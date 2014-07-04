@@ -1,0 +1,2250 @@
+//a side-by-side reference sheet//
+
+[#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#dates-time dates and time] | [#arrays arrays] | [#lists lists] | [#tuples tuples] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#concurrency concurrency] | [#file-handles file handles] | [#files files] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#user-defined-types user-defined types] | [#objects objects] | [#polymorphism polymorphism] | [#net-web net and web] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling] | [#repl repl]
+
+||~ ||~ [#ocaml ocaml]||~ [#fsharp f#]||~ [#scala scala]||~ [#haskell haskell]||
+||[[# version-used]][#version-used-note version used] _
+@<&nbsp;>@||##gray|//4.0//##||##gray|//F# 3.0//## _
+##gray|//Mono 3.2//##||##gray|//2.9//##||##gray|//7.4//##||
+||[[# version]][#version-note show version] _
+@<&nbsp;>@||$ ocaml -version||$ fsharpi @@--@@help||$ scala -version||$ ghc @@--@@version||
+||||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
+||~ ||~ ocaml||~ f#||~ scala||~ haskell||
+||[[# interpreter]][#interpreter-note interpreter] _
+@<&nbsp;>@||$ echo 'print_endline "hello"' > hello.ml _
+ _
+$ ocaml hello.ml||$ cat @@<<@@EOF > hello.fs _
+module hello _
+let main = printfn "hello" _
+EOF _
+ _
+$ fsharpi @@--@@quiet @@--@@exec hello.fs||$ echo 'println("hello")' > hello.scala _
+ _
+$ scala hello.scala||$ echo 'main = putStrLn "hello"' > hello.hs _
+ _
+$ runghc hello.hs||
+||[[# shebang]][#shebang-note shebang]||$ cat @@<<@@EOF > hello.ml _
+#!/usr/bin/env ocaml _
+ _
+print_endline "hello";; _
+EOF _
+ _
+$ chmod +x hello.ml _
+$ ./hello.ml||$ cat @@<<@@EOF > hello.fs _
+#light (* _
+@<&nbsp;&nbsp;>@exec fsharpi @@--@@exec $0 @@--@@quiet _
+*) _
+ _
+module hello _
+ _
+printfn "hello" _
+EOF _
+ _
+$ chmod +x hello.fs _
+$ ./hello.fs||$ cat @@<<@@EOF > hello.scala _
+#!/bin/sh _
+exec scala $0 $@ _
+!# _
+ _
+println("hello") _
+EOF _
+ _
+$ chmod +x hello.scala _
+$ ./hello.scala||$ cat @@<<@@EOF > hello.hs _
+#!/usr/bin/env runghc _
+ _
+main = putStrLn "hello" _
+EOF _
+ _
+$ chmod +x hello.hs _
+$ ./hello.hs||
+||[[# bytecode-compiler-interpreter]][#bytecode-compiler-interpreter-note bytecode compiler and interpreter]||$ echo 'print_endline "hello";;' > hello.ml _
+$ ocamlc -o hello hello.ml _
+$ ocamlrun hello||$ echo 'printfn "hello"' > hello.fs _
+$ fsharpc hello.fs _
+$ mono hello.exe||$ cat @@<<@@EOF > Hello.scala _
+object Hello { _
+@<&nbsp;&nbsp;>@def main(args: Array[String]) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@println("hello") _
+@<&nbsp;&nbsp;>@} _
+} _
+EOF _
+ _
+$ scalac Hello.scala _
+$ scala Hello||##gray|//none//##||
+||[[# native-compiler]][#native-compiler-note native compiler]||$ echo 'print_endline "hello";;' > hello.ml _
+$ ocamlopt hello.ml -o hello _
+$ ./hello||##gray|//none//##||##gray|//none//##||$ echo 'main = putStrLn "hello"' > hello.hs _
+$ ghc -o hello hello.hs _
+$ ./hello||
+||[[# library-always-imported]][#library-always-imported-note library which is always imported]||Pervasives||Core||java.lang _
+scala||Prelude||
+||[[# statement-terminator]][#statement-terminator-note statement terminator]||;;||;;||; ##gray|//or sometimes newline//##||##gray|//next line has equal or less indentation, or//## ;||
+||[[# blocks]][#blocks-note blocks]||( ##gray|//expr//## ; ##gray|//...//## ) _
+begin  ##gray|//expr//## ; ##gray|//...//## end||( ##gray|//expr//## ; ##gray|//...//## ) _
+begin  ##gray|//expr//## ; ##gray|//...//## end||{ }||##gray|//offside rule or//## { }||
+||[[# end-of-line-comment]][#end-of-line-comment-note end-of-line comment]||##gray|//none//##||@@//@@ ##gray|//comment//##||@@//@@ ##gray|//comment//##||@@--@@ ##gray|//comment//##||
+||[[# multiple-line-comment]][#multiple-line-comment-note multiple line comment]||(* ##gray|//comment _
+another comment//## *)||(* ##gray|//comment _
+another comment//## *)||/* ##gray|//comment _
+another comment//## */||{- ##gray|//comment _
+another comment//## -}||
+||||||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
+||~ ||~ ocaml||~ f#||~ scala||~ haskell||
+||[[# value]][#value-note write-once variable] _
+@<&nbsp;>@||let n = 1 + 2;;||let n = 1 + 2||##gray|@@//@@ evaluates 1 + 2 once:## _
+val n = 1 + 2 _
+ _
+##gray|@@//@@ evaluates 1 + 2 each time n is used:## _
+def n = 1 + 2||n = 3||
+||[[# variable]][#variable-note modifiable variable]||let n = ref 3;; _
+n := 4;; _
+!n + 7;;||let n = ref 3 _
+n := 4 _
+!n + 7||var n = 3 _
+n = 4 _
+n + 7||n <- return 3||
+||[[# unit]][#unit-note unit type and value]||unit _
+()||unit _
+()||Unit _
+()||() _
+()||
+||[[# conditional-expression]][#conditional-expression-note conditional expression]||let n = -3;; _
+let absn = if n < 0 then -n else n;;||let n = -3 _
+let absn = if n < 0 then -n else n||val n = -3 _
+if (n < 0) -n else n||n = -3 _
+let absn = if n < 0 then -n else n||
+||[[# branch-type-mismatch]][#branch-type-mismatch-note branch type mismatch]||##gray|(* compilation error: *)## _
+if true then "hello" else 3;;||##gray|(* compilation error: *)## _
+if true then "hello" else 3||##gray|// expression has type Any:## _
+if (true) { "hello" } else { 3 }||##gray|@@--@@ compilation error:## _
+if True then "hello" else 3||
+||[[# null]][#null-note null] _
+@<&nbsp;>@||None||None _
+ _
+##gray|//Also this value returned by .NET library functions.  It has a type distinct from// None:## _
+null||null||Nothing||
+||[[# nullable-type]][#nullable-type-note nullable type]||type list_option_int = int option list;; _
+ _
+let list = [Some 3; None; Some (-4)];;|| ||val list = List(Some(3), null, Some(-4))||list = [Just(3), Nothing, Just(-4)]||
+||[[# null-test]][#null-test-note null test]||match foo with _
+@<&nbsp;&nbsp;>@| None -> true _
+@<&nbsp;&nbsp;>@| _ -> false;;|| || || ||
+||[[# coalesce]][#coalesce-note coalesce]||match foo with _
+@<&nbsp;&nbsp;>@| None -> 0 _
+@<&nbsp;&nbsp;>@| Some n -> n;;|| || ||import Data.Maybe _
+ _
+let foo = Just(3) _
+##gray|//raises exception if Nothing://## _
+fromJust foo _
+ _
+let intId x = x _
+##gray|//evaluates to 0 if Nothing://## _
+maybe 0 intId foo||
+||[[# nullif]][#nullif-note nullif]||match foo with _
+@<&nbsp;&nbsp;>@| -999 -> None _
+@<&nbsp;&nbsp;>@| n -> Some n;;|| || || ||
+||[[# expr-type-declaration]][#expr-type-decl-note expression type declaration]||float 1||float 1||1: Double||1 :: Double||
+||[[# let-in]][#let-in-note let ... in ...]||let z = _
+@<&nbsp;&nbsp;>@let x = 3.0 in _
+@<&nbsp;&nbsp;>@let y = 2.0 *. x in _
+@<&nbsp;&nbsp;>@x *. y;;||let z = _
+@<&nbsp;&nbsp;>@let x = 3.0 in _
+@<&nbsp;&nbsp;>@let y = 2.0 * x in _
+@<&nbsp;&nbsp;>@x * y||val z = { _
+@<&nbsp;&nbsp;>@val x = 3.0 _
+@<&nbsp;&nbsp;>@val y = 2.0 * x _
+@<&nbsp;&nbsp;>@x * y _
+}||z = let x = 3.0 _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@y = 2.0 * x _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@in x * y||
+||[[# where]][#where-note where]||##gray|//none//##||##gray|//none//##||##gray|//none//##||z = x * y _
+@<&nbsp;&nbsp;>@where x = 3.0 _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@y = 2.0 * x||
+||||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
+||~ ||~ ocaml||~ f#||~ scala||~ haskell||
+||[[# boolean-type]][#boolean-type-note boolean type] _
+@<&nbsp;>@||bool||bool||Boolean||Bool||
+||[[# true-false]][#true-false-note true and false] _
+@<&nbsp;>@||true false||true false||true false||True False||
+||[[# logical-op]][#logical-op-note logical operators]||&& @@||@@ not||&& @@||@@ not||&& @@||@@ !||&& @@||@@ not||
+||[[# relational-op]][#relational-op-note relational operators]||@@=@@ <> < > <= >=||@@=@@ <> < > <= >=||== != < > <= >=||== /= < > <= >=||
+||[[# min-max]][#min-max-note min and max]||min 1 2 _
+max 1 2||min 1 2 _
+max 1 2||math.min 1 2 _
+math.max 1 2||min 1 2 _
+max 1 2||
+||[[# int-type]][#int-type-note integer type]||int _
+ _
+##gray|//other integer types://## _
+int32 int64 nativeint||int _
+ _
+##gray|//other integer types://## _
+int32 int64 nativeint||##gray|//type of integer literals://## _
+Int _
+##gray|//other modular types://## _
+Byte Short Long _
+##gray|//arbitrary precision type://## _
+BigInt||Integer||
+||[[# int-literal]][#int-literal-note integer literal]||##gray|int, int64, and nativeint literals:## _
+12 12L 12n _
+ _
+##gray|//literals can contain underscores://## _
+1_000_000 _
+ _
+##gray|//this parses as an expression://## _
+-4||-4||-4||##gray|//an expression, not a literal://## _
+-4||
+||[[# float-type]][#float-type-note float type]||float||float||##gray|//type of float literals://## _
+Double _
+##gray|//other types://## _
+Float||Double||
+||[[# int-op]][#int-op-note integer operators]||+ - * / mod _
+##gray|mod //is an infix operator//##||+ - * / %||+ - * / %||+ - * div rem _
+##gray|div //and// rem //are functions, not infix operators//##||
+||[[# float-op]][#float-op-note float operators] _
+@<&nbsp;>@||+. -. *. /.||@@+@@ - * /||+ - * /||+ - * /||
+||[[# add-int-float]][#add-int-float-note add integer and float]||float 3 +. 7.0||float 3 + 7.0||3 + 7.0||3 + 7.0||
+||[[# int-div]][#int-div-note integer division] _
+##gray|//and remainder//##||7 / 3 _
+7 mod 3||7 / 3 _
+7 % 3||7 / 3 _
+7 % 3||div 7 3 _
+rem 7 3||
+||[[# int-div-zero]][#int-div-zero-note integer division by zero]||##gray|//raises//## Division_by_zero||System.DivideByZeroException||java.lang.ArithmeticException||##gray|//Exception: divide by zero//##||
+||[[# float-div]][#float-div-note float division] _
+@<&nbsp;>@||float 7 /. float 3||float 7 / float 3||(7: Double) / 3||7 / 3||
+||[[# float-div-zero]][#float-div-zero-note float division by zero]||infinity nan ##gray|//or//## neg_infinity||infinity nan ##gray|//or//## neg_infinity||##gray|//evaluates to// Infinity, NaN, //or// -Infinity, //values which do not have literals//##||##gray|//evaluates to// Infinity, NaN, //or// -Infinity, //values which do not have literals//##||
+||[[# power]][#power-note power]||2.0 ** 32.0||2.0 ** 32.0||math.pow(2, 32)||2 ** 32 _
+ _
+##gray|@@--@@ syntax error if exponent not an integer:## _
+2 ^ 32||
+||[[# sqrt]][#sqrt-note sqrt] _
+@<&nbsp;>@||sqrt 2.0||sqrt 2.0||math.sqrt(2)||sqrt 2||
+||[[# sqrt-negative-one]][#sqrt-negative-one-note sqrt -1]||##gray|sqrt (-1.0):## _
+nan||nan||##gray|math.sqrt(-1) //evaluates to// NaN, //a value which has no literal//##||##gray|sqrt (-1) //evaluates to// NaN, //a value which has no literal//##||
+||[[# transcendental-func]][#transcendental-func-note transcendental functions]||exp log _
+sin cos tan _
+asin acos atan atan2||exp log _
+sin cos tan _
+asin acos atan atan2||math.exp math.log _
+math.sin math.cos math.tan _
+math.asin math.acos math.atan math.atan2||exp log _
+sin cos tan _
+asin acos atan atan2||
+||[[# transcendental-const]][#transcendental-const-note transcendental constants]||4.0 *. atan 1.0 _
+exp 1.0||System.Math.PI _
+System.Math.E||math.Pi _
+math.E||pi _
+exp 1||
+||[[# float-truncation]][#float-truncation-note float truncation]||truncate 3.14 _
+##gray|//none//## _
+floor 3.14 ##gray|//returns float//## _
+ceil 3.14 ##gray|//returns float//##||truncate 3.14 _
+round 3.14 _
+floor 3.14 ##gray|//returns float//## _
+ceil 3.14 ##gray|//returns float//##||##gray|//??//## _
+3.14.round _
+3.14.floor ##gray|//returns Double//## _
+3.14.ceil ##gray|//returns Double//##||truncate 3.14 _
+round 3.14 _
+floor 3.14 _
+ceiling 3.14||
+||[[# abs-val]][#abs-val-note absolute value] _
+##gray|//and signum//##||abs (-7) _
+abs_float (-7.0) _
+##gray|//no signum//##||abs -7 _
+abs -7.0 _
+sign -7 _
+sign -7.0||math.abs(-7) _
+math.signum(-7)||abs (-7) _
+signum (-7)||
+||[[# int-overflow]][#int-overflow-note integer overflow]||##gray|//modular arithmetic//##||##gray|//modular arithmetic//##||##gray|//modular arithmetic for all types except//## BigInt||##gray|//has arbitrary length integers//##||
+||[[# float-overflow]][#float-overflow-note float overflow]||infinity||infinity||##gray|//evaluates to// Infinity, //a value which has no literal//##||##gray|//evaluates to// Infinity, //a value which has no literal//##||
+||[[# arbitrary-len-int]][#arbitrary-len-int-note arbitrary length integer]||open Big_int;; _
+ _
+let n = big_int_of_int 7;; _
+let m = big_int_of_int 12;;||##gray|@@//@@ System.Numerics.BigInteger:## _
+let n = 7I _
+let m = 12I||val n = BigInt(7) _
+val m = BigInt(12)||##gray|@@--@@ Integer is arbitrary length type:## _
+let n = 7 _
+let m = 12||
+||[[# arbitrary-len-int-op]][#arbitrary-len-int-op-note arbitrary length integer operators]||add_big_int n m _
+sub_big_int n m _
+mult_big_int n m _
+div_big_int n m ##gray|(* quotient *)## _
+mod_big_int n m _
+ _
+eq_big_int n m _
+lt_big_int n m _
+gt_big_int n m _
+le_big_int n m _
+ge_big_int n m||n + m _
+n - m _
+n * m _
+n / m _
+n % m _
+ _
+n = m _
+n < m _
+n < m _
+n <= m _
+n >= m||n + m _
+n - m _
+n * m _
+n / m _
+n % m _
+ _
+n == m _
+n < m _
+n < m _
+n <= m _
+n >= m||n + m _
+n - m _
+n * m _
+div n m _
+mod n m _
+ _
+n == m _
+n < m _
+n < m _
+n <= m _
+n >= m||
+||[[# rational-type]][#rational-type-note rational type]|| || || ||Ratio Integer||
+||[[# rational-construction]][#rational-construction-note rational construction]|| || || ||import Data.Ratio _
+ _
+1 % 7||
+||[[# rational-decomposition]][#rational-decomposition-note rational decomposition]|| || || ||import Data.Ratio _
+ _
+numerator (1 % 7) _
+denominator (1 % 7)||
+||[[# complex-type]][#complex-type-note complex type]||Complex.t|| || ||Complex Double||
+||[[# complex-const]][#complex-const-note complex constants]||Complex.zero _
+Complex.one _
+Complex.i|| || || ||
+||[[# complex-op]][#complex-op-note complex operators]||Complex.add z w;; _
+Complex.sub z w;; _
+Complex.mul z w;; _
+Complex.div z w;;|| || || ||
+||[[# complex-construction]][#complex-construction-note complex construction]||{Complex.re=1.0; Complex.im=2.0}||System.Numerics.Complex(1.0, 2.0)|| ||import Data.Complex _
+ _
+1 :+ 2.0||
+||[[# complex-decomposition]][#complex-decomposition-note complex decomposition]||let z = {Complex.re=1.0; Complex.im=2.0};; _
+ _
+z.Complex.re;; _
+z.Complex.im;; _
+Complex.arg z;; _
+Complex.norm z;; _
+Complex.conj z;;|| || ||import Data.Complex _
+ _
+realPart (1 :+ 2) _
+imagPart (1 :+ 2) _
+phase (1 :+ 2) _
+magnitude (1 :+ 2) _
+conjugate (1 :+ 2)||
+||[[# random-num]][#random-num-note random number] _
+##gray|//uniform int, uniform float, normal float//##||Random.int 100 _
+Random.float 1.0 _
+##gray|//none//##||let rnd = System.Random() _
+ _
+rnd.Next(0, 100) _
+rnd.NextDouble() _
+##gray|//none//##||import scala.util.Random _
+ _
+val rnd = Random _
+ _
+rnd.nextInt(100) _
+rnd.nextDouble _
+rnd.nextGaussian||##gray|@@--@@ $ cabal install random## _
+import System.Random _
+ _
+getStdRandom (randomR (0, 99)) _
+getStdRandom (randomR (0.0, 1.0)) _
+##gray|//none//##||
+||[[# random-seed]][#random-seed-note random seed] _
+##gray|//set, get, restore//##||Random.init 17;; _
+let seed = Random.get_state();; _
+Random.set_state seed;;||let rnd = System.Random(17) _
+##gray|//none//## _
+##gray|//none//##||import scala.util.Random _
+ _
+val rnd = Random _
+ _
+rnd.setSeed(17) _
+##gray|//none//## _
+##gray|//none//##||##gray|@@--@@ $ cabal install random## _
+import System.Random _
+ _
+setStdGen $ mkStdGen 17 _
+seed <- getStdGen _
+setStdGen seed||
+||[[# bit-op]][#bit-op-note bit operators]||1 lsl 4 _
+1 lsr 4 _
+1 land 3 _
+1 lor 3 _
+1 lxor 3 _
+lnot 1||1 @@<<<@@ 4 _
+1 @@>>>@@ 4 _
+1 @@&&&@@ 3 _
+1 @@|||@@ 3 _
+1 @@^^^@@ 3 _
+@@~~~@@ 1||1@@ << @@ 4 _
+1 @@ >> @@ 4 _
+1 & 3 _
+1 | 3 _
+1 ^ 3 _
+~ 1||import Data.Bits _
+ _
+x = 1 :: Integer _
+y = 3 :: Integer _
+ _
+shiftL x 4 _
+shiftR x 4 _
+x .&. y _
+x .|. y _
+xor x y _
+complement x||
+||[[# binary-octal-hex-literals]][#binary-octal-hex-literals-note binary, octal, and hex literals]||0b101010 _
+0o52 _
+0x2a||0b101010 _
+0o52 _
+0x2a||##gray|//none//## _
+052 _
+0x2a||##gray|//none//## _
+052 _
+0x2a||
+||[[# radix]][#radix-note radix]|| || ||Integer.toString(42, 7) _
+Integer.parseInt("60", 7)|| ||
+||||||||||~ [[# strings]][#strings-note strings]||
+||~ ||~ ocaml||~ f#||~ scala||~ haskell||
+||[[# str-type]][#str-type-note string type] _
+@<&nbsp;>@||string||string||java.lang.String||String||
+||[[# str-literal]][#str-literal-note string literal] _
+@<&nbsp;>@||"Hello, World!"||"Hello, World!"||"Hello, World!" _
+ _
+"""Hello, World!"""||"Hello, World!"||
+||[[# newline-in-str-literal]][#newline-in-str-literal-note newline in literal]||##gray|//no//##||##gray|//yes//##||##gray|//in triple quote literal only//##||##gray|//no//##||
+||[[# str-esc]][#str-esc-note literal escapes]||\b \n \r \t \" \' \\ _
+\##gray|//ooo//## \x##gray|//hh//##||\b \n \r\ t \" \' \\ _
+\u##gray|//hhhh//## \U##gray|//hhhhhhhh//##||\b \f \n \r \t \" \' _
+\u##gray|//hhhh//## \##gray|//o//## \##gray|//oo//## \##gray|//ooo//##||\a \b \f \n \r \t \v \" \& \' \\ _
+\o##gray|//o@@...@@//## \##gray|//d@@...@@//## \x##gray|//h@@...@@//## _
+ _
+##gray|//Octal, decimal, and hex escapes denote Unicode characters and can contain anywhere from 1 to 7 digits.  The max values are \o4177777, \1114111, and \x10ffff.  The \& escape does not represent a character, but can separate a numeric backslash escape sequence from a following digit.//##||
+||[[# format-str]][#format-str-note format string]|| ||sprintf "foo %s %d %.2f" "bar" 7 3.1415||"foo %s %d %.2f".format("bar", 7, 3.1415)||import Text.Printf _
+ _
+printf "foo %s %d %.2f" "bar" 7 3.1415||
+||[[# str-concat]][#str-concat-note concatenate] _
+@<&nbsp;>@||"Hello" ^ ", " ^ "World!"||"Hello" + ", " + "World!"||"Hello" + ", " + "World!"||"Hello" ++ ", " ++ "World!"||
+||[[# str-replicate]][#str-replicate-note replicate] _
+@<&nbsp;>@||String.make 80 '-'||String.replicate 80 "-"||val hbar = "-" * 80||concat ( replicate 80 "-" )||
+||[[# translate-case]][#translate-case-note translate case] _
+##gray|//to upper, to lower//##||String.uppercase "hello" _
+String.lowercase "HELLO"||"hello".ToUpper() _
+"HELLO".ToLower()||"hello".toUpperCase _
+"HELLO".toLowerCase ||import Data.Char _
+ _
+map toUpper "hello" _
+map toLower "HELLO"||
+||[[# capitalize]][#capitalize-note capitalize] _
+@<&nbsp;>@||String.capitalize "hello"|| ||"hello".capitalize|| ||
+||[[# trim]][#trim-note trim] _
+##gray|//both sides, left, right//##||String.trim " hello "||" hello ".Trim() _
+" hello".TrimStart() _
+"hello ".TrimEnd()||" hello ".trim|| ||
+||[[# pad]][#pad-note pad] _
+##gray|//on left, on right//##|| ||"hello".PadLeft(10, ' ') _
+"hello".PadRight(10, ' ')||##gray|//??//## _
+"hello".padTo(10, " ").mkString|| ||
+||[[# num-to-str]][#num-to-str-note number to string]||"two: " ^ string_of_int 2 _
+"pi: " ^ float_of_string 3.14||"two: " + string 2 _
+"pi: " + string 3.14||"two: " + 2.toString _
+"pi: " + 3.14.toString||"two: " ++ (show 2) _
+"pi: " ++ (show 3.14)||
+||[[# str-to-num]][#str-to-num-note string to number]||7 + int_of_string "12" _
+73.9 +. float_of_string ".037"||7 + int "12" _
+73.9 + float ".037||7 + "12".toInt _
+73.9 + ".037".toFloat _
+##gray|//raises// NumberFormatException //if string doesn't completely parse//##||7 + (read "12")::Integer _
+73.9 + (read "0.037")::Double _
+##gray|//raises exception if string doesn't completely parse//##||
+||[[# join]][#join-note join] _
+@<&nbsp;>@|| ||System.String.Join(" ", ["do"; "re"; "mi"])|| List("do", "re", "mi").mkString(" ")|| ||
+||[[# split]][#split-note split] _
+@<&nbsp;>@|| ||"do re mi".Split(' ')||"do re mi".split(" ")|| ||
+||[[# char-type]][#char-type-note character type] _
+@<&nbsp;>@||char||char||Char||Char||
+||[[# char-literal]][#char-literal-note character literal]||'h'||'h'||'h'||'h'||
+||[[# str-len]][#str-len-note length] _
+@<&nbsp;>@||String.length "hello"||"hello".Length||"hello".length||length "hello"||
+||[[# index-substr]][#index-substr-note index of substring]|| ||"hello".IndexOf("hell")||"hello".indexOf("hell")|| ||
+||[[# substr]][#substr-note extract substring]||String.sub "hello" 0 4||"hello".Substring(0, 4)||"hello".substring(0, 4)||drop 0 (take 4 "hello")||
+||[[# extract-char]][#extract-char-note extract character]||"hello".[0]||"hello".[0]||"hello"(0)||"hello" !! 0||
+||[[# chr-ord]][#chr-ord-note chr and ord]||Char.code 'a' _
+Char.chr 97||int 'a' _
+char 97||'a'.toInt _
+97.toChar||Char.ord 'a' _
+Char.chr 97||
+||||||||||~ [[# dates-time]][#dates-time-note dates and time]||
+||~ ||~ ocaml||~ f#||~ scala||~ haskell||
+||[[# dates-time-types]][#dates-time-types-note date and time types]|| || || ||ClockTime CalendarTime TimeDiff||
+||[[# current-date-time]][#current-date-time-note current date and time]|| || || ||import Time _
+ _
+t <- getClockTime||
+||[[# current-unix-epoch]][#current-unix-epoch-note current unix epoch]||open Unix;; _
+ _
+##gray|(* float: *)## _
+time();;|| || ||import System.Time _
+ _
+getClockTime @@>>@@= (\(TOD sec _) -> return sec)||
+||||||||||~ [[# arrays]][#arrays-note arrays]||
+||~ ||~ ocaml||~ f#||~ scala||~ haskell||
+||literal|| || ||val a = Array(1, 2, 3)|| ||
+||size|| || ||a.size|| ||
+||lookup|| || ||val n = a(0)|| ||
+||update|| || ||a(2) = 4|| ||
+||out-of-bounds|| || ||##gray|//raises//## java.lang.ArrayIndexOutOfBounds|| ||
+||||||||||~ [[# lists]][#lists-note lists]||
+||~ ||~ ocaml||~ f#||~ scala||~ haskell||
+||[[# list-literal]][#list-literal-note literal]||[1; 2; 3]||[1; 2; 3]||##gray|@@//@@ none; use constructor:## _
+List(1, 2, 3)||[1, 2, 3]||
+||[[# empty-list]][#empty-list-note empty list] _
+@<&nbsp;>@||[]|| ||Nil _
+List()||[]||
+||[[# empty-list-test]][#empty-list-test-note empty list test]||let list = [1; 2; 3];; _
+ _
+list == []|| ||val list = List(1, 2, 3) _
+ _
+list == Nil _
+list.isEmpty||let list = [1, 2, 3] _
+ _
+list == [] _
+null list||
+||[[# cons]][#cons-note cons] _
+@<&nbsp;>@||1 :: [2; 3]||1 :: [2; 3]|| 1 :: List(2, 3)||1 : [2, 3]||
+||[[# head]][#head-note head] _
+@<&nbsp;>@||List.hd [1; 2; 3]||List.head [1; 2; 3]||List(1, 2, 3).head||head [1, 2, 3]||
+||[[# tail]][#tail-note tail] _
+@<&nbsp;>@||List.tl [1; 2; 3]||List.tail [1; 2; 3]||List(1, 2, 3).tail||tail [1, 2, 3]||
+||[[# head-tail-empty-list]][#head-tail-empty-list-note head and tail of empty list]||##gray|//exceptions//##|| ||##gray|@@//@@ NoSuchElementException:## _
+Nil.head _
+ _
+##gray|@@//@@ UnsupportedOperationException:## _
+Nil.tail||##gray|//exceptions//##||
+||[[# list-length]][#list-length-note length] _
+@<&nbsp;>@||List.length [1; 2; 3]||List.length [1; 2; 3]||List(1, 2, 3).length||length [1, 2, 3]||
+||[[# nth-elem-of-list]][#nth-elem-of-list-note nth element] _
+@<&nbsp;>@||List.nth [1; 2; 3] 0||List.nth [1; 2; 3] 0||List(1, 2, 3)(0)||[1, 2, 3] !! 0||
+||[[# list-elem-index]][#list-elem-index-note element index]|| || ||##gray|@@//@@ evaluates to 1:## _
+List(7, 8, 9).indexOf(8) _
+ _
+##gray|@@//@@ evaluates to -1:## _
+List(7, 8, 9).indexOf(10)||import Data.list _
+ _
+##gray|@@--@@ Just 1:## _
+elemIndex 8 [7, 8, 9] _
+ _
+##gray|@@--@@ Nothing:## _
+elemIndex 10 [7, 8, 9]||
+||[[# update-list]][#update-list-note update]|| || ||##gray|@@//@@ evaluates to List(1, 4, 3):## _
+List(1, 2, 3).updated(1, 4)|| ||
+||[[# concat-list]][#concat-list-note concatenate] _
+##gray|//two lists, list of lists//##||[1; 2] @ [3; 4] _
+List.append [1; 2] [3; 4] _
+ _
+List.concat [[1; 2]; [3; 4]]||[1; 2] @ [3; 4] _
+List.append [1; 2] [3; 4] _
+ _
+List.concat [[1; 2]; [3; 4]]||List(1, 2) ::: List(3, 4) _
+List(1, 2) ++ List(3, 4) _
+ _
+List(List(1, 2), List(3, 4)).flatten||[1, 2] ++ [3, 4] _
+ _
+concat [[1, 2], [3, 4]]||
+||[[# list-last]][#list-last-note last] _
+##gray|//and butlast//##|| || ||List(1, 2, 3).last _
+List(1, 2, 3).init||last [1, 2, 3] _
+init [1, 2, 3]||
+||[[# list-take]][#list-take-note take] _
+@<&nbsp;>@|| || ||List(1, 2, 3).take(2)||take 2 [1, 2, 3]||
+||[[# list-drop]][#list-drop-note drop] _
+@<&nbsp;>@|| || ||List(1, 2, 3).drop(2)||drop 2 [1, 2, 3]||
+||[[# iterate-over-list]][#iterate-over-list-note iterate]||let f i = _
+@<&nbsp;&nbsp;>@print_endline (string_of_int i);; _
+ _
+List.iter f [1; 2; 3];;||let f i = _
+@<&nbsp;&nbsp;>@System.Console.WriteLine(string i) _
+ _
+List.iter f [1; 2; 3]||List(1, 2, 3).foreach(i => println(i))||mapM_ print  [1, 2, 3]||
+||[[# reverse-list]][#reverse-list-note reverse] _
+@<&nbsp;>@||List.rev [1; 2; 3]||List.rev [1; 2; 3]||List(1, 2, 3).reverse||reverse [1, 2, 3]||
+||[[# sort-list]][#sort-list-note sort]||List.sort min [1; 3; 2; 4] _
+List.sort max [1; 3; 2; 4]||List.sort [1; 3; 2; 4]||List(1, 3, 2, 4).sortWith((x, y) => x < y) _
+List(1, 3, 2, 4).sortWith(_ < _) _
+List(1, 3, 2, 4).sortWith((x, y) => x > y) _
+List(1, 3, 2, 4).sortWith(_ > _)||import Data.List _
+ _
+sort [1, 3, 2, 4]||
+||[[# map-list]][#map-list-note map]||List.map (( * ) 2) [1; 2; 3]||List.map (( * ) 2) [1; 2; 3]||List(1, 2, 3).map(x => 2 * x) _
+List(1, 2, 3).map(2 * _)||map (\x -> x * x) [1, 2, 3]||
+||[[# filter-list]][#filter-list-note filter] _
+@<&nbsp;>@||List.filter ((<) 2) [1; 2; 3]||List.filter ((<) 2) [1; 2; 3]||List(1, 2, 3).filter(x => x > 2)||filter (\x -> x > 2) [1, 2, 3]||
+||[[# fold-list-left]][#fold-list-left-note fold from left]||List.fold_left (+) 0 [1; 2; 3]||List.fold (-) 0 [1; 2; 3]||List(1, 2, 3).foldLeft(0)(_ + _) _
+List(1, 2, 3).foldLeft(0)((x, y) => x + y)||foldl (+) 0 [1, 2, 3]||
+||[[# fold-list-right]][#fold-list-right-note fold from right] _
+@<&nbsp;>@||List.fold_right (-) [1; 2; 3] 0|| ||List(1, 2, 3).foldRight(0)(_ - _)||foldr (-) 0 [1, 2, 3]||
+||[[# list-member]][#list-member-note membership] _
+@<&nbsp;>@|| || ||List(1, 2, 3).contains(3)||elem 3 [1, 2, 3]||
+||[[# universal-test-list]][#universal-test-list-note universal test] _
+@<&nbsp;>@||List.for_all (fun x -> x > 2) [1; 2; 3];;||List.forall (fun x -> x > 2) [1; 2; 3]||List(1, 2, 3).forall(_ > 2)||all (\x -> x > 2) [1, 2, 3]||
+||[[# existential-test-list]][#existential-test-list-note existential test] _
+@<&nbsp;>@||List.exists (fun x -> x > 2) [1; 2; 3];;||List.exists (fun x -> x > 2) [1; 2; 3]||List(1, 2, 3).exists(_ > 2)||any (\x -> x > 2) [1, 2, 3]||
+||[[# zip-list]][#zip-list-note zip lists]|| || || ||##gray|@@--@@ list of tuples:## _
+zip [1, 2, 3] ['a', 'b', 'c']||
+||||||||||~ [[# tuples]][#tuples-note tuples]||
+||~ ||~ ocaml||~ f#||~ scala||~ haskell||
+||[#tuple tuple]||(1, "hello", true)||(1, "hello", true)||(1, "hello", true)||(1, "hello", True)||
+||[#tuple-element tuple element access]||match (1, "hello", true) with _, x, _ -> x||match (1, "hello", true) with _, x, _ -> x||(1, "hello", true)._1||(\(a, _, _) -> a) (1, "hello", True)||
+||[#pair-element pair element access]||fst (12, "December") _
+snd (12, "December")||fst (12, "December") _
+snd (12, "December")||(12, "December")._1 _
+(12, "December")._2||fst (12, "December") _
+snd (12, "December")||
+||||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
+||~ ||~ ocaml||~ f#||~ scala||~ haskell||
+||||||||||~ [[# functions]][#functions-note functions]||
+||~ ||~ ocaml||~ f#||~ scala||~ haskell||
+||[[# def-func]][#def-func-note define function]||let average a b = ( a +. b ) /. 2.0;;||let average a b = ( a + b ) / 2.0||##gray|@@//@@ argument types must be declared:## _
+def average(a: Double, b: Double) _
+@<&nbsp;&nbsp;>@= (a + b) / 2.0 _
+ _
+##gray|@@//@@ return value type must be declared if _
+@@//@@ function is recursive:## _
+def factorial(n: Int): Int = _
+@<&nbsp;&nbsp;>@if (n < 1) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@1 _
+@<&nbsp;&nbsp;>@else _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@n * factorial(n - 1)||average a b = (a + b) / 2.0||
+||[[# invoke-func]][#invoke-func-note invoke function]||##gray|@@(*@@ 4.5: *)## _
+average 1.0 2.0 +. 3.0;; _
+ _
+##gray|@@(*@@ 3.0: *)## _
+average 1.0 (2.0 +. 3.0);;||##gray|@@//@@ 4.5:## _
+average 1.0 2.0 + 3.0 _
+ _
+##gray|@@//@@ 3.0:## _
+average 1.0 (2.0 + 3.0)||##gray|@@//@@ 3.0:## _
+average(1, 2 + 3) _
+ _
+##gray|@@//@@ 4.5:## _
+average(1, 2) + 3 _
+ _
+##gray|@@//@@ parens can be omitted when a function _
+@@//@@ takes no arguments; by convention parens _
+@@//@@ are omitted when the function has no _
+@@//@@ side effects##||##gray|@@--@@ 4.5:## _
+average 1 2 + 3 _
+ _
+##gray|@@--@@ 3.0:## _
+average 1 (2 + 3) _
+average 1 $ 2 + 3||
+||define function with block body|| || ||##gray|@@//@@ braces must be used if body _
+@@//@@ not an expression:## _
+def print_numbers() = { _
+@<&nbsp;&nbsp;>@println("one") _
+@<&nbsp;&nbsp;>@println("two") _
+}|| ||
+||[#named-parameter named parameter]||let subtract ~m ~s = m - s;; _
+ _
+subtract ~s: 3 ~m: 7;;|| ||def subtract(m: Int, s: Int) = m - s _
+ _
+subtract(s = 3, m = 7)||##gray|//none//##||
+||[#default-value named parameter default value]||let logarithm ?(base = (exp 1.0)) x = log x /. (log base);; _
+ _
+logarithm 2.718;; _
+logarithm ~base: 2.0 10.0;;|| ||def logarithm(x: Double, _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@base: Double = math.exp(1)) = _
+@<&nbsp;&nbsp;>@math.log(x) / math.log(base) _
+ _
+logarithm(2.718) _
+logarithm(10, base = 2)||##gray|//none//##||
+||[#piecewise-defined-function piecewise defined function]||let to_s = function Red -> "red" _
+@<&nbsp;&nbsp;>@| Green -> "green" _
+@<&nbsp;&nbsp;>@| Blue -> "blue";;|| ||##gray|//none//##||to_s Red = "red" _
+to_s Green = "green" _
+to_s Blue = "blue"||
+||[#recursive-function recursive function]||let rec range a b = _
+if a > b then [] _
+else a :: range (a+1) b;;|| || def range(a:Int, b:Int): List[Int] = _
+@<&nbsp;&nbsp;>@if (a > b) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@List() _
+@<&nbsp;&nbsp;>@else _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@a :: range(a + 1, b)||range a b = if a > b then [] else a : range (a+1) b||
+||[#mutually-recursive-functions mutually-recursive-functions]||let rec even n = if n = 0 then true else odd (n-1) _
+and odd n = if n = 0 then false else even (n-1);;|| || || ||
+||[#anonymous-func anonymous function]||fun x -> fun y -> (x +. y) /. 2.0||fun x -> fun y -> (x + y) / 2.0||(x: Double, y: Double) => (x + y) / 2.0||\x y -> (x+y) / 2.0||
+||[#infix-prefix infix operator in prefix position]||( * ) 3 4;;|| ||##gray|//none//##||( * ) 3 4||
+||[#function-infix function in infix position]||##gray|//none//##|| ||##gray|//unary methods can be used as binary operators//##||add x y = x + y _
+3 `add` 4||
+||[#currying currying]||let plus2 = (+) 2;;|| ||def plus(x: Int)(y: Int) = x + y _
+plus(3)(7) _
+def plus2 = plus(2) _
+plus2(7)||plus2 = (+) 2||
+||[#composition composition]|| || || ||f x = x + 2 _
+g x = x * 3 _
+(f . g ) 4||
+||[#function-composition function composition operator]||##gray|//none//##|| ||##gray|//none//##||double x = 2 * x _
+quadruple x = double . double||
+||[#lazy-evaluation lazy evaluation]||let arg1 x y = x;; _
+ _
+arg1 7 (lazy (1/0) );;|| ||def arg1(x: => Int, y: => Int): Int = x  _
+ _
+arg1(7, 1 / 0)||##gray|//lazy evaluation is default://## _
+arg1 x y = x _
+ _
+arg1 7 (error "bam!")||
+||[#strict-evaluation strict evaluation]||##gray|//default behavior//##||##gray|//default behavior//##||##gray|//default behavior//##||arg1 x y = seq y x _
+ _
+arg1 7 (error "bam!")||
+||||||||||~ [[# execution-control]][#execution-control-note execution control]||
+||~ ||~ ocaml||~ f#||~ scala||~ haskell||
+||[#if if]||if x > 0 then _
+@<&nbsp;&nbsp;>@print_endline "pos";;||if x > 0 then _
+@<&nbsp;&nbsp;>@printfn "pos"||if ( x > 0 ) _
+@<&nbsp;&nbsp;>@println("pos")||if x > 0 _
+@<&nbsp;&nbsp;>@then putStrLn "pos" _
+@<&nbsp;&nbsp;>@else return ()||
+||[#if-else-if-else if else-if else]||if x > 0 then _
+@<&nbsp;&nbsp;>@print_endline "pos" _
+else _
+@<&nbsp;&nbsp;>@if x < 0 then _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print_endline "neg" _
+@<&nbsp;&nbsp;>@else _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print_endline "zero";;||if x > 0 then _
+@<&nbsp;&nbsp;>@printfn "pos" _
+else _
+@<&nbsp;&nbsp;>@if x < 0 then _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@printfn "neg" _
+@<&nbsp;&nbsp;>@else _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@printfn "zero"||if (x > 0) _
+@<&nbsp;&nbsp;>@println("pos") _
+else if (x < 0) _
+@<&nbsp;&nbsp;>@println("neg") _
+else _
+@<&nbsp;&nbsp;>@println("zero")||if x > 0 _
+@<&nbsp;&nbsp;>@then putStrLn "pos" _
+@<&nbsp;&nbsp;>@else if x < 0 _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@then putStrLn "neg" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@else putStrLn "zero"||
+||[#sequencing sequencing]||print_endline "one"; _
+print_endline "two"; _
+print_endline "three";;||printfn "one" _
+printfn "two" _
+printfn "three"||println("one") _
+println("two") _
+println("three")||do _
+@<&nbsp;&nbsp;>@putStrLn "one" _
+@<&nbsp;&nbsp;>@putStrLn  "two" _
+@<&nbsp;&nbsp;>@putStrLn  "three"||
+||[#while while]||let i = ref 0;; _
+ _
+while !i < 10 do _
+@<&nbsp;&nbsp;>@print_endline (string_of_int !i); _
+@<&nbsp;&nbsp;>@i := !i + 1 _
+done;;||let i = ref 0 _
+ _
+while !i < 10 do _
+@<&nbsp;&nbsp;>@printfn "%d" !i _
+@<&nbsp;&nbsp;>@i := !i + 1|| var i = 0 _
+while (i<10) { _
+@<&nbsp;&nbsp;>@printf("%d\n", i) _
+@<&nbsp;&nbsp;>@i = i+1 _
+}|| ||
+||[#for for]||for i = 1 to 10 do _
+@<&nbsp;&nbsp;>@let s = string_of_int i in _
+@<&nbsp;&nbsp;>@print_endline s _
+done;;|| ||for (i <- 1 to 10) _
+@<&nbsp;&nbsp;>@println(i)|| ||
+||[#reverse-for for in reverse]||for i = 10 downto 1 do _
+@<&nbsp;&nbsp;>@let s = string_of_int i in _
+@<&nbsp;&nbsp;>@print_endline s _
+done;;|| ||##gray|//none//##|| ||
+||[#list-iteration list iteration]||##gray|//none//##|| ||for (i <- List.range(1, 11).reverse) _
+@<&nbsp;&nbsp;>@println(i)|| ||
+||[#loop loop]||let rec loop i = _
+@<&nbsp;&nbsp;>@if i <= 10 then begin _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print_endline (string_of_int i); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@loop (i+1) _
+@<&nbsp;&nbsp;>@end in _
+loop 0;;|| ||##gray|//none//##|| ||
+||||||||||~ [[# exceptions]][#exceptions-note exceptions]||
+||~ ||~ ocaml||~ f#||~ scala||~ haskell||
+||[#raise-error raise error]||raise (Failure "bam!");; _
+##gray|//or//## _
+failwith "bam!";;|| ||throw new Exception("bam!")||error "bam!"||
+||[#handle-error handle error]||let x = try 1 / 0 with Division_by_zero -> 0;;|| ||import java.lang._ _
+@<&nbsp;>@ _
+val x = try { _
+@<&nbsp;&nbsp;>@1 / 0 _
+} _
+catch { _
+@<&nbsp;&nbsp;>@case e: ArithmeticException => 0 _
+}|| ||
+||[#exception-type type of exceptions]||exn|| || || ||
+||[#user-exception user defined exception]||exception Foo of string;; _
+raise (Foo "invalid input");;|| || || ||
+||[#standard-exceptions standard exceptions]||Division_by_zero _
+Failure ##gray|//string//## _
+Not_found _
+Invalid_argument ##gray|//string//## _
+Match_failure (##gray|//string//##, ##gray|//int//##, ##gray|//int//##) _
+Assert_failure (##gray|//string//##, ##gray|//int//##, ##gray|//int//##) _
+Out_of_memory _
+Stack_overflow|| || || ||
+||[#assert assert]||assert(1 = 0);;|| ||assert(1 == 0)|| ||
+||||||||||~ [[# concurrency]][#concurrency-note concurrency]||
+||~ ||~ ocaml||~ f#||~ scala||~ haskell||
+||||||||||~ [[# file-handles]][#file-handles-note file handles]||
+||~ ||~ ocaml||~ f#||~ scala||~ haskell||
+||standard file handles||stdin stdout stderr||stdin stdout stderr||System.in System.out System.err||import System.Posix.IO _
+ _
+stdInput stdOutput stdError||
+||read line from stdin||let line = read_line();;|| ||val line = readLine()||line <- getLine||
+||end-of-file behavior||##gray|//raises// End_of_file##|| || ||##gray|//when last data is returned,// hIsEOF //will return True.  Reading after end-of-file throws an exception.//##||
+||chomp|| || || || ||
+||[#write-line-stdout write line to stdout]||print_endline "lorem ipsum";;||printfn "lorem ipsum"||println("lorem ipsum")||putStrLn "lorem ipsum"||
+||write formatted string to stdout|| || || || ||
+||open file for reading||let f = open_in "/etc/passwd";;|| ||import scala.io.Source _
+ _
+val path = "/etc/hosts" _
+val f = Source.fromFile(path)||import System.IO _
+ _
+f <- openFile "/etc/hosts" ReadMode||
+||open file for writing||let f = open_out "/tmp/ocaml.out";;|| || ||import System.IO _
+ _
+f <- openFile "/tmp/test" WriteMode||
+||open file for appending|| || || ||import System.IO _
+ _
+f <- openFile "/tmp/err.log" AppendMode||
+||close file|| || ||import scala.io.Source _
+ _
+f.close||import System.IO _
+ _
+hClose f||
+||i/o errors|| || || || ||
+||[#read-line read line]||let ic = open_in "/etc/passwd" in _
+let line = input_line ic in _
+print_endline line;;|| ||import scala.io.Source _
+val src = Source.fromFile("/etc/passwd") _
+for (line <- src.getLines) _
+@<&nbsp;&nbsp;>@print(line)||import IO _
+ _
+readAndPrintLines h = do _
+@<&nbsp;&nbsp;>@eof <- hIsEOF h _
+@<&nbsp;&nbsp;>@if eof _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@then return () _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@else do _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@line <- hGetLine h _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@putStrLn line _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@readAndPrintLines h _
+ _
+main = do _
+@<&nbsp;&nbsp;>@h <- openFile "/etc/passwd" ReadMode _
+@<&nbsp;&nbsp;>@readAndPrintLines h||
+||iterate over file by line|| || || || ||
+||read file into array of strings|| || || || ||
+||read file into string|| || || || ||
+||write string|| || || || ||
+||[#write-file write line]||open Printf _
+let oc = open_out "/tmp/test-ocaml" in _
+fprintf oc "hello out\n"; _
+close_out oc;;|| ||val out = new java.io.FileWriter("/tmp/test-scala") _
+out.write("hello out\n") _
+out.close||s = "hello out\n" _
+f = "/tmp/test-haskell" _
+main = writeFile f s||
+||flush file handle|| || || || ||
+||end-of-file test|| || || || ||
+||get and set filehandle position|| || || || ||
+||||||||||~ [[# files]][#files-note files]||
+||~ ||~ ocaml||~ f#||~ scala||~ haskell||
+||file test, regular file test||open Unix _
+ _
+try Some (stat "/etc/hosts") with _
+@<&nbsp;&nbsp;>@Unix_error (ENOENT, _, _) -> None _
+ _
+(stat "/etc/hosts").st_kind = S_REG|| || ||import System _
+ _
+Directory.doesFileExist "/etc/hosts" _
+ _
+import Control.Monad _
+import System.Posix.Files _
+ _
+liftM isRegularFile (getFileStatus "/etc/hosts")||
+||file size||(stat "/etc/hosts").st_size|| || ||import Control.Monad _
+import System.Posix.Files _
+ _
+liftM fileSize (getFileStatus "/etc/hosts")||
+||is file readable, writable, executable||open Unix _
+ _
+try access "/tmp/bar" [R_OK]; true with _
+@<&nbsp;&nbsp;>@Unix.Unix_error (EACCES, _, _) -> false;; _
+try access "/tmp/bar" [W_OK]; true with _
+@<&nbsp;&nbsp;>@Unix.Unix_error (EACCES, _, _) -> false;; _
+try access "/tmp/bar" [X_OK]; true with _
+@<&nbsp;&nbsp;>@Unix.Unix_error (EACCES, _, _) -> false;;|| || ||import Control.Monad _
+ _
+liftM readable _
+@<&nbsp;&nbsp;>@(getPermissions "/etc/hosts") _
+liftM writable _
+@<&nbsp;&nbsp;>@(getPermissions "/etc/hosts") _
+liftM executable _
+@<&nbsp;&nbsp;>@(getPermissions "/etc/hosts")||
+||set file permissions||open Unix _
+ _
+chmod "/tmp/foo" 0o755|| || ||import System.Posix.Files _
+ _
+setFileMode "/tmp/foo" ownerModes _
+setFileMode "/tmp/foo" groupReadMode _
+setFileMode "/tmp/foo" groupExecuteMode _
+setFileMode "/tmp/foo" otherReadMode _
+setFileMode "/tmp/foo" otherExecuteMode||
+||copy file, remove file, rename file||open Unix _
+ _
+##gray|//??//## _
+unlink "/tmp/foo" _
+rename "/tmp/bar" "/tmp/foo"|| || ||import System.Directory _
+ _
+copyFile "/tmp/foo" "/tmp/bar" _
+removeFile "/tmp/foo" _
+renameFile "/tmp/bar" "/tmp/foo"||
+||create symlink, symlink test, readlink||open Unix _
+ _
+symlink "/etc/hosts" "/tmp/hosts" _
+(lstat "/tmp/hosts").st_kind = S_LNK _
+readlink "/tmp/hosts"|| || ||import System.Posix.Files _
+ _
+createSymbolicLink "/etc/hosts" "/tmp/hosts" _
+##gray|//??//## _
+readSymbolicLink "/tmp/hosts"||
+||generate unused file name||open Filename _
+ _
+##gray|(* prefix and suffix: *)## _
+temp_file "foo" ".txt"|| || || ||
+||||||||||~ [[# directories]][#directories-note directories]||
+||~ ||~ ocaml||~ f#||~ scala||~ haskell||
+||build pathname||open Filename _
+ _
+concat "/etc" "hosts"|| || ||import System.FilePath ((</>)) _
+ _
+let path = "/etc" </> "hosts"||
+||dirname and basename||open Filename _
+ _
+dirname "/etc/hosts" _
+basename "/etc/hosts"|| || ||import System.FilePath _
+ _
+takeFileName "/etc/hosts" _
+takeDirectory "/etc/hosts"||
+||iterate over directory by file|| || || ||import System _
+ _
+##gray|@@--@@ returns IO [FilePath]## _
+Directory.getDirectoryContents "/etc"||
+||make directory||##gray|(* opam install fileutils *)## _
+open FileUtil _
+ _
+mkdir ~parent:true "/tmp/foo/bar"|| || ||import System.Directory _
+ _
+createDirectoryIfMissing True _
+@<&nbsp;&nbsp;>@"/tmp/foo/bar"||
+||remove empty directory||open Unix _
+ _
+rmdir "/tmp/foodir"|| || ||import System.Directory _
+ _
+removeDirectory "/tmp/foodir"||
+||remove directory and contents|| || || ||import System.Directory _
+ _
+removeDirectoryRecursive "/tmp/foodir"||
+||directory test|| || || ||import System _
+ _
+Directory.doesDirectoryExist "/tmp"||
+||temporary directory|| || || || ||
+||||||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
+||~ ||~ ocaml||~ f#||~ scala||~ haskell||
+||[#command-line-arg command line arguments]||for i = 0 to Array.length Sys.argv - 1 do _
+@<&nbsp;&nbsp;>@print_endline i Sys.argv.(i) _
+done|| ||object Test { _
+@<&nbsp;&nbsp;>@def main(args: Array[String]) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@for (arg <- args) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@println(arg) _
+@<&nbsp;&nbsp;>@} _
+}||import System _
+ _
+printArgs args = do _
+@<&nbsp;&nbsp;>@if length args == 0 _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@then return () _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@else do _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@putStrLn (head args) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@printArgs (tail args) _
+main = do _
+@<&nbsp;&nbsp;>@a <- getArgs _
+@<&nbsp;&nbsp;>@printArgs a||
+||[[# program-name]][#program-name-note program name] _
+@<&nbsp;>@|| || || ||import System _
+ _
+s <-  getProgName||
+||[[# getopt]][#getopt-note getopt]|| || || || ||
+||[[# env-var]][#env-var-note get and set environment variable] _
+@<&nbsp;>@||open Unix _
+ _
+s = getenv "HOME" _
+putenv "PATH" "/bin"|| || ||import System.Posix.Env _
+ _
+s <- getEnv "HOME" _
+putEnv "PATH=/bin"||
+||[[# pid]][#pid-note get pid, parent pid]||open Unix _
+ _
+let pid = getpid() _
+let ppid = getppid()|| || ||import System.Posix.Process _
+ _
+pid <- getProcessID _
+ppid <- getParentProcessID||
+||[[# user-id-name]][#user-id-name-note get user id and name]||let uid = getuid() _
+let username = _
+@<&nbsp;&nbsp;>@(getpwuid (getuid())).pw_name|| || ||import System.Posix.User _
+ _
+uid <- getRealUserID _
+username <- getLoginName||
+||[[# exit]][#exit-note exit] _
+@<&nbsp;>@||exit 0 _
+ _
+exit 1|| || ||import System.Exit _
+ _
+exitWith ExitSuccess _
+ _
+##gray|//to return nonzero status://## _
+exitWith (ExitFailure 1)||
+||[[# signal-handler]][#signal-handler-note set signal handler] _
+@<&nbsp;>@|| || || || ||
+||[[# external-cmd]][#external-cmd-note external command] _
+@<&nbsp;>@|| || || ||import System.Cmd _
+ _
+rawSystem "ls" ["-l", "/tmp"]||
+||[[# escaped-external-cmd]][#escaped-external-cmd-note escaped external command] _
+@<&nbsp;>@|| || || || ||
+||[[# backticks]][#backticks-note backticks] _
+@<&nbsp;>@|| || || || ||
+||||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
+||~ ||~ ocaml||~ f#||~ scala||~ haskell||
+||[#namespace-example namespace example]|| || ||##gray|//Baz.scala//## _
+package Foo.Bar; _
+ _
+class Baz { _
+@<&nbsp;&nbsp;>@def say() { println("hello"); } _
+} _
+ _
+##gray|//Main.scala//## _
+import Foo.Bar.Baz; _
+ _
+object Main { _
+@<&nbsp;&nbsp;>@def main(args : Array[String]) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@val baz = new Baz; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@baz.say(); _
+@<&nbsp;&nbsp;>@} _
+} _
+ _
+##gray|//to compile and run//## _
+$ scalac Baz.scala _
+$ scalac Main.scala _
+$ scala Main _
+hello||##gray|//Foo/Bar.hs//## _
+module Foo.Bar where _
+@<&nbsp;&nbsp;>@data Baz = Baz _
+@<&nbsp;&nbsp;>@say Baz = putStrLn "hello" _
+ _
+##gray|//Main.hs//## _
+module Main where _
+import Foo.Bar _
+baz = Baz _
+main = say baz _
+ _
+##gray|//to compile and run//## _
+$ ghc -c Foo/Bar.hs _
+$ ghc Main.hs _
+$ ./Main _
+hello||
+||[#namespaces namespaces]|| || || ||values, constructors, type variables, type constructors, type classes, modules||
+||[#file-name file name restrictions]||##gray|//module// Foo.Bar //must be in// Foo.ml##|| ||##gray|//none//##||##gray|//module// Foo.Bar //must be in// Foo/Bar.hs##||
+||[#import namespace]||open Graphics;;|| || ||import Data.Bytestring||
+||[#namespace-creation namespace creation]||##gray|//put code in file// MODULE_NAME//.ml//##|| || || ||
+||[#namespace-alias namespace alias]||module Gr = Graphics;;|| || ||import qualified Data.Bytestring as B||
+||[#namespace-separator namespace separator]||.|| || ||.||
+||[#subnamespace subnamespace]||##gray|//in A.ml://## _
+module B = _
+sig _
+@<&nbsp;&nbsp;>@val display_instruction : unit -> unit _
+end = _
+struct _
+@<&nbsp;&nbsp;>@let msg = "attack" _
+@<&nbsp;&nbsp;>@let display_instruction () = print_endline msg _
+end _
+##gray|//in client source://## _
+A.B.display_instruction;;|| || || ||
+||[[# pkg-manager-setup]][#pkg-manager-setup-note package manager setup]||##gray|//do this once://## _
+$ opam init _
+ _
+##gray|//for each shell session://## _
+$ eval $(opam config env)|| || || ||
+||[[# pkg-manager]][#pkg-manager-note package manager] _
+##gray|//search; install; list installed//##||$ opam search utop _
+$ opam install utop _
+$ opam list @@--@@installed|| || ||$ cabal list parsec _
+$ cabal install parsec _
+$ cabal list @@--@@installed||
+||[[# pkg-compile]][#pkg-compile-note compile app using package]|| || || || ||
+||||||||||~ [[# user-defined-types]][#user-defined-types-note user-defined types]||
+||~ ||~ ocaml||~ f#||~ scala||~ haskell||
+||[[# type-synonym]][#type-synonym-note type synonym] _
+@<&nbsp;>@||type name = string;;||type name = string||type Name = String||type Name = String||
+||[[# sum-type]][#sum-type-note sum type]||type color = Red | Green | Blue;; _
+ _
+let col = Red;; _
+ _
+##gray|(* evaluates to true: *)## _
+col < Green;;||type color = Red | Green | Blue _
+ _
+let col = Red _
+ _
+##gray|@@//@@ evaluates to true:## _
+col < Green||abstract class Color _
+ _
+case object Red extends Color _
+case object Blue extends Color _
+case object Green extends Color _
+ _
+val col = Red _
+ _
+##gray|@@//@@ this won't compile:## _
+col < Green||data Color = Red | Green | Blue _
+ _
+col = Red _
+ _
+##gray|@@--@@ this won't compile:## _
+col < Green||
+||tuple product type with one field||type special_int = SpecialInt of int;; _
+ _
+let n = SpecialInt 7;;||type special_int = SpecialInt of int _
+ _
+let n = SpecialInt 7||class SpecialInt(x: Int) _
+ _
+val n = new SpecialInt(7)||data SpecialIntType = SpecialInt Integer _
+ _
+n = SpecialInt 7||
+||tuple product type with two fields||type int_pair = IntPair of int * int;; _
+ _
+let p = IntPair (7, 11);;||type int_pair = IntPair of int * int _
+ _
+let p = IntPair (7, 11)||class IntPair(a: Int, b: Int) _
+ _
+val p = new IntPair(7, 11)||data IntPairType = IntPair Integer Integer _
+ _
+p = IntPair 7 11||
+||record product type||type customer = { _
+@<&nbsp;&nbsp;>@id: int; _
+@<&nbsp;&nbsp;>@name: string; _
+@<&nbsp;&nbsp;>@address: string _
+};;||type customer = { _
+@<&nbsp;&nbsp;>@id: int; _
+@<&nbsp;&nbsp;>@name: string; _
+@<&nbsp;&nbsp;>@address: string _
+}||case class Customer( _
+@<&nbsp;&nbsp;>@id: Int, _
+@<&nbsp;&nbsp;>@name: String, _
+@<&nbsp;&nbsp;>@address: String _
+)||data CustomerType = Customer { _
+@<&nbsp;&nbsp;>@customerId :: Integer, _
+@<&nbsp;&nbsp;>@name :: String, _
+@<&nbsp;&nbsp;>@address :: String _
+}||
+||record product type literal||let cust = { _
+@<&nbsp;&nbsp;>@id=7; _
+@<&nbsp;&nbsp;>@name="John"; _
+@<&nbsp;&nbsp;>@address="Topeka, KS" _
+};;||{id=7; name="John"; address="Topeka, KS"}||Customer(7,"John","Topeka, KS") _
+ _
+Customer(id=7, name="John", address="Topeka, KS")||Customer { _
+@<&nbsp;&nbsp;>@customerId=7, _
+@<&nbsp;&nbsp;>@name="John", _
+@<&nbsp;&nbsp;>@address="Topeka, KS" }||
+||[[# generic-type]][#generic-type-note generic type]||type ('a, 'b) twosome = _
+@<&nbsp;&nbsp;>@Twosome of 'a * 'b;; _
+ _
+let p = Twosome ("pi", 3.14);;||type ('a, 'b) twosome = _
+@<&nbsp;&nbsp;>@Twosome of 'a * 'b _
+ _
+let p = Twosome ("pi", 3.14)||class Twosome[A, B](a: A, b: B) _
+ _
+val p = new Twosome("pi", 3.14)||data TwosomeType a b = Twosome a b _
+ _
+p = Twosome ("pi", 3.14)||
+||[#recursive-type recursive type]||type binary_tree = _
+@<&nbsp;&nbsp;>@| Leaf of int _
+@<&nbsp;&nbsp;>@| Tree of binary_tree * binary_tree;;||type binary_tree = _
+@<&nbsp;&nbsp;>@| Leaf of int _
+@<&nbsp;&nbsp;>@| Tree of binary_tree * binary_tree||abstract class BinaryTree _
+case class Tree(left: BinaryTree, right: BinaryTree) extends BinaryTree _
+case class Leaf(x: Int) extends BinaryTree||data BinaryTree = Leaf Integer | Tree BinaryTree BinaryTree||
+||pattern match sum type||let col = Red;; _
+ _
+let s = match col with _
+@<&nbsp;&nbsp;>@| Red -> "red" _
+@<&nbsp;&nbsp;>@| Blue -> "blue" _
+@<&nbsp;&nbsp;>@| Green -> "green";;|| ||val c:Color = Red; _
+c match { case Red => "red"; case Green => "green"; case Blue => "blue" }||c = Red _
+case c of Red -> "red" _
+@<&nbsp;&nbsp;>@Green -> "green" _
+@<&nbsp;&nbsp;>@Blue -> "blue"||
+||pattern match product type|| || || || ||
+||[#match-guard pattern match guard]||match i with j when i < 0 -> -j | j -> j;;|| ||match { case i: Int if i < 0 => - i; case i: Int => i }||##gray|//none, use if or piecewise function definition//##||
+||[#match-catchall pattern match catchall]||let to_s c = match c with Red -> "red" | _ -> "not red";; _
+to_s Green;;|| ||val c : Color = Green _
+c match { case Red => "red"; case _ => "not red" }||c = Green _
+case c of Red -> "red"; _ -> "not red"||
+||||||||||~ [[# objects]][#objects-note objects]||
+||~ ||~ ocaml||~ f#||~ scala||~ haskell||
+||[#class-definition class definition]||class counter = object _
+@<&nbsp;&nbsp;>@val mutable n = 0 _
+@<&nbsp;&nbsp;>@method incr = n <- n+1 _
+@<&nbsp;&nbsp;>@method get = n _
+end;;|| ||class Counter { _
+@<&nbsp;&nbsp;>@private var n = 0 _
+@<&nbsp;&nbsp;>@def incr(): Unit = { n = n+1 } _
+@<&nbsp;&nbsp;>@def get(): Int = { n } _
+}|| ||
+||[#object-creation object creation]||let c = new counter;;|| ||val c = new Counter|| ||
+||[#method-invocation method invocation]||c#incr;; _
+c#get;;|| ||c.incr _
+c.get|| ||
+||[#field-access field access]||##gray|//none//##|| || || ||
+||||||||||~ [[# polymorphism]][#polymorphism-note polymorphism]||
+||~ ||~ ocaml||~ f#||~ scala||~ haskell||
+||overload function|| || || || ||
+||[#inheritance inheritance]|| || || || ||
+||||||||||~ [[# net-web]][#net-web-note net and web]||
+||~ ||~ ocaml||~ f#||~ scala||~ haskell||
+||||||||||~ [[# unit-tests]][#unit-tests-note unit test]||
+||~ ||~ ocaml||~ f#||~ scala||~ haskell||
+||||||||||~ [[# debugging-profiling]][#debugging-profiling-note debugging and profiling]||
+||~ ||~ ocaml||~ f#||~ scala||~ haskell||
+||||||||||~ [[# repl]][#repl-note repl]||
+||~ ||~ ocaml||~ f#||~ scala||~ haskell||
+||[#invoke-repl invoke repl]||$ ocaml _
+ _
+##gray|//Use this if you want history://## _
+$ rlwrap ocaml _
+ _
+##gray|//The utop toplevel, which can be installed via opam, also provides history.//##||##gray|//Mono://## _
+$ fsharpi _
+ _
+##gray|//In visual studio, highlight code and press ALT+ENTER.//##||$ scala||$ ghci||
+||[#repl-limitations repl limitations]|| || || ||##gray|//Must use let to define values and functions; when defining functions with multiple equations the equations must be separated by semicolons; the clauses of case/of statements must be separated by semicolons; it is not possible to define data types.//##||
+||[#repl-last-value repl last value]||##gray|//none//##||it||res0, res1, ...||it||
+||[#help help]||##gray|//none//##|| ||:help||:?||
+||[#quit quit]||^D||#quit;;|| || ||
+||[#inspect-type inspect type]||##gray|//repl displays the type of any expression entered//##|| ||##gray|//repl displays the type of any expression entered//##||let a = 3 _
+:type a||
+||[#inspect-namespace inspect namespace]||module Unix = Unix;;|| || || ||
+||[#load-source load source file]||#use "hello";;|| || ||:edit hello.hs _
+:load hello||
+||[#load-pkg-note load package]||##gray|//consider adding to// .ocamlinit:## _
+#use "topfind";; _
+# thread;; _
+#require "core";; _
+open Core.Std;;|| || || ||
+||[#search-path search path]||#directory "libdir";;|| || || ||
+||[#search-path-command-line set search path on command line]||ocaml -Ilibdir|| || || ||
+||~ ||~ ##EFEFEF|@@_______________________________________________@@##||~ ##EFEFEF|@@_______________________________________________@@##||~ ##EFEFEF|@@_______________________________________________@@##||~ ##EFEFEF|@@_______________________________________________@@##||
+
+
+
+[[# version-used-note]]
+++ [#version-used version used]
+
+Versions used to test the code samples in this sheet.
+
+[[# version-note]]
+++ [#version show version]
+
+How to get the version.
+
+[[# grammar-invocation-note]]
+++ [#grammar-invocation Grammar and Invocation]
+
+[[# interpreter-note]]
+++ [#interpreter interpreter]
+
+How to run the interpreter on a file of source code.
+
+**scala:**
+
+Scala can be run "Perl style" like this:
+
+[[code]]
+scala foo.scala
+[[/code]]
+
+or "Java style" like this:
+
+[[code]]
+scala Foo
+[[/code]]
+
+When the code is run "Java style", the code to be executed must be in the //main// method of an object with the same name as the file.  When the code is run "Perl style" the statements o be executed should be at the top level outside of any object, class, or method.
+
+[[# shebang-note]]
+++ [#shebang shebang]
+
+How to use the interpreter in a shebang.
+
+**scala**
+
+To use scala as a shebang, it is necessary to terminate the shell script portion of the script with !#
+
+[[code]]
+#!/bin/sh
+exec scala $0 $@
+!#
+println("hello world")
+[[/code]]
+
+[[# bytecode-compiler-interpreter-note]]
+++ [#bytecode-compiler-interpreter bytecode compiler and interpreter]
+
+How to compile source to bytecode and run it.
+
+**ocaml:**
+
+It is not necessary to invoke //ocamlrun// on the bytecode; the bytecode can be executed directly because the bytecode compiler puts a shebang invocation at the top of the file.
+
+[[# native-compiler-note]]
+++ [#native-compiler native compiler]
+
+How to compile source to native code and run it.
+
+[[# library-always-imported-note]]
+++ [#library-always-imported library which is always imported]
+
+The name of the library containing the types and functions which are always available.
+
+[[# statement-terminator-note]]
+++ [#statement-terminator statement terminator]
+
+**ocaml:**
+
+;; is the ocaml statement separator.  It is not necessary at the end of the line if the following line starts with an //open// or //let// keyword or at the end of the file.
+
+**scala:**
+
+Scala infers the existence of a semicolon at the end of a newline terminated line if none of the following conditions hold:
+
+* the line ends with a infix operator, including a period
+* the following line begins with a word that is not legal at the start of a statement
+* the line ends inside parens or square brackets, neither of which can contain multiple statements
+
+[[# blocks-note]]
+++ [#blocks blocks]
+
+How to define a block of statements.
+
+[[# end-of-line-comment-note]]
+++ [#end-of-line-comment end-of-line comment]
+
+A comment terminated by the end of the line.
+
+[[# multiple-line-comment-note]]
+++ [#multiple-line-comment multiple line comment]
+
+A comment with a start and end delimiter which can span multiple lines.
+
+**ocaml:**
+
+(* *) style comments can be nested.
+
+[[# var-expr-note]]
++ [#var-expr Variables and Expressions]
+
+[[# value-note]]
+++ [#value write-once variable]
+
+How to define a variable which can be set at run-time but cannot be modified after it is set.
+
+[[# variable-note]]
+++ [#variable modifiable variable]
+
+How to define a modifiable variable.
+
+[[# unit-note]]
+++ [#unit unit type and value]
+
+The notation for the unit type and the unit value.   In all languages the notation for the unit value is the same as the notation for an empty tuple.
+
+The unit value is a common return value of functions which perform side effects.
+
+[[# conditional-expression-note]]
+++ [#conditional-expression conditional expression]
+
+The syntax for a conditional expression.
+
+[[# branch-type-mismatch-note]]
+++ [#branch-type-mismatch branch type mismatch]
+
+What happens if the two branches of a conditional expression don't have the same type.
+
+[[# null-note]]
+++ [#null null]
+
+A value used somewhat paradoxically to indicate the absence of a value.
+
+Types which can contain a null value are called //option types//.
+
+[[# nullable-type-note]]
+++ [#nullable-type nullable type]
+
+[[# null-test-note]]
+++ [#null-test null test]
+
+[[# coalesce-note]]
+++ [#coalesce coalesce]
+
+[[# expr-type-decl-note]]
+++ [#expr-type-decl expression type declaration]
+
+How to explicitly declare the type of an expression.
+
+[[# let-in-note]]
+++ [#let-in let ... in ...]
+
+How to define local variables.
+
+**ocaml:**
+
+OCaml uses //let// to define a value and //let// with //in// to define values in a local scope.  OCaml follows the usage of the original dialect of ML in this respect.
+
+OCaml can define multiple values with a single //let// and //in// by conjoining the definitions with //and//.  The definitions are performed in parallel, so later definitions cannot use the earlier definitions:
+
+[[code]]
+let z = 
+let x = 3
+and y = 4 in
+x * y;;
+[[/code]]
+
+**scala:**
+
+Blocks can be used in Scala exclusively to define scope.  Furthermore blocks are expressions and evaluate to their last statement.
+
+**haskell:**
+
+Haskell uses //let// with //in// to define local scope.  In addition, //ghci// uses //let// without //in// to define values.
+
+[[# where-note]]
+++ [#where where]
+
+How to define local variables with definitions after the expression that uses them.
+
+[[# arithmetic-logic-note]]
++ [#arithmetic-logic Arithmetic and Logic]
+
+[[# boolean-type-note]]
+++ [#boolean-type boolean type]
+
+The type for boolean values.
+
+[[# true-false-note]]
+++ [#true-false true and false]
+
+The literals for true and false.
+
+
+[[# logical-op-note]]
+++ [#logical-op logical operators]
+
+The logical operators: //and//, //or//, and //not//.
+
+[[# relational-op-note]]
+++ [#relational-op relational operators]
+
+Operators for performing comparisons.
+
+[[# min-max-note]]
+++ [#min-max min and max]
+
+The binary functions //min// and //max//.
+
+[[# int-type-note]]
+++ [#int-type integer types]
+
+The most commonly used numeric types.
+
+**scala:**
+
+Arithmetic operators can be used on values of type //Char//, which then behaves as a 16 bit unsigned integer.  Integer literals are of type //Int// unless suffixed with //L//:
+
+[[code]]
+scala> 9223372036854775807L
+res24: Long = 9223372036854775807
+
+scala> 9223372036854775807 
+<console>:1: error: integer number too large
+[[/code]]
+
+[[# int-literal-note]]
+++ [#int-literal integer literal]
+
+Integer literals.
+
+**haskell:**
+
+Haskell does not have negative integer literal syntax.  The negative sign parses as a unary prefix operator.  It may be necessary to put parens around a negative integer constant:
+
+[[code]]
+-- syntax error:
+1 + -3
+
+-- ok:
+1 + (-3)
+[[/code]]
+
+[[# float-type-note]]
+++ [#float-type float type]
+
+Floating point types.
+
+[[# int-op-note]]
+++ [#int-op integer operators]
+
+The integer operators. 
+
+[[# float-op-note]]
+++ [#float-op float operators]
+
+The floating point operators.  Note that in the OCaml the floating point operators are different from the integer operators.
+
+[[# add-int-float-note]]
+++ [#add-int-float add integer and float]
+
+How to add an integer and a float.
+
+**ocaml:**
+
+OCaml also can convert a integer to float with //float_of_int//.
+
+[[# int-div-note]]
+++ [#int-div integer division]
+
+How to find the quotient of two integers; how to find the remainder of two integers.
+
+[[# int-div-zero-note]]
+++ [#int-div-zero integer division by zero]
+
+The result of dividing an integer by zero.
+
+[[# float-div-note]]
+++ [#float-div float division]
+
+[[# float-div-zero-note]]
+++ [#float-div-zero float division by zero]
+
+The result of division by zero.
+
+[[# float-exponentiation-note]]
+++ [#float-exponentiation float exponentiation]
+
+How to exponentiate a float.
+
+[[# float-func-note]]
+++ [#float-func float functions]
+
+The square root function; the natural exponential and natural logarithm functions; the trigonometric functions.
+
+[[# arith-truncation-note]]
+++ [#arith-truncation arithmetic truncation]
+
+Ways to convert a float to a nearby integer.
+
+**ocaml:**
+
+This definition of //round// handles negative numbers correctly:
+
+[[code]]
+let round x = int_of_float (floor (x +. 0.5))
+[[/code]]
+
+[[# power-note]]
+++ [#power power]
+
+How to perform exponentiation.
+
+**ocaml:**
+
+How to define a function which computes the power of an integer:
+
+[[code]]
+let integer_exponent b e =
+  let rec aux x i =
+    if i = e then x else aux (x * b) (i + 1)
+  in
+  aux 1 0;;
+[[/code]]
+
+[[# sqrt-negative-one-note]]
+++ [#sqrt-negative-one sqrt -1]
+
+The result of taking the square root of a negative number.
+
+[[# transcendental-func-note]]
+++ [#transcendental-func transcendental functions]
+
+[[# transcendental-const-note]]
+++ [#transcendental-func transcendental constants]
+
+[[# int-overflow-note]]
+++ [#int-overflow integer overflow]
+
+What happens when expression evaluates to an integer that is larger than what can be stored.
+
+**scala:**
+
+The largest integers are available in the constants //Int.MaxValue// and //Long.MaxValue//.
+
+[[# float-overflow-note]]
+++ [#float-overflow float overflow]
+
+The result of float overflow.
+
+Ocaml has literals for infinity and negative infinity, but Scala and Haskell do not.
+
+[[# rational-type-note]]
+++ [#rational-type rational type]
+
+[[# rational-construction-note]]
+++ [#rational-construction rational construction]
+
+[[# rational-decomposition-note]]
+++ [#rational-decomposition rational decomposition]
+
+[[# complex-type-note]]
+++ [#complex-type complex type]
+
+[[# complex-construction-note]]
+++ [#complex-construction complex construction]
+
+[[# complex-decomposition-note]]
+++ [#complex-decomposition complex decomposition]
+
+[[# random-num-note]]
+++ [#random-num random number]
+
+How to generate a uniformly distributed random integer; how to generate a uniformly distributed float; how to generate a normally distributed float.
+
+**scala:**
+
+One can also use {{java.util.Random}}, which does not have to be imported.
+
+[[# random-seed-note]]
+++ [#random-seed random seed]
+
+How to set a random seed.  How to get and restore the state of a random number generator.
+
+**scala:**
+
+It looks like Scala 2.10 has modified the {{Random}} constructor so that it will accept an {{Int}} or {{Long}} as a seed argument.
+
+[[# bit-op-note]]
+++ [#bit-op bit operators]
+
+The bit operators.
+
+**ocaml:**
+
+Also has operators which perform arithmetic shift: //asl// and //asr//.  When performing an arithmetic shift, the sign of the integer is preserved.
+
+**haskell:**
+
+Haskell does not assign a default size or type to numeric literals.  Hence numeric literals must have their type declared for bit operations to be performed on them.
+
+[[# binary-octal-hex-literals-note]]
+++ [#binary-octal-hex-literals binary, octal, and hex literals]
+
+[[# radix-note]]
+++ [#radix radix]
+
+[[# strings-note]]
++ [#strings Strings]
+
+[[# str-type-note]]
+++ [#str-type string type]
+
+The types for strings and characters.
+
+[[# str-literal-note]]
+++ [#str-literal string literal]
+
+The syntax for a string literal.
+
+[[# newline-in-str-literal-note]]
+++ [#newline-in-str-literal newline in literal]
+
+[[# str-esc-note]]
+++ [#str-esc literal escapes]
+
+**scala:**
+
+Unicode escapes might not work when scala is installed on a Mac because the encoding is set by default to MacRoman:
+
+[[code]]
+scala> System.getProperty("file.encoding")
+res0: java.lang.String = MacRoman
+[[/code]]
+
+This can be fixed by passing the following flag to //java// in the //scala// shell script:
+
+[[code]]
+-Dfile.encoding=UTF-8
+[[/code]]
+
+[[# format-str-note]]
+++ [#format-str format string]
+
+[[# str-concat-note]]
+++ [#str-concat concatenate]
+
+How to concatenate strings.
+
+**f#:**
+
+F# supports (with a warning) the ^ operator for compatibility with OCaml.
+
+[[# str-replicate-note]]
+++ [#str-replicate replicate]
+
+[[# translate-case-note]]
+++ [#translate-case translate case]
+
+How to convert a string to uppercase; how to convert a string to lowercase; how to capitalize the first character.
+
+[[# capitalize-note]]
+++ [#capitalize capitalize]
+
+[[# trim-note]]
+++ [#trim trim]
+
+[[# pad-note]]
+++ [#pad pad]
+
+[[# num-to-str-note]]
+++ [#num-to-str number to string]
+
+[[# str-to-num-note]]
+++ [#str-to-num string to number]
+
+How to parse numeric types from string; how to convert numeric types to strings.
+
+**ocaml:**
+
+To convert a string to a float:
+
+[[code]]
+float_of_string "3.14"
+[[/code]]
+
+**scala:**
+
+The + operator will convert a numeric type to a string if the other operand is a string.  Hence the following works:
+
+[[code]]
+"value: " + 8
+[[/code]]
+
+[[# join-note]]
+++ [#join join]
+
+[[# split-note]]
+++ [#split split]
+
+[[# char-type-note]]
+++ [#char-type character type]
+
+[[# char-literal-note]]
+++ [#char-literal character literal]
+
+[[# str-len-note]]
+++ [#str-len length]
+
+How to get the length of a string.
+
+[[# index-substr-note]]
+++ [#index-substr index of substring]
+
+How to get the index of a substring.
+
+[[# substr-note]]
+++ [#substr extract substring]
+
+How to extract a substring.
+
+[[# extract-char-note]]
+++ [#extract-char extract character]
+
+How to get the character at a specified index of a string.
+
+The syntax for a character literal.
+
+[[# chr-ord-note]]
+++ [#chr-ord chr and ord]
+
+How to convert a character to its ASCII code or Unicode point; how to convert an ASCII code or Unicode point to a character. 
+
+[[# dates-time-note]]
++ [#dates-time Dates and Time]
+
+[[# arrays-note]]
++ [#arrays Arrays]
+
+[[# lists-note]]
++ [#lists Lists]
+
+[[# list-literal-note]]
+++ list literal
+
+[[# list-element]]
+++ list element element
+
+[[# list-head]]
+++ list head
+
+**f#:**
+
+Supports //List.hd// (with a warning) to be compatible with OCaml.
+
+[[# list-tail]]
+++ list-tail
+
+Supports //List.tl// (with a warning) to be compatible with OCaml.
+
+[[# tuples-note]]
++ [#tuples Tuples]
+
+[[# tuple]]
+++ tuple
+
+[[# tuple-element]]
+++ tuple element
+
+[[# functions-note]]
++ [#functions Functions]
+
+[[# function]]
+++ function
+
+How to define a function.
+
+**scala**
+
+Recursive functions must have their return type declared because the Scala compiler cannot infer it.
+
+[[# lambda]]
+++ lambda
+
+How to define an anonymous function.
+
+[[# piecewise-defined-function]]
+++ piecewise defined function
+
+How to define a function with multiple equations and matching on the arguments.
+
+[[# recursive-function]]
+++ recursive function
+
+How to define a recursive function.
+
+[[# mutually-recursive-functions]]
+++ mutually recursive functions
+
+How to define two functions which call each other.  Mutual recursion can be eliminated by inlining the second function inside the first function.  The first function is then recursive and can be defined independently of the second function.
+
+[[# named-parameter]]
+++ named parameter
+
+How to define and invoke a function with named parameters.
+
+**ocaml:**
+
+Multiple parameters can share a name.  In the function definition colons are used to rename the parameters for use in the function body.
+
+[[code]]
+let add_xs ~x:x1 ~x:x2 = x1 + x2;;
+add_xs ~x:3 ~x:7;;
+[[/code]]
+
+[[# default-value]]
+++ named parameter default value
+
+How to make named parameters optional by providing a default value in the definition.
+
+**ocaml:**
+
+For a named parameter to be optional, it must be following by an unnamed parameter in the definition.  This permits the parser to unambiguously determine if the optional parameter has been provided or not.  If the optional parameter is not followed by an unnamed parameter in the definition, then named parameter is not optional.  If the function is invoked without the parameter, it returns a curried version of the function which expects the missing named parameter as an argument.
+
+[[# infix-prefix]]
+++ infix operator in prefix position
+
+How to invoke an infix operator in prefix position.
+
+[[# function-infix]]
+++ function in infix position
+
+How to invoke a function in infix position.
+
+[[# currying]]
+++ currying
+
+How to create a curried function by providing values for some of the arguments of a function.
+
+**scala:**
+
+Functions can only be curried if they are defined with special syntax.  Functions defined with this syntax must be invoked with a pair of parens for each argument.
+
+[[# function-composition]]
+++ function composition operator
+
+An operator which takes two functions as arguments and returns a function constructed from them by composition.
+
+[[# lazy-evaluation]]
+++ lazy evaluation
+
+How to evaluate the arguments to a function in a lazy manner.
+
+Lazy evaluation is also called //call-by-name//.
+
+**ocaml:**
+
+OCaml provides the {{lazy}} function.  It is up to the caller to specify that the argument is to evaluated lazily.
+
+**scala:**
+
+Functions can be defined to evaluate their arguments lazily by putting a {{=>}} operator between the colon and the type of the parameter in the function signature.
+
+We can define {{arg1}} so that the first argument is strict and the second argument is lazy:
+
+[[code]]
+def arg1(x: Int, y: => Int): Int = x
+
+arg1(7, 1 / 0)
+[[/code]]
+
+**haskell:**
+
+Haskell evaluates arguments lazily by default.
+
+[[# strict-evaluation]]
+++ strict evaluation
+
+How to evaluate arguments before they are passed to a function.
+
+Strict evaluation is also called //call by-value//.
+
+**haskell:**
+
+The {{seq}} function evaluates its first argument and then returns the second argument.
+
+[[# execution-control-note]]
++ [#execution-control Execution Control]
+
+[[# if]]
+++ if
+
+[[# if-else-if-else]]
+++ if else-if else
+
+[[# sequencing]]
+++ sequencing
+
+[[# while]]
+++ while
+
+**ocaml:**
+
+There is no break or continue statement.  In addition to using references, it is possible to use exceptions to break out of a while loop.  
+
+[[# for]]
+++ for
+
+How to loop over a range of integers.
+
+**sml:**
+
+How to define a {{for}} loop in SML:
+
+[[code]]
+datatype for = to of int * int
+             | downto of int * int
+
+infix to downto
+
+val for =
+    fn lo to up =>
+       (fn f => let fun loop lo = if lo > up then ()
+                                  else (f lo; loop (lo+1))
+                in loop lo end)
+     | up downto lo =>
+       (fn f => let fun loop up = if up < lo then ()
+                                  else (f up; loop (up-1))
+                in loop up end)
+[[/code]]
+
+How to use the for loop:
+
+[[code]]
+for (1 to 9)
+    (fn i => print (Int.toString i))
+
+for (9 downto 1)
+    (fn i => print (Int.toString i))
+[[/code]]
+
+[[# reverse-for]]
+++ for in reverse
+
+How to iterate over a reversed range of integers.
+
+[[# list-iteration]]
+++ list iteration
+
+How to iterate over the members of a list.
+
+[[# loop]]
+++ loop
+
+An infinite loop.
+
+[[# exceptions-note]]
++ [#exceptions Exceptions]
+
+[[# raise-error]]
+++ raise error
+
+How to raise an error.
+
+[[# handle-error]]
+++ handle error
+
+How to handle an error.
+
+[[# concurrency-note]]
++ [#concurrency Concurrency]
+
+[[# file-handles-note]]
++ [#file-handles Filehandles]
+
+[[# files-note]]
++ [#files Files]
+
+[[# directories-note]]
++ [#directories Directories]
+
+[[# processes-environment-note]]
++ [#processes-environment Processes and Environment]
+
+[[# libraries-namespaces-note]]
++ [#libraries-namespaces Libraries and Namespaces]
+
+[[# namespace-example]]
+++ namespace example
+
+[[# namespaces]]
+++ namespaces
+
+[[# file-name]]
+++ file name restrictions
+
+[[# import]]
+++ import
+
+[[# namespace-creation]]
+++ namespace creation
+
+[[# namespace-alias]]
+++ namespace alias
+
+[[# namespace-separator]]
+++ namespace separator
+
+[[# subnamespace]]
+++ subnamespace
+
+[[# inspect-namespace]]
+++ inspect namespace
+
+[[# user-defined-types-note]]
++ [#user-defined-types User-Defined Types]
+
+||||||||||||||~ keywords used to define types by language||
+||~ ||~ pascal||~ c||~ c++||~ ocaml||~ scala||~ haskell||
+||type synonym||type||typedef||typedef||type||type||type||
+||sum type||type||enum ##gray|//or//## union|| ||type||abstract class||data||
+||tuple product type|| || || ||type|| ||data||
+||record product type||record||struct||struct ##gray|//or//## class||type ##gray|//...//## of||class||data||
+
+
+Examples of algebraic sum types are the enumerated type of Pascal and the enum of C.  The definition of the type lists a set of values which variables which have the type can contain.  The values are called variants.
+
+The enumerated type of Pascal and the enum of C are implemented as integers, and one can recover the underlying integer value associated with each variant.  In Pascal one uses the {{ord}} function to do this.  One can use the equality test operator to determine whether two variables hold the same variant.  One can also use the less than (<) operator to determine if a variable holds a variant which occurs earlier in the type definition list than another.
+
+An enumerated type is thus similar to defining a sequence of integer constants like this:
+
+[[code]]
+  typedef int month;
+
+  const month JANUARY = 1;
+  const month FEBRUARY = 2;
+  .
+  .
+  .
+  const month DECEMBER = 12;
+[[/code]]
+
+An enumerated type gives the compiler the ability to ensure that only variants listed in the type definition list are actually stored in variables with the enumerated type however.
+
+BETTER EXPLANATION AND MOTIVATION OF UNARY TYPES.  OTHER THAN VARIANTS: UNIT.  ARE
+UNARY TYPES USEFUL?
+
+Algebraic sum types are more general than enumerated types, because the variants are not restricted to being unary types.  By a unary type we mean a type whose variables can only contain a single value.  EXAMPLE OF SUCH AND ALGEBRAIC SUM TYPE.  Because of this generality, one cannot assume that a general algebraic sum type variant has an integer representation. Some languages nevertheless define an order on the variants.
+
+SUM TYPE: NUMBER OF VALUES IS THE SUM OF THE VALUES OF EACH OF THE VARIANTS
+
+C UNION TYPE AS ALGEBRAIC SUM TYPE
+
+Examples of algebraic product types are the record of Pascal and the struct of C.  An algebraic product type wraps several values into a single "super" value.  The components of an algebraic product type are called fields, and each has a type which constrains the values which can be stored in it.  The type of each field is normally a pre-existing type, but see the note on recursive types below.
+
+To extract a field from a product value, each field must be identified.  In the case of the Pascal and the C struct the fields are given names.  Product types can also be defined in which the fields are identified by position like a tuple.  OCaml and Haskell support both types of product type.
+
+Since OCaml and Haskell have both tuples and tuple product types, it is worthwhile to consider the differences.  One could represent represent coordinates on plane with a simple pair tuple with this type:
+
+[[code]]
+  (float, float)
+[[/code]]
+
+However, all 2-tuples in which the components are both floats are the same type. With tuple product types, we could define two distinct types:
+
+[[code]]
+  type cartesian = Cartestion of float * float;
+  type polar = Polar of float * float;
+[[/code]]
+
+The compiler will now prevent us from using cartesian coordinates in a place where polar coordinates are expected.
+
+It is also instructive to consider the difference between a type synonym and a product type with a single field.  In the former case the two types are interchangeable. Type synonyms are useful as a shorthand for a long type, such as a 10-tuple or a function type.  Functions which operate on variables of the original type will also operate on variables with the type synonym.  In fact, it should be noted that type synonyms don't create a constructor, so the constructor for the original type must be used.
+
+A product type with a single field creates a new type and provides a constructor for it which accepts the original type as an argument.  Functions which take the original type as an argument cannot be used on the new type.
+
+COMBINED ALGEBRAIC TYPES.
+
+Algebraic product types first appeared in 1966 in Algol W.  Algol W extended Algol 60 by adding a record type.  The idea was due to Niklaus Wirth and C. A. R. Hoare.  Pascal, which appeared in 1970, had both a record type and an enumerated type as already noted, and the Pascal enumerated type seems to be the first example of a type that could be called an algebraic sum type.
+
+Algebraic types first appeared in their full generality in the programming language called Hope, circa 1980.  Algebraic types were soon borrowed into ML.  Hope introduced the terms algebraic data type, product type, and sum type.  It also introduced pattern matching.
+
+PATTERN MATCHING.
+
+[[# type-synonym-note]]
+++ [#type-synonym type synonym]
+
+[[# sum-type-note]]
+++ [#sum-type sum type]
+
+[[# generic-type-note]]
+++ [#generic-type generic type]
+
+[[# recursive-type-note]]
+++ [#recursive-type recursive type]
+
+[[# objects-note]]
++ [#objects Objects]
+
+[[# polymorphism-note]]
++ [#polymorphism Polymorphism]
+
+[[# repl-note]]
++ [#repl REPL]
+
+[[# invoke-repl]]
+++ repl
+
+[[# repl-limitations]]
+++ repl limitations
+
+[[# repl-last-value]]
+++ repl last value
+
+[[# help]]
+++ help
+
+**ocaml**
+
+The OCaml top level provides [http://caml.inria.fr/pub/docs/manual-ocaml/manual023.html#toc90 these directives]:
+
+[[code]]
+#cd "DIRNAME";;
+#directory "DIRNAME";;
+#install_printer PRINTER_NAME;;
+#label BOOL;;
+#load "FILENAME";;
+#print_depth N;;
+#print_length N;;
+#quit;;
+#remove_printer PRINTER_NAME;;
+#trace FUNCTION_NAME;;
+#untrace FUNCTION_NAME;;
+#untrace_all;;
+#use "FILENAME";;
+#warnings "WARNINGS_LIST";;
+[[/code]]
+
+[[# inspect-type]]
+++ inspect type
+
+[[# load-source]]
+++ load source file
+
+[[# search-path]]
+++ search path
+
+[[# search-path-command-line]]
+++ set search path on command line
+
+[[# ocaml]]
++ OCaml
+
+[http://opam.ocamlpro.com/doc/Quick_Install.html Install OPAM in 2 minutes] ##gray|(ocamlpro.com)##
+[http://caml.inria.fr/pub/docs/manual-ocaml/index.html The Objective-Caml system] ##gray|(inria.fr)##
+[http://shop.oreilly.com/product/0636920024743.do Real World OCaml] ##gray|(oreilly.com)##
+[http://www.mpi-sws.org/~rossberg/sml-vs-ocaml.html Standard ML and Objective Caml, Side by Side]
+
+[[# fsharp]]
++ F#
+
+[http://mono-project.com/Main_Page Mono] ##gray|(mono-project.com)##
+
+[[# scala]]
++ Scala
+
+[http://www.scala-lang.org/sites/default/files/linuxsoft_archives/docu/files/ScalaReference.pdf The Scala Language Specification (pdf)]
+[http://www.scala-lang.org/docu/files/api/index.html Scala 2.7.7 API] 
+[http://java.sun.com/javase/6/docs/api/ Java 1.6 API]
+
+[[# haskell]]
++ Haskell
+
+[http://www.haskell.org/onlinereport/haskell2010/ Haskell 2010 Language Report]
+[http://www.haskell.org/ghc/docs/latest/html/libraries/index.html Haskell Hierarchical Libraries]
+[http://book.realworldhaskell.org/read/ Real World Haskell]

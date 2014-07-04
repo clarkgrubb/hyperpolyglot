@@ -1,0 +1,371 @@
+[[# top]][#coordinates coordinates] | [#paths paths] | [#shapes shapes] | [#color color] | [#text text] | [#groups groups] | [#masks-filters masks and filters]
+
+||~ ||~ [#postscript postscript]||~ [#processing processing]||~ [#svg svg]||
+||[[# hello-world]][#hello-world-note hello world]||##gray|//hello.ps://## _
+ _
+/Helvetica-Bold 20 selectfont _
+72 72 moveto (hello, world!) show||##gray|//hello.pde://## _
+ _
+size(400, 400); _
+background(255); _
+PFont f = createFont("Arial", 16, true); _
+fill(0); _
+textFont(f, 36); _
+text("hello world!", 10, 100);||##gray|//hello.html://## _
+ _
+<##purple|!DOCTYPE## html> _
+<##mediumblue|html##> _
+@<&nbsp;&nbsp;>@<##mediumblue|body##> _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@<##mediumblue|svg## ##peru|width##=##maroon|"400"## ##peru|height##=##maroon|"400"##> _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@<##mediumblue|text## ##peru|x##=##maroon|"100"## ##peru|y##=##maroon|"100"##> _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@hello world! _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@<##mediumblue|/text##> _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@<##mediumblue|/svg##> _
+@<&nbsp;&nbsp;>@<##mediumblue|/body##> _
+<##mediumblue|/html##>||
+||[[# comment]][#comment-note comment]||##gray|% comment## _
+##gray|% another comment##||##gray|@@//@@ comment## _
+##gray|@@//@@ another comment## _
+ _
+##gray|/* comment _
+@<&nbsp;&nbsp;>@@<&nbsp;>@another comment */##||##gray|@@<!--@@ comment _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@another comment @@-->@@##||
+||[[# deub-msg]][#debug-msg-note debug message] _
+@<&nbsp;>@||##gray|//none//##||println("DEBUG: height: " + height);||##gray|//none//##||
+||||||||~ [[# coordinates]][#coordinates-note coordinates]||
+||~ ||~ [#postscript postscript]||~ [#processing processing]||~ [#svg svg]||
+||[[# origin]][#origin-note origin]||##gray|//lower left//##||##gray|//upper left//##||##gray|//upper left//##||
+||[[# unit]][#unit unit]||##gray|//72 units per inch; i.e. each unit is the customary size of a point in the English-speaking world//##||##gray|//one pixel per unit//##||##gray|//one pixel per unit//##||
+||[[# coordinate-system]][#coordinate-system-note coordinate system]||##gray|% move origin 72 units up and to the right:## _
+72 72 translate _
+ _
+##gray|% increase size of unit 72-fold:## _
+72 72 scale _
+ _
+##gray|% rotate coordinates 90 degrees counterclockwise:## _
+90 rotate||##gray|@@//@@ move origin to (100, 200):## _
+translate(100, 200); _
+ _
+##gray|@@//@@ double x-scale and triple y-scale:## _
+scale(2, 3); _
+ _
+##gray|@@//@@ rotate coordinates 90 degrees _
+@@//@@ clockwise:## _
+rotate(PI/2);||<g transform="translate(50, 100)"> _
+@<&nbsp;&nbsp;>@##gray|<!@@--@@ origin at (50, 100) @@--@@>## _
+</g> _
+ _
+<g transform="rotate(30)"> _
+@<&nbsp;&nbsp;>@##gray|<!@@--@@ rotate coordinates 30 degrees _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@clockwise @@--@@>## _
+</g> _
+ _
+<g transform="scale(2, 3)"> _
+@<&nbsp;&nbsp;>@##gray|<!@@--@@ double x-scale and triple _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@y-scale @@--@@>## _
+</g>||
+||[[# canvas-size]][#canvas-size-note canvas size]||##gray|% doesn't work on all devices:## _
+currentpagedevice /PageSize get aload pop _
+ _
+##gray|% canvas size determined by device##||width _
+height _
+ _
+##gray|@@//@@ set width and height:## _
+size(400, 400)||<svg height="400px" width="400px"></svg>||
+||||||||~ [[# paths]][#paths-note paths]||
+||~ ||~ [#postscript postscript]||~ [#processing processing]||~ [#svg svg]||
+||[[# line]][#line-note line]||newpath _
+15 25 moveto _
+70 90 lineto _
+stroke _
+ _
+##gray|% rlineto uses relative coordinates: ## _
+newpath _
+15 25 moveto _
+55 65 rlineto _
+stroke||##gray|@@//@@ x1, y1, x2, y2:## _
+line(15, 25, 70, 90);||<line x1="40" y1="20" x2="80" y2="20" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@style="stroke: black;"/> _
+ _
+<path d="M 40 20 L 80 20" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@stroke="black" fill="none"/> _
+ _
+##gray|<!@@--@@ use relative coordinates for 2nd point: @@--@@>## _
+<path d="M 40 20 l 40 0" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@stroke="black" fill="none"/>||
+||[[# stroke-width]][#stroke-width-note stroke width]||2 setlinewidth _
+newpath _
+15 25 moveto _
+70 90 lineto _
+stroke||strokeWeight(2); _
+line(15, 25, 70, 90);||<line x1="40" y1="20" x2="80" y2="20" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@style="stroke: black;" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@stroke-width="4"/>||
+||[[# line-cap]][#line-cap-note line caps] _
+##gray|//butt, round, square//##||0 setlinecap _
+1 setlinecap _
+2 setlinecap||strokeCap(SQUARE); _
+strokeCap(ROUND); _
+strokeCap(PROJECT);||<line x1="10" y1="15" x2="50" y2="15" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@style="stroke-linecap: butt;"/> _
+ _
+<line x1="10" y1="45" x2="50" y2="45" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@style="stroke-linecap: round;"/> _
+ _
+<line x1="10" y1="75" x2="50" y2="75" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@style="stroke-linecap: square;"/> ||
+||[[# dashed-line]][#dashed-line-note dashed line]|| || || ||
+||[[# polyline]][#polyline-note polyline]||newpath _
+10 10 moveto _
+20 20 lineto _
+30 10 lineto _
+40 20 lineto _
+stroke||line(10, 10, 20, 20); _
+line(20, 20, 30, 10); _
+line(30, 10, 40, 20);||<polyline points="10,10,20,20,30,10,40,20" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@stroke="black" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@fill="none"/> _
+ _
+<path d="M 10 10 L 20 20 30 10 40 20" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@stroke="black" fill="none"/>||
+||[[# line-join]][#line-join-note line join] _
+##gray|//miter, round, bevel//##||0 setlinejoin _
+1 setlinejoin _
+2 setlinejoin||strokeJoin(MITER); _
+strokeJoin(ROUND); _
+strokeJoin(BEVEL);|| ||
+||[[# miter-limit]][#miter-limit-note miter limit]||2 setmiterlimit|| || ||
+||[[# circular-arc]][#circular-arc-note circular arc]||##gray|% creates half-circular arc centered at _
+% (144,144) with radius 40:## _
+newpath _
+144 144 40 90 270 arc _
+stroke||noFill(); _
+##gray|@@//@@ circular when 3rd and 4th args _
+@@//@@ are the same:## _
+arc(144, 144, 40, 40, HALF_PI, 3*HALF_PI)||<path d="M 144 104 A 40 40 0 1 1 144 184" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@stroke="black" fill="none"/>||
+||[[# elliptic-arc]][#elliptic-arc-note elliptic arc]||gsave _
+2 1 scale _
+newpath _
+144 144 40 90 270 arc _
+stroke _
+grestore||noFill(); _
+arc(144, 144, 80, 40, HALF_PI, 3*HALF_PI);||<path d="M 144 104 A 80 40 0 1 1 144 184" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@stroke="black" fill="none"/>||
+||[[# quadratic-bezier]][#quadratic-bezier-note quadratic bezier]||##gray|//None.  If the control points of a quadratic bezier are Q,,0,,, Q,,1,,, and Q,,2,,, the equivalent cubic bezier has control points C,,0,, = Q,,0,,, C,,1,, = Q,,0,, + 2Q,,1,,, C,,2,, = 2Q,,1,, + Q,,2,,, and C,,3,, = Q,,2,,.//##||##gray|//none//##||<path d="M 144 144 Q 288 216 144 288" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@stroke="black" fill="none"/>||
+||[[# cubic-bezier]][#cubic-bezier-note cubic bezier]||##gray|% control points are (144,144), (288,144), _
+% (288,288), and (144,288):## _
+newpath _
+144 144 moveto _
+288 144 288 288 144 288 curveto _
+stroke||noFill(); _
+bezier(144, 144, 288, 144, 288, 288, 144, 288);|| <path d="M 144 144 C 288 144 288 288 144 288" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@stroke="black" fill="none"/>||
+||||||||~ [[# shapes]][#shapes-note shapes]||
+||~ ||~ [#postscript postscript]||~ [#processing processing]||~ [#svg svg]||
+||[[# polygon]][#polygon-note polygon]||##gray|% creates outline of triangle:## _
+newpath _
+72 72 moveto _
+144 144 lineto _
+144 72 lineto _
+closepath _
+stroke||noFill(); _
+ _
+triangle(72, 72, 144, 144, 144, 72); _
+ _
+##gray|@@//@@ quadrilateral:## _
+quad(10, 20, 250, 10, 260, 270, 30, 240);||<polygon points="72,72,72,144,144,144"/>||
+||[[# fill]][#fill-note fill]|| || || ||
+||[[# rectangle]][#rectangle-note rectangle]||##gray|% x y width height:## _
+200 100 40 20 rectstroke _
+ _
+##gray|% solid:## _
+200 100 40 20 rectfill||##gray|@@//@@ x, y, width, height:## _
+rect(200, 300, 12, 14);||<rect x="200" y="300" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@height="12" width="14"/>||
+||[[# rounded-rectangle]][#rounded-rectangle-note rounded rectangle]||##gray|//none//##||rect(200, 200, 150, 120, 20);||<rect x="200" y="200" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@height="150" width="120" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@rx="20" ry="20"/>||
+||[[# circle]][#circle-note circle]||newpath _
+144 144 40 0 360 arc _
+stroke||##gray|@@//@@ first two args are x and y _
+@@//@@ set last two args to radius:## _
+ellipse(50, 50, 80, 80);||<circle cx="300" cy="200" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@r="35" fill="green"/>||
+||[[# ellipse]][#ellipse-note ellipse]||gsave _
+1 1.6666 scale _
+newpath _
+144 144 40 0 360 arc _
+stroke _
+grestore||##gray|@@//@@ x, y, rx, ry:## _
+ellipse(100, 100, 80, 120);||<ellipse cx="300" cy="100" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@rx="30" ry="50" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@fill="red"/>||
+||||||||~ [[# color]][#color-note color]||
+||~ ||~ [#postscript postscript]||~ [#processing processing]||~ [#svg svg]||
+||[[# grayscale]][#grayscale-note grayscale] _
+##gray|//black, white, gray//##||0 setgray _
+1 setgray _
+0.5 setgray||fill(0); _
+fill(255); _
+fill(127);|| ||
+||rgb color||##gray|//default color is black. Sets current color to red://## _
+1.0 0.0 0.0 setrgbcolor||##gray|@@//@@ this is the default:## _
+colorMode(RGB, 256); _
+ _
+color red = color(255, 0, 0); _
+color green = color(0, 255, 0); _
+color blue = color(0, 0, 255); _
+ _
+##gray|@@//@@ another way to make red:## _
+color red = #FF0000; _
+ _
+##gray|@@//@@ set fill color to red:## _
+fill(red);|| ||
+||hsb color||sethsbcolor||##gray|@@//@@ with scale from 0 to 99:## _
+colorMode(HSB, 100);|| ||
+||named color||##gray|//none//##||##gray|//none//##||##gray|//HTML 4.1 defines 16 named colors, the same used by VGA; in practice most browsers recognize the X Windows color names//##||
+||background color||clippath 1 0.75 0.75 setrgbcolor fill _
+0 setgray||color pink = color(255, 191, 191); _
+background(pink);|| ||
+||stroke color||##gray|//stroke and fill color are the same//##||color red = color(255, 0, 0); _
+stroke(red); _
+noStroke()|| ||
+||fill color||##gray|//stroke and fill color are the same//##||fill(red); _
+noFill();|| ||
+||opacity||##gray|//no support for transparency//##|| || ||
+||||||||~ [[# text]][#text-note text]||
+||~ ||~ [#postscript postscript]||~ [#processing processing]||~ [#svg svg]||
+||font||/Helvetica 20 selectfont||PFont f = createFont("Arial", 16, true);||<text x="100" y="100" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@font-family="Comic Sans MS"> _
+@<&nbsp;&nbsp;>@lorem ipsum _
+</text>||
+||built-in fonts||/Times-Roman /Times-Italic _
+/Times-Bold /Times-BoldItalic _
+/Helvetica /Helvetica-Oblique _
+/Helvetica-Bold /Helvetica-BoldOblique _
+/Courier /Courier-Bold _
+/Courier-Oblique /Courier-BoldOblique||##gray|//has access to system fonts; these are available in the string array// PFont.list()##||Andale Mono _
+Arial _
+Arial Black _
+Comic Sans MS _
+Courier New _
+Georgia _
+Impact _
+Times New Roman _
+Trebuchet MS _
+Verdana||
+||generic fonts||##gray|//none//##||##gray|//none//##||serif _
+sans-serif _
+cursive _
+monospace _
+fantasy||
+||font size||/Helvetica 20 selectfont|| ||<text x="100" y="100" font-size="36"> _
+@<&nbsp;&nbsp;>@lorem ipsum _
+</text>||
+||font weight||/Helvetica-Bold 20 selectfont|| ||<text x="100" y="100" font-weight="bold"> _
+@<&nbsp;&nbsp;>@lorem ipsum _
+</text>||
+||font style||/Helvetica-Oblique 20 selectfont|| || ||
+||text||72 72 moveto (lorem ipsum) show|| ||<text x="100" y="100"> _
+@<&nbsp;&nbsp;>@lorem ipsum _
+</text>||
+||utf-8||##gray|//PostScript is ASCII only.  One can use octal backslash sequences to put upper 8-bit characters in strings.  Each font has an encoding associated with it.  There are also CID fonts for multibyte character encodings, but it is an advanced topic and requires extra software.//##|| ||##gray|//at top of <head> element://## _
+<meta charset="UTF-8">||
+||text path|| || || ||
+||||||||~ [[# groups]][#groups-note groups]||
+||~ ||~ [#postscript postscript]||~ [#processing processing]||~ [#svg svg]||
+||group||##gray|//similar in function to gsave and grestore?//##|| ||<g id="group1" fill="red"> _
+@<&nbsp;&nbsp;>@<rect x="1cm" y="1cm" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@width="1cm" height="1cm"/> _
+@<&nbsp;&nbsp;>@<rect x="3cm" y="1cm" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@width="1cm" height="1cm"/> _
+</g>||
+||definition|| || ||<defs> _
+@<&nbsp;&nbsp;>@<linearGradient id="Gradient01"> _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@<stop offset="20%" stop-color="#39F"/> _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@<stop offset="90%" stop-color="#F3F"/> _
+@<&nbsp;&nbsp;>@</linearGradient> _
+</defs>||
+||||||||~ [[# masks-filters]][#masks-filters-note masks and filters]||
+||~ ||~ [#postscript postscript]||~ [#processing processing]||~ [#svg svg]||
+||clipping path|| || || ||
+||opacity mask|| || || ||
+||gaussian blur|| || || ||
+||offset|| || || ||
+||~ ||~ ##EFEFEF|@@__________________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________________@@##||
+
+
+
+[[# coordinates-note]]
++ [#coordinates Coordinates]
+
+[[# origin-note]]
+++ [#origin origin]
+
+[[# unit-note]]
+++ [#unit unit]
+
+In CSS, lengths the following units of length can be used:
+
+||~ abbrev||~ unit||
+||in||inch||
+||cm||centimeter||
+||mm||millimeter||
+||pc||pica (6 to an inch)||
+||pt||point (72 to an inch)||
+||px||pixel||
+
+Pixels are used if the unit of length is not specified explicitly.  High pixel density devices such as the Mac Retina display may nevertheless scale up the size of images specified in pixels.
+
+[[# paths-note]]
++ [#paths Paths]
+
+[[# shapes-note]]
++ [#shapes Shapes]
+
+[[# color-note]]
++ [#color Color]
+
+[[# text-note]]
++ [#text Text]
+
+SVG text elements use the same font properties as are used in CSS.
+
+* font-family: Andale Mono | Arial | Arial Black | Comic Sans MS | Courier New | Georgia | Impact | Times New Roman | Trebuchet MS | Verdana
+* font-family: serif | sans-serif | cursive | monospace | fantasy
+* font-size:
+* font-weight: normal | bold | bolder | lighter
+* font-style: normal | italic | oblique
+* font-variant: normal | small-caps
+
+The first list of fonts are "Core fonts for the Web" which Microsoft made publicly available from 1996 to 2002.  
+
+The second list of fonts are generic fonts.  They define categories, and the user agent will select from an available font in the category.
+
+Font size, if not specified, will be in pixels.
+
+SVG provides a mechanism for telling the user agent where to download the font.  It also has <font> and <glyph> tags for defining a font.
+
+[[# groups-note]]
++ [#groups Groups]
+
+[[# masks-filters-note]]
++ [#masks-filters Masks and Filters]
+
+
+[[# postscript]]
++ [#top PostScript]
+
+[http://partners.adobe.com/public/developer/en/ps/PLRM.pdf PostScript Language Reference] (pdf)
+
+[[# processing]]
++ [#top Processing]
+
+[http://processing.org/ Processing 2]
+
+[[# svg]]
++ [#top SVG]
+
+[http://www.w3.org/TR/SVG/ Scalable Vector Graphics (SVG) 1.1]

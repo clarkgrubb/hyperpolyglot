@@ -1,0 +1,3761 @@
+[[# top]]//a side-by-side reference sheet//
+
+[#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#arrays arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#file-handles file handles] | [#files files] | [#file-fmt file formats] | [#directories directories] | [#processes-environment processes and environment] | [#option-parsing option parsing] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#polymorphism polymorphism] | [#reflection reflection] | [#net-web net and web] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling] | [#java-interop java interop]
+
+||~ [[# general]]||~ [#perl perl]||~ [#tcl tcl]||~ [#lua lua]||~ [#groovy groovy]||
+||[[# version-used]][#version-used-note version used] _
+@<&nbsp;>@||##gray|//5.14; 5.16//##||##gray|//8.5//##||##gray|//5.1//##||##gray|//2.2//##||
+||[[# show-version]][#show-version-note show version]||$ perl @@--@@version||$ tclsh _
+% info tclversion||$ lua -v||$ groovy -v||
+||[[# implicit-prologue]][#implicit-prologue-note implicit prologue] _
+@<&nbsp;>@||##purple|use## ##mediumblue|strict##;|| || || ||
+||||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
+||~ ||~ perl||~ tcl||~ lua||~ groovy||
+||[[# interpreter]][#interpreter-note interpreter] _
+@<&nbsp;>@||$ perl foo.p||$ tclsh foo.tcl||$ lua foo.lua||$ echo 'println "hi!"' > hi.groovy _
+$ groovy hi.groovy||
+||[[# repl]][#repl-note repl] _
+@<&nbsp;>@||$ perl -de 0||$ tclsh||$ lua||$ groovysh||
+||[[# cmd-line-program]][#cmd-line-program-note command line program]||$ perl -e 'print("hi\n")'||##gray|//none//##||$  lua -e 'print("hi world!")'||$ groovy -e 'println "hi world!"'||
+||[[# block-delimiters]][#block-delimiters-note block delimiters] _
+@<&nbsp;>@||{}||{} ##gray|//or//## ##maroon|""##||##purple|do end##||{}||
+||[[# stmt-separator]][#stmt-separator-note statement separator]||;||##gray|//newline or// ;## _
+ _
+##gray|//newline not a separator inside {}, "", [] or after backslash: \//##||##gray|//newline or// ;## _
+ _
+##gray|//newline not separator inside {}, (), or after binary operator.  _
+ _
+newline can be put in "" or '' if preceded by backslash//##||##gray|//newline or// ;## _
+ _
+##gray|//newline not a separator inside (), [], triple quote literal, or after binary operator or backslash.//##||
+||[[# expr-stmt]][#expr-stmt-note are expressions statements]|| ||##gray|//no//##||##gray|//no//##||##gray|//yes//##||
+||[[# source-code-encoding]][#source-code-encoding-note source code encoding]||use utf8;|| || || ||
+||[[# eol-comment]][#eol-comment-note end-of-line comment]||##gray|# comment##||##gray|# comment##||##gray|@@--@@ comment##||##gray|@@//@@ comment##||
+||[[# multiple-line-comment]][#multiple-line-comment-note multiple line comment]||##gray|=for _
+comment line _
+another line _
+=cut##||##purple|if## (0) { _
+@<&nbsp;&nbsp;>@##gray|//commented out//## _
+@<&nbsp;&nbsp;>@##gray|//can contain {} if balanced//## _
+}||@@--@@[[ _
+@<&nbsp;&nbsp;>@##gray|//commented out//## _
+@<&nbsp;&nbsp;>@##gray|//also commented out//## _
+]]||##gray|/* comment _
+another comment */##||
+||||||||||~ [[# variables-expressions]][#variables-expressions-note variables and expressions]||
+||~ ||~ perl||~ tcl||~ lua||~ groovy||
+||[[# local-var]][#local-var-note local variable]||my $v; _
+my (@a, %d); _
+my $x = 1; _
+my ($y, $z) = (2, 3);||##gray|# set variable inside procedure## _
+##purple|proc## ##mediumblue|foo## {##gray|//args//##} { _
+@<&nbsp;&nbsp;>@##purple|set## ##peru|x## 1 _
+@<&nbsp;&nbsp;>@##gray|//...//## _
+}||##purple|local## ##peru|x## = 1||x = 1 _
+def y = 2 _
+Integer z = 3||
+||[[# local-scope-region]][#local-scope-region-note regions which define lexical scope]||top level: _
+@<&nbsp;&nbsp;>@file _
+ _
+nestable: _
+@<&nbsp;&nbsp;>@function body _
+@<&nbsp;&nbsp;>@anonymous function body _
+@<&nbsp;&nbsp;>@anonymous block|| || || ||
+||[[# global-var]][#global-var-note global variable]||our ($g1, $g2) = (7, 8); _
+ _
+sub swap_globals { _
+@<&nbsp;&nbsp;>@($g1, $g2) = ($g2, $g1); _
+}||##gray|# set variable outside procedure## _
+##purple|set## ##peru|g## 1 _
+ _
+##purple|proc## ##mediumblue|incr_global## {} { _
+@<&nbsp;&nbsp;>@##green|global## g _
+@<&nbsp;&nbsp;>@##purple|incr## ##peru|g## _
+}||##gray|@@--@@ assign without using local## _
+g = 1 _
+ _
+##purple|function## ##mediumblue|incr_global##() _
+@<&nbsp;&nbsp;>@g = g + 1 _
+##purple|end##|| ||
+||[[# const]][#const-note constant] _
+@<&nbsp;>@||use constant PI => 3.14;|| || || ||
+||[[# assignment]][#assignment-note assignment] _
+@<&nbsp;>@||$v = 1;||##purple|set## ##peru|x## 1||x = 1||x = 1||
+||[[# parallel-assignment]][#parallel-assignment-note parallel assignment] _
+@<&nbsp;>@||($x, $y, $z) = (1, 2, 3); _
+ _
+##gray|# 3 is discarded:## _
+($x, $y) = (1, 2, 3); _
+ _
+##gray|# $z set to undef:## _
+($x, $y, $z) = (1, 2);||lassign {1 2 3} x y z _
+ _
+##gray|# 3 is discarded:## _
+lassign {1 2 3} x y _
+ _
+##gray|# z is set to "":## _
+lassign {1 2} x y z||x, y, z = 1, 2, 3 _
+ _
+##gray|@@--@@ 3 is discarded:## _
+x, y = 1, 2, 3 _
+ _
+##gray|@@--@@ z is set to nil:## _
+x, y, z = 1, 2||(x, y, z) = [1, 2, 3] _
+ _
+##gray|@@//@@ 3 is discarded:## _
+(x, y) = [1, 2, 3] _
+ _
+##gray|@@//@@ z is set to null:## _
+(x, y, z) = [1, 2]||
+||[[# swap]][#swap-note swap] _
+@<&nbsp;>@||($x, $y) = ($y, $x);||lassign ##maroon|"$x $y"## y x||x, y = y, x||(x, y) = [y, x]||
+||[[# compound-assignment]][#compound-assignment-note compound assignment] _
+##gray|//arithmetic, string, logical, bit//##||+= -= *= ##gray|//none//## /= %= **= _
+.= x= _
+&&= ||= ^= _
+<<= >>= &= |= ^=|| || ||
+||[[# incr-decr]][#incr-decr-note increment and decrement]||my $x = 1; _
+my $y = ++$x; _
+my $z = --$y;|| || || ||
+||[[# null]][#null-note null] _
+@<&nbsp;>@||undef||""||##purple|nil##||null||
+||[[# null-test]][#null-test-note null test] _
+@<&nbsp;>@||! defined $v||v eq ""||v == ##purple|nil##||v == null||
+||[[# undef-var]][#undef-var-note undefined variable access]||##gray|//error under// use strict; //otherwise// undef##||##gray|//error//##||##purple|nil##||##gray|//raises// groovy.lang.MissingPropertyException##||
+||[[# conditional-expr]][#conditional-expr-note conditional expression]||$x > 0 ? $x : -$x||##purple|expr## $##peru|x## > 0 ? $##peru|x## : -$##peru|x##||##gray|//none//##||x > 0 ? x : -x||
+||||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
+||~ ||~ perl||~ tcl||~ lua||~ groovy||
+||[[# true-false]][#true-false-note true and false] _
+@<&nbsp;>@||1 ""||1 0||##purple|true false##||true false||
+||[[# falsehoods]][#falsehoods-note falsehoods]||undef 0 0.0 "" "0" ()||0 ##maroon|"false"## ##maroon|"no"## _
+##gray|//most strings cause error in boolean context; nonzero numbers are true//##||##purple|false nil##||false null 0 0.0 "" [] [:]||
+||[[# logical-op]][#logical-op-note logical operators] _
+@<&nbsp;>@||@@&& ||@@ ! _
+##gray|//lower precedence://## _
+and or xor not||&& @@||@@ !||##purple|and or not##||&& @@||@@ !||
+||[[# relational-expr]][#relational-expr-note relational expressions]||##gray|//numbers://## == != > < >= <= _
+##gray|//strings://## eq ne gt lt ge le||##purple|if## {$##peru|x## > 3} {##gray|//...//##} _
+##gray|# outside of conditionals use expr:## _
+##purple|expr## $##peru|x## > 3||x > 3||x > 0||
+||[[# relational-op]][#relational-op-note relational operators]|| ||== != > < >= <= _
+ _
+##gray|# string comparison:## _
+eq ne||== ~= < > >= <=||== != > < >= <=||
+||[[# min-max]][#min-max-note min and max]||use List::Util qw(min max); _
+ _
+min(1, 2, 3); _
+max(1, 2, 3); _
+ _
+@a = (1, 2, 3); _
+min(@a); _
+max(@a);||##purple|expr## min(1, 2, 3) _
+##purple|expr## max(1, 2, 3)||math.min(1, 2, 3) _
+math.max(1, 2, 3) _
+ _
+math.min(unpack({1 ,2 ,3})) _
+math.max(unpack({1, 2, 3}))||[1, 2, 3].min() _
+[1, 2, 3].max() _
+ _
+##gray|@@//@@ binary functions:## _
+Math.min(1, 2) _
+Math.max(1, 2)||
+||[[# three-val-comparison]][#three-val-comparison-note three value comparison]||0 <=> 1 _
+"do" cmp "re"|| || || ||
+||[[# arith-expr]][#arith-expr-note arithmetic expression]||+ - * / ##gray|//none//## %||##purple|expr## 1 + 3 _
+##gray|# expr not needed in conditionals:## _
+##purple|if## {1 + 3} {##gray|//...//##}||1 + 3||1 + 3||
+||[[# arith-op]][#arith-op-note arithmetic operators] _
+##gray|//addition, subtraction, multiplication, float division, quotient, modulus//##|| ||+ - * ##gray|//none//## / %||+ - * / ##gray|//none//## % ^||+ - * / ##gray|//??//## %||
+||[[# int-div]][#int-div-note integer division] _
+@<&nbsp;>@||int(13 / 5)||##purple|expr## $##peru|x## / $##peru|y##||math.floor(x / y)||Math.floor(x / y)||
+||[[# int-div-zero]][#int-div-zero-note integer division by zero] _
+@<&nbsp;>@||##gray|//error//##||##gray|//error//##||##gray|//returns assignable value// inf, nan, or -inf //depending upon whether dividend is positive, zero, or negative. _
+ _
+There are no literals for any of these values.//##||##gray|//raises// java.lang.ArithmeticException##||
+||[[# float-div]][#float-div-note float division] _
+@<&nbsp;>@||13 / 5||##purple|expr## $##peru|x## * 1.0 / $##peru|y## ||x / y||x / y||
+||[[# float-div-zero]][#float-div-zero-note float division by zero] _
+@<&nbsp;>@||##gray|//error//##||##gray|//returns assignable value// Inf //if dividend is positive and// -Inf //if negative.  Raises error if dividend is zero. _
+ _
+There is a literal for// Inf.##||##gray|//same behavior as for integers//##||##gray|//raises// java.lang.ArithmeticException##||
+||[[# power]][#power-note power]||2 @@**@@ 32||##purple|expr## 2 @@**@@ 32 _
+##purple|expr## pow(2, 32)||2 ^ 32 _
+math.pow(2, 32)||2 ** 32||
+||[[# sqrt]][#sqrt-note sqrt] _
+@<&nbsp;>@||sqrt(2)||##purple|expr## sqrt(2)||math.sqrt(2)||Math.sqrt(2)||
+||[[# sqrt-negative-one]][#sqrt-negative-one-note sqrt -1] _
+@<&nbsp;>@||##gray|//error unless// use Math::Complex //in effect//##||##gray|//error//##||nan||Double.NaN||
+||[[# transcendental-func]][#transcendental-func-note transcendental functions]||use Math::Trig qw(tan asin acos atan); _
+ _
+exp log sin cos tan asin acos atan atan2||exp log sin cos tan asin acos atan atan2 _
+##gray|# how to use math functions:## _
+##purple|expr## exp(2) _
+##purple|expr## atan2(1, 1) _
+::tcl::mathfunc::exp 2 _
+::tcl::mathfunc::atan2 1 1||math.exp math.log math.sin math.cos math.tan math.asin math.acos math.atan math.atan2||Math.exp Math.log Math.sin Math.cos Math.tan Math.asin Math.acos Math.atan Math.atan2||
+||[[# transcendental-const]][#transcendental-const-note transcendental constants] _
+##gray|//π and e//##|| ||##purple|expr## 4 * atan(1) _
+##purple|expr## exp(1)||math.pi _
+math.exp(1)||Math.PI _
+Math.E||
+||[[# float-truncation]][#float-truncation-note float truncation] _
+##gray|//round towards zero, round to nearest integer, round down, round up//##||##gray|# cpan -i Number::Format## _
+use Number::Format 'round'; _
+use POSIX qw(ceil floor); _
+ _
+int($x) _
+round($x, 0) _
+ceil($x) _
+floor($x)||##purple|expr## int(3.1) _
+##purple|expr## round(3.1) _
+##purple|expr## floor(3.1) _
+##purple|expr## ceil(3.1)||##gray|//none//## _
+##gray|//none//## _
+math.floor(3.1) _
+math.ceil(3.1)||(int)3.1 _
+Math.round(3.1) _
+(int)Math.floor(3.1) _
+(int)Math.ceil(3.1)||
+||[[# absolute-val]][#absolute-val-note absolute value] _
+@<&nbsp;>@||abs($x)||##purple|expr## abs(-3)||math.abs(-3)||Math.abs(-3)||
+||[[# int-overflow]][#int-overflow-note integer overflow] _
+@<&nbsp;>@||##gray|//converted to float;// use Math::BigInt //to create arbitrary length integers//##||##gray|//arbitrary length integers introduced in 8.5//##||##gray|//all numbers are floats//##||##gray|//becomes type// java.math.BigInteger##||
+||[[# float-overflow]][#float-overflow-note float overflow] _
+@<&nbsp;>@||inf||##gray|//error//##||inf||Double.POSITIVE_INFINITY||
+||[[# rational-construction]][#rational-construction-note rational construction]||use Math::BigRat; _
+ _
+my $x = Math::BigRat->new("22/7");|| || || ||
+||[[# rational-decomposition]][#rational-decomposition-note rational decomposition]||$x->numerator(); _
+$x->denominator();|| || || ||
+||[[# complex-construction]][#complex-construction-note complex construction]||use Math::Complex; _
+ _
+my $z = 1 + 1.414 * i;|| || || ||
+||[[# complex-decomposition]][#complex-decomposition-note complex decomposition] _
+##gray|//real and imaginary component, argument, absolute value, conjugate//##||Re($z); _
+Im($z); _
+arg($z); _
+abs($z); _
+~$z;|| || || ||
+||[[# random-num]][#random-num-note random number] _
+##gray|//uniform integer, uniform float, normal float//##||int(rand() * 100) _
+rand() _
+##gray|//none//##||##purple|expr## int(rand() * 100) _
+##purple|expr## rand() _
+##gray|//none//##||math.random(100) - 1 _
+math.random() _
+##gray|//none//##||rnd = new Random() _
+rnd.nextInt(100) _
+rnd.nextDouble()||
+||[[# random-seed]][#random-seed-note random seed] _
+##gray|//how to set//##||srand 17; _
+ _
+my $seed = srand; _
+srand($seed);||##purple|expr## srand(17)||math.randomseed(17)||rnd = new Random() _
+rnd.setSeed(17)||
+||[[# bit-op]][#bit-op-note bit operators] _
+##gray|//left shift, right shift, and, inclusive or, exclusive or, complement//##||@<<< >> & | ^ ~>@||@<<< >> & | ^ ~>@||##gray|//none//##||@<<< >> & | ^ ~>@||
+||[[# binary-oct-hex-literals]][#binary-oct-hex-literals-note binary, octal, and hex literals]||0b101010 _
+052 _
+0x2a|| || || ||
+||[[# radix]][#radix-note radix]||##gray|# cpan -i Math::BaseCalc## _
+use Math::BaseCalc; _
+ _
+$c = new Math::BaseCalc( _
+@<&nbsp;&nbsp;>@digits => [0..6]); _
+$c->to_base(42); _
+$c->from_base("60");|| || || ||
+||||||||||~ [[# strings]][#strings-note strings]||
+||~ ||~ perl||~ tcl||~ lua||~ groovy||
+||[[# str-literal]][#str-literal-note string literal]||"don't say \"no\"" _
+'don\'t say "no"'||##maroon|"don't say \"no\""## _
+{don't say ##maroon|"no"##}||##maroon|"don't say \"no\"" _
+'don\'t say "no"'##||"don't say \"no\"" _
+'don\'t say "no"' _
+"""don't say "no\"""" _
+'''don't say "no"''' _
+/don't say "no"/||
+||[[# str-literal-newline]][#str-literal-newline-note newline in literal] _
+@<&nbsp;>@||'first line _
+second line' _
+ _
+"first line _
+second line"||##gray|//yes//##||##gray|//yes, if preceded by backslash//##||##gray|@@//@@ triple quote literals only:## _
+"""foo _
+bar""" _
+ _
+'''foo _
+bar'''||
+||[[# char-esc]][#char-esc-note literal escapes]||##gray|//double quoted://## _
+\a \b \cx \e \f \n \r \t \xhh \x{hhhh} \ooo \o{ooo} _
+ _
+##gray|//single quoted://## _
+\' \\||##gray|//in double quotes://## _
+\a \b \f \n \r \t \v \\ \" \o##gray|//ooo//## \u##gray|//hhhh//## \x##gray|//hh//##||##gray|//single and double quotes://## _
+\a \b \f \n \r \t \v \" \' \\ \##gray|//ddd//##||##gray|@@//@@ single and double quotes _
+@@//@@ including triple quotes:## _
+\b \f \n \r \t _
+@@\\@@ \" \' _
+\u##gray|//hhhh//## \##gray|//o//## \##gray|//oo//## \##gray|//ooo//## _
+ _
+##gray|@@//@@ slash quotes:## _
+\/||
+||[[# here-doc]][#here-doc-note here document]||$word = "amet"; _
+ _
+$s = <<EOF; _
+lorem ipsum _
+dolor sit $word _
+EOF||##gray|//none//##||##gray|//none//##||##gray|//none//##||
+||[[# var-interpolation]][#var-interpolation-note variable interpolation]||my $count = 3; _
+my $item = "ball"; _
+print "$count ${item}s\n";||##purple|set## ##peru|count## 3 _
+##purple|set## ##peru|item## "ball" _
+##maroon|"$count ${item}s"##||##gray|//none//##||count = 3 _
+item = "ball" _
+ _
+"$count ${item}s" _
+"""$count ${item}s"""||
+||[[# expr-interpolation]][#expr-interpolation-note expression interpolation]||##gray|//none//##||##gray|//none//##||##gray|//none//##||"1 + 1 = ${1 + 1}" _
+"""1 + 1 = ${1 + 1}"""||
+||[[# str-concat]][#str-concat-note concatenate]||my $s = "Hello, "; _
+my $s2 = $s . "World!";||##purple|set## ##peru|s1## ##maroon|"Hello, "## _
+##purple|set## ##peru|s2## ##maroon|"World!"## _
+##purple|set## ##peru|s## $##peru|s1##$##peru|s2##||s = ##maroon|"Hello, "## .. ##maroon|"World!"##||s = "Hello, " + "World!"||
+||[[# str-replicate]][#str-replicate-note replicate] _
+@<&nbsp;>@||my $hbar = "-" x 80;||set hbar [string repeat "-" 80]||string.rep("-", 80)||hbar = "-" * 80||
+||[[# sprintf]][#sprintf-note sprintf]||my $fmt = "lorem %s %d %f"; _
+sprintf($fmt, "ipsum", 13, 3.7)||##purple|set## ##peru|fmt## ##maroon|"lorem %s %d %.2f"## _
+##purple|format## $##peru|fmt## ##maroon|"ipsum"## 13 3.7||string.format(##maroon|"lorem %s %d %.2f"##, _
+@<&nbsp;&nbsp;>@##maroon|"ipsum"##, 13, 3.7)||fmt = "lorem %s %d %.2f" _
+String.format(fmt, "ipsum", 13, 3.7)||
+||[[# case]][#case-note case manipulation]||uc("lorem") _
+lc("LOREM")||##purple|string## toupper ##maroon|"lorem"## _
+##purple|string## tolower ##maroon|"LOREM"##||string.upper(##maroon|"lorem"##) _
+string.lower(##maroon|"LOREM"##)||"lorem".toUpperCase() _
+"LOREM".toLowerCase()||
+||[[# capitalize]][#capitalize-note capitalize] _
+##gray|//string, words//##||##gray|# cpan -i Text::Autoformat## _
+use Text::Autoformat; _
+ _
+ucfirst("lorem") _
+autoformat("lorem ipsum", _
+@<&nbsp;&nbsp;>@{case => 'title'})||##gray|//none//## _
+##gray|//none//##||##gray|//none//## _
+##gray|//none//##||"lorem".capitalize() _
+##gray|//none//##||
+||[[# trim]][#trim-note trim]||##gray|# cpan -i Text::Trim## _
+use Text::Trim; _
+ _
+trim " lorem " _
+ltrim " lorem" _
+rtrim "lorem "||##purple|string## trim ##maroon|" lorem "## _
+##purple|string## trimleft ##maroon|" lorem"## _
+##purple|string## trimright ##maroon|"lorem "##||##gray|//none//##||" lorem ".trim()||
+||[[# pad]][#pad-note pad] _
+##gray|//on right, on left, centered//##||##gray|# cpan -i Text::Format## _
+use Text::Format; _
+ _
+sprintf("%-10s", "lorem") _
+sprintf("%10s", "lorem") _
+ _
+$text = Text::Format->new(columns => 10); _
+$text->center("lorem");||##purple|format## ##maroon|"%10s"## ##maroon|"lorem"## _
+##purple|format## ##maroon|"%-10s"## ##maroon|"lorem"##||##gray|//none//##||"lorem".padRight(10) _
+"lorem".padLeft(10) _
+"lorem.center(10)||
+||[[# str-to-num]][#str-to-num-note string to number]||7 + "12" _
+73.9 + ".037"||##gray|//use// expr //to interpret as numbers://## _
+##purple|set## ##peru|x## ##maroon|"12"## _
+##purple|expr## 7 + $##peru|x## _
+##purple|set## ##peru|y## ##maroon|".037"## _
+##purple|expr## 73.9 + $##peru|y##||7 + tonumber(##maroon|"12")## _
+73.9 + tonumber(##maroon|".037"##) _
+##gray|//arithmetic operators attempt numeric conversion of string operands//##||7 + Integer.parseInt("12") _
+73.9 + Double.parseDouble(".037")||
+||[[# num-to-str]][#num-to-str-note number to string] _
+@<&nbsp;>@||"value: " . 8||##gray|//all values are strings//##||##maroon|"value: "## .. 8||"value: " + 8 _
+ _
+##gray|@@//@@ explicit conversion:## _
+8.toString()||
+||[[# join]][#join-note join] _
+@<&nbsp;>@||join(" ", qw(do re mi fa))||##purple|join## [##purple|list## ##maroon|"do" "re" "mi"##] ##maroon|" "##||table.concat({##maroon|"do"##,##maroon|"re"##,##maroon|"mi"##}, ##maroon|" "##)||["do", "re", "mi"].join(" ")||
+||[[# split]][#split-note split] _
+@<&nbsp;>@||split(/\s+/, "do re mi fa")||##purple|split## ##maroon|"do re mi"##||##gray|//none//##||"do re mi".split()||
+||[[# split-in-two]][#split-in-two-note split in two]||split(/\s+/, "do re mi fa", 2)|| || || ||
+||[[# split-keep-delimiters]][#split-keep-delimiters-note split and keep delimiters]||split(/(\s+)/, "do re mi fa")|| || || ||
+||[[# str-length]][#str-length-note length] _
+@<&nbsp;>@||length("lorem")||##purple|string## length ##maroon|"lorem"##||string.len(##maroon|"lorem"##)||"lorem".size() _
+"lorem".length()||
+||[[# index-substr]][#index-substr-note index of substring] _
+@<&nbsp;>@||##gray|# returns -1 if not found:## _
+index("lorem ipsum", "ipsum") _
+rindex("do re re", "re")||##purple|string## first ##maroon|"ipsum"## ##maroon|"lorem ipsum"##||string.find(##maroon|"lorem ipsum"##, ##maroon|"ipsum"##)||"lorem ipsum".indexOf("ipsum")||
+||[[# extract-substr]][#extract-substr-note extract substring] _
+@<&nbsp;>@||substr("lorem ipsum", 6, 5)||##purple|string## range ##maroon|"lorem ipsum"## 6 10||string.sub(##maroon|"lorem ipsum"##, 7, 11)||"lorem ipsum".substring(6, 11)||
+||extract character||##gray|# can't use index notation with _
+# strings:## _
+substr("lorem ipsum", 6, 1)|| || || ||
+||[[# chr-ord]][#chr-ord-note chr and ord]||chr(65) _
+ord("A")||##purple|format## %c 65 _
+##purple|scan## A %c ascii_value||string.char(65) _
+string.byte(##maroon|"A"##)||(Character)65 _
+(Integer)'A'||
+||to array of characters||split(@@//@@, "abcd")||split "abcd" ""|| || ||
+||translate characters||$s = "hello"; _
+$s =~ tr/a-z/n-za-m/;|| || || ||
+||delete characters||$s = "disemvowel me"; _
+$s =~ tr/aeiou@@//@@d;|| || || ||
+||squeeze characters||$s = "too  much  space"; _
+$s =~ tr/ @@//@@s;|| || || ||
+||||||||||~ [[# regexes]][#regexes-note regular expressions]||
+||~ ||~ perl||~ tcl||~ lua||~ groovy||
+||[[# regex-literal]][#regex-literal-note literal, custom delimited literal]||/lorem|ipsum/ _
+qr(/etc/hosts)|| || || ||
+||[[# char-class-abbrev]][#char-class-abbrev-note character class abbreviations and anchors]||. \d \D \h \H \s \S \v \V \w \W||##gray|//char class abbrevs://## _
+. \d \D \s \S \w \W _
+ _
+##gray|//anchors://## ^ $ \A \m \M \y \Y \Z||##gray|//char class abbrevs://## _
+. %a %c %d %l %p %s %u %w %x %z _
+ _
+##gray|//anchors://## ^ $||##gray|//char class abbrevs://## _
+. \d \D \s \S \w \W _
+ _
+##gray|//anchors://## ^ $ \b||
+||[[# regex-anchors]][#regex-anchors-note anchors]||^ $ \A \b \B \z \Z|| || || ||
+||[[# regex-match]][#regex-match-note match test] _
+@<&nbsp;>@||if ($s =~ /1999/) { _
+@<&nbsp;&nbsp;>@print "party!\n"; _
+}||##purple|if## [##purple|regexp## @@--@@ {1999} $##peru|s##] { _
+@<&nbsp;&nbsp;>@##purple|puts## ##maroon|"party!"## _
+}||##purple|if## string.match(s, ##maroon|"1999"##) ##purple|then## _
+@<&nbsp;&nbsp;>@print(##maroon|"party!"##) _
+##purple|end##||s = "it is 1999" _
+ _
+if (s =~ /1999/) { _
+@<&nbsp;&nbsp;>@println("party!") _
+}||
+||[[# case-insensitive-regex]][#case-insensitive-regex-note case insensitive match test]||"Lorem" =~ /lorem/i||##purple|regexp## -nocase @@--@@ {lorem} ##maroon|"Lorem"##||##gray|//none//##||"Lorem" =~ /(?i)lorem/||
+||[[# regex-modifiers]][#regex-modifiers-note modifiers]||i m s p x||-all -expanded -indices -inline _
+-line -lineanchor -linestop -nocase||##gray|//none//##||i s||
+||[[# subst]][#subst-note substitution]||my $s = "do re mi mi mi"; _
+$s =~ s/mi/ma/g;||##purple|set## ##peru|s## ##maroon|"do re mi mi mi"## _
+##purple|regsub## -all @@--@@ ##maroon|"mi"## $##peru|s## ##maroon|"ma"##||s = ##maroon|"do re mi mi mi"## _
+s = string.gsub(s, ##maroon|"mi"##, ##maroon|"ma"##)||"do re mi mi mi".replaceAll(/mi/, "ma")||
+||[[# match-prematch-postmatch]][#match-prematch-postmatch-note match, prematch, postmatch]||f ($s =~ /\d{4}/p) { _
+@<&nbsp;&nbsp;>@$match = ${^MATCH}; _
+@<&nbsp;&nbsp;>@$prematch = ${^PREMATCH}; _
+@<&nbsp;&nbsp;>@$postmatch = ${^POSTMATCH}; _
+}|| || || ||
+||[[# group-capture]][#group-capture-note group capture]||$rx = qr/(\d{4})-(\d{2})-(\d{2})/; _
+"2010-06-03" =~ $rx; _
+($yr, $mo, $dy) = ($1, $2, $3);||##purple|set## ##peru|s## ##maroon|"2009-06-03"## _
+##purple|set## ##peru|rx## {^(\d{4})-(\d{2})-(\d{2})$} _
+##purple|regexp## @@--@@ $##peru|rx## $##peru|s## - yr mo dy||s = ##maroon|"2010-06-03"## _
+rx = ##maroon|"(%d+)-(%d+)-(%d+)"## _
+yr, mo, dy = string.match(s, rx)||s = "2010-06-03" _
+m = s =~ /(\d{4})-(\d{2})-(\d{2})/ _
+yr = m.group(1) _
+mo = m.group(2) _
+dy = m.group(3)||
+||[[# named-grouped-capture]][#named-group-capture-note named group capture]||$s = "foo.txt"; _
+$s =~ /^(?<file>.+)\.(?<suffix>.+)$/; _
+ _
+$+{"file"} _
+$+{"suffix"}|| || || ||
+||[[# scan]][#scan-note scan]||my $s = "dolor sit amet"; _
+@a = $s =~ m/\w+/g;|| || || ||
+||[[# backreference]][#backreference-note backreference] _
+##gray|//in regex, in substitution string//##||"do do" =~ /(\w+) \1/ _
+ _
+my $s = "do re"; _
+$s =~ s/(\w+) (\w+)/$2 $1/;||##purple|regexp## @@--@@ {(\w+) \1} ##maroon|"do do"## _
+ _
+##purple|set## ##peru|rx## {(\w+) (\w+)} _
+##purple|regsub## -all @@--@@ $rx ##maroon|"do re"## {\2 \1}||string.match(##maroon|"do do"##, ##maroon|"(%w+) %1"##) _
+ _
+rx = ##maroon|"(%w+) (%w+)"## _
+string.gsub(##maroon|"do re"##, rx, ##maroon|"%2 %1"##)||"do do" =~ /(\w+) \1/ _
+ _
+rx = /(\w+) (\w+)/ _
+"do re".replaceAll(rx, '$2 $1')||
+||[[# recursive-regex]][#recursive-regex-note recursive regex]||/\(([^()]*|(?R))\)/|| || || ||
+||||||||||~ [[# dates-time]][#dates-time-note dates and time]||
+||~ ||~ perl||~ tcl||~ lua||~ groovy||
+||[[# date-time-type]][#date-time-type-note date/time type]||##gray|Time::Piece //if// use Time::Piece //in effect, otherwise tm array//##|| || || ||
+||[[# current-date-time]][#current-date-time-note current date/time]||use Time::Piece; _
+ _
+my $t = localtime(time); _
+my $utc = gmtime(time);||##purple|set## ##peru|t## [##purple|clock## seconds]||t = os.time()||t = new Date()||
+||[[# unix-epoch]][#unix-epoch-note to unix epoch, from unix epoch]||use Time::Local; _
+use Time::Piece; _
+ _
+my $epoch = timelocal($t); _
+my $t2 = localtime(1304442000);||t _
+##purple|set## ##peru|t2## 1315716177||t _
+t2 = 1315716177||Math.round(t.getTime() / 1000) _
+t = new Date(1315716177 * 1000)||
+||[[# current-unix-epoch]][#current-unix-epoch-note current unix epoch]||$epoch = time;|| || || ||
+||[[# strftime]][#strftime-note strftime]||use Time::Piece; _
+ _
+$t = localtime(time); _
+$fmt = "%Y-%m-%d %H:%M:%S"; _
+print $t->strftime($fmt);||##purple|set## ##peru|fmt## ##maroon|"%Y-%m-%d %H:%M:%S"## _
+##purple|clock format## $##peru|t## -format $##peru|fmt##||os.date(##maroon|"%Y-%m-%d %H:%M:%S"##, t)|| ||
+||[[# strptime]][#strptime-note strptime]||use Time::Local; _
+use Time::Piece; _
+ _
+$s = "2011-05-03 10:00:00"; _
+$fmt = "%Y-%m-%d %H:%M:%S"; _
+$t = Time::Piece->strptime($s,$fmt);||##gray|//none//##||##gray|//none//##|| ||
+||[[# parse-date]][#parse-date-note parse date w/o format]||##gray|# cpan -i Date::Parse## _
+use Date::Parse; _
+ _
+$epoch = str2time("July 7, 1999");||##purple|set## ##peru|t## [##purple|clock scan## ##maroon|"July 7, 1999"##]||##gray|//none//##|| ||
+||[[# get-date-parts]][#get-date-parts-note get date parts]||$t->year _
+$t->mon _
+$t->mday||##purple|clock format## $##peru|t## -format ##maroon|"%Y"## _
+##purple|clock format## $##peru|t## -format ##maroon|"%m"## _
+##purple|clock format## $##peru|t## -format ##maroon|"%d"##||##gray|//none//##|| ||
+||[[# get-time-parts]][#get-time-parts-note get time parts]||$t->hour _
+$t->min _
+$t->sec||##purple|clock format## $##peru|t## -format ##maroon|"%H"## _
+##purple|clock format## $##peru|t## -format ##maroon|"%M"## _
+##purple|clock format## $##peru|t## -format ##maroon|"%S"##||##gray|//none//##|| ||
+||[[# date-from-parts]][#date-from-parts-note build date/time from parts]||$dt = DateTime->new( _
+@<&nbsp;&nbsp;>@year=>2014, _
+@<&nbsp;&nbsp;>@month=>4, _
+@<&nbsp;&nbsp;>@day=>1, _
+@<&nbsp;&nbsp;>@hour=>10, _
+@<&nbsp;&nbsp;>@minute=>3, _
+@<&nbsp;&nbsp;>@second=>56);||##gray|//none//##||##gray|//none//##|| ||
+||[[# date-subtraction]][#date-subtraction-note result of date subtraction]||##gray|Time::Seconds //object if// use Time::Piece //in effect; not meaningful to subtract tm arrays//##|| || || ||
+||[[# add-time-duration]][#add-time-duration-note add time duration]||use Time::Seconds; _
+ _
+$now = localtime(time); _
+$now += 10 * ONE_MINUTE() + 3;|| || || ||
+||[[# local-tmz]][#local-tmz-note local timezone]||##gray|Time::Piece //has local timezone if created with localtime and UTC timezone if created with gmtime; tm arrays have no timezone or offset info//##|| || || ||
+||[[# tmz-offset]][#tmz-offset-note timezone name; offset from UTC; is daylight savings?]||##gray|# cpan -i DateTime## _
+use DateTime; _
+use DateTime::TimeZone; _
+ _
+$dt = DateTime->now(); _
+$tz = DateTime::TimeZone->new( _
+@<&nbsp;&nbsp;>@name=>"local"); _
+ _
+$tz->name; _
+$tz->offset_for_datetime($dt) / _
+@<&nbsp;&nbsp;>@3600; _
+$tz->is_dst_for_datetime($dt);|| || || ||
+||[[# microseconds]][#microseconds-note microseconds]||use Time::HiRes qw(gettimeofday); _
+ _
+($sec, $usec) = gettimeofday;|| || || ||
+||[[# sleep]][#sleep-note sleep] _
+@<&nbsp;>@||##gray|# a float argument will be truncated _
+# to an integer:## _
+sleep 1;||##purple|after## 500||##gray|//none//##|| ||
+||[[# timeout]][#timeout-note timeout]||eval { _
+@<&nbsp;&nbsp;>@$SIG{ALRM}= sub {die "timeout!";}; _
+@<&nbsp;&nbsp;>@alarm 5; _
+@<&nbsp;&nbsp;>@sleep 10; _
+}; _
+alarm 0;|| || || ||
+||||||||||~ [[# arrays]][#arrays-note arrays]||
+||~ ||~ perl||~ tcl||~ lua||~ groovy||
+||[[# array-literal]][#array-literal-note literal] _
+@<&nbsp;>@||@a = (1, 2, 3, 4);||##purple|set## ##peru|a## [##purple|list## 1 2 3 4] _
+##purple|set## ##peru|a## {1 2 3 4}||a = { 1, 2, 3, 4 }||a = [1, 2, 3, 4]||
+||[[# quote-words]][#quote-words-note quote words]||@a = qw(do re mi);|| || || ||
+||[[# array-size]][#array-size-note size] _
+@<&nbsp;>@||$#a + 1 _
+scalar(@a)||##purple|llength## $##peru|a##||##gray|@@--@@ not well-defined if array _
+@@--@@ contains nil values:## _
+# a||a.size||
+||[[# array-lookup]][#array-lookup-note lookup] _
+@<&nbsp;>@||$a[0] _
+ _
+##gray|# returns last element:## _
+$a[-1]||##purple|lindex## $##peru|a## 0||a[1]||a[0]||
+||[[# array-update]][#array-update-note update]||$a[0] = "lorem";||##gray|# provide start and end index _
+# of elements to replace:## _
+##purple|set## ##peru|a## [##purple|lreplace## $##peru|a## 1 1 ##maroon|"lorem"##]||a[1] = "lorem"||a[0] = 'lorem'||
+||[[# array-out-of-bounds]][#array-out-of-bounds-note out-of-bounds behavior]||@a = (); _
+##gray|# evaluates as undef:## _
+$a[10]; _
+##gray|# increases array size to 11:## _
+$a[10] = "lorem";||##gray|//returns// ""##||##gray|//returns// nil##||##gray|//returns// null##||
+||[[# array-element-index]][#array-element-index-note index of element] _
+##gray|//first and last occurrence//##||use List::Util 'first'; _
+ _
+@a = qw(x y z w); _
+$i = first {$a[$_] eq "y"} (0..$#a);||lsearch {6 7 7 8} 7 _
+##purple|lindex## [lsearch -all {6 7 7 8} 7] end _
+##gray|# returns -1 if not found##||##gray|//none; use// for //and// ipairs##||[6, 7, 7, 8].indexOf(7) _
+[6, 7, 7, 8].lastIndexOf(7) _
+##gray|@@//@@ returns -1 if not found##||
+||[[# array-slice]][#array-slice-note slice] _
+@<&nbsp;>@||##gray|# select 3rd and 4th elements:## _
+@a[2..3] _
+splice(@a, 2, 2)||##purple|lrange## $##peru|a## 1 2||##gray|//none//##||##gray|@@//@@ ['b', 'c']:## _
+['a', 'b', 'c', 'd'][1..2]||
+||[[# array-slice-to-end]][#array-slice-to-end-note slice to end]||@a[1..$#a]||##purple|lrange## {##maroon|"a" "b" "c" "d"##} 1 end||##gray|//none//##||##gray|@@//@@ ['b', 'c', 'd']:## _
+['a', 'b', 'c', 'd'][1..-1]||
+||[[# array-back]][#array-back-note manipulate back]||@a = (6, 7, 8); _
+push @a, 9; _
+pop @a;||##purple|set## ##peru|a## {6 7 8} _
+##purple|lappend## a 9 _
+##purple|set## ##peru|i## [##purple|lindex## $##peru|a## end] _
+##purple|set## ##peru|a## [##purple|lreplace## $##peru|a## end end]||a = {6, 7, 8} _
+table.insert(a, 9) _
+i = table.remove(a)||a = [6, 7, 8] _
+a.push(9) _
+##gray|@@//@@ also:## _
+a @@<<@@ 9 _
+i = a.pop()||
+||[[# array-front]][#array-front-note manipulate front]||@a = (6, 7, 8); _
+unshift @a, 5; _
+shift @a;||##purple|set## ##peru|a## {6 7 8} _
+##purple|set## ##peru|a## [##purple|concat## {5} $##peru|a##] _
+##purple|set## ##peru|a## [lassign $##peru|a## i]||a = {6, 7, 8} _
+table.insert(a, 1, 5) _
+i = table.remove(a, 1)||a = [6, 7, 8] _
+a.add(0, 5) _
+i = a.remove(0)||
+||[[# array-concat]][#array-concat-note concatenate] _
+@<&nbsp;>@||@a = (1, 2, 3); _
+@a2 = (@a, (4, 5, 6)); _
+push @a, (4,5,6);||##purple|set## ##peru|a## [##purple|concat## {1 2 3} {4 5 6}]||##gray|//none//##||[1, 2, 3] + [4, 5, 6]||
+||[[# array-replicate]][#array-replicate-note replicate] _
+@<&nbsp;>@||@a = (undef) x 10;||lrepeat 10 ##maroon|""##||##gray|//none//##||a = [null] * 10||
+||[[# array-copy]][#array-copy-note copy] _
+##gray|//address copy, shallow copy, deep copy//##||use Storable 'dclone' _
+ _
+my @a = (1,2,[3,4]); _
+my $a2 = \@a; _
+my @a3 = @a; _
+my @a4 = @{dclone(\@a)};|| || || ||
+||[[# array-arg]][#array-arg-note arrays as function arguments]||##gray|//each element passed as separate argument; use reference to pass array as single argument//##|| || || ||
+||[[# array-iter]][#array-iter-note iterate over elements]||for $i (1, 2, 3) { print "$i\n" }||##purple|foreach## i $##peru|a## { ##purple|puts## $##peru|i## }||##purple|for## k,v ##purple|in## ipairs(a) ##purple|do## _
+@<&nbsp;&nbsp;>@print(v) _
+##purple|end##||for (i in [1, 2, 3, 4]) { _
+@<&nbsp;&nbsp;>@println i _
+}||
+||[[# range-iteration]][#range-iteration-note iterate over range]||for $i (1..1_000_000) { _
+@<&nbsp;&nbsp;>@##gray|//code//## _
+}|| || || ||
+||[[# range-array]][#range-array-note instantiate range as array]||@a = 1..10;|| || || ||
+||[[# array-reverse]][#array-reverse-note reverse] _
+@<&nbsp;>@||@a = (1, 2, 3); _
+ _
+reverse @a; _
+@a = reverse @a;||##purple|set## ##peru|a## {1 2 3} _
+##purple|set## ##peru|a## [lreverse $##peru|a##]||##gray|//none//##||a = [1, 2, 3] _
+a.reverse()||
+||[[# array-sort]][#array-sort-note sort] _
+@<&nbsp;>@||@a = qw(b A a B); _
+ _
+sort @a; _
+@a = sort @a; _
+sort { lc($a) cmp lc($b) } @a;||##purple|set## ##peru|a## {3 1 4 2} _
+##purple|set## ##peru|a## [##purple|lsort## $##peru|a##]||a = {3, 1, 4, 2} _
+table.sort(a)||a = [3, 1, 4, 2] _
+a.sort()||
+||[[# array-dedupe]][#array-dedupe-note dedupe]||use List::MoreUtils 'uniq'; _
+ _
+my @a = (1, 2, 2, 3); _
+ _
+my @a2 = uniq @a; _
+@a = uniq @a;||##purple|lsort## -unique {1 2 2 3}||##gray|//none//##||a = [1, 2, 2, 3] _
+ _
+##gray|@@//@@ modifies array in place:## _
+a.unique()||
+||[[# membership]][#membership-note membership]||7 ~~ @a||##purple|expr## {7 in $##peru|a##} _
+##purple|expr## {7 ni $##peru|a##}||##gray|//none//##||[1, 2, 3].contains(7) _
+![1, 2, 3].contains(7)||
+||[[# intersection]][#intersection-note intersection] _
+@<&nbsp;>@|| ||##purple|package## require struct::set _
+ _
+::struct::set intersect {1 2} {2 3}||##gray|//none//##||[1, 2].intersect([2, 3])||
+||[[# union]][#union-note union] _
+@<&nbsp;>@|| ||##purple|package## require struct::set _
+ _
+::struct::set union {1 2} {2 3 4}||##gray|//none//##||([1, 2] + [2, 3, 4]).unique()||
+||[[# set-diff]][#set-diff-note relative complement] _
+@<&nbsp;>@|| ||##purple|package## require struct::set _
+ _
+::struct::set difference {1 2 3} {2}||##gray|//none//##||[1 2 3] - [2]||
+||[[# map]][#map-note map] _
+@<&nbsp;>@||map { $_ * $_ } (1,2,3)||##purple|package## require struct::list _
+ _
+##purple|proc## ##mediumblue|sqr## {x} {##purple|return## [##purple|expr## $##peru|x## * $##peru|x##]} _
+::struct::list map {1 2 3} sqr||##gray|//none//##||[1, 2, 3].collect() { n -> n * n }||
+||[[# filter]][#filter-note filter] _
+@<&nbsp;>@||grep { $_ > 1 } (1,2,3)||##purple|package## require struct::list _
+ _
+##purple|proc## ##mediumblue|gt1## {x} {##purple|return## [##purple|expr## $##peru|x## > 1]} _
+::struct::list filter {1 2 3} gt1||##gray|//none//##||[1, 2, 3].findAll() { x -> x > 2 }||
+||[[# reduce]][#reduce-note reduce] _
+@<&nbsp;>@||use List::Util 'reduce'; _
+ _
+reduce { $x + $y } 0, (1,2,3)||##purple|package## require struct::list _
+ _
+::struct::list fold {1 2 3} 0 _
+@<&nbsp;&nbsp;>@::tcl::mathop::+||##gray|//none//##||[1, 2, 3].inject(0) { x, y -> x + y }||
+||[[# universal-existential-test]][#universal-existential-test-note universal and existential tests]||##gray|# cpan -i List::MoreUtils## _
+use List::MoreUtils qw(all any); _
+ _
+all { $_ % 2 == 0 } (1, 2, 3, 4) _
+any { $_ % 2 == 0 } (1, 2, 3, 4)||##gray|//none//##||##gray|//none//##||##gray|//none//##||
+||[[# shuffle]][#shuffle-note shuffle]||use List::Util 'shuffle'; _
+ _
+@a = (1, 2, 3, 4); _
+shuffle(@a);||##gray|//none//##||##gray|//none//##||a = [1, 2, 3, 4] _
+##gray|@@//@@ no return value:## _
+Collections.shuffle(a)||
+||[[# zip]][#zip-note zip] _
+@<&nbsp;>@||##gray|# cpan -i List::MoreUtils## _
+use List::MoreUtils 'zip'; _
+ _
+@nums = (1, 2, 3); _
+@lets = qw(a b c); _
+##gray|# flat array of 6 elements:## _
+@a = zip @nums, @lets;||##gray|//none//##||##gray|//none//##||[[1,2,3], ['a', 'b', 'c']].transpose()||
+||||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
+||~ ||~ perl||~ tcl||~ lua||~ groovy||
+||[[# dict-literal]][#dict-literal-note literal]||%d = ( "t" => 1, "f" => 0 ); _
+ _
+##gray|# barewords permitted in front of => _
+# under 'use strict'##||##purple|set## ##peru|d## [dict create t 1 f 0]||d = { t=1, f=0 }||d = ["t": 1, "f": 0]||
+||[[# dict-size]][#dict-size-note size] _
+@<&nbsp;>@||scalar(keys %d)||dict size $##peru|d##||size = 0 _
+##purple|for## k, v ##purple|in## pairs(d) ##purple|do## _
+@<&nbsp;&nbsp;>@size = size + 1 _
+##purple|end##||d.size()||
+||[[# dict-lookup]][#dict-lookup-note lookup]||$d{"t"} _
+ _
+##gray|# barewords permitted inside { } _
+# under 'use strict'##||dict get $##peru|d## t||d.t _
+d[##maroon|"t"##]||d["t"]||
+||[[# dict-update]][#dict-update-note update]|| ||dict ##purple|set## ##peru|d## t 2||d[##maroon|"t"##] = 2 _
+d.t = 2||d["t"] = 2||
+||[[# dict-out-of-bounds]][#dict-out-of-bounds-note out of bounds behavior]||%d = (); _
+##gray|# evaluates as undef:## _
+$d{"lorem"}; _
+##gray|# adds key/value pair:## _
+$d{"lorem"} = "ipsum";||##gray|//error//##||##gray|//returns//## nil||##gray|//returns// null##||
+||[[# dict-key-check]][#dict-key-check-note is key present] _
+@<&nbsp;>@||exists $d{"y"}||dict exists $##peru|d## t||d[##maroon|"t"##] ~= nil||d.containsKey("t")||
+||[[# dict-delete]][#dict-delete-note delete]||%d = ( 1 => "t", 0 => "f" ); _
+delete $d{1};||dict ##purple|unset## d t||d.t = nil _
+d[##maroon|"t"##] = nil|| ||
+||[[# dict-assoc-array]][#dict-assoc-array-note from array of pairs, from even length array]||@a = (1,"a",2,"b",3,"c"); _
+%d = @a;|| || || ||
+||[[# dict-merge]][#dict-merge-note merge]||%d1 = (a => 1, b => 2); _
+%d2 = (b => 3, c => 4); _
+%d1 = (%d1, %d2);|| || || ||
+||[[# dict-invert]][#dict-invert-note invert]||%to_num = (t=>1, f=>0); _
+%to_let = reverse %to_num;|| || || ||
+||[[# dict-iter]][#dict-iter-note iteration]||while (($k, $v) = each %d) { _
+@<&nbsp;&nbsp;>@##gray|//code//## _
+}||##purple|foreach## {k v} $##peru|d## { _
+@<&nbsp;&nbsp;>@##gray|//code//## _
+}||##purple|for## k,v ##purple|in## pairs(d) ##purple|do## _
+@<&nbsp;&nbsp;>@##gray|//use k or v//## _
+##purple|end##|| ||
+||[[# dict-key-val-array]][#dict-key-val-array-note keys and values as arrays]||keys %d _
+values %d|| || || ||
+||[[# dict-sort-val]][#dict-sort-val-note sort by values]||foreach $k (sort _
+@<&nbsp;&nbsp;>@{ $d{$a} <=> $d{$b} } keys %d) { _
+@<&nbsp;&nbsp;>@print "$k: $d{$k}\n"; _
+}|| || || ||
+||[[# dict-default-val]][#dict-default-val-note default value, computed value]||my %counts; _
+$counts{'foo'} += 1 _
+ _
+##gray|//define a tied hash for computed values and defaults other than zero or empty string//##|| || || ||
+||||||||||~ [[# functions]][#functions-note functions]||
+||~ ||~ perl||~ tcl||~ lua||~ groovy||
+||[[# func-def]][#func-def-note define function]||sub add3 { $_[0] + $_[1] + $_[2] } _
+ _
+sub add3 { _
+@<&nbsp;&nbsp;>@my ($x1, $x2, $x3) = @_; _
+@<&nbsp;&nbsp;>@$x1 + $x2 + $x3; _
+}||##purple|proc## ##mediumblue|add## { x y } { _
+@<&nbsp;&nbsp;>@##purple|expr## $##peru|x## + $##peru|y## _
+}||##purple|function## ##mediumblue|add##(x, y) _
+@<&nbsp;&nbsp;>@##purple|return## x + y _
+##purple|end##||def (x, y) { _
+@<&nbsp;&nbsp;>@x + y _
+}||
+||[[# func-invocation]][#func-invocation-note invoke function] _
+@<&nbsp;>@||add3(1, 2, 3); _
+ _
+##gray|# parens are optional:## _
+add3 1, 2, 3;||##gray|# statement position:## _
+add 1 2 _
+ _
+##gray|# argument position: ## _
+set a [ add 1 2 ]||add(1, 2)||add(1, 2) _
+ _
+##gray|@@//@@ parens are optional:## _
+add 1, 2||
+||[[# nested-func]][#nested-func-note nested function]||##gray|//defined when containing function is defined; visible outside containing function//##||##gray|//defined when containing function executes; visible outside containing function//##||##gray|//visible outside containing function//##|| ||
+||[[# missing-arg]][#missing-arg-note missing argument behavior]||##gray|//set to// undef##||##gray|//error//##||##purple|nil##||##gray|//raises// groovy.lang.MissingMethodException##||
+||[[# extra-arg]][#extra-arg-note extra argument behavior] _
+@<&nbsp;>@|| ||##gray|//error//##||##gray|//ignored//##||##gray|//raises// groovy.lang.MissingMethodException##||
+||[[# default-arg]][#default-arg-note default argument] _
+@<&nbsp;>@||sub my_log { _
+@<&nbsp;&nbsp;>@my $x = shift; _
+@<&nbsp;&nbsp;>@my $base = shift // 10; _
+ _
+@<&nbsp;&nbsp;>@log($x) / log($base); _
+} _
+ _
+my_log(42); _
+my_log(42, exp(1));||##purple|proc## ##mediumblue|log## {x {base 10 }} { ##gray|//body//## }||##gray|//none//##|| ||
+||[[# var-arg]][#var-arg-note collect arguments in array]||sub first_and_last { _
+ _
+@<&nbsp;&nbsp;>@if ( @_ >= 1 ) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print "first: $_[0]\n"; _
+@<&nbsp;&nbsp;>@} _
+ _
+@<&nbsp;&nbsp;>@if ( @_ >= 2 ) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print "last: $_[-1]\n"; _
+@<&nbsp;&nbsp;>@} _
+}||##gray|//last arg contains list of remaining values//##||##gray|//declare function with ellipsis://## _
+##purple|function## ##mediumblue|foo##(@@...@@) _
+@<&nbsp;&nbsp;>@local arg = {@@...@@}|| ||
+||[[# apply-func]][#apply-func-note pass array elements as separate arguments]||@a = (2, 3); _
+ _
+add3(1, @a); _
+ _
+##gray|# arrays are always expanded when used _
+# as arguments##|| || || ||
+||[[# retval]][#retval-note return value]||##gray|return //arg or last expression evaluated//##||return ##gray|//arg or empty string//##||return ##gray|//arg or//## nil||##gray|return //arg or last expression evaluated//##||
+||[[# multiple-retval]][#multiple-retval-note multiple return values]||sub first_and_second { _
+@<&nbsp;&nbsp;>@return ($_[0], $_[1]); _
+} _
+ _
+@a = (1,2,3); _
+($x, $y) = first_and_second(@a);||##gray|//none//##||##purple|function## ##mediumblue|roots##(x) _
+@<&nbsp;&nbsp;>@r = math.sqrt(x) _
+@<&nbsp;&nbsp;>@##purple|return## r, -r _
+##purple|end## _
+r1,r2 = roots(4)||##gray|//none//##||
+||[[# lambda-decl]][#lambda-decl-note anonymous function literal]||$sqr = sub { $_[0] * $_[0] }||##purple|set## ##peru|sqr## @@{{x}@@ {##purple|return## [##purple|expr## $##peru|x##*$##peru|x##]@@}}@@||##mediumblue|sqr## = ##purple|function##(x) ##purple|return## x*x ##purple|end##||sqr = { x -> Math.sqrt x }||
+||[[# lambda-invocation]][#lambda-invocation-note invoke anonymous function] _
+@<&nbsp;>@||$sqr->(2)||apply $##peru|sqr## 2||sqr(2)||sqr(2)||
+||[[# func-as-val]][#func-as-val-note function as value]||my $func = \&add;|| || || ||
+||[[# private-state-func]][#private-state-func-note function with private state]||use feature state; _
+ _
+sub counter { _
+@<&nbsp;&nbsp;>@state $i = 0; _
+@<&nbsp;&nbsp;>@++$i; _
+} _
+ _
+print counter() . "\n";|| || || ||
+||[[# closure]][#closure-note closure]||sub make_counter { _
+@<&nbsp;&nbsp;>@my $i = 0; _
+@<&nbsp;&nbsp;>@return sub { ++$i }; _
+} _
+ _
+my $nays = make_counter; _
+print $nays->() . "\n";|| || || ||
+||[[# generator]][#generator-note generator]|| ||##gray|//to be added to Tcl 8.6//##||crt = coroutine.create( _
+@<&nbsp;&nbsp;>@##purple|function## (n) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|while## (##purple|true##) ##purple|do## _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@coroutine.yield(n % 2) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@n = n + 1 _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|end## _
+@<&nbsp;&nbsp;>@##purple|end## _
+) _
+ _
+status, retval = _
+@<&nbsp;&nbsp;>@coroutine.resume(crt, 1) _
+ _
+##purple|if## status ##purple|then## _
+@<&nbsp;&nbsp;>@print(##maroon|"parity: "## .. retval) _
+##purple|else## _
+@<&nbsp;&nbsp;>@print(##maroon|"couldn't resume crt"##) _
+##purple|end## _
+ _
+_, retval = coroutine.resume(crt) _
+print(##maroon|"parity: "## .. retval)|| ||
+||||||||||~ [[# execution-control]][#execution-control-note execution control]||
+||~ ||~ perl||~ tcl||~ lua||~ groovy||
+||[[# if]][#if-note if]||if ( 0 == $n ) { _
+@<&nbsp;&nbsp;>@print "no hits\n" _
+} elsif ( 1 == $n ) { _
+@<&nbsp;&nbsp;>@print "one hit\n" _
+} else { _
+@<&nbsp;&nbsp;>@print "$n hits\n" _
+}||##purple|if## { 0 == $##peru|n## } { _
+@<&nbsp;&nbsp;>@##purple|puts## ##maroon|"no hits"## _
+} ##purple|elseif## { 1 == $##peru|n## } { _
+@<&nbsp;&nbsp;>@##purple|puts## ##maroon|"1 hit"## _
+} ##purple|else## { _
+@<&nbsp;&nbsp;>@##purple|puts## ##maroon|"$n hits"## _
+}||##purple|if## n == 0 ##purple|then## _
+@<&nbsp;&nbsp;>@print(##maroon|"no hits"##) _
+##purple|elseif## n == 1 ##purple|then## _
+@<&nbsp;&nbsp;>@print(##maroon|"one hit"##) _
+##purple|else## _
+@<&nbsp;&nbsp;>@print(n .. ##maroon|" hits"##) _
+##purple|end##||if (n == 0) { _
+@<&nbsp;&nbsp;>@println("no hits") _
+} _
+else if (n == 1) { _
+@<&nbsp;&nbsp;>@println("one hit") _
+} _
+else { _
+@<&nbsp;&nbsp;>@println(n + " hits") _
+}||
+||[[# while]][#while-note while]||while ( $i < 100 ) { $i++ }||##purple|while## { $##peru|i## < 100 } { _
+@<&nbsp;&nbsp;>@##purple|incr## i _
+}||##purple|while## i < 100 ##purple|do## _
+@<&nbsp;&nbsp;>@i = i + 1 _
+##purple|end##||while (i < 100) { _
+@<&nbsp;&nbsp;>@i += 1 _
+}||
+||[[# break-continue]][#break-continue-note break and continue]||last next||##purple|break continue##||##purple|break## ##gray|//none//##||break continue||
+||[[# for]][#for-note for]||for ( $i=0; $i <= 10; $i++ ) { _
+@<&nbsp;&nbsp;>@print "$i\n"; _
+}||##purple|for## {##purple|set## i 0} {$##peru|i## < 10} {##purple|incr## i} { _
+@<&nbsp;&nbsp;>@##purple|puts## $##peru|i## _
+}||##purple|for## i = 0, 9 ##purple|do## _
+@<&nbsp;&nbsp;>@print(i) _
+##purple|end##||for (i = 0; i < 10; i++) { _
+@<&nbsp;&nbsp;>@println i _
+}||
+||statement modifiers||print "positive\n" if $i > 0; _
+print "nonzero\n" unless $i == 0;|| || || ||
+||||||||||~ [[# exceptions]][#exceptions-note exceptions]||
+||~ ||~ perl||~ tcl||~ lua||~ groovy||
+||[[# raise-exc]][#raise-exc-note raise exception]||die "bad arg";||##purple|error## ##maroon|"bad arg"##||error ##maroon|"bad arg"##||throw new Exception("bad arg")||
+||[[# catch-exc]][#catch-exc-note catch exception]||eval { risky }; _
+if ($@) { _
+@<&nbsp;&nbsp;>@print "risky failed: $@\n"; _
+}||##purple|catch## risky retval _
+##purple|if## { retval != 0 } { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|puts## ##maroon|"risky failed"## _
+}||##purple|if not## pcall(risky) ##purple|then## _
+@<&nbsp;&nbsp;>@print ##maroon|"risky failed"## _
+##purple|end##|| ||
+||global variable for last exception||##gray|$EVAL_ERROR: $@ _
+$OS_ERROR: $! _
+$CHILD_ERROR: $?##|| || || ||
+||[[# finally-ensure]][#finally-ensure-note finally/ensure]|| ||##gray|//none//##||##gray|//none//##|| ||
+||[[# uncaught-exc]][#uncaught-exc-note uncaught exception behavior]|| ||##gray|//stderr and exit//##||##gray|//stderr and exit//##|| ||
+||||||||||~ [[# file-handles]][#file-handles-note file handles]||
+||~ ||~ perl||~ tcl||~ lua||~ groovy||
+||[[# standard-file-handles]][#standard-file-handles-note standard file handles]||STDIN STDOUT STDERR||stdin _
+stdout _
+stderr||io.stdin _
+io.stdout _
+io.stderr||System.in _
+System.out _
+System.err||
+||[[# read-stdin]][#read-stdin-note read line from stdin]||$line = <STDIN>;||##purple|gets## stdin line||line = io.stdin:read()|| ||
+||end-of-file behavior||##gray|//returns string without newline or// undef##|| || || ||
+||chomp||chomp $line;||##purple|string## trimright $##peru|line## ##maroon|"\r\n"##||##gray|//none,//## read() ##gray|//and//## lines() ##gray|//remove trailing newlines//##|| ||
+||[[# print-to-stdout]][#print-to-stdout-note write line to stdout]||print "Hello, World!\n";||##purple|puts## ##maroon|"Hello, World!"##||print ##maroon|"Hello, World!"##||print("Hello, World!\n") _
+println("Hello, World!") _
+System.out.print("Hello, World!\n") _
+System.out.println("Hello, World!")||
+||write formatted string to stdout||use Math::Trig 'pi'; _
+ _
+printf("%.2f\n", pi);|| || || ||
+||[[# open-file]][#open-file-note open file for reading]||open my $f, "/etc/hosts" or die;||##purple|set## ##peru|f## [##purple|open## ##maroon|"/tmp/foo"##]||f = io.open(##maroon|"/tmp/foo"##)|| ||
+||[[# open-file-write]][#open-file-write-note open file for writing]||open my $f, ">/tmp/test" or die;||##purple|set## ##peru|f## [##purple|open## ##maroon|"/tmp/foo"## ##maroon|"w"##]||f = io.open(##maroon|"/tmp/foo"##, ##maroon|"w"##)|| ||
+||set file handle encoding||open my $fin, "<:encoding(UTF-8)", "/tmp/foo" _
+@<&nbsp;&nbsp;>@or die; _
+ _
+open my $fout, ">:encoding(UTF-8)", "/tmp/bar" _
+@<&nbsp;&nbsp;>@or die;|| || || ||
+||open file for appending||open my $f, ">>/tmp/err.log" or die;|| || || ||
+||[[# close-file]][#close-file-note close file] _
+@<&nbsp;>@||close $f or die;||##maroon|close## $##peru|f##||f:close()|| ||
+||close file implicitly||{ _
+@<&nbsp;&nbsp;>@open(my $f, ">/tmp/test") or die; _
+@<&nbsp;&nbsp;>@print $f "lorem ipsum\n"; _
+}|| || || ||
+||i/o error||##gray|//return false value//##|| || || ||
+||encoding error||##gray|//emit warning and replace bad byte with 4 character \xHH sequence//##|| || || ||
+||[[# read-line]][#read-line-note read line] _
+@<&nbsp;>@||$line = <$f>;||##purple|gets## $##peru|f##||f:read()|| ||
+||[[# file-iter]][#file-iter-note iterate over file by line]||while ($line = <$f>) { _
+@<&nbsp;&nbsp;>@print $line; _
+}||##purple|while## { [##purple|gets## $##peru|f## s] >= 0 } { _
+@<&nbsp;&nbsp;>@##gray|//use s//## _
+}||##purple|for## s ##purple|in## f:lines() ##purple|do## _
+@<&nbsp;&nbsp;>@##gray|//use s//## _
+##purple|end##|| ||
+||read file into array of strings||@a = <$f>;|| || || ||
+||read file into string||$s = do { local $/; <$f> };||set s [ read $f]||s = f:read(##maroon|"*a"##)|| ||
+||[[# write-file]][#write-file-note write string] _
+@<&nbsp;>@||print $f "lorem ipsum";||##purple|puts## -nonewline $##peru|f## ##maroon|"lorem ipsum"##||f:write(##maroon|"lorem ipsum"##)|| ||
+||write line||print $f "lorem ipsum\n";|| || || ||
+||[[# flush-file]][#flush-file-note flush file handle]||use IO::Handle; _
+ _
+$f->flush();||##purple|flush## $##peru|f##||f:flush()|| ||
+||end-of-file test||eof($f)|| || || ||
+||get and set file handle position||tell($f) _
+seek($f, 0, SEEK_SET);|| || || ||
+||open temporary file||use File::Temp; _
+ _
+$f = File::Temp->new(); _
+ _
+print $f "lorem ipsum\n"; _
+ _
+print "tmp file: "; _
+print $f->filename . "\n"; _
+ _
+close $f or die; _
+ _
+##gray|# file is removed when file handle goes _
+# out of scope##|| || || ||
+||in memory file||my ($f, $s); _
+open($f, ">", \$s); _
+print $f "lorem ipsum\n"; _
+$s;|| || || ||
+||||||||||~ [[# files]][#files-note files]||
+||~ ||~ perl||~ tcl||~ lua||~ groovy||
+||[[# file-test]][#file-test-note file exists test, file regular test]||-e "/etc/hosts" _
+-f "/etc/hosts"||##purple|file## exists ##maroon|"/etc/hosts"## _
+##purple|file## isfile ##maroon|"/etc/hosts"##||##gray|//none//##||f = new File('/etc/hosts') _
+ _
+f.exists() _
+f.isFile()||
+||[[# file-size]][#file-size-note file size]||-s "/etc/hosts"|| || ||f = new File('/etc/hosts') _
+ _
+f.length()||
+||[[# readable-writable-executable]][#readable-writable-executable-note is file readable, writable, executable]||-r "/etc/hosts" _
+-w "/etc/hosts" _
+-x "/etc/hosts"|| || ||f = new File('etc/hosts') _
+ _
+f.canRead() _
+f.canWrite() _
+f.canExecute()||
+||[[# chmod]][#chmod-note set file permissions]||chmod 0755, "/tmp/foo";||##purple|set## ##peru|s## ##maroon|"/tmp/foo"## _
+##purple|file## attributes $##peru|s## -permissions 0755||##gray|//none//##|| ||
+||last modification time||my @data = stat('/etc/passwd'); _
+ _
+##gray|# unix epoch:## _
+my $t = $data['mtime'];|| || || ||
+||[[# file-cp-rm-mv]][#file-cp-rm-mv-note copy file, remove file, rename file]||use File::Copy; _
+ _
+copy("/tmp/foo", "/tmp/bar"); _
+unlink "/tmp/foo"; _
+move("/tmp/bar", "/tmp/foo");||##purple|file## copy ##maroon|"/tmp/foo" "/tmp/bar"## _
+##purple|file## delete ##maroon|"/tmp/foo"## _
+##purple|file rename## ##maroon|"/tmp/bar" "/tmp/foo"##||##gray|//none//##|| ||
+||create symlink, symlink test, readlink||symlink "/etc/hosts", "/tmp/hosts"; _
+-l "/etc/hosts" _
+readlink "/tmp/hosts"|| || || ||
+||[[# tmpfile]][#tmpfile-note generate unused file name]||use File::Temp; _
+ _
+$f = File::Temp->new(DIR=>"/tmp", _
+@<&nbsp;&nbsp;>@TEMPLATE=>"fooXXXXX", _
+@<&nbsp;&nbsp;>@CLEANUP=>0); _
+$path = $f->filename;||##purple|set## ##peru|tmp## [::fileutil::tempfile foo] _
+##purple|set## ##peru|f## [##purple|open## $##peru|tmp## ##maroon|"w"##] _
+##purple|puts## $##peru|f## ##maroon|"lorem ipsum"## _
+##purple|close## $##peru|f## _
+##purple|puts## ##maroon|"tmp file: $tmp"##||f = io.tmpfile() _
+f:write(##maroon|"lorem ipsum\n"##) _
+f:close() _
+##gray|//??//##|| ||
+||||||||||~ [[# file-fmt]][#file-fmt-note file formats]||
+||~ ||~ perl||~ tcl||~ lua||~ groovy||
+||parse csv||# cpan -i Text::CSV _
+use Text::CSV; _
+ _
+my $csv = Text::CSV->new or die; _
+open my $f, $ARGV[0] or die; _
+while (my $row = $csv->getline($f)) { _
+@<&nbsp;&nbsp;>@print join("\t", @$row) . "\n"; _
+}|| || || ||
+||generate csv||##gray|# cpan -i Text::CSV## _
+use Text::CSV; _
+ _
+my $csv = Text::CSV->new or die; _
+$csv->eol ("\r\n"); _
+open my $f, ">foo.csv" or die; _
+$csv->print($f, ["one", "une", "uno"]); _
+$csv->print($f, _
+@<&nbsp;&nbsp;>@["two", "deux", "dos"]); _
+$f->close or die;|| || || ||
+||json generate/parse||##gray|# cpan -i JSON## _
+use JSON; _
+ _
+$raw = {t => 1, f => 0}; _
+$json = JSON->new->allow_nonref; _
+$s = $json->encode($raw); _
+$d = $json->decode($s);|| || || ||
+||generate xml||##gray|# cpan -i XML::Writer## _
+use XML::Writer; _
+ _
+my $writer = XML::Writer->new( _
+  OUTPUT => STDOUT); _
+$writer->startTag("a"); _
+$writer->startTag("b", id => "123"); _
+$writer->characters("foo"); _
+$writer->endTag("b"); _
+$writer->endTag("a"); _
+ _
+##gray|# <a><b id="123">foo</b></a>:## _
+$writer->end;|| || || ||
+||parse xml||##gray|# cpan -i XML::XPath## _
+use XML::XPath; _
+ _
+my $xml = "<a><b><c>foo</c></b></a>"; _
+ _
+##gray|# fatal error if XML not well-formed## _
+my $doc = XML::XPath->new(xml => $xml); _
+ _
+my $nodes = $doc->find("/a/b/c"); _
+print $nodes->size . "\n"; _
+ _
+$node = $nodes->get_node(0); _
+print $node->string_value . "\n"; _
+print $node->getAttribute("ref") . "\n";|| || || ||
+||parse html|| || || || ||
+||||||||||~ [[# directories]][#directories-note directories]||
+||~ ||~ perl||~ tcl||~ lua||~ groovy||
+||working directory _
+##gray|//get and set//##||use Cwd; _
+ _
+my $old_dir = cwd(); _
+ _
+chdir("/tmp");|| || || ||
+||[[# build-pathname]][#build-pathname-note build pathname]||use File::Spec; _
+ _
+File::Spec->catfile("/etc", "hosts")||file join "/etc" "hosts"|| || ||
+||[[# dirname-basename]][#dirname-basename-note dirname and basename]||use File::Basename; _
+ _
+print dirname("/etc/hosts"); _
+print basename("/etc/hosts");||file dirname "/etc/hosts" _
+file tail "/etc/hosts"|| || ||
+||absolute pathname||use Cwd; _
+ _
+##gray|# symbolic links are resolved:## _
+Cwd::abs_path("foo") _
+Cwd::abs_path("/foo") _
+Cwd::abs_path("../foo") _
+Cwd::abs_path(".")|| || || ||
+||[[# dir-iter]][#dir-iter-note iterate over directory by file]||opendir(my $dh, $ARGV[0]); _
+ _
+while (my $file = readdir($dh)) { _
+@<&nbsp;&nbsp;>@print $file . "\n"; _
+} _
+ _
+closedir($dh);|| || || ||
+||glob paths||while ( </etc/*> ) { _
+@<&nbsp;&nbsp;>@print $_ . "\n"; _
+}|| || || ||
+||[[# mkdir]][#mkdir-note make directory]||use File::Path 'make_path'; _
+ _
+make_path "/tmp/foo/bar";||file mkdir "/tmp/foo/bar"|| || ||
+||recursive copy||##gray|# cpan -i File::Copy::Recursive## _
+use File::Copy::Recursive 'dircopy'; _
+ _
+dircopy "/tmp/foodir", _
+@<&nbsp;&nbsp;>@"/tmp/bardir";|| || || ||
+||[[# rmdir]][#rmdir-note remove empty directory]||rmdir "/tmp/foodir";||file delete "/tmp/foodir"|| || ||
+||[[# rm-rf]][#rm-rf-note remove directory and contents]||use File::Path 'remove_tree'; _
+ _
+remove_tree "/tmp/foodir";||file delete -force "/tmp/foodir"|| || ||
+||[[# dir-test]][#dir-test-note directory test] _
+@<&nbsp;>@||-d "/tmp"||file isdirectory "/tmp"|| || ||
+||generate unused directory||use File::Temp qw(tempdir); _
+ _
+$path = tempdir(DIR=>"/tmp", _
+@<&nbsp;&nbsp;>@CLEANUP=>0);|| || || ||
+||system temporary file directory||use File::Spec; _
+ _
+File::Spec->tmpdir|| ||  || ||
+||||||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
+||~ ||~ perl||~ tcl||~ lua||~ groovy||
+||[[# cmd-line-arg]][#cmd-line-arg-note command line arguments]||@ARGV||[lindex $argv 0] _
+[lindex $argv 1] _
+##gray|//...//##||# arg _
+arg[0] _
+arg[1] _
+##gray|//...//##||args.size() _
+args[0] _
+args[1] _
+...||
+||program name||$0|| || || ||
+||[[# env-var]][#env-var-note environment variable] _
+##gray|//get, set//##||$ENV{"HOME"} _
+ _
+$ENV{"PATH") = "/bin";||$env(HOME)||os.getenv("HOME")||System.getenv("HOME")||
+||get pid, parent pid||$$ _
+getppid|| || || ||
+||get user id and name||$< _
+getpwuid($<)|| || || ||
+||[[# exit]][#exit-note exit] _
+@<&nbsp;>@||exit 0;||exit 0||os.exit(0)||System.exit(0)||
+||set signal handler||$SIG{INT} = sub { _
+@<&nbsp;&nbsp;>@die "exiting...\n"; _
+};|| || || ||
+||executable test||-x "/bin/ls"|| || || ||
+||[[# external-cmd]][#external-cmd-note external command]||system("ls -l /tmp") == 0 or _
+@<&nbsp;&nbsp;>@die "ls failed";||exec ls||os.execute("ls")|| ||
+||escaped external command||$path = <>; _
+chomp($path); _
+system("ls", "-l", $path) == 0 or _
+@<&nbsp;&nbsp;>@die "ls failed";|| || || ||
+||[[# cmd-subst]][#cmd-subst-note command substitution]||my $files = `ls -l /tmp`; _
+##gray|# or## _
+my $files = qx(ls);||set f [ open |ls ] _
+read f||f = io.popen("ls") _
+s = f:read("*a")|| ||
+||||||||||~ [[# option-parsing]][#option-parsing-note option parsing]||
+||~ ||~ perl||~ tcl||~ lua||~ groovy||
+||command line options||use Getopt::Long; _
+ _
+my ($file, $help, $verbose); _
+ _
+my $usage = _
+@<&nbsp;&nbsp;>@"usage: $0 [-f FILE] [-v] [ARG ...]\n"; _
+ _
+if (!GetOptions("file=s" => \$file, _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@"help" => \$help, _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@"verbose" => \$verbose)) { _
+@<&nbsp;&nbsp;>@print $usage; _
+@<&nbsp;&nbsp;>@exit 1; _
+} _
+ _
+if ($help) { _
+@<&nbsp;&nbsp;>@print $usage; _
+@<&nbsp;&nbsp;>@exit 0; _
+} _
+ _
+##gray|# After call to GetOptions() only _
+# positional arguments are in @ARGV. _
+# _
+# Options can follow positional arguments. _
+# _
+# Long options can be preceded by one or two _
+# hyphens. Single letters can be used if _
+# only one long option begins with that _
+# letter. _
+# _
+# Single letter options cannot be bundled _
+# after a single hyphen. _
+# _
+# Single letter options must be separated _
+# from an argument by a space or =.##|| || || ||
+||||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
+||~ ||~ perl||~ tcl||~ lua||~ groovy||
+||[[# load-lib]][#load-lib-note load library]||require 'Foo.pm'; _
+ _
+##gray|# searches @INC for Foo.pm:## _
+require Foo;||source foo.tcl _
+add 3 7||require 'foo' _
+add(3,7)|| ||
+||load library in subdirectory||require 'Foo/Bar.pm'; _
+ _
+require Foo::Bar;|| || || ||
+||hot patch||do 'Foo.pm';|| || || ||
+||load error||##gray|//fatal error if library not found or if last expression in library does not evaluate as true; fatal error parsing library propagates to client//##|| || || ||
+||main routine in library||unless (caller) { _
+@<&nbsp;&nbsp;>@##gray|//code//## _
+}|| || || ||
+||[[# lib-path]][#lib-path-note library path]||@INC _
+ _
+push @INC, "/some/path";||##gray|//none//##||package.path|| ||
+||[[# lib-path-env]][#lib-path-env-note library path environment variable]||$ PERL5LIB=~/lib perl foo.pl||TCLLIBPATH||LUA_PATH|| ||
+||library path command line option||$ perl -I ~/lib foo.pl|| || || ||
+||simple global identifiers||##gray|//none//##|| || || || ||
+||multiple label identifiers||##gray|//all identifiers not declared with// my##|| || || ||
+||[[# label-separator]][#label-separator-note label separator]||Foo::Bar::baz();||::||.|| ||
+||[[# namespace-decl]][#namespace-decl-note namespace declaration]||package Foo; _
+require Exporter; _
+our @ISA = ("Exporter"); _
+our @EXPORT_OK = qw(bar baz);||namespace ||module|| ||
+||child namespace declaration||package Foo::Bar;|| || || ||
+||unqualified import of namespace||##gray|# imports symbols in @EXPORT:## _
+use Foo;|| || || ||
+||unqualified import of definitions||##gray|# bar and baz must be in _
+# @EXPORT or @EXPORT_OK:## _
+use Foo qw(bar baz);|| || || ||
+||[[# pkg-management]][#pkg-management-note list installed packaged, install a package]||$ perldoc perllocal _
+$ cpan -i Moose|| || || ||
+||||||||||~ [[# objects]][#objects-note objects]||
+||~ ||~ perl||~ tcl||~ lua||~ groovy||
+||[[# def-class]][#def-class-note define class]||package Int; _
+ _
+sub new { _
+@<&nbsp;&nbsp;>@my $class = shift; _
+@<&nbsp;&nbsp;>@my $v = $_[0] @@||@@ 0; _
+@<&nbsp;&nbsp;>@my $self = {value => $v}; _
+@<&nbsp;&nbsp;>@bless $self, $class; _
+@<&nbsp;&nbsp;>@$self; _
+} _
+ _
+sub value { _
+@<&nbsp;&nbsp;>@my $self = shift; _
+@<&nbsp;&nbsp;>@if ( @_ > 0 ) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@$self->{'value'} = shift; _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@$self->{'value'}; _
+}|| || ||class Int { _
+@<&nbsp;&nbsp;>@public int value _
+@<&nbsp;&nbsp;>@Int (int n) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@value = n _
+@<&nbsp;&nbsp;>@} _
+}||
+||[[# create-obj]][#create-obj-note create object]||my $i = new Int(); ##gray|# or## _
+my $i = Int->new();|| || ||o = new Int(3)||
+||[[# blank-obj]][#blank-obj-note create blank object]|| || ||o = {}|| ||
+||[[# instance-var-visibility]][#instance-var-visibility-note instance variable visibility]||##gray|//private; getters and setters must be explicitly defined//##|| || || ||
+||[[# obj-literal]][#obj-literal-note object literal]|| || ||o = { _
+@<&nbsp;&nbsp;>@score=21, _
+@<&nbsp;&nbsp;>@doubleScore=function(self) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return 2*self.score _
+@<&nbsp;&nbsp;>@end _
+}|| ||
+||[[# set-attr]][#set-attr-note set attribute] _
+@<&nbsp;>@||$i->value($v + 1);|| ||o.score = 21||o.value = 4||
+||[[# get-attr]][#get-attr-note get attribute]||my $v = $i->value;|| ||if o.score == 21 then _
+@<&nbsp;&nbsp;>@print("Blackjack!") _
+end||o.value||
+||[[# def-method]][#def-method-note define method]||sub plus { _
+@<&nbsp;&nbsp;>@my $self = shift; _
+@<&nbsp;&nbsp;>@$self->value + $_[0]; _
+}|| ||function o.doubleScore(self) _
+@<&nbsp;&nbsp;>@return 2 * self.score _
+end|| ||
+||[[# invoke-method]][#invoke-method-note invoke method]||$i->plus(7)|| ||print("Answer: " .. o:doubleScore())|| ||
+||[[# method-missing]][#method-missing-note handle undefined method invocation]||our $AUTOLOAD; _
+ _
+sub AUTOLOAD { _
+@<&nbsp;&nbsp;>@my $self = shift; _
+@<&nbsp;&nbsp;>@my $argc = scalar(@_); _
+@<&nbsp;&nbsp;>@print "no def: $AUTOLOAD" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@. " arity: $argc\n"; _
+}|| || || ||
+||[[# def-class-method]][#def-class-method-note define class method]|| || || || ||
+||[[# invoke-class-method]][#invoke-class-method-note invoke class method]||Counter->instances();|| || || ||
+||[[# def-class-var]][#def-class-var-note define class variable]|| || || || ||
+||[[# get-set-class-var]][#get-set-class-var-note get and set class variable]|| || || || ||
+||||||||||~ [[# polymorphism]][#polymorphism-note polymorphism]||
+||~ ||~ perl||~ tcl||~ lua||~ groovy||
+||[[# subclass]][#subclass-note subclass]||package Counter; _
+ _
+our @ISA = "Int"; _
+ _
+my $instances = 0; _
+ _
+sub new { _
+@<&nbsp;&nbsp;>@my $class = shift; _
+@<&nbsp;&nbsp;>@my $self = Int->new(@_); _
+@<&nbsp;&nbsp;>@$instances += 1; _
+@<&nbsp;&nbsp;>@bless $self, $class; _
+@<&nbsp;&nbsp;>@$self; _
+} _
+ _
+sub incr { _
+@<&nbsp;&nbsp;>@my $self = shift; _
+@<&nbsp;&nbsp;>@$self->value($self->value + 1); _
+} _
+ _
+sub instances { _
+@<&nbsp;&nbsp;>@$instances; _
+}|| || || ||
+||||||||||~ [[# reflection]][#reflection-note reflection]||
+||~ ||~ perl||~ tcl||~ lua||~ groovy||
+||[[# inspect-type]][#inspect-type-note inspect type] _
+@<&nbsp;>@||ref([]) eq "ARRAY" _
+ _
+##gray|//returns empty string if argument not a reference; returns package name for objects//##|| ||type(o)||o.class _
+o.getClass()||
+||[[# basic-types]][#basic-types-note basic types]||SCALAR _
+ARRAY _
+HASH _
+CODE _
+REF _
+GLOB _
+LVALUE _
+FORMAT _
+IO _
+VSTRING _
+Regexp|| || || ||
+||[[# inspect-class]][#inspect-class-note inspect class]||ref($o) eq "Foo"|| || || ||
+||[[# has-method]][#has-method-note has method?] _
+@<&nbsp;>@||$o->can("reverse")|| || || ||
+||[[# msg-passing]][#msg-passing-note message passing]||for $i (0..10) { _
+@<&nbsp;&nbsp;>@$meth = "phone$i"; _
+@<&nbsp;&nbsp;>@$o->$meth(undef); _
+}|| || || ||
+||[[# eval]][#eval-note eval] _
+@<&nbsp;>@||while(<>) { _
+@<&nbsp;&nbsp;>@print ((eval), "\n"); _
+}|| ||assert(loadstring("x = 1+1"))()|| ||
+||[[# methods]][#methods-note list object methods]|| || || ||"lorem".metaClass.methods||
+||[[# attributes]][#attributes-note list object attributes]||keys %$o;|| || || ||
+||[[# loaded-lib]][#loaded-lib-note list loaded libraries]||##gray|# relative to directory in lib path:## _
+keys %INC _
+ _
+##gray|# absolute path:## _
+values %INC|| || || ||
+||[[# loaded-namespaces]][#loaded-namespaces-note list loaded namespaces]||grep { $_ =~ /::/ } keys %::|| || || ||
+||[[# inspect-namespace]][#inspect-namespace-note inspect namespace]||keys %URI::|| || || ||
+||[[# pretty-print]][#pretty-print-note pretty print]||use Data::Dumper; _
+ _
+%d = (lorem=>1, ipsum=>[2, 3]); _
+ _
+print Dumper(\%d);|| || || ||
+||[[# src-line-file]][#src-line-file-note source line number and file name]||@@__LINE__@@ _
+@@__FILE__@@|| || || ||
+||[[# cmd-line-doc]][#cmd-line-doc-note command line documentation]||$ perldoc Math::Trig|| || || ||
+||||||||||~ [[# net-web]][#net-web-note net and web]||
+||~ ||~ perl||~ tcl||~ lua||~ groovy||
+||[[# hostname-ip]][#hostname-ip-note get local hostname, dns lookup, reverse dns lookup]||use Sys::Hostname; _
+use IO::Socket; _
+ _
+$host = hostname; _
+$ip = inet_ntoa( _
+@<&nbsp;&nbsp;>@(gethostbyname(hostname))[4]); _
+$host2 = (gethostbyaddr( _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@inet_aton("10.45.234.23"), _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@AF_INET))[0];|| || || ||
+||[[# http-get]][#http-get-note http get]||use LWP::UserAgent; _
+ _
+$url = @@"http://www.google.com";@@ _
+$r = HTTP::Request->new(GET=>$url); _
+$ua = LWP::UserAgent->new; _
+$resp = $ua->request($r); _
+my $s = $resp->content();|| || || ||
+||[[# http-post]][#http-post-note http post]|| || || || ||
+||[[# absolute-url]][#absolute-url-note absolute url] _
+##gray|//from base and relative url//##||use URI; _
+ _
+URI->new_abs("analytics", _
+@<&nbsp;&nbsp;>@@@"http://google.com"@@);|| || || ||
+||[[# parse-url]][#parse-url-note parse url]||use URI; _
+ _
+$url = @@"http://foo.com:80/baz?q=3#baz";@@ _
+$up = URI->new($url); _
+ _
+$protocol = $up->scheme; _
+$hostname = $up->host; _
+$port = $up->port; _
+$path = $up->path; _
+$query_str = $up->query; _
+$fragment = $up->fragment; _
+ _
+##gray|# flat list of alternating keys and _
+# values:## _
+@params = $up->query_form();|| || || ||
+||[[# url-encode]][#url-encode-note url encode/decode]||use CGI; _
+ _
+CGI::escape("lorem ipsum?") _
+CGI::unescape("lorem%20ipsum%3F")|| || || ||
+||[[# base64]][#base64-note base64 encode/decode]||use MIME::Base64; _
+ _
+open my $f, "<", "foo.png"; _
+my $s = do { local $/; <$f> }; _
+my $b64 = encode_base64($s); _
+my $s2 = decode_base64($b64);|| || || ||
+||||||||||~ [[# unit-tests]][#unit-tests-note unit tests]||
+||~ ||~ perl||~ tcl||~ lua||~ groovy||
+||[[# test-class]][#test-class-note test class]||##gray|# cpan -i Test::Class Test::More## _
+package TestFoo; _
+use Test::Class; _
+use Test::More; _
+use base qw(Test::Class); _
+ _
+sub test_01 : Test { _
+@<&nbsp;&nbsp;>@ok(1, "not true!"); _
+} _
+ _
+1;|| || || ||
+||[[# run-test]][#run-test-note run tests, run test method]||$ cat TestFoo.t _
+use TestFoo; _
+Test::Class->runtests; _
+ _
+$ perl ./TestFoo.t|| || || ||
+||[[# assert-equal]][#assert-equal-note equality assertion]||my $s = "do re me"; _
+is($s, "do re me");|| || || ||
+||[[# assert-approx]][#assert-approx-note approximate assertion]|| || || || ||
+||[[# assert-regex]][#assert-regex-note regex assertion]||my $s = "lorem ipsum"; _
+like($s, qr/lorem/);|| || || ||
+||[[# assert-exc]][#assert-exc-note exception assertion]||use Test::Fatal; _
+ _
+ok(exception { 1 / 0 });|| || || ||
+||[[# test-setup]][#test-setup-note setup]||##gray|# in class TestFoo:## _
+sub make_fixture : Test(setup) { _
+@<&nbsp;&nbsp;>@print "setting up"; _
+};|| || || ||
+||[[# test-teardown]][#test-teardown-note teardown]||##gray|# in class TestFoo:## _
+sub teardown : Test(teardown) { _
+@<&nbsp;&nbsp;>@print "tearing down"; _
+};|| || || ||
+||||||||||~ [[# debugging-profiling]][#debugging-profiling-note debugging and profiling]||
+||~ ||~ perl||~ tcl||~ lua||~ groovy||
+||[[# check-syntax]][#check-syntax-note check syntax]||$ perl -c foo.pl|| || || ||
+||[[# warning-flag]][#warning-flag-note flags for stronger and strongest warnings]||$ perl -w foo.pl _
+$ perl -W foo.pl|| || || ||
+||[[# lint]][#lint-note lint]||$ perl MO=Lint foo.pl|| || || ||
+||[[# debugger]][#debugger-note debugger]||$ perl -d foo.pl|| || || ||
+||[[# debugger-cmd]][#debugger-cmd-note debugger commands]||h l n s b c T ?? ?? p q|| || || ||
+||[[# benchmark-code]][#benchmark-code-note benchmark code]||use Benchmark qw(:all); _
+ _
+$t = timeit(1_000_000, '$i += 1;'); _
+print timestr($t);|| || || ||
+||[[# profile-code]][#profile-code-note profile code]||$ perl -d:DProf foo.pl _
+$ dprofpp|| || || ||
+||||||||||~ [[# java-interop]][#java-interop-note java interoperation]||
+||~ ||~ perl||~ tcl||~ lua||~ groovy||
+||~ ||~ ##EFEFEF|@@______________________________________________@@##||~ ##EFEFEF|@@_____________________________________________@@##||~ ##EFEFEF|@@______________________________________________@@##||~ ##EFEFEF|@@______________________________________________@@##||
+
+
+[[# general-note]]
++ [#general General]
+
+[[# version-used-note]]
+++ [#version-used version used]
+
+The version used for verifying the examples in this cheat sheet.
+
+[[# show-version-note]]
+++ [#show-version show version]
+
+How to get the version.
+
+**perl:**
+
+Also available in the predefined variable {{$]}}, or in a different format in {{$^V}} and {{$PERL_VERSION}}.
+
+[[# implicit-prologue-note]]
+++ [#implicit-prologue implicit prologue]
+
+Code which examples in the sheet assume to have already been executed.
+
+**perl:**
+
+We adopt the convention that if an example uses a variable without declaring it, it should be taken to have been previously declared with {{my}}.
+
+[[# grammar-invocation-note]]
++ [#grammar-invocation Grammar and Invocation]
+
+[[# interpreter-note]]
+++ [#interpreter interpreter]
+
+The customary name of the interpreter and how to invoke it.
+
+**unix:**
+
+On Unix, scripts are executing by passing the file containing the script to the interpreter as an argument:
+
+[[code]]
+bash ~/configure.sh
+[[/code]]
+
+If the executable bit is set, the file can be run directly:
+
+[[code]]
+~/configure.sh	  
+[[/code]]
+
+To determine the name of the interpreter that will process the script, Unix will look for the presence of a shebang (#!) at the start of the file.  If the pathname to a command follows the shebang, it will be used to interpret the script.   If no shebang is present, the script will be interpreted with //sh//, which is //bash// on modern Unix systems.
+
+Arguments that follow the command will be passed to interpreter as command line arguments.
+
+If it is undesirable to specify the pathname of the interpreter, the env command can be used to search the PATH directories:
+
+[[code]]
+#!/usr/bin/env lua
+[[/code]]
+
+**groovy:**
+
+Groovy does not in general have {{#}} style comments, but one can be used on the first line to create a shebang script:
+
+[[code]]
+#!/usr/bin/env groovy
+
+println "hello world!"
+[[/code]]
+
+[[# repl-note]]
+++ [#repl repl]
+
+The customary name of the repl.
+
+**perl:**
+
+The Perl REPL {{perl -de 0}} does not save or display the result of an expression. {{perl -d }}is the Perl debugger and {{perl -e}} runs code provided on the command line.
+
+{{perl -de 0}} does not by default have readline, but it can be added:
+
+[[code]]
+$ cpan -i Term::ReadLine::Perl
+
+  <cpan output omitted>
+
+$ perl -de 0
+
+  DB<1> use Term::ReadLine::Perl;
+
+  DB<2> print 1 + 1;
+2
+[[/code]]
+
+[[# cmd-line-program-note]]
+++ [#cmd-line-program command line program]
+
+How to pass in a program to the interpreter on the command line.
+
+[[# block-delimiters-note]]
+++ [#block-delimiters block delimiters]
+
+How blocks are delimited.
+
+**perl:**
+
+Curly brackets {} delimit blocks. They are also used for:
+
+* hash literal syntax which returns a reference to the hash: {{$rh = { 'true' => 1, 'false' => 0 } }}
+* hash value lookup: {{$h{'true'}, $rh->{'true'} }}
+* variable name delimiter: {{$s = "hello"; print "${s}goodbye";}}
+
+**tcl:**
+
+The block delimiters {} and "" are the same as the string delimiters.  Double quotes "" cause variable interpolation and as a result they are not often used to delimit blocks.
+
+The following three lines of code behave the same:
+
+[[code]]
+if {true} {puts "true"}
+
+if "true" "puts \"true\""
+
+if "true" "puts {true}"
+[[/code]]
+
+**lua:**
+
+The {{function}} and {{if}} keywords open blocks which are terminated by {{end}} keywords.  The {{repeat}} keyword opens a block which is terminated by {{until}}.
+
+[[# stmt-separator-note]]
+++ [#stmt-separator statement separator]
+
+How the parser determines the end of a statement.
+
+**perl:**
+
+In a script statements are separated by semicolons and never by newlines. However, when using {{perl -de 0}} a newline terminates the statement.
+
+[[# expr-stmt-note]]
+++ [#expr-stmt are expressions statements]
+
+Whether an expression can be used where a statement is expected.
+
+**tcl:**
+
+Code fragments such as
+
+[[code]]
+1 + 1
+[[/code]]
+
+or
+
+[[code]]
+[expr 1 + 1]
+[[/code]]
+
+result in {{invalid command name}} errors when used as statements.
+
+The following is a valid statement:
+
+[[code]]
+expr 1 + 1
+[[/code]]
+
+The above cannot be used as an argument to a command without putting it inside square brackets, however.
+
+Since the constructs which can be used as statements and the constructs which can be used in the positions where expressions are normally used are disjoint, we claim that expressions are not statements in Tcl. 
+
+[[# source-code-encoding-note]]
+++ [#source-code-encoding source code encoding]
+
+How to identify the character encoding for a source code file.
+
+Setting the source code encoding makes it possible to safely use non-ASCII characters in string literals and regular expression literals.
+
+[[# eol-comment-note]]
+++ [#eol-comment end-of-line comment]
+
+How to make the remainder of the line a comment.
+
+[[# multiple-line-comment-note]]
+++ [#multiple-line-comment multiple line comment]
+
+How to comment out multiple lines.
+
+**tcl:**
+
+The method described requires that there not be an unmatched right curly bracket in the comment.
+
+**lua:**
+
+The double bracket notation {{[[ ]]}} is the syntax for a multiline string literal.
+
+[[# variables-expressions-note]]
++ [#variables-expressions Variables and Expressions]
+
+[[# local-var-note]]
+++ [#local-var local variable]
+
+How to declare a local variable.
+
+**perl:**
+
+Variables don't need to be declared unless {{use strict}} is in effect.
+
+If not initialized, scalars are set to {{undef}}, arrays are set to an empty array, and hashes are set to an empty hash.
+
+Perl can also declare variables with local. These replace the value of a global variable with the same name, if any, for the duration of the enclosing scope, after which the old value is restored.
+
+[[# local-scope-region-note]]
+++ [#local-scope-region regions which define local scope]
+
+A list of regions which define a lexical scope for the local variables they contain.
+
+**perl:**
+
+A local variable can be defined outside of any function definition or anonymous block, in which case the scope of the variable is the file containing the source code.
+
+When a region which defines a scope is nested inside another, then the inner region has read and write access to local variables defined in the outer region.
+
+Note that the blocks associated with the keywords {{if}}, {{unless}}, {{while}}, {{until}}, {{for}}, and {{foreach}} are anonymous blocks, and thus any {{my}} declarations in them create variables local to the block.
+
+[[# global-var-note]]
+++ [#global-var global variable]
+
+How to declare and access a global variable.
+
+**perl:**
+
+Undeclared variables, which are permitted unless {{use strict}} is in effect, are global. If {{use strict}} is in effect, a global can be declared at the top level of a package (i.e. outside any blocks or functions) with the our keyword. A variable declared with {{my}} inside a function will hide a global with the same name, if there is one.
+
+[[# const-note]]
+++ [#const constant]
+
+How to declare a constant.
+
+[[# assignment-note]]
+++ [#assignment assignment]
+
+How to assign a value to a variable.
+
+**perl:**
+
+Assignment operators have right precedence and evaluate to the right argument, so assignments can be chained:
+
+[[code]]
+$a = $b = 3;
+[[/code]]
+
+[[# parallel-assignment-note]]
+++ [#parallel-assignment parallel assignment]
+
+Whether parallel assignment is supported, and if so how to do it.
+
+[[# swap-note]]
+++ [#swap swap]
+
+How to swap the values in two variables.
+
+[[# compound-assignment-note]]
+++ [#compound-assignment compound assignment]
+
+Compound assignment operators mutate a variable, setting it to the value of an operation which takes the previous value of the variable as an argument.
+
+[[# incr-decr-note]]
+++ [#incr-decr increment and decrement]
+
+The C-style increment and decrement operators can be used to increment or decrement values. They return values and thus can be used in expressions. The prefix versions return the value in the variable after mutation, and the postfix version return the value before mutation.
+
+**perl:**
+
+The increment and decrement operators also work on strings. There are postfix versions of these operators which evaluate to the value before mutation:
+
+[[code]]
+$x = 1;
+$x++;
+$x--;
+[[/code]]
+
+[[# null-note]]
+++ [#null null]
+
+The null literal.
+
+
+[[# null-test-note]]
+++ [#null-test null test]
+
+How to test if a value is null.
+
+**perl:**
+
+{{$v == undef}} does not imply that {{$v}} is {{undef}}. Any comparison between {{undef}} and a falsehood will return true. The following comparisons are true:
+
+[[code]]
+$v = undef;
+if ($v == undef) { print "true"; }
+
+$v = 0;
+if ($v == undef) { print "sadly true"; }
+
+$v = '';
+if ($v == undef) { print "sadly true"; }
+[[/code]]
+
+**tcl**
+
+Tcl has has no null value.
+
+[[# undef-var-note]]
+++ [#undef-var undefined variable access]
+
+What happens when the value in an undefined variable is accessed.
+
+**perl:**
+
+Perl does not distinguish between unset variables and variables that have been set to {{undef}}. In Perl, calling {{defined($a)}} does not result in a error if {{$a}} is undefined, even with the {{strict}} pragma.
+
+**tcl:**
+
+The following test can be used to determine if a variable is defined:
+
+[[code]]
+expr ![info exists v]
+[[/code]]
+
+**lua:**
+
+There is no distinction between a variable being defined and a variable having a nil value.  Assigning nil to a variable frees it.
+
+[[# conditional-expr-note]]
+++ [#conditional-expr conditional expression]
+
+How to write a conditional expression.
+
+**lua:**
+
+[http://lua-users.org/wiki/TernaryOperator notes on Lua and the ternary operator]
+
+
+[[# arithmetic-logic-note]]
++ [#arithmetic-logic Arithmetic and Logic] 
+
+[[# true-false-note]]
+++ [#true-false true and false]
+
+The literals for true and false.
+
+[[# falsehoods-note]]
+++ [#falsehoods falsehoods]
+
+Values which are false in conditional expressions.
+
+**tcl:**
+
+0 is false and all other numeric values are true.  For non-numeric strings, "no" and "false" are false, and "yes" and "true" are true.  The comparison is case insensitive.  All other non-numeric strings raise an error when evaluated in a boolean context.
+
+[[# logical-op-note]]
+++ [#logical-op logical operators]
+
+Logical and, or, and not.
+
+**perl:**
+
+&& and || have higher precedence than assignment, compound assignment, and the ternary operator (?:), which have higher precedence than and and or.
+
+[[# relational-expr-note]]
+++ [#relational-expr relational expressions]
+
+How to write a relational expression.
+
+**tcl**
+
+To evaluate a relational expression outside of the the conditional of an {{if}} statement, the {{expr}} command can be used.
+
+Use square brackets to make an expression an argument of a command:
+
+[[code]]
+puts [expr $x>1]
+[[/code]]
+
+[[# relational-op-note]]
+++ [#relational-op relational operators]
+
+The available relational operators.
+
+**perl:**
+
+The operators: == != > < >= <= convert strings to numbers before performing a comparison.  Many string evaluate as zero in a numeric context and are equal according to the == operator.  To perform a lexicographic string comparison, use: //eq//, //ne//, //gt//, //lt//, //ge//, //le//.
+
+**tcl:**
+
+The {{eq}} and {{ne}} operators always perform comparisons on their operators as strings.  If the arguments are numeric, they are converted to a standard floating point representation.
+
+[[code]]
+% expr {"0" eq "00"}
+0
+% expr {"0" == "00"}
+1
+[[/code]]
+
+The {{==}} and {{!=}} operators try to convert their arguments to a numeric form for the purpose of comparison.  String comparison is used when no numeric conversion is possible:
+
+[[code]]
+% expr {"lorem" == "ipsum"}
+0
+[[/code]]
+
+The relational operators can be invoked as commands in the following manner:
+
+[[code]]
+% ::tcl::mathop::== 1 1
+1
+% ::tcl::mathop::!= 1 1
+0
+% ::tcl::mathop::> 1 1
+%::tcl::mathop::< 1 1
+0
+% ::tcl::mathop::>= 1 1
+1
+% ::tcl::mathop::<= 1 1
+1
+% ::tcl::mathop::eq "lorem" "ipsum"
+0
+%::tcl::mathop::ne "lorem" "ipsum"
+1
+[[/code]]
+
+[[# min-max-note]]
+++ [#min-max min and max]
+
+How to find the min and max value in mix of values or variables.
+
+[[# three-val-comparison-note]]
+++ [#three-val-comparison three value comparison]
+
+Binary comparison operators which return -1, 0, or 1 depending upon whether the left argument is less than, equal to, or greater than the right argument.
+
+The {{<=>}} symbol is called the spaceship operator.
+
+[[# arith-expr-note]]
+++ [#arith-expr arithmetic expression]
+
+How to evaluate an arithmetic expression.
+
+**tcl:**
+
+Arithmetic expressions are normally evaluated with the {{expr}} command.  However, the conditional argument of an {{if}} statement is always evaluated as an expression.
+
+[[# arith-op-note]]
+++ [#arith-op arithmetic operators]
+
+The binary arithmetic operators.
+
+The operators for addition, subtraction, multiplication, float division, integer division, modulus, and exponentiation.  Some languages provide a function //pow// instead of an operator for exponentiation.
+
+**tcl:**
+
+Arithmetic operators are normally used as arguments to {{expr}}, but commands also exist for each of them:
+
+[[code]]
+::tcl::mathop::+
+::tcl::mathop::-
+::tcl::mathop::*
+::tcl::mathop::/
+::tcl::mathop::**
+::tcl::mathop::%
+[[/code]]
+
+[[# int-div-note]]
+++ [#int-div integer division]
+
+How to perform integer division.
+
+**perl:**
+
+The {{integer}} pragma makes all arithmetic operations integer operations.  Floating point numbers are truncated before they are used.  Hence integer division could be performed with:
+
+[[code]]
+use integer;
+my $a = 7 / 3;
+no integer;
+[[/code]]
+
+**lua:**
+
+All Lua numbers are floating point.
+
+[[# int-div-zero-note]]
+++ [#int-div-zero integer division by zero]
+
+What happens when a float is divided by zero.
+
+**lua**
+
+As already noted there are no literals for {{inf}} and {{nan}}.  Once could assign the correct values
+to variables with the following code
+
+[[code]]
+inf = 1 / 0
+nan = 0 / 0
+[[/code]]
+
+{{inf}} can be compared to itself, but {{nan}} cannot.  In other words:
+
+[[code]]
+# this prints 'true'
+=(1 / 0) == (1 / 0)
+# this prints 'false'
+=(0 / 0) == (0 / 0)
+[[/code]]
+
+[[# float-div-note]]
+++ [#float-div float division]
+
+How to perform floating point division, even if the operands might be integers.
+
+[[# float-div-zero-note]]
+++ [#float-div-zero float division by zero]
+
+The result of dividing a float by zero.
+
+[[# power-note]]
+++ [#power power]
+
+How to compute exponentiation.
+
+The examples calculate 2 to the 32 which is the number of distinct values that can be stored in 32 bits.
+
+[[# sqrt-note]]
+++ [#sqrt sqrt]
+
+How to get the square root of a number.
+
+[[# sqrt-negative-one-note]]
+++ [#sqrt-negative-one sqrt -1]
+
+The result of taking the square root of -1.
+
+[[# transcendental-func-note]]
+++ [#transcendental-func transcendental functions]
+
+Functions for computing  the natural exponent, natural logarithm, sine, cosine, tangent,  arcsine, arccosine, arctangent, and {{atan2}}.
+
+The trigonometric functions are all in radians. {{atan2}} takes two arguments which are the x and y co-ordinates of a vector in the Cartesian plane.  It returns
+the angle to the positive x-axis made by the vector.
+
+[[# transcendental-const-note]]
+++ [#transcendental-const transcendental constants]
+
+Approximate values for //π// and //e//.
+
+[[# float-truncation-note]]
+++ [#float-truncation float truncation]
+
+Ways to convert a float to a nearby integer: towards zero; to the nearest integer; towards positive infinity; towards negative infinity.
+
+**perl:**
+
+The CPAN module {{Number::Format}} provides a {{round}} function.  The 2nd argument specifies the number of digits to keep to the right of the radix.  The default is 2.
+
+[[code]]
+use Number::Format 'round';
+
+round(3.14, 0);
+[[/code]]
+
+[[# absolute-val-note]]
+++ [#absolute-val absolute value]
+
+How to get the absolute value of a number.
+
+[[# int-overflow-note]]
+++ [#int-overflow integer overflow]
+
+What happens when an operation yields an integer larger than the largest representable value.
+
+[[# float-overflow-note]]
+++ [#float-overflow float overflow]
+
+What happens when an operation yields a float larger than the largest representable value.
+
+[[# rational-construction-note]]
+++ [#rational-construction rational construction]
+
+How to construct a rational number.
+
+[[# rational-decomposition-note]]
+++ [#rational-decomposition rational decomposition]
+
+How to decompose a rational number into a numerator and a denominator.
+
+[[# complex-construction-note]]
+++ [#complex-construction complex construction]
+
+How to construct a complex number.
+
+[[# complex-decomposition-note]]
+++ [#complex-decomposition complex decomposition]
+
+How to decompose a complex number into its real and imaginary part; how to get the polar decomposition of a complex number; how to get the complex conjugate.
+
+[[# random-num-note]]
+++ [#random-num random number]
+
+The examples show how to generate a uniform random integer in the range from 0 to 99, inclusive; how to generate a uniform float in the range 0.0 to 1.0; how to generate a float from a standard normal distribution
+
+[[# random-seed-note]]
+++ [#random-seed random seed]
+
+How to set the seed for the random number generator.
+
+Setting the seed to a fixed number can be used for repeatable results.
+
+[[# bit-op-note]]
+++ [#bit-op bit operators]
+
+The available bit operators.
+
+[[# binary-oct-hex-literals-note]]
+++ [#binary-oct-hex-literals binary, octal, and hex literals]
+
+Binary, octal, and hex integer literals
+
+[[# radix-note]]
+++ [#radix radix]
+
+How to convert integers to strings of digits of a given base. How to convert such strings into integers.
+
+**perl:**
+
+Perl has the functions {{oct}} and {{hex}} which convert strings encoded in octal and hex and return the corresponding integer. The {{oct}} function will handle binary or hex encoded strings if they have "0b" or "0x" prefixes.
+
+[[code]]
+oct("60")
+oct("060")
+oct("0b101010")
+oct("0x2a")
+
+hex("2a")
+hex("0x2a")
+[[/code]]
+
+[[# strings-note]]
++ [#strings Strings]
+
+[[# str-literal-note]]
+++ [#str-literal string literal]
+
+The syntax for a string literal.
+
+**perl:**
+
+When {{use strict}} is not in effect bareword strings are permitted.
+
+Barewords are strings without quote delimiters.  They are a feature of shells.  Barewords cannot contain whitespace or any other character used by the tokenizer to distinguish words.
+
+Before Perl 5 subroutines were invoked with an ampersand prefix & or the older {{do}} keyword.  With Perl 5 neither is required, but this made it impossible to distinguish a bareword string from a subroutine without knowing all the subroutines which are in scope.
+
+The following code illustrates the bareword ambiguity:
+
+[[code]]
+no strict;
+
+print rich . "\n";  # prints "rich"; rich is a bareword string
+
+sub rich { return "poor" }
+
+print rich . "\n";  # prints "poor"; rich is now a subroutine
+[[/code]]
+
+Perl allows custom delimiters to be used for single and double quoted strings. These can be used to avoid backslash escaping. If the left delimiter is (, [, or { the right delimiter must be ), ], or }, respectively.
+
+[[code]]
+my $s1 = q(lorem ipsum);
+my $s2 = qq($s1 dolor sit amet);
+[[/code]]
+
+[[# str-literal-newline-note]]
+++ [#str-literal-newline newline in literal]
+
+Are newlines permitted in a string literal?
+
+**lua:**
+
+One can avoid backslashes by using the double bracket string notation.  The following are equivalent:
+
+[[code]]
+s = "one\
+two\
+three"
+
+s = [[one
+two
+three]]
+[[/code]]
+
+[[# char-esc-note]]
+++ [#char-esc literal escapes]
+
+Backslash escape sequences that can be used in a string literal.
+
+**perl:**
+
+In addition to the character escapes, Perl has the following translation escapes:
+
+||\u||make next character uppercase||
+||\l||make next character lowercase||
+||\U||make following characters uppercase||
+||\L||make following characters lowercase||
+||\Q||backslash escape following nonalphanumeric characters||
+||\E||end \U, \L, or \Q section||
+
+When {{use charnames}} is in effect the \N escape sequence is available:
+
+[[code]]
+binmode(STDOUT, ':utf8');
+
+use charnames ':full';
+
+print "lambda: \N{GREEK SMALL LETTER LAMDA}\n";
+
+use charnames ':short';
+
+print "lambda: \N{greek:lamda}\n";
+
+use charnames qw(greek);
+
+print "lambda: \N{lamda}\n";
+[[/code]]
+
+[[# here-doc-note]]
+++ [#here-doc here document]
+
+Here documents are strings terminated by a custom identifier. They perform variable substitution and honor the same backslash escapes as double quoted strings.
+
+**perl:**
+
+Put the custom identifier in single quotes to prevent variable interpolation and backslash escape interpretation:
+
+[[code]]
+s = <<'EOF';
+Perl code uses variables with dollar
+signs, e.g. $var
+EOF
+[[/code]]
+
+[[# var-interpolation-note]]
+++ [#var-interpolation variable interpolation]
+
+The syntax for interpolating variables into a string literal.
+
+[[# expr-interpolation-note]]
+++ [#expr-interpolation expression interpolation]
+
+Interpolating the result of evaluating an expression in a string literal.
+
+[[# str-concat-note]]
+++ [#str-concat concatenate]
+
+The string concatenation operator.
+
+[[# str-replicate-note]]
+++ [#str-replicate replicate]
+
+The string replication operator.
+
+[[# split-note]]
+++ [#split split]
+
+**tcl:**
+
+//split// takes an optional 2nd argument which is a string containing the characters to split on.  //split// can only split on characters, not strings or regular expressions.  For each pair of adjacent splitting characters in the input string, there will be an empty string in the result list.
+
+**lua:**
+
+[http://lua-users.org/wiki/SplitJoin how to split a string in Lua]
+
+[[# join-note]]
+++ [#join join]
+
+How to concatenate the elements of an array into a string with a separator.
+
+[[# sprintf-note]]
+++ [#sprintf sprintf]
+
+How to create a string using a printf style format.
+
+[[# case-note]]
+++ [#case case manipulation]
+
+[[# trim-note]]
+++ [#trim trim]
+
+How to remove whitespace from the ends of a string.
+
+**perl:**
+
+An example of how to trim a string without installing a library:
+
+[[code]]
+$s = " lorem ";
+$s =~ s/^\s*(.*)\s*$/\1/;
+[[/code]]
+
+The return value of the {{=~}} operator is boolean, indicating whether a match occurred.  Also the left hand side of the {{=~}} operator must be a scalar variable that can be modified.  Using the {{=~}} operator is necessarily imperative, unlike the {{Text::Trim}} functions which can be used in expressions.
+
+
+[[# pad-note]]
+++ [#pad pad]
+
+How to pad a string to a given length on the right; how to pad on the left; how to center a string inside a larger string of a given length.
+
+**groovy**
+
+Provide a second argument to set the pad character:
+
+[[code]]
+"lorem".padRight(10, '_')
+"lorem".padLeft(10, '_')
+"lorem.center(10, '_')
+[[/code]]
+
+[[# str-to-num-note]]
+++ [#str-to-num string to number]
+
+How to convert a string to a number.
+
+**perl:**
+
+Perl converts a scalar to the desired type automatically and does not raise an error if the string contains non-numeric data. If the start of the string is not numeric, the string evaluates to zero in a numeric context.
+
+**tcl:**
+
+All values are strings.  The //expr// function will concatenate the arguments together and then evaluate the string as a numerical expression.  If all the numbers are integers, the expression is computed using integer arithmetic.  Otherwise floating point arithmetic is used.  The variables can contain compound arithmetic expressions; the following script outputs 10:
+
+[[code]]
+set a "7+3"
+puts [expr $a]
+[[/code]]
+
+**lua:**
+
+Arithmetic operators will attempt to convert strings to numbers; if the string contains non-numeric data an error results.  Note that relational operators do not perform conversion.  Thus the following expression is false:
+
+[[code]]
+ 0 == '0'
+[[/code]]
+
+
+[[# num-to-str-note]]
+++ [#num-to-str number to string]
+
+How to convert a number to a string.
+
+**lua:**
+
+//print// and the .. operator will convert all types to strings.
+
+[[code]]
+(8).toString()
+x = 7
+x.toString()
+[[/code]]
+[[# str-length-note]]
+++ [#str-length length]
+
+How to get the number of characters in a string.
+
+[[# index-substr-note]]
+++ [#index-substr index substring]
+
+How to get the index of the leftmost occurrence of a substring.
+
+[[# extract-substr-note]]
+++ [#extract-substr extract substring]
+
+How to extract a substring.
+
+[[# chr-ord-note]]
+++ [#chr-ord chr and ord]
+
+converting characters to ASCII codes and back
+
+[[# regexes-note]]
++ [#regexes Regular Expressions]
+
+* [http://perldoc.perl.org/perlre.html perlre] and [http://perldoc.perl.org/perlreref.html perlreref]
+
+[[# regex-literal-note]]
+++ [#regex-literal literal, custom delimited literal]
+
+The literal for a regular expression; the literal for a regular expression with a custom delimiter.
+
+[[# char-class-abbrev-note]]
+++ [#char-class-abbrev character class abbreviations and anchors]
+
+The supported character class abbreviations and anchors
+
+||~ abbrev||~ description||
+||.||any character; doesn't match newline when -linestop in effect||
+||^||beginning of string; beginning of line when -lineanchor in effect||
+||$||end of string; end of line when -lineanchor in effect||
+||\A||beginning of string||
+||%a||letter||
+||\b, \y||word boundary||
+||\B, \Y||not a word boundary||
+||%c||control character||
+||\d, %d||digit [0-9]||
+||\D||not a digit [^0-9]||
+||\h||horizontal whitespace character [ \t]||
+||\H||not a horizontal whitespace character [^ \t]||
+||%l||lowercase letter||
+||\m||beginning of a word||
+||\M||end of a word||
+||%p||punctuation character||
+||\s||white space||
+||\S||not white space||
+||%u||uppercase letter||
+||\v||vertical whitespace character [\r\n\f]||
+||\V||not a vertical whitespace character [^\r\n\f]|| 
+||\w, %w||alphanumeric character.  \w also matches underscore||
+||\W||not a word character||
+||\Z||end of string||
+||%z||the null character (ASCII zero)||
+
+[[# regex-anchors-note]]
+++ [#regex-anchors anchors]
+
+The supported anchors.
+
+[[# regex-match-note]]
+++ [#regex-match match test]
+
+How to test whether a regular expression matches a string.
+
+**groovy**
+
+The {{=~}} operator succeeds if the regex matches part of the string.  The {{==~}} succeeds only if the regular expression matches the entire string:
+
+[[code]]
+s = "it's 1999"
+
+// true:
+s =~ /1999/
+
+// false:
+s ==~ /1999/
+[[/code]]
+
+[[# case-insensitive-regex-note]]
+++ [#case-insensitive-regex case insensitive match test]
+
+How to test whether a regular expression matches a string, ignoring case.
+
+[[# regex-modifiers-note]]
+++ [#regex-modifiers modifiers]
+
+Available flags for modifying regular expression behavior.
+
+**tcl:**
+
+||~ modifier||~ description||
+||-all||causes regexp to return number of matches in string; causes regsub to replace all occurrences of match||
+||-expanded||ignore whitespace in patten||
+||-indices||modifies group capture: returns start and end indices of the substring instead of the substring itself||
+||-inline||return the total match and each of the group captures as a list. Normally the number of matches is returned||
+||-line||same as using -lineanchor and -linestop||
+||-lineanchor||causes ^ and $ to match the beginning and ending of lines (\A and \Z still match beginning and ending of string)||
+||-linestop||causes . to not matcch a newline||
+||-nocase||makes matching case insensitive||
+
+[[# subst-note]]
+++ [#subst substitution]
+
+How to replace all occurrences of a pattern in a string with a substitution.
+
+**perl:**
+
+The {{=~}} operator performs the substitution in place on the string and returns the number of substitutions performed.
+
+The {{g}} modifiers specifies that all occurrences should be replaced.  If omitted, only the first occurrence is replaced.
+
+**tcl:**
+
+To replace only the first occurrence of the pattern, omit the {{-all}} flag:
+
+[[code]]
+set s "do re mi mi mi"
+regsub "mi" $s "ma"
+[[/code]]
+
+**lua:**
+
+To specify the maximum number of pattern occurrences to be replaced, provide a fourth argument:
+
+[[code]]
+s = "do re mi mi mi"
+s = string.gsub(s, "mi", "ma", 1)
+[[/code]]
+
+[[# match-prematch-postmatch-note]]
+++ [#match-prematch-postmatch match, prematch, postmatch]
+
+How to get the substring that matched the regular expression, as well as the part of the string before and after the matching substring.
+
+**perl:**
+
+The special variables {{$&}}, {{$@@`@@}}, and {{$'}} also contain the match, prematch, and postmatch.
+
+[[# group-capture-note]]
+++ [#group-capture group capture]
+
+How to get the substrings which matched a parenthesized portion of a regular expression.
+
+[[# named-group-capture-note]]
+++ [#named-group-capture named group capture]
+
+How to get the substrings which matched the parenthesized parts of a regular expression and put them into a dictionary.
+
+For reference, we call the {{(?P<foo>@@...@@)}} notation //Python-style// and the {{(?<foo>@@...@@)}} notation //Perl-style//.
+
+**perl:**
+
+Perl 5.10 added support for both Python-style and Perl-style named groups.
+
+[[# backreference-note]]
+++ [#backreference backreference]
+
+How to use backreferences in a regex; how to use backreferences in the replacement string of substitution.
+
+Perl uses and exposes the {{tm}} struct of the standard library.  The first nine values of the struct (up to the member {{tm_isdst}}) are put into an array.
+
+[[# dates-time-note]]
++ [#dates-time Date and Time]
+
+[[# date-time-type-note]]
+++ [#date-time-type date/time type]
+
+The data type used to hold a combined date and time.
+
+**perl**
+
+Built in Perl functions work with either (1) scalars containing the Unix epoch as an integer or (2) arrays containing the first nine values of the standard C library tm struct.  When {{use Time::Piece}} is in effect functions which work with tm arrays are replaced with variant that work with the {{Time::Piece}} wrapper.
+
+The modules {{Time::Local}} and {{Date::Parse}} can create scalars containing the Unix epoch.
+
+CPAN provides the {{DateTime}} module which provides objects with functionality comparable to the DateTime objects of PHP and Python.
+
+[[# current-date-time-note]]
+++ [#current-date-time current date/time]
+
+How to get the current time.
+
+[[# unix-epoch-note]]
+++ [#unix-epoch to unix epoch, from unix epoch]
+
+How to convert a date/time object to the Unix epoch; how to convert a date/time object from the Unix epoch.
+
+The Unix epoch is the number of seconds since January 1, 1970 UTC.  In the case of Tcl and Lua, the native date/time object is the Unix epoch, so no conversion is needed.
+
+[[# current-unix-epoch-note]]
+++ [#current-unix-epoch current unix epoch]
+
+
+[[# strftime-note]]
+++ [#strftime strftime]
+
+How to use a strftime style format string to convert a date/time object to a string representation.
+
+{{strftime}} is from the C standard library.  The Unix {{date}} command uses the same style of format.
+
+[[# strptime-note]]
+++ [#strptime strptime]
+
+How to parse a string into a date/time object using a {{strftime}} style format string.  {{strptime}} is from the C standard library.
+
+[[# parse-date-note]]
+++ [#parse-date parse date w/o format]
+
+How to parse a string into a date/time object without using a format string.
+
+[[# get-date-parts-note]]
+++ [#get-date-parts get date parts]
+
+How to get the year as a four digit integer; how to get the month as an integer from 1 to 12; how to get the day of the month as an integer from 1 to 31.
+
+[[# get-time-parts-note]]
+++ [#get-time-parts get time parts]
+
+How to get the hour as an integer from 0 to 23; how to get the minute as an integer from 0 to 59; how to get the second as an integer from 0 to 59.
+
+[[# date-from-parts-note]]
+++ [#date-from-parts build date/time from parts]
+
+How to assemble a date/time object from the 4 digit year, month (1-12), day (1-31), hour (0-23), minute (0-59), and second (0-59).
+
+[[# date-subtraction-note]]
+++ [#date-subtraction result of date subtraction]
+
+[[# add-time-duration-note]]
+++ [#add-time-duration add time duration]
+
+[[# local-tmz-note]]
+++ [#local-tmz local timezone]
+
+[[# tmz-offset-note]]
+++ [#tmz-offset timezone name, offset from UTC, is daylight savings?]
+
+How to get time zone information: the name of the timezone, the offset in hours from UTC, and whether the timezone is currently in daylight savings.
+
+Timezones are often identified by [http://en.wikipedia.org/wiki/List_of_time_zone_abbreviations three or four letter abbreviations].  As can be seen from the list, many of the abbreviations do not uniquely identify a timezone.  Furthermore many of the timezones have been altered in the past.  The [http://en.wikipedia.org/wiki/Tz_database Olson database] (aka Tz database) decomposes the world into zones in which the local clocks have all been set to the same time since 1970 and it gives these zones unique names.
+
+**perl:**
+
+It is not necessary to create a DateTime object to get the local timezone offset:
+
+[[code]]
+use Time::Piece;
+
+$t = localtime(time);
+$offset_hrs = $t->tzoffset / 3600;
+[[/code]]
+
+[[# microseconds-note]]
+++ [#microseconds microseconds]
+
+[[# sleep-note]]
+++ [#sleep sleep]
+
+How to sleep for half a second.
+
+**perl:**
+
+The Perl standard library includes a version of {{sleep}} which supports fractional seconds:
+
+[[code]]
+use Time::HiRes qw(sleep);
+
+sleep 0.5;
+[[/code]]
+
+[[# timeout-note]]
+++ [#timeout timeout]
+
+
+[[# arrays-note]]
++ [#arrays Arrays]
+
+The names given by the languages for their basic container types:
+
+||~ ||~ perl||~ tcl||~ lua||~ groovy||
+||[#arrays array]||array, list||list||table||java.util.ArrayList||
+||[#dict dictionary]||hash||array, dict||table||java.util.LinkedHashMap||
+
+**perl:**
+
+Arrays are a data type.  Lists are a context.
+
+**tcl:**
+
+Tcl arrays are associative arrays.  The dict type is new in Tcl 8.5.  See the documentation for [http://www.tcl.tk/man/tcl8.5/TclCmd/array.htm array] and [http://www.tcl.tk/man/tcl8.5/TclCmd/dict.htm dict].
+
+**lua:**
+
+Note that Lua uses the same data structure for arrays and dictionaries.
+
+[[# array-literal-note]]
+++ [#array-literal literal]
+
+Array literal syntax.
+
+**perl:**
+
+Square brackets create an array and return a reference to it:
+
+[[code]]
+$a = [1,2,3]
+[[/code]]
+
+[[# quote-words-note]]
+++ [#quote-words quote words]
+
+The quote words operator, which is a literal for arrays of strings where each string contains a single word.
+
+[[# array-size-note]]
+++ [#array-size size]
+
+How to get the number of elements in an array.
+
+**lua:**
+
+The {{#}} operator returns the index of a non-nil value in the array that is followed by a nil value.  Unfortunately different Lua implementations behave differently when there are multiple such indices.  In particular there is no guarantee that the index will be the index of the last non-nil value in the array.
+
+{{# a}} returns the number of times that a {{for}} loop used with {{ipairs}} will execute.
+
+[[# array-lookup-note]]
+++ [#array-lookup lookup]
+
+How to access a value in an array by index.
+
+**perl:**
+
+A negative index refers to the //length - index// element.
+
+**tcl:**
+
+Does not support negative indices.  To change the 2nd element in the list //a// to 8, use
+
+[[code]]
+lset a 1 8
+[[/code]]
+
+//lset// will not increase the size of the list if the index is out of bounds.  For more list manipulation commands see http://www.tcl.tk/man/tcl/tutorial/Tcl15.html.
+
+**lua:**
+
+Lua arrays are indexed from one.
+
+[[# array-update-note]]
+++ [#array-update update]
+
+How to change the value stored in an array at given index.
+
+[[# array-out-of-bounds-note]]
+++ [#array-out-of-bounds out-of-bounds behavior]
+
+What happens when a lookup is performed on an out-of-bounds index.
+
+[[# array-element-index-note]]
+++ [#array-element-index index of element]
+
+How to get the first or last index containing a value.
+
+**perl:**
+
+Some [http://www.perlmonks.org/?node_id=66003 techniques for getting the index of an array element].
+
+[[# array-slice-note]]
+++ [#array-slice slice]
+
+How to slice a subarray from an array.
+
+**perl:**
+
+Perl arrays can take an array of indices as the index value.  The range of values selected can be discontinuous and the order of the values can be manipulated:
+
+[[code]]
+@nums = (1,2,3,4,5,6);                                                                                                                                                  
+@nums[(1,3,2,4)];                                                                                                                                                 
+[[/code]]
+
+[[# array-slice-to-end-note]]
+++ [#array-slice-to-end slice to end]
+
+How to slice an array to the end
+
+[[# array-back-note]]
+++ [#array-back manipulate back]
+
+How to push or pop elements from the back an array.  The return value of the pop command is the value of the item which is removed.
+
+With these commands an array can be used as a stack.
+
+[[# array-front-note]]
+++ [#array-front manipulate front]
+
+How to shift or unshift elements to the front of an array.  The return value of the shift command is the value of the item which is removed.
+
+With these commands an array can be used as a stack.  When combined with the commands from the previous section the array can be used as a queue.
+
+[[# array-concat-note]]
+++ [#array-concat concatenate]
+
+How to concatenate two arrays.
+
+[[# array-replicate-note]]
+++ [#array-replicate replicate]
+
+How to create an array consisting of //n// copies of a value.
+
+[[# array-copy-note]]
+++ [#array-copy copy]
+
+How to make an address copy, a shallow copy, and a deep copy of an array.
+
+After an address copy is made, modifications to the copy also modify the original array.
+
+After a shallow copy is made, the addition, removal, or replacement of elements in the copy does not modify of the original array. However, if elements in the copy are modified, those elements are also modified in the original array.
+
+A deep copy is a recursive copy. The original array is copied and a deep copy is performed on all elements of the array. No change to the contents of the copy will modify the contents of the original array.
+
+**perl:**
+
+Taking a reference is customary way to make an address copy in Perl, but the Perl example is not equivalent to the other languages in that different syntax has to be used to access the original array and the address copy: {{@a}} and {{@$a1}}. To make {{@a1}} and {{@a}} refer to the same array, use typeglobs:
+
+[[code]]
+*a1 = *a;
+[[/code]]
+
+[[# array-arg-note]]
+++ [#array-arg arrays as function arguments]
+
+How arrays are passed as arguments.
+
+[[# array-iter-note]]
+++ [#array-iter iterate over elements]
+
+How to iterate through the elements of an array.
+
+**perl:**
+
+{{for}} and {{foreach}} are synonyms.  Some use {{for}} exclusively for C-style for loops and {{foreach}} for array iteration.
+
+[[# range-iteration-note]]
+++ [#range-iteration iterate over range]
+
+Iterate over a range without instantiating it as a list.
+
+**perl:**
+
+With Perl 5.005 the {{for}} and {{foreach}} operators were optimized to not instantiate a range argument as a list.
+
+[[# range-array-note]]
+++ [#range-array instantiate range as array]
+
+How to convert a range to an array.
+
+[[# array-reverse-note]]
+++ [#array-reverse reverse]
+
+How to reverse the order of the elements in an array.
+
+[[# array-sort-note]]
+++ [#array-sort sort]
+
+How to sort an array.
+
+[[# array-dedupe-note]]
+++ [#array-dedupe dedupe]
+
+How to remove extra occurrences of elements from an array.
+
+[[# membership-note]]
+++ [#membership membership]
+
+How to test whether a value is an element of an array; how to test whether a value is not an element of an array.
+
+[[# intersection-note]]
+++ [#intersection intersection]
+
+How to compute an intersection.
+
+[[# union-note]]
+++ [#union union]
+
+How to compute the union of two arrays.
+
+[[# set-diff-note]]
+++ [#set-diff relative complement]
+
+How to find the elements of an array that are not in another array.
+
+[[# map-note]]
+++ [#map map]
+
+How to apply a function to the elements of an array.
+
+None of the examples modify the source array.
+
+**lua:**
+
+[http://lua-users.org/wiki/FunctionalLibrary map implementation]
+
+[[# filter-note]]
+++ [#filter filter]
+
+How to select the elements of an array for which a predicate is true.
+
+None of the examples modify the source array.
+
+**lua:**
+
+[http://lua-users.org/wiki/FunctionalLibrary filter implementation]
+
+[[# reduce-note]]
+++ [#reduce reduce]
+
+How to reduce an array using a binary operation and an initial value.
+
+None of the examples modify the source array.
+
+**lua:**
+
+[http://lua-users.org/wiki/FunctionalLibrary reduce implementation]
+
+[[# universal-existential-test-note]]
+++ [#universal-existential-test universal and existential tests]
+
+How to test whether all elements in an array satisfy a predicate; how to test whether at least one element in an array satisfies a predicate.
+
+[[# shuffle-note]]
+++ [#shuffle shuffle]
+
+How to shuffle an array.
+
+[[# zip-note]]
+++ [#zip zip]
+
+How to interleave arrays. In the case of two arrays the result is an array of pairs or an associative list.
+
+**perl:**
+
+{{zip}} expects arrays as arguments, which makes it difficult to define the arrays to be zipped on the same line as the invocation.  It can be done like this:
+
+[[code]]
+@a = zip @{[1,2,3]}, @{['a','b','c']};
+[[/code]]
+
+[[# dictionaries-note]]
++ [#dictionaries Dictionaries]
+
+**tcl:**
+
+The {{dict}} type was introduced in Tcl 8.5.
+
+In earlier versions of Tcl associative arrays were used when a dictionary type was needed, and they remain an alternative in Tcl 8.5.  Associative arrays are stored in variables as strings. The {{array}} command is used to treat the string as an associative array:
+
+[[code]]
+array set d [list "t" 1 "f" 0]
+array size d
+$d(t)
+array set d [list "t" 2]
+info exists d(t)
+array unset d "t"
+foreach {k v} [array get d] {
+  puts k
+  puts v
+}
+[[/code]]
+
+[[# dict-literal-note]]
+++ [#dict-literal literal]
+
+The syntax for a dictionary literal.
+
+**perl:**
+
+Curly brackets create a hash and return a reference to it:
+
+[[code]]
+$h = { 'hello' => 5, 'goodbye' => 7 }
+[[/code]]
+
+[[# dict-size-note]]
+++ [#dict-size size]
+
+How to get the number of entries in a dictionary.
+
+[[# dict-lookup-note]]
+++ [#dict-lookup lookup]
+
+How to look up the value associated with a key.
+
+**perl:**
+
+Use the ampersand prefix {{@}} to slice a Perl hash.  The index is a list of keys.
+
+[[code]]
+%nums = ('b'=>1, 't'=>2, 'a'=>3);
+@nums{('b','t')} 
+[[/code]]
+
+[[# dict-update-note]]
+++ [#dict-update update]
+
+How to set or update the value associated with a key.
+
+[[# dict-out-of-bounds-note]]
+++ [#dict-out-of-bounds out of bounds behavior]
+
+What happens when a lookup is performed for a key the dictionary does not have.
+
+[[# dict-key-check-note]]
+++ [#dict-key-check is key present]
+
+How to find out whether a value is associated with a key.
+
+[[# dict-delete-note]]
+++ [#dict-delete delete]
+
+How to remove a key/value pair from a dictionary.
+
+[[# dict-assoc-array-note]]
+++ [#dict-assoc-array from array of pairs, from even length array]
+
+How to create a dictionary from an array of pairs; how to create a dictionary from an even length array.
+
+[[# dict-merge-note]]
+++ [#dict-merge merge]
+
+How to merge the values of two dictionaries.
+
+In the examples, if the dictionaries {{d1}} and {d2}} share keys then the values from {{d2}} will be used in the merged dictionary.
+
+[[# dict-invert-note]]
+++ [#dict-invert invert]
+
+How to turn a dictionary into its inverse. If a key 'foo' is mapped to value 'bar' by a dictionary, then its inverse will map the key 'bar' to the value 'foo'. However, if multiple keys are mapped to the same value in the original dictionary, then some of the keys will be discarded in the inverse.
+
+[[# dict-iter-note]]
+++ [#dict-iter iteration]
+
+How to iterate through all the key/value pairs of a dictionary.
+
+[[# dict-key-val-array-note]]
+++ [#dict-key-val-array keys and values as arrays]
+
+How to convert the keys of a dictionary to an array; how to convert the values of a dictionary to an array.
+
+[[# dict-sort-val-note]]
+++ [#dict-sort-val sort by values]
+
+How to sort the data in a dictionary by its values.
+
+[[# dict-default-val-note]]
+++ [#dict-default-val default value, computed value]
+
+How to create a dictionary with a default value for missing keys; how to compute and store the value on lookup.
+
+**perl:**
+
+How to use a [http://www.perlmonks.org/?node_id=684059 tied hash].  If the CPAN module Tie::ExtraHash is installed there is [http://www.perlmonks.org/?node_id=684069 a shorter way].
+
+[[# functions-note]]
++ [#functions Functions]
+
+Python has both functions and methods.  Ruby only has methods: functions defined at the top level are in fact methods on a special main object.  Perl subroutines can be invoked with a function syntax or a method syntax.
+
+[[# func-def-note]]
+++ [#func-def define function]
+
+How to define a function.
+
+**perl:**
+
+One can also use {{shift}} to put the arguments into local variables:
+
+[[code]]
+sub add {
+  my $a = shift;
+  my $b = shift;
+
+  $a + $b;
+}
+[[/code]]
+
+
+[[# func-invocation-note]]
+++ [#func-invocation invoke function]
+
+How to invoke a function.
+
+[[# nested-func-note]]
+++ [#nested-func nested function]
+
+Can function definitions be nested; are nested functions visible outside of the function in which they are defined. 
+
+[[# missing-arg-note]]
+++ [#missing-arg missing argument behavior]
+
+How incorrect number of arguments upon invocation are handled.
+
+**perl:**
+
+Perl collects all arguments into the @_ array, and subroutines normally don't declare the number of arguments they expect.  However, this can be done with [http://perldoc.perl.org/perlsub.html#Prototypes prototypes].  Prototypes also provide a method for taking an array from the caller and giving a reference to the array to the callee.
+
+[[# extra-arg-note]]
+++ [#extra-arg extra argument behavior]
+
+If a function is invoked with more arguments than are declared, how the function can access them.
+
+[[# default-arg-note]]
+++ [#default-arg default argument]
+
+How to declare a default value for an argument.
+
+[[# var-arg-note]]
+++ [#var-arg variable number of arguments]
+
+How to write a function which accepts a variable number of argument.
+
+**lua:**
+
+In version 5.1 and earlier the global variable {{arg}} was set automatically.  In version 5.2 one must explicitly assign to a local array.
+
+It is possible to get the number of arguments that were provided without assigning to a local array:
+
+[[code]]
+function foo(...)
+  print('passed ' .. select('#', ...) .. ' arguments')
+end
+[[/code]]
+
+[[# retval-note]]
+++ [#retval return value]
+
+How the return value of a function is determined.
+
+[[# multiple-retval-note]]
+++ [#multiple-retval multiple return values]
+
+**lua:**
+
+If a function returns multiple values, the first value can be selected by placing the invocation inside parens: 
+
+[[code]]
+function roots(x)
+  return math.sqrt(x), -math.sqrt(x)
+end
+(roots(4))
+[[/code]]
+
+[[# lambda-decl-note]]
+++ [#lambda-decl anonymous function literal]
+
+How to define a lambda function.
+
+[[# lambda-invocation-note]]
+++ [#lambda-invocation invoke anonymous function]
+
+How to invoke a lambda function.
+
+[[# func-as-val-note]]
+++ [#func-as-val function as value]
+
+How to store a function in a variable and pass it as an argument.
+
+[[# private-state-func-note]]
+++ [#private-state-func function with private state]
+
+How to create a function with private state which persists between function invocations.
+
+[[# default-scope-note]]
+++ [#default-scope default scope]
+
+What scope do variables declared inside a function have by default.
+
+**tcl:**
+
+Tcl variables inside functions have local scope. 
+
+[[# execution-control-note]]
++ [#execution-control Execution Control]
+
+[[# if-note]]
+++ [#if if]
+
+The {{if}} statement.
+
+**perl:**
+
+When an {{if}} block is the last statement executed in a subroutine, the return value is the value of the branch that executed.
+
+**tcl:**
+
+Tcl also has a switch:
+
+[[code]]
+switch $a 0 { puts "no" } 1 { puts "yes" } 2 { puts "maybe" } default { puts "error" }
+[[/code]]
+
+[[# while-note]]
+++ [#while while]
+
+How to create a while loop.
+
+**perl:**
+
+Perl provides {{until}}, {{do-while}}, and {{do-until}} loops.
+
+An {{until}} or a {{do-until}} loop can be replaced by a {{while}} or a {{do-while}} loop by negating the condition.
+
+[[# break-continue-note]]
+++ [#break-continue break and continue]
+
+//break// exits a //for// or //while// loop immediately.  //continue// goes to the next iteration of the loop.
+
+[[# for-note]]
+++ [#for for]
+
+How to create a C-style for loop.
+
+**lua:**
+
+Provide a third argument to set the step size to something other than the default of one:
+
+[[code]]
+for i = 0, 90, 10 do
+  print(i)
+end
+[[/code]]
+
+[[# raise-exc-note]]
+++ [#raise-exc raise exception]
+
+How to raise an exception.
+
+[[# catch-exc-note]]
+++ [#catch-exc catch exception]
+
+How to handle an exception.
+
+[[# finally-ensure-note]]
+++ [#finally-ensure finally/ensure]
+
+Clauses that are guaranteed to be executed even if an exception is thrown or caught.
+
+[[# uncaught-exc-note]]
+++ [#uncaught-exc uncaught exception behavior]
+
+System behavior if an exception goes uncaught.  Most interpreters print the exception message to stderr and exit with a nonzero status.
+
+**tcl:**
+
+A tcl process can have multiple interpreters and multiple threads.  However, each interpreter is limited to a single thread.
+
+[[# closure-note]]
+++ [#closure closure]
+
+How to create a first class function with access to the local variables of the local scope in which it was created.
+
+[[# generator-note]]
+++ [#generator generator]
+
+How to create and use a generator.
+
+[[# file-handles-note]]
++ [#file-handles File Handles]
+
+[[# print-to-stdout-note]]
+++ [#print-to-stdout print to standard output]
+
+**tcl:**
+
+To prevent //puts// from appending a newline to the output, use
+
+[[code]]
+puts -nonewline "hello"
+[[/code]]
+
+[[# read-stdin-note]]
+++ [#read-stdin read from standard input]
+
+How to read a line from standard input.
+
+[[# standard-file-handles-note]]
+++ [#standard-file-handles standard file handles]
+
+Constands for the standard file handles.
+
+[[# open-file-note]]
+++ [#open-file open file]
+
+How to create a file handle for reading.
+
+[[# open-file-write-note]]
+++ [#open-file-write open file for writing]
+
+How to create a file handle for writing.
+
+[[# close-file-note]]
+++ [#close-file close file]
+
+How to close a file handle.
+
+[[# read-line-note]]
+++ [#read-line read line]
+
+[[# file-iter-note]]
+++ [#file-iter iterate over a file by line]
+
+[[# chomp-note]]
+++ [#chomp chomp]
+
+Remove a newline, carriage return, or carriage return newline pair from the end of a line if there is one.
+
+[[# read-file-note]]
+++ [#read-file read file]
+
+[[# write-file-note]]
+++ [#write-file write to file]
+
+[[# flush-file-note]]
+++ [#flush-file flush file handle]
+
+[[# files-note]]
++ [#files Files]
+
+[[# file-test-note]]
+++ [#file-test file exists test, file regular test]
+
+[[# file-cp-rm-mv-note]]
+++ [#file-cp-rm-mv copy file, remove file, rename file]
+
+[[# chmod-note]]
+++ [#chmod set file permissions]
+
+[[# tmpfile-note]]
+++ [#tmpfile temporary file]
+
+[[# directories-note]]
++ [#directories Directories]
+
+[[# processes-environment-note]]
++ [#processes-environment Processes and Environment]
+
+[[# cmd-line-arg-note]]
+++ [#cmd-line-arg command line arguments]
+
+How to access the command line arguments.
+
+[[# env-var-note]]
+++ [#env-var environment variable]
+
+How to access an environment variable.
+
+[[# exit-note]]
+++ [#exit exit]
+
+How to terminate the process and set the status code.
+
+[[# set-signal-handler-note]]
+++ [#set-signal-handler set signal handler]
+
+How to register a signal handler.
+
+[[# external-cmd-note]]
+++ [#external-cmd external command]
+
+How to execute an external command.
+
+**tcl**
+
+When using tclsh as a shell or repl, external commands that do not have the same name as a built-in or user defined function can be executed directly without using the exec command.
+
+[[# backticks-note]]
+++ [#backticks backticks]
+
+How to execute an external command and read the standard output into a variable.
+
+[[# libraries-namespaces-note]]
++ [#libraries-namespaces Libraries and Namespaces]
+
+[[# lib-note]]
+++ [#lib library]
+
+What a library looks like.
+
+[[# import-lib-note]]
+++ [#import-lib import library]
+
+How to import a library.
+
+[[# lib-path-note]]
+++ [#lib-path library path]
+
+How to access the library path.
+
+[[# lib-path-env-note]]
+++ [#lib-path-env library path environment variable]
+
+The environment variable which governs the library path.
+
+[[# namespace-decl-note]]
+++ [#namespace-decl namespace declaration]
+
+How to declare a namespace.
+
+[[# namespace-separator-note]]
+++ [#namespace-separator namespace separator]
+
+The separator used in namespace names.
+
+[[# pkg-management-note]]
+++ [#pkg-management list installed packages, install a package]
+
+How to list the installed 3rd party packages; how to install a 3rd party package.
+
+[[# objects-note]]
++ [#objects Objects]
+
+[[# def-class-note]]
+++ [#def-class define class]
+
+How to define a class.
+
+[[# create-obj-note]]
+++ [#create-obj create object]
+
+How to instantiate a class.
+
+[[# blank-obj-note]]
+++ [#blank-obj create blank object]
+
+How to create a blank object without any attributes or methods, or at least without any but the default attributes and methods.
+
+[[# instance-var-visibility-note]]
+++ [#instance-var-visibility instance variable visibility]
+
+[[# obj-literal-note]]
+++ [#obj-literal object literal]
+
+The syntax for an object literal.
+
+[[# set-attr-note]]
+++ [#set-attr set attribute]
+
+How to set an object attribute.
+
+[[# get-attr-note]]
+++ [#get-attr get attribute]
+
+How to get an object attribute.
+
+[[# def-method-note]]
+++ [#def-method define method]
+
+How to define a method for an object.
+
+[[# invoke-method-note]]
+++ [#invoke-method invoke method]
+
+How to invoke an object method.
+
+[[# method-missing-note]]
+++ [#method-missing handle undefined method invocation]
+
+[[# def-class-method-note]]
+++ define class method
+
+[[# invoke-class-method-note]]
+++ invoke class method
+
+[[# def-class-var-note]]
+++ define class variable
+
+[[# get-set-class-var-note]]
+++ [#get-set-class-var get and set class variable]
+
+[[# polymorphism-note]]
++ [#polymorphism Polymorphism]
+
+[[# subclass-note]]
+++ [#subclass subclass]
+
+[[# reflection-note]]
++ [#reflection Reflection]
+
+[[# inspect-type-note]]
+++ [#inspect-type inspect type]
+
+[[# basic-types-note]]
+++ [#basic-types basic types]
+
+[[# inspect-class-note]]
+++ [#inspect-class inspect class]
+
+[[# has-method-note]]
+++ [#has-method has method?]
+
+[[# msg-passing-note]]
+++ [#msg-passing message passing]
+
+[[# eval-note]]
+++ [#eval eval]
+
+[[# methods-note]]
+++ [#methods list object methods]
+
+[[# attributes-note]]
+++ [#attributes list object attributes]
+
+[[# loaded-lib-note]]
+++ [#loaded-lib list loaded libraries]
+
+[[# loaded-namespaces-note]]
+++ [#loaded-namespaces list loaded namespaces]
+
+[[# inspect-namespace-note]]
+++ [#inspect-namespace inspect namespace]
+
+[[# pretty-print-note]]
+++ [#pretty-print pretty print]
+
+[[# src-line-file-note]]
+++ [#src-line-file source line number and file name]
+
+[[# cmd-line-doc-note]]
+++ [#cmd-line-doc command line documentation]
+
+[[# net-web-note]]
++ [#net-web Net and Web]
+
+[[# hostname-ip-note]]
+++ [#hostname-ip get local hostname, dns lookup, reverse dns lookup]
+
+How to get the hostname and the ip address of the local machine without connecting to a socket.
+
+The operating system should provide a method for determining the hostname.  Linux provides the {{uname}} system call.
+
+A DNS lookup can be performed to determine the IP address for the local machine.  This may fail if the DNS server is unaware of the local machine or if the DNS server has incorrect information about the local host.
+
+A reverse DNS lookup can be performed to find the hostname associated with an IP address.  This may fail for the same reasons a forward DNS lookup might fail.
+
+[[# http-get-note]]
+++ [#http-get http get]
+
+How to make an HTTP GET request and read the response into a string.
+
+[[# http-post-note]]
+++ [#http-post http post]
+
+
+[[# absolute-url-note]]
+++ [#absolute-url absolute url]
+
+How to construct an absolute URL from a base URL and a relative URL as documented in [http://www.ietf.org/rfc/rfc1808.txt RFC 1808].
+
+When constructing the absolute URL, the rightmost path component of the base URL is removed unless it ends with a slash /.  The query string and fragment of the base URL are always removed.
+
+If the relative URL starts with a slash / then the entire path of the base URL is removed.
+
+If the relative URL starts with one or more occurrences of ../ then one or more path components are removed from the base URL.
+
+The base URL and the relative URL will be joined by a single slash / in the absolute URL.
+
+[[# parse-url-note]]
+++ [#parse-url parse url]
+
+How to extract the protocol, host, port, path, query string, and fragment from a URL.  How to extract the parameters from the query string.
+
+
+[[# url-encode-note]]
+++ [#url-encode url encode/decode]
+
+How to URL encode and URL unencode a string.
+
+URL encoding, also called percent encoding, is described in [http://www.ietf.org/rfc/rfc3986.txt RFC 3986].  It replaces all characters except for the letters, digits, and a few punctuation marks with a percent sign followed by their two digit hex encoding.  The characters which are not escaped are:
+
+[[code]]
+A-Z a-z 0-9 - _ . ~
+[[/code]]
+
+URL encoding can be used to encode UTF-8, in which case each byte of a UTF-8 character is encoded separately.
+
+When form data is sent from a browser to a server via an HTTP GET or an HTTP POST, the data is percent encoded but spaces are replaced by plus signs {{+}} instead of {{%20}}.  The MIME type for form data is {{application/x-www-form-urlencoded}}.
+
+[[# base64-note]]
+++ [#base64 base64 encode/decode]
+
+How to encode binary data in ASCII using the Base64 encoding scheme.
+
+A popular Base64 encoding is the one defined by [http://www.ietf.org/rfc/rfc2045.txt RFC 2045] for MIME.  Every 3 bytes of input is mapped to 4 of these characters: {{[A-Za-z0-9/+]}}.
+If the input does not consist of a multiple of three characters, then the output is padded with one or two hyphens: =.
+
+Whitespace can inserted freely into Base64 output; this is necessary to support transmission by email.  When converting Base64 back to binary whitespace is ignored.
+
+[[# unit-tests-note]]
++ [#unit-tests Unit Tests]
+
+[[# test-class-note]]
+++ [#test-class test class]
+
+[[# run-test-note]]
+++ [#run-test run tests, run test method]
+
+[[# assert-equal-note]]
+++ [#assert-equal equality assertion]
+
+[[# assert-approx-note]]
+++ [#assert-approx approximate assertion]
+
+[[# assert-regex-note]]
+++ [#assert-regex regex assertion]
+
+[[# assert-exc-note]]
+++ [#assert-exc exception assertion]
+
+[[# test-setup-note]]
+++ [#test-setup setup]
+
+[[# test-teardown-note]]
+++ [#test-teardown teardown]
+
+[[# debugging-profiling-note]]
++ [#debugging-profiling Debugging and Profiling]
+
+[[# check-syntax-note]]
+++ [#check-syntax check syntax]
+
+[[# warning-flag-note]]
+++ [#warning-flag flags for stronger and strongest warnings]
+
+[[# lint-note]]
+++ [#lint lint]
+
+[[# debugger-note]]
+++ [#debugger debugger]
+
+[[# debugger-cmd-note]]
+++ [#debugger-cmd debugger commands]
+
+[[# benchmark-code-note]]
+++ [#benchmark-code benchmark code]
+
+[[# profile-code-note]]
+++ [#profile-code profile code]
+
+[[# java-interop-note]]
++ [#java-interop Java Interoperation]
+
+[[# perl]]
++ [#top Perl]
+
+[http://perldoc.perl.org/index-language.html perldoc]
+[http://perldoc.perl.org/index-modules-A.html core modules]
+
+The first character of a Perl variable {{$ @ %}} determines the type of value that can be stored in the variable: scalar, array, hash. Using an array variable {{@foo}} in a scalar context yields the size of the array, and assigning a scalar to an array will modify the array to contain a single element. {{$foo[0]}} accesses the first element of the array {{@foo}}, and {{$bar{'hello'} }} accesses the value stored under {{'hello'}} in the hash {{%bar}}. {{$#foo}} is the index of the last element in the array {{@foo}}.
+
+Scalars can store a string, integer, or float. If an operator is invoked on a scalar which contains an incorrect data type, perl will perform an implicit conversion to the correct data type: non-numeric strings evaluate to zero.
+
+Scalars can also contain a reference to a variable, which can be created with a backslash: {{$baz = \@foo;}} The original value can be dereferenced with the correct prefix: {{@$baz}}. References are how perl creates complex data structures, such as arrays of hashes and arrays of arrays. If {{$baz}} contains a reference to an array, then {{$baz->[0]}} is the first element of the array. if {{$baz}} contains a reference to a hash, {{$baz->{'hello'} }} is the value indexed by {{'hello'}}.
+
+The literals for arrays and hashes are parens with comma separated elements. Hash literals must contain an even number of elements, and the {{=>}} operator can be used in placed of a  comma between a key and its value. Square brackets, e.g. {{[1, 2, 3]}}, create an array and return a reference to it, and curly brackets, e.g. {{ {'hello' => 5, 'bye' => 3} }}, create a hash and return a reference to it.
+
+By default Perl variables are global. They can be made local to the containing block with the {{my}} keyword or the {{local}} keyword. {{my}} gives lexical scope, and {{local}} gives dynamic scope. Also by default, the perl interpreter creates a variable whenever it encounters a new variable name in the code. The {{use strict;}} pragma requires that all variables be declared with {{my}}, {{local}}, or {{our}}. The last is used to declare global variables.
+
+Perl functions do not declare their arguments. Any arguments passed to the function are available in the {{@_}} array, and the shift command will operate on this array if no argument is specified. An array passed as an argument is expanded: if the array contains 10 elements, the callee will have 10 arguments in its {{@_}} array. A reference (passing {{\@foo}} instead of {{@foo}}) can be used to prevent this.
+
+Some of Perl’s special variables:
+
+* {{$$}}: pid of the perl process
+* {{$0}}: name of the file containing the perl script (may be a full pathname)
+* {{$@}}: error message from last eval or require command
+* {{$& $` $’}}: what last regex matched, part of the string before and after the match
+* {{$1}} ... {{$9}}: what subpatterns in last regex matched
+
+[[# tcl]]
++ [#top Tcl]
+
+[http://tmml.sourceforge.net/doc/tcl/ Tcl Reference Manual]
+[http://tcllib.sourceforge.net/doc/ Tcl Standard Library]
+
+Tcl has some traits which will be familiar to anyone who has done Unix shell script programming:
+
+(1) variables have a $ prefix except when values are assigned to them, in which case they are used unadorned:
+
+[[code]]
+set v 42
+puts $v
+[[/code]]
+
+(2) statements consist of a command and zero or more arguments.  Commands which are not built-in functions or user defined functions are resolved by looking for an external command in the search path and running it.
+
+(3) the values are always stored in variables as strings.  Commands which expect numeric arguments perform an implicit conversion, so there isn't much practical consequence for the developer.
+
+(4) in the absence of quoting ("", {}, []) the arguments of a command are parsed into words using whitespace; commas are not used to separate arguments.
+
+(5) square brackets [] must be used to execute a function and use its return value as an argument.  A combination of square brackets [] and the {{expr}} command must be used to evaluate an expression and use its value as an argument:
+
+[[code]]
+puts [format "%10s" "lorem"]
+puts [expr 1 + 1]
+[[/code]]
+
+Square brackets can be used to invoke an external command, but the value of the square brackets containing an external command is always the empty string: "".
+
+Unlike shells, *, ?, ~ in variable names are not automatically expanded using the filesystem, but this behavior can be invoked with the glob command.
+
+[[# lua]]
++ [#top Lua]
+
+[http://www.lua.org/manual/5.1/manual.html Lua 5.1 Reference Manual]
+[http://lua-users.org/wiki/TutorialDirectory Lua Tutorial Directory]
+
+The Lua REPL is actually a REL; that is, it doesn't print the value of statement.  Furthermore expressions cannot in general be used in the position of a statement.  An expression can be converted to a statement and printed by preceding it with an equals sign:
+
+[[code]]
+> =1 + 1
+2
+> ="lorem ipsum"
+lorem ipsum
+[[/code]]
+
+
+There is no built-in pretty printer for tables.  All numbers are stored as double precision floats.  The table type can be used as both an array and a dictionary.
+
+[[# groovy]]
++ [#top Groovy]
+
+[http://groovy.codehaus.org/User+Guide User Guide]
+
+An interpreted Groovy script can be nothing more than a few top level statements which are executed in order.  The Groovy interpreter handles providing an entry point class and main method, compiling the source to Java byte code, and launching the JVM.
+
+[[code]]
+$ cat > hello.groovy
+s = "Hello, World!"
+println(s)
+
+$ groovy hello.groovy
+Hello, World!
+[[/code]]
+
+Groovy classes can be placed in their own files and compiled to Java byte code explicitly.  The resulting {{.class}} files depend on the groovy.jar and the asm.jar but otherwise can be used like {{.class}} files compiled from Java source files.  
+
+[[code]]
+$ cat > Greeting.groovy
+class Greeting {
+  void say(name) {
+    println("Hello, ${name}!")
+  }
+}
+
+$ cat > UseGreeting.java
+public class UseGreeting {
+  public static void main(String[] args) {
+    Greeting g = new Greeting();
+    g.say(args[0]);
+  }
+}
+
+$ groovyc Greeting.groovy
+
+$ javac UseGreeting.java
+
+$ java -cp.:/PATH/TO/groovy-2.2.1.jar:/PATH/TO/asm-4.1.jar UseGreeting Fred
+Hello, Fred!
+[[/code]]
+
+All Groovy values have a Java type which can be inspected at runtime with the {{getClass()}} method.
+
+A Groovy variable can optionally be declared to have a type.  This places a constraint on the values which can be stored in the variable which is enforced at run time.  The following code generates a {{org.codehaus.groovy.runtime.typehandling.GroovyCastException}}:
+
+[[code]]
+Integer i = 'foo'
+[[/code]]
+
+Groovy does not use any of the Java primitive types directly: {{byte}}, {{short}}, {{int}}, {{long}}, {{float}}, {{double}}, {{boolean}}, {{char}}.  Instead it used it uses the wrapper classes: {{Byte}}, {{Short}}, {{Integer}}, {{Long}}, {{Float}}, {{Double}}, {{Boolean}}, {{Char}}.  Nevertheless it is still possible to use the primitive type in a variable declaration.

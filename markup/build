@@ -1,0 +1,915 @@
+[[# top]][#invocation invocation] | [#var variables] | [#var-func variable functions] | [#targets-prerequisites targets and prerequisites] | [#recipes recipes] | [#rules rules] | [#file-dir files and directories] _
+[#repo repositories] | [#lib libraries and namespaces] | [#recursion recursion]
+
+||~ ||~ [#make make]||~ [#rake rake]||~ [#ant ant]||
+||[[# version-used]][#version-used-note version used] _
+@<&nbsp;>@||##gray|//GNU Make 3.81//##||##gray|//0.8//##||##gray|//Apache Ant 1.8//##||
+||[[# show-version]][#show-version-note show version] _
+@<&nbsp;>@||make @@--@@version||$ rake @@--@@version||ant -version||
+||[[# build-file-name]][#build-file-name-note name of build file] _
+@<&nbsp;>@||Makefile||Rakefile||build.xml||
+||[[# hello-world]][#hello-world-note hello world]||$ cat > Makefile _
+hello: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@@echo Hello, World! _
+ _
+$ make hello||$ cat > Rakefile _
+task :hello do _
+@<&nbsp;&nbsp;>@puts "Hello, World!" _
+end _
+ _
+$ rake hello||$ cat > build.xml _
+<project> _
+@<&nbsp;&nbsp;>@<target name="hello"> _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@<echo>Hello, World!</echo> _
+@<&nbsp;&nbsp;>@</target> _
+</project> _
+ _
+$ ant hello||
+||[[# build-hello-world]][#build-hello-world-note build hello world]||$ cat > Makefile _
+hello: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@gcc -o $@ $@.c _
+ _
+$ cat > hello.c _
+#include <stdio.h> _
+ _
+int _
+main(int argc, char *argv[]) { _
+@<&nbsp;&nbsp;>@printf("Hello, World!\n"); _
+} _
+ _
+$ make _
+ _
+$ ./hello _
+Hello, World!||$ cat > Rakefile _
+task :default => ["hello"] _
+ _
+file "hello" => ["hello.c"] do _
+@<&nbsp;&nbsp;>@sh "gcc -o hello hello.c" _
+end _
+ _
+$ cat hello.c _
+#include <stdio.h> _
+ _
+int _
+main(int argc, char *argv[]) { _
+@<&nbsp;&nbsp;>@printf("Hello, World!\n"); _
+} _
+ _
+$ rake _
+ _
+$ ./hello _
+Hello, World!||$ cat > build.xml _
+<project default="hello"> _
+@<&nbsp;&nbsp;>@<target name="hello"> _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@<javac srcdir="." _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@includeantruntime="false" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@destdir="."/> _
+@<&nbsp;&nbsp;>@</target> _
+</project> _
+ _
+$ cat > Hello.java _
+public class Hello { _
+@<&nbsp;&nbsp;>@public static void _
+@<&nbsp;&nbsp;>@main(String[] args) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@String msg = "Hello, World!"; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@System.out.println(msg); _
+@<&nbsp;&nbsp;>@} _
+} _
+ _
+$ ant _
+ _
+$ java Hello _
+Hello, World!||
+||[[# stmt-separator]][#stmt-separator-note statement separator]||##gray|//Variable definition terminated by newline unless escaped with a preceding backslash. _
+ _
+Target definition terminated by the first subsequent line without a leading tab. _
+ _
+Within recipes statements are terminated by newline unless escaped with a preceding backslash.//##||##gray|//newline or ; _
+ _
+newlines not separators inside (), [], {}, triple quote literals, or after backslash: \//##||##gray|//A statement is delimited by an XML start tag and its matching end tag.//##||
+||[[# comment]][#comment-note comment] _
+@<&nbsp;>@||# ##gray|//comment//##||# ##gray|//comment//##||<!@@--@@ ##gray|//comment//## @@--@@>||
+||||||||~ [[# invocation]][#invocation-note invocation]||
+||~ ||~ make||~ rake||~ ant||
+||[[# specify-build-file]][#specify-build-file-note specify build file]||$ make -f ##gray|PATH [TARGET]## _
+$ make @@--@@makefile ##gray|PATH [TARGET]##||$ rake -f ##gray|PATH## ##gray|[TARGET] @@...@@## _
+$ rake @@--@@rakefile ##gray|PATH## ##gray|[TARGET] @@...@@##||$ ant -f ##gray|PATH## ##gray|[TARGET] @@...@@## _
+$ ant -buildfile ##gray|PATH## ##gray|[TARGET] @@...@@##||
+||[[# dry-run]][#dry-run-note dry run] _
+@<&nbsp;>@||$ make -n ##gray|[TARGET] @@...@@## _
+$ make @@--@@dry-run ##gray|[TARGET] @@...@@##||$ rake -n ##gray|[TARGET] @@...@@## _
+$ rake @@--@@dry-run ##gray|[TARGET] @@...@@##||##gray|//none//##||
+||[[# keep-going-after-errors]][#keep-going-after-errors-note keep going after errors]||$ make -k ##gray|[TARGET] @@...@@## _
+$ make @@--@@keep-going ##gray|[TARGET] @@...@@##||##gray|//none//##||$ ant -k ##gray|[TARGET] @@...@@## _
+$ ant -keep-going ##gray|[TARGET] @@...@@##||
+||[[# run-jobs-in-parallel]][#run-jobs-in-parallel-note run jobs in parallel]||$ make -j 10 ##gray|[TARGET] @@...@@## _
+$ make @@--@@jobs=10 ##gray|[TARGET] @@...@@##||##gray|//none//##||##gray|//none//##||
+||[[# list-targets]][#list-targets-note list targets]||$ env -i make -nRrp | grep -v '^#'||$ rake -T _
+$ rake @@--@@tasks||$ ant -p _
+$ ant -projecthelp||
+||[[# touch-targets]][#touch-targets-note touch targets]||$ make -t ##gray|[TARGET] @@...@@## _
+$ make @@--@@touch ##gray|[TARGET] @@...@@##||##gray|//none//##||##gray|//none//##||
+||[[# always-rebuild]][#always-rebuild-note always rebuild]||$ make -B ##gray|[TARGET] @@...@@## _
+$ make @@--@@always-make ##gray|[TARGET] @@...@@##||##gray|//none//##||##gray|//none//##||
+||[[# up-to-date-test]][#up-to-date-test-note up-to-date test]||$ make -q ##gray|[TARGET] @@...@@## _
+$ make @@--@@question ##gray|[TARGET] @@...@@##||##gray|//none//##||##gray|//none//##||
+||||||||~ [[# var]][#var-note variables]||
+||~ ||~ make||~ rake||~ ant||
+||[[# set-use-var]][#set-use-var-note set and access variable]||msg := hello _
+ _
+say_hello: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@@echo $(msg) _
+ _
+##gray|# alternate syntax:## _
+say_hello2: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@@echo ${msg}||msg = "hello" _
+ _
+task :say_hello do _
+@<&nbsp;&nbsp;>@puts msg _
+end||<property name="msg" value="hello"/> _
+ _
+<target name="say_hello"> _
+@<&nbsp;&nbsp;>@<echo>${msg}</echo> _
+</target>||
+||[[# undefined-var]][#undefined-var-note undefined variable access]||##gray|//evaluates as empty string//##||##gray|//raises// NameError##||##gray|//no variable name substitution occurs; i.e. the variable name itself with the dollar sign and the braces appear in the string//##||
+||[[# redefine-var]][#redefine-var-note redefine variable]||##gray|//last definition overwrites previous definition//##||##gray|//last definition overwrites previous definition//##||##gray|//later definitions are ignored; use// var //for a mutable variable//##||
+||[[# append-var]][#append-var-note append to variable]||src_files := foo.c _
+ _
+##gray|# sets src_files to "foo.c bar.c":## _
+src_files += bar.c _
+ _
+src_files: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@echo $(src_files)||src_files = ['foo.c'] _
+src_files @@<<@@ 'bar.c' _
+ _
+task :src_files do _
+@<&nbsp;&nbsp;>@puts src_files.join(' ') _
+end||##gray|//none//##||
+||[[# conditionally-def-var]][#conditionally-def-var-note conditionally define variable]||ifeq ($(ENV),test) _
+db := test _
+else _
+db := prod _
+endif _
+ _
+##gray|# also ifneq##||if ENV["ENV"] == "test" _
+@<&nbsp;&nbsp;>@db = "test" _
+else _
+@<&nbsp;&nbsp;>@db = "prod" _
+end||<property environment="env"/> _
+ _
+<condition property="db" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@value="test" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@else="prod"> _
+@<&nbsp;&nbsp;>@<equals arg1="${env.ENV}" arg2="test"/> _
+</condition>||
+||[[# env-var]][#env-var-note environment variable]||invoker := $(USER)||invoker = ENV['USER']||<property environment="env"/> _
+ _
+<property name="invoker" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@value="${env.USER}"/>||
+||[[# set-var-if-not-exists]][#set-var-if-not-exists-note set variable if doesn't exist]||database ?= dev_db||database = dev_db if database.nil?||<condition property="database" value="dev_db"> _
+@<&nbsp;&nbsp;>@<not><isset property="database"/></not> _
+</condition>||
+||[[# error-var-not-set]][#error-var-not-set-note fatal error if variable not set]||ifeq ($(PASSWORD),) _
+$(error PASSWORD not set) _
+endif||raise "password not set" if password.nil?||<fail message="password not set" unless="password"/>||
+||[[# warn-var-not-set]][#warn-var-not-set-note warn if variable not set]||ifeq ($(ACCOUNT),) _
+$(warning ACCOUNT not set; setting to $(USER)) _
+ACCOUNT := $(USER) _
+endif|| || ||
+||||||||~ [[# var-func]][#var-func-note variable functions]||
+||~ ||~ make||~ rake||~ ant||
+||[[# glob-filenames]][#glob-filenames-note glob filenames] _
+@<&nbsp;>@||src := $(wildcard *.c)||src = Dir.glob('*.rb') _
+ _
+##gray|# lazy evaluation:## _
+src = FileList.new('*.c')||<fileset id="javaFiles" dir="."> _
+@<&nbsp;&nbsp;>@<include name="*.java"/> _
+</fileset> _
+ _
+<pathconvert pathsep=" " _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@property="src" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@refid="javaFiles"/>||
+||[[# recursively-glob-filenames]][#recursively-glob-filenames-note recursively glob filenames]||src := $(shell find . -name '*.c')||src = Dir.glob('@@**@@/*.c') _
+ _
+##gray|# lazy evaluation:## _
+src = FileList.new('@@**@@/*.c')|| ||
+||[[# pattern-subst]][#pattern-subst-note pattern substitution]||obj = $(src: %.c = %.o) _
+ _
+##gray|# or:## _
+obj = $(patsubst %.c,%.o,$(src))||obj = src.sub('\.c$', '.o')|| ||
+||[[# global-subst]][#global-subst-note global substitution]||american := meter.txt center.csv _
+british := $(subst ter,tre,$(american))||american = ['meter.txt', 'center.csv'] _
+british = american.map do |o| _
+@<&nbsp;&nbsp;>@o.sub(/ter/, 'tre') _
+end|| ||
+||[[# foreach]][#foreach-note foreach]||dirs := a b c d _
+files := $(foreach dir,$(dirs),$(wildcard $(dir)/*))|| || ||
+||[[# call]][#call-note call]||reverse = $(2) $(1) _
+ foo = $(call reverse,a,b)|| || ||
+||[[# shell]][#shell-note shell]||yyyymmdd = $(shell date +'%Y%m%d')||yyyymmdd = @@`@@date +'%Y%m%d'@@`@@||<exec executable="date" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@outputproperty="yyyymmdd"> _
+@<&nbsp;&nbsp;>@<arg value="+'%Y%m%d'"/> _
+</exec>||
+||[[# dirname-basename]][#dirname-basename-note dirname and basename]||##gray|# leaves trailing slash (can operate _
+# on multiple arguments):## _
+$(dir /etc/passwd) _
+ _
+$(notdir /etc/passwd)||##gray|# no trailing slash:## _
+File.dirname("/etc/passwd") _
+ _
+File.basename("/etc/passwd")||<dirname property="file_dir" file="/etc/passwd"/> _
+<echo>${file_dir}</echo> _
+ _
+<basename property="file_base" file="/etc/passwd"/> _
+<echo>${file_base}</echo>||
+||root and suffix||##gray|# README## _
+$(basename README.txt) _
+ _
+##gray|# .txt## _
+$(suffix README.txt)||@@"README.txt"[/(\.[^.]+)$/, 1]@@ _
+ _
+##gray|//??//##|| ||
+||join||$(join /etc/,passwd)||File.join("/etc", "passwd")|| ||
+||realpath||realpath_example: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@ln -s /tmp t _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@$(realpath t)|| || ||
+||abspath||$(abspath ..)||File.expand_path("..")|| ||
+||if||SRC1 := $(wildcard *.cpp) _
+SRC2 := $(wildcard *.cxx) _
+##gray|# non-empty strings are "true":## _
+SRC := $(if $(SRC1),$(SRC1),$(SRC2))|| || ||
+||and _
+or||##gray|# returns last arg if all args _
+# are non-empty:## _
+$(and $(FOO),$(BAR)) _
+ _
+##gray|# return first non-empty arg:## _
+$(or $(FOO),$(BAR))|| || ||
+||filter, filter-out||FILES := foo.c foo.h bar.c bar.h _
+HEADERS := $(filter %.h,$(FILES)) _
+OTHERS := $(filter-out %.h,$(FILES))|| || ||
+||sort||LIST := foo foo bar _
+##gray|# also removes dupes:## _
+SORTED := $(sort $(LIST))|| || ||
+||strip||EMPTY := _
+FOO := $(EMPTY) foo $(EMPTY) _
+FOO2 := $(strip $(FOO))|| || ||
+||words||NAMES := foo bar baz _
+##gray|# 3:## _
+NAME_COUNT := $(words $(NAMES))|| || ||
+||word||NAMES := foo bar baz _
+FOO := $(word 1,$(NAMES)) _
+BAR := $(word 2,$(NAMES)) _
+BAZ := $(word 3,$(NAMES))|| || ||
+||wordlist||NAMES := foo bar baz _
+FOO_BAR := $(wordlist 1,2,$(NAMES)) _
+BAR_BAZ := $(wordlist 2,3,$(NAMES)) _
+EMPTY := $(worldlist 1,0,$(NAMES))|| || ||
+||firstword, lastword||NAMES := foo bar baz _
+FOO := $(firstword $(NAMES)) _
+BAZ := $(lastword $(NAMES))|| || ||
+||||||||~ [[# targets-prerequisites]][#targets-prerequisites-note targets and prerequisites]||
+||~ ||~ make||~ rake||~ ant||
+||[[# file-target]][#file-target-note file target]||foo: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@touch $@||file :foo do _
+@<&nbsp;&nbsp;>@touch "foo" _
+end||<target name="check-foo"> _
+@<&nbsp;&nbsp;>@<available file="foo" property="foo.present"/> _
+</target> _
+ _
+<target name="do-if-foo" depends="check-foo" if="foo.present"> _
+@<&nbsp;&nbsp;>@FOO _
+</target>||
+||[[# file-target-prerequisite]][#file-target-prerequisite-note file target with prerequisites]||main.o: main.c common.h _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@gcc -c -o main.o main.c||file "main.o" => ["main.c", "common.h"] do _
+@<&nbsp;&nbsp;>@sh "gcc -c -o main.o main.c" _
+end|| ||
+||[[# order-only-prerequisite]][#order-only-prerequisite-note order only prerequisite]||build: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@mkdir -p build _
+ _
+build/output.csv: | build _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@generate-output.py > $@||file_create :build do _
+@<&nbsp;&nbsp;>@mkdir_p "build" _
+end _
+ _
+file "build/output.csv" => :build do _
+@<&nbsp;&nbsp;>@touch "build/output.csv" _
+end _
+|| ||
+||[[# phony-target]][#phony-target-note phony target]||.PHONY: clean _
+ _
+clean: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@-rm *.o||task :clean do _
+@<&nbsp;&nbsp;>@sh rm *.o _
+end||<target name="clean"> _
+@<&nbsp;&nbsp;>@<delete> _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@<fileset dir="." includes="*.o"/> _
+@<&nbsp;&nbsp;>@</delete> _
+</target>||
+||prerequisite search path||VPATH := src:lib _
+ _
+##gray|# will work if foo.c, src/foo.c _
+# or lib/foo.c exist:## _
+foo: foo.c _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@gcc -o $@ $<|| ||<project default="hello" basedir="src"> _
+@<&nbsp;&nbsp;>@##gray|<!-- paths relative to ./src -->## _
+</project>||
+||[[# phony-target-prerequisite]][#phony-target-prerequisite-note phony target with prerequisites]|| || || ||
+||[[# parallelizable-prerequisites]][#parallelizable-prerequisites-note phony target with parallelizable prerequisites]|| ||multitask||<parallel>@@...@@</parallel>||
+||[[# default-target]][#default-target-note default target]||##gray|# if .DEFAULT_GOAL variable is not set the _
+# first target that does not start _
+# with a period is executed.## _
+.DEFAULT_GOAL := foo||##gray|# error to invoke Rake without a target when no :default _
+# task is defined## _
+task :default => [:foo] _
+ _
+task :foo do _
+@<&nbsp;&nbsp;>@puts "foo" _
+end||##gray|<!@@--@@ if no target specifed on cmd line _
+or as a default ant does nothing successfully @@--@@>## _
+<project default="foo"> _
+@<&nbsp;&nbsp;>@<target name="foo"> _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@<echo>foo</echo> _
+@<&nbsp;&nbsp;>@</target> _
+</project>||
+||target with argument||echo.%: _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@echo $*|| || ||
+||delete target on error||.DELETE_ON_ERROR:|| || ||
+||do not delete if intermediate||.SECONDARY|| || ||
+||do not delete if interrupted||.PRECIOUS|| || ||
+||conditionally define target||all: _
+ifeq ($(USER), root ) _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@echo do not run as root _
+else _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@gcc $(SRC_FILES) _
+endif _
+ _
+##gray|# also ifneq##|| || ||
+||||||||~ [[# recipes]][#recipes-note recipes]||
+||~ ||~ make||~ rake||~ ant||
+||[[# shared-recipe]][#shared-recipe-note shared recipe]||##gray|# if run as 'make frobnicate', $@ contains _
+# 'frobnicate'## _
+frobnicate twiddle: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@gcc -o $@ $@.c|| || ||
+||[[# shared-target]][#shared-target-note shared target]||$ cat > Makefile.common _
+clean:: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@-rm -f *.o _
+ _
+$ cat > Makefile _
+include Makefile.common _
+ _
+clean:: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@-rm -f *.pyc _
+ _
+##gray|# removes .o and .pyc files:## _
+$ make clean|| || ||
+||multiple target recipe _
+##gray|//dummy file technique//##||foo.tab.cpp foo.tab.hpp: parser _
+ _
+parser: foo.ypp _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@bison -d $< _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@touch $@|| || ||
+||[[# multiline-var]][#multiline-var-note multiline variable]||define SETUP = _
+echo performing setup@@...@@ _
+mkdir -p build _
+date +'%s' > build/start.timestamp _
+endef _
+ _
+foo.txt: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@$(SETUP) _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@process $@|| || ||
+||[[# universal-recipe]][#universal-recipe-note universal recipe]||%: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@echo target is $@|| || ||
+||[[# empty-recipe]][#empty-recipe-note empty recipe]||nothing: ;||task :nothing||<target name="nothing"></target>||
+||[[# invoke-shell]][#invoke-shell-note invoke shell]||ls_etc: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@ls /etc||task :ls_etc do _
+@<&nbsp;&nbsp;>@sh "ls /etc" _
+end||<exec executable="ls"> _
+@<&nbsp;&nbsp;>@<arg value="/etc/"/> _
+</exec>||
+||invoke shell in different directory||ls_etc: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@(cd /etc; ls)|| ||<exec executable="ls" dir="/etc"/>||
+||configure shell||SHELL := /bin/bash _
+.SHELLFLAGS := -o pipefail|| || ||
+||suppress echoing||foo: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@@echo building @@$@...@@ _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@gcc -o $@ $@.c|| || ||
+||ignore error||clean: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@-rm *.o|| || ||
+||shell variable||identify_invoker: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@echo $$USER|| || ||
+||prerequisite variables _
+##gray|//first, all, newer than target//##||$< $^ $?|| || ||
+||target variable||$@|| || ||
+||shared prefix variable||$*|| || ||
+||set variable in recipe||get_date: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@$(eval DATE := $(shell date)) _
+ _
+echo_date: get_date _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@echo $(DATE)||date = nil _
+ _
+task :get_date do _
+@<&nbsp;&nbsp;>@date = Time.now _
+end _
+ _
+task :echo_date => :get_date do _
+@<&nbsp;&nbsp;>@puts date _
+end|| ||
+||prompt user||##gray|//none//##|| ||<target name="foo"> _
+@<&nbsp;&nbsp;>@<input message="Enter foo:" addproperty="foo"/> _
+@<&nbsp;&nbsp;>@<echo>foo: ${foo}</echo> _
+</target>||
+||fatal error||foo: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@echo foo not implemented _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@false|| ||<target name="foo"> _
+@<&nbsp;&nbsp;>@<fail message="foo not implemented"/> _
+</target>||
+||||||||~ [[# rules]][#rules-note rules]||
+||~ ||~ make||~ rake||~ ant||
+||pattern rule||%.o: %.c _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@$(CC) -o $@ $<||rule '.o' => '.c' do |t| _
+@<&nbsp;&nbsp;>@sh "gcc -c -o #{t.name} #{t.source}" _
+end|| ||
+||multiple target rule||%.tab.cpp %.tab.hpp: %.ypp _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@bison -d $<|| || ||
+||built-in rules||##gray|# make behaves as if the following rules are _
+# defined:## _
+%.o: %.c _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@$(CC) $(CPPFLAGS) $(CFLAGS) -c $<|| || ||
+||don't use built-in rules||$ make -r ##gray|[TARGET] @@...@@##|| || ||
+||javac|| || ||<javac srcdir="${src}" destdir="${build}"/>||
+||||||||~ [[# file-dir]][#file-dir-note files and directories]||
+||~ ||~ make||~ rake||~ ant||
+||rm||rm *.o||rm||<delete file="foo"/>||
+||rm -rf||rm -rf build||rm_rf||<delete dir="foo"/>||
+||cp||cp -n bar baz _
+cp bar baz _
+cp bar /tmp||cp||<copy file="bar" tofile="baz"/> _
+<copy file="bar" tofile="baz" overwrite="true"/> _
+<copy file="bar" todir="/tmp"/>||
+||cp -R||cp -R foodir bardir||cp_r|| ||
+||mv||mv -n bar baz _
+mv bar baz _
+mv bar /tmp||mv||<move file="bar" tofile="baz"/> _
+<move file="bar" tofile="baz" overwrite="true"/> _
+<move file="bar" todir="/tmp"/>||
+||mkdir||mkdir foodir||mkdir||##gray|//none//##||
+||mkdir -p||mkdir -p foo/bar/bazdir||mkdir_p||<mkdir dir="foo/bar/bazdir"/>||
+||ln -s||ln -s foo altfoo||ln_s|| ||
+||rsync||rsync -ur bar/* baz|| || ||
+||tar|| || || ||
+||jar|| || ||<jar jarfile="${dist}/lib/MyProject-${DSTAMP}.jar" basedir="${build}"/>||
+||patch|| || || ||
+||gzip||gzip test.tar|| ||<gzip src="test.tar" destfile="test.tar.gz"/>||
+||gunzip||gunzip test.tar.gz|| ||<gunzip src="test.tar.gz"/>||
+||chmod|| ||chmod|| ||
+||chown|| || || ||
+||chgrp|| || || ||
+||mktemp|| || || ||
+||touch||touch foo||file :foo _
+@<&nbsp;&nbsp;>@touch :foo _
+end|| ||
+||wget|| || || ||
+||file test||test -e|| ||<available>||
+||regular file test||test -f|| ||<available type="file">||
+||directory test||test -d|| ||<available type="dir">||
+||readable test|| || || ||
+||writable test|| || || ||
+||executable test|| || || ||
+||||||||~ [[# repo]][#repo-note repositories]||
+||~ ||~ make||~ rake||~ ant||
+||package dependency|| || || ||
+||set repository|| || || ||
+||||||||~ [[# lib]][#lib-note libraries and namespaces]||
+||~ ||~ make||~ rake||~ ant||
+||[[# include]][#include-note include]||include ./Makefile.common||load './Rakefile.common'||<import file="./common.xml"/> _
+##gray|//also <include>//##||
+||include if exists||-include ./Makefile.optional||rakefile_lib = './Rakefile.optional' _
+ _
+if File.exists? rakefile_lib _
+@<&nbsp;&nbsp;>@load rakefile_lib _
+end|| ||
+||namespace||##gray|//none//##||$ cat Rakefile _
+namespace :foo do _
+@<&nbsp;&nbsp;>@task :bar do _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@puts "foo:bar" _
+@<&nbsp;&nbsp;>@end _
+end _
+ _
+task :bar => ["foo:bar"] do _
+@<&nbsp;&nbsp;>@puts "bar" _
+end _
+ _
+$ rake bar _
+foo:bar _
+bar _
+ _
+$ rake foo:bar _
+foo:bar|| ||
+||||||||~ [[# recursion]][#recursion-note recursion]||
+||~ ||~ make||~ rake||~ ant||
+||[[# recursive-invocation]][#recursive-invocation-note recursive invocation]||foo: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@$(MAKE) -C subdir $@|| || ||
+||export variable||export foo||##gray|//none//##|| ||
+||export all variables||export||##gray|//none//##|| ||
+||unexport variable||unexport foo||##gray|//none//##|| ||
+||~ ##EFEFEF|@@_____________@@##||~ ##EFEFEF|@@________________________________________@@##||~ ##EFEFEF|@@________________________________________@@##||~ ##EFEFEF|@@________________________________________@@##||
+
+
+[[# version-used-note]]
+++ [#version-used version used]
+
+The version used for this reference sheet.
+
+[[# show-version-note]]
+++ [#show-version show version]
+
+How to get the version of the build tool.
+
+[[# build-file-name-note]]
+++ [#build-file-name name of build file]
+
+The customary name for the build file.
+
+[[# hello-world-note]]
+++ [#hello-world hello world]
+
+How to use the build tool to write to standard out.
+
+[[# build-hello-world-note]]
+++ [#build-hello-world build hello world]
+
+How to build an executable which writes to standard out.
+
+[[# stmt-separator-note]]
+++ [#stmt-separator statement separator]
+
+How statements are terminated.
+
+[[# comment-note]]
+++ [#comment comment]
+
+How to put a comment in the build file.
+
+[[# invocation-note]]
++ [#invocation Invocation]
+
+[[# specify-build-file-note]]
+++ [#specify-build-file specify build file]
+
+How to use to use a build file other than the default.
+
+[[# dry-run-note]]
+++ [#dry-run dry run]
+
+How to do a dry run.  Commands that would be performed to build the target are echoed, but no actions are performed.
+
+[[# keep-going-after-errors-note]]
+++ [#keep-going-after-errors keep going after errors]
+
+When multiple targets are specified, how to keep going even if some of the targets fail to build.
+
+[[# run-jobs-in-parallel-note]]
+++ [#run-jobs-in-parallel run jobs in parallel]
+
+How to run recipes in parallel.
+
+**make:**
+
+[[# list-targets-note]]
+++ [#list-targets list targets]
+
+List the targets which can be specified on the command line.
+
+**make:**
+
+
+
+[[# touch-targets-note]]
+++ [#touch-targets touch targets]
+
+How to run {{touch}} on all targets without building them.  This updates the last modified timestamp to the present and creates an empty file if the target does not exist.
+
+[[# always-rebuild-note]]
+++ [#always-rebuild always rebuild]
+
+How to rebuild all targets, even if they are already built and up-to-date.
+
+[[# up-to-date-test-note]]
+++ [#up-to-date-test up-to-date test]
+
+How to test whether the targets are up-to-date.  Returns a exit status of zero if they are.
+
+[[# var-note]]
++ [#var Variables]
+
+[[# set-use-var-note]]
+++ [#set-use-var set and access variable]
+
+How to set a variable; how to use the value stored in a variable.
+
+**make**
+
+Make variables are implemented as macro substitutions.  There is no difference between the {{$(foo)}} and {{${foo} }} syntax.  There is, however, a difference between using {{:=}} and {{=}} to perform variable assignment.
+
+{{:=}} is the //immediate assignment// operator.  It expands variables on the right hand side when the assignment is performed.  A variable defined by immediate assignment is called //simply expanded//.  The //immediate assignment// behaves like assignment in other programming languages.
+
+{{=}} is the //deferred assignment// operator.  It expands variables on the right each time the variable on the left is referenced.  A variable defined by deferred assignment is called //recursively expanded//.  Variables can be used on the left side of a deferred assignment before they are defined.  If a {{$(wilcard ...)}} or {{$(shell ...)}} function is used on the right side, the value of the variable may be different each time it is referenced.  Deferred assignment should perhaps be regarded as a misfeature of the original version of {{make}}.
+
+The flavor function can be used to determine whether a variable is simple or recursive:
+
+[[code]]
+rec = foo
+sim := foo
+
+rec sim:
+        # echoes "recursive" or "simple":
+        @echo $(flavor $@)
+[[/code]]
+
+The variable expressions {{$(foo)}} or {{${foo} }} can be used on the left side of an assignment.  The variables are immediately evaluated to determine the name of the variable being defined.
+
+Whitespace after an assignment operator is trimmed.  It is nevertheless possible to set a variable to a space:
+
+[[code]]
+empty :=
+space := $(empty) $(empty)
+[[/code]]
+
+[[# undefined-var-note]]
+++ [#undefined-var undefined variable access]
+
+What happens when a variable which is undefined is accessed.
+
+[[# redefine-var-note]]
+++ [#redefine-var redefine variable]
+
+What happens when a variable is redefined.
+
+[[# append-var-note]]
+++ [#append-var append to variable]
+
+How to append to variable.
+
+[[# conditionally-def-var-note]]
+++ [#conditionally-def-var conditionally define variable]
+
+How to conditionally define a variable.
+
+[[# env-var-note]]
+++ [#env-var environment variable]
+
+How to access an environment variable.
+
+**make:**
+
+Every environment variable becomes a {{make}} variable.
+
+The {{origin}} function can be used to identify which variables were environment variables.
+
+//example of the origin function and a list of return values//
+
+[[# set-var-if-not-exists-note]]
+++ [#set-var-if-not-exists set variable if doesn't exist]
+
+How to set a variable if it is not already defined.
+
+[[# error-var-not-set-note]]
+++ [#error-var-not-set raise error if variable not set]
+
+How to exit before executing any recipes if a variable is not set.
+
+[[# warn-var-not-set-note]]
+++ [#warn-var-not-set warn if variable not set]
+
+How to write a message to standard error if a variable is not set.
+
+[[# var-func-note]]
++ [#var-func Variable Functions]
+
+[[# glob-filenames-note]]
+++ [#glob-filenames glob filenames]
+
+How to match files in a directory using pattern matching.
+
+Shell-style file pattern matching uses {{?}} to match a single character and {{*}} to match zero or more characters.
+
+[[# recursively-glob-filenames-note]]
+++ [#recursively-glob-filenames recursively glob filenames]
+
+[[# pattern-subst-note]]
+++ [#pattern-subst pattern substitution]
+
+[[# global-subst-note]]
+++ [#global-subst global substitution]
+
+**make**
+
+The comma is used as an argument separator.  If a comma appears in a match pattern or a replacement pattern, one must store the pattern in a variable:
+
+[[code]]
+comma := ,
+comma_list := foo,bar,baz _
+semicolon_list := $(subst $(comma),;,$(comma_liost))
+[[/code]]
+
+[[# foreach-note]]
+++ [#foreach foreach]
+
+[[# call-note]]
+++ [#call call]
+
+[[# shell-note]]
+++ [#shell shell]
+
+[[# dirname-basename-note]]
+++ [#dirname-basename dirname and basename]
+
+[[# targets-prerequisites-note]]
++ [#targets-prerequisites Targets and Prerequisites]
+
+[[# file-target-note]]
+++ [#file-target file target]
+
+A target which creates a file.  The target should not execute if the file exists and is more recent than its prerequisites.
+
+[[# file-target-prerequisite-note]]
+++ [#file-target-prerequisite file target with prerequisites]
+
+[[# order-only-prerequisite-note]]
+++ [#order-only-prerequisite order only prerequisite]
+
+How to define a prerequisite which will be built if it does not exist before the target, but will not trigger a re-build of the target if it is newer than the target.
+
+Directories should usually be order only prerequisites, because the last modification timestamp of a directory is updated whenever a file is added to or removed from the directory.
+
+[[# phony-target-note]]
+++ [#phony-target phony target]
+
+A target which always executes, even if a file of the same name exists.
+
+**make:**
+
+A target can be declared phony by making it a prerequisite for the .PHONY target.  This ensures execution of the recipe even if a file with the same name is created in the Makefile directory.
+
+Older versions of Make which don't support .PHONY use the following idiom to ensure execution:
+
+[[code]]
+clean: FORCE
+        rm $(objects)
+FORCE:
+[[/code]]
+
+[[# default-target-note]]
+++ [#default-target default target]
+
+Which target is executed if the build tool is run without an argument; how to specify the target which is executed if the build tool is run without an argument.
+
+[[# universal-target-note]]
+++ [#universal-target universal target]
+
+How to define a default recipe.
+
+[[# recipes-note]]
++ [#recipes Recipes]
+
+[[# shared-recipe-note]]
+++ [#shared-recipe shared recipe]
+
+How to define targets with a common recipe.
+
+[[# shared-target-note]]
+++ [#shared-target shared target]
+
+How to define a target with multiple recipes.  If the target is invoked, all recipes are executed.
+
+**make:**
+
+If a target has multiple recipes, all of them must use the double colon syntax.  The recipes are executed in the order in which they are defined in the Makefile.
+
+Each recipe can have its own prerequisites.  Recipes for which the the prerequisites exist and the target is newer than the prerequisites will not execute.
+
+[[# empty-recipe-note]]
+++ [#empty-recipe empty recipe]
+
+[[# invoke-shell-note]]
+++ [#invoke-shell invoke shell]
+
+[[# multiline-var-note]]
+++ [#multiline-var multiline variable]
+
+How to define a variable containing newlines.
+
+[[# rules-note]]
++ [#rules Rules]
+
+++ variables used by built-in rules for c
+
+Many of the variables have an accompanying variables for setting flags:
+
+* AR: ARFLAGS
+* AS: ASFLAGS
+* CC: CFLAGS
+* CXX: CXXFLAGS
+* CPP: CPPFLAGS
+* ld: LDFLAGS
+* LEX: LFLAGS
+* YACC: YFLAGS
+
+
+[[# file-dir-note]]
++ [#file-dir Files and Directories]
+
+[[# repo-note]]
++ [#repo Repositories]
+
+[[# lib-note]]
++ [#lib Libraries and Namespaces]
+
+[[# include-note]]
+++ [#include include]
+
+[[# recursion-note]]
++ [#recursion Recursion]
+
+[[# recursive-invocation-note]]
+++ [#recursive-invocation recursive invocation]
+
+How to invoke the build tool on a build file in a subdirectory.
+
+**make:**
+
+Using {{$(MAKE)}} instead of {{make}} guarantees that the same version of {{make}} is used and passes along command line options from the original invocation.
+
+[[# terminology]]
++ [#top Terminology]
+
+* variable
+* variable function
+* target
+* prerequisite
+* recipe
+* build
+* job
+* job slot
+* rule
+* built-in rule
+
+[[# doc]][[# make]]
++ [#top Make]
+
+* [http://www.gnu.org/software/make/manual/make.html GNU make]
+
+If precautions are taken it is possible to write a Makefile which will build on a variety of POSIX systems:
+
+* [http://www.gnu.org/software/autoconf/manual/autoconf.html#Portable-Shell Portable Shell Programming]
+* [http://www.gnu.org/software/autoconf/manual/autoconf.html#Portable-Make Portable Make Programming]
+* [http://www.gnu.org/software/autoconf/manual/autoconf.html#Portable-C-and-C_002b_002b Portable C and C++ Programming]
+
+A Makefile consists of rules which have the following format:
+
+[[code]]
+TARGET ... : PREREQUISITE ...
+        ACTION
+        ...
+[[/code]]
+
+The rule consists of usually one target, zero or more prerequisites, and zero or more actions.  The actions are collectively called the recipe for the rule.
+
+When multiple targets are provides the effect is the same as defining separate rules (one for each target) with the same prerequisites and actions.  The targets are not necessarily synonyms since the actions can inspect the $@ variable to get the target name.
+
+When the target is invoked, {{make}} will first execute any of the prerequisites which can be defined using rules.  If {{make}} cannot find a rule for a prerequisite it will exit with an error.  Then {{make}} will execute the recipe.
+
+The actions of a recipe are a sequence of lines, each starting with a tab character and containing a shell expression.  If the last character on an action line is a backslash \, then the action continues on the following line.  {{make}} will interpret any makefile variables in the action and then fork a shell to execute the shell expression.  Makefile variables start with a dollar sign.  Use duplication to pass a dollar sign character to the shell.  Make echoes the action before executing it, but this can be suppressed by putting an ampersand after the tab character.
+
+Here is an example of defining and using a Makefile variable:
+
+[[code]]
+hello = Hello, World!
+
+hello :
+        @echo $(hello)
+[[/code]]
+
+There is target with the same name as the variable.  Targets and variables live in separate namespaces so there is no conflict.  
+
+Here is an example of how to define a suffix rule.  In the recipe {{$@}} refers to the target and {{$<}} refers to the dependency.
+
+[[code]]
+%.html: %.md
+        markdown $< > $@
+[[/code]]
+
+* //files with the same name as targets, .PHONY//
+* //invoking make, default rule//
+
+[[# rake]]
++ [#top Rake]
+
+[http://rake.rubyforge.org/ rake.rubyforge.org]
+
+
+[[# ant]]
++ [#top Ant]
+
+[http://ant.apache.org/manual/index.html Apache Ant Manual]

@@ -1,0 +1,308 @@
+[#cmd-line-opts command line options] | [#key-bindings key bindings] | [#customization customization] | [#terminology terminology] | [#doc documentation]
+
+[[# cmd-line-opts]]
+++ Command Line Options
+
+||~ ||~ [#screen screen]||~ [#tmux tmux]||
+||create session and attach||$ screen||$ tmux||
+||create session //foo// and attach||$ screen -S foo||$ tmux new -s foo||
+||create detached session //foo//||$ screen -S foo -d -m||$ tmux new -s foo -d||
+||list sessions|| ||$ tmux ls||
+||attach||$ screen -r||$ tmux attach||
+||attach to session //foo//||$ screen -r foo||$ tmux attach -t foo||
+||attach to session by pid||$ screen -r ##gray|//pid//##|| ||
+||kill session //foo//||$ screen -r foo -X quit||$ tmux kill-session -t foo||
+||send multiplexer command to session //foo//||$ screen -r foo -X ##gray|//command//##||$ tmux ##gray|//command//## -t foo||
+||run ls in session //foo//||$ screen -r foo -X stuff "ls $(echo -ne '\015')"||$ tmux send-keys -t foo 'ls' C-m||
+
+[[# key-bindings]]
+++ Key Bindings
+
+[#sessions sessions] | [#windows windows] | [#regions regions] | [#panes panes] | [#paste-buffer paste buffer] | [#copy-mode copy mode] 
+
+||~ ||||~ [#screen screen]||||~ [#tmux tmux]||
+||~ ||~ C-a ##gray|//cmd//##||~  command||~ C-b ##gray|//cmd//##||~ command||
+||help||?||:help||?||:list-keys||
+||send prefix to app||a||:meta||C-b||:send-prefix||
+||suspend multiplexer||C-z||:suspend||C-z||:suspend-client||
+||show previous multiplexer message||m _
+C-m||:lastmsg||~||:show-messages||
+||source file|| ||:source ##gray|//file//##|| ||:source-file ##gray|//file//##||
+||detach||d _
+C-d||:detach||d||:detach-client||
+||||||||||~ [[# sessions]]sessions||
+||~ ||||~ screen||||~ tmux||
+||~ ||~ C-a ##gray|//cmd//##||~  command||~ C-b ##gray|//cmd//##||~ command||
+||new session|| || || ||:new||
+||new named session|| || || ||:new -s foo||
+||switch session|| || ||s||:choose-session||
+||rename session|| ||:sessionname foo||$||command-prompt -I #S "rename-session '%%'"||
+||kill session||C-\||:quit|| || ||
+||||||||||~ [[# windows]]windows||
+||~ ||||~ screen||||~ tmux||
+||~ ||~ C-a ##gray|//cmd//##||~  command||~ C-b ##gray|//cmd//##||~ command||
+||create new window||c _
+C-c||:screen||c||:new-window||
+||switch to next window||n _
+C-n _
+SPACE||:next||n||:next-window||
+||switch to previous window||BACKSPACE _
+h _
+p _
+C-p||:prev||p||:previous-window||
+||toggle to last window||C-a||:other|| || ||
+||select window ##gray|//n//##|| || ||##gray|//n//##||:select-window -t :##gray|//n//##||
+||list windows||w _
+C-w||:windows|| ||:list-windows||
+||show current window number and name||N||:number|| || ||
+||renumber current window|| || ||. ##gray|//position//##||:move-window||
+||move current window to another session|| || ||. ##gray|//sessname//## _
+. ##gray|//sessnum//##:##gray|//position//##|| ||
+||redraw current window||l _
+C-l||:redisplay||r||:refresh-client||
+||choose window interactively||"||:windowlist -b||w||:choose-window||
+||rename window||A||:title||,|| ||
+||select window ##gray|//foo//##||'||:select||f ##gray|//foo//##|| ||
+||close current window||C-k||:kill||&||:kill-window||
+||join window 1 to current window|| || || ||:join-pane -s 1||
+||join region 0 of window 1 to current window|| || || ||:join-pane -s 1.0||
+||||||||||~ [[# regions]]regions||
+||~ ||||~ screen||||~ tmux||
+||~ ||~ C-a ##gray|//cmd//##||~  command||~ C-b ##gray|//cmd//##||~ command||
+||split into top and bottom regions||S||:split|| || ||
+||move down to next region||TAB||:focus|| || ||
+||make regions same height|| ||:resize =|| || ||
+||close current region||X||:remove|| || ||
+||close all but current region||Q||:only|| || ||
+||clear current region||C||:clear|| || ||
+||log region to file|| ||##gray|//file is// screenlog.NN## _
+:log|| || ||
+||turn off logging|| ||:log off|| || ||
+||make current region ##gray|//n//## rows taller/shorter|| ||:resize +##gray|//n//## _
+:resize -##gray|//n//##|| || ||
+||make current region ##gray|//n//## rows tall|| ||:resize ##gray|//n//##|| || ||
+||||||||||~ [[# panes]]panes||
+||~ ||||~ screen||||||~ tmux||
+||~ ||~ C-a ##gray|//cmd//##||~  command||~ C-b ##gray|//cmd//##||~ command||
+||split into left and right panes|| || ||%||:split-window -h||
+||split into top and bottom panes|| || ||"||:split-window||
+||switch to next panes|| || ||o||:select-pane||
+||rotate panes|| || ||C-o||:rotate-window||
+||reverse rotate panes|| || ||M-o||:rotate-window -D||
+||arrange panes side-by-side and same width|| || ||M-1|| ||
+||arrange panes stacked and same height|| || ||M-2|| ||
+||swap current and previous pane|| || ||{||:swap-pane -U||
+||swap current and next pane|| || ||}||:swap-pane -D||
+||change arrangement of panes|| || ||SPACE||:next-layout||
+||close current pane|| || ||x||:confirm-before kill-pane||
+||break current pane into separate window|| || ||!||:break-pane||
+||list panes|| || || ||:list-panes||
+||display pane numbers|| || ||q||:display-panes||
+||clear current pane|| || || ||:clear-history||
+||log pane to file|| || || ||:pipe-pane "cat > /tmp/tmux.log"||
+||turn off logging|| || || ||:pipe-pane||
+||resize pane left/up ##gray|//n//## cells|| || || ||:resize-pane -L ##gray|//n//## _
+:resize-pane -U ##gray|//n//##||
+||||||||||~ [[# paste-buffer]]paste buffer||
+||~ ||||~ screen||||~ tmux||
+||~ ||~ C-a ##gray|//cmd//##||~  command||~ C-b ##gray|//cmd//##||~ command||
+||enter copy mode||[ _
+C-[ _
+ESC||:copy||[||:copy-mode||
+||paste most recent buffer||]|| ||]||:paste-buffer||
+||list buffers||##gray|//only one buffer//##|| ||#||:list-buffers||
+||choose buffer to paste interactively|| || ||=||:choose-buffer||
+||write buffer to file||##gray|//writes to// /tmp/screen-exchange:## _
+@@>@@||:writebuf ##gray|//path//##|| ||:save-buffer ##gray|//path//##||
+||copy file to buffer||##gray|//copies from// /tmp/screen-exchange:## _
+@@<@@||:readbuf ##gray|//path//##|| ||:load-buffer ##gray|//path//##||
+||||||||||~ [[# copy-mode]]copy mode||
+||~ ||||~ screen||||~ tmux||
+||~ ||~ ##gray|//cmd//##||~  command||~ ##gray|//cmd//##||~ command||
+||default bindings||||##gray|//Vim-style//##||||##gray|//Emacs-style//##||
+||set mark||SPACE|| ||C-SPACE|| ||
+||copy from mark to point and exit copy mode||##gray|//when mark is set://## _
+SPACE|| ||C-w|| ||
+||single column movement||##gray|//also left right arrow//## _
+h l|| ||##gray|//also left right arrow//## _
+C-b C-h|| ||
+||single line movement||##gray|//also down up arrow//## _
+j k|| ||##gray|//also down up arrow//## _
+C-n C-p|| ||
+||beginning of line||0|| ||C-a|| ||
+||end of line||$|| ||C-e|| ||
+||forward word||e|| ||M-f|| ||
+||backward word||b|| ||M-b|| ||
+||page up||C-b|| ||M-v|| ||
+||page down||C-f|| ||C-v|| ||
+||beginning of buffer||g|| ||M-<|| ||
+||end of buffer||G|| ||M->|| ||
+||search backwards||? ##gray|//phrase//##|| ||C-r ##gray|//phrase//##|| ||
+||search forwards||/ ##gray|//phrase//##|| ||C-s ##gray|//phrase//##|| ||
+||exit copy mode||##gray|//any unbound key also works://## _
+ESC|| ||q|| ||
+
+[[# customization]]
+++ Customization
+
+||~ ||~ [#screen screen]||~ [#tmux tmux]||
+||startup file||~/.screenrc||~/.tmux.conf||
+||scrollback length||defscrollback 2000||set-option history-limit 2000||
+||set prefix||##gray|//how to set prefix to C-b, with a second C-b to send a C-b to the controlling process://## _
+escape ^B^B||set-option -g prefix C-a||
+||define key binding||bind||bind-key||
+||undefine key binding|| ||unbind-key||
+||set copy/scrollback key binding style||##gray|//vi bindings by default. _
+When redefining, use vi _
+commands on left of equations://## _
+markkeys h=^B:l=^F:$=^E||##gray|//emacs by default://## _
+setw -g mode-keys vi||
+||disable startup message||startup_message off|| ||
+||number windows from one|| ||##gray|//0 by default://## _
+set -g base-index 1||
+||always show status bar||##gray|//splitonly by default://## _
+caption always _
+caption splitonly||##gray|//on by default://## _
+set-option status off _
+set-option status on||
+||customize caption||caption string "##gray|//string//##"||set-option status-left "##gray|//string//##" _
+set-option status-right ##gray|//string//##||
+
+||||||~ caption escapes||
+||~ ||~ screen||~ tmux||
+||shell output||##gray|//first arg is an identifier referenced by the caption string; _
+the second and third argument set the refresh in seconds//## _
+ _
+backtick 1 60 60 ##gray|//cmd//## _
+caption always "%1@@`@@"||#(##gray|//cmd//##)||
+||date (YYYYMMDD)||%Y%m%d|| ||
+||month name||%M|| || 
+||weekday name||%D|| ||
+||24 hr time||%C|| ||
+||12 hr time||%c%A|| ||
+||color||%{ry}##gray|//red text, yellow background//##%{dd}foo||#[fg=red,bg=yellow]##gray|//red text, yellow background//###[default]||
+||fully qualified hostname|| ||#H||
+||hostname||%H||#h||
+||session name|| ||#S||
+||current window flag||%F||#F||
+||current window index||%n||#I||
+||current pane index||##gray|//none//##||#P|||
+||current pane title||##gray|//none//##||#T||
+||window name||%t||#W||
+||literal % or #||%%||@@##@@||
+
+[[# terminology]]
+++ Terminology
+
+[#def-server server] | [#def-client client] | [#def-session session] | [#def-window window] | [#def-region region] | [#def-pane pane]
+
+**how ssh works:**
+
+When a user logs in to a remote host using {{ssh}}, the {{ssh}} process contacts an {{sshd}} process listening on TCP port 22.  The {{sshd}} process opens up a new TCP port and forks off a copy of itself for communicating with the {{ssh}} process.  The new port and child process are for the exclusive use of the connection being established.
+
+The child {{sshd}} process authenticates the {{ssh}} process, and if it passes it creates a pseudo-terminal.  It then forks the remote user's shell which becomes the controlling process for the pseudo-terminal.
+
+If the network connection is closed, either explicitly by the {{ssh}} process or because of a loss of network connectivity, the child {{sshd}} process closes the pseudo-terminal, and this in turn causes the shell to exit.
+
+**the SIGHUP problem:**
+
+If the shell had any process groups running when it exits, they are sent a {{SIGHUP}} signal followed by a {{SIGCONT}} signal.  By default processes exit when they receive {{SIGHUP}}.  This makes it challenging to run long-running jobs on a remote host when the network connection is unreliable.
+
+A simple solution to the {{SIGHUP}} problem is to run each job with {{nohup}}.   Optionally, shells such as {{bash}} and {{zsh}} have a {{disown}} built-in which can be used on a process that is already running, should the user have neglected to run it with {{nohup}}.
+
+Multiplexers offer a solution which protects the shell instead of the job.  The user doesn't need to remember to run each job with {{nohup}}.  As an added benefit any state kept by the shell is preserved.  
+
+[[# def-server]]**server:**
+
+The multiplexer server creates pseudo-terminals which are used for running and interacting with programs.
+
+//Screen// and //Tmux// servers can create multiple pseudo-terminals. The controlling process for each pseudo-terminal is the user's shell.
+
+[[# def-client]]**client:**
+
+To see the output of a shell the user must connect to the multiplexer server with a multiplexer client process.
+
+If the multiplexer is being run on a remote machine and the user's connection is lost, the server and its terminals and controlling processes will persist, but the client process will exit.
+
+When multiple client processes connect to the same server they can see the same output.  This is a way to share a display across computers.
+
+[[# def-session]]**session:**
+
+Multiplexers support multiple sessions.  Each multiplexer session has its own set of terminals and controlling processes which it is running.  The client must choose a session to attach to, and will only be able to see the output of the controlling processes in that session. Sessions can be given names to make it easy for the client to choose the correct session.
+
+//Screen// launches a separate server process for each session.  //Screen// servers and clients communicate via named pipes.
+
+//Tmux// by default will only run one server process per user, and this server process can have multiple sessions.  A //Tmux// client and the server communicate via a Unix domain socket in the /tmp directory.  The {{-L}} option can be used to specify a different socket; a new server is created for each socket.
+
+[[# def-window]]**window:**
+
+Both //Screen// and //Tmux// have entities which they call windows.
+
+A //Screen// window has a single pseudo-terminal and shell.  A //Tmux// window can have multiple pseudo-terminals and shells.
+
+//Screen// windows can share the viewport.  The //Tmux// viewport can only display one window at a time.
+
+Both //Screen// and //Tmux// windows are numbered starting from zero.
+
+[[# def-region]]**region:**
+
+//Screen// can divide the viewport into multiple regions.
+
+//Screen// regions can be empty or they can contain a window.  The same window can be displayed in more than one region.  When regions share a window their content is identical.
+
+//Screen// regions are stacked on top of each other and extend the full width of the window.
+
+[[# def-pane]]**pane:**
+
+//Tmux// can divide windows into multiple panes.
+
+//Tmux// panes contain a single pseudo-terminal with a shell, and each pseudo-terminal and shell belongs to only one pane.
+
+//Tmux// windows can be divided both horizontally and vertically into panes.  Each division can be subdivided further.
+
+//Tmux// panes are numbered.
+
+//Tmux// panes can be moved between windows.
+
+**command character (prefix):**
+
+Multiplexers pass most input on to the shell in the region with focus, but a special command character is used to send commands to the multiplexer.
+
+The default command character in //Screen// is {{C-a}}.  The keystrokes which follow {{C-a}} are interpreted by //Screen// instead of being passed to the shell.
+
+//Tmux// calls the command character the //prefix// and the default value is {{C-b}}.  The keystrokes following the prefix are interpreted by //Tmux// instead of being passed to shell.
+
+**scrollback buffer (history):**
+
+//Screen// and //Tmux// keep a history of the output of each shell.  The maximum length of the output in lines is configurable.
+
+//Screen// calls the history the scrollback buffer.
+
+**copy/scrollback mode (copy mode):**
+
+//Screen// and //Tmux// support two modes for each region.  In default mode, input which is not intercepted by the multiplexer is passed to the shell.
+
+When the region is in copy mode the region behaves like a read-only buffer of an editor.   The contents are the output of the shell including output that may have scrolled off the top of the region.
+
+The keybindings used by //Screen// in copy/scrollback mode are Vim-style.  It is possible to customize them to be Emacs-style.
+
+The //Tmux// calls copy/scrollback mode simply copy mode.  The keybindings are by default Emacs-style.
+
+**paste buffer:**
+
+//Screen// has a single paste buffer.
+
+//Tmux// has multiple paste buffers.  The //Tmux// paste buffers are numbered; the most recent is number zero.  Sessions share a common paste buffer history.
+
+**caption (status line):**
+
+When a //Screen// window is split into multiple regions, a caption line is placed at the bottom of each region.  When a window contains a single region, //Screen// by default does not display a caption.  The caption, when present, contains information from //Screen//.  The information that is displayed can be customized.
+
+//Tmux// calls the line at the bottom of a window the status line.  By default it is always displayed, though it can be turned off.  The status line contains information from //Tmux// which can be customized.
+
+[[# screen]][[# tmux]][[# doc]]
+++ Documentation
+
+[http://linux.die.net/man/1/nohup man nohup]
+[http://www.gnu.org/software/screen/manual/screen.html Screen User's Manual]
+[http://manpages.ubuntu.com/manpages/precise/man1/tmux.1.html man tmux]

@@ -1,0 +1,929 @@
+//a side-by-side reference sheet//
+
+[[# top]][#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#arrays arrays] | [#user-defined-types user-defined types] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#file-handles file handles] | [#files files] | [#sql sql] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces]
+
+||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
+||[[# version-used]][#version-used-note version used] _
+@<&nbsp;>@||##gray|//Free Pascal 2.4//##||##gray|//GNAT GCC 4.1//##||##gray|//Postgres 9.1//##||
+||[[# show-version]][#show-version-note show version] _
+@<&nbsp;>@||$ fpc -v||$ gnatgcc @@--@@version||$ psql @@--@@version||
+||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
+||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
+||[[# hello-world]][#hello-world-note hello word]||$ cat hello.pas _
+program Hello; _
+begin _
+@<&nbsp;&nbsp;>@WriteLn('hello world!'); _
+end. _
+ _
+$ fpc hello.pas _
+ _
+$ ./hello||$ cat hello.adb _
+with Text_IO; use Text_IO; _
+procedure Hello is _
+begin _
+@<&nbsp;&nbsp;>@Put_Line ("Hello World!"); _
+end Hello; _
+ _
+$ gnatgcc -c hello.adb _
+ _
+$ gnatbind hello _
+ _
+$ gnatlink hello _
+ _
+$ ./hello _
+Hello World!||##gray|//at psql prompt://## _
+@@>@@ create or replace function hello() _
+returns varchar as $$ _
+begin _
+@<&nbsp;&nbsp;>@return 'Hello World!'; _
+end; _
+$$ language plpgsql; _
+CREATE FUNCTION _
+ _
+@@>@@ select hello(); _
+hello _
+@@--------------@@ _
+Hello World! _
+(1 row)||
+||[[# file-suffixes]][#file-suffixes-note file suffixes]||foo.pas _
+foo.o _
+foo|| || ||
+||[[# eol-comment]][#eol-comment-note end-of-line comment]||##gray|//not ISO Pascal://## _
+@@//@@ ##gray|//comment line//## _
+@@//@@ ##gray|//another line//##||@@--@@ ##gray|//comment line//## _
+@@--@@ ##gray|//another line//##||@@--@@ ##gray|//comment line//## _
+@@--@@ ##gray|//another line//##||
+||[[# multiple-line-comment]][#multiple-line-comment-note multiple line comment]||(* ##gray|//comment line//## _
+##gray|//another line//## *) _
+ _
+{ ##gray|//comment line//## _
+##gray|//another line//## }|| ||##gray|//none//##||
+||||||||~ [[# variables-expressions]][#variables-expressions-note variables and expressions]||
+||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
+||[[# case-sensitive]][#case-sensitive-note case sensitive] _
+@<&nbsp;>@||##gray|//no//##||##gray|//no//##||##gray|//no//##||
+||[[# declarations]][#declarations-note declare constant, type, and variable]||program Foo; _
+const _
+@<&nbsp;&nbsp;>@PI: Real = 3.14159; _
+type _
+@<&nbsp;&nbsp;>@Customer = record _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Id: Integer; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Name: String; _
+@<&nbsp;&nbsp;>@end; _
+var _
+@<&nbsp;&nbsp;>@I: Integer; _
+@<&nbsp;&nbsp;>@C: Customer; _
+begin _
+@<&nbsp;&nbsp;>@##gray|//body of program//##||procedure Foo is _
+@<&nbsp;&nbsp;>@Pi :  constant FLOAT := 3.14; _
+@<&nbsp;&nbsp;>@i : INTEGER; _
+@<&nbsp;&nbsp;>@type Customer is record _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Id : INTEGER; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Name : String(1..4); _
+@<&nbsp;&nbsp;>@end record; _
+@<&nbsp;&nbsp;>@C: Customer; _
+begin _
+@<&nbsp;&nbsp;>@##gray|//body of program//##|| create type customer as ( _
+@<&nbsp;&nbsp;>@id integer, _
+@<&nbsp;&nbsp;>@name text _
+); _
+ _
+create or replace function foo() returns void as $$ _
+declare _
+@<&nbsp;&nbsp;>@pi numeric(10,4) = 3.14; _
+@<&nbsp;&nbsp;>@i integer = 42; _
+@<&nbsp;&nbsp;>@c customer%rowtype; _
+begin _
+@<&nbsp;&nbsp;>@return; _
+end $$ language plpgsql;||
+||[#block block with local scope]|| || ||declare _
+@<&nbsp;&nbsp;>@i integer := 3; _
+begin _
+@<&nbsp;&nbsp;>@raise notice 'i is %', i; _
+end;||
+||[[# assignment]][#assignment-note assignment] _
+@<&nbsp;>@||X := 1;||x := 1;|| x = 1;||
+||[[# pointer-declaration]][#pointer-declaration-note pointer declaration]||IP: ^Integer;||type Integer_Pointer is access Integer; _
+Ip : Integer_Pointer;||##gray|//none//##||
+||[[# allocate-memory]][#allocate-memory-note allocate memory] _
+@<&nbsp;>@||new(IP);||Ip := new Integer;||##gray|//none//##||
+||[[# free-memory]][#free-memory-note free memory] _
+@<&nbsp;>@||dispose(IP);|| ||##gray|//none//##||
+||[[# deference-pointer]][#dereference-pointer-note dereference pointer]||IP^ := 7; _
+Ans := 6 * IP^;||Ip.all := 7; _
+ans := 6 * Ip.all;||##gray|//none//##||
+||[[# null]][#null-note null literal]||##gray|//can only be assigned to pointers://## _
+nil||##gray|//can only be assigned to access types://## _
+null||NULL||
+||[[# null-test]][#null-test-note null test]||X = nil||x = null||x is NULL _
+##gray|x = NULL //is always false//##||
+||[[# coalesce]][#coalesce-note coalesce] _
+@<&nbsp;>@||##gray|//none//##|| ||7 + coalesce(x, 0)||
+||[[# nullif]][#nullif-note nullif] _
+@<&nbsp;>@||##gray|//none//##|| ||nullif(x, 0)||
+||[[# conditional-expr]][#conditional-expr-note conditional expression] _
+@<&nbsp;>@||##gray|//none//##|| ||case when x > 0 then x else -x end||
+||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
+||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
+||[[# boolean-type]][#boolean-type-note boolean type] _
+@<&nbsp;>@||Boolean||BOOLEAN||BOOL BOOLEAN||
+||[[# true-false]][#true-false-note true and false] _
+@<&nbsp;>@||true false||TRUE FALSE||TRUE FALSE||
+||[[# falsehoods]][#falsehoods-note falsehoods]||false _
+##gray|//non booleans cause error in boolean context//##||FALSE _
+##gray|//non booleans cause error in boolean context//##||FALSE NULL 0 _
+##gray|//strings and floats cause error in boolean context//##||
+||[[# logical-op]][#logical-op-note logical operators] _
+@<&nbsp;>@||and or xor not||and or xor not||AND OR ##gray|//none//## NOT||
+||[[# short-circuit-op]][#short-circuit-op-note short circuit operators]||##gray|{ in Free Pascal 'and' and 'or' also short circuit }## _
+and_then _
+or_else||and then _
+or else||AND _
+OR||
+||[[# int-type]][#int-type-note integer type]||Integer|| ||smallint: ##gray|//2 bytes//## _
+integer: ##gray|//4 bytes//## _
+bigint: ##gray|//8 bytes//##||
+||[[# float-type]][#float-type-note float type]||Real|| ||real: ##gray|//4 bytes//## _
+double precision: ##gray|//8 bytes//##||
+||[[# fixed-type]][#fixed-type-note fixed type] _
+@<&nbsp;>@||##gray|//four fractional digits://## _
+Currency|| ||numeric(##gray|//digits//##, ##gray|//fractional_digits//##)||
+||[[# relational-op]][#relational-op-note relational operators] _
+@<&nbsp;>@||@@=@@ <> < > <= >=||@@=@@ /= < > <= >=||@@=@@ != ##gray|//also://## <> < > <= >=||
+||[[# min-max]][#min-max-note min and max]||uses Math; _
+ _
+Min(1, 2) _
+Max(1, 2) _
+MinIntValue([1, 2, 3]) _
+MaxIntValue([1, 2, 3]) _
+MinValue([1.0, 2.0, 3.0]) _
+MaxValue([1.0, 2.0, 3.0])|| ||least(1,2,3) _
+greatest(1,2,3)||
+||[[# arith-op]][#arith-op-note arithmetic operators] _
+@<&nbsp;>@||+ - * / div mod||+ - * ##gray|//none//## / mod ##gray|//or//## rem||+ - * ##gray|//none//## / %||
+||[[# int-div]][#int-div-note integer division] _
+@<&nbsp;>@||7 div 3|| ||7 / 3||
+||[[# int-div-zero]][#int-div-zero-note integer division by zero] _
+@<&nbsp;>@||##gray|//raises//## EDivByZero||##gray|//raises//## CONSTRAINT_ERROR||##gray|//raises//## division_by_zero||
+||[[# float-div]][#float-div-note float division] _
+@<&nbsp;>@||7 / 3||Float(7)/Float(3)||7 * 1.0 / 3||
+||[[# float-div-zero]][#float-div-zero-note float division by zero] _
+@<&nbsp;>@||+Inf||##gray|//raises//## CONSTRAINT_ERROR||##gray|//raises//## division_by_zero||
+||[[# power]][#power-note power]||uses Math; _
+ _
+Power(2, 16);||**||2 ^ 16||
+||[[# sqrt]][#sqrt-note sqrt] _
+@<&nbsp;>@||Sqrt(2)|| ||sqrt(2)||
+||[[# sqrt-negative-one]][#sqrt-negative-one-note sqrt -1] _
+@<&nbsp;>@||##gray|//raises//## EInvalidOp||##gray|//raises//## ADA.NUMERICS.ARGUMENT_ERROR||##gray|//raises//## invalid_argument_for_power_function||
+||[[# transcendental-func]][#transcendental-func-note transcendental functions]||uses Math; _
+ _
+Exp Ln Sin Cos Tan ArcSin ArcCos ArcTan ArcTan2||with Ada.Numerics.Elementary_Functions; _
+use Ada.Numerics.Elementary_Functions; _
+ _
+Exp Log Sin Cos Tan Arcsin Arccos ##gray|//none//## Arctan||exp ln sin cos tan asin acos atan atan2||
+||[[# float-truncation]][#float-truncation-note float truncation] _
+##gray|//towards zero, to nearest integer, down, up//##||uses Math; _
+ _
+Trunc Round Floor Ceil||##gray|//return Float://## _
+##gray|//??//## Float'Rounding Float'Floor Float'Ceiling||trunc round floor ceil||
+||[[# absolute-val]][#absolute-val-note absolute value] _
+##gray|//and sign//##||Abs(-7) _
+##gray|//none//##|| ||abs(-7) _
+sign(-7)||
+||[[# int-overflow]][#int-overflow-note integer overflow] _
+@<&nbsp;>@||##gray|//modular arithmetic//##||##gray|//modular arithmetic//##||##gray|//raises//## numeric_value_out_of_range||
+||[[# float-overflow]][#float-overflow-note float overflow] _
+@<&nbsp;>@||##gray|//raises//## EOverflow||+Inf@@*******@@||##gray|//raises//## numeric_value_out_of_range||
+||[[# random-num]][#random-num-note random number] _
+##gray|//integer, float//##||Random(100) _
+Random||with Ada.Numerics.Float_Random; _
+with Ada.Numerics.Discrete_Random; _
+use Ada.Numerics; _
+procedure Foo is _
+@<&nbsp;&nbsp;>@type Rand_Range is range 0..99; _
+@<&nbsp;&nbsp;>@package Rand_Int is new Discrete_Random(Rand_Range); _
+@<&nbsp;&nbsp;>@IG : Rand_Int.Generator; _
+@<&nbsp;&nbsp;>@FG : Float_Random.Generator; _
+begin _
+@<&nbsp;&nbsp;>@##gray|//use//## Rand_Int.Random(IG) _
+@<&nbsp;&nbsp;>@##gray|//use//## Float_Random.Random(FG)||floor(100 * random()) _
+random()||
+||[[# bit-op]][#bit-op-note bit operators] _
+@<&nbsp;>@||shl shr and or xor not|| ||@@ << >> @@ & | ^ ~||
+||||||||~ [[# strings]][#strings-note strings]||
+||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
+||[#string-literal string literal]||'Don''t say "foo"'||"Don't say ""foo"""||'Don''t say "foo"'||
+||[#fixed-string-type fixed length string type]|| ||##gray|//error unless string length is// n## _
+STRING(1..##gray|//n//##) _
+##gray|//length can be omitted if initialized with literal in declaration//##||##gray|//pads length to// n //with spaces://## _
+char(##gray|//n//##)||
+||[#bounded-string-type bounded length string type]|| || ||##gray|//error if// n //exceeded://## _
+varchar(##gray|//n//##)||
+||[#unbounded-string-type unbounded length string type]|| || ||text||
+||[#character-type character type]|| ||CHARACTER||char(1)||
+||[#chr-ord chr and ord]||Chr(65) _
+Ord('A')|| ||chr(65) _
+ascii('A')||
+||[#string-concatenate concatenate]||'hello' + ' world'||"hello" & " world"||'hello' @@||@@ ' world'||
+||[#string-length length]||Length('hello')|| ||length('hello')||
+||[#extract-substring extract substring]||Copy(S, 1, 4)|| ||substr('hello', 1, 4)||
+||[#index-substring index of substring]||Pos('hell', 'hello')|| ||strpos('hello', 'hell')||
+||[#case-manipulation case manipulation]||uses SysUtils; _
+ _
+UpperCase('hello') _
+LowerCase('HELLO')|| ||upper('hello') _
+lower('HELLO')||
+||[#strip strip]||Trim(' foo ') _
+TrimLeft(' foo') _
+TrimRight('foo ')|| ||trim(' foo ') _
+ltrim(' foo') _
+rtrim('foo ')||
+||[#pad pad on left, pad on right]|| || ||lpad('foo', 10) _
+rpad('foo', 10)||
+||[#string-number-conversion convert string to number]||uses SysUtils; _
+ _
+7 + StrToInt('12') _
+73.9 + StrToFloat('.037')|| ||##gray|//arithmetic operators automatically convert strings to numbers//## _
+cast('12' as int) _
+cast('3.14') as real)||
+||[#number-string-conversion convert number to string]||uses SysUtils; _
+ _
+'value: ' + IntToStr(8) _
+'value: ' + FloatToStr(3.14)|| ||##gray|//double pipe operator// @@||@@ //converts numbers operands to strings//## _
+cast(8 to text) _
+cast(3.14 to text)||
+||||||||~ [[# regexes]][#regexes-note regular expressions]||
+||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
+||[[# match]][#match-note match]|| || ||select * _
+from pwt _
+where name similar to 'r[a-z]+';||
+||[[# substitute]][#substitute-note substitute] _
+@<&nbsp;>@|| || ||select regexp_replace('foo bar', 'bar$', 'baz');||
+||[[# extract-subgroup]][#extract-subgroup-note extract subgroup]|| || ||select (regexp_matches('foobar', '(f..)bar'))[1];||
+||||||||~ [[# dates-time]][#dates-time-note dates and time]||
+||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
+||[[# current-date-time]][#current-date-time-note current date and time]|| || ||now()||
+||[[# date-time-to-str]][#date-time-to-str-note datetime to string]|| || ||to_char(now(), 'YYYY-MM-DD HH24:MI:SS')||
+||[[# str-to-date-time]][#str-to-date-time-note string to datetime]|| || ||to_timestamp('2011-09-26 00:00:47', 'YYYY-MM-DD HH24:MI:SS')||
+||||||||~ [[# arrays]][#arrays-note arrays]||
+||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
+||[#declare-array declare array]||A:  array[1..5] of Integer;|| A : array(1..5) of Integer;||a int[];||
+||[#array-length array length]|| ||A'Last||array_length(a, 1)||
+||[#array-access array element access]|| A[1] := 3;|| A(1) := 3;||a[1] = 3;||
+||[#array-initialization array initialization]|| || A : array(1..5) of Integer := (1,3,5,2,4);||a int[] = array[1,3,5,2,4];||
+||[#array-slice array slice]|| || A(3..4) := A(1..2);||a[1:2] _
+##gray|//can assign to slice in// UPDATE //statement but not in assignment//##||
+||[#array-out-of-bounds array out of bounds behavior]||##gray|//undefined; free pascal permits out of bounds memory access//##||##gray|//compiler warning; raises//## CONSTRAINT_ERROR ##gray|//at runtime//##||NULL||
+||[#declare-multidimensional-array declare multidimensional array]|| || ||a integer[][];||
+||[#multidimensional-array-access multidimensional array access]|| || ||a[2][3] = 7;||¯
+||||||||~ [[# user-defined-types]][#user-defined-types-note user-defined types]||
+||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
+||[[# type-synonym]][#type-synonym-note type synonym]||type _
+@<&nbsp;&nbsp;>@CustomerId = Integer;|| || ||
+||[[# enumerated-type]][#enumerated-type-note enumerated type]||type _
+@<&nbsp;&nbsp;>@Direction =  (North, South, East, West); _
+var _
+@<&nbsp;&nbsp;>@Wind: Direction = North; _
+begin _
+@<&nbsp;&nbsp;>@WriteLn(Wind); ##gray|{ prints 'North' }##|| ||create type direction as enum ( 'north', 'south', 'east', 'west'); _
+ _
+create table wind ( origin direction, speed_mph real ); _
+ _
+insert into wind values ( 'north', 12 );||
+||[#define-record-type define record type]||##gray|//in type section://## _
+Customer = record _
+@<&nbsp;&nbsp;>@Id: Integer; _
+@<&nbsp;&nbsp;>@Name: String; _
+end;||type Customer is record _
+@<&nbsp;&nbsp;>@Id : Integer; _
+@<&nbsp;&nbsp;>@Name : String(1..4); _
+end record;||create type customer as ( _
+@<&nbsp;&nbsp;>@id integer, _
+@<&nbsp;&nbsp;>@name text _
+);||
+||[#declare-record declare record]||C: Customer;|| C : Customer := ( 17, "John" );||declare _
+@<&nbsp;&nbsp;>@c customer; _
+begin _
+@<&nbsp;&nbsp;>@c = (17,'John'); _
+@<&nbsp;&nbsp;>@##gray|//code which uses// c##||
+||[#record-member-access record member access]||C.Name := 'Fred';||C.Name := 'Fred';||c.name = 'Fred'||
+||[#record-block record block]|| || || ||
+||||||||~ [[# functions]][#functions-note functions]||
+||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||¯
+||[[# def-func]][#def-func-note define function]||function Foo(M: Integer; N: Integer): Integer; _
+begin _
+ @<&nbsp;&nbsp;>@Result := M + N; _
+end;|| ||create function foo(i int, j int) _
+returns int as $$ _
+begin _
+@<&nbsp;&nbsp;>@return i + j; _
+end; _
+$$ language plpgsql;||
+||[[# invoke-func]][#invoke-func-note invoke function]||Retval := Foo(7, 3);|| ||##gray|@@--@@ in select clause:## _
+select foo(1, 2); _
+ _
+##gray|@@--@@ in where clause:## _
+select * from cust where id = foo(1, 2); _
+ _
+##gray|@@--@@ inside PL/pgSQL functions can be used wherever _
+@@--@@ expressions are permitted.  Can be used as a statement _
+@@--@@ with perform:## _
+perform foo(1, 2);||
+||[[# undef-func]][#undef-func-note undefine function]||##gray|//none//##|| ||##gray|@@--@@ parameter types are required:## _
+drop function foo(int, int);||
+||[[# no-retval]][#no-retval-note no return value]||procedure Message(Msg:  String); _
+begin _
+@<&nbsp;&nbsp;>@WriteLn(Msg); _
+end;|| ||##gray|@@--@@ declare return type as void:## _
+create or replace function message(msg text) _
+returns void as $$ _
+begin _
+@<&nbsp;&nbsp;>@raise notice '%', msg; _
+end; _
+$$ language plpgsql;||
+||[[# pass-by-ref]][#pass-by-ref-note pass by reference]||##gray|{ declare parameter with var }## _
+procedure Incr(var N:  Integer); _
+begin _
+@<&nbsp;&nbsp;>@N := N + 1; _
+end; _
+ _
+var _
+@<&nbsp;&nbsp;>@I:  Integer; _
+begin _
+@<&nbsp;&nbsp;>@I := 3; _
+@<&nbsp;&nbsp;>@Incr(I); _
+@<&nbsp;&nbsp;>@WriteLn(I); ##gray|{ prints 4 }## _
+end.|| ||##gray|//none//##||
+||[[# nested-func]][#nested-func-note nested function]|| || ||##gray|//none//##||
+||[[# overloaded-func]][#overloaded-func-note overloaded function]|| || ||##gray|@@--@@integer version:## _
+create or replace function add(m int, n int) _
+returns int as $$ _
+begin _
+@<&nbsp;&nbsp;>@return m + n; _
+end; _
+$$ language plpgsql; _
+ _
+##gray|@@--@@float version:## _
+create or replace function add(x real, y real) _
+returns real as $$ _
+begin _
+@<&nbsp;&nbsp;>@return x + y; _
+end; _
+$$ language plpgsql;||
+||[[# forward-decl]][#forward-decl-note forward declaration]||function Odd(N:  Integer): Boolean; _
+Forward; _
+ _
+function Even(N: Integer): Boolean; _
+begin _
+@<&nbsp;&nbsp;>@if N = 0 then _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Result := true _
+@<&nbsp;&nbsp;>@else _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Result := Odd(N - 1); _
+end; _
+ _
+function Odd(N: Integer): Boolean; _
+begin _
+@<&nbsp;&nbsp;>@if N = 0 then _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Result := false _
+@<&nbsp;&nbsp;>@else _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Result := Even(N - 1); _
+end;|| ||##gray|//none//##||
+||out parameter|| || || ||
+||||||||~ [[# execution-control]][#execution-control-note execution control]||
+||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
+||[[# if]][#if-note if]||if I = 0 then _
+begin _
+@<&nbsp;&nbsp;>@WriteLn('no hits'); _
+end _
+else _
+@<&nbsp;&nbsp;>@if I = 1 then _
+@<&nbsp;&nbsp;>@begin _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@WriteLn('one hit'); _
+@<&nbsp;&nbsp;>@end _
+@<&nbsp;&nbsp;>@else _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@WriteLn(IntToStr(I) + ' hits');||if I = 0 then _
+@<&nbsp;&nbsp;>@Put_Line("no hits"); _
+elsif I = 1 then _
+@<&nbsp;&nbsp;>@Put_Line("one hit"); _
+else _
+@<&nbsp;&nbsp;>@Put_Line(Integer'Image(I) & " hits"); _
+end if;||if i = 0 then _
+@<&nbsp;&nbsp;>@return 'no hits'; _
+elsif i = 1 then _
+@<&nbsp;&nbsp;>@return 'one hit'; _
+else _
+@<&nbsp;&nbsp;>@return i @@||@@ ' hits'; _
+end if;||
+||[[# while]][#while-note while]||I := 0; _
+while I < 10 do _
+begin _
+@<&nbsp;&nbsp;>@WriteLn(IntToStr(I)); _
+@<&nbsp;&nbsp;>@I := I + 1; _
+end||I := 0; _
+while I < 10 loop _
+@<&nbsp;&nbsp;>@Put_Line(Integer'Image(I)); _
+@<&nbsp;&nbsp;>@I := I + 1; _
+end loop;||i = 1; _
+sum = 0; _
+while i <= n loop _
+@<&nbsp;&nbsp;>@sum = sum + i; _
+@<&nbsp;&nbsp;>@i = i + 1; _
+end loop;||
+||[[# for]][#for-note for]||for I := 0 to 9 do _
+@<&nbsp;&nbsp;>@WriteLn(IntToStr(I));||for I in 1..9 loop _
+@<&nbsp;&nbsp;>@Put_Line(Integer'Image(I)); _
+end loop;||sum = 0; _
+for i in 1..n loop _
+@<&nbsp;&nbsp;>@sum = sum + i; _
+end loop;||
+||[[# break-continue]][#break-continue-note break and continue]|| || ||exit continue||
+||||||||~ [[# exceptions]][#exceptions-note exceptions]||
+||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
+||[[# raise-exc]][#raise-exc-note raise exception] _
+@<&nbsp;>@||{$mode delphi} _
+ _
+raise Exception.Create('bad int: ' + IntToStr(7));|| ||##gray|@@--@@ raises exception with condition raise_exception:## _
+raise exception 'bad int: %', i; _
+ _
+##gray|@@--@@ also possible to use predefined condition:## _
+raise data_exception using message = 'bam!||
+||[[# re-raise-exc]][#re-raise-exc-note re-raise exception]||{$mode delphi} _
+ _
+try _
+@<&nbsp;&nbsp;>@risky(); _
+except on E: Exception do begin _
+@<&nbsp;&nbsp;>@WriteLn('risky failed'); _
+@<&nbsp;&nbsp;>@raise; _
+end;|| ||begin _
+@<&nbsp;&nbsp;>@perform risky(); _
+exception when others then _
+@<&nbsp;&nbsp;>@raise notice 'risky() failed.'; _
+@<&nbsp;&nbsp;>@raise; _
+end;||
+||[[# def-exc]][#def-exc-note define exception]||{$mode delphi} _
+ _
+type Err42 = class(Exception);|| ||##gray|@@--@@ code string must be five digits or uppercase letters:## _
+begin _
+@<&nbsp;&nbsp;>@raise 'User defined error 42' using errcode = 'ERR42'; _
+exception when sqlstate 'ERR42' then _
+@<&nbsp;&nbsp;>@raise notice 'caught ERR42'; _
+end;||
+||[[# handle-any-exc]][#handle-any-exc-note handle any exception] _
+@<&nbsp;>@||{$mode delphi} _
+ _
+try _
+@<&nbsp;&nbsp;>@raise Exception.Create('bad int: ' + IntToStr(7)); _
+except _
+@<&nbsp;&nbsp;>@on E: Exception do WriteLn(E.Message);|| ||begin _
+@<&nbsp;&nbsp;>@raise exception 'bad int: %', i; _
+exception when others then _
+@<&nbsp;&nbsp;>@raise notice 'caught bad int'; _
+end;||
+||[[# handle-exc-by-type]][#handle-exc-by-type-note handle exception by type]||{$mode delphi} _
+ _
+try _
+@<&nbsp;&nbsp;>@raise Err42.Create('bad int: ' + IntToStr(7)); _
+except _
+@<&nbsp;&nbsp;>@on E: Err42 do WriteLn(E.Message);|| ||begin _
+@<&nbsp;&nbsp;>@n := 1 / 0; _
+exception when division_by_zero then _
+@<&nbsp;&nbsp;>@raise notice 'ignoring div by zero'; _
+end;||
+||[[# multiple-exc-handlers]][#multiple-exc-handlers-note multiple exception handlers]|| || || ||
+||finally|| || || ||
+||||||||~ [[# file-handles]][#file-handles-note file handles]||
+||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
+||[[# read-line-stdin]][#read-line-stdin-note read line from stdin]|| || ||##gray|//none//##||
+||[[# write-line-stdout]][#write-line-stdout-note write line to stdout]|| || ||##gray|//none//##||
+||[[# write-line-stderr]][#write-line-stderr-note write line to stderr]|| || ||##gray|@@--@@ stderr stream goes to both client and server log. _
+@@--@@ _
+@@--@@ levels are: debug, log, info, notice, warning _
+@@--@@## _
+raise notice 'i is %', i;||
+||||||||~ [[# files]][#files-note files]||
+||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
+||||||||~ [[# sql]][#sql-note sql]||
+||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
+||execute statement with no result|| || ||##gray|@@--@@ create table foo (s text, i int);## _
+ _
+create or replace function insert_foo(s text, i int) _
+returns void as $$ _
+begin _
+@<&nbsp;&nbsp;>@insert into foo values (s, i); _
+end; ) _
+$$ language plpgsql; _
+ _
+##gray|@@--@@ insert, update, and delete statements raise an _
+@@--@@ exception if they fail##||
+||select one row|| || || ||
+||select multiple rows|| || || ||
+||execute sql in string|| || ||create or replace function drop_table(tbl text) _
+returns void as $$ _
+begin _
+@<&nbsp;&nbsp;>@execute 'drop table ' @@||@@ quote_ident(tbl); _
+end; _
+$$ language plpgsql;||
+||functions to prevent sql injection|| || ||quote_literal _
+quote_nullable _
+quote_ident||
+||||||||~ [[# directories]][#directories-note directories]||
+||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
+||||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
+||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
+||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
+||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
+||~ ||~ ##EFEFEF|@@________________________________________________________@@##||~ ##EFEFEF|@@________________________________________________________@@##||~ ##EFEFEF|@@________________________________________________________@@##||
+
+
+[[# general-note]]
++ [#top General Notes]
+
+[[# version-used-note]]
+++ [#version-used version used]
+
+The version used in this reference sheet.
+
+[[# show-version-note]]
+++ [#show-version show version]
+
+How to get the version.
+
+[[# grammar-invocation-note]]
++ [#grammar-invocation Grammar and Invocation]
+
+[[# hello-world-note]]
+++ [#hello-world hello word]
+
+A "Hello, World!" example.
+
+[[# file-suffixes-note]]
+++ [#file-suffixes file suffixes]
+
+
+[[# eol-comment-note]]
+++ [#eol-comment end-of-line comment]
+
+The syntax for a comment which ends at the end of the line.
+
+**pascal:**
+
+The @@//@@ style comment is supported by Borland compilers and Free Pascal.
+
+[[# multiple-line-comment-note]]
+++ [#multiple-line-comment multiple line comment]
+
+The syntax for a comment which can span multiple lines.
+
+[[# variables-expressions-note]]
++ [#variables-expressions Variables and Expressions]
+
+[[# case-sensitive-note]]
+++ [#case-sensitive case sensitive]
+
+Are identifiers case sensitive?
+
+**pascal:**
+
+[http://www.freepascal.org/docs-html/ref/refse3.html Free Pascal Reserved Words and Modifiers]
+
+A word in Pascal is reserved if it cannot be redefined by the programmer.  The names for the built-in types: Integer, Boolean, etc. are not reserved.  They are defined in the System unit and can be redefined by the programmer.
+
+Although Pascal is case insensitive, reserved words and modifiers are customarily written in lower case.  Other identifiers are customarily written in upper camel case, also known as Pascal case.
+
+[[# declarations-note]]
+++ [#declarations declare constant, type, variable]
+
+How to declare a constant, type, or variable.
+
+[[# assignment-note]]
+++ [#assignment assignment]
+
+The syntax for assigning a value to a variable.
+
+[[# pointer-declaration-note]]
+++ [#pointer-declaration pointer declaration]
+
+How to declare a pointer.
+
+[[# arithmetic-logic-note]]
++ [#arithmetic-logic Arithmetic and Logic]
+
+[[# boolean-type-note]]
+++ [#boolean-type boolean type]
+
+The boolean type.
+
+[[# true-false-note]]
+++ [#true-false true and false]
+
+The literals for true and false.
+
+[[# falsehoods-note]]
+++ [#falsehoods falsehoods]
+
+Values which evaluate as false in a boolean context.
+
+[[# logical-op-note]]
+++ [#logical-op logical operators]
+
+The logical operators for conjunction, disjunction, exclusive or, and negation.
+
+[[# short-circuit-op-note]]
+++ [#short-circuit-op short circuit operators]
+
+Short circuit versions of the logical operators.
+
+The short circuit version of //and// will not evaluate its second argument if the first is false.  The short circuit version of //or// will not evaluate its second argument if the first is true.
+
+[[# int-type-note]]
+++ [#int-type integer type]
+
+[[# float-type-note]]
+++ [#float-type float type]
+
+[[# fixed-type-note]]
+++ [#fixed-type fixed type]
+
+[[# relational-op-note]]
+++ [#relational-op relational operators]
+
+[[# min-max-note]]
+++ [#min-max min and max]
+
+
+[[# arith-op-note]]
+++ [#arith-op arithmetic operators]
+
+[[# int-div-note]]
+++ [#int-div integer division]
+
+[[# int-div-zero-note]]
+++ [#int-div-zero integer division by zero]
+
+[[# float-div-note]]
+++ [#float-div float division]
+
+[[# float-div-zero-note]]
+++ [#float-div-zero float division by zero]
+
+[[# power-note]]
+++ [#power power]
+
+[[# sqrt-note]]
+++ [#sqrt sqrt]
+
+[[# sqrt-negative-one-note]]
+++ [#sqrt-negative-one sqrt -1]
+
+[[# transcendental-func-note]]
+++ [#transcendental-func transcendental functions]
+
+[[# float-truncation-note]]
+++ [#float-truncation float truncation]
+
+[[# absolute-val-note]]
+++ [#absolute-val absolute value]
+
+[[# int-overflow-note]]
+++ [#int-overflow integer overflow]
+
+[[# float-overflow-note]]
+++ [#float-overflow float overflow]
+
+[[# random-num-note]]
+++ [#random-num random number]
+
+[[# bit-op-note]]
+++ [#bit-op bit operators]
+
+
+[[# strings-note]]
++ [#strings Strings]
+
+[[# string-literal]]
+++ string literal
+
+[[# string-concatenate]]
+++ string concatenate
+
+[[# regexes-note]]
++ [#regexes Regular Expressions]
+
+[[# dates-time-note]]
++ [#dates-time Dates and Time]
+
+[[# arrays-note]]
++ [#arrays Arrays]
+
+[[# user-defined-types-note]]
++ [#user-defined-types User-Defined Types]
+
+[[# functions-note]]
++ [#functions Functions]
+
+[[# def-func-note]]
+++ [#def-func define function]
+
+How to define a function.
+
+**postgresql:**
+
+If "or replace" is omitted from the function definition and the function already exists, the statement fails with an error.
+
+Before PostgreSQL 8.0 parameters could not be assigned names in the function signature.  The following syntax which is still valid was used:
+
+[[code]]
+create or replace function foo(int, int)
+returns int as $$
+declare
+@<&nbsp;&nbsp;>@i alias for $1;
+@<&nbsp;&nbsp;>@j alias for $2;
+begin
+@<&nbsp;&nbsp;>@return i + j;
+end;
+$$ language plpgsql;
+[[/code]]
+
+
+[[# invoke-func-note]]
+++ [#invoke-func invoke function]
+
+How to invoke a function.
+
+[[# undef-func-note]]
+++ [#undef-func undefine function]
+
+How to undefine a function.
+
+[[# no-retval-note]]
+++ [#no-retval no return value]
+
+How to define a function with no return value.  Sometimes such functions are called procedure.  Such a function is not useful unless it has a side effect.
+
+[[# pass-by-ref-note]]
+++ [#pass-by-ref pass by reference]
+
+How to pass a variable by reference.  This permits the callee to modify the value in the variable.
+
+[[# nested-func-note]]
+++ [#nested-func nested function]
+
+How to define a function inside another function.
+
+**plpgsql:**
+
+Nested functions are a feature of Oracle's PL/SQL.  A nested function has access to the local variables of the containing function; it is not visible or callable from outside of the containing function.
+
+[[# overloaded-func-note]]
+++ [#overloaded-func overloaded function]
+
+How to define multiple versions of a function, with the correct version chosen by the type of the arguments used at invocation.
+
+[[# forward-decl-note]]
+++ [#forward-decl forward declaration]
+
+How to declare a function before it is defined.
+
+[[# execution-control-note]]
++ [#execution-control Execution Control]
+
+[[# if-note]]
+++ [#if if]
+
+The syntax for an if statement.
+
+[[# while-note]]
+++ [#while while]
+
+The syntax for a while statement.
+
+[[# for-note]]
+++ [#for for]
+
+The syntax for a for loop.
+
+[[# break-continue-note]]
+++ [#break-continue break and continue]
+
+How to break from a loop; how to jump to the next iteration of a loop.
+
+[[# exceptions-note]]
++ [#exceptions Exceptions]
+
+[[# raise-exc-note]]
+++ [#raise-exc raise exception]
+
+How to raise an exception.
+
+**postgresql:**
+
+The raise statement can also be used to write info and warning messages.  See [#write-line-stderr write line to stderr].
+
+[[# re-raise-exc-note]]
+++ [#re-raise-exc re-raise exception]
+
+How to re-raise a caught exception.
+
+**postgresql:**
+
+PostgreSQL exceptions do not have a stack trace or preserve the line number at which the error originated, so re-raising an exception just preserves the exception type and message.
+
+[[# def-exc-note]]
+++ [#def-exc define exception]
+
+How to define a new exception type.
+
+**postgresql:**
+
+Any 5 character string of digits or uppercase letters may be used as an error code.  Many error codes are already in use:
+
+[http://www.postgresql.org/docs/9.1/static/errcodes-appendix.html  PostgreSQL Error Codes]
+
+[[# handle-any-exc-note]]
+++ [#handle-any-exc handle any exception]
+
+How to handle any exception.
+
+[[# handle-exc-by-type-note]]
+++ [#handle-exc-by-type handle exception by type]
+
+How to handle exceptions of a specific type.
+
+[[# multiple-exc-handlers-note]]
+++ [#multiple-exc-handlers multiple exception handlers]
+
+[[# file-handles-note]]
++ [#file-handles File Handles]
+
+[[# read-line-stdin-note]]
+++ [#read-line-stdin read line from stdin]
+
+How to read a line from standard input.
+
+**plpgsql:**
+
+In a SQL session the stream on which the server receives SQL commands from the client can be regarded as the standard input.  Furthermore the COPY command provides a mechanism for providing unquoted data on the input stream for insertion into a table.  PL/pgSQL code does not have access to this stream, however; a COPY command cannot be run from within PL/pgSQL.  Note that some PL/pgSQL code runs as triggers in which case no such stream exists.
+
+[[# write-line-stdout-note]]
+++ [#write-line-stdout write line stdout]
+
+How to write a line to stdout.
+
+**plpgsql:**
+
+In an interactive SQL session the server writes the results of SQL select statements to a stream which can be regarded as standard out.  PL/pgSQL code cannot write to this stream, however.  The only thing PL/pgSQL code can do with selected data is read it into local variables.
+
+[[# write-line-stderr-note]]
+++ [#write-line-stderr write line stderr]
+
+How to write a line to stderr.
+
+**plpgsql:**
+
+The RAISE statement is used to write to stderr.  Each message must be assigned one of five log levels: debug, log, info, notice, warning.  The message can be reported to the client, written to the server log, or both depending upon how the server is configured.
+
+[[# files-note]]
++ [#files Files]
+
+[[# sql-note]]
++ [#sql SQL]
+
+[[# directories-note]]
++ [#directories Directories]
+
+[[# processes-environment-note]]
++ [#processes-environment Processes and Environment]
+
+[[# libraries-namespaces-note]]
++ [#libraries-namespaces Libraries and Namespaces]
+
+[[# pascal]]
++ [#top Pascal]
+
+[http://www.freepascal.org/docs-html/ref/ref.html Free Pascal: Reference Guide]
+[http://www.freepascal.org/docs-html/rtl/index.html Free Pascal: Run-Time Language Reference]
+
+[http://www.standardpascal.org/The_Programming_Language_Pascal_1973.pdf The Programming Language Pascal] Wirth 1973
+[http://www.standardpascal.org/iso7185.html ISO 7185] 1983,1990
+[http://www.cs.virginia.edu/~evans/cs655-S00/readings/bwk-on-pascal.html Why Pascal is Not My Favorite Language] Kernighan 1981
+[http://pascal-central.com/ppl/chapter3.html Summary of ISO 7185 (1983) and ISO 10206 (1991)]
+
+[[# ada]]
++ [#top Ada]
+
+[http://www.infres.enst.fr/~pautet/Ada95/a95list.htm Ada Tutorial]
+[http://archive.adaic.com/standards/83rat/html/ratl-TOC.html Rationale for the Design of the Ada Programming Language] 1983
+[http://archive.adaic.com/standards/83lrm/html/Welcome.html Ada 83 Reference Manual]
+[http://www.adahome.com/rm95/ Ada 95 Reference Manual]
+[http://www.adaic.org/standards/05rm/RM.pdf Ada 2005 Reference Manual (pdf)]
+[http://gcc.gnu.org/onlinedocs/gcc-4.1.2/gnat_rm/ GNAT 4.1.2 Reference Manual]
+[http://www.cs.fit.edu/~ryan/ada/ada-hist.html History of the Ada Programming Language]
+
+[[# plpgsql]]
++ [#top PL/SQL]
+
+[http://download.oracle.com/docs/cd/B28359_01/appdev.111/b28370/toc.htm Oracle 11g PL/SQL Language Reference]
+[http://download.oracle.com/docs/cd/B28359_01/appdev.111/b28419/toc.htm Oracle 11g PL/SQL Packages and Types Reference]
+[http://www.postgresql.org/docs/9.1/interactive/plpgsql.html PostgreSQL 9.1 Documention: PL/pgSQL]
+[http://www.postgresql.org/docs/9.1/interactive/plpgsql-porting.html Porting from PL/SQL to PL/pgSQL]

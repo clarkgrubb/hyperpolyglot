@@ -1,0 +1,29 @@
+h1{
+	border-bottom: 1px solid #CCC;
+}
+
+#container {
+	margin: 0 20px;
+}
+
+#header {
+	margin: 10px 0 10px 0px; 
+	height: 5em;
+
+	background-color: #DDD;
+}
+
+#header h1{
+	font-size: 170%;
+	border: none;
+	font-weight: bold;
+	color: #000;
+	margin: 0;
+	padding: 4px 10px 0 10px;
+}
+#header h2{
+	font-size: 140%;
+	color: #555;
+	padding: 4px 10px;
+}
+

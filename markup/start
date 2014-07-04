@@ -1,0 +1,116 @@
+//commonly used features in a side-by-side format//
+
+[[table style="align:left;"]]
+[[row]]
+[[cell]]**Interpreted Languages:**[[/cell]][[cell]][[[scripting|JavaScript, PHP, Python, Ruby]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**More Interpreted Languages:**[[/cell]][[cell]][[[more|Perl, Tcl, Lua, Groovy]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**C++ Style Languages:**[[/cell]][[cell]][[[cpp|C++, Objective-C, Java, C#]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**C, Go, and Swift:**[[/cell]][[cell]][[[c|C, Go, Swift]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**Pascal Style Languages:**[[/cell]][[cell]][[[pascal|Pascal, Ada, PL/pgSQL]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**Lisp Dialects:**[[/cell]][[cell]][[[lisp|Common Lisp, Racket, Clojure, Emacs Lisp]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**ML Dialects and Friends:**[[/cell]][[cell]][[[ml|OCaml, F#, Scala, Haskell]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**Prolog and Erlang:@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@**[[/cell]][[cell]][[[logic|Prolog, Erlang]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**Stack-Oriented Languages:**[[/cell]][[cell]][[[stack|Forth, PostScript, Factor]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**Operating System Automation:**[[/cell]][[cell]][[[shell|POSIX Shell, AppleScript, PowerShell]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**Relational Data Languages:**[[/cell]][[cell]][[[data|SQL, Awk, Pig, MongoDB Query]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**Numerical Analysis & Statistics:**[[/cell]][[cell]][[[numerical-analysis|MATLAB, R, NumPy]]] and [[[fortran|Fortran]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**Computer Algebra Software:**[[/cell]][[cell]][[[computer-algebra|Mathematica, SymPy, Pari/GP]]][[/cell]]
+[[/row]]
+
+[[/table]]
+
++ Programming Tools
+
+[[table style="align:left;"]]
+[[row]]
+[[cell]]**Unix Shells:**[[/cell]][[cell]][[[unix-shells|Bash, Fish, Ksh, Tcsh, Zsh]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**Text Mode Editors:**[[/cell]][[cell]][[[text-mode-editors|Vim, Emacs, Nano]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**Version Control:**[[/cell]][[cell]][[[version-control|Git, Mercurial]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**Build Tools:**[[/cell]][[cell]][[[build|Make, Rake, Ant]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**Terminal Multiplexers:**[[/cell]][[cell]][[[multiplexers|Screen, Tmux]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**Databases:**[[/cell]][[cell]][[[db|PostgreSQL, MySQL, SQLite, Redis, MongoDB]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**Markup:**[[/cell]][[cell]][[[lightweight-markup|Markdown, reStructuredText, MediaWiki, Wikidot, LaTeX]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**2D Vector Graphics:**[[/cell]][[cell]][[[vector-graphics|PostScript, Processing, SVG]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**Mathematical Notation:**@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@[[/cell]][[cell]][[[math-notation|LaTeX, Mathematica, HTML Entities, Unicode]]][[/cell]]
+[[/row]]
+
+[[/table]]
+
+
+
+@<&nbsp;>@
+@<&nbsp;>@
+@<&nbsp;>@
+@<&nbsp;>@
+@<&nbsp;>@
+@<&nbsp;>@
+@<&nbsp;>@
+@<&nbsp;>@
+@<&nbsp;>@
+@<&nbsp;>@
+@<&nbsp;>@
+@<&nbsp;>@
+@<&nbsp;>@
+@<&nbsp;>@
+@<&nbsp;>@
+@<&nbsp;>@

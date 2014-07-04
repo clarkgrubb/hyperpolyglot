@@ -1,0 +1,3137 @@
+[[# top]]//a side-by-side reference sheet//
+
+[#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#arrays arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#concurrency concurrency] | [#file-handles file handles] | [#files files] | [#file-fmt file formats] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#user-defined-types user-defined types] | [#objects objects] | [#macros macros] | [#net-web net and web] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling] _
+
+||~ [[# general]]||~ [#c c]||~ [#go go]||~ [#swift swift]||
+||[[# version-used]][#version-used-note version used] _
+@<&nbsp;>@||##gray|//gcc 4.6 in POSIX environment//##||##gray|//1.3//##||##gray|//1.0//##||
+||[[# show-version]][#show-version-note show version] _
+@<&nbsp;>@||$ gcc @@--@@version||$ go version||$ xcrun swift @@--@@version||
+||[[# implicit-prologue]][#implicit-prologue-note implicit prologue]||#include <errno.h> _
+#include <stdlib.h> _
+#include <stdio.h> _
+#include <string.h> _
+#include <time.h>|| ||import Foundation||
+||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
+||~ ||~ c||~ go||~ swift||
+||[[# hello-world]][#hello-world-note hello word]||$ cat hello.c _
+#include <stdio.h> _
+ _
+int main(int argc, char @@**@@argv) { _
+@<&nbsp;&nbsp;>@printf("Hello, World!\n"); _
+} _
+ _
+$ gcc hello.c _
+ _
+$ ./a.out _
+Hello, World!||$ cat hello.go  _
+package main _
+import "fmt" _
+ _
+func main() { _
+@<&nbsp;&nbsp;>@fmt.Printf("Hello, World!\n") _
+} _
+ _
+$ go build hello.go _
+ _
+$ ./hello _
+Hello, World!||$ cat hello.swift _
+println("Hello, World!") _
+ _
+$  xcrun swift hello.swift _
+ _
+$ ./hello _
+Hello, World!||
+||[[# file-suffixes]][#file-suffixes-note file suffixes] _
+##gray|//source, header, object file//##||.c .h .o|| ||.swift ##gray|//none?//## .swiftmodule||
+||[[# block-delimiters]][#block-delimiters-note block delimiters] _
+@<&nbsp;>@||{ ##gray|//...//## }||{ ##gray|//...//## }||{ ##gray|//...//## }||
+||[[# stmt-terminator]][#stmt-terminator-note statement terminator]||;||; ##gray|//or sometimes newline//## _
+ _
+##gray|//a new line terminates a statement when the last token on the line is _
+@<&nbsp;&nbsp;>@(1) an identifier, _
+@<&nbsp;&nbsp;>@(2) a numeric, character, or string literal, _
+@<&nbsp;&nbsp;>@(3) one of the keywords// break, continue, _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@fallthrough, //or// return, // _
+@<&nbsp;&nbsp;>@(4) one of// ++, @@--@@, ), ], //or// }##||; ##gray|//sometimes newline//## _
+ _
+##gray|//a new line does not terminate a statement when: _
+@<&nbsp;&nbsp;>@(1) inside [ ] of an array literal, _
+@<&nbsp;&nbsp;>@(2) inside of ( ) parens, _
+@<&nbsp;&nbsp;>@(3) after a binary operator, _
+@<&nbsp;&nbsp;>@(4) other situations?//##||
+||[[# eol-comment]][#eol-comment-note end-of-line comment] _
+@<&nbsp;>@||@@//@@ ##gray|//comment//##||@@//@@ ##gray|//comment//##||@@//@@ ##gray|//comment//##||
+||[[# multiple-line-comment]][#multiple-line-comment-note multiple line comment]||/* ##gray|//comment line//## _
+##gray|//another line//## */||/* ##gray|//comment line//## _
+##gray|//another line//## */||/* ##gray|//comment line//## _
+/* ##gray|//nested comment//## */ */||
+||||||||~ [[# variables-expressions]][#variables-expressions-note variables and expressions]||
+||~ ||~ c||~ go||~ swift||
+||[[# local-var]][#local-var-note variable]||##gray|/* if inside function, memory allocated on stack: */## _
+int i; _
+int j = 3; _
+ _
+ ##gray|/* memory allocated on heap: */## _
+int *ip = malloc(sizeof(int)); _
+*ip = 7;||##gray|@@//@@ memory allocated on stack:## _
+var i int _
+j := 3 _
+ _
+##gray|@@//@@ memory allocated on heap:## _
+ip := new(int) _
+*ip = 7|| ||
+||[[# free-heap]][#free-heap-note free heap] _
+@<&nbsp;>@||free(ip);||##gray|//none; uses mark-and-sweep garbage collection//##||##gray|//none; uses automatic reference counting//##||
+||[[# global-var]][#global-var-note global variable]||##gray|/* in foo.cpp, outside of any function: */## _
+int x = 7; _
+ _
+##gray|/* to declare in bar.cpp: */## _
+extern int x;||##gray|@@//@@ foo.go:## _
+package foo _
+ _
+var x = 7 _
+ _
+##gray|@@//@@ bar.go:## _
+package bar _
+import foo _
+ _
+var y = foo.x + 3|| ||
+||[[# uninitialized-var]][#uninitialized-var-note uninitialized variable]||##gray|//stack variables and heap variables allocated with// malloc //have indeterminate values.  Global and static variables and heap variables allocated with// calloc //are zero-initialized.//##||##gray|//every type has a zero value.  For numeric types it is zero and for strings it is the empty string.//##||##gray|//compiler error to use an uninitialized variable; optionals initialize to// nil //by default//##||
+||[[# const]][#const-note constant]||##gray|/* usually preprocessor is used: */## _
+#define PI 3.14||const Pi = 3.14||let Pi = 3.14||
+||[[# assignment]][#assignment-note assignment]||i = 3;||##gray|@@//@@ defines variable of appropriate type:## _
+i := 3 _
+ _
+##gray|@@//@@variable must already be declared:## _
+i = 3||var i = 0 _
+ _
+i = 3||
+||[[# parallel-assignment]][#parallel-assignment-note parallel assignment]||##gray|//none//##||##gray|@@//@@define variables of appropriate type:## _
+m, n := 3, 7 _
+ _
+##gray|@@//@@ x and y must already be declared:## _
+x, y = 2, 8||var (m, n) = (3, 7)||
+||[[# swap]][#swap-note swap]||int x = 1, y = 2, tmp; _
+ _
+tmp = x; _
+x = y; _
+y = tmp;||x, y = y, x||(x, y) = (y, x)||
+||[[# compound-assignment]][#compound-assignment-note compound assignment]||##gray|//arithmetic://## _
++= -= *= /= %= _
+ _
+##gray|//bit://## _
+@@<<= >>= &= |= ^=@@||##gray|//arithmetic://## _
++= -= *= /= %= _
+ _
+##gray|//bit://## _
+@@<<= >>= &= |= ^=@@||##gray|//arithmetic://## _
++= -= *= /= %= _
+ _
+##gray|//string://## _
++= _
+ _
+##gray|//bit://## _
+@@<<= >>= &= |= ^=@@||
+||[[# incr-decr]][#incr-decr-note increment and decrement]||##gray|//premodifiers://## _
+++i @@--@@i _
+ _
+##gray|//postmodifiers://## _
+i++ i@@--@@||##gray|//cannot be used as expressions://## _
+i++ i@@--@@||##gray|//premodifiers://## _
+++i @@--@@i _
+ _
+##gray|//postmodifiers://## _
+i++ i@@--@@||
+||[[# null]][#null-note null] _
+@<&nbsp;>@||##gray|/* pointer types only: */## _
+NULL||nil||##gray|@@//@@ option types only:## _
+nil||
+||[[# null-test]][#null-test-note null test] _
+@<&nbsp;>@||ip == NULL|| || ||
+||[[# coalesce]][#coalesce-note coalesce] _
+@<&nbsp;>@||char *s1 = s2 @@||@@ "was null";|| || ||
+||[[# conditional-expr]][#conditional-expr-note conditional expression] _
+@<&nbsp;>@||x > 0 ? x : -x||##gray|//none//##||x > 0 ? x : -x||
+||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
+||~ ||~ c||~ go||~ swift||
+||[[# boolean-type]][#boolean-type-note boolean type] _
+@<&nbsp;>@||int||bool||Bool||
+||[[# true-false]][#true-false-note true and false] _
+@<&nbsp;>@||1 0||true false||true false||
+||[[# falsehoods]][#falsehoods-note falsehoods] _
+@<&nbsp;>@||0 0.0 NULL||false||false||
+||[[# logical-op]][#logical-op-note logical operators] _
+@<&nbsp;>@||&& @@||@@ !||&& @@||@@ !||&& @@||@@ !||
+||[[# relational-op]][#relational-op-note relational operators] _
+@<&nbsp;>@||== != < > <= >=||== != < > <= >=||== != < > <= >=||
+||[[# int-type]][#int-type-note integer type]||signed char ##gray|//1+ byte//## _
+short int ##gray|//2+ bytes//## _
+int ##gray|//2+ bytes//## _
+long int ##gray|//4+ bytes//## _
+long long int ##gray|//4+ bytes//##||int  _
+int8  _
+int16  _
+int32  _
+int64||Int8  _
+Int16  _
+Int32 (Int)  _
+Int64||
+||[[# unsigned-type]][#unsigned-type-note unsigned type]||unsigned char: 8+ _
+unsigned short int ##gray|//2 bytes+//## _
+unsigned int ##gray|//2 bytes+//## _
+unsigned long int ##gray|//4+ bytes//## _
+unsigned long long int ##gray|//4+ bytes//##||uint8 (byte) _
+uint16 _
+uint32 _
+uint64||UInt8 _
+UInt16 _
+UInt32 _
+UInt64 (UInt)||
+||[[# float-type]][#float-type-note float type]||float ##gray|//4 bytes//## _
+double ##gray|//8 bytes//## _
+long double ##gray|//16 bytes//##||float32 _
+float64||Float _
+Double||
+||[[# arith-op]][#arith-op-note arithmetic operators] _
+@<&nbsp;>@||@@+@@ - * / %||@@+@@ - * / %||+ - * / %||
+||[[# int-div]][#int-div-note integer division] _
+@<&nbsp;>@||3 / 7||3 / 7||3 / 7||
+||[[# int-div-zero]][#int-div-zero-note integer division by zero] _
+@<&nbsp;>@||##gray|//system dependent; process often sent a// SIGFPE //signal//##||##gray|//on Unix, process sent a// SIGFPE //signal//##||##gray|//process sent a// SIGILL //signal//##||
+||[[# float-div]][#float-div-note float division] _
+@<&nbsp;>@||3 / (float)7||3 / float32(7)||3 / Double(7)||
+||[[# float-div-zero]][#float-div-zero-note float division by zero]||##gray|/* these are float values but not literals: */##  _
+inf, nan, or -inf||##gray|@@//@@ these are float values but not literals:## _
++Inf, NaN, ##gray|//or//## -Inf _
+ _
+##gray|@@//@@ to get the float values:## _
+import "math" _
+ _
+math.Inf(1) math.Nan() math.Inf(-1)||##gray|@@//@@ these are float values but not literals:## _
++Inf, NaN, ##gray|//or//## -Inf||
+||[[# power]][#power-note power]||#include <math.h>  _
+ _
+pow(2.0, 3.0)||import "math" _
+ _
+math.Pow(2.0, 3.0)||pow(2.0, 3.0)||
+||[[# sqrt]][#sqrt-note sqrt]||#include <math.h> _
+ _
+sqrt(2);||include "math" _
+ _
+math.Sqrt(2)||sqrt(2)||
+||[[# sqrt-negative-one]][#sqrt-negative-one-note sqrt -1]||#include <math.h> _
+ _
+##gray|/* nan */## _
+double x = sqrt(-2.0);||import "math" _
+ _
+##gray|@@//@@ NaN## _
+x := math.Sqrt(-2.0) _
+ _
+import "math/cmplx" _
+ _
+##gray|@@//@@ (0+1.41421356i)## _
+z := cmplx.Sqrt(-2.0)||##gray|@@//@@ NaN:## _
+sqrt(-1)||
+||[[# transcendental-func]][#transcendental-func-note transcendental functions]||#include <math.h> _
+ _
+exp log log2 log10 _
+sin cos tan _
+asin acos atan _
+atan2||include "math" _
+ _
+math.Exp math.Log math.Log2 math.Log10 _
+math.Sin math.Cos math.Tan _
+math.Asin math.Acos math.Atan _
+math.Atan2||exp log log2 log10 _
+sin cos tan _
+asin acos atan _
+atan2||
+||[[# transcendental-const]][#transcendental-const-note transcendental constants]||#include <math.h> _
+ _
+M_PI _
+M_E||import "math" _
+ _
+math.Pi _
+Math.E|| ||
+||[[# float-truncation]][#float-truncation-note float truncation]||#include <math.h> _
+@<&nbsp;>@ _
+double d = 3.77; _
+@<&nbsp;>@ _
+long trunc = (long)d; _
+long rnd = round(d); _
+long flr = floorl(d); _
+long cl = ceill(d);||include "math" _
+ _
+x = 3.77 _
+ _
+trunc := int(x) _
+##gray|//none//## _
+flr := int(math.Floor(x)) _
+cl := int(math.Ceil(x))||Int(3.77) _
+Int(round(3.77)) _
+Int(floor(3.77)) _
+Int(ceil(3.77))||
+||[[# absolute-val]][#absolute-val-note absolute value]||#include <math.h>@<&nbsp;&nbsp;>@##gray|/* fabs() */## _
+ _
+int i = abs(-7); _
+float x = fabs(-7.77);||include "math" _
+ _
+##gray|//none//## _
+math.Abs(-7.77)||abs(-7) _
+fabs(-7.77)||
+||[[# complex-type]][#complex-type-note complex type]||float complex ##gray|//8 bytes//## _
+double complex ##gray|//16 bytes//## _
+long double complex ##gray|//32 bytes//##||complex64 _
+complex128|| ||
+||[[# complex-construction]][#complex-construction-note complex construction]||#include <complex.h> _
+ _
+double complex z; _
+z = 1.0 + 2.0 * I;||var z complex128 = 1.0 + 2.0i|| ||
+||[[# complex-decomposition]][#complex-decomposition-note complex decomposition] _
+##gray|//real and imaginary component, argument, absolute value, conjugate//##||#include <complex.h> _
+ _
+double x; _
+double complex w; _
+ _
+x = creal(z); _
+x = cimag(z); _
+x = carg(z); _
+x = cabs(z); _
+w = conj(z);||import "math/cmplx" _
+ _
+var x float64 _
+var w complex128 _
+ _
+x = real(z) _
+x = imag(z) _
+x = cmplx.Phase(z) _
+x = cmplx.Abs(z) _
+w = cmplx.Conj(z)|| ||
+||[[# random-num]][#random-num-note random number] _
+##gray|//uniform integer, uniform float//##||##gray|/* Value between 0 and RAND_MAX inclusive: */## _
+int i = rand(); _
+ _
+##gray|/* Value in interval [0.0, 1.0]: */## _
+float x = (float)rand()/(float)RAND_MAX;||import "math/rand" _
+ _
+i := rand.Int() _
+x := rand.Float64()||let i = rand() _
+##gray|//??//##||
+||[[# random-seed]][#random-seed-note random seed]||srand(17);||import "math/rand" _
+ _
+rand.Seed(17)||srand(17)||
+||[[# bit-op]][#bit-op-note bit operators] _
+@<&nbsp;>@||@@ << >> & | ^ ~ @@||@@<< >> & |@@ ##gray|//none//## ^||<< >> & | ^ ~ ||
+||||||||~ [[# strings]][#strings-note strings]||
+||~ ||~ c||~ go||~ swift||
+||[[# str-type]][#str-type-note string type] _
+@<&nbsp;>@||char *||string||String||
+||[[# str-literal]][#str-literal-note string literal] _
+@<&nbsp;>@||##gray|/* string in initialized data segment: */## _
+char *s = "hello"; _
+ _
+##gray|/* string in heap: */## _
+char *s2 = strdup(s);||"hello" _
+@@`hello`@@||"hello"||
+||[[# newline-in-str-literal]][#newline-in-str-literal-note newline in string literal]||##gray|/* compiler concatenates literals _
+@<&nbsp;&nbsp;&nbsp;>@separated by whitespace: */## _
+char *s = "first line\n" _
+@<&nbsp;&nbsp;>@"second line";||##gray|@@//@@ backquote literals only:## _
+let s := @@`first line@@ _
+second line@@`@@||##gray|//no//##||
+||[[# str-literal-esc]][#str-literal-esc-note string escapes]||\a \b \f \n \r \t \v \" \' \? \\ _
+\##gray|//o//## \##gray|//oo//## \##gray|//ooo//## \x##gray|//hh//## \u##gray|//hhhh//## \U##gray|//hhhhhhhh//##||##gray|//Double quote literals only://## _
+ _
+\a \b \f \n \r \t \v \\ \" _
+\##gray|//ooo//## \x##gray|//hh//## \u##gray|//hhhh//## \U##gray|//hhhhhhhh//##||\0 \\ \t \n \r \" \' _
+\x##gray|//hh//## \u##gray|//hhhh//## \U##gray|//hhhhhhhh//##||
+||[[# expr-interpolation]][#expr-interpolation-note expression interpolation]||##gray|//none//##|| ||let n = 3, m = 5 _
+let msg =  "\(n) + \(m) is \(n + m)"||
+||[#string-comparison comparison]||##gray|/* == and < compare memory addresses: */## _
+ _
+strcmp("hello", "world") == 0 _
+strcmp("hello", "world") < 0||"hello" == "world" _
+"hello" < "world"||"hello" == "world" _
+"hello" < "world"||
+||[#string-to-number convert string to numeric]||strtoimax strtol strtoll _
+strtoumax strtoul strtoull _
+strtof strtod strtold||import "strconv" _
+ _
+##gray|@@//@@2nd arg is base, 3rd arg is size of int in bits:## _
+i, _ := strconv.ParseInt("17", 10, 32) _
+ _
+##gray|@@//@@ 2nd arg is size of float in bits:## _
+x, _ := strconv.ParseFloat("3.14", 32)||"17".toInt() _
+ _
+##gray|@@//@@ evaluates to nil:## _
+"17foo".toInt() _
+ _
+##gray|@@//@@ convert to float?##||
+||[#number-to-string convert numeric to string]|| ||import "strconv" _
+ _
+##gray|@@//@@3rd arg is precision after decimal point; _
+@@//@@ 4th arg is size of float in bits:## _
+strconv.FormatFloat(3.14, 'f', 4, 32) _
+ _
+##gray|@@//@@ 2nd arg is base:## _
+strconv.FormatInt(7, 10)||let n = String(17) _
+let x = String(17.3)||
+||[#split split]||##gray|//none//##||import "strings" _
+ _
+s := "foo bar baz" _
+parts := strings.Split(s, " ")|| ||
+||[#join join] _
+@<&nbsp;>@||##gray|//none//##||import "strings" _
+ _
+parts := []string{"foo", "bar", "baz"} _
+s := strings.Join(parts, " ")|| ||
+||[#string-concatenate concatenate]||char *s1 = "hello"; _
+char *s2 = " world"; _
+char *s3 = (char *)calloc(strlen(s1) + strlen(s2) + 1,sizeof(char)); _
+strcpy(s3, s1); _
+strcat(s3, s2);||"hello" + " world"||"hello" + " world"||
+||[#str-replicate replicate]||##gray|//none//##||import "strings" _
+ _
+hbar := strings.Repeat("-", 80)||let ch: Character = "-" _
+let hbar = String(count: 80, repeatedValue: ch)||
+||[#substring substring]||char target[3]; _
+ char *source = "hello"; _
+strncpy(target, source + 2, 2);||"hello"[2:4]|| ||
+||[#index index of substring]||const char *s = "hello"; _
+const char *p = strstr("hello", "ll"); _
+p ? p - s : -1;||import "strings" _
+ _
+##gray|@@//@@ zero-based index; -1 if not found:## _
+strings.Index("hello", "ll")|| ||
+||[#sprintf sprintf]||char buf[100]; _
+snprintf(buf, 100, "%s: %d", "Spain", 7);|| || ||
+||[#uppercase uppercase]||char *s = strdup("hello"); _
+int i; _
+ _
+for (i=0; i < strlen(s); ++i) { _
+@<&nbsp;&nbsp;>@s[i] = toupper(s[i]); _
+}||import "strings" _
+ _
+strings.ToUpper("hello")||let s = "hello" _
+let s2 = s.uppercaseString||
+||[#lowercase lowercase]||char *s = strdup("HELLO"); _
+int i; _
+ _
+for (i=0; i < strlen(s); i++) { _
+@<&nbsp;&nbsp;>@s[i] = tolower(s[i]); _
+}||import "strings" _
+ _
+strings.ToLower("HELLO")||let s = "HELLO" _
+let s2 = s.lowercaseString||
+||[#trim trim] _
+##gray|//both sides, on left, on right//##|| ||import "strings" _
+ _
+s := " lorem " _
+strings.Trim(s, " ") _
+strings.TrimLeft(s, " ") _
+strings.TrimRight(s, " ")|| ||
+||[#pad pad on right]||char buf[100]; _
+snprintf(buf, 100, "%-10s", "hello");|| || ||
+||[#string-length length] _
+@<&nbsp;>@||strlen("hello")||len("hello")||countElements("hello")||
+||[[# char-type]][#char-type-note character type]||char||rune||Character||
+||[[# char-literal]][#char-literal-note character literal]|| || || ||
+||[#char-access character access]|| || || ||
+||[#chr-ord chr and ord]|| || || ||
+||||||||~ [[# regexes]][#regexes-note regular expressions]||
+||~ ||~ c||~ go||~ swift||
+||[[# regex-metachar]][#regex-metachar-note metacharacters]||##gray|/* REG_BASIC: */## _
+. [ ] \ * ^ $ _
+ _
+##gray|/* REG_EXTENDED: */## _
+. [ ] \ ( ) * + ? { } | ^ $||. [ ] \ ( ) * + ? { } | ^ $|| ||
+||[[# char-class-abbrev]][#char-class-abbrev-note character class abbrevations]||##gray|/* matches any character; does not match newline if _
+@<&nbsp;&nbsp;&nbsp;>@REG_NEWLINE is used: */## _
+. _
+ _
+##gray|/* more character classes available in pcre library */##||. \d \D \s \S \w \W|| ||
+||[[# regex-anchors]][#regex-anchors-note anchors]||##gray|/* match beginning and end of string; match beginning and _
+@<&nbsp;&nbsp;&nbsp;>@end of line if REG_NEWLINE is used: */## _
+^ $||^ $ \A \b \B \z|| ||
+||[[# regex-test]][#regex-test-note match test]||#include <regex.h> _
+ _
+regex_t rx; _
+int retval; _
+char *pat = "1999"; _
+char *s = "It's 1999"; _
+ _
+##gray|/* Use REG_NOSUB if 4th arg to regexec() is NULL */## _
+if (retval = regcomp(&rx, pat, REG_EXTENDED | REG_NOSUB)) { _
+ _
+@<&nbsp;&nbsp;>@char buf[200]; _
+ _
+@<&nbsp;&nbsp;>@regerror(retval, &rx, buf, 200); _
+@<&nbsp;&nbsp;>@fprintf(stderr, "regex error: %s\n", buf); _
+} _
+else { _
+ _
+@<&nbsp;&nbsp;>@if (regexec(&rx, "s, 0, NULL, 0) == 0) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@printf("Party!\n"); _
+@<&nbsp;&nbsp;>@} _
+ _
+@<&nbsp;&nbsp;>@regfree(&rx); _
+}||import "fmt" _
+import "regexp" _
+ _
+var rx = regexp.MustCompile("1999") _
+if (rx.MatchString("It's 1999.")) { _
+@<&nbsp;&nbsp;>@fmt.Println("Party!") _
+}|| ||
+||[[# case-insensitive-regex]][#case-insensitive-regex-note case insensitive match test]||#include <regex.h> _
+ _
+regex_t rx; _
+int retval; _
+char *pat = "lorem"; _
+char *s = "Lorem"; _
+ _
+if (retval = regcomp(&rx, pat, REG_EXTENDED | REG_ICASE)) { _
+ _
+@<&nbsp;&nbsp;>@char buf[200]; _
+ _
+@<&nbsp;&nbsp;>@regerror(retval, &rx, buf, 200); _
+@<&nbsp;&nbsp;>@fprintf(stderr, "Regex error: %s\n", buf); _
+} _
+else { _
+ _
+@<&nbsp;&nbsp;>@if (regexec(&rx, s, 0, NULL, 0) == 0) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@printf("case insensitive match\n"); _
+@<&nbsp;&nbsp;>@} _
+ _
+@<&nbsp;&nbsp;>@regfree(&rx); _
+}||import "fmt" _
+import "regexp" _
+ _
+var rx = regexp.MustCompile("(?i)lorem") _
+if (rx.MatchString("Lorem Ipsum")) { _
+@<&nbsp;&nbsp;>@fmt.Println("case insensitive match") _
+}|| ||
+||[[# regex-modifiers]][#regex-modifiers-note modifiers]||##gray|/* bit flags used in 3rd arg of regcomp(): */## _
+REG_BASIC _
+REG_EXTENDED _
+REG_ICASE _
+REG_NOSUB _
+REG_NEWLINE||##gray|@@//@@ use (?i), (?m), @@...@@ to insert in regex:## _
+i m s U|| ||
+||[[# subst]][#subst-note substitution]|| ||import "fmt" _
+import "regexp" _
+ _
+s := "do re mi mi mi" _
+var rx = regexp.MustCompile("mi") _
+fmt.Println(rx.ReplaceAllString(s, "ma"))|| ||
+||[[# group-capture]][#group-capture-note group capture]||#include <regex.h> _
+ _
+regex_t rx; _
+int retval; _
+ _
+char *pat = "([0-9]{4})-([0-9]{2})-([0-9]{2})"; _
+char *s = "2010-06-03"; _
+ _
+if (retval = regcomp(&rx, pat, REG_EXTENDED)) { _
+ _
+@<&nbsp;&nbsp;>@char buf[200]; _
+ _
+@<&nbsp;&nbsp;>@regerror(retval, &rx, buf, 200); _
+@<&nbsp;&nbsp;>@fprintf(stderr, "Regex error: %s\n", buf); _
+} _
+else { _
+ _
+@<&nbsp;&nbsp;>@##gray|/* first match is entire pattern */## _
+@<&nbsp;&nbsp;>@regmatch_t matches[4]; _
+ _
+@<&nbsp;&nbsp;>@if (regexec(&rx, s, 4, matches, 0) == 0) { _
+ _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@char yr[5]; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@regmatch_t rm = matches[1]; _
+ _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|/* rm_so and rm_eo contain index of start and end of _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;&nbsp;>@match; they are set to -1 if unused */## _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@strncpy(yr, s + rm.rm_so, rm.rm_eo - rm.rm_so); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@yr[5] = '\0'; _
+ _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@printf("year is %s\n", yr); _
+@<&nbsp;&nbsp;>@} _
+ _
+@<&nbsp;&nbsp;>@regfree(&rx); _
+}|| || ||
+||||||||~ [[# dates-time]][#dates-time-note dates and time]||
+||~ ||~ c||~ go||~ swift||
+||[[# unix-epoch-type]][#unix-epoch-type-note unix epoch type]||time_t|| || ||
+||[[# broken-down-date-time-type]][#broken-down-date-time-type-note broken down type]||struct tm||Time|| ||
+||[[# current-unix-epoch]][#current-unix-epoch-note current unix epoch]||time_t now; _
+ _
+if (time(&now) == -1) { _
+@<&nbsp;&nbsp;>@perror("time failed"); _
+}|| || ||
+||current broken-down date/time|| ||import "time" _
+ _
+t := time.Now()|| ||
+||[[# date-time-to-str]][#date-time-to-str-note date and time to string]|| || || ||
+||[[# format-date]][#format-date-note format date]|| || || ||
+||[[# parse-date]][#parse-date-note parse date]|| || || ||
+||[[# date-to-str]][#date-to-str-note convert to string] _
+@<&nbsp;>@||char *s; _
+ _
+##gray|/* ctime returns pointer to statically allocated memory */## _
+if ((s = ctime(&now)) == NULL) { _
+@<&nbsp;&nbsp;>@fputs("ctime failed."); _
+}|| || ||
+||[[# date-subtraction]][#date-subtraction-note date subtraction]|| || || ||
+||[[# add-duration]][#add-duration-note add duration]|| || || ||
+||[[# date-parts]][#date-parts-note date parts]|| || || ||
+||[[# time-parts]][#time-parts-note time parts]|| || || ||
+||[[# build-date-time]][#build-date-time-note build broken-down date and time]|| || || ||
+||[[# local-tmz-determination]][#local-tmz-determination-note how localtime is determined]|| || || ||
+||[[# tmz-info]][#tmz-info-note time zone info] _
+##gray|//name and utc offset in hours//##|| || || ||
+||[[# daylight-savings-test]][#daylight-savings-test-note daylight savings test]|| || || ||
+||[[# nonlocal-tmz]][#nonlocal-tmz-note nonlocal time zone]|| || || ||
+||[[# microseconds]][#microseconds-note microseconds]|| || || ||
+||[[# sleep]][#sleep-note sleep]||#include <unistd.h> _
+ _
+##gray|/* seconds */## _
+int retval = sleep(10); _
+if (retval != 0) { _
+@<&nbsp;&nbsp;>@printf("interupted with %d s to go", retval); _
+} _
+ _
+##gray|/* microseconds */## _
+if (usleep(10000)) { _
+@<&nbsp;&nbsp;>@perror("usleep failed"); _
+}||dur := time.Duration(10 * time.Second) _
+time.Sleep(dur) _
+ _
+dur2 := time.Duration(10000 * time.Microsecond) _
+time.Sleep(dur2)|| ||
+||[[# timeout]][#timeout-note timeout]|| || || ||
+||[[# cpu-usage]][#cpu-usage-note cpu usage]||#include <sys/times.h> _
+#include <unistd.h>@<&nbsp;&nbsp;>@##gray|/* sysconf */## _
+ _
+struct tms start, end; _
+ _
+double ticks_per_s = (double)sysconf(_SC_CLK_TCK); _
+ _
+clock_t start_wall = times(&start); _
+ _
+if (start_wall < 0) { _
+@<&nbsp;&nbsp;>@fputs("times failed", stderr); _
+@<&nbsp;&nbsp;>@return (1); _
+} _
+ _
+int i; _
+for (i = 0; i < 1000 * 1000 * 1000; ++i) { _
+@<&nbsp;&nbsp;>@##gray|/* empty loop */## _
+} _
+ _
+clock_t end_wall = times(&end); _
+ _
+if (end_wall < 0) { _
+@<&nbsp;&nbsp;>@fputs("times failed", stderr); _
+@<&nbsp;&nbsp;>@return (1); _
+} _
+ _
+clock_t wall = end_wall - start_wall; _
+clock_t user = end.tms_utime - start.tms_utime; _
+clock_t system = end.tms_stime - start.tms_stime; _
+ _
+printf("wall: %f s\n", wall / ticks_per_s); _
+printf("user: %f s\n", user / ticks_per_s); _
+printf("system: %f s\n", system / ticks_per_s);|| || ||
+||||||||~ [[# arrays]][#arrays-note arrays]||
+||~ ||~ c||~ go||~ swift||
+||[[# declare-array]][#declare-array-note declare]||int a[10];||##gray|@@//@@ values are zero-initialized:## _
+var a [10]int _
+ _
+##gray|@@//@@ slice of length 5; capacity 10:## _
+a2 := make([]int, 5, 10)||let a: Array<Int> = [] _
+let a2: Int[] = []||
+||[[# allocate-array-on-stack]][#allocate-array-on-stack-note allocate on stack]||##gray|/* contents of memory undefined: */## _
+int a[10];||##gray|//compiler decides location in memory//##||##gray|//compiler decides location in memory//##||
+||[[# allocate-array-on-heap]][#allocate-array-on-heap-note allocate on heap]||#include <stdlib.h> _
+ _
+##gray|/* memory zero-initialized: */## _
+int *a = calloc(10, sizeof(int));||##gray|//compiler decides location in memory//##||##gray|//compiler decides location in memory//##||
+||[[# free-array-on-heap]][#free-array-on-heap-note free heap] _
+@<&nbsp;>@||free(a);||##gray|//none; garbage collected//##||##gray|//none; garbage collected//##||
+||[[# array-literal]][#array-literal-note literal]||int a[] = {1, 2, 3};||a := []int{1, 2, 3}||##gray|@@//@@ array is mutable; variable is not:## _
+let a = [1, 2, 3]||
+||[[# array-size]][#array-size-note size] _
+@<&nbsp;>@||##gray|//none//##||##gray|@@//@@ number of elements in array or slice:## _
+len(a) _
+ _
+##gray|@@//@@ number of elements that can be stored in allocated memory; runtime reallocates when needed:## _
+cap(a)||a.count||
+||[[# array-lookup]][#array-lookup-note lookup] _
+@<&nbsp;>@||a[0]||a[0]||a[0]||
+||[[# array-update]][#array-update-note update] _
+@<&nbsp;>@||a[0] = 4;||a[0] = 4||a[0] = 4||
+||[[# array-out-of-bounds]][#array-out-of-bounds-note out-of-bounds behavior]||##gray|//undefined, possible SIGSEGV//##||##gray|panic: index out of range## _
+ _
+##gray|//if compiler detects a problem the code won't compile//##||##gray|//raises// SIGILL##||
+||[[# array-element-index]][#array-element-index-note element index]||char *a[3] = {"foo", "bar", "baz"}; _
+int loc = -1, i; _
+ _
+for (i = 0; i < 3; ++i) { _
+@<&nbsp;&nbsp;>@if (strcmp("bar", a[i]) == 0) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@loc = i; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@break; _
+@<&nbsp;&nbsp;>@} _
+}||a := []string{"foo", "bar", "baz"} _
+loc := -1 _
+ _
+for i, val := range a { _
+@<&nbsp;&nbsp;>@if val == "bar" { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@loc = i _
+@<&nbsp;&nbsp;>@} _
+}|| ||
+||[[# slice-array]][#slice-array-note slice]||int *a2; _
+ _
+a2 = a[2];||a := []string{"a", "b", "c", "d", "e"} _
+ _
+##gray|@@//@@ {"c", "d"}:## _
+a2 := a[2:4]||var a = ["a", "b", "c", "d", "e"] _
+ _
+##gray|@@//@@ ["c", "d"]:## _
+a[2@@...@@3] _
+a[2..4]||
+||[[# slice-array-to-end]][#slice-array-to-end-note slice to end]|| ||a := []string{"a", "b", "c", "d", "e"} _
+ _
+##gray|@@//@@ {"c", "d", "e"}:## _
+a2 := a[2:]|| ||
+||[[# array-back]][#array-back-note manipulate back]|| ||a := []int{1, 2, 3} _
+ _
+a = append(a, 4) _
+num := a[len(a) - 1] _
+a = a[:len(a) - 1]||let a = [1, 2, 3] _
+a.append(4) _
+##gray|@@//@@ sets num to 4:## _
+let num = a.removeLast()||
+||[[# array-front]][#array-front-note manipulate front]|| || ||let a = [1, 2, 3] _
+a.insert(0, atIndex: 0) _
+##gray|@@//@@ sets num to 0:## _
+let num = a.removeAtIndex(0)||
+||[[# concatenate-array]][#concatenate-array-note concatenate]|| ||a := []int{1, 2, 3} _
+a2 := []int{4, 5, 6} _
+a3 := append(a, a2@@...@@)||let a = [1, 2, 3] _
+a += [4, 5, 6] _
+ _
+let a3 = [1, 2, 3] + [4, 5, 6]||
+||[[# copy-array]][#copy-array-note copy]|| ||a := []int{1, 2, 3} _
+ _
+a2 := a _
+##gray|@@//@@ also sets a[0] to 4:## _
+a2[0] = 4 _
+ _
+a3 := make([]int, len(a)) _
+copy(a3, a) _
+##gray|@@//@@ a[0] is unchanged:## _
+a3[0] = 5||let a = [1, 2, 3] _
+ _
+let a2 = a _
+##gray|@@//@@ also modifies a[0]:## _
+a2[0] = 4 _
+ _
+a3 = Array(a) _
+##gray|@@//@@ a[0] remains 4:## _
+a3[0] = 5||
+||[[# iterate-over-array]][#iterate-over-array-note iterate over elements]||int a[10]; _
+ _
+for (i = 0; i < 10; ++i ) { _
+@<&nbsp;&nbsp;>@a[i] = i * i; _
+}|| || ||
+||[[# iterate-indices-elem]][#iterate-indices-elem-note iterate over indices and elements]|| || || ||
+||[[# reverse-array]][#reverse-array-note reverse]|| ||import "sort" _
+ _
+a := []int{1, 2, 3} _
+sort.Sort(sort.Reverse(sort.IntSlice(a)))||let a = [1, 2, 3] _
+let a2 = a.reverse()||
+||[[# sort-array]][#sort-array-note sort]||int _
+compare(const void *a, const void *b) { _
+ _
+@<&nbsp;&nbsp;>@if (*(int *)a < *(int *)b) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return -1; _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@else if (*(int *)a == *(int *)b) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return 0; _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@else { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return 1; _
+@<&nbsp;&nbsp;>@} _
+} _
+ _
+int a[5] = {6, 8, 10, 9, 7}; _
+ _
+##gray|/* 2nd arg is array length; 3rd arg is element size */## _
+qsort(a, 5, sizeof(int), &compare);|| ||let a = [1, 3, 2, 4] _
+ _
+##gray|@@//@@ modifies a in-place and returns it:## _
+sort(a)||
+||[[# map]][#map-note map]||##gray|//none//##||##gray|//none//##|| ||
+||[[# filter]][#filter-note filter]||##gray|//none//##||##gray|//none//##|| ||
+||[[# reduce]][#reduce-note reduce]||##gray|//none//##||##gray|//none//##|| ||
+||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
+||~ ||~ c||~ go||~ swift||
+||[[# declare-dict]][#declare-dict-note declare]|| ||gold := make(map[string]int)||let dict = Dictionary<String, Int>()||
+||[[# dict-literal]][#dict-literal-note literal]|| ||gold := map[string]int{ _
+@<&nbsp;&nbsp;>@"France": 7, _
+@<&nbsp;&nbsp;>@"Spain": 3, _
+}||let dict = ["t": 1, "f": 0]||
+||[[# dict-size]][#dict-size-note size]|| || ||dict.count||
+||[[# dict-lookup]][#dict-lookup-note lookup]|| ||import "fmt" _
+ _
+gold["France"] = 7 _
+fmt.Printf("France: %d\n", gold["France"])||dict["t"]||
+||[[# dict-update]][#dict-update-note update]|| || ||dict["t"] = 2||
+||[[# dict-out-of-bounds]][#dict-out-of-bounds-note out-of-bounds behavior]|| || ||##gray|//returns//## nil||
+||[[# dict-is-key-present]][#dict-is-key-present-note is key present]|| ||##gray|//if key not present,// val //will contain zero value for type and// ok //will contain false://## _
+val, ok = gold["Norway"]||if dict["y"] { _
+@<&nbsp;&nbsp;>@println("key found") _
+} else { _
+@<&nbsp;&nbsp;>@println("no such key") _
+}||
+||[[# dict-delete]][#dict-delete-note delete]|| ||delete(gold, "France")||dict.removeValueForKey("t")||
+||[[# dict-iterate]][#dict-iterate-note iterate]|| || ||for (k, v) in dict { _
+@<&nbsp;&nbsp;>@println("\(k): \(v)") _
+}||
+||[[# dict-key-val]][#dict-key-val-note keys and values as arrays]|| || ||##gray|@@//@@ dict.keys and dict.values are iterable:## _
+Array(dict.keys) _
+Array(dict.values)||
+||||||||~ [[# functions]][#functions-note functions]||
+||~ ||~ c||~ go||~ swift||
+||[[# def-func]][#def-func-note define function]||int add(int n, int m) { _
+@<&nbsp;&nbsp;>@return n + m; _
+}||func add(n int, m int) int { _
+@<&nbsp;&nbsp;>@return n + m _
+} _
+ _
+##gray|@@//@@ parameters can share type declaration:## _
+func add(n, m int) int { _
+@<&nbsp;&nbsp;>@return n + m _
+}||func add(n: Int, m: Int) -> Int { _
+@<&nbsp;&nbsp;>@return n + m _
+}||
+||[[# invoke-func]][#invoke-func-note invoke function] _
+@<&nbsp;>@||add(3, 7)||add(3, 7)||add(3, 7)||
+||[[# forward-decl-func]][#forward-decl-func-note forward declaration of function]||float add(float x, float y); _
+ _
+##gray|/* if a function invocation is encountered before a _
+@<&nbsp;&nbsp;>@declaration or a definition, the arguments and the _
+@<&nbsp;&nbsp;>@return value are assumed to have type 'int' */## _
+printf("%f\n", add(2.2, 3.5)); _
+ _
+float add(float x, float y) { _
+@<&nbsp;&nbsp;>@return x + y; _
+}||import "fmt" _
+ _
+##gray|@@//@@ function can be invoked before definition## _
+fmt.Printf("%f\n", add(2.2, 3.5)) _
+ _
+func add(n float32, m float32) float32 { _
+@<&nbsp;&nbsp;>@return n + m _
+}|| ||
+||[[# overload-func]][#overload-func-note overload function]||##gray|//not permitted//##||##gray|//not permitted//##||func add(a: String, b: String) -> String { _
+@<&nbsp;&nbsp;>@return a + b _
+}||
+||[[# nest-func]][#nest-func-note nest function]||##gray|//not permitted//##||##gray|//not permitted//##||func add_one(n: Int) -> Int { _
+@<&nbsp;&nbsp;>@func add(a: Int, b: Int) -> Int { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return a + b _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@return add(1, n) _
+}||
+||[[# default-val-param]][#default-val-param-note default value for parameter]||##gray|//none//##||##gray|//none//##||func incr(n: Int, amount: Int = 1) -> Int { _
+@<&nbsp;&nbsp;>@return n + amount _
+} _
+ _
+##gray|@@//@@ 4:## _
+incr(3) _
+ _
+##gray|@@//@@ 5:## _
+incr(3, amount: 2)||
+||[[# variable-num-arg]][#variable-num-arg-note variable number of arguments]||#include <stdarg.h> _
+ _
+char* concat(int cnt,  @@...@@) { _
+ _
+@<&nbsp;&nbsp;>@int i, len; _
+@<&nbsp;&nbsp;>@va_list ap; _
+@<&nbsp;&nbsp;>@char *retval, *arg; _
+ _
+@<&nbsp;&nbsp;>@va_start(ap, cnt); _
+@<&nbsp;&nbsp;>@for (i = 0, len = 0; i < cnt; i++) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@len += strlen(va_arg(ap, char*)); _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@va_end(ap); _
+ _
+@<&nbsp;&nbsp;>@retval = calloc(len + 1, sizeof(char)); _
+ _
+@<&nbsp;&nbsp;>@va_start(ap, cnt); _
+@<&nbsp;&nbsp;>@for (i = 0, len = 0; i < cnt; i++) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@arg = va_arg(ap, char*); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@strcpy(retval + len, arg); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@len += strlen(arg); _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@va_end(ap); _
+ _
+@<&nbsp;&nbsp;>@return retval; _
+} _
+ _
+char *s = concat(4, "Hello", ", ", "World", "!");||func concat(strs @@...@@string) string { _
+@<&nbsp;&nbsp;>@var ret = "" _
+@<&nbsp;&nbsp;>@for _, str := range strs { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@ret += str _
+@<&nbsp;&nbsp;>@} _
+ _
+@<&nbsp;&nbsp;>@return ret _
+}|| func concat(strings: String@@...@@) -> String { _
+@<&nbsp;&nbsp;>@var retval = "" _
+@<&nbsp;&nbsp;>@for string in strings { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@retval += string _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@return retval _
+}||
+||[[# named-param]][#named-param-note named parameters]||##gray|//none//##||##gray|//none//##||func my_log(#exp: Double, #base: Double) -> Double {  _
+@<&nbsp;&nbsp;>@return log(exp) / log(base) _
+} _
+ _
+##gray|@@//@@ expose different parameter names:## _
+func my_log(exp e: Double, base b: Double) -> Double { _
+@<&nbsp;&nbsp;>@return log(e) / log(b) _
+} _
+ _
+my_log(exp: 8, base: 2)||
+||[[# pass-by-val]][#pass-by-val-note pass by value]||void use_integer(int i) { _
+@<&nbsp;&nbsp;>@##gray|//function body//## _
+} _
+ _
+int i = 7; _
+ _
+use_integer(i);|| || ||
+||[[# pass-by-addr]][#pass-by-addr-note pass by address]||void use_iptr(int *i) { _
+@<&nbsp;&nbsp;>@##gray|//function body//## _
+} _
+ _
+int i = 7; _
+ _
+use_iptr(&i);|| || ||
+||[[# pass-by-ref]][#pass-by-ref-note pass by reference]||##gray|//not possible//##|| || ||
+||[[# retval]][#retval-note return value]||##gray|return //arg//##||##gray|return //arg.  If return values have names and no arguments are provided to// return //the values assigned to the return variables are used.//##||##gray|return //arg//##||
+||[[# no-retval]][#no-retval-note no return value]||##gray|/* declare function void: */## _
+void print_err(char *msg) { _
+@<&nbsp;&nbsp;>@fprintf(stderr, msg); _
+}|| ||func print_err(err: String) { _
+@<&nbsp;&nbsp;>@println(err) _
+}||
+||[[# multiple-retval]][#multiple-retval-note multiple return values]||##gray|//not permitted//##||func divmod(m, n int) (int, int) { _
+@<&nbsp;&nbsp;>@return m / n, m % n _
+} _
+ _
+q, r := divmod(7, 3)||func divmod(dividend: Int, divisor: Int) -> (Int, Int) { _
+@<&nbsp;&nbsp;>@return (dividend / divisor, dividend % divisor) _
+}||
+||[[# named-retval]][#named-retval-note named return values]||##gray|//none//##||func divmod(m, n int) (q, r int) { _
+@<&nbsp;&nbsp;>@q =  m / n _
+@<&nbsp;&nbsp;>@r = m % n _
+@<&nbsp;&nbsp;>@return _
+} _
+ _
+q, r := divmod(7, 3)|| ||
+||[[# anonymous-func-literal]][#anonymous-func-literal-note anonymous function literal]||##gray|//none//##||  || let add_one = {(n: Int) -> Int in n + 1}||
+||[[# invoke-anonymous-func]][#invoke-anonymous-func-note invoke anonymous function]|| || ||add_one(2)|| 
+||[[# func-private-state]][#func-private-state-note function with private state]||int _
+counter() { _
+@<&nbsp;&nbsp;>@static int n = 0; _
+ _
+@<&nbsp;&nbsp;>@return ++n; _
+}|| || ||
+||[[# func-as-val]][#func-as-val-note function as value]||int _
+add(int m, int n) { _
+@<&nbsp;&nbsp;>@return m + n; _
+} _
+ _
+##gray|/* a function cannot be stored in a variable, but _
+@<&nbsp;&nbsp;>@its address can */## _
+int (* fp)(int, int) = &add; _
+ _
+printf("1 + 2: %d\n", (*fp)(1, 2));|| ||func add(n: Int, m: Int) -> Int { _
+@<&nbsp;&nbsp;>@return n + m _
+} _
+ _
+let f = add||
+||||||||~ [[# execution-control]][#execution-control-note execution control]||
+||~ ||~ c||~ go||~ swift||
+||[[# for]][#for-note for]||int i, n; _
+ _
+for (i = 1, n = 1; i <= 10; ++i) { _
+@<&nbsp;&nbsp;>@n *= i; _
+}||n := 1 _
+ _
+for i := 1; i <= 10; i++ { _
+@<&nbsp;&nbsp;>@n *= i; _
+}|| var n = 1 _
+ _
+for var i = 1; i <= 10; i++ { _
+@<&nbsp;&nbsp;>@n *= i _
+}||
+||[[# if]][#if-note if]||int signum; _
+ _
+if (i > 0) { _
+@<&nbsp;&nbsp;>@signum = 1; _
+} else if (i == 0) { _
+@<&nbsp;&nbsp;>@signum = 0; _
+} else { _
+@<&nbsp;&nbsp;>@signum = -1; _
+}||if x > 0 { _
+@<&nbsp;&nbsp;>@signum = 1 _
+} else if x == 0 { _
+@<&nbsp;&nbsp;>@signum = 0 _
+} else { _
+@<&nbsp;&nbsp;>@signum = -1 _
+}||var signum: Int _
+ _
+if i > 0 { _
+@<&nbsp;&nbsp;>@signum = 1 _
+} else if i == 0 { _
+@<&nbsp;&nbsp;>@signum = 0 _
+} else { _
+@<&nbsp;&nbsp;>@signum = -1 _
+}||
+||[[# while]][#while-note while]||int i = 0; _
+ _
+while (i < 10) { _
+@<&nbsp;&nbsp;>@++i; _
+}||i := 0 _
+ _
+for  i < 10 { _
+@<&nbsp;&nbsp;>@i++ _
+}||var i = 0 _
+ _
+while i < 10 { _
+@<&nbsp;&nbsp;>@++i _
+}||
+||[[# switch]][#switch-note switch]||switch (i) { _
+case 0: _
+@<&nbsp;&nbsp;>@0; _
+@<&nbsp;&nbsp;>@break; _
+case 1: _
+@<&nbsp;&nbsp;>@1; _
+@<&nbsp;&nbsp;>@break; _
+default: _
+@<&nbsp;&nbsp;>@-1; _
+@<&nbsp;&nbsp;>@break; _
+}|| || ||
+||[[# break-continue]][#break-continue-note break/continue] _
+@<&nbsp;>@|| || || ||
+||||||||~ [[# concurrency]][#concurrency-note concurrency]||
+||~ ||~ c||~ go||~ swift||
+||start thread||#include <pthread.h> _
+ _
+typedef struct { _
+@<&nbsp;&nbsp;>@int id; _
+} payload; _
+ _
+void* _
+thread(void* arg) { _
+@<&nbsp;&nbsp;>@payload* pl = (payload*)arg; _
+@<&nbsp;&nbsp;>@printf("the value is %d\n", pl->id); _
+} _
+ _
+pthread_t thr; _
+payload pl = {3}; _
+ _
+if (pthread_create(&thr, NULL, &thread, (void*)&pl)) { _
+@<&nbsp;&nbsp;>@printf("failed to create thead\n"); _
+@<&nbsp;&nbsp;>@exit(1); _
+}|| || ||
+||terminate current thread||#include <pthread.h> _
+ _
+payload pl = {7}; _
+ _
+pthread_exit((void*)&pl);|| || ||
+||terminate other thread||#include <pthread> _
+ _
+pthread_t thr; _
+payload pl = {3}; _
+ _
+if (pthread_create(&thr, NULL, &thread, (void*)&pl)) { _
+@<&nbsp;&nbsp;>@printf("failed to create thead\n"); _
+@<&nbsp;&nbsp;>@exit(1); _
+} _
+ _
+sleep(5); _
+ _
+if (pthread_cancel(thr)) { _
+@<&nbsp;&nbsp;>@printf("failed to cancel thread\n"); _
+@<&nbsp;&nbsp;>@exit (1); _
+}|| || ||
+||list threads||##gray|//no portable way//##|| || ||
+||wait on thread|| || || ||
+||lock|| || || ||
+||create message queue|| || || ||
+||send message|| || || ||
+||receive message|| || || ||
+||||||||~ [[# file-handles]][#file-handles-note file handles]||
+||~ ||~ c||~ go||~ swift||
+||[[# std-file-handles]][#std-file-handles-note standard file handles]||stdin stdout stderr||import "os" _
+ _
+os.Stdin os.Stdout os.Stderr||let stdin = _
+@<&nbsp;&nbsp;>@NSFileHandle.fileHandleWithStandardInput() _
+let stdout = _
+@<&nbsp;&nbsp;>@NSFileHandle.fileHandleWithStandardOutput() _
+let stderr _
+@<&nbsp;&nbsp;>@NSFileHandle.fileHandleWithStandardError()||
+||[[# read-line-stdin]][#read-line-stdin-note read line from stdin]||char *line = NULL; _
+size_t cap = 0; _
+ssize_t len; _
+ _
+##gray|/* if line is not NULL, it should be memory allocated by _
+@<&nbsp;&nbsp;&nbsp;>@malloc and the size should be in cap.  If size is not _
+@<&nbsp;&nbsp;&nbsp;>@sufficient getline will call realloc on line */## _
+len = getline(&line, &cap, stdin); _
+ _
+if (len == -1) { _
+@<&nbsp;&nbsp;>@if (ferror(stdin)) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@perror("getline err"); _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@else if (feof(stdin)) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@fprintf(stderr, "end of file\n"); _
+@<&nbsp;&nbsp;>@} _
+} else { _
+ _
+@<&nbsp;&nbsp;>@##gray|/* use line here */## _
+ _
+@<&nbsp;&nbsp;>@free(line); _
+}||import "bufio" _
+import "os" _
+ _
+var line string _
+var err error _
+ _
+b := bufio.NewReader(os.Stdin) _
+ _
+line, err = b.ReadString('\n') _
+ _
+if err != nil { _
+@<&nbsp;&nbsp;>@os.Stderr.WriteString("error!") _
+} else { _
+@<&nbsp;&nbsp;>@##gray|@@//@@ use line here## _
+}||##gray|//none//##||
+||[[# write-line-stdout]][#write-line-stdout-note write line to stdout]||##gray|/* returns EOF on error */## _
+int retval = puts("Hello, World!");||import "os" _
+ _
+os.Stdout.WriteString("Hello, World!\n")||println("Hello, World!")||
+||[[# printf]][#printf-note write formatted string to stdout] _
+@<&nbsp;>@||printf("count: %d\n", 7);||import "fmt" _
+ _
+fmt.Printf("count: %d\n", 7)||let s = "Spain" _
+let i = 17 _
+let x = 3.14156 _
+let fmtx = NSString(format: "%.2f", x) _
+ _
+println("\(s) \(i) \(fmtx)")||
+||[[# open-file]][#open-file-note open file for reading]||##gray|/* returns NULL on error */## _
+FILE *f = fopen("/etc/hosts", "r");||raw, err := os.Open("/etc/hosts") _
+if err == nil { _
+@<&nbsp;&nbsp;>@f := bufio.NewReader(f) _
+}||let f = NSFileHandle( _
+@<&nbsp;&nbsp;>@forReadingAtPath: "/etc/hosts")||
+||[[# open-file-write]][#open-file-write-note open file for writing]||##gray|/* returns NULL on error */## _
+FILE *f = fopen("/tmp/test", "w");|| ||let path = "/tmp/test" _
+NSFileManager().copyItemAtPath( _
+@<&nbsp;&nbsp;>@"/dev/null", _
+@<&nbsp;&nbsp;>@toPath: path, _
+@<&nbsp;&nbsp;>@error: nil) _
+let f = NSFileHandle( _
+@<&nbsp;&nbsp;>@forWritingAtPath: path)||
+||[[# open-file-append]][#open-file-append-note open file for appending]||##gray|/* returns NULL on error */## _
+FILE *f = fopen("/tmp/err.log", "a");|| ||let f = NSFileHandle( _
+@<&nbsp;&nbsp;>@forWritingAtPath: "/tmp/err.log") _
+f.seekToEndOfFile()||
+||[[# close-file]][#close-file-note close file]||##gray|/* returns EOF on error */## _
+int retval = fclose(f);|| ||f.closeFile()||
+||[[# close-file-implicitly]][#close-file-implicitly-note close file implicitly]||##gray|//none//##||##gray|//defer//##||class Defer { _
+@<&nbsp;&nbsp;>@var fun: ()->() _
+@<&nbsp;&nbsp;>@init(fun: ()->()) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@self.fun = fun _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@deinit { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@fun() _
+@<&nbsp;&nbsp;>@} _
+} _
+var defer = Defer({()->() in f.closeFile()})||
+||[[# io-err]][#io-err-note i/o errors]||##gray|//Functions return values such as// EOF, NULL, //or// -1 //to indicate error.  In some cases errors are not distinguished from end-of-file.  The functions// ferror() //and// feof() //can be used to test a file handle. _
+ _
+The type of error is stored in// errno.  strerror(errno) //converts the errors code to a string and// perror() //writes its argument to// stderr //with// sterror(errno).##|| || ||
+||[[# read-line]][#read-line-note read line]||char line[BUFSIZ]; _
+ _
+if (fgets(line, BUFSIZ, f) == NULL) { _
+@<&nbsp;&nbsp;>@if (ferror(stdin)) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@perror("getline err"); _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@else if (feof(stdin)) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@fprintf(stderr, "end of file\n"); _
+@<&nbsp;&nbsp;>@} _
+ _
+} else { _
+@<&nbsp;&nbsp;>@if ('\n' == line[strlen(line) - 1]) { _
+ _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|/* use line here */## _
+ _
+} else { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@fprintf(stderr, "long line truncated\n"); _
+}|| ||##gray|//none//##||
+||[[# file-line-iterate]][#file-line-iterate-note iterate over file by line]|| || ||##gray|//none//##||
+||[[# read-file-array]][#read-file-array-note read file into array of strings]|| || ||##gray|//none//##||
+||[[# read-file-str]][#read-file-str-note read file into string]|| || ||let data = f.readDataToEndOfFile() _
+let s = NSString( _
+@<&nbsp;&nbsp;>@data: data, _
+@<&nbsp;&nbsp;>@encoding: NSUTF8StringEncoding)||
+||[[# write-str]][#write-str-note write string]||##gray|/* returns EOF on error */## _
+int retval = fputs("Hello, World!", f);|| ||f.writeData("Hello, World!".dataUsingEncoding( _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@NSUTF8StringEncoding))||
+||[[# write-line]][#write-line-note write line]||##gray|/* returns EOF on error */## _
+int retval = fputs("Hello, World!\n", f);|| ||f.writeData("Hello, World!\n".dataUsingEncoding( _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@NSUTF8StringEncoding))||
+||[[# flush]][#flush-note flush file handle]||if (fflush(f) == EOF) { _
+@<&nbsp;&nbsp;>@perror("fflush failed"); _
+}|| ||f.synchronizeFile()||
+||[[# eof-test]][#eof-test-note end-of-file test] _
+@<&nbsp;>@||feof(f)|| || ||
+||[[# seek]][#seek-note get and set file handle position]||long pos; _
+if ((pos = ftell(f)) == -1) { _
+@<&nbsp;&nbsp;>@perror("ftell failed"); _
+} _
+ _
+##gray|/* 3rd arg can also be SEEK_CUR or SEEK_END */## _
+if (fseek(f, 0, SEEK_SET) == -1) { _
+@<&nbsp;&nbsp;>@perror("fseek failed"); _
+}|| ||let pos = f.offsetInFile _
+f.seekToFileOffset(0)||
+||[[# tmp-file]][#tmp-file-note open unused file]||#include <limits.h>@<&nbsp;&nbsp;>@##gray|/* PATH_MAX */## _
+#include <unistd.h> _
+ _
+char buf[PATH_MAX]; _
+ _
+strcpy(buf, "/tmp/foo.XXXXXX"); _
+ _
+##gray|/* terminal Xs will be replaced: */## _
+int fd = mkstemp(buf); _
+ _
+if (fd != -1) { _
+@<&nbsp;&nbsp;>@FILE *f = fdopen(fd, "w"); _
+ _
+@<&nbsp;&nbsp;>@if (NULL == f) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@perror("fdopen failed"); _
+@<&nbsp;&nbsp;>@} else { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|/* use f */## _
+@<&nbsp;&nbsp;>@} _
+ _
+} else { _
+@<&nbsp;&nbsp;>@perror("mkstemp failed"); _
+}|| || ||
+||||||||~ [[# files]][#files-note files]||
+||~ ||~ c||~ go||~ swift||
+||[[# file-test]][#file-test-note file test, regular file test] _
+@<&nbsp;>@||#include <sys/stat.h> _
+#include <unistd.h>@<&nbsp;&nbsp;>@##gray|/* access() */## _
+ _
+struct stat buf; _
+ _
+if (access("/tmp/foo", F_OK) >= 0) { _
+@<&nbsp;&nbsp;>@##gray|/* file exists */## _
+} _
+ _
+if (stat("/tmp/foo", &buf) != 0) { _
+@<&nbsp;&nbsp;>@perror("stat failed"); _
+} else if (S_ISREG(buf.st_mode)) { _
+@<&nbsp;&nbsp;>@##gray|/* file is regular */## _
+}|| || ||
+||[[# file-size]][#file-size-note file size] _
+@<&nbsp;>@||#include <sys/stat.h> _
+ _
+struct stat buf; _
+ _
+if (stat("/tmp/foo", &buf) != 0) { _
+@<&nbsp;&nbsp;>@perror("stat failed"); _
+} else { _
+@<&nbsp;&nbsp;>@printf("size: %llu\n", buf.st_size); _
+}|| || ||
+||[[# readable-writable-executable]][#readable-writable-executable-note is file readable, writable, executable]||#include <unistd.h> _
+ _
+if (access("/etc/hosts", R_OK) != 0) { _
+@<&nbsp;&nbsp;>@printf("not readable\n"); _
+} _
+if (access("/etc/hosts", W_OK) != 0) { _
+@<&nbsp;&nbsp;>@printf("not writable\n"); _
+} _
+if (access("/etc/hosts", X_OK) != 0) { _
+@<&nbsp;&nbsp;>@printf("not executable\n"); _
+}|| || ||
+||[[# chmod]][#chmod-note set file permissions]||#include <sys/stat.h> _
+ _
+if (chmod("/tmp/foo", 0755) == -1) { _
+@<&nbsp;&nbsp;>@perror("chmod failed"); _
+}|| || ||
+||[[# file-cp-rm-mv]][#file-cp-rm-mv-note copy file, remove file, rename file]||##gray|/* no copy function in standard library */## _
+ _
+if (remove("/tmp/foo")) { _
+@<&nbsp;&nbsp;>@perror("remove failed"); _
+} _
+ _
+if (rename("/tmp/bar", "/tmp/foo")) { _
+@<&nbsp;&nbsp;>@perror("rename failed"); _
+}|| || ||
+||[[# symlink]][#symlink-note create symlink, symlink test, readlink]||#include <limits.h>@<&nbsp;&nbsp;>@##gray|/* PATH_MAX */## _
+#include <sys/stat.h> _
+#include <unistd.h> _
+ _
+if (symlink("/etc/hosts", "/tmp/hosts") == -1) { _
+@<&nbsp;&nbsp;>@perror("symlink failed"); _
+} _
+ _
+struct stat sbuf; _
+ _
+if (stat("/tmp/hosts", &buf) != 0) { _
+@<&nbsp;&nbsp;>@perror("stat failed"); _
+} else if (S_ISLNK(buf.st_mode)) { _
+@<&nbsp;&nbsp;>@##gray|/* file is symlink */## _
+} _
+ _
+char pbuf[PATH_MAX + 1]; _
+ _
+ssize_t size = readlink("/tmp/hosts", pbuf, PATH_MAX); _
+ _
+if (size >= 0 ) { _
+@<&nbsp;&nbsp;>@pbuf[size] = 0; _
+@<&nbsp;&nbsp;>@##gray|/* pbuf now contains null-terminated string _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;&nbsp;>@with target path */## _
+}|| || ||
+||[[# unused-file-name]][#unused-file-name-note generate unused file name]||##gray|/* if first argument is NULL, path is in system temp _
+@<&nbsp;&nbsp;&nbsp;>@directory.  Caller should free() return value. */## _
+char *path = tempnam("/tmp", "foo");|| || ||
+||||||||~ [[# file-fmt]][#file-fmt-note file formats]||
+||~ ||~ c||~ go||~ swift||
+||||||||~ [[# directories]][#directories-note directories]||
+||~ ||~ c||~ go||~ swift||
+||[[# build-pathname]][#build-pathname-note build pathname]|| || || ||
+||[[# dirname-basename]][#dirname-basename-note dirname and basename]||#include <libgen.h> _
+ _
+##gray|/* return pointers to statically allocated memory _
+@<&nbsp;&nbsp;&nbsp;>@which is overwritten by subsequent calls */## _
+char *s1 = dirname("/etc/hosts"); _
+char *s2 = basename("/etc/hosts");||import "path" _
+ _
+path.Dir("/etc/hosts") _
+path.Base("/etc/hosts")|| ||
+||[[# absolute-pathname]][#absolute-pathname-note absolute pathname]||#include <limits.h> _
+ _
+char buf[PATH_MAX]; _
+ _
+if (realpath("..", buf) == NULL) { _
+@<&nbsp;&nbsp;>@perror("realpath failed"); _
+} _
+else { _
+@<&nbsp;&nbsp;>@##gray|/* use buf */## _
+}|| || ||
+||[[# dir-iterate]][#dir-iterate-note iterate over directory by file]||#include <dirent.h> _
+ _
+DIR *dir = opendir("/etc"); _
+struct dirent *de; _
+ _
+while (de = readdir(dir)) { _
+@<&nbsp;&nbsp;>@printf("%s\n", de->d_name); _
+} _
+ _
+closedir(dir);|| || ||
+||[[# glob]][#glob-note glob paths]||#include <glob.h> _
+ _
+glob_t pglob; _
+int i; _
+ _
+glob("/etc/*", 0, NULL, &pglob); _
+ _
+for (i = 0; i < pglob.gl_pathc; ++i) { _
+@<&nbsp;&nbsp;>@printf("%s\n", pglob.gl_pathv[i]); _
+} _
+ _
+globfree(&pglob);|| || ||
+||[[# mkdir]][#mkdir-note make directory]||#include <sys/stat.h> _
+ _
+if (mkdir("/tmp/foo")) { _
+@<&nbsp;&nbsp;>@fprintf(stderr, "mkdir err: %s\n", strerror(errno)); _
+}|| || ||
+||[[# recursive-cp]][#recursive-cp-note recursive copy]|| || || ||
+||[[# rmdir]][#rmdir-note remove empty directory]||#include <unistd.h> _
+ _
+if (rmdir("/tmp/foo") == -1) { _
+@<&nbsp;&nbsp;>@perror("rmdir failed"); _
+}|| || ||
+||[[# rm-rf]][#rm-rf-note remove directory and contents]|| || || ||
+||[[# dir-test]][#dir-test-note directory test] _
+@<&nbsp;>@||#include <sys/stat.h> _
+ _
+struct stat buf; _
+ _
+if (stat("/tmp/foo", &buf) != 0) { _
+@<&nbsp;&nbsp;>@perror("stat failed"); _
+} else if (S_ISDIR(buf.st_mode)) { _
+@<&nbsp;&nbsp;>@##gray|/* file is directory */## _
+}|| || ||
+||[[# unused-dir]][#unused-dir-note generate unused directory]||#include <limits.h> _
+ _
+char buf[PATH_MAX]; _
+ _
+strcpy(buf, "/tmp/fooXXXXXX"); _
+ _
+##gray|/* terminal Xs will be replaced: */## _
+if (mkdtemp(buf) == NULL) { _
+@<&nbsp;&nbsp;>@perror("mkdtemp failed"); _
+} else { _
+@<&nbsp;&nbsp;>@##gray|/* use buf */## _
+}|| || ||
+||[[# system-tmp-dir]][#system-tmp-dir-note system temporary file directory]||##gray|/* defined in <stdio.h> */## _
+P_tmpdir|| || ||
+||||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
+||~ ||~ c||~ go||~ swift||
+||[#main signature of main]||int main(int argc, char **argv) {|| || ||
+||[#first-argument first argument] _
+@<&nbsp;>@||##gray|//pathname of executable//##|| || ||
+||[[# getopt]][#getopt-note getopt]||#include <getopt.h> _
+ _
+##gray|/* 2nd value indicates whether option takes an argument */## _
+static struct option long_opts[] = { _
+@<&nbsp;&nbsp;>@{"debug", 0, NULL, 'd'}, _
+@<&nbsp;&nbsp;>@{"threshold", 1, NULL, 't'}, _
+@<&nbsp;&nbsp;>@{0, 0, 0, 0} _
+}; _
+ _
+int debug = 0; _
+double threshold = 0.0; _
+char *file = NULL; _
+ _
+int ch; _
+int opti; _
+char *endptr; _
+ _
+while (1) { _
+@<&nbsp;&nbsp;>@ch = getopt_long(argc, argv, "dt:", long_opts, &opti); _
+@<&nbsp;&nbsp;>@if (-1 == ch) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@break; _
+@<&nbsp;&nbsp;>@} _
+ _
+@<&nbsp;&nbsp;>@switch (ch) { _
+@<&nbsp;&nbsp;>@case 'd': _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@debug = 1; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@break; _
+@<&nbsp;&nbsp;>@case 't': _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@threshold = strtod(optarg, &endptr); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@if (*endptr != 0) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@fprintf(stderr, "expected float: %s\n", optarg); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@exit(1); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@break; _
+@<&nbsp;&nbsp;>@default: _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@fprintf(stderr, "unexpected arg: %d\n", ch); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@exit(1); _
+@<&nbsp;&nbsp;>@} _
+} _
+ _
+##gray|/* optind is index of 1st arg not consumed by getopt */## _
+if (optind != argc - 1) { _
+@<&nbsp;&nbsp;>@fputs("USAGE: foo [@@--@@multi] [@@--@@threshold=NUM] FILE\n", _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@stderr); _
+@<&nbsp;&nbsp;>@exit(1); _
+} _
+else { _
+@<&nbsp;&nbsp;>@file = argv[optind]; _
+}|| || ||
+||[#environment-variable environment variable]||#include <stdlib.h> _
+ _
+char *home = getenv("HOME"); _
+setenv("EDITOR", "emacs", 1); _
+unsetenv("EDITOR");|| || ||
+||[#iterate-environment-variable iterate thru environment variables]|| || || ||
+||[[# user-id-name]][#user-id-name-note get user id and name]||#include <unistd.h>@<&nbsp;&nbsp;>@##gray|/* getlogin */## _
+ _
+printf("uid: %d\n", getuid()); _
+printf("username: %s\n", getlogin());|| || ||
+||[[# exit]][#exit-note exit]||##gray|/* use 0 for success; 1 through 127 for failure */## _
+exit(1);|| || ||
+||[[# executable-test]][#executable-test-note executable test]||#include <unistd.h> _
+ _
+if (access("/bin/ls", X_OK) != 0) { _
+@<&nbsp;&nbsp;>@printf("not executable\n"); _
+}|| || ||
+||[[# external-cmd]][#external-cmd-note external command]||##gray|/* retval of -1 indicates fork or wait failed.  _
+@<&nbsp;&nbsp;&nbsp;>@127 indicates shell failed */## _
+int retval = system("ls -l *");|| || ||
+||[[# fork]][#fork-note fork]|| || || ||
+||[[# exec]][#exec-note exec]|| || || ||
+||[[# pipe]][#pipe-note pipe]|| || || ||
+||[[# wait]][#wait-note wait]|| || || ||
+||[[# pid]][#pid-note get pid, parent pid]||#include <unistd.h> _
+ _
+##gray|/* getpid() and getppid() have return type pid_t */## _
+printf("%d\n", getpid()); _
+printf("%d\n", getppid())|| || ||
+||[[# signal-handler]][#signal-handler-note set signal handler]||#include <signal.h> _
+ _
+void _
+handle_signal(int signo) { _
+@<&nbsp;&nbsp;>@switch(signo) { _
+@<&nbsp;&nbsp;>@case SIGUSR1: _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@puts("caught SIGUSR1"); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@break; _
+@<&nbsp;&nbsp;>@default: _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@printf("unexpected signal: %s", strsignal(signo)); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@break; _
+@<&nbsp;&nbsp;>@} _
+} _
+ _
+##gray|/*2nd arg can also be SIG_IGN or SIG_DFL */## _
+sig_t prev_handler = signal(SIGUSR1, &handle_signal); _
+ _
+if (prev_handler == SIG_ERR) { _
+@<&nbsp;&nbsp;>@perror("signal failed"); _
+@<&nbsp;&nbsp;>@exit(1); _
+}|| || ||
+||[[# send-signal]][#send-signal-note send signal]||#include <signal.h> _
+#include <unistd.h>@<&nbsp;&nbsp;>@##gray|/* getppid */## _
+ _
+if (kill(getppid(), SIGUSR1) == -1) { _
+@<&nbsp;&nbsp;>@perror("kill failed"); _
+}|| || ||
+||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
+||~ ||~ c||~ go||~ swift||
+||[[# load-lib]][#load-lib-note load library]||##gray|/* The library must also be linked: _
+ _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@$ gcc foo.o main.c _
+ _
+@<&nbsp;&nbsp;>@@<&nbsp;>@If the library is in an archive: _
+ _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@$ gcc -lfoo main.c _
+*/## _
+#include "foo.h"||import "foo" _
+ _
+##gray|@@//@@ Only capitalized identifiers are visible:## _
+var bar = foo.GetBar()|| ||
+||[[# load-lib-subdir]][#load-lib-subdir-note load library in subdirectory]||#include "lib/foo.h"||import "lib/foo"|| ||
+||[[# lib-path]][#lib-path-note library path]||##gray|//Add directory to path searched by// #include //directive://## _
+$ gcc -I/home/fred/include foo.c _
+ _
+##gray|//Add directory to path searched by -l (lowercase L) option://## _
+$ gcc -L/home/fred/lib -lbar foo.c||##gray|//The installation libraries are in the// GOROOT //directory.  Additional directories can be listed in the// GOPATH //environment variable.  The directories are separated by colons (semicolons) on Unix (Windows). _
+ _
+Each directory contains a// src //subdirectory containing source code and a// pkg/ARCH //subdirectory containing compiled libraries.//##|| ||
+||[[# declare-namespace]][#declare-namespace-note declare namespace]||##gray|//none//##||##gray|@@//@@ A package declaration must be first statement _
+@@//@@ in every source file..## _
+package foo|| ||
+||[[# alias-namespace]][#alias-namespace-note alias namespace] _
+@<&nbsp;>@||##gray|//none//##||import fu "foo"|| ||
+||[[# unqualified-import]][#unqualified-import-note unqualified import of namespace]||##gray|//none//##||import . "foo"|| ||
+||||||||~ [[# user-defined-types]][#user-defined-types-note user-defined types]||
+||~ ||~ c||~ go||~ swift||
+||[[# typedef]][#typedef-note typedef]||typedef int customer_id; _
+customer_id cid = 3;|| ||typealias CustomerId = Int _
+var customer_id: CustomerId = 3||
+||[[# enum]][#enum-note enum]||enum day_of_week { _
+@<&nbsp;&nbsp;>@mon, tue, wed, thu, fri, sat, sun _
+}; _
+ _
+enum day_of_week dow = tue;|| ||enum DayOfWeek { _
+@<&nbsp;&nbsp;>@case Mon, Tue, Wed, Thu, Fri, Sat, Sun _
+} _
+let dow = DayOfWeek.Tue||
+||[#struct-definition struct definition]||struct medal_count { _
+@<&nbsp;&nbsp;>@const char* country; _
+@<&nbsp;&nbsp;>@int gold; _
+@<&nbsp;&nbsp;>@int silver; _
+@<&nbsp;&nbsp;>@int bronze; _
+};||type MedalCount struct { _
+@<&nbsp;&nbsp;>@country string _
+@<&nbsp;&nbsp;>@gold int _
+@<&nbsp;&nbsp;>@silver int _
+@<&nbsp;&nbsp;>@bronze int _
+}||struct MedalCount { _
+@<&nbsp;&nbsp;>@var country: String _
+@<&nbsp;&nbsp;>@var gold: Int, silver: Int, bronze: Int _
+}||
+||[#struct-declaration struct declaration]||struct medal_count spain;|| ||var spain: MedalCount||
+||[#struct-initialization struct initialization]||struct medal_count spain = { "Spain", 3, 7, 4}; _
+ _
+struct medal_count france = { _
+@<&nbsp;&nbsp;>@.gold = 8, _
+@<&nbsp;&nbsp;>@.silver = 7, _
+@<&nbsp;&nbsp;>@.bronze = 9, _
+@<&nbsp;&nbsp;>@.country = "France" _
+};||spain := MedalCount{"Spain", 3, 2, 1} _
+ _
+france := MedalCount{ _
+@<&nbsp;&nbsp;>@bronze: 9, _
+@<&nbsp;&nbsp;>@silver: 7, _
+@<&nbsp;&nbsp;>@gold: 8, _
+@<&nbsp;&nbsp;>@country: "France"}||var spain = MedalCount( _
+@<&nbsp;&nbsp;>@country: "Spain", _
+@<&nbsp;&nbsp;>@gold: 3, _
+@<&nbsp;&nbsp;>@silver: 2, _
+@<&nbsp;&nbsp;>@bronze: 1 _
+)||
+||[#struct-member-assignment struct member assignment]||spain.country = "Spain"; _
+spain.gold = 3; _
+spain.silver = 7; _
+spain.bronze = 4;||france := MedalCount{} _
+france.country = "France" _
+france.gold = 7 _
+france.silver = 6 _
+france.bronze = 5||var france: MedalCount _
+france.country = "France" _
+france.gold = 7 _
+france.silver = 6 _
+france.bronze = 5||
+||[#struct-member-access struct member access]||int spain_total = spain.gold + spain.silver + spain.bronze;||france_total = france.gold + _
+@<&nbsp;&nbsp;>@france.silver + _
+@<&nbsp;&nbsp;>@france.bronze||let france_total = france.gold + france.silver + france.bronze||
+||||||||~ [[# objects]][#objects-note objects]||
+||~ ||~ c||~ go||~ swift||
+||||||||~ [[# macros]][#macros-note macros]||
+||~ ||~ c||~ go||~ swift||
+||[[# include-file]][#include-file-note include file]||##gray|/* search path include system directories: */## _
+#include <stdio.h> _
+ _
+##gray|/* search path also includes directory of source file */## _
+#include "foo.h"|| || ||
+||[[# add-system-dir]][#add-system-dir-note add system directory]||$ gcc -I/opt/local/include foo.c|| || ||
+||[[# def-macro]][#def-macro-note define macro]||#define PI 3.14|| || ||
+||[[# cmd-line-macro]][#cmd-line-macro-note command line macro]||$ gcc -DPI=3.14 foo.c|| || ||
+||[[# undef-macro]][#undef-macro-note undefine macro]||#undef PI|| || ||
+||macro with arguments||#define MIN(X, Y)  ((X) < (Y) ? (X) : (Y))|| || ||
+||strinfigy macro argument|| || || ||
+||concatenate tokens|| || || ||
+||conditional compilation||#if defined(__WIN32) _
+@<&nbsp;&nbsp;>@win32_prinft("%f\n", x); _
+#else _
+@<&nbsp;&nbsp;>@printf("%f\n", x); _
+#endif|| || ||
+||macro operators||##gray|//The conditional of// #if //can contain integer literals and the following operators://## _
+ _
+@@&&@@ @@||@@ ! _
+@@==@@ != < > <= >= _
+@@+@@ - * / % _
+@@ << >> & | ^ ~ @@ _
+ _
+##gray|//In addition, the// defined() //operator can be used to test whether a macro is defined.//## _
+ _
+##gray|#ifdef FOO //is a shortcut for// #if defined(FOO)##|| || ||
+||||||||~ [[# net-web]][#net-web-note net and web]||
+||~ ||~ c||~ go||~ swift||
+||[[# http-get]][#http-get-note http get]|| ||import "fmt" _
+import "io/ioutil" _
+import "net/http" _
+ _
+resp, err := http.Get(@@"http://www.google.com"@@) _
+if err == nil { _
+@<&nbsp;&nbsp;>@defer resp.Body.Close() _
+@<&nbsp;&nbsp;>@body, err := ioutil.ReadAll(resp.Body) _
+@<&nbsp;&nbsp;>@if err == nil { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@fmt.Println(string(body)) _
+@<&nbsp;&nbsp;>@} _
+}|| ||
+||||||||~ [[# unit-tests]][#unit-tests-note unit tests]||
+||~ ||~ c||~ go||~ swift||
+||unit test example||$ sudo apt-get install check _
+ _
+$ cat > check_foo.c _
+#include <check.h> _
+ _
+START_TEST(test_foo) { _
+@<&nbsp;&nbsp;>@fail_unless(0, "not true"); _
+} _
+END_TEST _
+ _
+Suite * _
+suite_foo(void) { _
+@<&nbsp;&nbsp;>@Suite *ste = suite_create("suite: foo"); _
+@<&nbsp;&nbsp;>@TCase *tc = tcase_create("case: foo"); _
+ _
+@<&nbsp;&nbsp;>@tcase_add_test(tc, test_foo); _
+@<&nbsp;&nbsp;>@suite_add_tcase(ste, tc); _
+ _
+@<&nbsp;&nbsp;>@return ste; _
+} _
+ _
+int _
+main(void) { _
+@<&nbsp;&nbsp;>@int number_failed; _
+@<&nbsp;&nbsp;>@Suite *ste = suite_foo(); _
+@<&nbsp;&nbsp;>@SRunner *sr = srunner_create(ste); _
+ _
+@<&nbsp;&nbsp;>@srunner_run_all(sr, CK_NORMAL); _
+@<&nbsp;&nbsp;>@number_failed = srunner_ntests_failed(sr); _
+@<&nbsp;&nbsp;>@srunner_free(sr); _
+ _
+@<&nbsp;&nbsp;>@return (number_failed); _
+} _
+ _
+$ gcc -o check_foo check_foo.c -lcheck _
+ _
+$  ./check_foo _
+Running suite(s): foo _
+0%: Checks: 1, Failures: 1, Errors: 0 _
+check_foo.c:4:F:foo:test_foo:0: not equal|| || ||
+||equality assertion||fail_unless(1 == 2, "integers not equal"); _
+ _
+char *s = "lorem"; _
+fail_unless(strcmp(s, "ipsum"), "strings not equal");|| || ||
+||setup and teardown|| || || ||
+||unit test coverage|| || || ||
+||||||||~ [[# debugging-profiling]][#debugging-profiling-note debugging and profiling]||
+||~ ||~ c||~ go||~ swift||
+||[[# check-syntax]][#check-syntax-note check syntax]||$ gcc -fsyntax-only foo.c|| || ||
+||[[# stronger-warnings]][#stronger-warnings-note flag for stronger warnings]||$ gcc -Wall foo.c|| || ||
+||[[# suppress-warnings]][#suppress-warnings-note suppress warnings]||$ gcc -w foo.c|| || ||
+||[[# warnings-as-err]][#warnings-as-err-note treat warnings as errors]||$ gcc -Werror foo.c|| || ||
+||[[# lint]][#lint-note lint]||$ sudo apt-get install splint _
+$ splint foo.c|| || ||
+||[[# src-cleanup]][#src-cleanup-note source cleanup]|| || || ||
+||[[# debugger]][#debugger-note run debugger]||$ gcc -g -o foo foo.c _
+$ gdb foo|| || ||
+||[[# debugger-cmds]][#debugger-cmds-note debugger commands] _
+##gray|//help, list source, (re)load executable, next, step, set breakpoint, show breakpoints, delete breakpoint, continue, backtrace, up stack, down stack, print, run, quit//##||@@>@@ h _
+@@>@@ l ##gray|[FIRST_LINENO, LAST_LINENO]## _
+@@>@@ file ##gray|PATH## _
+@@>@@ n _
+@@>@@ s _
+@@>@@ b ##gray|[FILE:]LINENO## _
+@@>@@ i _
+@@>@@ d ##gray|NUM## _
+@@>@@ c _
+@@>@@ bt _
+@@>@@ up _
+@@>@@ do _
+@@>@@ p ##gray|EXPR## _
+@@>@@ r ##gray|[ARG1[, [ARG2 @@...@@]]## _
+@@>@@ q|| || ||
+||[[# profile]][#profile-note profile code]||##gray|//does not work on Mac OS X//## _
+$ gcc -pg -o foo foo.c _
+$ ./foo _
+$ gprof foo|| || ||
+||[[# memory-tool]][#memory-tool-note memory tool]||$ sudo apt-get install valgrind _
+$ gcc -o foo foo.c _
+$ valgrind foo|| || ||
+||~ ||~ ##EFEFEF|@@_________________________________________________@@##||~ ##EFEFEF|@@_________________________________________________@@##||~ ##EFEFEF|@@_________________________________________________@@##||
+
+
+[[# general-note]]
+++ [#general General]
+
+[[# version-used-note]]
+++ [#version-used version used]
+
+The compiler version used for this cheatsheat.
+
+[[# show-version-note]]
+++ [#show-version show version]
+
+How to get the compiler version.
+
+[[# implicit-prologue-note]]
+++ [#implicit-prologue implicit prologue]
+
+Code which the examples in this sheet assume to have been executed.
+
+**c:**
+
+A selection of commonly used symbols and macros from the standard C library and the headers in which they are defined according to POSIX:
+
+||~ [http://pubs.opengroup.org/onlinepubs/9699919799/functions/errno.html errno.h]||~ [http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/stdlib.h.html stdlib.h]||~ [http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/stdio.h.html stdio.h]||~ [http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/string.h.html string.h]||~ [http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/time.h.html time.h]||
+||errno _
+ _
+ENOENT _
+ENOMEM _
+EACCES _
+EINVAL _
+EPIPE||abs _
+drand48 _
+exit _
+free _
+getenv _
+malloc _
+mkdtemp _
+putenv _
+qsort _
+rand _
+realpath _
+srand _
+strtod _
+strtol _
+system _
+unsetenv||fclose _
+feof _
+fflush _
+fgets _
+fopen _
+fprintf _
+fputs _
+getc _
+getline _
+printf _
+putc _
+remove _
+rename _
+scanf _
+ _
+BUFSIZ _
+EOF _
+NULL||strcat _
+strchr _
+strcmp _
+strcpy _
+strdup _
+strerror _
+strncat _
+strncmp _
+strncpy _
+strndup _
+strrchr _
+strstr _
+strtok||time _
+time_t||
+
+
+
+[[# grammar-invocation-note]]
++ [#grammar-invocation Grammar and Invocation]
+
+[[# hello-world-note]]
+++ [#hello-world hello world]
+
+How to write, compile, and run a "Hello, World!" program.
+
+[[# file-suffixes-note]]
+++ [#file-suffixes file suffixes]
+
+The suffixes used for source files, header files, and compiled object files.
+
+[[# block-delimiters-note]]
+++ [#block-delimiters block delimiters]
+
+How a block of statements is delimited.
+
+[[# stmt-terminator-note]]
+++ [#stmt-terminator statement terminator]
+
+How statements are terminated.
+
+[[# eol-comment-note]]
+++ [#eol-comment end-of-line comment]
+
+The syntax for a comment which is terminated by the end of the line.
+
+**c:**
+
+The {{//}} style comment first appeared in the C99 standard.
+
+[[# multiple-line-comment-note]]
+++ [#multiple-line-comment multiple line comment]
+
+The syntax for a comment which can span multiple lines.
+
+{{/* */}} style comments cannot be nested in C or Go.
+
+[[# variables-expressions-note]]
++ [#variables-expressions Variables and Expressions]
+
+[[# local-var-note]]
+++ [#local-var variable]
+
+How to declare a variable.
+
+[[# free-heap-note]]
+++ [#free-heap free heap]
+
+How to free memory allocated on the heap.
+
+[[# global-var-note]]
+++ [#global-var global variable]
+
+How to declare a global variable.
+
+[[# uninitialized-var-note]]
+++ [#uninitialized-var uninitialized variable]
+
+What happens when reading from an uninitialized variable.
+
+[[# const-note]]
+++ [#const constant]
+
+How to define a constant.
+
+**go:**
+
+Multiple constants can be declared in this manner:
+
+[[code]]
+const (
+  Pi = 3.14
+  E = 2.718
+)
+[[/code]]
+
+[[# assignment-note]]
+++ [#assignment assignment]
+
+The syntax for assigning a value to a variable.
+
+[[# parallel-assignment-note]]
+++ [#parallel-assignment parallel assignment]
+
+The syntax for parallel assignment.
+
+[[# swap-note]]
+++ [#swap swap]
+
+How to swap the values in two variables.
+
+[[# compound-assignment-note]]
+++ [#compound-assignment compound assignment]
+
+The compound assignment operators.
+
+[[# incr-decr-note]]
+++ [#incr-decr increment and decrement]
+
+The increment and decrement operators.
+
+[[# null-note]]
+++ [#null null]
+
+The null literal and where the null value can be used.
+
+**c:**
+
+A typical definition:
+
+[[code]]
+#define NULL (void *)0
+[[/code]]
+
+[[# null-test-note]]
+++ [#null-test null test]
+
+How to test whether a value is null.
+
+[[# coalesce-note]]
+++ [#coalesce coalesce]
+
+The equivalent of the {{COALESCE}} function from SQL.
+
+**c:**
+
+The short circuit or operator @@||@@ can be used as a coalesce operator. However, in C, C++, and Objective C, NULL is identical to zero, whereas in databases they are two distinct values.
+
+[[# conditional-expr-note]]
+++ [#conditional-expr conditional expression]
+
+The syntax for a conditional expression.
+
+[[# arithmetic-logic-note]]
++ [#arithmetic-logic Arithmetic and Logic]
+
+[[# boolean-type-note]]
+++ [#boolean-type boolean type]
+
+**c:**
+
+The following definitions are common:
+
+[[code]]
+typedef int BOOL;
+#define TRUE 1
+#define FALSE 0
+[[/code]]
+
+
+[[# true-false-note]]
+++ [#true-false true and false]
+
+Literals for the boolean values true and false.
+
+**c:**
+
+The following definitions are common:
+
+[[code]]
+typedef int BOOL;
+#define TRUE 1
+#define FALSE 0
+[[/code]]
+
+[[# falsehoods-note]]
+++ [#falsehoods falsehoods]
+
+Values which evaluate as false in the conditional expression of an {{if}} statement.
+
+[[# logical-op-note]]
+++ [#logical-op logical operators]
+
+The logical operators.
+
+In all languages on this sheet the && and @@||@@ operators short circuit: i.e. && will not evaluate the 2nd argument if the 1st argument is false, and @@||@@ will not evaluate the 2nd argument if the 1st argument is true.  If the 2nd argument is not evaluated, side-effects that it contains are not executed.
+
+[[# relational-op-note]]
+++ [#relational-op relational operators]
+
+Binary operators which return boolean values.
+
+[[# int-type-note]]
+++ [#int-type integer type]
+
+Signed integer types.
+
+**c:**
+
+Whether //char// is a signed or unsigned type depends on the implementation.
+
+[[# unsigned-type-note]]
+++ [#unsigned-type unsigned type]
+
+Unsigned integer types.
+
+**c:**
+
+Whether //char// is a signed or unsigned type depends on the implmentation.
+
+[[# float-type-note]]
+++ [#float-type float type]
+
+Floating point types.
+
+[[# arith-op-note]]
+++ [#arith-op arithmetic operators]
+
+The arithmetic binary operators.
+
+[[# int-div-note]]
+++ [#int-div integer division]
+
+How to find the quotient of two integers.
+
+[[# int-div-zero-note]]
+++ [#int-div-zero integer division by zero]
+
+The result of attempting to divide an integer by zero.
+
+**c:**
+
+The behavior for division by zero is system dependent; the behavior described is common on Unix.
+
+[[# float-div-note]]
+++ [#float-div float division]
+
+How to perform float division on integers.
+
+[[# float-div-zero-note]]
+++ [#float-div-zero float division by zero]
+
+The result of attempting to divide a float by zero.
+
+[[# power-note]]
+++ [#power power]
+
+How to perform exponentiation.
+
+[[# sqrt-note]]
+++ [#sqrt sqrt]
+
+The square root function.
+
+[[# sqrt-negative-one-note]]
+++ [#sqrt-negative-one sqrt -1]
+
+The result of attempting to find the square root of a negative nubmer.
+
+[[# transcendental-func-note]]
+++ [#transcendental-func transcendental functions]
+
+The exponential function; logarithm functions; trigonometric and inverse trigonometric functions.
+
+[[# transcendental-const-note]]
+++ [#transcendental-const transcendental constants]
+
+Constants for {{π}} and {{e}}.
+
+[[# float-truncation-note]]
+++ [#float-truncation float truncation]
+
+Functions for converting a float to a nearby integer value.
+
+**c:**
+
+The {{math.h}} library also provides {{floor}} and {{ceil}} which return {{double}} values.
+
+[[# absolute-val-note]]
+++ [#absolute-val absolute value]
+
+The absolute value of a numeric.
+
+[[# complex-type-note]]
+++ [#complex-type complex type]
+
+Complex floating point types.
+
+[[# complex-construction-note]]
+++ [#complex-construction complex construction]
+
+How to create a complex number.
+
+**c:**
+
+The C11 standard introduced macros for constructing complex numbers which work correctly when the arguments are inf, nan, or +nan:
+
+[[code]]
+     double complex CMPLX(double x, double y)
+     float complex CMPLXF(float x, float y)
+     long double complex CMPLXL(long double x, long double y)
+[[/code]]
+
+[[# complex-decomposition-note]]
+++ [#complex-decomposition complex decomposition]
+
+How to decompose a complex number into its real and imaginary parts; how to get the argument and absolute value of a complex number; how to get its complex conjugate.
+
+[[# random-num-note]]
+++ [#random-num random number]
+
+How to generate a random integer from a uniform distribution; how to generate a random float from a uniform distribution.
+
+[[# random-seed-note]]
+++ [#random-seed random seed]
+
+How to set the random seed.
+
+**c:**
+
+There are at least three random number generators defined in {{stdlib.h}}.  Each has its own function for setting the random seed:
+
+[[code]]
+srand(17);    /* used by rand() */
+
+srandom(17);  /* used by random() */
+
+srand48(17);  /* used by drand48() and lrand48() */
+[[/code]]
+
+[[# bit-op-note]]
+++ [#bit-op bit operators]
+
+The bit operations: right shift, left shift, and, or, exclusive or, and not.
+
+**go:**
+
+Note that ^ is bit-not and not exclusive-or like in C.
+
+[[# strings-note]]
++ [#strings Strings]
+
+[[# str-type-note]]
+++ [#str-type string type]
+
+The type for a string
+
+[[# char-type-note]]
+++ [#char-type character type]
+
+The type for a character.
+
+[[# str-literal-note]]
+++ [#str-literal string literal]
+
+The syntax for a string literal.
+
+**go:**
+
+The backquote literal is also called the raw string literal.  It has no escape sequences, and in particular there is no way for it to contain a backquote character.
+
+[[# newline-in-str-literal-note]]
+++ [#newline-in-str-literal newline in string literal]
+
+Can newlines be included in string literals?
+
+**c:**
+
+The compiler will convert the following three string literals to the single literal {{"foobarbaz"}}.
+
+[[code]]
+char *metavars = "foo"
+  "bar"
+  "baz";
+[[/code]]
+
+[[# str-literal-esc-note]]
+++ [#str-literal-esc string escapes]
+
+Escape sequences in string literals.
+
+[[# expr-interpolation-note]]
+++ [#expr-interpolation expression interpolation]
+
+[[# string-length]]
+++ string length
+
+[[# string-comparison]]
+++ string comparison
+
+**c:**
+
+Returns 1, 0, or -1 depending upon whether the first string is lexicographically greater, equal, or less than the second.  The variants //strncmp//, //strcasecmp//, and //strncasecmp// can perform comparisons on the first //n// characters of the strings or case insensitive comparisons.
+
+
+[[# to-c-string]]
+++ to C string
+
+[[# string-to-number]]
+++ numeric conversion
+
+**c:**
+
+//strtoimax//,  //strtol//, //strtoll//, //strtoumax//, //strtoul//, and //strtoull// take three arguments: 
+
+[[code]]
+intmax_t
+strtoimax(const char *str, char **endp, int base);
+[[/code]]
+
+The 2nd argument, if not NULL, will be set to first character in the string that is not part of the number.  The 3rd argument can specify a base between 2 and 36.
+
+//strtof//, //strtod//, and //strtold// take three arguments:
+
+[[code]]
+double
+strtod(const char *str, char **endp);
+[[/code]]
+
+[[# split]]
+++ split
+
+[[# join]]
+++ join
+
+[[# string-concatenate]]
+++ concatenate
+
+[[# substring]]
+++ substring
+
+[[# index]]
+++ index
+
+[[# sprintf]]
+++ sprintf
+
+
+
+[[# uppercase]]
+++ uppercase
+
+[[# lowercase]]
+++ lowercase
+
+[[# trim]]
+++ trim
+
+[[# pad]]
+++ pad
+
+[[# regexes-note]]
++ [#regexes Regular Expressions]
+
+[[# regex-metachar-note]]
+++ [#regex-metachar metacharacters]
+
+The list of regular expression metacharacters.
+
+A regular expression that does not contain any metacharacters matches itself as a string.
+
+[[# char-class-abbrev-note]]
+++ [#char-class-abbrev character class abbrevations]
+
+Abbreviations for character classes.
+
+**c:**
+
+[http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/regex.h.html#tag_13_38 regex.h (POSIX 2008)]
+
+We describe the {{regex}} library which is mandated by POSIX.
+
+The PCRE library is available or easily installed on most systems and provides Perl style regular expressions.  In particular PCRE has these character class abbreviations: {{\d \D \h \H \s \S \v \V \w \W}}.
+
+To install PCRE on Ubuntu and read the documentation:
+
+[[code]]
+$ sudo apt-get install pcre
+
+$ man pcre
+[[/code]]
+
+To include the PCRE definitions in a C file:
+
+[[code]]
+#include <pcre.h>
+[[/code]]
+
+[[# regex-anchors-note]]
+++ [#regex-anchors anchors]
+
+Metacharacters for matching locations in the string which aren't single characters or substrings.
+
+[[# regex-test-note]]
+++ [#regex-test match test]
+
+How to test whether a string matches a regular expression.
+
+[[# case-insensitive-regex-note]]
+++ [#case-insensitive-regex case insensitive match test]
+
+How to test whether a string matches a regular expression in a case insensitive manner.
+
+[[# regex-modifiers-note]]
+++ [#regex-modifiers modifers]
+
+Modifers which can be used to customize the behvaior of a regular expression.
+
+**go:**
+
+The meaning of the modifiers:
+
+||i||case insensitive match||
+||m||^ and $ match begin and end of line in addition to begin and end of string||
+||s||l. matches \n||
+||U||make (foo)*, (foo)+ non-greedy and (foo)*?, (foo)+? greedy||
+
+[[# subst-note]]
+++ [#subst substitution]
+
+How to replace the part of a string matching a regular expression.
+
+[[# group-capture-note]]
+++ [#group-capture group capture]
+
+How to use a regular expression to parse a string.
+
+[[# dates-time-note]]
++ [#dates-time Dates and Time]
+
+[[# date-time-type-note]]
+++ [#date-time-type date/time type]
+
+[[# date-time-diff-type-note]]
+++ [#date-time-diff-type date/time difference type]
+
+[[# current-date-time-note]]
+++ [#current-date-time current date/time]
+
+
+[[# unix-epoch-note]]
+++ [#unix-epoch unix epoch]
+
+[[# date-to-str-note]]
+++ [#date-to-str convert to string]
+
+[[# strftime-note]]
+++ [#strftime strftime]
+
+[[# date-parts-note]]
+++ [#date-parts date parts]
+
+[[# time-parts-note]]
+++ [#time-parts time parts]
+
+
+[[# build-date-time-note]]
+++ [#build-date-time build date/time from parts]
+
+
+
+[[# arrays-note]]
++ [#arrays Arrays]
+
+[[# declare-array-note]]
+++ [#declare-array declare]
+
+How to declare an array variable.
+
+[[# allocate-array-on-stack-note]]
+++ [#allocate-array-on-stack allocate on stack]
+
+How to allocate an array on the stack.
+
+[[# allocate-array-on-heap-note]]
+++ [#allocate-array-on-heap allocate on heap]
+
+How to allocate an array on the heap.
+
+[[# free-array-on-heap-note]]
+++ [#free-array-on-heap free heap]
+
+How to free an array that was allocated on the heap.
+
+[[# array-literal-note]]
+++ [#array-literal literal]
+
+Syntax for an array literal.
+
+[[# array-size-note]]
+++ [#array-size size]
+
+How many elements are stored in an array.
+
+[[# array-lookup-note]]
+++ [#array-lookup lookup]
+
+How to get an element by index.
+
+**c:**
+
+Arrays can be manipulated with pointer syntax.  The following sets //x// and //y// to the same value:
+
+[[code]]
+int a[] = {3,7,4,8,5,9,6,10};
+int x = a[4];
+int y = *(a+4);
+[[/code]]
+
+[[# array-update-note]]
+++ [#array-update update]
+
+How to set or change the element stored at an index.
+
+[[# array-out-of-bounds-note]]
+++ [#array-out-of-bounds out-of-bounds behavior]
+
+What happens when an attempt is made to access an element at an invalid index.
+
+[[# array-element-index-note]]
+++ [#array-element-index element index]
+
+[[# slice-array-note]]
+++ [#slice-array slice]
+
+[[# slice-array-to-end-note]]
+++ [#slice-array-to-end slice to end]
+
+[[# array-back-note]]
+++ [#array-back manipulate back]
+
+[[# array-front-note]]
+++ [#array-front manipulate front]
+
+[[# concatenate-array-note]]
+++ [#concatenate-array concatenate]
+
+[[# copy-array-note]]
+++ [#copy-array copy]
+
+[[# iterate-over-array-note]]
+++ [#iterate-over-array iterate over elements]
+
+How to iterate over the elements of an array.
+
+**c:**
+
+C arrays do not store their size; if needed the information can be stored in a separate variable.  Another option is to use a special value to mark the end of the array:
+
+[[code]]
+char *a[] = { "Bob", "Ned", "Amy", NULL };
+int i;
+for (i=0; a[i]; i++) {
+  printf("%s\n", a[i]);
+}
+[[/code]]
+
+[[# iterate-indices-elem-note]]
+++ [#iterate-indices-elem iterate over indices and elements]
+
+[[# reverse-array-note]]
+++ [#reverse-array reverse]
+
+How to reverse the elements of an array.
+
+[[# sort-array-note]]
+++ [#sort-array sort]
+
+How to sort the elements of an array.
+
+[[# map-note]]
+++ [#map map]
+
+[[# filter-note]]
+++ [#filter filter]
+
+[[# reduce-note]]
+++ [#reduce reduce]
+
+[[# dictionaries-note]]
++ [#dictionaries Dictionaries]
+
+[[# map]]
+++ map declaration
+
+**c:**
+
+For those interested in an industrial strength hashtable implementation for C, here is the [http://svn.ruby-lang.org/cgi-bin/viewvc.cgi/trunk/include/ruby/st.h?revision=26401&view=markup header file] and the [http://svn.ruby-lang.org/cgi-bin/viewvc.cgi/trunk/st.c?revision=26672&view=markup source file] for the hashtable used by Ruby.
+For those interested in a "Computer Science 101" implementation of a hashtable, here is a simpler [http://gist.github.com/400762 source file] and [http://gist.github.com/400764 header file].
+
+[[# map-access]]
+++ map access
+
+[[# map-size]]
+++ map size
+
+[[# map-remove]]
+++ map remove
+
+[[# map-element-not-found]]
+++ map element not found result
+
+[[# map-iterator]]
+++ map iterator
+
+[[# functions-note]]
++ [#functions Functions]
+
+[[# def-func-note]]
+++ [#def-func define function]
+
+How to define a function.
+
+[[# invoke-func-note]]
+++ [#invoke-func invoke function]
+
+How to invoke a function.
+
+[[# forward-decl-func-note]]
+++ [#forward-decl-func forward declaration of function]
+
+How to declare a function without defining it.
+
+[[# overload-func-note]]
+++ [#overload-func overload function]
+
+How to define multiple functions with the same name.  The functions differ in either the number or type of arguments.
+
+[[# nest-func-note]]
+++ [#nest-func nest function]
+
+How to define a function inside another function.
+
+[[# default-val-param-note]]
+++ [#default-val-param default value for parameter]
+
+[[# variable-num-arg-note]]
+++ [#variable-num-arg variable number of arguments]
+
+**c:**
+
+The stdarg.h library supports variable length functions, but provides no means for the callee to determine how many arguments were provided.  Two techniques for communicating the number of arguments to the caller are (1) devote one of the non-variable arguments for the purpose as illustrated in the table  above, or (2) set the last argument to a sentinel value as illustrated below.  Both techniques permit the caller to make a mistake that can cause the program to segfault.  //printf// uses the first technique, because it infers the number of arguments from the number of format specifiers in the format string.
+
+[[code]]
+char* concat(char* first,  ...) {
+
+  int len;
+  va_list ap;
+  char *retval, *arg;
+
+  va_start(ap, first);
+  len = strlen(first);
+
+  while (1) {
+    arg = va_arg(ap, char*);
+    if (!arg) {
+      break;
+    }
+    len += strlen(arg);
+  }
+
+  va_end(ap);
+
+  retval = calloc(len+1,sizeof(char));
+
+  va_start(ap, first);
+
+  strcpy(retval, first);
+  len = strlen(first);
+
+  while (1) {
+    arg = va_arg(ap, char*);
+    if (!arg) {
+      break;
+    }
+    printf("copying %s\n", arg);
+    strcpy(retval+len, arg);
+    len += strlen(arg);
+  }
+
+  va_end(ap);
+
+  return retval;
+}
+[[/code]]
+
+An example of use:
+
+[[code]]
+string *s = concat("Hello", ", ", "World", "!", NULL);
+[[/code]]
+
+[[# named-param-note]]
+++ [#named-param named parameters]
+
+[[# pass-by-val-note]]
+++ [#pass-by-val pass by value]
+
+[[# pass-by-addr-note]]
+++ [#pass-by-addr pass by address]
+
+[[# pass-by-ref-note]]
+++ [#pass-by-ref pass by reference]
+
+[[# retval-note]]
+++ [#retval return value]
+
+How the return value for a function is determined.
+
+[[# no-retval-note]]
+++ [#no-retval no return value]
+
+How to define a function with no return value.
+
+**swift:**
+
+The return value can be explicitly declared as {{Void}}:
+
+[[code]]
+func print_err(err: String) -> Void {
+  println(err)
+}  
+[[/code]]
+
+[[# multiple-retval-note]]
+++ [#multiple-retval multiple return values]
+
+How to return multiple values.
+
+[[# named-retval-note]]
+++ [#named-retval named return values]
+
+How to return values by assigning values to variables.
+
+[[# anonymous-func-literal-note]]
+++ [#anonymous-func-literal anonymous function literal]
+
+[[# invoke-anonymous-func-note]]
+++ [#invoke-anonymous-func invoke anonymous function]
+
+[[# func-private-state-note]]
+++ [#func-private-state function with private state]
+
+[[# func-as-val-note]]
+++ [#func-as-val function as value]
+
+[[# execution-control-note]]
++ [#execution-control Execution Control]
+
+[[# for-note]]
+++ [#for for]
+
+[[# if-note]]
+++ [#if if]
+
+**c:**
+
+The curly braces surrounding an //if// or //else// clause are optional if the clause contains a single statement.  The resulting [http://en.wikipedia.org/wiki/Dangling_else dangling else] ambiguity is resolved by setting the value of //c// to 2 in the following code:
+
+[[code]]
+int a = 1;
+int b = -1;
+int c = 0;
+if (a > 0)
+if (b > 0)
+  c=1;
+else
+  c= 2;
+[[/code]]
+
+[[# while-note]]
+++ [#while while]
+
+**c:**
+
+If the body of a while loop consists of a single statement the curly braces are optional:
+
+[[code]]
+int i = 0;
+while (i<10)
+  printf("%d\n", ++i);
+[[/code]]
+
+[[# switch-note]]
+++ [#switch switch]
+
+A switch statement branches based on the value of an integer or an integer expression.  Each clause must be terminated by a //break// statement or execution will continue into the following clause.
+
+[[# break-continue-note]]
+++ [#break-continue break/continue]
+
+[[# concurrency-note]]
++ [#concurrency Concurrency]
+
+[[# file-handles-note]]
++ [#file-handles File Handles]
+
+[[# std-file-handles-note]]
+++ [#std-file-handles standard file handles]
+
+The file handles for standard input, standard output, and standard error.
+
+**c:**
+
+POSIX systems provide processes with the ability to open multiple files and manipulate them with via integers called file descriptors.  Normally the integers 0, 1, and 2 refer to standard input, standard output, and standard error.  The header <unistd.h> defines the macros STDIN_FILENO, STDOUT_FILENO, and STDERR_FILENO for these file descriptors.
+
+System calls take file descriptors as arguments, but the C standard library provides an alternate set functions for buffered I/O.  The standard library functions use {{FILE}} structs to identify streams and open files.
+
+[[# read-line-stdin-note]]
+++ [#read-line-stdin read line from stdin]
+
+How to read a line from standard input.
+
+[[# write-line-stdout-note]]
+++ [#write-line-stdout write line to stdout]
+
+How to write a line to standard output.
+
+[[# printf-note]]
+++ [#printf write formatted string to stdout]
+
+How to print a formatted string to standard out.
+
+**c:**
+
+The [http://linux.die.net/man/3/printf printf man page] describes the notation used in C style format strings.
+
+[[# open-file-note]]
+++ [#open-file open file for reading]
+
+How to open a file for reading.
+
+[[# open-file-write-note]]
+++ [#open-file-write open file for writing]
+
+How to open a file for reading.
+
+[[# open-file-append-note]]
+++ [#open-file-append open file for appending]
+
+How to open a file for appending.
+
+[[# close-file-note]]
+++ [#close-file close file]
+
+How to close a file handle.
+
+[[# close-file-implicitly-note]]
+++ [#close-file-implicitly close file implicitly]
+
+[[# io-err-note]]
+++ [#io-err i/o errors]
+
+[[# read-line-note]]
+++ [#read-line read line]
+
+[[# file-line-iterate-note]]
+++ [#file-line-iterate iterate over file by line]
+
+[[# read-file-array-note]]
+++ [#read-file-array read file into array of strings]
+
+[[# read-file-str-note]]
+++ [#read-file-str read file into string]
+
+[[# write-str-note]]
+++ [#write-str write string]
+
+[[# write-line-note]]
+++ [#write-line write line]
+
+[[# flush-note]]
+++ [#flush flush file handle]
+
+[[# eof-test-note]]
+++ [#eof-test end-of-file test]
+
+[[# seek-note]]
+++ [#seek get and set file handle position]
+
+[[# tmp-file-note]]
+++ [#tmp-file open unused file]
+
+How to open a file with a previously unused file name.
+
+**c:**
+
+The function {{mkstemps}} can be used to create a new file with a fixed suffix:  "/tmp/fooXXXXXXsuffix".
+
+[[# files-note]]
++ [#files Files]
+
+[[# file-test-note]]
+++ [#file-test file test, regular file test]
+
+Does the file exist; is the file a regular file.
+
+[[# file-size-note]]
+++ [#file-size file size]
+
+The size of the file in bytes.
+
+[[# readable-writable-executable-note]]
+++ [#readable-writable-executable is file readable, writable, executable]
+
+Can the process read, write, or executable the file?
+
+**c:**
+
+{{access}} returns 0 if the process has the permission, and -1 if it doesn't or some other error occurred.
+
+{{access}} uses the real user id to determine permission even though the kernel uses the effective user id.
+
+[[# chmod-note]]
+++ [#chmod set file permissions]
+
+[[# file-cp-rm-mv-note]]
+++ [#file-cp-rm-mv copy file, remove file, rename file]
+
+[[# symlink-note]]
+++ [#symlink create symlink, symlink test, readlink]
+
+[[# unused-file-name-note]]
+++ [#unused-file-name generate unused file name]
+
+[[# file-fmt-note]]
++ [#file-fmt File Formats]
+
+[[# directories-note]]
++ [#directories Directories]
+
+[[# build-pathname-note]]
+++ [#build-pathname build pathname]
+
+[[# dirname-basename-note]]
+++ [#dirname-basename dirname and basename]
+
+[[# absolute-pathname-note]]
+++ [#absolute-pathname absolute pathname]
+
+[[# dir-iterate-note]]
+++ [#dir-iterate iterate over directory by file]
+
+[[# glob-note]]
+++ [#glob glob paths]
+
+[[# mkdir-note]]
+++ [#mkdir make directory]
+
+[[# recursive-cp-note]]
+++ [#recursive-cp recursive copy]
+
+[[# rmdir-note]]
+++ [#rmdir remove empty directory]
+
+[[# rm-rf-note]]
+++ [#rm-rf remove directory and contents]
+
+[[# dir-test-note]]
+++ [#dir-test directory test]
+
+[[# unused-dir-note]]
+++ [#unused-dir generate unused directory]
+
+[[# system-tmp-dir-note]]
+++ [#system-tmp-dir system temporary file directory]
+
+[[# processes-environment-note]]
++ [#processes-environment Processes and Environment]
+
+[[# main]]
+++ signature of main
+
+[[# first-argument]]
+++ first argument
+
+**c:**
+
+The first argument is the pathname to the executable.  Whether the pathname is absolute or relative depends on how the executable was invoked.  If the executable was invoked via a symlink, then the first argument is the pathname of the symlink, not the executable the symlink points to.
+
+[[# environment-variable]]
+++ environment variable
+
+[[# iterate-thru-environment-variables]]
+++ iterate thru environment variables
+
+[[# exit-note]]
+++ [#exit exit]
+
+How to set the exit status and cause the process to exit.
+
+**c:**
+
+On POSIX systems zero indicates success and other values indicate failure.
+
+On Linux and Mac OS X the value returned to the parent is {{exit_arg & 0377}}.  If the process exited because of a signal, the kernel sets the exit status to 128 plus the signal number.  The signals are numbered starting from 1, leaving exit status values from 1 to 127 and perhaps 128 available for other failure conditions.
+
+The C standard library defines the values EXIT_SUCCESS and EXIT_FAILURE as an aid for writing code which is portable to systems which do not use 0 to indicate success.
+
+[[# libraries-namespaces-note]]
++ [#libraries-namespaces Libraries and Namespaces]
+
+[[# load-lib-note]]
+++ [#load-lib load library]
+
+How to load a library.
+
+**c:**
+
+Loading a library is a two part process.
+
+Library declarations are made available by including headers in the client code.
+
+Linking is performed by listing the library objects with the client object containing the {{main}} function on the command line when invoked the linker.
+
+Alternatively, library objects can be collected into archive files using the {{ar}} command.  These files have a {{.a}} suffix.  The -l (lowercase L) option is used to include an archive when linking.
+
+**go:**
+
+Multiple libraries can be loaded by listing them one after another:
+
+[[code]]
+import  "fmt"
+import "math/rand"
+[[/code]]
+
+Alternatively a single import statement can be used:
+
+[[code]]
+import (
+    "fmt"
+    "math/rand"
+)
+[[/code]]
+
+[[# load-lib-subdir-note]]
+++ [#load-lib-subdir load library in subdirectory]
+
+How to load a library in a subdirectory of the load path.
+
+[[# lib-path-note]]
+++ [#lib-path library path]
+
+How to the library path is specified.
+
+[[# declare-namespace-note]]
+++ [#declare-namespace declare namespace]
+
+How to declare the namespace of a source file.
+
+[[# alias-namespace-note]]
+++ [#alias-namespace alias namespace]
+
+How to import a namespace under an alias.
+
+This can be used to provide an abbreviated name for a namespace.
+
+It also allows a client to use two different libraries which declare the same namespace.
+
+[[# unqualified-import-note]]
+++ [#unqualified-import unqualified import of namespace]
+
+How to import all the identifiers in a library so that the client can refer to them without the namespace prefix.
+
+[[# user-defined-types-note]]
++ [#user-defined-types User-Defined Types]
+
+[[# typedef-note]]
+++ [#typedef typedef]
+
+**c:**
+
+Because C integer types don't have well defined sizes, //typedef// is sometimes employed to as an aid to writing portable code.  One might include the following in a header file:
+
+[[code]]
+typedef int int32_t;
+[[/code]]
+
+The rest of the code would declare integers that need to be 32 bits in size using //int32_t// and if the code needed to be ported to a platform with a 16 bit //int//, only a single place in the code requires change.  In practice the //typedef// abstraction is leaky because functions in the standard library such as //atoi//, //strtol//, or the format strings used by //printf// depend on the underlying type used.
+
+[[# enum-note]]
+++ [#enum enum]
+
+**c:**
+
+Enums were added to the C standard when the language was standardized by ANSI in 1989.
+
+An enum defines a family of integer constants.  If an integer value is not explicitly provided for a constant, it is given a value one greater than the previous constant in the list.  If the first constant in the list is not given an explicit value, it is assigned a value of zero.  it is possible for constants in a list to share values.  For example, in the following enum, //a// and //c// are both zero and //b// and //d// are both one.
+
+[[code]]
+enum { a=0, b, c=0, d };
+[[/code]]
+
+A //typedef// can be used to make the //enum// keyword unnecessary in variable declarations:
+
+[[code]]
+typedef enum { mon, tue, wed, thu, fri, sat, sun } day_of_week;
+day_of_week d = tue;
+[[/code]]
+
+From the point of view of the C compiler, an enum is an //int//.  The C compiler does not prevent assigning values to an enum type that are not in the enumerated list.  Thus, the following code compiles:
+
+[[code]]
+enum day_of_week { mon, tue, wed, thu, fri, sat, sun };
+day_of_week d = 10;
+
+typedef enum { mon, tue, wed, thu, fri, sat, sun } day_of_week2;
+day_of_week2 d2 = 10;
+[[/code]]
+
+[[# struct-definition]]
+++ struct definition
+
+A struct provides names for elements in a  predefined set of data and permits the data to be accessed directly without the intermediation of getters and setters.  C++, Java, and C# classes can be used to define structs by making the data members public.  However, public data members violates the [http://en.wikipedia.org/wiki/Uniform_access_principle uniform access principle]. 
+
+[[# struct-declaration]]
+++ struct declaration
+
+[[# struct-initialization]]
+++ struct initialization
+
+**c:**
+
+The literal format for a struct can only be used during initialization.  If the member names are not provided, the values must occur in the order used in the definition.
+
+[[# struct-member-assignment]]
+++ struct member assignment
+
+[[# struct-member-access]]
+++ struct member access
+
+**c:**
+
+The period operator used for member access has higher precedence than the pointer operator.  Thus parens must be used
+to get at the member of a struct referenced by a pointer:
+
+[[code]]
+struct medal_count {
+char* country;
+int gold;
+int silver;
+int bronze;
+}
+
+struct medal_count spain = { "Spain", 3, 7 4 };
+struct medal_count *winner = &spain;
+printf("The winner is %s with %d gold medals", (*winner).country, (*winner).gold);
+[[/code]]
+
+//ptr->mem// is a shortcut for //(*ptr).mem//: 
+
+[[code]]
+printf("The winner (%s) earned %d silver medals", winner->country, winner->silver);
+[[/code]]
+
+[[# objects-note]]
++ [#objects Objects]
+
+[[# macros-note]]
++ [#macros Macros]
+
+* https://gcc.gnu.org/onlinedocs/cpp/
+
+[[# net-web-note]]
++ [#net-web Net and Web]
+
+[[# http-get-note]]
+++ [#http-get http get]
+
+How to make an HTTP GET request.
+
+[[# unit-tests-note]]
++ [#unit-tests Unit Tests]
+
+[[# debugging-profiling-note]]
++ [#debugging-profiling Debugging and Profiling]
+
+
+[[# c]]
++ [#top C]
+
+[http://www.open-std.org/jtc1/sc22/WG14/www/docs/n1256.pdf ANSI C Standard (pdf)] 1999
+[http://www.gnu.org/software/libc/manual/html_mono/libc.html GNU C Library]
+
+[[code]]
+FREQUENTLY USED GCC and CLANG OPTIONS
+
+-o name of output file
+
+TYPE OF BUILD
+
+-E stop after preprocessor; do not compile
+-S stop after compilation; do not assemble
+-c stop after assembly; do not link
+
+PREPROCESSOR
+
+-I add directory to list of directories containing header files
+-D FOO define macro FOO as 1
+-D FOO=VAL define macro FOO as VAL
+-U FOO   undefine macro FOO
+-M output make dependency info
+
+LINKER
+
+-lfoo search library foo for symbols when liking
+-L add directory to search path used by -l
+
+WARNINGS
+
+-w no warnings
+-Werror make warnings errors
+-Wall enable all warnings
+
+DEBUGGING, PROFILING, and OPTIMIZATION
+
+-g make object debuggable
+-pg generate executable which produces output for gprof
+-O1 -O2 -O2 spend progressively more time in compilation optimizing code
+
+MAC SPECIFIC
+
+-F add a framework directory (used in place of -I, -l, -L)
+[[/code]]
+
+[[# go]]
++ [#top Go]
+
+[http://golang.org/doc/go_spec.html Language Specification]
+[http://golang.org/pkg/ Package Reference]
+
+[[# swift]]
++ [#top Swift]
+
+As of June 2014, to use Swift one must download and install a beta version of Xcode 6, then:
+
+[[code]]
+$ sudo xcode-select -s /Applications/Xcode6-Beta.app/Contents/Developer/
+
+$ xcrun swift
+[[/code]]

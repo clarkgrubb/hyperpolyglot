@@ -1,0 +1,1138 @@
+//a side-by-side reference sheet//
+
+[#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#stack stack] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regex regexes] _
+[#dates-time dates and time] | [#arrays arrays] | [#heap heap] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#file-handles file handles] | [#files files] _
+[#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] |  [#reflection reflection] | [#graphics graphics]
+
+||~ ||~ [#forth forth]||~ [#postscript postscript]||~ [#factor factor]||
+||[[# version-used]][#version-used-note version used] _
+@<&nbsp;>@||##gray|//Gforth 0.70//##||##gray|//Preview 5.0//##||##gray|//0.96//##||
+||[[# show-version]][#show-version-note show version] _
+@<&nbsp;>@||$ gforth @@--@@version||##gray|//select// About Preview //in// Preview //menu//##||##gray|//note version when downloading//##||
+||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
+||~ ||~ forth||~ postscript||~ factor||
+||[[# interpreter]][#interpreter-note interpreter] _
+@<&nbsp;>@||$ echo "1 1 + . cr bye" > /tmp/add.forth _
+ _
+$ gforth /tmp/add.forth||##gray|//none//##||$ factor ##gray|//file//##||
+||[[# shebang]][#shebang-note shebang] _
+@<&nbsp;>@||##gray|//none//##||##gray|//none//##||#! /usr/bin/env factor||
+||[[# repl]][#repl-note repl] _
+@<&nbsp;>@||$ gforth||##gray|//none//##||$ factor||
+||[[# save-image]][#save-image-note save image]|| || ||"/tmp/factor.image" save-image||
+||[[# load-image]][#load-image-note load image]|| || ||$ factor -i=/tmp/factor.image||
+||[[# identifiers-case-sensitive]][#identifiers-case-sensitive-note are identifiers case sensitive]||##gray|//no//##||##gray|//yes//##||##gray|//yes//##||
+||[[# eol-comment]][#eol-comment-note end-of-line comment]||1 1 + ##gray|\ addition##||1 1 add ##gray|% addition##||1 1 + ##gray|! addition##||
+||[[# multiple-line-comment]][#multiple-line-comment-note multiple line comment]||1 1 ##gray|( comment _
+another comment )## +||##gray|//none//##||##gray|//none//##||
+||||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
+||~ ||~ forth||~ postscript||~ factor||
+||[#assignment assignment]||variable a _
+3 a ! _
+7 a @ +||/a 3 def _
+7 currentdict /a get add||SYMBOL: a _
+ _
+3 a set _
+7 a get +||
+||[#increment-decrement increment and decrement]||7 1+ _
+7 1-|| ||7 ?1+ _
+##gray|//none//##||
+||[#null null] _
+@<&nbsp;>@||##gray|//none//##||null||null||
+||[#null-test null test] _
+@<&nbsp;>@||##gray|//none//##|| ||a get null =||
+||[#undefined-word undefined variable access]|| || ||##gray|//raises error//##||
+||||||||~ [[# stack]][#stack-note stack]||
+||~ ||~ forth||~ postscript||~ factor||
+||[#stacks stacks]||##gray|//data _
+floating point _
+return _
+locals//##||##gray|//operand _
+dictionary _
+execution _
+graphics state _
+clipping path//##||##gray|//data//##||
+||[#stack-underflow stack underflow]|| || || ||
+||[#display-stack display stack]||.s _
+##gray|//displays float stack://## _
+f.s||##gray|//none//##|| ||
+||[#clear-stack clear stack]||##gray|//clears data stack://## _
+clearstack _
+##gray|//clears data and float stack://## _
+clearstacks||clear||clear||
+||[#count-stack count stack]||depth _
+fdepth||count|| ||
+||[#copy-stack copy stack] _
+@<&nbsp;>@|| ||count copy|| ||
+||[#drop (a -- )]||drop _
+##gray|//displays item being dropped://## _
+. _
+##gray|//operate on float stack://## _
+fdrop _
+f.||pop||drop||
+||[#dup (a -- a a)]||dup _
+fdup||dup||dup||
+||[#swap (a b -- b a)]||swap _
+fswap||exch||swap||
+||[#nip (a b -- b)]||nip _
+fnip||exch pop||nip||
+||[#over (a b -- a b a)]||over _
+fover||1 index||over||
+||[#tuck (a b -- b a b)]||tuck _
+ftuck||dup 3 1 roll||USE: shuffle _
+ _
+tuck||
+||[#rot (a b c -- b c a)]||rot _
+frot||3 -1 roll||rot||
+||[#pick (a b c -- a b c a)]||2 pick _
+2 fpick||2 index||pick||
+||[#roll (a b c d -- b c d a)]||3 roll _
+3 froll||4 -1 roll||USE: shuffle _
+ _
+roll||
+||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
+||~ ||~ forth||~ postscript||~ factor||
+||[[# true-false]][#true-false-note true and false]||true false _
+-1 0||true false||t f||
+||[[# falsehoods]][#falsehoods-note falsehoods] _
+@<&nbsp;>@||false 0||false||f||
+||[[# logical-op]][#logical-op-note logical operators]||and or invert xor||and or not xor||and or not xor||
+||[[# relational-op]][#relational-op-note relational operators]||@@=@@ <> > < >= <= _
+f= f<> f> f< f>= f<=||eq ne gt lt ge le||@@=@@ ##gray|//none//## < > >= <=||
+||[[# min-max]][#min-max-note min and max]||1 2 min _
+1 2 max|| ||1 2 min _
+1 2 max||
+||[[# three-val-comparision]][#three-val-comparison-note three value comparison]|| || ||##gray|! push +lt+ +eq+ and +gt+ on stack:## _
+1 2 <=> _
+1 1 <=> _
+2 1 <=> _
+ _
+##gray|! pushes +gt+ on stack:## _
+1 2 >=<||
+||[[# float-literal]][#float-literal-note float literal]||##gray|//must contain an// e:## _
+3.14e0||3.14 _
+3.14e0||##gray|! must contain decimal point or e:## _
+10.0 _
+1e1||
+||[[# num-predicates]][#num-predicates-note numeric predicates]|| || ||number? _
+integer? _
+float? _
+rational? _
+complex?||
+||[[# arithmetic-op]][#arithmetic-op-note arithmetic operators]||+ - * ##gray|//??//## / mod ##gray|//??//## _
+##gray|//float stack operators://## _
+f+ f- f* f/ f**||add sub mul div idiv mod exp||USE: math ##gray|! for ^## _
+ _
+@@+@@ - * / /i mod ^||
+||[[# unary-negation]][#unary-negation-note unary negation]||negate _
+fnegate||neg||neg||
+||integer division|| || ||7 3 /i||
+||integer division by zero|| || ||##gray|//raises division by zero error//##||
+||float division|| || ||##gray|! returns a rational:## _
+7 3 /||
+||float division by zero|| || ||##gray|//evaluates to:// 1/0##||
+||[[# power]][#power-note power]||2e0 32e0 f**|| ||USE: math.functions _
+ _
+2 32 ^||
+||[[# sqrt]][#sqrt-note sqrt]||2e0 fsqrt|| ||2 sqrt||
+||[#square-root-negative-2 sqrt(-2)]||##gray|//pushes this non-literal value onto stack://## _
+-na|| ||C{ 0.0 1.414213562373095 }||
+||[[# transcendental-func]][#transcendental-func-note transcendental functions]||fexp fln fsin fcos ftan fasin facos fatan fatan2 _
+##gray|//also// flog //for base 10 logarithm//##||sqrt exp ln sin cos ##gray|//none//## ##gray|//none//## ##gray|//none//## ##gray|//none//## atan _
+##gray|//also// log //for base 10 logarithm//##||USE: math.functions _
+ _
+exp log sin cos tan asin acos atan ##gray|//??//## _
+##gray|! also log10 for base 10 logarithm##||
+||[[# transcendental-const]][#transcendental-const-note transcendental constants]||pi _
+1e0 fexp|| ||USE: math.constants _
+ _
+pi e||
+||[[# float-truncation]][#float-truncation-note float truncation]||##gray|//return floats//## _
+fround ##gray|//??//## floor ##gray|//??//##||round truncate floor ceiling||USE: math.functions _
+ _
+round truncate floor ceiling||
+||[[# absolute-value]][#absolute-val-note absolute value] _
+##gray|//and signum//##||-7 abs _
+-7e0 fabs||abs||-7 abs _
+-7 sgn||
+||[[# int-overflow]][#int-overflow-note integer overflow]||##gray|//modular arithmetic//##|| ||##gray|//none; converts to arbitrary length integer type//##||
+||[#float-overflow float overflow] _
+@<&nbsp;>@|| || ||1/0.||
+||[#float-limits float limits]|| || ||USE: math.constants _
+ _
+single-epsilon largest-float smallest-float ||
+||[[# rational-construction]][#rational-construction-note rational construction]|| || ||7/3 _
+7 3 /||
+||[[# rational-decomposition]][#rational-decomposition-note rational decomposition]|| || ||7/3 numerator _
+7/3 denominator||
+||[[# complex-construction]][#complex-construction-note complex construction]|| || ||USE: math.functions _
+ _
+C{ 1 1.414 } _
+1 1.414 rect>||
+||[[# complex-conjugation]][#complex-conjugation-note complex decomposition] _
+##gray|//real and imaginary component, argument, absolute value, conjugate//##|| || ||C{ 1 2 } real-part _
+C{ 1 2 } imaginary-part _
+C{ 1 2 } arg _
+C{ 1 2 } abs _
+C{ 1 2 } conjugate||
+||[#random-num-note random number] _
+##gray|//uniform integer, uniform float, normal float//##|| ||##gray|rand //generates random integer from 0 to 2^^31^^-1//:## _
+rand 100 mod _
+##gray|//none//## _
+##gray|//none//##||USE: random _
+ _
+100 random _
+0 1 uniform-random-float _
+0 1 normal-random-float||
+||[[# random-seed]][#random-seed-note random seed] _
+@<&nbsp;>@|| ||13 srand|| ||
+||[[# bit-op]][#bit-op-note bit operators]||and or xor invert _
+##gray|//logical shift by 3://## _
+7 3 lshift _
+7 3 rshift _
+##gray|//arithmetic shift by 1://## _
+7 2* _
+7 2/||and or xor not _
+##gray|//logical shift by 3://## _
+7 3 bitshift _
+7 -3 bitshift||bitand bitor bitxor bitnot _
+##gray|! arithmetic shift by 3:## _
+7 3 shift _
+7 -3 shift||
+||[[# binary-octal-hex-literals]][#binary-octal-hex-literals-note binary, octal, and hex literals]|| || ||0b101010 _
+0o52 _
+0x2a||
+||[[# radix]][#radix-note radix]|| || ||USE: math.parser _
+ _
+42 7 >base _
+"60" 7 base>||
+||||||||~ [[# strings]][#strings-note strings]||
+||~ ||~ forth||~ postscript||~ factor||
+||[#string-literals string literals]||##gray|//allocates memory for string and pushes address and length onto stack://## _
+s\" don't say \"no\""||(don't say "no") _
+##gray|//parens and backslashes are escaped with backslashes.  Balanced parens do not need to be escaped.//##||"don't say \"no\""||
+||[#string-escapes string escapes]||\a \b \e \f \n \r \t \v  \" \\ \, \##gray|//ooo//## \x##gray|//xx//##||\b \f \n \r \t \\ \( \) \##gray|//ooo//##||\e \n \r \s \t \\ \" \0 \u##gray|//xxxxxx//##||
+||[#string-newline newline in literal]||##gray|//no, use \n//##||##gray|//no, use \n//##||##gray|//yes//##||
+||[#character-access character access]|| ||(hello) 0 get||0 "hello" nth||
+||[#string-length length]|| ||(hello) length||"hello" length||
+||[#string-concatenate concatenate]|| || ||"foo" "bar" append||
+||[#split split]|| || ||USE: splitting _
+ _
+"foo bar baz" " " split||
+||[#join join]|| || ||{ "foo" "bar" "baz" } " " join||
+||[#trim trim]|| || || ||
+||[#pad pad]|| || || ||
+||[#number-string-conversion number to string]|| ||7 (12) cvi add _
+73.9 (.037) cvr add||USE: math.parser _
+ _
+7 "12" string>number + _
+73.9 ".037" string>number + _
+17 number>string _
+17.1 number>string||
+||string to number|| || || ||
+||[#case-manipulation case manipulation]|| || || ||
+||[#sprintf sprintf]|| || ||USE: formatting _
+ _
+"Spain" 7 13.1 "%s: %d %f" sprintf||
+||||||||~ [[# regex]][#regex-note regular expressions]||
+||~ ||~ forth||~ postscript||~ factor||
+||[[# regex-literal]][#regex-literal-note literal]|| || ||R/ lorem|ipsum/ _
+R@ /etc/hosts@ _
+ _
+##gray|! how to create from a string:## _
+"lorem|ipsum" <regexp> _
+"/etc/hosts" <regexp>||
+||[[# char-class-abbrev]][#char-class-abbrev-note character class abbreviations]|| || ||\d \D \s \S \w \W \p{##gray|//property//##} \P{##gray|//property//##}||
+||[[# regex-anchors]][#regex-anchors-note anchors] _
+@<&nbsp;>@|| || ||^ $ \A \z \Z \b \B||
+||[[# regex-test]][#regex-test-note match test]|| || ||USE: regexp _
+ _
+"It's 1999" R/ 1999/ re-contains? _
+"It's 1999" "1999" <regexp> re-contains?||
+||[[# case-insensitive-regex]][#case-insensitive-regex-note case insensitive match test]|| || ||USE: regexp _
+ _
+"Lorem" R/ lorem/i re-contains? _
+"Lorem" "lorem" "i" <optioned-regexp> re-contains?||
+||[[# regex-modifiers]][#regex-modifiers-note modifiers] _
+@<&nbsp;>@|| || ||i d m s r||
+||[[# subst]][#subst-note substitution]|| || ||USE: regexp _
+ _
+"do re mi mi mi" R/ mi/ "ma" re-replace||
+||[[# group-capture]][#group-capture-note group capture] _
+@<&nbsp;>@|| || ||##gray|//none//##||
+||[[# regex-back-ref]][#regex-back-ref-note back reference in match and substitution]|| || ||##gray|//none//##||
+||||||||~ [[# dates-time]][#dates-time-note dates and time]||
+||~ ||~ forth||~ postscript||~ factor||
+||[[# broken-down-date-time-type]][#broken-down-date-time-type-note broken-down date and time type]|| || ||timestamp||
+||[[# current-date-time]][#current-date-time-note current date/time]||##gray|\ pushes six values onto stack:## _
+date&time|| ||USE: calendar _
+ _
+now||
+||[[# unix-epoch]][#unix-epoch-note to unix epoch, from unix epoch]|| || ||USE: calendar _
+ _
+now timestamp>unix-time _
+1366558586 seconds unix-1970 time+||
+||[[# current-unix-epoch]][#current-unix-epoch-note current unix epoch]|| || ||USE: calendar _
+ _
+unix-1970||
+||[[# date-time-to-str]][#date-time-to-str-note date and time to string]|| || ||USE: calendar.format _
+ _
+now timestamp>string||
+||[[# format-date]][#format-date-note format date]|| || || ||
+||[[# parse-date]][#parse-date-note parse date]|| || || ||
+||[[# date-subtraction]][#date-subtraction-note date subtraction]|| || ||USE: calendar _
+ _
+now unix-1970 time-||
+||[[# add-duration]][#add-duration-note add duration]|| || ||USE: calendar _
+ _
+now 100 days time+||
+||[[# date-parts]][#date-parts-note date parts]|| || ||USE: calendar _
+ _
+now year@@>>@@ _
+now month@@>>@@ _
+now day@@>>@@||
+||[[# time-parts]][#time-parts-note time parts]|| || ||USE: calendar _
+ _
+now hour@@>>@@ _
+now minute@@>>@@ _
+##gray|! second@@>>@@ returns a ratio:## _
+now second@@>>@@ truncate||
+||[[# build-date-time]][#build-date-time-note build broken-down date and time]|| || ||USE: calendar _
+ _
+2013 4 21 9 36 15 -7 hours <timestamp>||
+||[[# dow-doy]][#dow-doy-note day of week and day of year]|| || ||USE: calendar _
+ _
+##gray|! Sunday is zero:## _
+now day-of-week _
+now day-of-year||
+||[[# microseconds]][#microseconds-note microseconds]|| || ||now second@@>>@@ dup truncate -||
+||[[# sleep]][#sleep-note sleep]|| || ||USING: calendar threads ; _
+ _
+10 seconds sleep _
+500 milliseconds sleep||
+||[[# timeout]][#timeout-note timeout]|| || || ||
+||[[# cpu-usage]][#cpu-usage-note cpu usage]|| || || ||
+||||||||~ [[# arrays]][#arrays-note arrays]||
+||~ ||~ forth||~ postscript||~ factor||
+||[[# array-literal]][#array-literal-note literal]|| ||[ 1 2 3 ]||##gray|! arrays need not be homogeneous## _
+{ 1 2 "foo" } _
+ _
+##gray|! creates resizable array:## _
+V{ 1 2 "foo" }||
+||[[# array-size]][#array-size-note size] _
+@<&nbsp;>@|| ||[ 1 2 3 ] length||{ 1 2 3 } length||
+||[[# empty-array-test]][#empty-array-test-note empty test] _
+@<&nbsp;>@|| || ||{ 2 3 4 } empty?||
+||[[# array-lookup]][#array-lookup-note lookup] _
+@<&nbsp;>@|| ||[ 1 2 3 ] 0 get|| 0 { 1 2 3 } nth||
+||[[# array-update]][#array-update-note update]|| || ||##gray|! sets 2nd element to 3.5:## _
+{ 2 3 4 } dup 3.5 1 rot set-nth||
+||[[# array-out-of-bounds]][#array-out-of-bounds-note out-of-bounds behavior]|| ||##gray|rangecheck //error//##||##gray|! raises error:## _
+9 { 1 2 3 } nth _
+ _
+##gray|! returns f:## _
+9 { 1 2 3 } nth?||
+||[[# array-element-index]][#array-element-index-note element index]|| || ||##gray|! returns 1:## _
+"y" { "x" "y" "z" } index||
+||[[# slice-array]][#slice-array-note slice]|| || ||##gray|! allocates space for 3rd and 4th element.## _
+2 4 { 1 2 3 4 5 } subseq _
+ _
+##gray|! space efficient version:## _
+2 4 { 1 2 3 4 5 } <slice>||
+||slice to end|| || ||##gray|! all elements at or after specified index:## _
+{ "w" "x" "y" "z" } 1 tail||
+||manipulate back|| || ||##gray|! puts { 6 7 8 9 } on stack:## _
+{ 6 7 8 } 9 suffix||
+||manipulate front|| || ||##gray|! add 5 to front:## _
+{ 6 7 8 } 5 prefix _
+ _
+##gray|! put { 6 7 8 } and 5 onto stack:## _
+{ 5 6 7 8 } unclip||
+||[[# concatenate-array]][#concatenate-array-note array concatenate]|| || ||{ 1 2 } { 3 4 } append||
+||replicate|| || ||##gray|! creates array of ten zeros:## _
+10 0 <array> _
+ _
+##gray|! creates space efficient sequence of ten zeros:## _
+10 0 <repetition>||
+||copy|| || || ||
+||[#array-iteration array iteration]|| ||[ 50 100 150 ] { 100 moveto (foo) show } forall||{ "foo" "bar" "baz" } [ print ] each||
+||indexed iteration|| || ||{ "x" "y" "z" } [ number>string print print ] each-index||
+||iterate over range|| || || ||
+||instantiate range as array|| || || ||
+||reverse|| || ||{ 1 2 3 } reverse _
+ _
+##gray|! does not allocate new array:## _
+{ 1 2 3 } <reversed>||
+||sort|| || ||{ 1 3 2 4 } [ <=> ] sort _
+{ 1 3 2 4 } natural-sort||
+||dedupe|| || || ||
+||[[# membership]][#membership-note membership]|| || ||7 { 1 2 3 } member?||
+||[[# intersection]][#intersection-note intersection]|| || || ||
+||[[# union]][#union-note union]|| || || ||
+||relative complement, symmetric difference|| || || ||
+||[#array-map map]|| || ||{ 1 2 3 } [ dup * ] map||
+||[#array-filter filter]|| || ||{ 1 2 3 } [ 2 > ] filter||
+||[#array-reduce reduce]||   || ||{ 1 2 3 } 0 [ + ] reduce||
+||min and max element|| || || ||
+||universal and existential tests|| || ||{ 1 2 3 } [ even? ] all? _
+{ 1 2 3 } [ even? ] any?||
+||[#sample sample w/o replacement]|| || ||USE: random _
+ _
+{ 3 7 5 12 19 8 } 3 sample||
+||[[# zip]][#zip-note zip]|| || ||{ 1 2 3 } { "x" "y" "z" } [ 2array ] 2map||
+||||||||~ [[# heap]][#heap-note heap]||
+||[#allocate allocate region on heap]||##gray|//pushes address and// 0 //onto stack://## _
+10 allocate|| || ||
+||[#free free region on heap]||free|| || ||
+||[#resize resize region on heap]|| || || ||
+||[#write write]|| || || ||
+||[#read read]|| || || ||
+||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
+||~ ||~ forth||~ postscript||~ factor||
+||[#dictionary-literal dictionary literal]|| ||@@ << @@1 (one) 2 (two) 3 (three)@@ >> @@||##gray|! association list:## _
+{ { 1 "one" } { 2 "two" } { 3 "three" } } _
+ _
+##gray|! hashtable:## _
+H{ { 1 "one" } { 2 "two" } { 3 "three" } }||
+||[#dictionary-length dictionary length]|| ||@@ << @@1 (one) 2 (two)@@ >> @@length||{ { 1 "one" } { 2 "two" } } assoc-size||
+||[#dictionary-element-access dictionary element access]|| ||##gray|//pushes// (one) //onto stack://## _
+@@ << @@1 (one) 2 (two)@@ >> @@1 get||##gray|! pushes "one" and t onto stack:## _
+1 { { 1 "one" } { 2 "two" } } at*||
+||[#dictionary-element-not-found element not found behavior]|| ||##gray|undefined //error//##||##gray|! pushes f twice onto stack:## _
+4 { { 1 "one" } } at*||
+||[#dictionary-set-element set dictionary element]|| ||/h@@ << @@1 (one) 2 (two)@@ >> @@def _
+currentdict /h get 3 (three) put||SYMBOL: h _
+ _
+H{ { 1 "one" } { 2 "two" } } h set _
+"three" 3 h get set-at||
+||[#range range]|| || ||USE: math.ranges _
+ _
+1 100 [a,b]||
+||||||||~ [[# functions]][#functions-note functions]||
+||~ ||~ forth||~ postscript||~ factor||
+||[[# def-func]][#def-func-note define function]||: add3 + + ; ||/add3 { add add } def||: add3 ( a1 a2 a3 @@--@@ s ) + + ;||
+||[[# invoke-func]][#invoke-func-note invoke function]||3 7 5 add3||3 7 5 add3||3 7 5 add3||
+||[[# missing-arg]][#missing-arg-note missing argument behavior]||##gray|//a stack underflow error results if the expected number of arguments is not on the stack//##||##gray|//a stack underflow error results if the expected number of arguments is not on the stack//##||##gray|//a stack underflow error results if the expected number of arguments is not on the stack//##||
+||[[# retval]][#retval-note return value] _
+@<&nbsp;>@||##gray|//values are returned by pushing them onto the stack//##||##gray|//values are returned by pushing them onto the stack//##||##gray|//values are returned by pushing them onto the stack//##||
+||[[# multiple-retval]][#multiple-retval-note multiple return values]||##gray|//no limit on the number of values a function can leave on the stack//##||##gray|//no limit on the number of values a function can leave on the stack//##||##gray|//a function can leave multiple values on the stack, but the change in stack size must match the stack effect declaration//##||
+||[[# recursive-func]][#recursive-func-note recursive function]|| || ||USE: math-parser _
+ _
+: countdown ( n @@--@@ ) _
+@<&nbsp;&nbsp;>@dup 0 > [ _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@dup print 1 - countdown _
+@<&nbsp;&nbsp;>@] [ _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@drop "go" print _
+@<&nbsp;&nbsp;>@] if ;||
+||[[# mutually-recursive-func]][#mutually-recursive-func-note mutually recursive functions]|| || ||##gray|! there are already definitions for even? and odd? _
+! in the math vocabulary## _
+DEFER: odd _
+ _
+: even ( n --  bool ) dup 0 = [ drop t ] [ 1 - odd ] if ; _
+: odd ( n -- bool ) dup 0 = [ drop f ] [ 1 - even ] if ;||
+||[[# anonymous-func]][#anonymous-func-note anonymous function]|| ||{ 2 add }||[ 2 + ]||
+||[[# invoke-anonymous-func]][#invoke-anonymous-func-note invoke anonymous function]|| ||3 { 2 add } exec||3 [ 2 + ] call||
+||[[# closure]][#closure-note closure]|| || || ||
+||[[# func-as-val]][#func-as-val-note function as value]|| || ||##gray|! push word "dup" on stack:## _
+\ dup _
+ _
+##gray|! execute word on top of stack:## _
+execute|| 
+||[[# compose-func]][#compose-func-note compose functions]|| || ||##gray|! compose quotations:## _
+4 [ 2 * ] [ 3 - ] compose call _
+ _
+##gray|! words can be composed if quoted:## _
+: mult2 ( x @@--@@ y ) 2 * ; _
+: sub3 ( x @@--@@ y ) 3 - ; _
+4 [ mult2 ] [ sub3 ] compose call||
+||[[# partial-application]][#partial-application-note partial application]|| || ||3 2 [ * ] curry call||
+||[[# fried-quotation]][#fried-quotation-note fried quotation]|| || ||USE: fry _
+ _
+##gray|! each is same as: [ 2 + ]## _
+2 '[ _ + ] _
+[ + ] '[ 2 @ ] _
+2 [ + ] '[ _ @ ]|| 
+||||||||~ [[# execution-control]][#execution-control-note execution control]||
+||~ ||~ forth||~ postscript||~ factor||
+||[#if-note notes on conditionals]||##gray|//conditionals can only be used in word definitions.//## _
+##gray|endif //can be used in place of// then##|| || ||
+||[#ifelse ifelse]||: ifelse rot if drop else nip then ; _
+x @ 0 > x @ x @ negate ifelse||x 0 gt { x } { x neg } ifelse||x get 0 > x get x get neg ?||
+||[#if if]||##gray|//bool//## _
+if _
+@<&nbsp;&nbsp;>@##gray|//if true//## _
+then||##gray|//bool//## { ##gray|//if true//## } if||##gray|//bool//## [ ##gray|//if true//## ] when||
+||[#if-else if else]||##gray|//bool//## _
+if _
+@<&nbsp;&nbsp;>@##gray|//if true//## _
+else _
+@<&nbsp;&nbsp;>@##gray|//if false//## _
+then||##gray|//bool//## { ##gray|//if true//## } { ##gray|//if false//## } ifelse||##gray|//bool//## [ ##gray|//if true//## ] [ ##gray|//if false//## ] if||
+||[#loop-note notes on loops]||##gray|//loops can only be used in word definitions.//## _
+##gray|leave //can be used with// loop //to terminate early//##||##gray|exit //terminates innermost// for, forall, loop, //or// repeat##|| ||
+||[#conditional-loop conditional loop]||begin _
+@<&nbsp;&nbsp;>@##gray|//bool//## _
+while _
+@<&nbsp;&nbsp;>@##gray|//code//## _
+repeat||{ _
+@<&nbsp;&nbsp;>@##gray|//bool//## { exit } if _
+@<&nbsp;&nbsp;>@##gray|//code//## _
+} loop||[ ##gray|//bool//## ] [ ##gray|//code//## ] while||
+||[#infinite-loop infinite loop]||begin _
+@<&nbsp;&nbsp;>@##gray|//code//## _
+again||{ ##gray|//code//## } loop||[ ##gray|//code//## t ] loop||
+||[#loop-10-times loop 10 times]||10 0 ?do ##gray|//code//## loop||10 { ##gray|//code//## } repeat||10 [ "foo" print ] times||
+||[#for-loop for loop]||10 0 ?do i ##gray|//code//## loop||##gray|//iterator value on stack//## _
+0 20 200 { 72 exch moveto (foo) show } for|| ||
+||[#for-loop-step-2 for loop step 2]||10 0 +do i ##gray|//code//## 2 +loop|| || ||
+||||||||~ [[# exceptions]][#exceptions-note exceptions]||
+||~ ||~ forth||~ postscript||~ factor||
+||[#exception-note notes on exceptions]||##gray|throw //raises an exception if the top of the data stack is nonzero.// exception //puts a nonzero value on the stack.  If the exception is not handled the string will be displayed by the interpreter on exit.// catch //can only be used in a word definition.//##|| || ||
+||[#raise-exception raise exception]||s" bam!" exception throw||$error /errorname (foo) put stop||"bam!" throw||
+||[#handle-exception handle exception]||['] ##gray|//risky word//## catch if ##gray|//handle error//## then||{ _
+@<&nbsp;&nbsp;>@##gray|//risky code//## _
+} stopped { ##gray|//handle error//## }||[ ##gray|//risky code//## ] [ ##gray|//handle error//## ] recover||
+||||||||~ [[# file-handles]][#file-handles-note file handles]||
+||~ ||~ forth||~ postscript||~ factor||
+||standard file handles|| || ||input-stream output-stream ##gray|//??//##||
+||read line from stdin|| || ||input-stream readln||
+||write line to stdout|| || || ||
+||[#write-stdout write to stdout]||." hello" cr|| ||"hello" write||
+||[#redirect-to-file redirect to file]|| || || ||
+||||||||~ [[# files]][#files-note files]||
+||~ ||~ forth||~ postscript||~ factor||
+||file test, regular file text|| || ||USE: io.files.info _
+ _
+"/etc/hosts" exists? _
+"/etc/hosts" regular-file?||
+||file size|| || ||USE: io.files.info _
+ _
+"/etc/hosts" file-info size@@>>@@||
+||is file readable, writable, executable|| || ||USE: io.files.info _
+ _
+"/etc/hosts" file-readable? _
+"/etc/hosts" file-writable? _
+"/etc/hosts" file-executable?||
+||set file permissions|| || || ||
+||touch file|| || ||"/tmp/foo" touch-file||
+||copy file, remove file, rename file|| || ||"/tmp/foo" "/tmp/bar" copy-file _
+"/tmp/foo" delete-file _
+"/tmp/bar" "/tmp/foo" move-file||
+||create symlink, symlink test, readlink|| || ||USE: io.files.links _
+ _
+"/etc/hosts" "/tmp/hosts" make-link _
+"/tmp/hosts" link-info symbolic-link? _
+"/tmp/hosts" read-link||
+||generate unused file name|| || ||USE: io.files.unique _
+ _
+##gray|! empty file is created with prefix:## _
+"/tmp/foo" unique-file||
+||||||||~ [[# directories]][#directories-note directories]||
+||~ ||~ forth||~ postscript||~ factor||
+||working directory _
+##gray|//get and set//##|| || ||USE: io.directories _
+ _
+current-directory get _
+"~" set-current-directory||
+||build pathname|| || ||"/etc" "hosts" append-path||
+||dirname and basename|| || ||"/etc/hosts" parent-directory _
+"/etc/hosts" file-name||
+||absolute pathname|| || || ||
+||make directory|| || ||USE: io.directories _
+ _
+"/tmp/foo/bar" make-directories||
+||recursive copy|| || || ||
+||remove empty directory|| || || ||
+||remove directory and contents|| || || ||
+||directory test|| || ||USE: io.files.info _
+ _
+"/tmp" file-info directory?||
+||||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
+||~ ||~ forth||~ postscript||~ factor||
+||[[# cmd-line-arg]][#cmd-line-arg-note command line arguments]|| || ||USE: command-line _
+ _
+(command-line)||
+||[[# program-name]][#program-name-note program name]|| || || ||
+||[[# env-var]][#env-var-note environment variable] _
+##gray|//get, set//##|| || ||USE: environment _
+ _
+"HOME" os-env _
+"/bin" "PATH" set-os-env||
+||[[# user-id-name]][#user-id-name-note user id and name]|| || ||USE: unix.users _
+ _
+real-user-id _
+real-user-name||
+||[[# exit]][#exit-note exit]||bye||quit||USE: system _
+ _
+0 exit||
+||[[# external-cmd]][#external-cmd-note external command]|| || ||USE: io.launcher _
+ _
+##gray|! pushes process object on stack:## _
+"ls" run-process _
+##gray|! pushes exit status on stack:## _
+wait-for-process||
+||[[# backticks]][#backticks-note backticks]|| || || ||
+||[[# pid]][#pid-note pid] _
+##gray|//and parent pid//##|| || || ||
+||[[# signal-handler]][#signal-handler-note set signal handler]|| || || ||
+||[[# send-signal]][#send-signal-note send signal]|| || || ||
+||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
+||~ ||~ forth||~ postscript||~ factor||
+||[#interpret-file interpret file]||foo.fs include _
+##gray|//or//## _
+s" foo.fs" included||  ||USE: command-line _
+ _
+"/tmp/foo.factor" run-script||
+||[#load-library load library]||require foo.fs _
+##gray|//or//## _
+s" foo.fs" required|| || ||
+||hot patch|| || || ||
+||load error|| || || ||
+||main routine in library|| || || ||
+||library path|| || || ||
+||library path environment variable|| || || ||
+||namespace declaration|| || || ||
+||unqualified import of namespace|| || ||USE: foo _
+ _
+##gray|! import multiple namespaces:## _
+USING: foo bar ;||
+||||||||~ [[# reflection]][#reflection-note reflection]||
+||~ ||~ forth||~ postscript||~ factor||
+||[#data-type query data type]||##gray|//none//##||3 type||USE: classes _
+ _
+3 class-of||
+||[#pretty-print pretty print]||  || ||pprint||
+||[#dump-location-and-stack dump location and stack]||@@~~@@|| || ||
+||[#show-code show code]||see ##gray|//word//##|| || ||
+||[#function-documentation documentation]|| || ||\ tan help||
+||||||||~ [[# graphics]][#graphics-note graphics]||
+||~ ||~ forth||~ postscript||~ factor||
+||[#default-origin default location of origin]|| ||##gray|//lower left corner of page//##|| ||
+||[#default-scale default scale]|| ||##gray|//72 units per inch//##|| ||
+||[#text text]|| ||72 72 moveto (hello) show|| ||
+||[#render-page render page and start a new one]|| ||showpage|| ||
+||[#set-font set current font]|| ||/Helvetica 20 selectfont|| ||
+||[#built-in-fonts built-in fonts]|| ||/Times-Roman /Times-Italic _
+/Times-Bold /Times-BoldItalic _
+/Helvetica /Helvetica-Oblique _
+/Helvetica-Bold /Helvetica-BoldOblique _
+/Courier /Courier-Bold _
+/Courier-Oblique /Courier-BoldOblique|| ||
+||[#closed-polygon closed polygon]|| ||##gray|//creates outline of triangle://## _
+newpath _
+72 72 moveto _
+144 144 lineto _
+144 72 lineto _
+closepath _
+stroke|| ||
+||[#set-line-width set current line width]|| ||##gray|//default value is 1://## _
+2 setlinewidth|| ||
+||[#circle-arc arc of circle]|| ||##gray|//creates half-circular arc centered at (144,144) with radius 40://## _
+newpath _
+144 144 40 90 270 arc _
+stroke|| ||
+||[#bezier-curve bezier curve]|| ||##gray|//control points are (144,144), (288,144), (288,288), and (144,288)://## _
+newpath _
+144 144 moveto _
+288 144 288 288 144 288 curveto _
+stroke|| ||
+||[#filled-polygon filled polygon]|| ||##gray|//creates solid triangle://## _
+newpath _
+72 72 moveto _
+144 144 lineto _
+144 72 lineto _
+closepath _
+fill|| ||
+||[#set-color set color]|| ||##gray|//default color is black.  Sets current color to red://## _
+1.0 0.0 0.0 setrgbcolor|| ||
+||[#translate-coordinates translate coordinates]|| ||##gray|//move origin 72 units up and to the right://## _
+72 72 translate|| ||
+||[#scale-coordinates scale coordinates]|| ||##gray|//increase size of unit 72-fold://## _
+72 72 scale|| ||
+||[#rotate-coordindates rotate coordinates]|| ||##gray|//rotate coordinates 90 degrees counterclockwise://## _
+90 rotate|| ||
+||[#graphics-state items in graphics state]|| ||currentpoint _
+currentrgbcolor _
+currentfont _
+currentmatrix _
+currentlinewidth|| ||
+||[#save-graphics-state save graphics state]|| ||gsave|| ||
+||[#restore-graphics-state restore graphics state]|| ||grestore|| ||
+||~ ||~ ##EFEFEF|@@_____________________________________________________________@@##||~ ##EFEFEF|@@_____________________________________________________________@@##||~ ##EFEFEF|@@_____________________________________________________________@@##||
+
+[[# version-used-note]]
+++ [#version-used version used]
+
+The version used for the examples in this sheet.
+
+[[# show-version-note]]
+++ [#show-version show version]
+
+How to get the version.
+
+[[# grammar-invocation-note]]
++ [#grammar-invocation Grammar and Invocation]
+
+[[# interpreter-note]]
+++ [#interpreter interpreter]
+
+How to invoke the interpreter.
+
+[[# shebang-note]]
+++ [#shebang shebang]
+
+How to make a source file executable on a UNIX system.
+
+[[# repl-note]]
+++ [#repl repl]
+
+How to invoke the REPL.
+
+**factor:**
+
+The factor REPL is called a listener.  There is both a command line and GUI version.
+
+[[# save-image-note]]
+++ [#save-image save image]
+
+[[# load-image-note]]
+++ [#load-image load image]
+
+[[# identifiers-case-sensitive-note]]
+++ [#identifiers-case-sensitive are identifiers case sensitive]
+
+Are words case sensitive?
+
+[[# eol-comment-note]]
+++ [#eol-comment end-of-line comment]
+
+The syntax for a comment which ends at the end of the line.
+
+[[# multiple-line-comment-note]]
+++ [#multiple-line-comment multiple line comment]
+
+The syntax for a comment which can span multiple lines.
+
+**forth:**
+
+Paren delimited comments cannot span multiple lines when using the REPL.
+
+Paren delimited comments do not nest.
+
+[[# var-expr-note]]
++ [#var-expr Variables and Expressions]
+
+[[# assignment]]
+++ assignment
+
+**factor:**
+
+The following code will get the value for a variable and push it onto the stack:
+
+[[code]]
+a get
+[[/code]]
+
+[[# stack-note]]
++ [#stack Stack]
+
+[[# arithmetic-logic-note]]
++ [#arithmetic-logic Arithmetic and Logic]
+
+[[# arithmetic-operators]]
+++ operators
+
+**factor:**
+
+The power operator ^ requires loading the math.functions library.
+
+Factor's division operator / will return a rational if used on integers that don't divide evenly.  /f always returns a float when used on integers.
+
+
+[[# strings-note]]
++ [#strings Strings]
+
+[[# regex-note]]
++ [#regex Regular Expressions]
+
+[[# regex-literal-note]]
+++ [#regex-literal literal]
+
+The syntax for a regular expression value.
+
+**factor:**
+
+The complete list of parsing words for regular expression values:
+
+[[code]]
+R!
+R"
+R#
+R'
+R(
+R/
+R@
+R[
+R`
+R{
+R|
+[[/code]]
+
+In each of the above words, the second character is the character used to terminate the regular expression.  The terminating character cannot appear in the regular expression itself, so it is not possible to use a parsing word to create a regular expression with all eleven terminating characters. 
+
+Furthermore whitespace must separate the parsing word from the regular expression, so it is not possible to create a regular expression with a parsing word that had leading whitespace.
+
+Regular expressions created from strings do not have these limitations.
+
+[[# char-class-abbrev-note]]
+++ [#char-class-abbrev character class abbreviations]
+
+**factor:**
+
+Upper case character class abbreviations are the complement of the lower case character class abbreviation
+
+||\d||digit||
+||\s||whitespace||
+||\w||alphanumeric or underscore||
+||\p{lower}||lower case letter||
+||\p{upper}||upper case letter||
+||\p{alpha}||letter||
+||\p{ascii}	||in ASCII range||
+||\p{alnum}||alphanumeric||
+||\p{punct}||punctuation||
+||\p{blank}||non-newline whitespace||
+||\p{cntrl}	||control character||
+||\p{space}||whitespace||
+||\p{xdigit}||hex digit||
+||\p{Nd}||in Unicode category Nd||
+
+[[# regex-anchors-note]]
+++ [#regex-anchors anchors]
+
+[[# regex-test-note]]
+++ [#regex-test match test]
+
+[[# case-insensitive-regex-note]]
+++ [#case-insensitive-regex case insensitive match test]
+
+[[# regex-modifiers-note]]
+++ [#regex-modifiers modifiers]
+
+[[# subst-note]]
+++ [#subst substitution]
+
+[[# group-capture-note]]
+++ [#group-capture group capture]
+
+[[# regex-back-ref-note]]
+++ [#regex-back-ref back reference in match and substitution]
+
+[[# dates-time-note]]
++ [#dates-time Dates and Time]
+
+[[# broken-down-date-time-type-note]]
+++ [#broken-down-date-time-type broken-down date and time type]
+
+[[# current-date-time-note]]
+++ [#current-date-time current date/time]
+
+[[# unix-epoch-note]]
+++ [#unix-epoch to unix epoch, from unix epoch]
+
+[[# current-unix-epoch-note]]
+++ [#current-unix-epoch current unix epoch]
+
+[[# date-time-to-str-note]]
+++ [#date-time-to-str date and time to string]
+
+[[# format-date-note]]
+++ [#format-date format date]
+
+[[# parse-date-note]]
+++ [#parse-date parse date]
+
+[[# date-subtraction-note]]
+++ [#date-subtraction date subtraction]
+
+[[# add-duration-note]]
+++ [#add-duration add duration]
+
+[[# date-parts-note]]
+++ [#date-parts date parts]
+
+[[# time-parts-note]]
+++ [#time-parts time parts]
+
+[[# build-date-time-note]]
+++ [#build-date-time build broken-down date and time]
+
+[[# dow-doy-note]]
+++ [#dow-doy day of week and day of year]
+
+[[# microseconds-note]]
+++ [#microseconds microseconds]
+
+[[# sleep-note]]
+++ [#sleep sleep]
+
+[[# timeout-note]]
+++ [#timeout timeout]
+
+[[# cpu-usage-note]]
+++ [#cpu-usage cpu usage]
+
+[[# arrays-note]]
++ [#arrays Arrays]
+
+**factor:**
+
+Factor provides fixed-length array type which it calls //arrays// and a resizable array type which it calls //vectors//.
+
+Factor arrays and vectors are mutable.  Furthermore they can contain elements which are a mix of types.
+
+Factor arrays and vectors are both examples of //sequences//.  To be a sequence a Factor type must implement {{length}}, {{nth}}, and {{set-nth}}.
+
+[[# array-literal-note]]
+++ [#array-literal literal]
+
+Syntax for an array literal.
+
+[[# array-size-note]]
+++ [#array-size size]
+
+How to get the length of an array.
+
+[[# empty-array-test-note]]
+++ [#empty-array-test empty test]
+
+How to test whether an array is empty.
+
+[[# array-lookup-note]]
+++ [#array-lookup lookup]
+
+How to look up the value stored at an index.
+
+**factor:**
+
+There are special words for extracting the first four elements of a sequence:
+
+[[code]]
+{ 1 2 3 4 } first
+{ 1 2 3 4 } second
+{ 1 2 3 4 } third
+{ 1 2 3 4 } fourth
+[[/code]]
+
+[[# array-update-note]]
+++ [#array-update update]
+
+How to set the value stored at an index.
+
+[[# array-out-of-bounds-note]]
+++ [#array-out-of-bounds out-of-bounds behavior]
+
+What happens when an attempt is made to access the value at a non-existent index.
+
+[[# zip-note]]
+++ [#zip zip]
+
+How to convert two sequences into a sequence of pairs.
+
+**factor:**
+
+[[# heap-note]]
++ [#heap Heap]
+
+[[# dictionaries-note]]
++ [#dictionaries Dictionaries]
+
+[[# functions-note]]
++ [#functions Functions]
+
+[[# def-func-note]]
+++ [#def-func define function]
+
+How to define a function.
+
+**factor:**
+
+[[# invoke-func-note]]
+++ [#invoke-func invoke function]
+
+How to invoke a function.
+
+[[# missing-arg-note]]
+++ [#missing-arg missing argument behavior]
+
+What happens when too few arguments are passed to a function.
+
+It is an error in stack-oriented languages when a function tries to read more values from a stack than are there.  Since the stack may have had values in it which were not intended for the function, so in general stack-oriented languages cannot detect when too few arguments are passed to a function.
+
+**factor:**
+
+
+
+[[# retval-note]]
+++ [#retval return value]
+
+How to return a value from a function.
+
+[[# multiple-retval-note]]
+++ [#multiple-retval multiple return values]
+
+[[# recursive-func-note]]
+++ [#recursive-func recursive function]
+
+[[# mutually-recursive-func-note]]
+++ [#mutually-recursive-func mutually recursive functions]
+
+[[# anonymous-func-note]]
+++ [#anonymous-func anonymous function]
+
+[[# invoke-anonymous-func-note]]
+++ [#invoke-anonymous-func invoke anonymous function]
+
+[[# closure-note]]
+++ [#closure closure]
+
+[[# func-as-val-note]]
+++ [#func-as-val function as value]
+
+How to treat a function as a value.
+
+[[# compose-func-note]]
+++ [#compose-func compose functions]
+
+[[# partial-application-note]]
+++ [#partial-application partial application]
+
+[[# fried-quotation-note]]
+++ [#fried-quotation fried quotation]
+
+[[# execution-control-note]]
++ [#execution-control Execution Control]
+
+[[# exceptions-note]]
++ [#exceptions Exceptions]
+
+[[# file-handles-note]]
++ [#file-handles File Handles]
+
+[[# files-note]]
++ [#files Files]
+
+[[# directories-note]]
++ [#directories Directories]
+
+[[# processes-environment-note]]
++ [#processes-environment Processes and Environment]
+
+[[# cmd-line-arg-note]]
+++ [#cmd-line-arg command line arguments]
+
+[[# program-name-note]]
+++ [#program-name program name]
+
+[[# env-var-note]]
+++ [#env-var environment variable]
+
+[[# user-id-name-note]]
+++ [#user-id-name user id and name]
+
+[[# exit-note]]
+++ [#exit exit]
+
+[[# external-cmd-note]]
+++ [#external-cmd external command]
+
+[[# backticks-note]]
+++ [#backticks backticks]
+
+[[# pid-note]]
+++ [#pid pid]
+
+[[# signal-handler-note]]
+++ [#signal-handler set signal handler]
+
+[[# send-signal-note]]
+++ [#send-signal send signal]
+
+[[# libraries-namespaces-note]]
++ [#libraries-namespaces Libraries and Namespaces]
+
+[[# reflection-note]]
++ [#reflection Reflection]
+
+[[# graphics-note]]
++ [#graphics Graphics]
+
+[[# forth]]
++ [#top Forth]
+
+[http://www.complang.tuwien.ac.at/forth/gforth/Docs-html/ Gforth User Manual]
+[http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm A Beginner's Guide to Forth]
+[http://thinking-forth.sourceforge.net/ Thinking Forth]
+[http://lars.nocrew.org/dpans/dpans.htm ANS Forth]
+
+The data stack used by Forth procedures to pass operands consists of cells of machine words.  These will be interpreted as signed integers, unsigned integers, or memory addresses, depending upon the operator invoked on them.  A Forth interpreter does not perform any checks to ensure type safety.  
+
+To work with strings and arrays, a Forth programmer must allocate and free space on the heap with the //allocate// and //free// commands.  Strings are then represented on the data stack with two cells: the address of the string and the length of the string.  To make working with these string representations easier, there are operators which manipulate the stack two cells at a time: //2drop//, //2dup//, //2swap//.
+
+Most Forth implementations support floating point numbers.  Floats are kept on a separate stack, and many data stack operators have a floating point stack analogue.  Floating point operators have an "f" prefix: //fdrop//, //fdup//, //fswap//, //f+//, //f*//, //f<//.
+
+[[# postscript]]
++ [#top PostScript]
+
+[http://partners.adobe.com/public/developer/en/ps/PLRM.pdf PostScript Language Reference (pdf)]
+[http://www.adobe.com/devnet/acrobat/pdfs/pdf_reference_1-7.pdf PDF Reference (pdf)]
+
+PostScript is a commonly used page description language.  It has programming language features one might not expect to find in such a special purpose language such as looping and branching commands, arrays and dictionaries, and even commands which read from standard input and write to standard out.
+
+Like Forth, PostScript is a language with built-in operators that add value to or remove values from an operand stack.  Unlike Forth, PostScript keeps track of the type of each value in the operand stack, and it will raise an error if an operator is called on an operand of the wrong type.  PostScript also offers string, array, and dictionary data types so that direct access to memory is not needed or even supported.
+
+A PostScript document consists of a sequence of pages, one for each execution of the //showpage// operator.  PostScript provides a selection of operators which paint marks such as letters, shapes, or lines onto the page.  The painted marks are collected in a buffer.  When a //showpage// operator is invoked, the marks are rendered on the page and the buffer is cleared.  If two marks overlap, the mark which was painted last will be completely visible, and the earlier mark will be partially or completely obscured as if it had been painted over.
+
+The coordinate system used for determining the location of a painting mark places the origin in the lower left corner of the pa by default.  The scale is 72 units per inch, with the x coordinate increasing in a rightward direction and the y coordinate increasing in an upward direction.  The program may scale, rotate, or translate the coordinate system as pleased as long as the transformation is linear.  The size of the page depends on the output device.  Although the origin is by default the lower left corner of the physical page, some printers cannot print on the margin of the page; such printers cannot place a mark at or near the origin.  The portions of marks which are outside the renderable window of the output device are ignored.
+
+Some of the behavior of the painting operands is governed by the current graphics state.  This reduces the number of operands that must be pushed onto the stack when calling a painting operator.  The most commonly used parameters in the current graphics state are the current position, path, color, font, line width, coordinate transformation matrix.  The //gsave// and //grestore// will push the current graphics state onto a stack or pop and restore the top value of the graphics state from the same stack.
+
++ PostScript Development
+
+[http://pages.cs.wisc.edu/~ghost/ Ghostscript]
+[http://www.quite.com/psalter/ PSAlter]
+[http://en.wikipedia.org/wiki/Preview_(software) Preview]
+
+One can test PostScript code by sending it to a printer, but it is better to have an application which can render the PostScript on a screen. Ghostscript is free and runs on Unix and Linux.  PSAlter can be purchased for Windows.
+
+Mac OS X includes an application called //Preview// which renders PDF documents on the screen.  It can also be used to render PostScript which it accomplishes by automatically converting the PostScript to PDF.  //Preview// doesn't provide informative error messages.  The following PostScript shows how to use the //stopped// operator to catch an error and display the error name and the command that caused the error:
+
+[[code]]
+%!PS
+/showobject { () exch 40 string cvs show } bind readonly def
+/showerror {
+    /saved_errorname $error /errorname get def
+    /saved_command $error /command get def
+    initgraphics
+    /Helvetica 20 selectfont
+    72 644 moveto (this error occurred: ) show
+    144 572 moveto currentdict /saved_errorname get showobject
+    72 504 moveto (operator causing the error: ) show
+    144 432 moveto currentdict /saved_command  get showobject
+    $error /newerror false put
+    showpage } bind readonly def
+
+{
+    /Helvetica-Bold 20 selectfont
+    72 576 moveto
+    /h << 1 (one) 2 (two) >> def
+    currentdict /h get 3 get show showpage
+    
+} stopped { showerror } if
+[[/code]]
+
+
+[[# factor]]
++ [#top Factor]
+
+[http://docs.factorcode.org/content/article-handbook.html Factor Handbook]
+[http://docs.factorcode.org/content/article-vocab-index.html Vocabulary Index]

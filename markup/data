@@ -1,0 +1,1188 @@
+[[# top]]//a side-by-side reference sheet//
+
+[#grammar-invocation grammar and invocation] | [#var-expr variables and expression] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] _
+[#arrays arrays] | [#dictionaries dictionaries] | [#tables tables] | [#import-export import and export] | [#relational-algebra relational algebra] | [#aggregation aggregation] | [#functions functions] _
+[#execution-control execution control] | [#files files] | [#libraries-namespaces libraries and namespaces] | [#reflection reflection]
+
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
+||[[# version-used]][#version-used-note version used] _
+@<&nbsp;>@||##gray|//PostgreSQL 9.0//##||##gray|//20070501//##||##gray|//0.9//##|| ||
+||[[# show-version]][#show-version-note show version] _
+@<&nbsp;>@||$ psql @@--@@version||$ awk @@--@@version||$ pig @@--@@version|| ||
+||||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
+||[[# interpreter]][#interpreter-note interpreter] _
+@<&nbsp;>@||$ psql -f foo.sql||$ awk -f foo.awk bar.txt||$ pig -f foo.pig||$ mongo foo.js||
+||[[# repl]][#repl-note repl] _
+@<&nbsp;>@||$ psql||##gray|//none//##||$ pig -x local||$ mongo _
+ _
+$ mongo @@--@@shell startup.js||
+||[[# input-format]][#input-format-note input data format]||##gray|//multiple tables defined by// create table //statements//##||##gray|//single field and record delimited file.  By default fields are delimited by whitespace and records by newlines//##||##gray|//multiple files.  Default loading function is// PigStorage //and default delimiter is tab//##|| ||
+||[[# statement-separator]][#statement-separator-note statement separator]||;||; ##gray|//or newline//##||; ##gray|//and newline when using REPL//##|| ||
+||[[# block-delimiters]][#block-delimiters-note block delimiters]||##gray|//none in SQL; PL/SQL uses keywords to delimit blocks//##||{ }|| ||{ }||
+||[[# eol-comment]][#eol-comment-note end-of-line comment]||@@--@@ ##gray|//comment//##||# ##gray|//comment//##||@@--@@ ##gray|//comment//##||##gray|@@//@@ comment##||
+||[[# multiple-line-comment]][#multiple-line-comment-note multiple line comment]||##gray|//none//##||##gray|//none//##||##gray|/* comment _
+another comment */##||##gray|/* comment _
+another comment */##||
+||||||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
+||[[# case-sensitive]][#case-sensitive-note case sensitive?]||##gray|//no//##||##gray|//yes//##||##gray|//functions and aliases are case sensitive; commands and operators are not//##||##gray|//yes//##||
+||[[# quoted-id]][#quoted-id-note quoted identifier]||CREATE TABLE "select" ( _
+@<&nbsp;&nbsp;>@"foo bar" INT _
+); _
+ _
+##gray|//MySQL://## _
+CREATE TABLE @@`select`@@ ( _
+@<&nbsp;&nbsp;>@ @@`foo bar`@@ INT _
+);||##gray|//none//##||##gray|//none//##|| ||
+||[[# null]][#null-note null] _
+@<&nbsp;>@||NULL||""||null|| ||
+||[[# null-test]][#null-test-note null test] _
+@<&nbsp;>@||foo IS NULL||foo == ""||##gray|//in filter clause://## _
+is null|| ||
+||[[# coalesce]][#coalesce-note coalesce] _
+@<&nbsp;>@||coalesce(foo, 0)|| ||foo is null ? 0 : foo|| ||
+||[[# nullif]][#nullif-note nullif]||nullif(foo, -999)|| || || ||
+||[[# conditional-expr]][#conditional-expr-note conditional expression]||CASE WHEN x > 0 THEN x ELSE -x END||x > 0 ? x : -x||x > 0 ? x : -x|| ||
+||||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
+||[[# boolean-type]][#boolean-type-note boolean type] _
+@<&nbsp;>@||BOOLEAN||##gray|//values are untyped//##||##gray|//none//##||Boolean||
+||[[# true-false]][#true-false-note true and false] _
+@<&nbsp;>@||TRUE FALSE||1 0||##gray|//none//##||true false||
+||[[# falsehoods]][#falsehoods-note falsehoods]||FALSE _
+ _
+##gray|//the predicate of a// where //clause evaluates as false if it contains a null//##||0 ""||##gray|//none; the first operand of a conditional expression must be a comparison operator expression//##||false null undefined "" 0 NaN||
+||[[# logical-op]][#logical-op-note logical operators]||AND OR NOT||&& @@||@@ !||##gray|//in filter clause://## _
+and or not||$and $or $not||
+||[[# logical-expr]][#logical-expr-note logical expression]|| || || ||{$and: [ ]} _
+{$or: [ ]} _
+{$not: {}}||
+||[[# relational-op]][#relational-op-note relational operators]||@@=@@ != > < >= <=||== != > < >= <=||== != > < >= <=|| ||
+||[[# int-type]][#int-type-note integer type]||smallint ##gray|//2 bytes//## _
+int ##gray|//4 bytes//## _
+bigint ##gray|//8 bytes//##||##gray|//variables are untyped//##||int ##gray|//4 bytes//## _
+long ##gray|//8 bytes//##|| ||
+||[[# float-type]][#float-type-note float type]||float ##gray|//4 bytes//## _
+double ##gray|//8 bytes//##||##gray|//variables are untyped//##||float ##gray|//4 bytes//## _
+double ##gray|//8 bytes//##|| ||
+||[[# fixed-type]][#fixed-type-note fixed type] _
+@<&nbsp;>@||numeric(##gray|//precision//##, ##gray|//scale//##)||##gray|//variables are untyped//##||##gray|//none//##|| ||
+||[[# arith-op]][#arith-op-note arithmetic operators] _
+##gray|//addition, subtraction, multiplication, division, remainder//##||+ - * / %||+ - * / %||+ - * / %|| ||
+||[[# int-div]][#int-div-note integer division] _
+@<&nbsp;>@||13 / 5||int(13 / 5)||13 / 5|| ||
+||[[# int-div-zero]][#int-div-zero-note integer division by zero]||##gray|//error//##||##gray|//error//##||null|| ||
+||[[# float-div]][#float-div-note float division] _
+@<&nbsp;>@||cast(13 as float) / 5||13 / 5||1.0 * 13 / 5|| ||
+||[[# float-div-zero]][#float-div-zero-note float division by zero]||##gray|//error//##||##gray|//error//##||null|| ||
+||[[# power]][#power-note power]||2 ^ 32||2 ^ 32 _
+2 ** 32||##gray|//none//##|| ||
+||[[# sqrt]][#sqrt-note sqrt] _
+@<&nbsp;>@||sqrt(2)||sqrt(2)||SQRT(2)|| ||
+||[[# sqrt-negative-one]][#sqrt-negative-one-note sqrt -1]||##gray|//error//##||##gray|//generates a warning://## _
+nan||NaN|| ||
+||[[# transcendental-func]][#transcendental-func-note transcendental functions]||exp ln sin cos tan asin acos atan atan2||exp log sin cos ##gray|//none//## ##gray|//none//## ##gray|//none//## ##gray|//none//## atan2||EXP LOG SIN COS TAN ASIN ACOS ATAN ##gray|//none//##|| ||
+||[[# float-trunc]][#float-trunc-note float truncation]||cast(2.7 as int) _
+round(2.7) _
+ceil(2.7) _
+floor(2.7)||int(2.7)||(int)2.7 _
+ROUND(2.7) _
+CEIL(2.7) _
+FLOOR(2.7)|| ||
+||[[# absolute-val]][#absolute-val-note absolute value] _
+@<&nbsp;>@||abs(-2.7)||##gray|//none//##||ABS(-2.7)|| ||
+||[[# random-num]][#random-num-note random number] _
+@<&nbsp;>@||random()||rand()||RANDOM()|| ||
+||[[# bit-op]][#bit-op-note bit operators]||@<<< >>>@ & | # ~||##gray|//gawk://## _
+lshift(##gray|//val//##, ##gray|//cnt//##) _
+rshift(##gray|//val//##, ##gray|//cnt//##) _
+and(##gray|//val1//##, ##gray|//val2//##) _
+or(##gray|//val1//##, ##gray|//val2//##) _
+xor(##gray|//val1//##, ##gray|//val2//##) _
+compl(##gray|//val//##)||##gray|//none//##|| ||
+||||||||||~ [[# strings]][#strings-note strings]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
+||[[# str-types]][#str-types-note types]||text _
+varchar(##gray|//n//##) _
+char(##gray|//n//##)||##gray|//variables are untyped//##||chararray _
+bytearray|| ||
+||[[# str-literal]][#str-literal-note literal] _
+@<&nbsp;>@||'don''t say "no"' _
+ _
+##gray|//PostgreSQL escape literal://## _
+E'don\'t say "no"'||"don't say \"no\""||'don\'t say "no"'|| ||
+||[[# str-len]][#str-len-note length] _
+@<&nbsp;>@||length('lorem ipsum')||length("lorem ipsum")||SIZE('lorem ipsum')|| ||
+||[[# str-esc]][#str-esc-note escapes]||##gray|//no backslash escapes in SQL standard string literals//## _
+ _
+##gray|//in PostgreSQL escape literals://## _
+\b \f \n \r \t \##gray|//ooo//## \x##gray|//hh//## \u##gray|//hhhh//## \u##gray|//hhhhhhhh//##||\\ \" \a \b \f \n \r \t \v \##gray|//ooo//## \x##gray|//hh//##||\n \t \u##gray|//hhhh//##|| ||
+||[[# str-concat]][#str-concat-note concatenation] _
+@<&nbsp;>@||'Hello' @@||@@ ', ' @@||@@ 'World!'||("Hello" " " "World!")||CONCAT(CONCAT('Hello', ', '), 'World!')|| ||
+||[[# split]][#split-note split] _
+@<&nbsp;>@||regexp_split_to_array( _
+@<&nbsp;&nbsp;>@'do re mi', ' ' _
+)||split("do re mi", a, " ")||STRSPLIT('do re mi', ' ')|| ||
+||[[# case-manipulation]][#case-manipulation-note case manipulation]||upper('lorem') _
+lower('LOREM') _
+initcap('lorem')||toupper("lorem") _
+tolower("LOREM") _
+##gray|//none//##||UPPER('lorem') _
+LOWER('LOREM') _
+UCFIRST('lorem')|| ||
+||[[# strip]][#strip-note strip]||trim(' lorem ') _
+ltrim(' lorem') _
+rtrim('lorem ')|| ||TRIM(' lorem ')|| ||
+||[[# index-substr]][#index-substr-note index of substring]||##gray|//index starts from 1; returns 0 if not found://## _
+strpos('lorem ipsum', 'ipsum')||##gray|//index starts from 1; returns 0 if not found://## _
+index("lorem ipsum", "ipsum")||##gray|//index starts from 0; returns -1 if not found://## _
+INDEXOF('lorem ipsum', 'ipsum', 0)|| ||
+||[[# substr]][#substr-note extract substring]||substr('lorem ipsum', 7, 5)||substr("lorem ipsum", 7, 5)||SUBSTRING('lorem ipsum', 6, 11)|| ||
+||[[# sprintf]][#sprintf-note sprintf]||select format('%s %s %s', 'foo', 7, 13.2);||sprintf("%s %d %f", "foo", 7, 13.2)||REGISTER /PATH/TO/piggybank-0.3-amzn.jar; _
+DEFINE FORMAT org.apache.pig.piggybank. _
+evaluation.string.FORMAT(); _
+ _
+foo = FOREACH foo GENERATE _
+@<&nbsp;&nbsp;>@FORMAT('%s %d %f', 'foo', 7, 13.2);|| ||
+||||||||||~ [[# regexes]][#regexes-note regular expressions]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
+||[[# match]][#match-note match]||select * _
+from pwt _
+where name similar to 'r[a-z]+';||##gray|//matching inside pattern://## _
+$1 ~ /^r[a-z]+/ { print $0 } _
+ _
+##gray|//matching inside action://## _
+{ if (match($1, /^r[a-z]+$/)) print $0 }||root_pwf = filter pwf _
+@<&nbsp;&nbsp;>@by SIZE(REGEX_EXTRACT(name, '^(root)$',1)) > 0;|| ||
+||[[# substitute]][#substitute-note substitute] _
+@<&nbsp;>@||select regexp_replace('foo bar', 'bar$', 'baz');||s = "foo bar" _
+sub(/bar$/, "baz", s)|| || ||
+||[[# extract-subgroup]][#extract-subgroup-note extract subgroup]||select (regexp_matches('foobar', '(f..)bar'))[1];|| ||properties = FOREACH urls GENERATE FLATTEN(EXTRACT($0, '^https?:@@//@@([^/]+)')) as host:chararray;|| ||
+||||||||||~ [[# dates-time]][#dates-time-note dates and time]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
+||[[# current-date-time]][#current-date-time-note current date and time]||now()||##gray|//gawk://## _
+systime()||REGISTER /PATH/TO/piggybank-0.3-amzn.jar; _
+DEFINE DATE_TIME org.apache.pig.piggybank. _
+evaluation.datetime.DATE_TIME(); _
+ _
+bar = FOREACH foo GENERATE DATE_TIME('-00:00');|| ||
+||[[# date-time-to-str]][#date-time-to-str-note datetime to string]||to_char(now(), 'YYYY-MM-DD HH24:MI:SS')||##gray|//gawk://## _
+strftime("%Y-%m-%d %H:%M:%S", systime())||REGISTER /PATH/TO/piggybank-0.3-amzn.jar; _
+DEFINE FORMAT_DT org.apache.pig.piggybank. _
+evaluation.datetime.FORMAT_DT(); _
+ _
+baz = FOREACH bar GENERATE FORMAT_DT('yyyy-MM-dd HH::mm:ss', $0);|| ||
+||[[# str-to-date-time]][#str-to-date-time-note string to datetime]||to_timestamp('2011-09-26 00:00:47', 'YYYY-MM-DD HH24:MI:SS')||##gray|//gawk://## _
+mktime("2011 09 26 00 00 47")|| || ||
+||||||||||~ [[# arrays]][#arrays-note arrays]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
+||[[# array-literal]][#array-literal-note literal]||##gray|//PostgreSQL://## _
+create temp table foo ( a int[] ); _
+insert into foo values ( '{1,2,3}' );||##gray|//none//##||one_row = LOAD '/tmp/one_line.txt'; _
+foo = FOREACH one_row GENERATE (1,2,3);|| ||
+||[[# array-size]][#array-size-note size]||##gray|//PostgreSQL://## _
+select array_upper(a, 1) from foo;||##gray|//none, but// split //function returns length//##||bar = FOREACH foo GENERATE SIZE(a);|| ||
+||[[# array-lookup]][#array-lookup-note lookup]||##gray|//PostgreSQL://## _
+select a[1] from foo;||a[0]||bar = FOREACH foo GENERATE a.$0;|| ||
+||[[# array-update]][#array-update-note update]|| || || || ||
+||[[# array-iteration]][#array-iteration-note iteration]|| ||for (i in a) print i, a[i]|| || ||
+||[[# membership]][#membership-note membership]|| || || || ||
+||||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
+||[[# dictionary-literal]][#dictionary-literal-note literal]|| || ||['t'#1, 'f'#0]|| ||
+||||||||||~ [[# tables]][#tables-note tables]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
+||[[# order-by]][#order-by-note order rows by column]||##gray|//ordering depends on type of column//## _
+select name _
+from pwt _
+order by name;||##gray|//ordering is lexical unless// -n //flag is used//## _
+$ sort -k1 -t: /etc/passwd||names = foreach pwf generate name; _
+ordered_names = order names by name;|| ||
+||[[# order-by-multiple]][#order-by-multiple-note order rows by multiple columns]||select group, name _
+from pwt _
+order by group, name;|| || || ||
+||order rows in descending order||select name _
+from pwt _
+order by name;||$ sort -k1 -r -t: /etc/passwd|| || ||
+||[[# limit]][#limit-note limit]||select name from pwt order by name limit 10;|| ||first_ten = limit ordered_names 10;|| ||
+||[[# offset]][#offset-note offset]||select name from pwt order by name limit 10 offset 10;|| || || ||
+||||||||||~ [[# import-export]][#import-export-note import and export]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
+||||||||||~ [[# relational-algebra]][#relational-algebra-note relational algebra]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
+||[[# poject-column-by-name]][#project-column-by-name-note project columns by name]||select name, pw from pwt;||##gray|//none//##||name_pw = foreach pwf generate name, pw;|| ||
+||[[# project-column-by-position]][#project-column-by-position-note project columns by position]||##gray|//none//##||{ print $1, $2 }||name_pw = foreach pwf generate $0, $1;|| ||
+||[[# project-expr]][#project-expr-note project expression]|| || || || ||
+||[[# project-all-columns]][#project-all-columns-note project all columns]||select * from pwt;||##gray|# prints input line:## _
+{ print $0 }||pwf2 = foreach pwf generate *;|| ||
+||[[# rename-columns]][#rename-columns-note rename columns]||select uid as userid, gid as groupid _
+from pwf;||##gray|//none//##||usergroups = foreach pwf generate uid as userid, gid as groupid;|| ||
+||[[# select-rows]][#select-rows-note select rows]||select * from pwt where name = 'root';||$1 == "root" { print $0 }||pwf3 = filter pwf by name == 'root';|| ||
+||[[# select-distinct-rows]][#select-distinct-rows-note select distinct rows]||select distinct gid from pwt;||$ cat > gid.awk _
+BEGIN { FS=":" } _
+!/^#/ { print $4 } _
+$ awk -f gid.awk /etc/passwd > /tmp/x _
+$ sort -u /tmp/x||gids1 = foreach pwf generate gid; _
+gids2 = distinct gids1;|| ||
+||[[# split-rows]][#split-rows-note split rows]|| || ||split pwf into rootpwf if name == 'root', otherpwf if name != 'root';|| ||
+||[[# inner-join]][#inner-join-note inner join]||create temp table gt ( _
+@<&nbsp;&nbsp;>@name text, pw text, _
+@<&nbsp;&nbsp;>@gid int, members text _
+); _
+ _
+copy gt from '/etc/group' _
+with delimiter ':'; _
+ _
+select * from pwt _
+join gt on pwt.gid = gt.gid;||$  awk '!/^#/' /etc/passwd > /tmp/x _
+$ sort -k4,4 -t: < /tmp/x > /tmp/pw _
+ _
+$  awk '!/^#/' /etc/group > /tmp/y _
+$ sort -k3,3 -t: < /tmp/y > /tmp/g _
+ _
+$ join -t: -14 -23 /tmp/pw /tmp/g||gf = load '/etc/group' using PigStorage(':') as (name:chararray, pw:chararray, gid:int, members:chararray); _
+ _
+pwgf = join pwf by gid, gf by gid;|| ||
+||[[# nulls-as-join-values]][#nulls-as-join-values-note nulls as join values]||##gray|//input tuples with nulls for join values are omitted from inner joins//##||##gray|//no null value; empty strings are joinable values//##||##gray|//input tuples with nulls for join values are omitted from inner joins//##|| ||
+||[[# self-join]][#self-join-note self join]||select pwt1.name, pwt2.name _
+from pwt as pwt1, pwt as pwt2 _
+where pwt1.gid = pwt2.gid;||$ join -t: -14 -24 /tmp/pw /tmp/pw||pwf2 = foreach pwf generate *; _
+joined_by_gid = join pwf by gid, pwf2 by gid; _
+name_pairs = foreach by_group generate pwf::name, pwf2::name;|| ||
+||[[# left-join]][#left-join-note left join]||select * _
+from customers c _
+left join orders o _
+@<&nbsp;&nbsp;>@on c.id = o.customer_id;||$ join -t: -a1 -11 -22 /tmp/c /tmp/o||j = join customers by id left, orders by customer_id;|| ||
+||[[# outer-join]][#full-join-note full join]||select * _
+from customers c _
+full join orders o _
+@<&nbsp;&nbsp;>@on c.id = o.customer_id;||$ join -t: -a1 -a2 -11 -22 /tmp/c /tmp/o||j = join customers by id full, orders by customer_id;|| ||
+||[[# antijoin]][#antijoin-note antijoin]|| || || || ||
+||[[# cross-join]][#cross-join-note cross join]||create table files ( file text ); _
+insert into files values ('a'), ('b'), ('c'), ('d'), ('e'), ('f'), ('g'), ('h'); _
+ _
+create table ranks ( rank int ); _
+insert into ranks values (1), (2), (3), (4), (5), (6), (7), (8); _
+ _
+create table chessboard ( file text, rank int ); _
+insert into chessboard _
+select * _
+from files, ranks;||##gray|//specify nonexistent join fields://## _
+ _
+$ join -12 -22 /tmp/f /tmp/r||files = load '/tmp/files.txt' as (file:chararray); _
+ _
+ranks = load '/tmp/ranks.txt' as (rank:int); _
+ _
+chessboard = cross files, ranks;|| ||
+||||||||||~ [[# aggregation]][#aggregation-note aggregation]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
+||[[# group-by]][#group-by-note group by]||select gid, count(*) _
+from pwf _
+group by gid;||BEGIN { FS=":" } _
+!/^#/ { cnt[$4]++ } _
+END { for (i in cnt) print i, cnt[i] }||by_group = group pwf by gid; _
+cnts = foreach by_group generate $0, COUNT($1);|| ||
+||[[# group-by-multiple]][#group-by-multiple-note group by multiple columns]||select gid, sh, count(*) _
+from pwf _
+group by gid, sh;|| ||by_group = group pwf by (gid, sh); _
+cnts = foreach by_group generate FLATTEN($0), COUNT($1);|| ||
+||[[# aggregation-func]][#aggregation-func-note aggregation functions]||count sum min max avg stddev||##gray|//none//##||COUNT SUM MIN MAX AVG ##gray|//none//##|| ||
+||||||||||~ [[# functions]][#functions-note functions]||
+||~ ||~ [#sql pl/sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
+||[[# def-func]][#def-func-note define function]||create or replace function _
+@<&nbsp;&nbsp;>@add ( x int, y int ) _
+@<&nbsp;&nbsp;>@returns int as $$ _
+begin _
+@<&nbsp;&nbsp;>@return x + y; _
+end; $$ language plpgsql;||##gray|//can be defined at position of pattern-action statement://## _
+ _
+function add(x, y) { return x+y }||##gray|//in// org/hpglot/Add.java:## _
+package org.hpglot; _
+ _
+import java.io.IOException; _
+import org.apache.pig.EvalFunc; _
+import org.apache.pig.data.Tuple; _
+ _
+public class Add extends EvalFunc<Integer> { _
+@<&nbsp;&nbsp;>@@Override public Integer _
+@<&nbsp;&nbsp;>@exec(Tuple input) throws IOException { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Integer x, y; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@if (input == null @@|| ||
+||[[# invoke-func]][#invoke-func-note invoke function]||select add(x, y) from foo;||{ print add($1, $2) }||REGISTER Add.jar _
+DEFINE ADD org.hpglot.Add(); _
+ _
+foo = LOAD 'foo.txt' AS (x:int, y:int); _
+bar = FOREACH foo GENERATE ADD(x, y);|| ||
+||[[# drop-func]][#drop-func-note drop function] _
+@<&nbsp;>@||drop function add(integer, integer);||##gray|//none//##||##gray|//none//##|| ||
+||||||||||~ [[# execution-control]][#execution-control-note execution control]||
+||~ ||~ [#sql pl/sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
+||[[# if]][#if-note if]|| ||if (!0) print "foo"; else print "bar"||##gray|//none//##|| ||
+||[[# while]][#while-note while]|| ||i = 0; while (i<5) print i++||##gray|//none//##|| ||
+||[[# for]][#for-note for]|| ||for (i=0; i<5; i++) print i||##gray|//none//##|| ||
+||||||||||~ [[# files]][#files-note files]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
+||[[# field-delimiter]][#field-delimiter-note set field delimiter]||$  grep -v '^#' /etc/passwd > /tmp/pw _
+ _
+create table pwt ( name text, pw text, uid int, gid int, gecos text, home text, sh text ); _
+ _
+copy pwt from '/tmp/pw' with delimiter ':';||BEGIN { FS=":" }||pwf = LOAD '/etc/passwd' USING PigStorage(':') AS (name:chararray, pw:chararray, uid:int, gid:int, gecos:chararray, home:chararray, sh:chararray);|| ||
+||[[# write-table-file]][#write-table-file-note write table to file]|| || ||STORE foo INTO '/tmp/foo.tab';|| ||
+||||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
+||||||||||~ [[# reflection]][#reflection-note reflection]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
+||[[# table-schema]][#table-schema-note table schema]|| || ||DESCRIBE foo;|| ||
+||~ ||~ ##EFEFEF|@@_________________________________________@@##||~ ##EFEFEF|@@_________________________________________@@##||~ ##EFEFEF|@@_________________________________________@@##||~ ##EFEFEF|@@_________________________________________@@##||
+
+
+
+[[# general-note]]
++ [#general General]
+
+[[# version-used-note]]
+++ [#version-used versions used]
+
+The versions used for testing code in the reference sheet.
+
+[[# show-version-note]]
+++ [#show-version show version]
+
+How to get the version.
+
+[[# grammar-invocation-note]]
++ [#grammar-invocation Grammar and Invocation]
+
+[[# interpreter-note]]
+++ [#interpreter interpreter]
+
+How to run the interpreter on a script.
+
+[[# repl-note]]
+++ [#repl repl]
+
+How to invoke the REPL.
+
+[[# statement-separator-note]]
+++ [#statement-separator statement separator]
+
+The statement separator.
+
+[[# block-delimiters-note]]
+++ [#block-delimiters block delimiters]
+
+The delimiters used for blocks.
+
+[[# eol-comment-note]]
+++ [#eol-comment end-of-line comment]
+
+How to create a comment that ends at the next newline.
+
+[[# multiple-line-comment-note]]
+++ [#multiple-line-comment multiple line comment]
+
+How to comment out multiple lines.
+
+[[# var-expr-note]]
++ [#var-expr Variables and Expressions]
+
+[[# case-sensitive-note]]
+++ [#case-sensitive case sensitive?]
+
+Are identifiers which differ only by case treated as distinct identifiers?
+
+[[# quoted-id-note]]
+++ [#quoted-id quoted identifier]
+
+How to quote an identifier.
+
+Quoting an identifier is a way to include characters which aren't normally permitted in an identifier.
+
+In SQL quoting is also a way to refer to an identifier that would otherwise be interpreted as a reserved word
+
+[[# null-note]]
+++ [#null null]
+
+The null literal.
+
+**pig:**
+
+{{PigStorage}}, the default function for loading and persisting relations, represents a null value with an empty string.  Null is distinct from an empty string since {{null == ''}} evaluates as false.  Thus {{PigStorage}} cannot load or store an empty string.
+
+[[# null-test-note]]
+++ [#null-test null test]
+
+How to test whether an expression is null.
+
+**sql:**
+
+The expression {{null = null}} evaluates as {{null}}, which is a ternary boolean value distinct from true and false.  Expressions built up from arithmetic operators or comparison operators  which contain a null evaluate as null.  When logical operators are involved, null behaves like the //unknown// value of [http://en.wikipedia.org/wiki/Three-valued_logic#Kleene_logic Kleene logic].
+
+[[# coalesce-note]]
+++ [#coalesce coalesce]
+
+How to use the value of an expression, replacing it with an alternate value if it is null.
+
+[[# nullif-note]]
+++ [#nullif nullif]
+
+How to use the value of an expression, replacing a specific value with null.
+
+[[# conditional-expr-note]]
+++ [#conditional-expr conditional expression]
+
+The syntax for a conditional expression.
+
+[[# arithmetic-logic-note]]
++ [#arithmetic-logic Arithmetic and Logic]
+
+[[# true-false-note]]
+++ [#true-false true and false]
+
+Literals for true and false.
+
+[[# falsehoods-note]]
+++ [#falsehoods falsehoods]
+
+Values which evaluate as false in a boolean context.
+
+[[# logical-op-note]]
+++ [#logical-op logical operators]
+
+The logical operators.  Logical operators impose a boolean context on their arguments and return a boolean value.
+
+[[# relational-op-note]]
+++ [#relational-op relational operators]
+
+The comparison operators, also known as the relational operators.
+
+[[# int-type-note]]
+++ [#int-type integer type]
+
+Integer types.
+
+**sql:**
+
+Datatypes are database specific, but the mentioned types are provided by both PostgreSQL and MySQL.
+
+**awk:**
+
+Variables are untyped and implicit conversions are performed between numeric and string types.
+
+The numeric literal for zero, 0, evaluates as false, but the string "0" evaluates as true.  Hence we can infer that awk has at least two distinct data types.
+
+[[# float-type-note]]
+++ [#float-type float type]
+
+Floating point decimal types.
+
+**sql:**
+
+Datatypes are database specific, but the mentioned types are provided by both PostgreSQL and MySQL.
+
+[[# fixed-type-note]]
+++ [#fixed-type fixed type]
+
+Fixed precision decimal types.
+
+**sql:**
+
+Datatypes are database specific, but the mentioned types are provided by both PostgreSQL and MySQL.
+
+[[# arith-op-note]]
+++ [#arith-op arithmetic operations]
+
+The arithmetic operators: addition, subtraction, multiplication, division, modulus, and exponentiation.
+
+[[# int-div-note]]
+++ [#int-div integer division]
+
+How to compute the quotient of two numbers.  The quotient is always an integer.
+
+[[# int-div-zero-note]]
+++ [#int-div-zero integer division by zero]
+
+What happens when an integer is divided by zero.
+
+**pig:**
+
+Division by zero evaluates to null.  Recall that {{PigStorage}} stores nulls in files as empty strings.
+
+[[# float-div-note]]
+++ [#float-div float division]
+
+How to perform floating point division, even if the operands are integers.
+
+[[# float-div-zero-note]]
+++ [#float-div-zero float division by zero]
+
+The result of dividing a float by zero.
+
+**pig:**
+
+Division by zero evaluates to null.  Recall that {{PigStorage}} stores nulls in files as empty strings.
+
+[[# power-note]]
+++ [#power power]
+
+How to raise a number to a power.
+
+[[# sqrt-note]]
+++ [#sqrt sqrt]
+
+How to get the square root of a number.
+
+[[# sqrt-negative-one-note]]
+++ [#sqrt-negative-one sqrt -1]
+
+The result of taking the square root of negative one.
+
+[[# transcendental-func-note]]
+++ [#transcendental-func transcendental functions]
+
+The standard transcendental functions of mathematics.
+
+[[# float-trunc-note]]
+++ [#float-trunc float truncation]
+
+How to truncate floats to integers.   The functions (1) round towards zero, (2) round to the nearest integer, (3) round towards positive infinity, and (4) round towards negative infinity.  How to get the absolute value of a number is also illustrated.
+
+[[# absolute-val-note]]
+++ [#absolute-val absolute value]
+
+The absolute value of a number.
+
+[[# random-num-note]]
+++ [#random-num random number]
+
+How to create a unit random float.
+
+[[# strings-note]]
++ [#strings Strings]
+
+[[# str-types-note]]
+++ [#str-types types]
+
+The available string types.
+
+**pig:**
+
+A //chararray// is a string of Unicode characters.  Like in Java the characters are UTF-16 encoded.
+
+A //bytearray// is a string of bytes.  Data imported into Pig is of type //bytearray// unless declared otherwise.
+
+[[# str-literal-note]]
+++ [#str-literal literal]
+
+The syntax for string literals.
+
+**sql:**
+
+MySQL also has double quoted string literals.  PostgreSQL and most other database use double quotes for identifiers.
+
+In a MySQL double quoted string double quote characters must be escaped with reduplication but single quote characters do not need to be escaped.
+
+**pig:**
+
+Single quoted string literals are of type //chararray//.  There is no syntax for a //bytearray// literal.
+
+[[# str-len-note]]
+++ [#str-len length]
+
+How to get the length of a string.
+
+[[# str-esc-note]]
+++ [#str-esc escapes]
+
+Escape sequences which are available in string literals.
+
+**sql:**
+
+Here is a portable way to include a newline character in a SQL string:
+
+[[code]]
+select 'foo' || chr(10) || 'bar';
+[[/code]]
+
+MySQL double and single quoted strings support C-style backslash escapes.  Backslash escapes are not part of the SQL standard.  Their interpretation can be disabled at the session level with
+
+[[code]]
+SET sql_mode='NO_BACKSLASH_ESCAPES';
+[[/code]]
+
+
+[[# str-concat-note]]
+++ [#str-concat concatenation]
+
+How to concatenate strings.
+
+[[# split-note]]
+++ [#split split]
+
+How to split a string into an array of substrings.
+
+**sql:**
+
+How to split a string into multiple rows of data:
+
+[[code]]
+=> create temp table foo ( bar text );
+CREATE TABLE
+
+=> insert into foo select regexp_split_to_table('do re mi', ' ');
+INSERT 0 3
+[[/code]]
+
+[[# case-manipulation-note]]
+++ [#case-manipulation case manipulation]
+
+How to uppercase a string; how to lower case a string; how to capitalize the first character. 
+
+[[# strip-note]]
+++ [#strip strip]
+
+How to remove whitesapce from the edges of a string.
+
+[[# index-substr-note]]
+++ [#index-substr index of substring]
+
+How to get the leftmost index of a substring in a string.
+
+[[# substr-note]]
+++ [#substr extract substring]
+
+How to extract a substring from a string.
+
+[[# sprintf-note]]
+++ [#sprintf sprintf]
+
+How to create a string from a format.
+
+[[# regexes-note]]
++ [#regexes Regular Expressions]
+
+[[# match-note]]
+++ [#match match]
+
+**pig:**
+
+Pig does not directly support a regex match test.  The technique illustrated is to extract a subgroup and see whether the resulting tuple has anything in it.  This can be done in the {{by}} clause of a {{filter}} statement, but not as the first operand of a conditional expression.
+
+[[# substitute-note]]
+++ [#substitute substitute]
+
+How to perform substitution on a string.
+
+**awk:**
+
+{{sub}} and the global variant {{gsub}} return the number of substitutions performed.
+
+[[# extract-subgroup-note]]
+++ [#extract-subgroup extract subgroup]
+
+[[# dates-time-note]]
++ [#dates-time Date and Time]
+
+[[# arrays-note]]
++ [#arrays Arrays]
+
+[[# array-literal-note]]
+++ [#array-literal literal]
+
+The syntax for an array literal.
+
+**sql:**
+
+The syntax for arrays is specific to PostgreSQL.  MySQL does not support arrays.
+
+Defining a column to be an array violates first normal form.
+
+**pig:**
+
+Pig tuples can be used to store a sequence of data in a field.  Pig tuples are heterogeneous; the components do not need to be of the same type.
+
+[[# array-size-note]]
+++ [#array-size size]
+
+How to get the number of elements in an array.
+
+[[# array-lookup-note]]
+++ [#array-lookup lookup]
+
+How to get the value in an array by index.
+
+[[# array-update-note]]
+++ [#array-update update]
+
+How to change a value in an array.
+
+[[# array-iteration-note]]
+++ [#array-iteration iteration]
+
+How to iterate through the values of an array.
+
+[[# dictionaries-note]]
++ [#dictionaries Dictionaries]
+
+[[# dictionary-literal-note]]
++ [#dictionary-literal literal]
+
+**pig:**
+
+Dictionaries are called //maps// in Pig.  The keys must be character arrays, but the values can be any type.
+
+[[# tables-note]]
++ [#tables Tables]
+
+[[# order-by-note]]
+++ [#order-by order by]
+
+How to sort the rows in table using the values in one of the columns.
+
+[[# order-by-multiple-note]]
+++ [#order-by-multiple order by multiple columns]
+
+How to sort the rows in a table using the values in multiple columns.  If the values in the first column are the same, the values in the seconds column are used as a tie breaker.
+
+[[# limit-note]]
+++ [#limit limit]
+
+[[# offset-note]]
+++ [#offset offset]
+
+[[# import-export-note]]
++ [#import-export Import and Export]
+
+[[# relational-algebra-note]]
++ [#relational-algebra Relational Algebra]
+
+In a mapping operation the output relation has the same number of rows as the input relation.  A mapping operation can be specified with a function which accepts an input record and returns an output record.
+
+In a filtering operation the output relation has a less than or equal number of rows as the input relation.  A filtering operation can be specified with a function which accepts an input record and returns a boolean value.
+
+[[# input-format-note]]
+++ [#input-format input data format]
+
+The data formats the language can operate on.
+
+[[# field-delimiter-note]]
+++ [#field-delimiter set field delimiter]
+
+For languages which can operate on field and record delimited files, how to set the field delimiter.
+
+**sql:**
+
+The PostgreSQL {{copy}} command requires superuser privilege unless the input source is {{stdin}}.  Here is an example of how to use the {{copy}} command without superuser privilege:
+
+[[code]]
+$ ( echo "copy pwt from stdin with delimiter ':';"; cat /tmp/pw ) | psql
+[[/code]]
+
+The {{copy}} command is not part of the SQL standard.  MySQL uses the following:
+
+[[code]]
+load data infile '/etc/passwd' into table pwt fields terminated by ':';
+[[/code]]
+
+Both PostgreSQL and MySQL will use tab characters if a field separator is not specified.  MySQL permits the record terminator to changed from the default newline, but PostgreSQL does not.
+
+[[# select-column-name-note]]
+++ [#select-column-name select column by name]
+
+How to select fields by name.
+
+[[# select-column-position-note]]
+++ [#select-column-position select column by position]
+
+[[# select-all-columns-note]]
+++ [#select-all-columns select all columns]
+
+[[# rename-columns-note]]
+++ [#rename-columns rename columns]
+
+[[# filter-rows-note]]
+++ [#filter-rows filter rows]
+
+[[# split-rows-note]]
+++ [#split-rows split rows]
+
+An aggregation operation is similar to a filtering operation in that it accepts an input relation and produces an output relation with less than or equal number of rows.   An aggregation is defined by two functions: a partitioning function which accepts a record and produces a partition value, and a reduction function which accepts a set of records which share a partition value and produces an output record.
+
+[[# distinct-note]]
+++ [#distinct select distinct]
+
+How to remove duplicate rows from the output set.
+
+Removing duplicates can be accomplished with an aggregation operation in which the partition value is the entire row and a reduction function which returns the first row in the set of rows sharing the partition value.
+
+[[# inner-join-note]]
+++ [#inner-join inner join]
+
+In an //inner join//, only tuples from the input relations which satisfy a //join predicate// are used in the output relation.
+
+A special but common case is when the join predicate consists of an equality test or a conjunction of two or more equality tests.  Such a join is called an //equi-join//.
+
+**awk:**
+
+If {{awk}} is available at the command line then chances are good that {{join}} is also available.
+
+[[# null-join-note]]
+++ [#null-join null treatment in joins]
+
+How rows which have a null value for the join column are handled.
+
+Both SQL and Pig do not include such rows in the output relation unless an outer join (i.e. a left, right, or full join) is specified.  Even in the case of an outer join the rows with a null join column value are not joined with any rows from the other relations, even if there are also rows in the other relation with null join column values.  Instead the columns that derive from the other input relation will have null values in the output relation.
+
+[[# self-join-note]]
+++ [#self-join self join]
+
+A self join is when a relation is joined with itself.
+
+If a relation contained a list of people and their parents, then a self join could be used to find a persons grandparents.
+
+**pig:**
+
+An alias be used in a JOIN statement more than once.  Thus to join a relation with itself it must first be copied with a FOREACH statement.
+
+[[# left-join-note]]
+++ [#left-join left join]
+
+How to include rows from the input relation listed on the left (i.e. listed first) which have values in the join column which don't match any rows from the input relation listed on the right (i.e. listed second).  The term in short for //left outer join//.
+
+As an example, a left join between customers and orders would have a row for every order placed and the customer who placed it.  In addition it would have rows for customers who haven't placed any orders.  Such rows would have null values for the order information.
+
+**sql:**
+
+Here is a complete example with the schemas and data used in the left join: 
+
+[[code]]
+create table customers ( id int, name text );
+
+insert into customers values ( 1, 'John' ), ( 2, 'Mary' ), (3, 'Jane');
+
+create table orders ( id int, customer_id int, amount numeric(9, 2));
+
+insert into orders values ( 1, 2, 12.99 );
+insert into orders values ( 2, 3, 5.99 );
+insert into orders values ( 3, 3, 12.99 );
+
+select * from customers c left join orders o on c.id = o.customer_id;
+ id | name | id | customer_id | amount 
+----+------+----+-------------+--------
+  1 | John |    |             |       
+  2 | Mary |  1 |           2 |  12.99
+  3 | Jane |  2 |           3 |   5.99
+  3 | Jane |  3 |           3 |  12.99
+(4 rows)
+[[/code]]
+
+{{left outer join}} is synonymous with {{left join}}.  The following query is identical to the one above:
+
+[[code]]
+select *
+from customers c
+left outer join orders o
+  on c.id = o.customer_id;
+[[/code]]
+
+**pig:**
+
+For a complete example assume the following data is in {{/tmp/customers.txt}}:
+
+[[code]]
+1:John
+2:Mary
+3:Jane
+[[/code]]
+
+and {{/tmp/orders.txt}}:
+
+[[code]]
+1:2:12.99
+2:3:5.99
+3:3:12.99
+[[/code]]
+
+Here is the Pig session:
+
+[[code]]
+customers = LOAD '/tmp/customers.txt' USING PigStorage(':') AS (id:int, name:chararray);
+orders = LOAD '/tmp/orders.txt' USING PigStorage(':') AS (id:int, customer_id:int, amount:float);
+j = join customers by id left, orders by customer_id;
+dump j;
+[[/code]]
+
+Here is the output:
+
+[[code]]
+(1,John,,,)
+(2,Mary,1,2,12.99)
+(3,Jane,2,3,5.99)
+(3,Jane,3,3,12.99)
+[[/code]]
+
+[[# full-join-note]]
+++ [#full-join full join]
+
+A full join is a join in which rows with null values for the join condition from both input relations are included in the output relation.
+
+Left joins, right joins, and full joins are collectively called //outer joins//.
+
+**sql:**
+
+We illustrate a full join by using the schema and data from the left join example and adding an order with a null {{customer_id}}:
+
+[[code]]
+insert into orders values ( 4, null, 7.99);
+
+select * from customers c full join orders o on c.id = o.customer_id;
+ id | name | id | customer_id | amount 
+----+------+----+-------------+--------
+  1 | John |    |             |       
+  2 | Mary |  1 |           2 |  12.99
+  3 | Jane |  2 |           3 |   5.99
+  3 | Jane |  3 |           3 |  12.99
+    |      |  4 |             |   7.99
+(5 rows)
+[[/code]]
+
+**pig:**
+
+For a complete example assume the following data is in {{/tmp/customers.txt}}:
+
+[[code]]
+1:John
+2:Mary
+3:Jane
+[[/code]]
+
+and {{/tmp/orders.txt}}:
+
+[[code]]
+1:2:12.99
+2:3:5.99
+3:3:12.99
+4::7.99
+[[/code]]
+
+Here is the Pig session:
+
+[[code]]
+customers = LOAD '/tmp/customers.txt' USING PigStorage(':') AS (id:int, name:chararray);
+orders = LOAD '/tmp/orders.txt' USING PigStorage(':') AS (id:int, customer_id:int, amount:float);
+j = join customers by id full, orders by customer_id;
+dump j;
+[[/code]]
+
+Here is the output:
+
+[[code]]
+(1,John,,,)
+(2,Mary,1,2,12.99)
+(3,Jane,2,3,5.99)
+(3,Jane,3,3,12.99)
+(,,4,,7.99)
+[[/code]]
+
+[[# cross-join-note]]
+++ [#cross-join cross join]
+
+A cross join is a join with no join predicate.  It is also called a Cartesian product.  If the input relations have //N,,1,,//, //N,,2,,//, ..., //N,,m,,// rows respectively, then the output relation has [[$ \prod_{i=1}^{m} N_i $]] rows.
+
+[[# aggregation-note]]
++ [#aggregation Aggregation]
+
+[[# group-by-note]]
+++ [#group-by group by]
+
+**sql:**
+
+The columns in the select clause of a select statement with a group by clause must be expressions built up of columns listed in the group by clause and aggregation functions.  Aggregation functions can contain expressions containing columns not in the group by clause as arguments.
+
+**pig:**
+
+The output relation of a GROUP BY operation is always a relation with two fields.  The first is the partition value, and the second is a bag containing all the tuples in the input relation which have the partition value.
+
+[[# group-by-multiple-note]]
+++ [#group-by-multiple group by multiple columns]
+
+How to group by multiple columns.  The output relation will have a row for each distinct tuple of column values.
+
+**pig:**
+
+Tuples must be used to group on multiple fields.  Tuple syntax is used in the GROUP BY statement and the first field in the output relation will be tuple.  The FLATTEN function can be used to replace the tuple field with multiple fields, one for each component of the tuple.
+
+[[# aggregation-func-note]]
+++ [#aggregation-func aggregation functions]
+
+The aggregation functions.
+
+**sql:**
+
+Rows for which the expression given as an argument of an aggregation function is null are excluded from a result.  In particular, {{COUNT(foo)}} is the number of rows for which the {{foo}} column is not null.  {{COUNT(*)}} always returns the number of rows in the input set, including even rows with columns that are all null.
+
+**pig:**
+
+The Pig aggregation functions operate on bags.  The GROUP BY operator produces a relation of tuples in which the first field is the partition value and the second is a bag of all the tuples which have the partition value.  Since {{$1}} references the second component of a tuple, it is often the argument to the aggregation functions.
+
+A //join// is an operation on //m// input relations.  If the input relations have //n,,1,,//, //n,,2,,//, ..., //n,,m,,// columns respectively, then the output relation has [[$ \sum_{i=1}^{m} n_i $]] columns.
+
+[[# functions-note]]
++ [#functions Functions]
+
+[[# def-func-note]]
+++ [#def-func define function]
+
+How to define a function.
+
+**sql:**
+
+To be able to write PL/pgSQL functions on a PostgreSQL database, someone with superuser privilege must run the following command:
+
+[[code]]
+create language plpgsql;
+[[/code]]
+
+[[# invoke-func-note]]
+++ [#invoke-func invoke function]
+
+How to invoke a function.
+
+[[# drop-func-note]]
+++ [#drop-func drop function]
+
+How to remove a function.
+
+**sql:**
+
+PL/pgSQL permits functions with the same name and different parameter types.  Resolution happens at invocation using the types of the arguments.
+
+When dropping the function the parameter types must be specified.  There is no statement for dropping multiple functions with a common name.
+
+[[# execution-control-note]]
++ [#execution-control Execution Control]
+
+[[# if-note]]
+++ [#if if]
+
+How to execute code conditionally.
+
+[[# while-note]]
+++ [#while while]
+
+How to implement a while loop.
+
+[[# for-note]]
+++ [#for for]
+
+How to implement a C-style for loop.
+
+[[# files-note]]
++ [#files Files]
+
+[[# libraries-namespaces-note]]
++ [#libraries-namespaces Library and Namespaces]
+
+[[# reflection-note]]
++ [#reflection Reflection]
+
+[[# sql]]
++ [#top SQL]
+
+[http://www.postgresql.org/docs/9.1/static/sql.html PostgreSQL 9.1: The SQL Language]
+[http://dev.mysql.com/doc/refman/5.6/en/ MySQL 5.6 Reference Manual]
+
+SQL has been the leading query language for relational databases since the early 1980s.  It received its first ISO standardization in 1986.
+
+SQL statements are classified into three types: data manipulation language (DML), data definition language (DDL), and data control language (DCL). DDL defines and alters the database schema.  DCL controls the privileges of database users.  DML queries and modifies the data in the tables.
+
+||~ sql statement||~ type||
+||select||DML||
+||insert||DML||
+||update||DML||
+||delete||DML||
+||create||DDL||
+||alter||DDL||
+||drop||DDL||
+||grant||DCL||
+||revoke||DCL||
+
+[[# awk]]
++ [#top Awk]
+
+[http://www.manpagez.com/man/1/awk/ awk - pattern-directed scanning and processing language]
+[http://pubs.opengroup.org/onlinepubs/9699919799/utilities/awk.html POSIX specification for awk]
+[http://pubs.opengroup.org/onlinepubs/9699919799/utilities/join.html POSIX specification for join]
+[http://pubs.opengroup.org/onlinepubs/9699919799/utilities/sort.html POSIX specification for sort]
+
+Awk has been included on all Unix systems since 7th Edition Unix in 1979.  It provides a concise language for performing transformations on files.  An entire program can be provided to the awk interpreter as the first argument on the command line.  Because awk string literals use double quotes, single quotes are usually used to quote the awk program for the benefit of the shell.  Here's an example which prints the default shell used by root:
+
+[[code]]
+awk 'BEGIN{FS=":"} $1=="root" {print $7}' /etc/passwd
+[[/code]]
+
+An awk script is sequence of pattern-action pairs.  Awk will iterate through the lines of standard input or the lines of the specified input files, testing each pattern against the line and executing the corresponding action if the pattern matches.
+
+Patterns are usually slash delimited regular expressions, e.g. /lorem/, and logical expressions built up from them using the logical operators &&, @@||@@, and !.  If an action is provided without an accompanying pattern, the action is executed once for every line of input.  The keywords {{BEGIN}} and {{END}} are special patterns which cause the following action to be executed once at the start and end of execution, respectively.
+
+[[# pig]]
++ [#top Pig]
+
+[http://pig.apache.org/docs Apache Pig docs]
+[http://www.docjar.com/jar_detail/piggybank.jar.html piggybank.jar]
+[http://aws.amazon.com/code/Elastic-MapReduce/2730 piggybank-0.3-amzn.jar]
+
+Pig is language for specifying Hadoop map reduce jobs.  Pig scripts are shorter than equivalent Java source code, especially if joins are required.
+
+There are products such as Hive which can convert an SQL statement to a map reduce job, but Pig has an advantage over Hive in that it can handle a greater variety of data formats in the input files.
+
+Although Pig is intended to be used with a Hadoop grid, Hadoop is not required to run a Pig job.  Running a Pig job locally is a convenient way to test a Pig job before running it on a grid.
+
+In addition to some numeric and string data types, Pig provides three compound data types: //bag//, //tuples//, and //map//.  A bag is an array of tuples.  It is equivalent to a database table; it is the database type which Pig uses to hold data which it reads in from files.
+
+Pig has a limited type of variable called an //alias//.  The only data type which can be stored in an alias is a bag.  When a bag is stored in an alias it is called a //relation// or an //outer bag//.  A bag can also be stored in the field of a tuple, in which case it is called an //inner bag//.  
+
+**pig relational operators:**
+
+Pig provides the following 15 operators for manipulating relations:
+
+||~ relational operator||~ input relations||~ output relations||~ output rows||
+||CROSS||2+||1||N,,1,, x N,,2,, x ...||
+||DISTINCT||1||1||N ##gray|//or fewer//##||
+||FILTER||1||1||N ##gray|//or fewer//##||
+||FOREACH||1||1||N||
+||GROUP||1+||1||##gray|//number of groups//##||
+||JOIN||2+||1||##gray|//bounded by// N,,1,, x N,,2,, x ...##||
+||LIMIT||1||1||min(N, ##gray|//limit argument//##)||
+||LOAD||0||1||##gray|//lines in file//##||
+||MAPREDUCE||0||1||##gray|//depends on mapreduce job//##||
+||ORDER BY||1||1||N||
+||SAMPLE||1||1||N * ##gray|//fraction argument//##||
+||SPLIT||1||n||##gray|//can exceed// N //if split conditions overlap//##||
+||STORE||1||0||0||
+||STREAM||1||1||##gray|//depends on external script//##||
+||UNION||2+||1||N,,1,, + N,,2,, + ... + N,,n,,||
+
+Most of the above operators create a new relation from existing relations.  Exceptions are LOAD and MAPREDUCE which create relations from external files, STORE which writes a relation to a file, and SPLIT which can create more than one relation.
+
+**piggybank UDFs:**
+
+It is easy to write user defined functions (UDFs) in Java and make them available to pig.  {{piggybank.jar}} and {{piggybank-0.3-amzn.jar}} are two publicly available libraries of UDFs.  
+
+If the Piggybank jar is in the home directory when the Pig script is run, the functions can be made available with the following code at the top of the Pig script:
+
+[[code]]
+REGISTER /PATH/TO/piggybank.jar;
+REGISTER /PATH/TO/piggybank-0.3-amzn.jar;
+
+DEFINE DATE_TIME    org.apache.pig.piggybank.evaluation.datetime.DATE_TIME();
+DEFINE EXTRACT org.apache.pig.piggybank.evaluation.string.EXTRACT();
+DEFINE FORMAT org.apache.pig.piggybank.evaluation.string.FORMAT();
+DEFINE FORMAT_DT org.apache.pig.piggybank.evaluation.datetime.FORMAT_DT();
+DEFINE REPLACE org.apache.pig.piggybank.evaluation.string.REPLACE();
+[[/code]]
+
+
+[[# mongo]]
++ [#top MongoDB Query]

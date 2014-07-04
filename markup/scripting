@@ -1,0 +1,4550 @@
+[[# top]]//a side-by-side reference sheet//
+
+**sheet one:** [#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#arrays arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#concurrency concurrency]
+
+**[[[scripting2|sheet two]]]:** [[[scripting2#file-handles|file handles]]] | [[[scripting2#files|files]]] | [[[scripting2#file-fmt|file formats]]] | [[[scripting2#directories|directories]]] | [[[scripting2#processes-environment|processes and environment]]] | [[[scripting2#option-parsing|option parsing]]] | [[[scripting2#libraries-namespaces|libraries and namespaces]]] | [[[scripting2#objects|objects]]] | [[[scripting2#polymorphism|polymorphism]]] | [[[scripting2#reflection|reflection]]] | [[[scripting2#net-web|net and web]]] | [[[scripting2#unit-tests|unit tests]]] | [[[scripting2#debugging-profiling|debugging and profiling]]] | [[[scripting2#java-interop|java interop]]]
+
+||~ [[# general]]||~ [#javascript javascript]||~ [#php php]||~ [#python python]||~ [#ruby ruby]||
+||[[# version-used]][#version-used-note versions used] _
+@<&nbsp;>@|| ||##gray|//5.4; 5.5//##||##gray|//2.7; 3.3//##||##gray|//1.9; 2.0//##||
+||[[# version]][#version-note show version] _
+@<&nbsp;>@||$ node @@--@@version||$ php @@--@@version||$ python -V _
+$ python @@--@@version||$ ruby @@--@@version||
+||[[# implicit-prologue]][#implicit-prologue-note implicit prologue] _
+@<&nbsp;>@||<script src="underscore.js"> _
+</script>||##gray|//none//##||##purple|import## os, re, sys||##gray|//none//##||
+||||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
+||~  ||~ javascript||~ php||~ python||~ ruby||
+||[[# interpreter]][#interpreter-note interpreter] _
+@<&nbsp;>@||$ node foo.js||$ php -f foo.php||$ python foo.py||$ ruby foo.rb||
+||[[# repl]][#repl-note repl] _
+@<&nbsp;>@||$ node||$ php -a||$ python||$ irb||
+||[[# cmd-line-program]][#cmd-line-program-note command line program]||$ node -e 'var sys = require("sys"); _
+  sys.puts("hi world!");'||$ php -r 'echo "hi\n";'||$ python -c 'print("hi")'||$ ruby -e 'puts "hi"'||
+||[[# block-delimiters]][#block-delimiters-note block delimiters] _
+@<&nbsp;>@||{}||{}||: ##gray|//and offside rule//##||{} _
+##purple|do end##||
+||[[# statement-separator]][#statement-separator-note statement separator] _
+@<&nbsp;>@||##gray|//; or newline _
+ _
+newline not separator inside (), [], {}, "", '', or after binary operator _
+ _
+newline sometimes not separator when following line would not parse as a valid statement//##||; _
+ _
+##gray|//statements must be semicolon terminated inside {}//##||##gray|//newline or//## ; _
+ _
+##gray|//newlines not separators inside (), [], {}, triple quote literals, or after backslash: @@\@@//##||##gray|//newline or//## ; _
+ _
+##gray|//newlines not separators inside (), [], {}, @@``@@, '', "", or after binary operator or backslash: @@\@@//##||
+||[[# source-code-encoding]][#source-code-encoding-note source code encoding]|| ||##gray|//none//##||##gray|//Python 3 source is UTF-8 by default//## _
+ _
+##gray|# -*- coding: utf-8 -*-##||##gray|//Ruby 2.0 source is UTF-8 by default//## _
+ _
+##gray|# -*- coding: utf-8 -*-##||
+||[[# eol-comment]][#eol-comment-note end-of-line comment] _
+@<&nbsp;>@||##gray|@@//@@ comment##|| ##gray|@@//@@ comment _
+# comment##||##gray|# comment##|| ##gray|# comment##||
+||[[# multiple-line-comment]][#multiple-line-comment-note multiple line comment] _
+@<&nbsp;>@||##gray|/* line _
+another line */##||##gray|/* comment line _
+another line */##||##gray|//use triple quote string literal://## _
+ _
+##maroon|'''comment line _
+another line'''##||##gray|=begin _
+comment line _
+another line _
+=end##||
+||||||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
+||~  ||~ javascript||~ php||~ python||~ ruby||
+||[[# local-var]][#local-var-note local variable] _
+@<&nbsp;>@||var x = 1;||##gray|# in function body:## _
+$##peru|v## = ##teal|NULL##; _
+$##peru|a## = []; _
+$##peru|d## = []; _
+$##peru|x## = 1; _
+list($##peru|y##, $##peru|z##) = [2, 3];||##gray|# in function body:## _
+##peru|v## = ##teal|None## _
+##peru|a##, ##peru|d## = [], {} _
+##peru|x## = 1 _
+##peru|y##, ##peru|z## = 2, 3||v = ##peru|nil## _
+a, d = [], {} _
+x = 1 _
+y, z = 2, 3||
+||[[# local-scope-regions]][#local-scope-regions-note regions which define lexical scope]||##gray|//top level: _
+@<&nbsp;&nbsp;>@html page _
+ _
+nestable: _
+@<&nbsp;&nbsp;>@function//##||##gray|//top level: _
+@<&nbsp;&nbsp;>@function or method body _
+ _
+nestable (with use clause): _
+@<&nbsp;&nbsp;>@anonymous function body//##||##gray|//nestable (read only): _
+@<&nbsp;&nbsp;>@function or method body//##||##gray|//top level: _
+@<&nbsp;&nbsp;>@file _
+@<&nbsp;&nbsp;>@class block _
+@<&nbsp;&nbsp;>@module block _
+@<&nbsp;&nbsp;>@method body _
+ _
+nestable: _
+@<&nbsp;&nbsp;>@anonymous function body _
+@<&nbsp;&nbsp;>@anonymous block//##||
+||[[# global-var]][#global-var-note global variable]||##gray|@@//@@ assign without using var## _
+g = 1; _
+ _
+function incr_global () { g++; }||list($##peru|g1##, $##peru|g2##) = [7, 8]; _
+ _
+##purple|function## ##0000CD|swap_globals##() { _
+@<&nbsp;&nbsp;>@##purple|global## $##peru|g1##, $##peru|g2##; _
+@<&nbsp;&nbsp;>@list($##peru|g1##, $##peru|g2##) = [$##peru|g2##, $##peru|g1##]; _
+}||##peru|g1##, ##peru|g2## = 7, 8 _
+ _
+##purple|def## ##0000CD|swap_globals##(): _
+@<&nbsp;&nbsp;>@##purple|global## g1, g2 _
+@<&nbsp;&nbsp;>@g1, g2 = g2, g1||##peru|$g1##, ##peru|$g2## = 7, 8 _
+ _
+##purple|def## ##0000CD|swap_globals## _
+@<&nbsp;&nbsp;>@##peru|$g1##, ##peru|$g2## = ##peru|$g2##, ##peru|$g1## _
+end||
+||[[# const]][#const-note constant] _
+@<&nbsp;>@||##gray|//none//##||define(##maroon|"PI"##, 3.14);||##gray|# uppercase identifiers _
+# constant by convention## _
+##peru|PI## = 3.14||##gray|# warning if capitalized _
+# identifier is reassigned## _
+##green|PI## = 3.14||
+||[[# assignment]][#assignment-note assignment] _
+@<&nbsp;>@||x = 1;||$##peru|v## = 1;||##gray|//assignments can be chained but otherwise don't return values://## _
+##peru|v## = 1||v = 1||
+||[[# parallel-assignment]][#parallel-assignment-note parallel assignment] _
+@<&nbsp;>@||##gray|//none//##||list($##peru|x##, $##peru|y##, $##peru|z##) = [1 ,2, 3]; _
+ _
+##gray|# 3 is discarded:## _
+list($##peru|x##, $##peru|y##) = [1, 2, 3]; _
+ _
+##gray|# $z set to NULL:## _
+list($##peru|x##, $##peru|y##, $##peru|z##) = [1, 2];||##peru|x##, ##peru|y##, ##peru|z## = 1, 2, 3 _
+ _
+##gray|# raises ValueError:## _
+##peru|x##, ##peru|y## = 1, 2, 3 _
+ _
+##gray|# raises ValueError:## _
+##peru|x##, ##peru|y##, ##peru|z## = 1, 2||x, y, z = 1, 2, 3 _
+ _
+##gray|# 3 is discarded:## _
+x, y = 1, 2, 3 _
+ _
+##gray|# z set to nil:## _
+x, y, z = 1, 2||
+||[[# swap]][#swap-note swap] _
+@<&nbsp;>@||tmp = x; _
+x = y; _
+y = tmp;||list($##peru|x##, $##peru|y##) = [$##peru|y##, $##peru|x##];||##peru|x##, ##peru|y## = y, x||x, y = y, x||
+||[[# compound-assignment]][#compound-assignment-note compound assignment] _
+##gray|//arithmetic, string, logical, bit//##||+= -= *= /= ##gray|//none//## %= _
++= _
+##gray|//none//## _
+@@<<= >>= @@&= |= ^=||+= -= *= ##gray|//none//## /= %= @@**@@= _
+.= ##gray|//none//## _
+&= |= ##gray|//none//## _
+@@<<= >>= @@&= |= ^=||##gray|# do not return values:## _
++= -= *= /= @@//@@= %= @@**@@= _
++= *= _
+&= @@|@@= ^= _
+@@<<= >>= @@&= |= ^=||+= -= *= /= ##gray|//none//## %= @@**@@= _
++= *= _
+&&= @@||@@= ^= _
+@@<<= >>= @@&= |= ^=||
+||[[# incr-decr]][#incr-decr-note increment and decrement] _
+@<&nbsp;>@||var x = 1; _
+var y = ++x; _
+var z = @@--@@y;||$##peru|x## = 1; _
+$##peru|y## = ++$##peru|x##; _
+$##peru|z## = @@--@@$##peru|y##;||##gray|//none//##||x = 1 _
+##gray|# x and y not mutated:## _
+y = x.succ _
+z = y.pred||
+||[[# null]][#null-note null] _
+@<&nbsp;>@||null||##teal|NULL## ##gray|# case insensitive##||##teal|None##||##peru|nil##||
+||[[# null-test]][#null-test-note null test] _
+@<&nbsp;>@||v === null||is_null($##peru|v##) _
+! isset($##peru|v##)||v == ##teal|None## _
+v ##purple|is## ##teal|None##||v == ##peru|nil## _
+v.nil?||
+||[[# undef-access]][#undef-access-note undefined variable access] _
+@<&nbsp;>@||undefined||##teal|NULL##||##gray|//raises// NameError##||##gray|//raises// NameError##||
+||[[# conditional-expr]][#conditional-expr-note conditional expression] _
+@<&nbsp;>@||x > 0 ? x : -x||$##peru|x## > 0 ? $##peru|x## : -$##peru|x##||x ##purple|if## x > 0 ##purple|else## -x||x > 0 ? x : -x||
+||||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
+||~  ||~ javascript||~ php||~ python||~ ruby||
+||[[# true-false]][#true-false-note true and false] _
+@<&nbsp;>@||true false||##teal|TRUE FALSE## ##gray|# case insensitive##||##purple|True False##||##peru|true false##||
+||[[# falsehoods]][#falsehoods-note falsehoods] _
+@<&nbsp;>@||false null undefined "" 0 NaN||##teal|FALSE NULL## 0 0.0 ##maroon|"" "0"## []||##purple|False## ##teal|None## 0 0.0 ##maroon|''## [] {}||##peru|false nil##||
+||[[# logical-op]][#logical-op-note logical operators] _
+@<&nbsp;>@||@@&& ||@@ !||&& @@||@@ ! _
+##gray|//lower precedence://## _
+##purple|and or xor##||##purple|and or not##||&& @@||@@ ! _
+##gray|//lower precedence://## _
+##purple|and or not##||
+||[[# relational-op]][#relational-op-note relational operators] _
+@<&nbsp;>@||@@===@@ !== < > >= <= _
+ _
+##gray|//perform type coercion://## _
+@@==@@ !=||== != ##gray|//or//## <> > < >= <= _
+##gray|//no conversion://## === !==||##gray|//relational operators are chainable://## _
+== != > < >= <=||== != > < >= <=||
+||[[# min-max]][#min-max-note min and max] _
+@<&nbsp;>@||Math.min(1, 2, 3) _
+Math.max(1, 2, 3) _
+ _
+Math.min.apply(Math, [1, 2, 3]) _
+Math.max.apply(Math, [1, 2, 3])||min(1, 2, 3) _
+max(1, 2, 3) _
+$##peru|a## = [1, 2, 3] _
+min($##peru|a##) _
+max($##peru|a##)||##purple|min##(1, 2, 3) _
+##purple|max##(1, 2, 3) _
+ _
+##purple|min##([1, 2, 3]) _
+##purple|max##([1, 2, 3])||[1, 2, 3].min _
+[1, 2, 3].max||
+||[[# three-val-comparison]][#three-val-comparison-note three value comparison]||##gray|//none//##||##gray|//none//##||##gray|//removed from Python 3://## _
+##purple|cmp##(0, 1) _
+##purple|cmp##(##maroon|'do'##, ##maroon|'re'##)||0 <=> 1 _
+##maroon|"do"## <=> ##maroon|"re"##||
+||[[# arith-op]][#arith-op-note arithmetic operators] _
+##gray|//addition, subtraction, multiplication, float division, quotient, remainder//##||+ - * / ##gray|//none//## %||+ - * / ##gray|//none//## %||+ - * ##gray|//see note//## // % _
+ _
+##gray|//Python 2 does not have an operator which performs float division on integers.  In Python 3 / always performs float division.//##||+ - * x.fdiv(y) / %||
+||[[# int-div]][#int-div-note integer division] _
+@<&nbsp;>@||Math.floor(x / y)||(##green|int##)(13 / 5) ||13 // 5||13 / 5||
+||[[# divmod]][#divmod-note divmod] _
+@<&nbsp;>@||##gray|//none//##||##gray|//none//##||q, r = ##purple|divmod##(13, 5)||q, r = 13.divmod(5)||
+||[[# int-div-zero]][#int-div-zero-note integer division by zero] _
+@<&nbsp;>@||##gray|//returns assignable value Infinity, NaN, or -Infinity depending upon whether dividend is positive, zero, or negative. _
+ _
+There are literals for Infinity and NaN.//##||##gray|//returns// FALSE //with warning//##||##gray|//raises// ZeroDivisionError##||##gray|//raises// ZeroDivisionError##||
+||[[# float-div]][#float-div-note float division] _
+@<&nbsp;>@||13 / 5||13 / 5|| ##purple|float##(13) / 5 _
+ _
+##gray|# Python 3:## _
+13 / 5||13.to_f / 5 ##gray|//or//## _
+13.fdiv(5)||
+||[[# float-div-zero]][#float-div-zero-note float division by zero] _
+@<&nbsp;>@||##gray|//same behavior as for integers//##||##gray|//returns// FALSE //with warning//##||##gray|//raises// ZeroDivisionError##||##gray|//returns// -Infinity, NaN, //or// Infinity##||
+||[[# power]][#power-note power] _
+@<&nbsp;>@||Math.pow(2, 32)||pow(2, 32)||2@@**@@32||2@@**@@32||
+||[[# sqrt]][#sqrt-note sqrt]||Math.sqrt(2)||sqrt(2)||##purple|import## math _
+ _
+math.sqrt(2)||include ##green|Math## _
+ _
+sqrt(2)||
+||[[# sqrt-negative-one]][#sqrt-negative-one-note sqrt -1] _
+@<&nbsp;>@||NaN||NaN||##gray|# raises ValueError:## _
+##purple|import## math _
+math.sqrt(-1) _
+ _
+##gray|# returns complex float:## _
+##purple|import## cmath _
+cmath.sqrt(-1)||##gray|//raises// Errno::EDOM##||
+||[[# transcendental-func]][#transcendental-func-note transcendental functions] _
+@<&nbsp;>@||Math.exp Math.log Math.sin Math.cos Math.tan Math.asin Math.acos Math.atan Math.atan2||exp log sin cos tan asin acos atan atan2||##purple|from## math ##purple|import## exp, log, \ _
+sin, cos, tan, asin, acos, atan, atan2||include ##green|Math## _
+ _
+exp log sin cos tan asin acos atan atan2||
+||[[# transcendental-const]][#transcendental-const-note transcendental constants] _
+##gray|//π and e//##||Math.PI _
+Math.E||##teal|M_PI M_E##||import ##purple|math## _
+ _
+math.pi math.e||include ##green|Math## _
+ _
+##green|PI E##||
+||[[# float-truncation]][#float-truncation-note float truncation] _
+@<&nbsp;>@||##gray|//none//## _
+Math.round(3.1) _
+Math.floor(3.1) _
+Math.ceil(3.1)||(##green|int##)$##peru|x## _
+round($##peru|x##) _
+ceil($##peru|x##) _
+floor($##peru|x##)||##purple|import## math _
+ _
+##purple|int##(x) _
+##purple|int##(##purple|round##(x)) _
+math.ceil(x) _
+math.floor(x)||x.to_i _
+x.round _
+x.ceil _
+x.floor||
+||[[# abs-val]][#abs-val-note absolute value] _
+@<&nbsp;>@||Math.abs(-3)||abs($##peru|x##)||##purple|abs##(x)||x.abs||
+||[[# int-overflow]][#int-overflow-note integer overflow] _
+@<&nbsp;>@||##gray|//all numbers are floats//##||##gray|//converted to float//##||##gray|//becomes arbitrary length integer of type// long##||##gray|//becomes arbitrary length integer of type// Bignum##||
+||[[# float-overflow]][#float-overflow-note float overflow] _
+@<&nbsp;>@||Infinity||INF||##gray|//raises// OverflowError##||##green|Infinity##||
+||[[# rational-construction]][#rational-construction-note rational construction] _
+@<&nbsp;>@|| ||##gray|//none//##||##purple|from## fractions ##purple|import## Fraction _
+ _
+##peru|x## = Fraction(22, 7)||require ##maroon|'rational'## _
+ _
+x = ##green|Rational##(22, 7)||
+||[[# rational-decomposition]][#rational-decomposition-note rational decomposition] _
+@<&nbsp;>@|| ||##gray|//none//##||x.numerator _
+x.denominator||x.numerator _
+x.denominator||
+||[[# complex-construction]][#complex-constructionnote complex construction] _
+@<&nbsp;>@|| ||##gray|//none//##||##peru|z## = 1 + 1.414j||require ##maroon|'complex'## _
+ _
+z = 1 + 1.414.im||
+||[[# complex-decomposition]][#complex-decomposition-note complex decomposition] _
+##gray|//real and imaginary component, argument, absolute value, conjugate//##|| ||##gray|//none//##||##purple|import## cmath _
+ _
+z.real _
+z.imag _
+cmath.phase(z) _
+abs(z) _
+z.conjugate()||z.real _
+z.imag _
+z.arg _
+z.abs _
+z.conj||
+||[[# random-num]][#random-num-note random number] _
+##gray|//uniform integer, uniform float, normal float//##||Math.floor(Math.random() * 100) _
+Math.random() _
+##gray|//none//##||rand(0,99) _
+lcg_value() _
+##gray|//none//##||##purple|import## random _
+ _
+random.randint(0, 99) _
+random.random() _
+random.gauss(0, 1)||rand(100) _
+rand _
+##gray|//none//##||
+||[[# random-seed]][#random-seed-note random seed] _
+##gray|//set, get, restore//##||##gray|//none//##||srand(17); _
+ _
+##gray|//none//##||##purple|import## random _
+ _
+random.seed(17) _
+##peru|seed## = random.getstate() _
+random.setstate(seed)||srand(17) _
+ _
+seed = srand _
+srand(seed)||
+||[[# bit-op]][#bit-op-note bit operators] _
+@<&nbsp;>@||@<<< >> & | ^ ~>@||@<<< >> & | ^ ~>@||@<<< >> & | ^ ~>@||@<<< >> & | ^ ~>@||
+||[[# binary-octal-hex-literals]][#binary-octal-hex-literals-note binary, octal, and hex literals]||##gray|//none//## _
+052 ##gray|@@//@@ deprecated## _
+0x2a||0b101010 _
+052 _
+0x2a||0b101010 _
+052 _
+0x2a||0b101010 _
+052 _
+0x2a||
+||[[# radix]][#radix-note radix] _
+##gray|//convert integer to and from string with radix//##||(42).toString(7) _
+##gray|//??//##||base_convert(##maroon|"42"##, 10, 7); _
+base_convert(##maroon|"60"##, 7, 10);||##gray|//none//## _
+int(##maroon|"60"##, 7)||42.to_s(7) _
+##maroon|"60"##.to_i(7)||
+||||||||||~ [[# strings]][#strings-note strings]||
+||~  ||~ javascript||~ php||~ python||~ ruby||
+||[[# str-type]][#str-type-note string type] _
+@<&nbsp;>@||String||string||str||String||
+||[[# str-literal]][#str-literal-note string literal] _
+@<&nbsp;>@||"don't say \"no\"" _
+'don\'t say "no"'||##maroon|"don't say \"no\""## _
+##maroon|'don\'t say "no"'##||##maroon|'don\'t say "no"'## _
+##maroon|"don't say \"no\""## _
+##maroon|"don't "## ##maroon|'say "no"'## _
+##maroon|'''don't say "no"'''## _
+##maroon|"""don't say "no\""""##||##maroon|"don't say \"no\""## _
+##maroon|'don\'t say "no"'## _
+##maroon|"don't "## ##maroon|'say "no"'##||
+||[[# newline-in-str-literal]][#newline-in-str-literal-note newline in literal] _
+@<&nbsp;>@||##gray|//yes//##||##maroon|'first line _
+second line' _
+ _
+"first line _
+second line"##||##gray|//triple quote literals only://## _
+##maroon|'''first line _
+second line''' _
+ _
+"""first line _
+second line"""##||##maroon|'first line _
+second line' _
+ _
+"first line _
+second line"##||
+||[[# str-literal-esc]][#str-literal-esc-note literal escapes] _
+@<&nbsp;>@||##gray|//single and double quotes://## _
+\b \f \n \r \t \v \uhhhh \xhh \" \' \\||##gray|//double quoted://## _
+\f \n \r \t \v \x##gray|//hh//## \$ \" \\ \##gray|//ooo//## _
+ _
+##gray|//single quoted://## _
+\' \\||##gray|//single and double quoted://## _
+\##gray|//newline//## \\ \' \" \a \b \f \n \r \t \v \##gray|//ooo//## \x##gray|//hh//## _
+ _
+##gray|//Python 3://## _
+\u##gray|//hhhh//## \U##gray|//hhhhhhhh//##||##gray|//double quoted://## _
+\a \b \c##gray|//x//## \e \f \n \r \s \t \v \x##gray|//hh//## \##gray|//ooo//## \u##gray|//hhhh//## \u{##gray|//hhhhh//##} _
+ _
+##gray|//single quoted://## _
+\' \\||
+||[[# here-doc]][#here-doc-note here document] _
+@<&nbsp;>@||##gray|//none//##||$##peru|word## = ##maroon|"amet"##; _
+ _
+$##peru|s## = ##maroon|@@<<<@@EOF _
+lorem ipsum _
+dolor sit $word _
+EOF##;||##gray|//none//##||word = ##maroon|"amet"## _
+ _
+s = ##maroon|@@<<@@EOF _
+lorem ipsum _
+dolor sit## ##peru|#{word}## _
+##maroon|EOF##||
+||[[# var-interpolation]][#var-interpolation-note variable interpolation] _
+@<&nbsp;>@||##gray|@@//@@ None; use string concatenation. _
+@@//@@ Both of these expressions are '11':## _
+1 + "1" _
+"1" + 1||$##peru|count## = 3; _
+$##peru|item## = ##maroon|"ball"##; _
+##purple|echo## ##maroon|"$count ${item}s\n"##;||##peru|count## = 3 _
+##peru|item## = ##maroon|'ball'## _
+##purple|print##(##maroon|'{count} {item}s'##.format( _
+@<&nbsp;&nbsp;>@@@**@@##purple|locals##()))||count = 3 _
+item = ##maroon|"ball"## _
+puts ##maroon|"####peru|#{count} #{item}####maroon|s"##||
+||[[# expr-interpolation]][#expr-interpolation-note expression interpolation]||##gray|//none//##||##gray|//none//##||##maroon|'1 + 1 = {}'##.format(1 + 1)||##maroon|"1 + 1 = #{1 + 1}"##||
+||[[# format]][#format-note format] _
+@<&nbsp;>@||##gray|@@//@@ None; use string concatenation. _
+@@//@@ Evaluates to "12.35":## _
+12.3456.toFixed(2)||$##peru|fmt## = ##maroon|"lorem %s %d %f"##; _
+sprintf($##peru|fmt##, ##maroon|"ipsum"##, 13, 3.7);||##maroon|'lorem %s %d %f'## % (##maroon|'ipsum'##, 13, 3.7) _
+ _
+##peru|fmt## = ##maroon|'lorem {0} {1} {2}'## _
+fmt.format(##maroon|'ipsum'##, 13, 3.7)||##maroon|"lorem %s %d %f"## % [##maroon|"ipsum"##, 13, 3.7]||
+||[[# mutable-str]][#mutable-str-note are strings mutable?]||##gray|//no//##||$##peru|s## = ##maroon|"bar"##; _
+$##peru|s2## = $##peru|s##; _
+##gray|# sets s to "baz"; s2 is unchanged:## _
+$##peru|s##[2] = ##maroon|"z"##;||##gray|//no//##||s = ##maroon|"bar"## _
+s2 = s _
+##gray|# sets s and s2 to "baz":## _
+s[2] = ##maroon|"z"##||
+||[[# copy-str]][#copy-str-note copy string]||##gray|//none//##||$##peru|s2## = $##peru|s##;||##gray|//none//##||s = ##maroon|"bar"## _
+s2 = s.clone _
+##gray|# s2 is not altered:## _
+s[2] = ##maroon|"z"##||
+||[[# str-concat]][#str-concat-note concatenate] _
+@<&nbsp;>@||s = "Hello, " + "World!";||$##peru|s## = ##maroon|"Hello, "##; _
+$##peru|s2## = $##peru|s## . ##maroon|"World!"##;||##peru|s## = ##maroon|'Hello, '## _
+##peru|s2## = s + ##maroon|'World!'## _
+ _
+##gray|# juxtaposition can be used to _
+# concatenate literals:## _
+##peru|s2## = ##maroon|'Hello, ' "World!"##||s = ##maroon|"Hello, "## _
+s2 = s + ##maroon|"World!"## _
+ _
+##gray|# juxtaposition can be used to _
+# concatenate literals:## _
+s2  =##maroon|"Hello, " 'World!'##||
+||[[# str-replicate]][#str-replicate-note replicate] _
+@<&nbsp;>@||var hbar = Array(80).join("-");||$##peru|hbar## = str_repeat(##maroon|"-"##, 80);||##peru|hbar## = ##maroon|'-'## * 80||hbar = ##maroon|"-"## * 80||
+||[[# translate-case]][#translate-case-note translate case] _
+##gray|//to upper, to lower//##||"lorem".toUpperCase() _
+"LOREM".toLowerCase()||strtoupper(##maroon|"lorem"##) _
+strtolower(##maroon|"LOREM"##)||##maroon|'lorem'##.upper() _
+##maroon|'LOREM'##.lower()||##maroon|"lorem"##.upcase _
+##maroon|"LOREM"##.downcase||
+||[[# capitalize]][#capitalize-note capitalize] _
+##gray|//string, words//##||##gray|//none//##||ucfirst(##maroon|"lorem"##) _
+ucwords(##maroon|"lorem ipsum"##)||##purple|import## string _
+ _
+##maroon|'lorem'##.capitalize() _
+string.capwords(##maroon|'lorem ipsum'##)||##maroon|"lorem"##.capitalize _
+##gray|//none//##||
+||[[# trim]][#trim-note trim] _
+##gray|//both sides, left, right//##||" lorem ".trim() _
+##gray|# some browsers:## _
+" lorem".trimLeft() _
+"lorem ".trimRight()||trim(##maroon|" lorem "##) _
+ltrim(##maroon|" lorem"##) _
+rtrim(##maroon|"lorem "##)||##maroon|' lorem '##.strip() _
+##maroon|' lorem'##.lstrip() _
+##maroon|'lorem '##.rstrip()||##maroon|" lorem "##.strip _
+##maroon|" lorem"##.lstrip _
+##maroon|"lorem "##.rstrip||
+||[[# pad]][#pad-note pad] _
+##gray|//on right, on left, centered//##||##gray|//none//##||str_pad(##maroon|"lorem"##, 10) _
+str_pad(##maroon|"lorem"##, 10, ##maroon|" "##, ##teal|STR_PAD_LEFT##) _
+str_pad(##maroon|"lorem"##, 10, ##maroon|" "##, ##teal|STR_PAD_BOTH##)||##maroon|'lorem'##.ljust(10) _
+##maroon|'lorem'##.rjust(10) _
+##maroon|'lorem'##.center(10)||##maroon|"lorem"##.ljust(10) _
+##maroon|"lorem"##.rjust(10) _
+##maroon|"lorem"##.center(10)||
+||[[# num-to-str]][#num-to-str-note number to string] _
+@<&nbsp;>@||"value: " + 8||##maroon|"value: "## . 8||##maroon|'value: '## + ##purple|str##(8)||##maroon|"value: "## + 8.to_s||
+||[[# str-to-num]][#str-to-num-note string to number] _
+@<&nbsp;>@||7 + parseInt("12", 10) _
+73.9 + parseFloat(".037")||7 + ##maroon|"12"## _
+73.9 + ##maroon|".037"##||7 + ##purple|int##(##maroon|'12'##) _
+73.9 + ##purple|float##(##maroon|'.037'##)||7 + ##maroon|"12"##.to_i _
+73.9 +  ##maroon|".037"##.to_f||
+||[[# join]][#join-note join] _
+@<&nbsp;>@||["do", "re", "mi"].join(" ")||$##peru|a## = [##maroon|"do"##, ##maroon|"re"##, ##maroon|"mi"##, ##maroon|"fa"##]; _
+implode(##maroon|" "##, $##peru|a##)||##maroon|' '##.join([##maroon|'do'##, ##maroon|'re'##, ##maroon|'mi'##, ##maroon|'fa'##]) _
+ _
+##gray|# raises TypeError:## _
+##maroon|' '##.join([1, 2, 3])||%w(do re mi fa).join(##maroon|' '##) _
+ _
+##gray|# implicitly converted to strings:## _
+[1, 2, 3].join(##maroon|' '##)||
+||[[# split]][#split-note split] _
+@<&nbsp;>@||"do re mi".split(" ")||explode(##maroon|" "##, ##maroon|"do re mi fa"##)||##maroon|'do re mi fa'##.split()||##maroon|"do re mi fa"##.split||
+||[[# split-in-two]][#split-in-two-note split in two] _
+@<&nbsp;>@||##gray|//none//##||preg_split(##maroon|'/\s+/'##, ##maroon|"do re mi fa"##, 2)||##maroon|'do re mi fa'##.split(##purple|None##, 1)||##maroon|"do re mi fa"##.split(##maroon|/\s+/##, 2)||
+||[[# split-keep-delimiters]][#split-keep-delimiters-note split and keep delimiters]||##gray|//none//##||preg_split(##maroon|'/(\s+)/'##, ##maroon|"do re mi fa"##, _
+@<&nbsp;&nbsp;>@##teal|NULL##, ##teal|PREG_SPLIT_DELIM_CAPTURE##)||re.split(##maroon|'(\s+)'##, ##maroon|'do re mi fa'##)||##maroon|"do re mi fa"##.split(##maroon|/(\s+)/##)||
+||[[# str-length]][#str-length-note length] _
+@<&nbsp;>@||"lorem".length||strlen(##maroon|"lorem"##)||##purple|len##(##maroon|'lorem'##)||##maroon|"lorem"##.length _
+##maroon|"lorem"##.size||
+||[[# index-substr]][#index-substr-note index of substring] _
+##gray|//first, last//##||"lorem ipsum".indexOf("ipsum")||##gray|# returns FALSE if not found:## _
+strpos(##maroon|"do re re"##, ##maroon|"re"##) _
+strrpos(##maroon|"do re re"##, ##maroon|"re"##)||##gray|# raises ValueError if not found:## _
+##maroon|'do re re'##.index(##maroon|'re'##) _
+##maroon|'do re re'##.rindex(##maroon|'re'##) _
+ _
+##gray|# returns -1 if not found:## _
+##maroon|'do re re'##.find(##maroon|'re'##) _
+##maroon|'do re re'##.rfind(##maroon|'re'##) ||##gray|# returns nil if not found:## _
+##maroon|"do re re"##.index(##maroon|"re"##) _
+##maroon|"do re re"##.rindex(##maroon|"re"##)||
+||[[# extract-substr]][#extract-substr-note extract substring] _
+##gray|//by start and length, by start and end, by successive starts//##||"lorem ipsum".substr(6, 5) _
+"lorem ipsum".substring(6, 11)||substr(##maroon|"lorem ipsum"##, 6, 5) _
+##gray|//none//## _
+##gray|//none//##||##gray|//none//## _
+##gray|//none//## _
+##maroon|'lorem ipsum'##[6:11]||##maroon|"lorem ipsum"##[6, 5] _
+##maroon|"lorem ipsum"##[6@@..@@10] _
+##maroon|"lorem ipsum"##[6@@...@@11]||
+||[[# extract-char]][#extract-char-note extract character]||"lorem ipsum"[6]||##gray|# syntax error to use index notation _
+# directly on string literal:## _
+$##peru|s## = ##maroon|"lorem ipsum"##; _
+$##peru|s##[6];||##maroon|'lorem ipsum'##[6]||##maroon|"lorem ipsum"##[6]||
+||[[# chr-ord]][#chr-ord-note chr and ord] _
+@<&nbsp;>@||String.fromCharCode(65) _
+"A".charCodeAt(0)||chr(65) _
+ord(##maroon|"A"##)||##purple|chr##(65) _
+##purple|ord##(##maroon|'A'##)||65.chr _
+##maroon|"A"##.ord||
+||[[# str-to-char-array]][#str-to-char-array-note to array of characters]||"abcd".split("")||str_split(##maroon|"abcd"##)||##purple|list##(##maroon|'abcd'##)||##maroon|"abcd"##.split(##maroon|""##)||
+||[[# translate-char]][#translate-char-note translate characters] _
+@<&nbsp;>@||##gray|//none//##||$##peru|ins## = implode(range(##maroon|"a"##, ##maroon|"z"##)); _
+$##peru|outs## = substr($##peru|ins##, 13, 13) . _
+@<&nbsp;&nbsp;>@substr($##peru|ins##, 0, 13); _
+strtr(##maroon|"hello"##, $##peru|ins##, $##peru|outs##)||##purple|from## string ##purple|import## lowercase ##purple|as## ins _
+##purple|from## string ##purple|import## maketrans _
+ _
+##peru|outs## = ins[13:] + ins[:13] _
+##maroon|'hello'##.translate(maketrans(ins,outs))||##maroon|"hello"##.tr(##maroon|"a-z"##, ##maroon|"n-za-m"##)||
+||[[# delete-char]][#delete-char-note delete characters]||##gray|//none//##||$##peru|vowels## = str_split(##maroon|"aeiou"##); _
+$##peru|s## = ##maroon|"disemvowel me"##; _
+$##peru|s## = str_replace($##peru|vowels##, ##maroon|""##, $##peru|s##);||##maroon|"disemvowel me"##.translate(##teal|None##, ##maroon|"aeiou"##)||##maroon|"disemvowel me"##.delete(##maroon|"aeiou"##)||
+||[[# squeeze-char]][#squeeze-char-note squeeze characters]||##gray|//none//##||$##peru|s## = ##maroon|"too@<&nbsp;&nbsp;>@much@<&nbsp;&nbsp;>@space"##; _
+$##peru|s## = = preg_replace(##maroon|'/(\s)+/'##, ##maroon|'\1'##, $##peru|s##);||re.sub(##maroon|'(\s)+'##, r##maroon|'\1'##, ##maroon|'too@<&nbsp;&nbsp;>@much@<&nbsp;&nbsp;>@space'##)||##maroon|"too@<&nbsp;&nbsp;>@much@<&nbsp;&nbsp;>@space"##.squeeze(##maroon|" "##)||
+||||||||||~ [[# regexes]][#regexes-note regular expressions]||
+||~  ||~ javascript||~ php||~ python||~ ruby||
+||[[# regex-literal]][#regex-literal-note literal, custom delimited literal]||/lorem|ipsum/||##maroon|'/lorem|ipsum/'## _
+##maroon|'(/etc/hosts)'##||re.compile(##maroon|'lorem|ipsum'##) _
+##gray|//none//##||##maroon|/lorem|ipsum/ _
+%r(/etc/hosts)##||
+||[[# char-class-abbrev]][#char-class-abbrev-note character class abbreviations]||. \d \D \s \S \w \W||. \d \D \h \H \s \S \v \V \w \W||. \d \D \s \S \w \W||. \d \D \h \H \s \S \w \W||
+||[[# regex-anchors]][#regex-anchors-note anchors] _
+@<&nbsp;>@||^ $ \b \B||^ $ \A \b \B \z \Z||^ $ \A \b \B \Z||^ $ \A \b \B \z \Z||
+||[[# regex-test]][#regex-test-note match test] _
+@<&nbsp;>@||if (s.match(/1999/)) { _
+@<&nbsp;&nbsp;>@alert("party!"); _
+}||if (preg_match(##maroon|'/1999/'##, $##peru|s##)) { _
+@<&nbsp;&nbsp;>@echo ##maroon|"party!\n"##; _
+}||##purple|if## re.search(##maroon|'1999'##, s): _
+@<&nbsp;&nbsp;>@##purple|print##(##maroon|'party!'##)||##purple|if## ##maroon|/1999/##.match(s) _
+@<&nbsp;&nbsp;>@puts ##maroon|"party!"## _
+##purple|end##||
+||[[# case-insensitive-regex]][#case-insensitive-regex-note case insensitive match test]||"Lorem".match(/lorem/i)||preg_match(##maroon|'/lorem/i'##, ##maroon|"Lorem"##)||re.search(##maroon|'lorem'##, ##maroon|'Lorem'##, re.I)||##maroon|/lorem/##i.match(##maroon|"Lorem"##)||
+||[[# regex-modifiers]][#regex-modifiers-note modifiers] _
+@<&nbsp;>@||g i m||e i m s x||re.I re.M re.S re.X||i o m x||
+||[[# subst]][#subst-note substitution] _
+@<&nbsp;>@||s = "do re mi mi mi"; _
+s.replace(/mi/g, "ma");||$##peru|s## = ##maroon|"do re mi mi mi"##; _
+$##peru|s## = preg_replace(##maroon|'/mi/'##, ##maroon|"ma"##, $##peru|s##);||##peru|s## = ##maroon|'do re mi mi mi'## _
+##peru|s## = re.compile(##maroon|'mi'##).sub(##maroon|'ma'##, s)||s = ##maroon|"do re mi mi mi"## _
+s.gsub!(##maroon|/mi/##, ##maroon|"ma"##)||
+||[[# match-prematch-postmatch]][#match-prematch-postmatch-note match, prematch, postmatch] _
+@<&nbsp;>@||##per|m## = /\d{4}/.exec(s); _
+if (m) { _
+@<&nbsp;&nbsp;>@match = m[0]; _
+@<&nbsp;&nbsp;>@##gray|# no prematch or postmatch## _
+}||##gray|//none//##||##peru|m## = re.search(##maroon|'\d{4}'##, s) _
+##purple|if## m: _
+@<&nbsp;&nbsp;>@match = m.group() _
+@<&nbsp;&nbsp;>@prematch = s[0:m.start(0)] _
+@<&nbsp;&nbsp;>@postmatch = s[m.end(0):##purple|len##(s)]||m = ##maroon|/\d{4}/##.match(s) _
+##purple|if## m _
+@<&nbsp;&nbsp;>@match = m[0] _
+@<&nbsp;&nbsp;>@prematch = m.pre_match _
+@<&nbsp;&nbsp;>@postmatch = m.post_match _
+##purple|end##||
+||[[# group-capture]][#group-capture-note group capture] _
+@<&nbsp;>@||rx = /^(\d{4})-(\d{2})-(\d{2})$/; _
+m = rx.exec('2009-06-03'); _
+yr = m[1]; _
+mo = m[2]; _
+dy = m[3];||$##peru|s## = ##maroon|"2010-06-03"##; _
+$##peru|rx## = ##maroon|'/(\d{4})-(\d{2})-(\d{2})/'##; _
+preg_match($##peru|rx##, $##peru|s##, $##peru|m##); _
+list($_, $##peru|yr##, $##peru|mo##, $##peru|dy##) = $##peru|m##;||##peru|rx## = ##maroon|'(\d{4})-(\d{2})-(\d{2})'## _
+##peru|m## = re.search(rx, ##maroon|'2010-06-03'##) _
+##peru|yr##, ##peru|mo##, ##peru|dy## = m.groups()||rx = ##maroon|/(\d{4})-(\d{2})-(\d{2})/## _
+m = rx.match(##maroon|"2010-06-03"##) _
+ yr, mo, dy = m[1..3]||
+||[[# named-grouped-capture]][#named-group-capture-note named group capture]||##gray|//none//##||$##peru|s## = ##maroon|"foo.txt"##; _
+$##peru|rx## = ##maroon|'/^(?P<file>.+)\.(?P<suffix>.+)$/'##; _
+preg_match($##peru|rx##, $##peru|s##, $##peru|m##); _
+ _
+$##peru|m##[##maroon|"file"##] _
+$##peru|m##[##maroon|"suffix"##]||##peru|rx## = ##maroon|'^(?P<file>.+)\.(?P<suffix>.+)$'## _
+##peru|m## = re.search(rx, ##maroon|''foo.txt'##) _
+ _
+m.groupdict()[##maroon|'file'##] _
+m.groupdict()[##maroon|'suffix'##]||rx = ##maroon|/^(?<file>.+)\.(?<suffix>.+)$/## _
+m = rx.match(##maroon|'foo.txt'##) _
+ _
+m[##maroon|"file"##] _
+m[##maroon|"suffix"##]||
+||[[# scan]][#scan-note scan] _
+@<&nbsp;>@||var a = "dolor sit amet".match(/\w+/g);||$##peru|s## = ##maroon|"dolor sit amet"##; _
+preg_match_all(##maroon|'/\w+/'##, $##peru|s##, $##peru|m##); _
+$##peru|a## = $##peru|m##[0];||##peru|s## = ##maroon|'dolor sit amet'## _
+##peru|a## = re.findall(##maroon|'\w+'##, s)||a = ##maroon|"dolor sit amet"##.scan(##maroon|/\w+/##)||
+||[[# backreference]][#backreference-note backreference in match and substitution]||/(\w+) \1/.exec("do do") _
+ _
+"do re".replace(/(\w+) (\w+)/, '$2 $1')||preg_match(##maroon|'/(\w+) \1/'##, ##maroon|"do do"##) _
+ _
+$##peru|s## = ##maroon|"do re"##; _
+$##peru|rx## = ##maroon|'/(\w+) (\w+)/'##; _
+$##peru|s## = preg_replace($##peru|rx##, ##maroon|'\2 \1'##, $##peru|s##);||##gray|//none//## _
+ _
+##peru|rx## = re.compile(##maroon|'(\w+) (\w+)'##) _
+rx.sub(r##maroon|'\2 \1'##, ##maroon|'do re'##)||##maroon|/(\w+) \1/##.match(##maroon|"do do"##) _
+ _
+##maroon|"do re"##.sub(##maroon|/(\w+) (\w+)/##, ##maroon|'\2 \1'##)||
+||[[# recursive-regex]][#recursive-regex-note recursive regex] _
+@<&nbsp;>@||##gray|//none//##||##maroon|'/\(([^()]*|($R))\)/'##||##gray|//none//##||##maroon|/(?<foo>\(([^()]*|\g<foo>)*\))/##||
+||||||||||~ [[# dates-time]][#dates-time-note dates and time]||
+||~  ||~ javascript||~ php||~ python||~ ruby||
+||[[# date-time-type]][#date-time-type-note date/time type] _
+@<&nbsp;>@||Date||##green|DateTime##||datetime.datetime||##green|Time##||
+||[[# current-date-time]][#current-date-time-note current date/time]||var t = new Date();||$##peru|t## = ##purple|new## ##green|DateTime##(##maroon|"now"##); _
+$##peru|utc_tmz## = ##purple|new## ##green|DateTimeZone##(##maroon|"UTC"##); _
+$##peru|utc## = ##purple|new## ##green|DateTime##(##maroon|"now"##, $##peru|utc_tmz##);||##purple|import## datetime _
+ _
+##peru|t## = datetime.datetime.now() _
+##peru|utc## = datetime.datetime.utcnow()||t = ##green|Time##.now _
+utc = ##green|Time##.now.utc||
+||[[# unix-epoch]][#unix-epoch-note to unix epoch, from unix epoch]||Math.round(t.getTime() / 1000) _
+var epoch = 1315716177; _
+var t2 = new Date(epoch * 1000);||$##peru|epoch## = $##peru|t##->getTimestamp(); _
+$##peru|t2## = ##purple|new## ##green|DateTime##(); _
+$##peru|t2##->setTimestamp(1304442000);||##purple|from## datetime ##purple|import## datetime ##purple|as## dt _
+ _
+##peru|epoch## = ##purple|int##(t.strftime(##maroon|"%s"##)) _
+##peru|t2## = dt.fromtimestamp(1304442000)||epoch = t.to_i _
+t2 = ##green|Time##.at(1304442000)||
+||[[# current-unix-epoch]][#current-unix-epoch-note current unix epoch]||(new Date()).getTime() / 1000||$##peru|epoch## = time();||##purple|import## datetime _
+ _
+##peru|t## = datetime.datetime.now() _
+##peru|epoch## = ##purple|int##(t.strftime(##maroon|"%s"##))||epoch = ##green|Time##.now.to_i||
+||[[# strftime]][#strftime-note strftime]||##gray|//none//##||strftime(##maroon|"%Y-%m-%d %H:%M:%S"##, $##peru|epoch##); _
+date(##maroon|"Y-m-d H:i:s"##, $##peru|epoch##); _
+$##peru|t##->format(##maroon|"Y-m-d H:i:s"##);||t.strftime(##maroon|'%Y-%m-%d %H:%M:%S'##)||t.strftime(##maroon|"%Y-%m-%d %H:%M:%S"##)||
+||[[# date-time-str]][#date-time-str-note default format example]||##gray|Tue Apr 01 2014 13:05:36 GMT-0700 (PDT)##||##gray|//no default string representation//##||##gray|2011-08-23 19:35:59.411135##||##gray|2011-08-23 17:44:53 -0700##||
+||[[# strptime]][#strptime-note strptime]||##gray|//none//##||$##peru|fmt## = ##maroon|"Y-m-d H:i:s"##; _
+$##peru|s## = ##maroon|"2011-05-03 10:00:00"##; _
+$##peru|t## = ##green|DateTime##::createFromFormat($##peru|fmt##, _
+@<&nbsp;&nbsp;>@$##peru|s##);||##purple|from## datetime ##purple|import## datetime _
+ _
+##peru|s## = ##maroon|'2011-05-03 10:00:00'## _
+##peru|fmt## = ##maroon|'%Y-%m-%d %H:%M:%S'## _
+##peru|t## = datetime.strptime(s, fmt)||require ##maroon|'date'## _
+ _
+s = ##maroon|"2011-05-03 10:00:00"## _
+fmt = ##maroon|"%Y-%m-%d %H:%M:%S"## _
+t = ##green|Date##.strptime(s, fmt).to_time||
+||[[# parse-date]][#parse-date-note parse date w/o format]||var t = new Date("July 7, 1999");||$##peru|epoch## = strtotime(##maroon|"July 7, 1999"##);||##gray|# pip install python-dateutil## _
+##purple|import## dateutil.parser _
+ _
+##peru|s## = ##maroon|'July 7, 1999'## _
+##peru|t## = dateutil.parser.parse(s)||require ##maroon|'date'## _
+ _
+s = ##maroon|"July 7, 1999"## _
+t = ##green|Date##.parse(s).to_time||
+||[[# get-date-parts]][#get-date-parts-note get date parts]||t.getFullYear() _
+t.getMonth() + 1 _
+t.getDate() ##gray|# getDay() is day of week##||(int)$t->format("Y") _
+(int)$t->format("m") _
+(int)$t->format("d")||t.year _
+t.month _
+t.day||t.year _
+t.month _
+t.day||
+||[[# get-time-parts]][#get-time-parts-note get time parts]||t.getHours() _
+t.getMinutes() _
+t.getSeconds()||(int)$t->format("H") _
+(int)$t->format("i") _
+(int)$t->format("s")||t.hour _
+t.minute _
+t.second||t.hour _
+t.min _
+t.sec||
+||[[# date-from-parts]][#date-from-parts-note build date/time from parts]||##purple|var## ##peru|yr## = 1999; _
+##purple|var## ##peru|mo## = 9; _
+##purple|var## ##peru|dy## = 10; _
+##purple|var## ##peru|hr## = 23; _
+##purple|var## ##peru|mi## = 30; _
+##purple|var## ##peru|ss## = 0; _
+##purple|var## ##peru|t## = ##purple|new## ##green|Date##(yr,mo-1,dy,hr,mi,ss);|| ||import datetime _
+ _
+yr = 1999 _
+mo = 9 _
+dy = 10 _
+hr = 23 _
+mi = 30 _
+ss = 0 _
+t = datetime.datetime(yr,mo,dy,hr,mi,ss)||yr = 1999 _
+mo = 9 _
+dy = 10 _
+hr = 23 _
+mi = 30 _
+ss = 0 _
+t = Time.new(yr,mo,dy,hr,mi,ss)||
+||[[# date-subtraction]][#date-subtraction-note result of date subtraction]||##gray|number //containing time difference in milliseconds//##||##gray|DateInterval //object if// diff //method used://## _
+$##peru|fmt## = ##maroon|"Y-m-d H:i:s"##; _
+$##peru|s## = ##maroon|"2011-05-03 10:00:00"##; _
+$##peru|then## = ##green|DateTime##::createFromFormat($##peru|fmt##, $##peru|s##); _
+$##peru|now##  = ##purple|new## ##green|DateTime##(##maroon|"now"##); _
+$##peru|interval## = $##peru|now##->diff($##peru|then##);||##gray|datetime.timedelta //object//## _
+ _
+##gray|//use// total_seconds() //method to convert to float representing difference in seconds//##||##gray|Float //containing time difference in seconds//##||
+||[[# add-time-duration]][#add-time-duration-note add time duration]||var t1 = new Date(); _
+var delta = (10 * 60 + 3) * 1000; _
+var t2 = new Date(t1.getTime() + delta);||$##peru|now## = ##purple|new## ##green|DateTime##(##maroon|"now"##); _
+$##peru|now##->add(##purple|new## ##green|DateInterval##(##maroon|"PT10M3S"##);||##purple|import## datetime _
+ _
+##peru|delta## = datetime.timedelta( _
+@<&nbsp;&nbsp;>@minutes=10, _
+@<&nbsp;&nbsp;>@seconds=3) _
+##peru|t## = datetime.datetime.now() + delta||require ##maroon|'date/delta'## _
+ _
+s = ##maroon|"10 min, 3 s"## _
+delta = ##green|Date##::##green|Delta##.parse(s).in_secs _
+t = ##green|Time##.now + delta||
+||[[# local-tmz]][#local-tmz-note local timezone]|| ||##gray|//DateTime objects can be instantiated without specifying the timezone if a default is set://## _
+$##peru|s## = ##maroon|"America/Los_Angeles"##; _
+date_default_timezone_set($##peru|s##);||##gray|//a// datetime //object has no timezone information unless a// tzinfo //object is provided when it is created//##||##gray|//if no timezone is specified the local timezone is used//##||
+||[[# arbitrary-tmz]][#arbitrary-tmz-note arbitrary timezone]|| || ||# pip install pytz _
+import pytz _
+import datetime _
+ _
+tmz = pytz.timezone('Asia/Tokyo') _
+utc = datetime.datetime.utcnow() _
+utc_dt = datetime.datetime( _
+@<&nbsp;&nbsp;>@*utc.timetuple()[0:5], _
+@<&nbsp;&nbsp;>@tzinfo=pytz.utc) _
+jp_dt = utc_dt.astimezone(tmz)||# gem install tzinfo _
+require 'tzinfo' _
+ _
+tmz = TZInfo::Timezone.get("Asia/Tokyo") _
+jp_time = tmz.utc_to_local(Time.now.utc)||
+||[[# timezone-offset]][#timezone-offset-note timezone name; offset from UTC; is daylight savings?]|| ||$##peru|tmz## = date_timezone_get($##peru|t##); _
+timezone_name_get($##peru|tmz##); _
+date_offset_get($##peru|t##) / 3600; _
+$##peru|t##->format(##maroon|"I"##);||##purple|import## time _
+ _
+##peru|tm## = time.localtime() _
+@<&nbsp;&nbsp;>@ _
+time.tzname[tm.tm_isdst] _
+(time.timezone / -3600) + tm.tm_isdst _
+tm.tm_isdst||t.zone _
+t.utc_offset / 3600 _
+t.dst?||
+||[[# microseconds]][#microseconds-note microseconds]|| ||list($##peru|frac##, $##peru|sec##) = explode(##maroon|" "##, _
+@<&nbsp;&nbsp;>@microtime()); _
+$##peru|usec## = $##peru|frac## * 1000 * 1000;||t.microsecond||t.usec||
+||[[# sleep]][#sleep-note sleep]||##gray|//none//##||##gray|# a float argument will be truncated _
+# to an integer:## _
+sleep(1);||##purple|import## time _
+ _
+time.sleep(0.5)||sleep(0.5)||
+||[[# timeout]][#timeout-note timeout]|| ||##gray|//use// set_time_limit //to limit execution time of the entire script; use// stream_set_timeout //to limit time spent reading from a stream opened with// fopen //or// fsockopen##||##purple|import## signal, time _
+ _
+##purple|class## ##green|Timeout##(##green|Exception##): ##purple|pass## _
+ _
+##purple|def## ##mediumblue|timeout_handler##(signo, fm): _
+@<&nbsp;&nbsp;>@##purple|raise## Timeout() _
+ _
+signal.signal(signal.SIGALRM, _
+@<&nbsp;&nbsp;>@timeout_handler) _
+ _
+##purple|try##: _
+@<&nbsp;&nbsp;>@signal.alarm(5) _
+@<&nbsp;&nbsp;>@time.sleep(10) _
+##purple|except## Timeout: _
+@<&nbsp;&nbsp;>@##purple|pass## _
+signal.alarm(0)||require ##maroon|'timeout'## _
+ _
+##purple|begin## _
+@<&nbsp;&nbsp;>@##green|Timeout##.timeout(5) ##purple|do## _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@sleep(10) _
+@<&nbsp;&nbsp;>@##purple|end## _
+##purple|rescue## ##green|Timeout##::##green|Error## _
+##purple|end##||
+||||||||||~ [[# arrays]][#arrays-note arrays]||
+||~  ||~ javascript||~ php||~ python||~ ruby||
+||[[# array-literal]][#array-literal-note literal] _
+@<&nbsp;>@||a = [1, 2, 3, 4]||$##peru|a## = [1, 2, 3, 4]; _
+ _
+##gray|# older syntax:## _
+$##peru|a## = array(1, 2, 3, 4);||##peru|a## = [1, 2, 3, 4]||a = [1, 2, 3, 4] _
+ _
+##gray|# a = ['do', 're', 'mi']## _
+a = %w(do re mi)||
+||[[# array-size]][#array-size-note size] _
+@<&nbsp;>@||a.length||count($##peru|a##)||##purple|len##(a)||a.size _
+a.length ##gray|# same as size##||
+||[[# array-empty]][#array-empty-note empty test] _
+@<&nbsp;>@||##gray|@@//@@ TypeError if a is null or undefined:## _
+a.length === 0||##gray|# NULL tests as empty:## _
+!$##peru|a##||##gray|# None tests as empty:## _
+##purple|not## a||##gray|# NoMethodError if a is nil:## _
+a.empty?||
+||[[# array-lookup]][#array-lookup-note lookup] _
+@<&nbsp;>@||a[0]||$##peru|a##[0] _
+ _
+##gray|# PHP uses the same type for arrays and _
+# dictionaries; indices can be negative _
+# integers or strings##||a[0] _
+ _
+##gray|# returns last element:## _
+a[-1]||a[0] _
+ _
+##gray|# returns last element:## _
+a[-1]||
+||[[# array-update]][#array-update-note update] _
+@<&nbsp;>@||a[0] = "lorem"||$##peru|a##[0] = ##maroon|"lorem"##;||a[0] = ##maroon|'lorem'## ||a[0] = ##maroon|"lorem"##||
+||[[# array-out-of-bounds]][#array-out-of-bounds-note out-of-bounds behavior]||##gray|//returns// undefined##||$##peru|a## = []; _
+##gray|# evaluates as NULL:## _
+$##peru|a##[10]; _
+##gray|# increases array size to one:## _
+$##peru|a##[10] = ##maroon|"lorem"##;||##peru|a## = [] _
+##gray|# raises IndexError:## _
+a[10] _
+##gray|# raises IndexError:## _
+a[10] = ##maroon|'lorem'##||a = [] _
+##gray|# evaluates as nil:## _
+a[10] _
+##gray|# increases array size to 11:## _
+a[10] = ##maroon|"lorem"##||
+||[[# array-element-index]][#array-element-index-note index of element]||[6, 7, 7, 8].indexOf(7) _
+[6, 7, 7, 8].lastIndexOf(7) _
+##gray|@@//@@ returns -1 if not found##||$##peru|a## = [##maroon|"x"##, ##maroon|"y"##, ##maroon|"z"##, ##maroon|"w"##]; _
+$##peru|i## = array_search(##maroon|"y"##, $##peru|a##);||##peru|a## = [##maroon|'x'##, ##maroon|'y'##, ##maroon|'z'##, ##maroon|'w'##] _
+##peru|i## = a.index(##maroon|'y'##)||a = %w(x y z w) _
+i = a.index(##maroon|"y"##)||
+||[[# array-slice]][#array-slice-note slice] _
+##gray|//by endpoints, by length//## _
+@<&nbsp;>@||["a", "b", "c", "d"].slice(1,3)||##gray|# select 3rd and 4th elements:## _
+##gray|//none//## _
+array_slice($##peru|a##, 2, 2)||##gray|# select 3rd and 4th elements:## _
+a[2:4] _
+a[@@2:2@@ + 2]||##gray|# select 3rd and 4th elements:## _
+a[2..3] _
+a[2, 2]||
+||[[# array-slice-to-end]][#array-slice-to-end-note slice to end] _
+@<&nbsp;>@||["a", "b", "c", "d"].slice(1)||array_slice($##peru|a##, 1)||a[1:]||a[1..-1]||
+||[[# array-back]][#array-back-note manipulate back] _
+@<&nbsp;>@||a = [6, 7, 8]; _
+a.push(9); _
+i = a.pop();||$##peru|a## = [6, 7, 8]; _
+array_push($##peru|a##, 9); _
+$##peru|a##[] = 9; ##gray|# same as array_push## _
+array_pop($##peru|a##);||##peru|a## = [6, 7, 8] _
+a.append(9) _
+a.pop()||a = [6, 7, 8] _
+a.push(9) _
+a @@<<@@ 9 ##gray|# same as push## _
+a.pop||
+||[[# array-front]][#array-front-note manipulate front] _
+@<&nbsp;>@||a = [6, 7, 8]; _
+a.unshift(5); _
+i = a.shift();||$##peru|a## = [6, 7, 8]; _
+array_unshift($##peru|a##, 5); _
+array_shift($##peru|a##);||##peru|a## = [6, 7, 8] _
+a.insert(0, 5) _
+a.pop(0)||a = [6, 7, 8] _
+a.unshift(5) _
+a.shift||
+||[[# array-concatenation]][#array-concatenation-note concatenate]||a = [1, 2, 3].concat([4, 5, 6]);||$##peru|a## = [1, 2, 3]; _
+$##peru|a2## = array_merge($##peru|a##, [4, 5, 6]); _
+$##peru|a## = array_merge($##peru|a##, [4, 5, 6]);||##peru|a## = [1, 2, 3] _
+##peru|a2## = a + [4, 5, 6] _
+a.extend([4, 5, 6])||a = [1, 2, 3] _
+a2 = a + [4, 5, 6] _
+a.concat([4, 5, 6])||
+||[[# array-replication]][#array-replication-note replicate]||##gray|//none//##|| ||a = [##purple|None##] * 10 _
+a = [##purple|None for## i ##purple|in range##(0, 10)]||a = [##peru|nil##] * 10 _
+a = ##green|Array##.new(10, ##peru|nil##)||
+||[[# array-copy]][#array-copy-note copy] _
+##gray|//address copy, shallow copy, deep copy//##||a = [1, 2, [3, 4]]; _
+a2 = a; _
+a3 = a.slice(0); _
+a4 = JSON.parse(JSON.stringify(a));||$##peru|a## = [1, 2, [3, 4]]; _
+$##peru|a2## =& $##peru|a##; _
+##gray|//none//## _
+$##peru|a4## = $##peru|a##;||##purple|import## copy _
+ _
+##peru|a## = [1,2,[3,4]] _
+##peru|a2## = a _
+##peru|a3## = ##purple|list##(a) _
+##peru|a4## = copy.deepcopy(a)||a = [1,2,[3,4]] _
+a2 = a _
+a3 = a.dup _
+a4 = ##green|Marshal##.load(##green|Marshal##.dump(a))||
+||[[# array-arguments]][#array-arguments-note arrays as function arguments]||##gray|//parameter contains address copy//##||##gray|//parameter contains deep copy//##||##gray|//parameter contains address copy//##||##gray|//parameter contains address copy//##||
+||[[# array-iterate]][#array-iterate-note iterate over elements] _
+@<&nbsp;>@||_.each([1, 2, 3], function(n) { _
+@<&nbsp;&nbsp;>@alert(n); _
+})||##purple|foreach## ([1, 2, 3] ##purple|as## $##peru|i##) { _
+@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"$i\n"##; _
+}||##purple|for## i ##purple|in## [1,2,3]: _
+@<&nbsp;&nbsp;>@##purple|print##(i)||[1,2,3].each { |i| puts i }||
+||[[# indexed-array-iteration]][#indexed-array-iteration-note iterate over indices and elements]||var len = a.length; _
+for (var i = 0; i < len; i++ ) { _
+@<&nbsp;&nbsp;>@alert(a[i]); _
+}||$##peru|a## = [##maroon|"do"##, ##maroon|"re"##, ##maroon|"mi"## ##maroon|"fa"##]; _
+##purple|foreach## ($##peru|a## as $##peru|i## => $##peru|s##) { _
+@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"$s at index $i\n"##; _
+}||##peru|a## = [##maroon|'do'##, ##maroon|'re'##, ##maroon|'mi'##, ##maroon|'fa'##] _
+##purple|for## i, s ##purple|in## enumerate(a): _
+@<&nbsp;&nbsp;>@##purple|print##(##maroon|'%s at index %d'## % (s, i))||a = %w(do re mi fa) _
+a.each_with_index do |s, i| _
+@<&nbsp;&nbsp;>@puts ##maroon|"####peru|#{s}## ##maroon|at index## ##peru|#{i}####maroon|"## _
+end||
+||[[# range-iteration]][#range-iteration-note iterate over range]||##gray|//not space efficient; use C-style for loop//##||##gray|//not space efficient; use C-style for loop//##||##gray|# use range() in Python 3:## _
+##purple|for## i ##purple|in xrange##(1, 1000001): _
+@<&nbsp;&nbsp;>@##gray|//code//##||(1..1_000_000).each ##purple|do## |i| _
+@<&nbsp;&nbsp;>@##gray|//code//## _
+##purple|end##||
+||[[# range-array]][#range-array-note instantiate range as array]||var a = _.range(1, 10);||$##peru|a## = range(1, 10);||##peru|a## = ##purple|range##(1, 11) _
+##gray|//Python 3://## _
+##peru|a## = ##purple|list##(##purple|range##(1, 11))||a = (1..10).to_a||
+||[[# array-reverse]][#array-reverse-note reverse] _
+##gray|//non-destructive, in-place//##||var a = [1, 2, 3]; _
+a.reverse();||$##peru|a## = [1, 2, 3]; _
+ _
+array_reverse($##peru|a##); _
+$##peru|a## = array_reverse($##peru|a##);||##peru|a## = [1, 2, 3] _
+ _
+a[::-1] _
+a.reverse()||a = [1, 2, 3] _
+ _
+a.reverse _
+ a.reverse!||
+||[[# array-sort]][#array-sort-note sort] _
+##gray|//non-destructive, _
+in-place, _
+custom comparision//##||var a = [3, 1, 4, 2]; _
+a.sort();||$##peru|a## = [##maroon|"b"##, ##maroon|"A"##, ##maroon|"a"##, ##maroon|"B"##]; _
+ _
+##gray|//none//## _
+sort($##peru|a##); _
+##gray|//none, but// usort //sorts in place//##||##peru|a## = [##maroon|'b'##, ##maroon|'A'##, ##maroon|'a'##, ##maroon|'B'##] _
+ _
+##purple|sorted##(a) _
+a.sort() _
+##gray|# custom binary comparision _
+# removed from Python 3:## _
+a.sort(key=##purple|str##.lower)||a = %w(b A a B) _
+ _
+a.sort _
+a.sort! _
+a.sort ##purple|do## |x, y| _
+@<&nbsp;&nbsp;>@x.downcase <=> y.downcase _
+##purple|end##||
+||[[# array-dedupe]][#array-dedupe-note dedupe] _
+##gray|//non-destructive, in-place//##||var a = [1, 2, 2, 3]; _
+ _
+var a2 = _.uniq(a); _
+a = _.uniq(a);||$##peru|a## = [1, 2, 2, 3]; _
+ _
+$##peru|a2## = array_unique($##peru|a##); _
+$##peru|a## = array_unique($##peru|a##);||##peru|a## = [1, 2, 2, 3] _
+ _
+##peru|a2## = ##purple|list##(##purple|set##(a)) _
+##peru|a## = ##purple|list##(##purple|set##(a))||a = [1, 2, 2, 3] _
+ _
+a2 = a.uniq _
+a.uniq!||
+||[[# membership]][#membership-note membership] _
+@<&nbsp;>@||_.contains(a, 7)||in_array(7, $##peru|a##)||7 ##purple|in## a||a.include?(7)||
+||[[# intersection]][#intersection-note intersection] _
+@<&nbsp;>@||_.intersection([1, 2], [2, 3, 4])|| $##peru|a## = [1, 2]; _
+$##peru|b## = [2, 3, 4] _
+array_intersect($##peru|a##, $##peru|b##)||{1,2} & {2,3,4}||[1,2] & [2,3,4]||
+||[[# union]][#union-note union] _
+@<&nbsp;>@||_.union([1, 2], [2, 3, 4])||$##peru|a1## = [1, 2]; _
+$##peru|a2## = [2, 3, 4]; _
+array_unique(array_merge($##peru|a1##, $##peru|a2##))||{1,2} | {2,3,4}||[1,2] | [2,3,4]||
+||[[# set-diff]][#set-diff-note relative complement, symmetric difference]||_.difference([1,2,3], [2]) _
+##gray|//none//##||$##peru|a1## = [1, 2, 3]; _
+$##peru|a2## = [2]; _
+array_values(array_diff($##peru|a1##, $##peru|a2##)) _
+##gray|//none//##||{1,2,3} - {2} _
+{1,2} ^ {2,3,4}||require ##maroon|'set'## _
+ _
+[1,2,3] - [2] _
+##green|Set##[1,2] ^ ##green|Set##[2,3,4]||
+||[[# map]][#map-note map] _
+@<&nbsp;>@||##gray|@@//@@ callback gets 3 args: _
+@@//@@ value, index, array## _
+a.map(function(x) { return x * x })||array_map(function ($##peru|x##) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|return## $##peru|x## * $##peru|x##; _
+@<&nbsp;&nbsp;>@}, [1, 2, 3])||##purple|map##(##purple|lambda## x: x * x, [1,2,3]) _
+##gray|# or use list comprehension:## _
+[x * x for x in [1,2,3]]||[1,2,3].map { |o| o * o }||
+||[[# filter]][#filter-note filter] _
+@<&nbsp;>@||a.filter(function(x) { return x > 1 }) 	||array_filter([1, 2, 3], _
+@<&nbsp;&nbsp;>@function ($##peru|x##) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|return## $##peru|x##>1; _
+@<&nbsp;&nbsp;>@})||##purple|filter##(##purple|lambda## x: x > 1, [1,2,3]) _
+##gray|# or use list comprehension:## _
+[x for x in [1,2,3] if x > 1]||[1,2,3].select { |o| o > 1 }||
+||[[# reduce]][#reduce-note reduce] _
+@<&nbsp;>@||a.reduce(function(m, o) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return m + o; _
+@<&nbsp;&nbsp;>@}, 0)||array_reduce([1, 2, 3], _
+@<&nbsp;&nbsp;>@function($##peru|x##,$##peru|y##) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|return## $##peru|x## + $##peru|y##; _
+@<&nbsp;&nbsp;>@}, 0)||##gray|# import needed in Python 3 only## _
+##purple|from## functools ##purple|import reduce## _
+ _
+##purple|reduce##(##purple|lambda## x, y: x + y, [1, 2, 3], 0)||[1, 2, 3].inject(0) { |m, o| m + o }||
+||[[# universal-existential-test]][#universal-existential-test-note universal  and existential tests] _
+@<&nbsp;>@||var a = [1, 2, 3, 4]; _
+var even = function(x) { _
+@<&nbsp;&nbsp;>@return x % 2 == 0; _
+}; _
+ _
+a.every(even) _
+a.some(even)||##gray|//use array_filter//##||##purple|all##(i % 2 == 0 ##purple|for## i ##purple|in## [1,2,3,4]) _
+##purple|any##(i % 2 == 0 ##purple|for## i ##purple|in## [1,2,3,4])||[1,2,3,4].all? {|i| i.even? } _
+[1,2,3,4].any? {|i| i.even? }||
+||[[# shuffle-sample]][#shuffle-sample-note shuffle and sample]||var a = [1, 2, 3, 4]; _
+a = _.shuffle(a); _
+var samp = _.sample([1, 2, 3, 4], 2);||$##peru|a## = [1, 2, 3, 4]; _
+shuffle($##peru|a##); _
+$##peru|samp## = array_rand(|[1, 2, 3, 4], 2);||##purple|from## random ##purple|import## shuffle, sample _
+ _
+##peru|a## = [1, 2, 3, 4] _
+shuffle(a) _
+samp = sample([1, 2, 3, 4], 2)||[1, 2, 3, 4].shuffle! _
+samp = [1, 2, 3, 4].sample(2)||
+||[[# flatten]][#flatten-note flatten] _
+##gray|//one level, completely//##||var a = [1, [2, [3, 4]]]; _
+var a2 = _.flatten(a, true); _
+var a3 = _.flatten(a);||##gray|//none//##||##gray|//none//##||a = [1, [2, [3, 4]]] _
+a2 = a.flatten(1) _
+a3 = a.flatten||
+||[[# zip]][#zip-note zip] _
+@<&nbsp;>@||var a = _.zip( _
+@<&nbsp;&nbsp;>@[1, 2, 3], _
+@<&nbsp;&nbsp;>@["a", "b", "c"]);||$##peru|a## = array_map(##teal|NULL##, _
+@<&nbsp;&nbsp;>@[1, 2, 3], _
+@<&nbsp;&nbsp;>@[##maroon|"a"##, ##maroon|"b"##, ##maroon|"c"##]);||##peru|a## = zip([1,2,3], [##maroon|'a'##, ##maroon|'b'##, ##maroon|'c'##])||a = [1,2,3].zip([##maroon|"a"##, ##maroon|"b"##, ##maroon|"c"##])||
+||||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
+||~  ||~ javascript||~ php||~ python||~ ruby||
+||[[# dict-literal]][#dict-literal-note literal] _
+@<&nbsp;>@||d = { "t":1, "f":0 }; _
+##gray|@@//@@ keys do not need to be quoted if they _
+@@//@@ are a legal JavaScript variable name _
+@@//@@and not a reserved word##||$##peru|d## = [##maroon|"t"## => 1, ##maroon|"f"## => 0]; _
+  _
+##gray|# older syntax:## _
+$##peru|d## = array(##maroon|"t"## => 1, ##maroon|"f"## => 0);||##peru|d## = { ##maroon|'t'##:1, ##maroon|'f'##:0 }||d = { ##maroon|"t"## => 1, ##maroon|"f"## => 0 }||
+||[[# dict-size]][#dict-size-note size] _
+@<&nbsp;>@||var size = 0; _
+for (var k in d) { _
+@<&nbsp;&nbsp;>@if (d.hasOwnProperty(k)) size++; _
+}||count($##peru|d##)||##purple|len##(d)||d.size _
+d.length ##gray|# same as size##||
+||[[# dict-lookup]][#dict-lookup-note lookup] _
+@<&nbsp;>@||d.t _
+d["t"]||$##peru|d##[##maroon|"t"##]||d[##maroon|'t'##]||d[##maroon|"t"##]||
+||[[# dict-update]][#dict-update-note update]||d["t"] = 2; _
+d.t = 2;||$##peru|d##[##maroon|"t"##] = 2;||d[##maroon|'t'##] = 2||d[##maroon|"t"##] = 2||
+||[[# dict-out-of-bounds]][#dict-out-of-bounds-note out-of-bounds behavior] _
+@<&nbsp;>@||var d = {}; _
+##gray|@@//@@ sets s to undefined:## _
+var s = d["lorem"]; _
+##gray|@@//@@ adds key/value pair:## _
+d["lorem"] = "ipsum"; ||$##peru|d## = []; _
+##gray|# sets $s to NULL:## _
+$##peru|s## = $##peru|d##[##maroon|"lorem"##]; _
+##gray|# adds key/value pair:## _
+$##peru|d##[##maroon|"lorem"##] = ##maroon|"ipsum"##;||##peru|d## = {} _
+##gray|# raises KeyError:## _
+##peru|s## = d[##maroon|'lorem'##] _
+##gray|# adds key/value pair:## _
+d[##maroon|'lorem'##] = ##maroon|'ipsum'##||d = {} _
+##gray|# sets s to nil:## _
+s = d[##maroon|"lorem"##] _
+##gray|# adds key/value pair:## _
+d[##maroon|"lorem"##] = ##maroon|"ipsum"##||
+||[[# dict-key-check]][#dict-key-check-note is key present] _
+@<&nbsp;>@||d.hasOwnProperty("t");||array_key_exists(##maroon|"y"##, $##peru|d##);||##maroon|'y'## ##purple|in## d||d.has_key?(##maroon|"y"##)||
+||[[# dict-delete]][#dict-delete-note delete entry]||delete d["t"]; _
+delete d.t;||$##peru|d## = [1 => ##maroon|"t"##, 0 => ##maroon|"f"##]; _
+unset($##peru|d##[1]);||##peru|d## = {1: ##purple|True##, 0: ##purple|False##} _
+##purple|del## d[1]||d = {1 => ##peru|true##, 0 => ##peru|false##} _
+d.delete(1)||
+||[[# dict-assoc-array]][#dict-assoc-array-note from array of pairs, from even length array]||var a = [["a", 1], ["b", 2], ["c", 3]]; _
+var d = _.object(a); _
+ _
+##gray|//none//##|| ||##peru|a## = [[##maroon|'a'##, 1], [##maroon|'b'##, 2], [##maroon|'c'##, 3]] _
+##peru|d## = ##purple|dict##(a) _
+ _
+##peru|a## = [##maroon|'a'##, 1, ##maroon|'b'##, 2, ##maroon|'c'##, 3] _
+##peru|d## =  ##purple|dict##(##purple|zip##(a[::2], a[1::2]))||a = [[##maroon|"a"##, 1], [##maroon|"b"##, 2], [##maroon|"c"##, 3]] _
+d = ##green|Hash##[a] _
+ _
+a = [##maroon|"a"##, 1, ##maroon|"b"##, 2, ##maroon|"c"##, 3] _
+d = ##green|Hash##[*a]||
+||[[# dict-merge]][#dict-merge-note merge]||var d1 = {"a": 1, "b": 2}; _
+var d2 = {"c": 3, "d": 4}; _
+d1 = _.extend(d1, d2);||$##peru|d1## = [##maroon|"a"## => 1, ##maroon|"b"## => 2]; _
+$##peru|d2## = [##maroon|"b"## => 3, ##maroon|"c"## => 4]; _
+$##peru|d1## = array_merge($##peru|d1##, $##peru|d2##);||##peru|d1## = {##maroon|'a'##: 1, ##maroon|'b'##: 2} _
+##peru|d2## = {##maroon|'b'##: 3, ##maroon|'c'##: 4} _
+d1.update(d2)||d1 = {##maroon|"a"## => 1, ##maroon|"b"## => 2} _
+d2 = {##maroon|"b"## => 3, ##maroon|"c"## => 4} _
+d1.merge!(d2)||
+||[[# dict-invert]][#dict-invert-note invert]||var to_num = {'t': 1, 'f': 0}; _
+var to_let = _.invert(to_num);||$##peru|to_num## = [##maroon|"t"## => 1, ##maroon|"f"## => 0]; _
+$##peru|to_let## = array_flip($##peru|to_num##);||##peru|to_num## = {##maroon|'t##': 1, ##maroon|'f'##: 0} _
+##gray|# dict comprehensions added in 2.7:## _
+##peru|to_let## = {v: k ##purple|for## k, v _
+@<&nbsp;&nbsp;>@##purple|in## to_num.items()}||to_num = {##maroon|"t"## => 1, ##maroon|"f"## => 0} _
+to_let = to_num.invert||
+||[[# dict-iter]][#dict-iter-note iteration] _
+@<&nbsp;>@||for (var k in d) { _
+@<&nbsp;&nbsp;>@##gray|//use k or d[k]//## _
+}||##purple|foreach## ($##peru|d## as $##peru|k## => $##peru|v##) { _
+@<&nbsp;&nbsp;>@##gray|//code//## _
+}||##purple|for## k, v ##purple|in## d.iteritems(): _
+@<&nbsp;&nbsp;>@##gray|//code//## _
+ _
+##gray|//Python 3://## _
+##purple|for## k, v ##purple|in## d.items(): _
+@<&nbsp;&nbsp;>@##gray|//code//##||d.each ##purple|do## |k,v| _
+@<&nbsp;&nbsp;>@##gray|//code//## _
+##purple|end##||
+||[[# dict-key-val]][#dict-key-val-note keys and values as arrays]||_.keys(d) _
+_.values(d)||array_keys($##peru|d##) _
+array_values($##peru|d##)||d.keys() _
+d.values() _
+ _
+##gray|//Python 3://## _
+list(d.keys()) _
+list(d.values())||d.keys _
+d.values||
+||[[# dict-sort-values]][#dict-sort-values-note sort by values]||function cmp2(a, b) { _
+@<&nbsp;&nbsp;>@if (a[1] < b[1]) { return -1; } _
+@<&nbsp;&nbsp;>@if (a[1] > b[1]) { return 1; } _
+@<&nbsp;&nbsp;>@return 0; _
+} _
+ _
+for (p in _.pairs(d).sort(cmp2)) { _
+@<&nbsp;&nbsp;>@alert(p[0] + ": " + p[1]); _
+}||asort($##peru|d##); _
+ _
+##purple|foreach## ($##peru|d## ##purple|as## $##peru|k## => $##peru|v##) { _
+@<&nbsp;&nbsp;>@##purple|print## ##maroon|"$k: $v\n"##; _
+}||##purple|from## operator ##purple|import## itemgetter _
+ _
+##peru|pairs## = ##purple|sorted##(d.iteritems(), _
+@<&nbsp;&nbsp;>@key=itemgetter(1)) _
+ _
+##purple|for## k, v ##purple|in## pairs: _
+@<&nbsp;&nbsp;>@##purple|print##(##maroon|'{}: {}'##.format(k, v))||d.sort_by {|k, v| v}.each ##purple|do## |k, v| _
+@<&nbsp;&nbsp;>@puts ##maroon|"#{k}: #{v}"## _
+##purple|end##||
+||[[# dict-default-val]][#dict-default-val-note default value, computed value]||##gray|//none//##||$##peru|counts## = []; _
+$##peru|counts##[##maroon|'foo'##] += 1; _
+ _
+##gray|//extend// ArrayObject //for computed values and defaults other than zero or empty string.//##||##purple|from## collections ##purple|import## defaultdict _
+ _
+##peru|counts## = defaultdict(##purple|lambda##: 0) _
+counts[##maroon|'foo'##] += 1 _
+ _
+##purple|class## ##green|Factorial##(dict): _
+@<&nbsp;&nbsp;>@##purple|def## ##mediumblue|@@__missing__@@##(##purple|self##, k): _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|if## k > 1: _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|return## k * ##purple|self##[k-1] _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|else##: _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|return## 1 _
+ _
+##peru|factorial## = Factorial()||counts = ##green|Hash##.new(0) _
+counts[##maroon|'foo'##] += 1 _
+ _
+factorial = ##green|Hash##.new ##purple|do## |h,k| _
+@<&nbsp;&nbsp;>@k > 1 ? k * h[k-1] : 1 _
+##purple|end##||
+||||||||||~ [[# functions]][#functions-note functions]||
+||~  ||~ javascript||~ php||~ python||~ ruby||
+||[[# def-func]][#def-func-note define function] _
+@<&nbsp;>@||function add(x, y) { _
+@<&nbsp;&nbsp;>@return x+y; _
+}||##purple|function## ##0000CD|add3##($##peru|x1##, $##peru|x2##, $##peru|x3##) _
+{ _
+@<&nbsp;&nbsp;>@##purple|return## $##peru|x1## + $##peru|x2## + $##peru|x3##; _
+}||##purple|def## ##0000CD|add3##(x1, x2, x3): _
+@<&nbsp;&nbsp;>@##purple|return## x1 + x2 + x3||##purple|def## ##0000CD|add3##(x1, x2, x3) _
+@<&nbsp;&nbsp;>@x1 + x2 + x3 _
+##purple|end## _
+ _
+##gray|# parens are optional and customarily _
+# omitted when defining functions _
+# with no parameters##||
+||[[# invoke-func]][#invoke-func-note invoke function]||add(1, 2)||add3(1, 2, 3); _
+ _
+##gray|# function names are case insensitive:## _
+ADD3(1, 2, 3);||add3(1, 2, 3)||add3(1, 2, 3) _
+ _
+##gray|# parens are optional:## _
+add3 1, 2, 3||
+||[[# missing-arg]][#missing-arg-note missing argument behavior] _
+@<&nbsp;>@||##gray|//set to// undefined##||##gray|//set to// NULL //with warning//##||##gray|//raises// TypeError //if number of arguments doesn't match function arity//##||##gray|//raises// ArgumentError //if number of arguments doesn't match function arity//##||
+||[[# default-arg]][#default-arg-note default argument] _
+@<&nbsp;>@||##gray|//none//##||##purple|function## ##mediumblue|my_log##($##peru|x##, $##peru|base##=10) _
+{ _
+@<&nbsp;&nbsp;>@##purple|return## log($##peru|x##) / log($##peru|base##); _
+} _
+ _
+my_log(42); _
+my_log(42, ##teal|M_E##);||##purple|import## math _
+ _
+##purple|def## ##mediumblue|my_log##(x, base=10): _
+@<&nbsp;&nbsp;>@##purple|return## math.log(x) / math.log(base) _
+ _
+my_log(42) _
+my_log(42, math.e)||##purple|def## ##mediumblue|my_log##(x, base=10) _
+@<&nbsp;&nbsp;>@##green|Math##.log(x) / ##green|Math##.log(base) _
+##purple|end## _
+ _
+my_log(42) _
+my_log(42, ##green|Math##::##green|E##)||
+||[[# variable-num-arg]][#variable-num-arg-note variable number of arguments]||##gray|//args in//## arguments[0], arguments[1], ##gray|//… with number of args in//## arguments.length||##purple|function## ##mediumblue|first_and_last##() _
+{ _
+ _
+@<&nbsp;&nbsp;>@$##peru|arg_cnt## = func_num_args(); _
+ _
+@<&nbsp;&nbsp;>@##purple|if## ($##peru|arg_cnt## >= 1) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@$##peru|n## = func_get_arg(0); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"first: "## . $##peru|n## . ##maroon|"\n"##; _
+@<&nbsp;&nbsp;>@} _
+ _
+@<&nbsp;&nbsp;>@##purple|if## ($##peru|arg_cnt## >= 2) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@$##peru|a## = func_get_args(); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@$##peru|n## = $##peru|a##[$##peru|arg_cnt##-1]; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"last: "## . $##peru|n## . ##maroon|"\n"##; _
+@<&nbsp;&nbsp;>@} _
+}||##purple|def## ##mediumblue|first_and_last##(*a): _
+ _
+@<&nbsp;&nbsp;>@##purple|if len##(a) >= 1: _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|print##(##maroon|'first: '## + ##purple|str##(a[0])) _
+ _
+@<&nbsp;&nbsp;>@##purple|if len##(a) >= 2: _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|print##(##maroon|'last: '## + ##purple|str##(a[-1]))||##purple|def## ##mediumblue|first_and_last##(*a) _
+ _
+@<&nbsp;&nbsp;>@##purple|if## a.size >= 1 _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@puts ##maroon|"first: #{a[0]}"## _
+@<&nbsp;&nbsp;>@##purple|end## _
+ _
+@<&nbsp;&nbsp;>@##purple|if## a.size >= 2 _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@puts ##maroon|"last: #{a[-1]}"## _
+@<&nbsp;&nbsp;>@##purple|end## _
+##purple|end##||
+||[[# apply-func]][#apply-func-note pass array elements as separate arguments]||##gray|//none//##||$##peru|a## = [1, 2, 3]; _
+ _
+call_user_func_array(##maroon|"add3"##, $##peru|a##);||##peru|a## = [2, 3] _
+ _
+add3(1, *a) _
+ _
+##gray|# splat operator can only be used once _
+# and must appear after other _
+# unnamed arguments##||a = [2, 3] _
+ _
+add3(1, *a) _
+ _
+##gray|# splat operator can be used multiple _
+# times and can appear before regular _
+# arguments##||
+||[[# named-param]][#named-param-note named parameters] _
+@<&nbsp;>@||##gray|//none//##||##gray|//none//##||##purple|def## ##mediumblue|fequal##(x, y, eps=0.01): _
+@<&nbsp;&nbsp;>@##purple|return abs##(x - y) < eps _
+ _
+fequal(1.0, 1.001) _
+fequal(1.0, 1.001, eps=0.1@@**@@10)||##purple|def## ##mediumblue|fequal##(x, y, opts={}) _
+@<&nbsp;&nbsp;>@eps = opts[##teal|:eps##] @@||@@ 0.01 _
+@<&nbsp;&nbsp;>@(x - y).abs < eps _
+##purple|end## _
+ _
+fequal(1.0, 1.001) _
+fequal(1.0, 1.001, ##teal|:eps##=>0.1@@**@@10) _
+ _
+##gray|# Ruby 2.0:## _
+##purple|def## ##mediumblue|fequals##(x, y, ##teal|eps##: 0.01) _
+@<&nbsp;&nbsp;>@(x - y).abs < eps _
+end _
+ _
+fequals(1.0, 1.001) _
+fequals(1.0, 1.001, ##teal|eps##: 0.1**10)||
+||[[# pass-num-str-by-ref]][#pass-num-str-by-ref-note pass number or string by reference] _
+@<&nbsp;>@||##gray|//not possible//##||##purple|function## ##0000CD|impure##(&$##peru|x##, &$##peru|y##) _
+{ _
+@<&nbsp;&nbsp;>@$##peru|x## += 1; _
+@<&nbsp;&nbsp;>@$##peru|y## .= ##maroon|"ly"##; _
+ } _
+ _
+$##peru|n## = 7; _
+$##peru|s## = ##maroon|"hard"##; _
+impure($##peru|n##, $##peru|s##);||##gray|//not possible//##||##gray|//not possible//##||
+||[[# pass-array-dict-by-ref]][#pass-array-dict-by-ref-note pass array or dictionary by reference] _
+@<&nbsp;>@||function impure(x, y) { _
+@<&nbsp;&nbsp;>@x[2] = 5; _
+@<&nbsp;&nbsp;>@y["f"] = -1; _
+} _
+ _
+var a = [1, 2, 3]; _
+var d = {"t": 1, "f": 0}; _
+impure(a, d);||##purple|function## ##0000CD|impure##(&$##peru|x##, &$##peru|y##) _
+{ _
+@<&nbsp;&nbsp;>@$##peru|x##[2] = 5; _
+@<&nbsp;&nbsp;>@$##peru|y##[##maroon|"f"##] = -1; _
+} _
+ _
+$##peru|a## = [1, 2, 3]; _
+$##peru|d## = [##maroon|"t"## => 1, ##maroon|"f"## => 0]; _
+impure($##peru|a##, $##peru|d##);||##purple|def## ##0000CD|impure##(x, y): _
+@<&nbsp;&nbsp;>@x[2] = 5 _
+@<&nbsp;&nbsp;>@y[##maroon|'f'##] = -1 _
+ _
+##peru|a## = [1, 2, 3] _
+##peru|d## = {##maroon|'t'##:1, ##maroon|'f'##:0} _
+impure(a, d)||##purple|def## ##0000CD|impure##(x, y) _
+@<&nbsp;&nbsp;>@x[2] = 5 _
+@<&nbsp;&nbsp;>@y[##maroon|"f"##] = -1 _
+end _
+ _
+a = [1, 2, 3] _
+d = {##maroon|"t"## => 1, ##maroon|"f"## => 0 } _
+impure(a, d)||
+||[[# retval]][#retval-note return value] _
+@<&nbsp;>@||return ##gray|//arg or//## undefined. ##gray|//If invoked with//## new ##gray|//and return value not an object, returns//## this||##gray|return //arg or// NULL##||##gray|return //arg or// None##||##gray|return //arg or last expression evaluated##//||
+||[[# multiple-retval]][#multiple-retval-note multiple return values] _
+@<&nbsp;>@||##gray|//none//##||##purple|function## ##0000CD|first_and_second##(&$##peru|a##) _
+{ _
+@<&nbsp;&nbsp;>@##purple|return## [$##peru|a##[0], $##peru|a##[1]]; _
+} _
+ _
+$##peru|a## = [1, 2, 3]; _
+list($##peru|x##, $##peru|y##) = _
+@<&nbsp;&nbsp;>@first_and_second($a);||##purple|def## ##0000CD|first_and_second##(a): _
+@<&nbsp;&nbsp;>@##purple|return## a[0], a[1] _
+ _
+##peru|x##, ##peru|y## = first_and_second([1,2,3])||##purple|def## ##0000CD|first_and_second##(a) _
+@<&nbsp;&nbsp;>@##purple|return## a[0], a[1] _
+##purple|end## _
+ _
+x, y = first_and_second([1,2,3])||
+||[[# lambda]][#lambda-note lambda declaration] _
+@<&nbsp;>@||var sqr = function(x) { return x*x; }||$##peru|sqr## = function ($##peru|x##) { _
+@<&nbsp;&nbsp;>@return $##peru|x## * $##peru|x##; _
+};||##gray|# body must be an expression:## _
+##peru|sqr## = ##purple|lambda## x: x * x||sqr = lambda { |x| x * x }||
+||[#lambda-note lambda invocation]||sqr(2)||$##peru|sqr##(2)||sqr(2)||sqr.call(2) ##gray|//or//## _
+sqr[2]||
+||[[# func-as-val]][#func-as-val-note function as value] _
+@<&nbsp;>@||var func = add;||$##peru|func## = ##maroon|"add"##;||##peru|func## = add||func = lambda {|*args| add(*args)}||
+||[[# private-state-func]][#private-state-func-note function with private state]||function counter() { _
+@<&nbsp;&nbsp;>@counter.i += 1; _
+@<&nbsp;&nbsp;>@return counter.i; _
+} _
+ _
+counter.i = 0; _
+alert(counter());||##purple|function## ##0000CD|counter##() _
+{ _
+@<&nbsp;&nbsp;>@##purple|static## $##peru|i## = 0; _
+@<&nbsp;&nbsp;>@##purple|return## ++$##peru|i##; _
+} _
+ _
+##purple|echo## counter();||##gray|# state not private:## _
+##purple|def## ##0000CD|counter##(): _
+@<&nbsp;&nbsp;>@counter.i += 1 _
+@<&nbsp;&nbsp;>@##purple|return## counter.i _
+ _
+counter.i = 0 _
+##purple|print##(counter())||##gray|//none//##||
+||[[# closure]][#closure-note closure]||function make_counter() { _
+@<&nbsp;&nbsp;>@var i = 0; _
+ _
+@<&nbsp;&nbsp;>@return function() { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@i += 1; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return i; _
+@<&nbsp;&nbsp;>@} _
+}||##purple|function## ##0000CD|make_counter()## _
+{ _
+@<&nbsp;&nbsp;>@$##peru|i## = 0; _
+@<&nbsp;&nbsp;>@##purple|return## function () use (&$##peru|i##) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|return## ++$##peru|i##; _
+@<&nbsp;&nbsp;>@}; _
+} _
+ _
+$##peru|nays## = make_counter(); _
+##purple|echo## $##peru|nays##();||##gray|# Python 3:## _
+##purple|def## ##0000CD|make_counter##(): _
+@<&nbsp;&nbsp;>@i = 0 _
+@<&nbsp;&nbsp;>@##purple|def## ##0000CD|counter##(): _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@nonlocal i _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@i += 1 _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|return## i _
+@<&nbsp;&nbsp;>@##purple|return## counter _
+ _
+nays = make_counter()||##purple|def## ##0000CD|make_counter## _
+@<&nbsp;&nbsp;>@i = 0 _
+@<&nbsp;&nbsp;>@##purple|return## lambda { i +=1; i } _
+##purple|end## _
+ _
+nays = make_counter _
+puts nays.call||
+||[[# generator]][#generator-note generator]|| ||##gray|# PHP 5.5:## _
+##purple|function## ##mediumblue|make_counter##() { _
+@<&nbsp;&nbsp;>@$##peru|i## = 0; _
+@<&nbsp;&nbsp;>@##purple|while## (1) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|yield## ++$##peru|i##; _
+@<&nbsp;&nbsp;>@} _
+} _
+ _
+$##peru|nays## = make_counter(); _
+##gray|# does not return a value:## _
+$##peru|nays##->next(); _
+##gray|# runs generator if generator has not _
+# yet yielded:## _
+##purple|echo## $##peru|nays##->current();||##gray|# The itertools library contains _
+# standard generators. _
+# c.f. itertools.count()## _
+ _
+##purple|def## ##0000CD|make_counter##(): _
+@<&nbsp;&nbsp;>@i = 0 _
+@<&nbsp;&nbsp;>@##purple|while True##: _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@i += 1 _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|yield## i _
+ _
+##peru|nays## = make_counter() _
+##purple|print##(nays.next())||##purple|def## ##0000CD|make_counter## _
+@<&nbsp;&nbsp;>@##purple|return## ##green|Fiber##.new ##purple|do## _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@i = 0 _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|while## ##peru|true## _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@i += 1 _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##green|Fiber##.yield i _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|end## _
+@<&nbsp;&nbsp;>@##purple|end## _
+##purple|end## _
+ _
+nays = make_counter _
+puts nays.resume||
+||[[# decorator]][#decorator-note decorator]|| || ||##purple|def## ##mediumblue|logcall##(f): _
+@<&nbsp;&nbsp;>@##purple|def## ##mediumblue|wrapper##(*a, **opts): _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|print##(##maroon|'calling '## + f.@@__name__@@) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@f(*a, **opts) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|print##(##maroon|'called '## + f.@@__name__@@) _
+@<&nbsp;&nbsp;>@##purple|return## wrapper _
+ _
+##green|@logcall## _
+##purple|def## ##mediumblue|square##(x): _
+@<&nbsp;&nbsp;>@##purple|return## x * x|| ||
+||[[# op-as-func]][#op-as-func-note operator as function]|| || ||##purple|import## operator _
+ _
+operator.mul(3, 7) _
+ _
+##peru|a## = [##maroon|'foo'##, ##maroon|'bar'##, ##maroon|'baz'##] _
+operator.itemgetter(2)(a)||3.*(7) _
+ _
+a = [##maroon|'foo'##, ##maroon|'bar'##, ##maroon|'baz'##] _
+a.[](2)||
+||||||||||~ [[# execution-control]][#execution-control-note execution control]||
+||~  ||~ javascript||~ php||~ python||~ ruby||
+||[[# if]][#if-note if] _
+@<&nbsp;>@||if (0 == n) { _
+@<&nbsp;&nbsp;>@alert("no hits"); _
+} else if (1 == n) { _
+@<&nbsp;&nbsp;>@alert("1 hit"); _
+} else { _
+@<&nbsp;&nbsp;>@alert(n + " hits"); _
+}||##purple|if## ( 0 == $##peru|n## ) { _
+@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"no hits\n"##; _
+} ##purple|elseif## ( 1 == $##peru|n## ) { _
+@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"one hit\n"##; _
+} ##purple|else## { _
+@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"$n hits\n"##; _
+}||##purple|if## 0 == n: _
+@<&nbsp;&nbsp;>@##purple|print##(##maroon|'no hits'##) _
+##purple|elif## 1 == n: _
+@<&nbsp;&nbsp;>@##purple|print##(##maroon|'one hit'##) _
+##purple|else##: _
+@<&nbsp;&nbsp;>@##purple|print##(##purple|str##(n) + ##maroon|' hits'##)||##purple|if## n == 0 _
+@<&nbsp;&nbsp;>@puts ##maroon|"no hits"## _
+##purple|elsif## 1 == n _
+@<&nbsp;&nbsp;>@puts ##maroon|"one hit"## _
+##purple|else## _
+@<&nbsp;&nbsp;>@puts ##maroon|"####peru|#{n}## ##maroon|hits"## _
+##purple|end##||
+||[[# switch]][#switch-note switch]||switch (n) { _
+case 0: _
+@<&nbsp;&nbsp;>@alert("no hits\n"); _
+@<&nbsp;&nbsp;>@break; _
+case 1: _
+@<&nbsp;&nbsp;>@alert("one hit\n"); _
+@<&nbsp;&nbsp;>@break; _
+default: _
+@<&nbsp;&nbsp;>@alert(3 + " hits\n"); _
+}||##purple|switch## ($##peru|n##) { _
+##purple|case## ##green|0##: _
+@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"no hits\n"##; _
+@<&nbsp;&nbsp;>@##purple|break##; _
+##purple|case## ##green|1##: _
+@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"one hit\n"##; _
+@<&nbsp;&nbsp;>@##purple|break##; _
+##purple|default##: _
+@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"$n hits\n"##; _
+}||##gray|//none//##||##purple|case## n _
+##purple|when## 0 _
+@<&nbsp;&nbsp;>@puts ##maroon|"no hits"## _
+##purple|when## 1 _
+@<&nbsp;&nbsp;>@puts ##maroon|"one hit"## _
+##purple|else## _
+@<&nbsp;&nbsp;>@puts ##maroon|"#{n} hits"## _
+##purple|end##||
+||[[# while]][#while-note while] _
+@<&nbsp;>@||while (i < 100) { _
+@<&nbsp;&nbsp;>@i += 1; _
+}|| ##purple|while## ( $##peru|i## < 100 ) { $##peru|i##++; }||##purple|while## i < 100: _
+@<&nbsp;&nbsp;>@i += 1||##purple|while## i < 100 ##purple|do## _
+@<&nbsp;&nbsp;>@i += 1 _
+##purple|end##||
+||[[# for]][#for-note c-style for] _
+@<&nbsp;>@||for (var i = 0; i < 10; i++) { _
+@<&nbsp;&nbsp;>@alert(i); _
+}||##purple|for## ($##peru|i## = 1; $##peru|i## <= 10; $##peru|i##++) { _
+@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"$i\n"##; _
+}||##gray|//none//##||##gray|//none//##||
+||[[# break-continue]][#break-continue-note break, continue, redo] _
+@<&nbsp;>@||break continue ##gray|//none//##||##purple|break continue## ##gray|//none//##||##purple|break continue## ##gray|//none//##||##purple|break next redo##||
+||[[# control-keywords]][#control-keywords-note control structure keywords]||case catch debugger default do else finally for if switch throw try while||##purple|case default do else elseif for foreach goto if switch while##||##purple|elif else for if while##||##purple|case do else elsif end for loop when while unless until##||
+||[[# do]][#do-note what do does]||##gray|//starts body of a// do-while //loop, a loop which checks the condition after the body is executed//##||##gray|//starts body of a// do-while //loop, a loop which checks the condition after the body is executed//##||##gray|//raises// NameError //unless a value was assigned to it//##||##gray|//starts an anonymous block.  Also starts the body of a// loop, while, //or// until //loop//##||
+||[[# statement-modifiers]][#statement-modifiers-note statement modifiers] _
+@<&nbsp;>@||##gray|//none//##||##gray|//none//##||##gray|//none//##||puts ##maroon|"positive"## ##purple|if## i > 0 _
+puts ##maroon|"nonzero"## ##purple|unless## i == 0||
+||||||||||~ [[# exceptions]][#exceptions-note exceptions]||
+||~  ||~ javascript||~ php||~ python||~ ruby||
+||[[# base-exc]][#base-exc-note base exception]||##gray|//Any value can be thrown.//##||Exception||BaseException _
+ _
+##gray|//User-defined exceptions should subclass// Exception.## _
+ _
+##gray|//In Python 2 old-style classes can be thrown.//##||Exception _
+ _
+##gray|//User-defined exceptions should subclass// StandardError.##||
+||[[# predefined-exc]][#predefined-exc-note predefined exceptions]||Error _
+@<&nbsp;&nbsp;>@EvalError _
+@<&nbsp;&nbsp;>@RangeError _
+@<&nbsp;&nbsp;>@ReferenceError _
+@<&nbsp;&nbsp;>@SyntaxError _
+@<&nbsp;&nbsp;>@TypeError _
+@<&nbsp;&nbsp;>@URIError||Exception _
+@<&nbsp;&nbsp;>@LogicException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@BadFunctionCallException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@BadMethodCallException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@DomainException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@InvalidArgumentException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@LengthException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@OutOfRangeException _
+@<&nbsp;&nbsp;>@RuntimeException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@OutOfBoundsException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@OverflowException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@RangeException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@UnderflowException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@UnexpectedValueException||BaseException _
+@<&nbsp;&nbsp;>@SystemExit _
+@<&nbsp;&nbsp;>@KeyboardInterrupt _
+@<&nbsp;&nbsp;>@GeneratorExit _
+@<&nbsp;&nbsp;>@Exception _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@StopIteration _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@StandardError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@BufferError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@ArithmeticError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@FloatingPointError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@OverflowError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@ZeroDivisionError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@AssertionError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@AttributeError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@EnvironmentError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@ EOFError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@ImportError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@LookupError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@IndexError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@KeyError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@MemoryError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@NameError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@ReferenceError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@RuntimeError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@NotImplementedError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@SyntaxError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@SystemError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@TypeError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@ValueError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@UnicodeError _
+ _
+##gray|//Python 3 has a different tree//##||Exception _
+@<&nbsp;&nbsp;>@NoMemoryError _
+@<&nbsp;&nbsp;>@ScriptError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@LoadError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@NotImplementedError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@SyntaxError _
+@<&nbsp;&nbsp;>@SignalException _
+@<&nbsp;&nbsp;>@StandardError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@ArgumentError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@IOError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@EOFError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@IndexError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@LocalJumpError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@NameError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@RangeError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@RegexpError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@RuntimeError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@SecurityError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@SocketError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@SystemCallError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Errno::* _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@SystemStackError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@ThreadError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@TypeError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@ZeroDivisionError _
+@<&nbsp;&nbsp;>@SystemExit _
+@<&nbsp;&nbsp;>@fatal||
+||[[# raise-exc]][#raise-exc-note raise exception] _
+@<&nbsp;>@||throw new Error("bad arg");||##purple|throw new## ##green|Exception##(##maroon|"bad arg"##);||##purple|raise## ##green|Exception##(##maroon|'bad arg'##)||##gray|# raises RuntimeError## _
+##purple|raise## ##maroon|"bad arg"##||
+||[[# catch-exc]][#catch-exc-note catch exception] _
+@<&nbsp;>@||try { _
+@<&nbsp;&nbsp;>@risky(); _
+} _
+catch (e) { _
+@<&nbsp;&nbsp;>@alert("risky failed: " + e.message); _
+}||##purple|try## { _
+@<&nbsp;&nbsp;>@risky(); _
+} ##purple|catch## (##green|Exception## $##peru|e##) { _
+@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"risky failed: "##,  _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@$##peru|e##->getMessage(), ##maroon|"\n"##; _
+}||##purple|try##: _
+@<&nbsp;&nbsp;>@risky() _
+##purple|except##: _
+@<&nbsp;&nbsp;>@##purple|print##(##maroon|'risky failed'##)||##gray|# catches StandardError## _
+##purple|begin## _
+@<&nbsp;&nbsp;>@risky _
+##purple|rescue## _
+@<&nbsp;&nbsp;>@print ##maroon|"risky failed: "## _
+@<&nbsp;&nbsp;>@puts ##peru|$!##.message _
+##purple|end##||
+||[[# re-raise-exc]][#re-raise-exc-note re-raise exception]||try { _
+@<&nbsp;&nbsp;>@throw new Error("bam!"); _
+} _
+catch (e) { _
+@<&nbsp;&nbsp;>@alert("re-raising@@...@@"); _
+@<&nbsp;&nbsp;>@throw e; _
+}|| ||##purple|try##: _
+@<&nbsp;&nbsp;>@##purple|raise## ##green|Exception##(##maroon|'bam!'##) _
+##purple|except##: _
+@<&nbsp;&nbsp;>@##purple|print##(##maroon|'re-raising@@...@@'##) _
+@<&nbsp;&nbsp;>@##purple|raise##||##purple|begin## _
+@<&nbsp;&nbsp;>@##purple|raise## ##maroon|"bam!"## _
+##purple|rescue## _
+@<&nbsp;&nbsp;>@puts ##maroon|"re-raising..."## _
+@<&nbsp;&nbsp;>@##purple|raise## _
+##purple|end##||
+||[[# last-exc-global]][#last-exc-global-note global variable for last exception]||##gray|//none//##||##gray|//none//##||##gray|//last exception:// sys.exc_info()[1]##||##gray|//last exception:// $!## _
+##gray|//backtrace array of exc.:// $@## _
+##gray|//exit status of child:// $?##||
+||[[# def-exc]][#def-exc-note define exception]||function Bam(msg) { _
+@<&nbsp;&nbsp;>@this.message = msg; _
+} _
+ _
+Bam.prototype = new Error;||##purple|class## ##green|Bam## ##purple|extends## ##green|Exception## _
+{ _
+@<&nbsp;&nbsp;>@##purple|function## ##0000CD|@@__@@construct##() _
+@<&nbsp;&nbsp;>@{ _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##teal|parent##::@@__@@construct(##maroon|"bam!"##); _
+@<&nbsp;&nbsp;>@} _
+}||##purple|class## ##green|Bam##(##green|Exception##): _
+@<&nbsp;&nbsp;>@##purple|def## ##0000CD|@@__init__@@##(##purple|self##): _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|super##(Bam, ##purple|self##).@@__init__@@(##maroon|'bam!'##)||##purple|class## ##green|Bam## < ##green|Exception## _
+@<&nbsp;&nbsp;>@##purple|def## initialize _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|super##(##maroon|"bam!"##) _
+@<&nbsp;&nbsp;>@##purple|end## _
+##purple|end##||
+||[[# name-exc]][#name-exc-note catch exception by type]||try { _
+@<&nbsp;&nbsp;>@throw new Bam("bam!"); _
+} _
+catch (e) { _
+@<&nbsp;&nbsp;>@if (e instanceof Bam) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@alert(e.message); _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@else { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@throw e; _
+@<&nbsp;&nbsp;>@} _
+}||##purple|try## { _
+@<&nbsp;&nbsp;>@##purple|throw new## ##green|Bam##; _
+} ##purple|catch## (##green|Bam## $##peru|e##) { _
+@<&nbsp;&nbsp;>@##purple|echo## $##peru|e##->getMessage(), ##maroon|"\n"##; _
+}||##purple|try##: _
+@<&nbsp;&nbsp;>@##purple|raise## Bam() _
+##purple|except## Bam ##purple|as## e: _
+@<&nbsp;&nbsp;>@##purple|print##(e)||##purple|begin## _
+@<&nbsp;&nbsp;>@##purple|raise## ##green|Bam##.new _
+##purple|rescue## ##green|Bam## => e _
+@<&nbsp;&nbsp;>@puts e.message _
+##purple|end##||
+||[[# finally-ensure]][#finally-ensure-note finally/ensure] _
+@<&nbsp;>@||acquire_resource(); _
+try { _
+@<&nbsp;&nbsp;>@risky(); _
+} _
+finally { _
+@<&nbsp;&nbsp;>@release_resource(); _
+}||##gray|//PHP 5.5://## _
+acquire_resource(); _
+try { _
+@<&nbsp;&nbsp;>@risky(); _
+} _
+finally { _
+@<&nbsp;&nbsp;>@release_resource(); _
+}||acquire_resource() _
+##purple|try##: _
+@<&nbsp;&nbsp;>@risky() _
+##purple|finally##: _
+@<&nbsp;&nbsp;>@release_resource()||acquire_resource _
+##purple|begin## _
+@<&nbsp;&nbsp;>@risky _
+##purple|ensure## _
+@<&nbsp;&nbsp;>@release_resource _
+##purple|end##||
+||||||||||~ [[# concurrency]][#concurrency-note concurrency]||
+||~  ||~ javascript||~ php||~ python||~ ruby||
+||[[# start-thread]][#start-thread-note start thread] _
+@<&nbsp;>@|| ||##gray|//none//##||##purple|class## ##green|sleep10##(threading.Thread): _
+@<&nbsp;&nbsp;>@##purple|def## ##0000CD|run##(##purple|self##): _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@time.sleep(10) _
+ _
+##peru|thr## = sleep10() _
+thr.start()|| thr = ##green|Thread##.new { sleep 10 }||
+||[[# wait-on-thread]][#wait-on-thread-note wait on thread] _
+@<&nbsp;>@|| || ||thr.join()||thr.join||
+||~ ||~ ##EFEFEF|@@____________________________________________@@##||~ ##EFEFEF|@@____________________________________________@@##||~ ##EFEFEF|@@_____________________________________________@@##||~ ##EFEFEF|@@_____________________________________________@@##||
+
+
+**[[[scripting2|sheet two]]]:** [[[scripting2#file-handles|file handles]]] | [[[scripting2#file|files]]] | [[[scripting2#directories|directories]]] | [[[scripting2#processes-environment|processes and environment]]] | [[[scripting2#option-parsing|option parsing]]] | [[[scripting2#libraries-namespaces|libraries and namespaces]]] | [[[scripting2#objects|objects]]] | [[[scripting2#polymorphism|polymorphism]]] | [[[scripting2#reflection|reflection]]] | [[[scripting2#net-web|net and web]]] | [[[scripting2#unit-tests|unit tests]]] | [[[scripting2#debugging-profiling|debugging and profiling]]] | [[[scripting2#deployment|deployment]]]
+
+[[# general-note]]
++ [#general General]
+
+[[# version-used-note]]
+++ [#version-used versions used]
+
+The versions used for testing code in the reference sheet.
+
+[[# version-note]]
+++ [#version show version]
+
+How to get the version.
+
+**php:**
+
+The function {{phpversion()}} will return the version number as a string.
+
+**python:**
+
+The following function will return the version number as a string:
+
+[[code]]
+import platform
+
+platform.python_version()
+[[/code]]
+
+**ruby:**
+
+Also available in the global constant {{RUBY_VERSION}}.
+
+[[# implicit-prologue-note]]
+++ [#implicit-prologue implicit prologue]
+
+Code which examples in the sheet assume to have already been executed.
+
+**javascript:**
+
+{{underscore.js}} adds some convenience functions as attributes of an object which is normally stored in the underscore {{_}} variable.  E.g.:
+
+[[code]]
+_.map([1, 2, 3], function(n){ return n * n; });
+[[/code]]
+
+[http://cdnjs.com/libraries/underscore.js cdnjs] hosts underscore.js and other JavaScript libraries for situations where it is inconvenient to have the webserver host the libraries.
+
+When using {{underscore.js}} with the Node REPL, there is a conflict, since the Node REPL uses the underscore {{_}} variable to store the result of the last evaluation.  
+
+[[code]]
+$ npm install underscore
+
+$ node
+
+> var us = require('underscore'); _
+
+> us.keys({"one": 1, "two": 2});
+[ 'one', 'two' ]
+
+[[/code]]
+
+**python:**
+
+We assume that {{os}}, {{re}}, and {{sys}} are always imported.
+
+[[# grammar-invocation-note]]
++ [#grammar-invocation Grammar and Invocation]
+
+[[# interpreter-note]]
+++ [#interpreter interpreter]
+
+The customary name of the interpreter and how to invoke it.
+
+**php:**
+
+{{php -f}} will only execute portions of the source file within a <?php ##gray|//php code//## ?> tag as php code.  Portions of the source file outside of such tags is not treated as executable code and is echoed to standard out.
+
+If short tags are enabled, then php code can also be placed inside <? ##gray|//php code//## ?> and <?= ##gray|//php code//## ?> tags.
+
+<?= ##gray|//php code//## ?> is identical to <?php echo ##gray|//php code//## ?>.
+
+[[# repl-note]]
+++ [#repl repl]
+
+The customary name of the repl.
+ 
+**php:**
+
+The {{php -a}} REPL does not save or display the result of an expression.
+
+**python:**
+
+The python repl saves the result of the last statement in @@_@@.
+
+**ruby:**
+
+{{irb}} saves the result of the last statement in @@_@@.
+
+[[# cmd-line-program-note]]
+++ [#cmd-line-program command line program]
+
+How to pass the code to be executed to the interpreter as a command line argument.
+
+[[# block-delimiters-note]]
+++ [#block-delimiters block delimiters]
+
+How blocks are delimited.
+
+**python:**
+
+Python blocks begin with a line that ends in a colon.  The block ends with the first line that is not indented further than the initial line.  Python raises an IndentationError if the statements in the block that are not in a nested block are not all indented the same.  Using tabs in Python source code is unrecommended and many editors replace them automatically with spaces.  If the Python interpreter encounters a tab, it is treated as 8 spaces.
+
+The python repl switches from a {{@@>>>@@}} prompt to a ... prompt inside a block.  A blank line terminates the block.
+
+Colons are also used to separate keys from values in dictionary literals and in sequence slice notation.
+
+**ruby:**
+
+Curly brackets {} delimit blocks.  A matched curly bracket pair can be replaced by the {{do}} and {{end}} keywords.  By convention curly brackets are used for one line blocks.
+
+The {{end}} keyword also terminates blocks started by {{def}}, {{class}}, or {{module}}.
+
+Curly brackets are also used for hash literals, and the #{ } notation is used to interpolate expressions into strings.
+
+[[# statement-separator-note]]
+++ [#statement-separator statement separator]
+
+How the parser determines the end of a statement.
+
+**php:**
+
+Inside braces statements must be terminated by a semicolon.  The following causes a parse error:
+
+[[code]]
+<? if (true) { echo "true" } ?>
+[[/code]]
+
+The last statement inside {{<?= ?>}} or {{<? ?>}} tags does not need to be semicolon terminated, however.  The following code is legal:
+
+[[code]]
+<?= $a = 1 ?>
+<? echo $a ?>
+[[/code]]
+
+**python:**
+
+Newline does not terminate a statement when:
+
+* inside parens
+* inside list [] or dictionary {} literals
+
+Python single quote '' and double quote "" strings cannot contain newlines except as the two character escaped form \n.  Putting a newline in these strings results in a syntax error.  There is however a multi-line string literal which starts and ends with three single quotes ''' or three double quotes: """.
+
+A newline that would normally terminate a statement can be escaped with a backslash.
+
+**ruby:**
+
+Newline does not terminate a statement when:
+
+* inside single quotes '', double quotes "", backticks ``, or parens ()
+* after an operator such as + or , that expects another argument
+
+Ruby permits newlines in array [] or hash literals, but only after a comma , or associator =>.  Putting a newline before the comma or associator results in a syntax error.
+
+A newline that would normally terminate a statement can be escaped with a backslash.
+
+[[# source-code-encoding-note]]
+++ [#source-code-encoding source code encoding]
+
+How to identify the character encoding for a source code file.
+
+Setting the source code encoding makes it possible to safely use non-ASCII characters in string literals and regular expression literals.
+
+[[# eol-comment-note]]
+++ [#eol-comment end-of-line comment]
+
+How to create a comment that ends at the next newline.
+
+[[# multiple-line-comment-note]]
+++ [#multiple-line-comment multiple line comment]
+
+How to comment out multiple lines.
+
+**python:**
+
+The triple single quote ''' and triple double quote """ syntax is a syntax for string literals.
+
+[[# var-expr-note]]
++ [#var-expr Variables and Expressions]
+
+[[# local-var-note]]
+++ [#local-var local variable]
+
+How to declare variables which are local to the scope defining region which immediately contain them.
+
+**php:**
+
+Variables do not need to be declared and there is no syntax for declaring a local variable.   If a variable with no previous reference is accessed, its value is //NULL//.
+
+
+**python:**
+
+A variable is created by assignment if one does not already exist.  If the variable is inside a function or method, then its scope is the body of the function or method.  Otherwise it is a global.
+
+**ruby:**
+
+Variables are created by assignment.  If the variable does not have a dollar sign ($) or ampersand (@) as its first character then its scope is scope defining region which most immediately contains it.
+
+A lower case name can refer to a local variable or method.  If both are defined, the local variable takes precedence.  To invoke the method make the receiver explicit: e.g. self.//name//.  However, outside of class and modules local variables hide functions because functions are private methods in the class //Object//.  Assignment to //name// will create a local variable if one with that name does not exist, even if there is a method //name//.
+
+[[# local-scope-regions-note]]
+++ [#local-scope-regions regions which define lexical scope]
+
+A list of regions which define a lexical scope for the local variables they contain.
+
+Local variables defined inside the region are only in scope while code within the region is executing.  If the language does not have closures, then code outside the region has no access to local variables defined inside the region.  If the language does have closures, then code inside the region can make local variables accessible to code outside the region by returning a reference.
+
+A region which is //top level// hides local variables in the scope which contains it from the code it contains.  A region can also be top level if the syntax requirements of the language prohibit it from being placed inside another scope defining region.
+
+A region is //nestable// if it can be placed inside another scope defining region, and if code in the inner region can access local variables in the outer region.
+
+**php:**
+
+Only function bodies and method bodies define scope.  Function definitions can be nested, but when this is done lexical variables in the outer function are not visible to code in the body of the inner function.
+
+Braces can be used to set off blocks of codes in a manner similar to the anonymous blocks of Perl.  However, these braces do not define a scope.  Local variables created inside the braces will be visible to subsequent code outside of the braces.
+
+Local variables cannot be created in class bodies.
+
+**python:**
+
+Only functions and methods define scope.  Function definitions can be nested.  When this is done, inner scopes have read access to variables defined in outer scopes.  Attempting to write (i.e. assign) to a variable defined in an outer scope will instead result in a variable getting created in the inner scope.  Python trivia question: what would happen if the following code were executed?
+
+[[code]]
+def foo():
+    v = 1
+    def bar():
+        print(v)
+        v = 2
+        print(v)
+    bar()
+
+foo()
+[[/code]]
+
+**ruby:**
+
+The keywords //if//, //unless//, //case//, //while//, and //until// each define a block which is terminated by an //end// keyword, but none of these blocks have their own scope.
+
+Anonymous functions can be created with the //lambda// keyword.  Ruby anonymous blocks can be provided after a function invocation and are bounded by curly brackets { } or the //do// and //end// keywords.  Both anonymous functions and anonymous blocks can have parameters which are specified at the start of the block within pipes.  Here are some examples:
+
+[[code]]
+id = lambda { |x| x }
+
+[3, 1, 2, 4].sort { |a,b| a <=> b }
+
+10.times do |i|
+  print "#{i}..." 
+end
+[[/code]]
+
+The scope of the parameters of an anonymous block or anonymous function is local to the block or function body.
+
+It is possible to mark variables as local, even when they are already defined in the containing scope.  Such variables are listed inside the parameter pipes, separated from the parameters by a semicolon:
+
+[[code]]
+x = 3
+noop = lambda { |; x| x = 15 }
+noop.call
+# x is still 3
+[[/code]]
+
+[[# global-var-note]]
+++ [#global-var global variable]
+
+How to declare and access a variable with global scope.
+
+**php:**
+
+A variable is global if it is used at the top level (i.e. outside any function definition) or if it is declared inside a function with the //global// keyword.  A function must use the //global// keyword to access the global variable.
+
+**python:**
+
+A variable is global if it is defined at the top level of a file (i.e. outside any function definition).   Although the variable is global, it must be imported individually or be prefixed with the module name prefix to be accessed from another file.  To be accessed from inside a function or method it must be declared with the //global// keyword.
+
+**ruby:**
+
+A variable is global if it starts with a dollar sign: $.
+
+[[# const-note]]
+++ [#const constant]
+
+How to declare a constant.
+
+**php:**
+
+A constant can be declared inside a class:
+
+[[code]]
+class Math {
+  const pi = 3.14;
+}
+[[/code]]
+
+Refer to a class constant like this:
+
+[[code]]
+Math::pi
+[[/code]]
+
+**ruby:**
+
+Capitalized variables contain constants and class/module names.  By convention, constants are all caps and class/module names are camel case.  The ruby interpreter does not prevent modification of constants, it only gives a warning.  Capitalized variables are globally visible, but a full or relative namespace name must be used to reach them: e.g. Math::PI.
+
+[[# assignment-note]]
+++ [#assignment assignment]
+
+How to assign a value to a variable.
+
+**python:**
+
+If the variable on the left has not previously been defined in the current scope, then it is created.  This may hide a variable in a containing scope.
+
+Assignment does not return a value and cannot be used in an expression.   Thus, assignment cannot be used in a conditional test, removing the possibility of using assignment (=) when an equality test (==) was intended.  Assignments can nevertheless be chained to assign a value to multiple variables:
+
+[[code]]
+a = b = 3
+[[/code]]
+
+**ruby:**
+
+Assignment operators have right precedence and evaluate to the right argument, so they can be chained.  If the variable on the left does not exist, then it is created.
+
+[[# parallel-assignment-note]]
+++ [#parallel-assignment parallel assignment]
+
+How to assign values to variables in parallel.
+
+**python:**
+
+The r-value can be a list or tuple:
+
+[[code]]
+nums = [1,2,3]
+a,b,c = nums
+more_nums = (6,7,8)
+d,e,f = more_nums
+[[/code]]
+
+Nested sequences of expression can be assigned to a nested sequences of l-values, provided the nesting matches.  This assignment will set a to 1, b to 2, and c to 3:
+
+[[code]]
+(a,[b,c]) = [1,(2,3)]
+[[/code]]
+
+This assignment will raise a {{TypeError}}:
+
+[[code]]
+(a,(b,c)) = ((1,2),3)
+[[/code]]
+
+In Python 3 the splat operator {{*}} can be used to collect the remaining right side elements in a list:
+
+[[code]]
+x, y, *z = 1, 2        # assigns [] to z
+x, y, *z = 1, 2, 3     # assigns [3] to z
+x, y, *z = 1, 2, 3, 4  # assigns [3, 4] to z
+[[/code]]
+
+
+**ruby:**
+
+The r-value can be an array:
+
+[[code]]
+nums = [1,2,3]
+a,b,c = nums
+[[/code]]
+
+[[# swap-note]]
+++ [#swap swap]
+
+How to swap the values held by two variables.
+
+[[# compound-assignment-note]]
+++ [#compound-assignment compound assignment]
+
+Compound assignment operators mutate a variable, setting it to the value of an operation which takes the previous value of the variable as an argument.
+
+If {{<OP>}} is a binary operator and the language has the compound assignment operator {{<OP>=}}, then the following are equivalent:
+
+[[code]]
+x <OP>= y
+x = x <OP> y
+[[/code]]
+
+The compound assignment operators are displayed in this order:
+
+//First row:// arithmetic operator assignment: addition, subtraction, multiplication, (float) division, integer division, modulus, and exponentiation.
+//Second row:// string concatenation assignment and string replication assignment
+//Third row:// logical operator assignment: and, or, xor
+//Fourth row:// bit operator assignment: left shift, right shift, and, or, xor.
+
+**python:**
+
+Python compound assignment operators do not return a value and hence cannot be used in expressions.
+
+[[# incr-decr-note]]
+++ [#incr-decr increment and decrement]
+
+The C-style increment and decrement operators can be used to increment or decrement values.  They return values and thus can be used in expressions.  The prefix versions return the value in the variable after mutation, and the postfix version return the value before mutation.
+
+Incrementing a value two or more times in an expression makes the order of evaluation significant:
+
+[[code]]
+x = 1;
+foo(++x, ++x); // foo(2, 3) or foo(3, 2)?
+
+x = 1;
+y = ++x/++x;  // y = 2/3 or y = 3/2?
+[[/code]]
+
+Python avoids the problem by not having an in-expression increment or decrement.
+
+Ruby mostly avoids the problem by providing a non-mutating increment and decrement.  However, here is a Ruby expression which is dependent on order of evaluation:
+
+[[code]]
+x = 1
+y = (x += 1)/(x += 1)
+[[/code]]
+
+**php:**
+
+The increment and decrement operators also work on strings.  There are postfix versions of these operators which evaluate to the value before mutation:
+
+[[code]]
+$x = 1;
+$x++;
+$x--;
+[[/code]]
+
+**ruby:**
+
+The Integer class defines {{succ}}, {{pred}}, and {{next}}, which is a synonym for {{succ}}.
+
+The String class defines {{succ}}, {{succ!}}, {{next}}, and {{next!}}.  {{succ!}} and {{next!}} mutate the string.
+
+[[# null-note]]
+++ [#null null]
+
+The null literal.
+
+[[# null-test-note]]
+++ [#null-test null test]
+
+How to test if a variable contains null.
+
+**php:**
+
+//$v == NULL// does not imply that //$v// is //NULL//, since any comparison between //NULL// and a falsehood will return true.  In particular, the following comparisons are true:
+
+[[code]]
+$v = NULL;
+if ($v == NULL) { echo "true"; }
+
+$v = 0;
+if ($v == NULL) { echo "sadly true"; }
+
+$v = '';
+if ($v == NULL) { echo "sadly true"; }
+[[/code]]
+
+[[# undef-access-note]]
+++ [#undef-access undefined variable access]
+
+The result of attempting to access an undefined variable.
+
+**php:**
+
+PHP does not provide the programmer with a mechanism to distinguish an undefined variable from a variable which has been set to NULL.
+
+[https://gist.github.com/1157508 A test] showing that {{isset}} is the logical negation of {{is_null}}.
+
+**python:**
+
+How to test if a variable is defined:
+
+[[code]]
+not_defined = False
+try: v
+except NameError:
+  not_defined = True
+[[/code]]
+
+**ruby:**
+
+How to test if a variable is defined:
+
+[[code]]
+! defined?(v)
+[[/code]]
+
+[[# conditional-expr-note]]
+++ [#conditional-expr conditional expression]
+
+How to write a conditional expression.  A ternary operator is an operator which takes three arguments.  Since
+
+  ##gray|//condition//## ? ##gray|//true value//## : ##gray|//false value//##
+
+is the only ternary operator in C, it is unambiguous to refer to it as //the// ternary operator.
+
+**python:**
+
+The Python conditional expression comes from Algol.
+
+**ruby:**
+
+The Ruby {{if}} statement is also an expression:
+
+[[code]]
+x = if x > 0
+  x
+else
+  -x
+end
+[[/code]]
+
+[[# arithmetic-logic-note]]
++ [#arithmetic-logic Arithmetic and Logic]
+
+[[# true-false-note]]
+++ [#true-false true and false]
+
+Literals for the booleans.
+
+These are the return values of the relational operators.
+
+**php:**
+
+Any identifier which matches TRUE case-insensitive can be used for the TRUE boolean.  Similarly for FALSE. 
+
+In general, PHP variable names are case-sensitive, but function names are case-insensitive.
+
+When converted to a string for display purposes, TRUE renders as "1" and FALSE as "".  The equality tests {{TRUE == 1}} and {{FALSE == ""}} evaluate as TRUE but the equality tests {{TRUE === 1}} and {{FALSE === ""}} evaluate as FALSE.
+
+[[# falsehoods-note]]
+++ [#falsehoods falsehoods]
+
+Values which behave like the false boolean in a conditional context.
+
+Examples of conditional contexts are the conditional clause of an {{if}} statement and the test of a {{while}} loop.
+
+**python:**
+
+Whether a object evaluates to True or False in a boolean context can be customized by implementing a @@__nonzero__@@ (Python 2) or @@__bool__@@ (Python 3) instance method for the class.
+
+[[# logical-op-note]]
+++ [#logical-op logical operators]
+
+Logical and, or, and not.
+
+**php, ruby:**
+
+&& and @@||@@ have higher precedence than assignment, compound assignment, and the ternary operator (?:), which have higher precedence than //and// and //or//.
+
+[[# relational-op-note]]
+++ [#relational-op relational operators]
+
+Equality, inequality, greater than, less than, greater than or equal, less than or equal.
+
+**php:**
+
+Most of the relational operators will convert a string to a number if the other operand is a number.  Thus 0 == "0" is true.  The operators === and !== do not perform this conversion, so 0 === "0" is false.
+
+**python:**
+
+Relational operators can be chained.  The following expressions evaluate to true:
+
+[[code]]
+1 < 2 < 3
+1 == 1 != 2
+[[/code]]
+
+In general if //A,,i,,// are expressions and //op,,i,,// are relational operators, then
+
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@{{A,,1,, op,,1,, A,,2,, op,,2,, A,,3,, ... A,,n,, op,,n,, A,,n+1,,}} 
+
+is true if and only if each of the following is true
+
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@{{A,,1,, op,,1,, A,,2,,}}
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@{{A,,2,, op,,2,, A,,3,,}}
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@...
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@{{A,,n,, op,,n,, A,,n+1,,}}
+
+[[# min-max-note]]
+++ [#min-max min and max]
+
+How to get the min and max.
+
+[[# three-val-comparison-note]]
+++ [#three-val-comparison three value comparison]
+
+Binary comparison operators which return -1, 0, or 1 depending upon whether the left argument is less than, equal to, or greater than the right argument.
+
+The {{<=>}} symbol is called the spaceship operator.
+
+[[# arith-op-note]]
+++ [#arith-op arithmetic operators]
+
+The operators for addition, subtraction, multiplication, float division, integer division, modulus, and exponentiation.
+
+[[# int-div-note]]
+++ [#int-div integer division]
+
+How to get the integer quotient of two integers.
+
+[[# divmod-note]]
+++ [#divmod divmod]
+
+How to get the quotient and remainder with single function call.
+
+[[# int-div-zero-note]]
+++ [#int-div-zero integer division by zero]
+
+What happens when an integer is divided by zero.
+
+[[# float-div-note]]
+++ [#float-div float division]
+
+How to perform floating point division, even if the operands might be integers.
+
+[[# float-div-zero-note]]
+++ [#float-div-zero float division by zero]
+
+What happens when a float is divided by zero.
+
+[[# power-note]]
+++ [#power power]
+
+How to get the value of a number raised to a power.
+
+[[# sqrt-note]]
+++ [#sqrt sqrt]
+
+The square root function.
+
+[[# sqrt-negative-one-note]]
+++ [#sqrt-negative-one sqrt -1]
+
+The result of taking the square root of negative one.
+
+[[# transcendental-func-note]]
+++ [#transcendental-func transcendental functions]
+
+Some mathematical functions.  Trigonometric functions are in radians unless otherwise noted.  Logarithms are natural unless otherwise noted.
+
+**python:**
+
+Python also has //math.log10//.  To compute the log of //x// for base //b//, use:
+
+[[code]]
+math.log(x)/math.log(b)
+[[/code]]
+
+**ruby:**
+
+Ruby also has //Math.log2//, //Math.log10//.  To compute the log of //x// for base //b//, use
+
+[[code]]
+Math.log(x)/Math.log(b)
+[[/code]]
+
+[[# transcendental-const-note]]
+++ [#transcendental-const transcendental constants]
+
+Constants for π and Euler's constant.
+
+[[# float-truncation-note]]
+++ [#float-truncation float truncation]
+
+How to truncate a float to the nearest integer towards zero; how to round a float to the nearest integer; how to find the nearest integer above a float; how to find the nearest integer below a float; how to take the absolute value.
+
+[[# abs-val-note]]
+++ [#abs-val absolute value]
+
+How to get the absolute value of a number.
+
+[[# int-overflow-note]]
+++ [#int-overflow integer overflow]
+
+What happens when the largest representable integer is exceeded.
+
+[[# float-overflow-note]]
+++ [#float-overflow float overflow]
+
+What happens when the largest representable float is exceeded.
+
+[[# rational-note]]
+++ [#rational rational numbers]
+
+How to create rational numbers and get the numerator and denominator.
+
+**ruby:**
+
+Require the library //mathn// and integer division will yield rationals instead of truncated integers.
+
+[[# complex-note]]
+++ [#complex complex numbers]
+
+**python:**
+
+Most of the functions in //math// have analogues in //cmath// which will work correctly on complex numbers.
+
+[[# random-note]]
+++ [#random random integer, uniform float, normal float]
+
+How to generate a random integer between 0 and 99, include, float between zero and one in a uniform distribution, or a float in a normal distribution with mean zero and standard deviation one.
+
+[[# random-seed-note]]
+++ [#random-seed set random seed, get and restore seed]
+
+How to set the random seed; how to get the current random seed and later restore it.
+
+All the languages in the sheet set the seed automatically to a value that is difficult to predict.  The Ruby MRI interpreter uses the current time and process ID, for example.  As a result there is usually no need to set the seed.
+
+Setting the seed to a hardcoded value yields a random but repeatable sequence of numbers.  This can be used to ensure that unit tests which cover code using random numbers doesn't intermittently fail.
+
+The seed is global state.  If multiple functions are generating random numbers then saving and restoring the seed may be necessary to produce a repeatable sequence.
+
+[[# bit-op-note]]
+++ [#bit-op bit operators]
+
+The bit operators for left shift, right shift, and, inclusive or, exclusive or, and negation.
+
+[[# binary-octal-hex-literals-note]]
+++ [#binary-octal-hex-literals binary, octal, and hex literals]
+
+Binary, octal, and hex integer literals
+
+[[# radix-note]]
+++ [#radix radix]
+
+How to convert integers to strings of digits of a given base.  How to convert such strings into integers.
+
+**python**
+
+Python has the functions {{bin}}, {{oct}}, and {{hex}} which take an integer and return a string encoding the integer in base 2, 8, and 16.
+
+[[code]]
+bin(42)
+oct(42)
+hex(42)
+[[/code]]
+
+[[# strings-note]]
++ [#strings Strings]
+
+[[# str-type-note]]
+++ [#str-type string type]
+
+The type or types using for strings.
+
+**php:**
+
+PHP assumes all strings have single byte characters.
+
+**python:**
+
+In Python 2.7 the {{str}} type assumes single byte characters.  A separate {{unicode}} type is available for working with Unicode strings.
+
+In Python 3 the {{str}} type supports multibtye characters and the {{unicode}} type has been removed.
+
+There is a mutable {{bytearray}} type and an immutable {{bytes}} type for working with sequences of bytes.
+
+**ruby:**
+
+The {String}} type supports multibtye characters. All strings have an explicit {{Encoding}}.
+
+[[# str-literal-note]]
+++ [#str-literal string literal]
+
+The syntax for string literals.
+
+**ruby:**
+
+How to specify custom delimiters for single and double quoted strings.  These can be used to avoid backslash escaping.  If the left delimiter is (, [, or { the right delimiter must be ), ], or }, respectively.
+
+[[code]]
+s1 = %q(lorem ipsum)
+s2 = %Q(#{s1} dolor sit amet)
+[[/code]]
+
+[[# newline-in-str-literal-note]]
+++ [#newline-in-str-literal newline in literal]
+
+Whether newlines are permitted in string literals.
+
+**python:**
+
+Newlines are not permitted in single quote and double quote string literals.  A string can continue onto the following line if the last character on the line is a backslash.  In this case, neither the backslash nor the newline are taken to be part of the string.
+
+Triple quote literals, which are string literals terminated by three single quotes or three double quotes, can contain newlines:
+
+[[code]]
+'''This is
+two lines'''
+
+"""This is also
+two lines"""
+[[/code]]
+
+[[# str-literal-esc-note]]
+++ [#str-literal-esc literal escapes]
+
+Backslash escape sequences for inserting special characters into string literals.
+
+||||||~ unrecognized backslash escape sequence||
+||~ ||~ double quote||~ single quote||
+||JavaScript|| || ||
+||PHP||preserve backslash||preserve backslash||
+||Python||preserve backslash||preserve backslash||
+||Ruby||drop backslash||preserve backslash||
+
+**python:**
+
+When string literals have an {{r}} or {{R}} prefix there are no backslash escape sequences and any backslashes thus appear in the created string.  The delimiter can be inserted into a string if it is preceded by a backslash, but the backslash is also inserted.  It is thus not possible to create a string with an {{r}} or {{R}} prefix that ends in a backslash.  The {{r}} and {{R}} prefixes can be used with single or double quotes:
+
+[[code]]
+r'C:\Documents and Settings\Admin'
+r"C:\Windows\System32"
+[[/code]]
+
+The \u##gray|//hhhh//## escapes are also available inside Python 2 Unicode literals.  Unicode literals have a //u// prefiix:
+
+[[code]]
+u'lambda: \u03bb'
+[[/code]]
+
+This syntax is also available in Python 3.3, but not Python 3.2.  In Python 3.3 it creates a string of type {{str}} which has the same features as the {{unicode}} type of Python 2.7.
+
+[[# here-doc-note]]
+++ [#here-doc here document]
+
+Here documents are strings terminated by a custom identifier.  They perform variable substitution and honor the same backslash escapes as double quoted strings.
+
+**python:**
+
+Python lacks variable interpolation in strings.  Triple quotes honor the same backslash escape sequences as regular quotes, so triple quotes can otherwise be used like here documents:
+
+[[code]]
+s = '''here document
+there computer
+'''
+[[/code]]
+
+**ruby:**
+
+Put the customer identifier in single quotes to prevent variable interpolation and backslash escape interpretation:
+
+[[code]]
+s = <<'EOF'
+Ruby code uses #{var} type syntax
+to interpolate variables into strings.
+EOF
+[[/code]]
+
+[[# var-interpolation-note]]
+++ [#var-interpolation variable interpolation]
+
+How to interpolate variables into strings.
+
+**python:**
+
+{{str.format}} will take named or positional parameters.  When used with named parameters {{str.format}} can mimic the variable interpolation feature of the other languages.
+
+A selection of variables in scope can be passed explicitly:
+
+[[code]]
+count = 3
+item = 'ball'
+print('{count} {item}s'.format(
+  count=count,
+  item=item))
+[[/code]]
+
+Python 3 has {{format_map}} which accepts a {{dict}} as an argument:
+
+[[code]]
+count = 3
+item = 'ball'
+print('{count} {item}s'.format_map(locals()))
+[[/code]]
+
+[[# expr-interpolation-note]]
+++ [#expr-interpolation expression interpolation]
+
+How to interpolate the result of evaluating an expression into a string.
+
+[[# format-note]]
+++ [#format format]
+
+How to create a string using a printf style format.
+
+**python:**
+
+The % operator will interpolate arguments into printf-style format strings.
+
+The {{str.format}} with positional parameters provides an alternative format using curly braces {0}, {1}, ... for replacement fields.
+
+The curly braces are escaped by doubling:
+
+[[code]]
+'to insert parameter {0} into a format, use {{{0}}}'.format(3)
+[[/code]]
+
+If the replacement fields appear in sequential order and aren't repeated, the numbers can be omitted:
+
+[[code]]
+'lorem {} {} {}'.format('ipsum', 13, 3.7)
+[[/code]]
+
+[[# mutable-str-note]]
+++ [#mutable-str are strings mutable?]
+
+Are strings mutable?
+
+[[# copy-str-note]]
+++ [#copy-str copy string]
+
+How to copy a string such that changes to the original do not modify the copy.
+
+[[# str-concat-note]]
+++ [#str-concat concatenate]
+
+The string concatenation operator.
+
+[[# str-replicate-note]]
+++ [#str-replicate replicate]
+
+The string replication operator.
+
+[[# translate-case-note]]
+++ [#translate-case translate case]
+
+How to put a string into all caps or all lower case letters.
+
+[[# capitalize-note]]
+++ [#capitalize capitalize]
+
+How to capitalize a string and the words in a string.
+
+**ruby:**
+
+Rails monkey patches the {{String}} class with the {{titleize}} method for capitalizing the words in a string.
+
+[[# trim-note]]
+++ [#trim trim]
+
+How to remove whitespace from the ends of a string.
+
+[[# pad-note]]
+++ [#pad pad]
+
+How to pad the edge of a string with spaces so that it is a prescribed length.
+
+[[# num-to-str-note]]
+++ [#num-to-str number to string]
+
+How to convert numeric data to string data.
+
+[[# str-to-num-note]]
+++ [#str-to-num string to number]
+
+How to convert string data to numeric data.
+
+**php:**
+
+PHP converts a scalar to the desired type automatically and does not raise an error if the string contains non-numeric data.  If the start of the string is not numeric, the string evaluates to zero in a numeric context.
+
+**python:**
+
+float and int raise an error if called on a string and any part of the string is not numeric.
+
+**ruby:**
+
+to_i and to_f always succeed on a string, returning the numeric value of the digits at the start of the string, or zero if there are no initial digits.
+
+[[# join-note]]
+++ [#join join]
+
+How to concatenate the elements of an array into a string with a separator.
+
+[[# split-note]]
+++ [#split split]
+
+How to split a string containing a separator into an array of substrings.
+
+See also [#scan scan].
+
+**python:**
+
+{{str.split()}} takes simple strings as delimiters; use {{re.split()}} to split on a regular expression:
+
+[[code]]
+re.split('\s+', 'do re mi fa')
+re.split('\s+', 'do re mi fa', 1)
+[[/code]]
+
+[[# split-in-two-note]]
+++ [#split-in-two split in two]
+
+How to split a string in two.
+
+**javascript:**
+
+A regular expression is probably the best method for splitting a string in two:
+
+[[code]]
+var m = /^([^ ]+) (.+)/.exec("do re mi");
+var first = m[1];
+var rest = m[2];
+[[/code]]
+
+This technique works when the delimiter is a fixed string:
+
+[[code]]
+var a = "do re mi".split(" ");
+var first = a[0];
+var rest = a.splice(1).join(" ");
+[[/code]]
+
+**python:**
+
+Methods for splitting a string into three parts using the first or last occurrence of a substring:
+
+[[code]]
+'do re mi'.partition(' ')         # returns ('do', ' ', 're mi')
+'do re mi'.rpartition(' ')        # returns ('do re', ' ', 'mi')
+[[/code]]
+
+[[# split-keep-delimiters-note]]
+++ [#split-keep-delimiters split and keep delimiters]
+
+How to split a string with the delimiters preserved as separate elements.
+
+[[# str-length-note]]
+++ [#str-length length]
+
+How to get the length in characters of a string.
+
+[[# index-substr-note]]
+++ [#index-substr index of substring]
+
+How to find the index of the leftmost occurrence of a substring in a string; how to find the index of the rightmost occurrence.
+
+[[# extract-substr-note]]
+++ [#extract-substr extract substring]
+
+How to extract a substring from a string by index.
+
+[[# extract-char-note]]
+++ [#extract-char extract character]
+
+How to extract a character from a string by its index.
+
+[[# chr-ord-note]]
+++ [#chr-ord chr and ord]
+
+Converting characters to ASCII codes and back.
+
+The languages in this reference sheet do not have character literals, so characters are represented by strings of length one.
+
+[[# str-to-char-array-note]]
+++ [#str-to-char-array to array of characters]
+
+How to split a string into an array of single character strings.
+
+[[# translate-char-note]]
+++ [#translate-char translate characters]
+
+How to apply a character mapping to a string.
+
+[[# delete-char-note]]
+++ [#delete-char delete characters]
+
+How to remove all specified characters from a string; how to remove all but the specified characters from a string.
+
+[[# squeeze-char-note]]
+++ [#squeeze-char squeeze characters]
+
+How to replace multiple adjacent occurrences of a character with a single occurrence.
+
+[[# regexes-note]]
++ [#regexes Regular Expressions]
+
+* [http://php.net/manual/en/book.pcre.php PHP PCRE Regexes]
+* Python re library: [http://docs.python.org/library/re.html 2.7], [http://docs.python.org/release/3.1.3/library/re.html 3.1]
+* [http://www.ruby-doc.org/core/classes/Regexp.html Ruby Regexp]
+
+Regular expressions or regexes are a way of specifying sets of strings.  If a string belongs to the set, the string and regex "match".  Regexes can also be used to parse strings.
+
+The modern notation for regexes was introduced by Unix command line tools in the 1970s.  POSIX standardized the notation into two types: extended regexes and the more archaic basic regexes.  Perl regexes are extended regexes augmented by new character class abbreviations and a few other features introduced by the Perl interpreter in the 1990s.  All the languages in this sheet use Perl regexes.
+
+Any string that doesn't contain regex metacharacters is a regex which matches itself.  The regex metacharacters are: {{[ ] . | ( ) * + ? { } ^ $  \}}
+
+**character classes: [ ] .**
+
+A character class is a set of characters in brackets:{{ [ ].}}  When used in a regex it matches any character it contains.
+
+Character classes have their own set of metacharacters: {{^ - \ ]}}
+
+The {{^}} is only special when it is the first character in the character class.  Such a character class matches its complement; that is, any character not inside the brackets.  When not the first character the {{^}} refers to itself.
+
+The hyphen is used to specify character ranges: e.g. {{0-9}} or {{A-Z}}.  When the hyphen is first or last inside the brackets it matches itself.
+
+The backslash can be used to escape the above characters or the terminal character class delimiter: {{]}}.  It can be used in character class abbreviations or string backslash escapes.
+
+The period {{.}} is a character class abbreviation which matches any character except for newline.  In all languages the period can be made to match all characters.  PHP uses the {{m}} modifier.  Python uses the {{re.M}} flag.  Ruby uses the {{s}} modifier.
+
+[[# regex-char-class-abbrev]]
+**character class abbreviations:**
+
+||~ abbrev||~ name||~ character class||
+||\d||digit||[0-9]||
+||\D||nondigit||[^0-9]||
+||\h||##gray|//PHP://## horizontal whitespace character _
+##gray|//Ruby://## hex digit||##gray|//PHP://## [ \t] _
+##gray|//Ruby://## [0-9a-fA-F] ||
+||\H||##gray|//PHP://## not a horizontal whitespace character _
+##gray|//Ruby://## not a hex digit||##gray|//PHP://## [^ \t] _
+##gray|//Ruby://## [^0-9a-fA-F] ||
+||\s||whitespace character||[ \t\r\n\f]||
+||\S||non whitespace character||[^ \t\r\n\f]||
+||\v||vertical whitespace character||[\r\n\f]||
+||\V||not a vertical whitespace character||[^\r\n\f]|| 
+||\w||word character||[A-Za-z0-9_]||
+||\W||non word character||[^A-Za-z0-9_]||
+
+**alternation and grouping: | ( )**
+
+The vertical pipe | is used for alternation and parens () for grouping.
+
+A vertical pipe takes as its arguments everything up to the next vertical pipe, enclosing paren, or end of string.
+
+Parentheses control the scope of alternation and the quantifiers described below.  They are also used for capturing groups, which are the substrings which matched parenthesized parts of the regular expression.  Each language numbers the groups and provides a mechanism for extracting them when a match is made.  A parenthesized subexpression can be removed from the groups with this syntax: {{(?:##gray|//expr//##)}}
+
+**quantifiers: * + ? { }**
+
+As an argument quantifiers take the preceding regular character, character class, or group.  The argument can itself be quantified, so that {{^a{4}*$}} matches strings with the letter a in multiples of 4.
+
+||~ quantifier||~ # of occurrences of argument matched||
+||@@*@@||zero or more, greedy||
+||+||one or more, greedy||
+||?||zero or one, greedy||
+||{m,n}||//m// to //n//, greedy||
+||{n}||exactly //n//||
+||{m,}||//m// or more, greedy||
+||{,n}||zero to //n//, greedy||
+||*?||zero or more, lazy||
+||+?||one or more, lazy||
+||{m,n}?||//m// to //n//, lazy||
+||{m,}?||//m// or more, lazy||
+||{,n}?||zero to //n//, lazy||
+
+When there is a choice, greedy quantifiers will match the maximum possible number of occurrences of the argument.  Lazy quantifiers match the minimum possible number.
+
+**anchors: ^ $**
+
+||~ anchor||~ matches||
+||^||beginning of a string.  In Ruby or when //m// modifier is used also matches right side of a newline||
+||$||end of a string.  In Ruby or when //m// modifier is used also matches left side of a newline||
+||\A||beginning of the string||
+||\b||word boundary.  In between a \w and a \W character or in between a \w character and the edge of the string||
+||\B||not a word boundary.  In between two \w characters or two \W characters||
+||\z||end of the string||
+||\Z||end of the string unless it is a newline, in which case it matches the left side of the terminal newline||
+
+**escaping: \**
+
+To match a metacharacter, put a backslash in front of it.  To match a backslash use two backslashes.
+
+**php:**
+
+PHP 5.3 still supports the EREG engine, though the functions which use it are deprecated.  These include the {{split}} function and functions which start with {{ereg}}.  The preferred functions are {{preg_split}} and the other functions with a {{preg}} prefix.
+
+[[# regex-literal-note]]
+++ [#regex-literal literal, custom delimited literal]
+
+The literal for a regular expression; the literal for a regular expression with a custom delimiter.
+
+**javascript:**
+
+The constructor for a regular expression is:
+
+[[code]]
+var rx = RegExp("lorem|ipsum");
+[[/code]]
+
+**php:**
+
+PHP regex literals are strings.  The first character is the delimiter and it must also be the last character.  If the start delimiter is (, {, or [ the end delimiter must be ), }, or ], respectively.
+
+Here are the signatures from the PHP manual for the preg functions used in this sheet:
+
+[[code]]
+array preg_split ( string $pattern , string $subject [, int $limit = -1 [, int $flags = 0 ]] )
+
+int preg_match ( string $pattern , string $subject [, array &$matches [, int $flags = 0 [, int $offset = 0 ]]] )
+
+mixed preg_replace ( mixed $pattern , mixed $replacement , mixed $subject [, int $limit = -1 [, int &$count ]] )
+
+int preg_match_all ( string $pattern , string $subject [, array &$matches [, int $flags = PREG_PATTERN_ORDER [, int $offset = 0 ]]] )
+[[/code]]
+
+**python:**
+
+Python does not have a regex literal, but the {{re.compile}} function can be used to create regex objects.  
+
+Compiling regexes can always be avoided:
+
+[[code]]
+re.compile('\d{4}').search('1999')
+re.search('\d{4}', '1999')
+
+re.compile('foo').sub('bar', 'foo bar')
+re.sub('foo', 'bar', 'foo bar')
+
+re.compile('\w+').findall('do re me')
+re.findall('\w+', 'do re me')
+[[/code]]
+
+[[# char-class-abbrev-note]]
+++ [#char-class-abbrev character class abbreviations]
+
+The supported [#regex-char-class-abbrev character class abbreviations].
+
+Note that {{\h}} refers to horizontal whitespace (i.e. a space or tab) in PHP and a hex digit in Ruby.  Similarly {{\H}} refers to something that isn't horizontal whitespace in PHP and isn't a hex digit in Ruby.
+
+[[# regex-anchors-note]]
+++ [#regex-anchors anchors]
+
+The supported anchors.
+
+[[# regex-test-note]]
+++ [#regex-test match test]
+
+How to test whether a string matches a regular expression.
+
+**python:**
+
+The {{re.match}} function returns true only if the regular expression matches the beginning of the string.  {{re.search}} returns true if the regular expression matches any substring of the of string.
+
+**ruby:**
+
+{{match}} is a method of both {{Regexp}} and {{String}} so can match with both
+
+[[code]]
+/1999/.match("1999")
+[[/code]]
+
+and
+
+[[code]]
+"1999".match(/1999/)
+[[/code]]
+
+When variables are involved it is safer to invoke the {{Regexp}} method because string variables are more likely to contain {{nil}}.
+
+[[# case-insensitive-regex-note]]
+++ [#case-insensitive-regex case insensitive match test]
+
+How to perform a case insensitive match test.
+
+[[# regex-modifiers-note]]
+++ [#regex-modifiers modifiers]
+
+Modifiers that can be used to adjust the behavior of a regular expression.
+
+The lists are not comprehensive.  For all languages except Ruby there are additional modifiers.
+
+||~ modifier||~ behavior||
+||e||##gray|//PHP://## when used with preg_replace, the replacement string, after backreferences are substituted, is eval'ed as PHP code and the result is used as the replacement.||
+||g||##gray|//JavaScript://## read all non-overlapping matches into an array.||
+||i, re.I||##gray|//all://## ignores case.  Upper case letters match lower case letters and vice versa.||
+||m, re.M||##gray|//JavaScript, PHP, Python://## makes the ^ and $ match the right and left edge of newlines in addition to the beginning and end of the string. _
+##gray|//Ruby://## makes the period . match newline characters.||
+||o||##gray|//Ruby://## performs variable interpolation #{ } only once per execution of the program.||
+||s, re.S||##gray|//PHP, Python://## makes the period . match newline characters.||
+||x, re.X||##gray|//all://## ignores whitespace in the regex which permits it to be used for formatting.||
+
+Python modifiers are bit flags.  To use more than one flag at the same time, join them with bit or: |
+
+
+[[# subst-note]]
+++ [#subst substitution]
+
+How to replace all occurrences of a matching pattern in a string with the provided substitution string.
+
+**php:**
+
+The number of occurrences replaced can be controlled with a 4th argument to {{preg_replace}}:
+
+[[code]]
+$s = "foo bar bar";
+preg_replace('/bar/', "baz", $s, 1);
+[[/code]]
+
+If no 4th argument is provided, all occurrences are replaced.
+
+**python:**
+
+The 3rd argument to {{sub}} controls the number of occurrences which are replaced.
+
+[[code]]
+s = 'foo bar bar'
+re.compile('bar').sub('baz', s, 1)
+[[/code]]
+
+If there is no 3rd argument, all occurrences are replaced.
+
+**ruby:**
+
+The //gsub// operator returns a copy of the string with the substitution made, if any.  The //gsub!// performs the substitution on the original string and returns the modified string.
+
+The //sub// and //sub!// operators only replace the first occurrence of the match pattern.
+
+
+[[# match-prematch-postmatch-note]]
+++ [#match-prematch-postmatch match, prematch, postmatch]
+
+How to get the substring that matched the regular expression, as well as the part of the string before and after the matching substring.
+
+**ruby:**
+
+The special variables {{$&}}, {{$@@`@@}}, and {{$'}} also contain the match, prematch, and postmatch.
+
+[[# group-capture-note]]
+++ [#group-capture group capture]
+
+How to get the substrings which matched the parenthesized parts of a regular expression.
+
+**ruby:**
+
+Ruby has syntax for extracting a group from a match in a single expression.  The following evaluates to "1999":
+
+[[code]]
+"1999-07-08"[/(\d{4})-(\d{2})-(\d{2})/, 1]
+[[/code]]
+
+[[# named-group-capture-note]]
+++ [#named-group-capture named group capture]
+
+How to get the substrings which matched the parenthesized parts of a regular expression and put them into a dictionary.
+
+For reference, we call the {{(?P<foo>@@...@@)}} notation //Python-style// and the {{(?<foo>@@...@@)}} notation //Perl-style//.
+
+**php:**
+
+PHP originally supported Python-style named groups since that was the style that was added to the PCRE regex engine.  Perl-style named groups were added to PHP 5.2.
+
+**python:**
+
+The Python interpreter was the first to support named groups.
+
+[[# scan-note]]
+++ [#scan scan]
+
+How to return all non-overlapping substrings which match a regular expression as an array.
+
+[[# backreference-note]]
+++ [#backreference backreference in match and substitution]
+
+How to use backreferences in a regex; how to use backreferences in the replacement string of substitution.
+
+[[# recursive-regex-note]]
+++ [#recursive-regex recursive regex]
+
+Examples of recursive regexes.
+
+The examples match substrings containing balanced parens.
+
+[[# dates-time-note]]
++ [#dates-time Date and Time]
+
+In ISO 8601 terminology, a //date// specifies a day in the Gregorian calendar and a //time// does not contain date information; it merely specifies a time of day.  A data type which combines both date and time information is probably more useful than one which contains just date information or just time information; it is unfortunate that ISO 8601 doesn't provide a name for this entity.  The word //timestamp// often gets used to denote a combined date and time.  PHP and Python use the compound noun //datetime// for combined date and time values.
+
+An useful property of [http://en.wikipedia.org/wiki/ISO_8601 ISO 8601 dates, times, and date/time combinations] is that they are correctly ordered by a lexical sort on their string representations.  This is because they are big-endian (the year is the leftmost element) and they used fixed-length fields for each term in the string representation.
+
+The C standard library provides two methods for representing dates.  The first is the UNIX epoch, which is the seconds since January 1, 1970 in UTC.  If such a time were stored in a 32-bit signed integer, the rollover would happen on January 18, 2038.
+
+The other method of representing dates is the {{tm}} struct, a definition of which can be found on Unix systems in {{/usr/include/time.h}}:
+
+[[code]]
+struct tm {
+        int     tm_sec;         /* seconds after the minute [0-60] */
+        int     tm_min;         /* minutes after the hour [0-59] */
+        int     tm_hour;        /* hours since midnight [0-23] */
+        int     tm_mday;        /* day of the month [1-31] */
+        int     tm_mon;         /* months since January [0-11] */
+        int     tm_year;        /* years since 1900 */
+        int     tm_wday;        /* days since Sunday [0-6] */
+        int     tm_yday;        /* days since January 1 [0-365] */
+        int     tm_isdst;       /* Daylight Savings Time flag */
+        long    tm_gmtoff;      /* offset from CUT in seconds */
+        char    *tm_zone;       /* timezone abbreviation */
+};
+[[/code]]
+
+Python uses and exposes the {{tm}} struct of the standard library.  Python has a module called {{time}} which is a thin wrapper to the standard library functions which operate on this struct.  Here is how get a {{tm}} struct in Python:
+
+[[code]]
+import time
+
+utc = time.gmtime(time.time())
+t = time.localtime(time.time())
+[[/code]]
+
+The {{tm}} struct is a low level entity, and interacting with it directly should be avoided.  In the case of Python it is usually sufficient to use the {{datetime}} module instead.
+
+[[# date-time-type-note]]
+++ [#date-time-type date/time type]
+
+The data type used to hold a combined date and time.
+
+[[# current-date-time-note]]
+++ [#current-date-time current date/time]
+
+How to get the combined date and time for the present moment in both local time and UTC.
+
+[[# unix-epoch-note]]
+++ [#unix-epoch to unix epoch, from unix epoch]
+
+How to convert the native date/time type to the Unix epoch which is the number of seconds since the start of January 1, 1970 UTC. 
+
+**python:**
+
+The Python datetime object created by {{now()}} and {{utcnow()}} has no timezone information associated with it.  The {{strftime()}} method assumes a receiver with no timezone information represents a local time.  Thus it is an error to call {{strftime()}} on the return value of {{utcnow()}}.
+
+Here are two different ways to get the current Unix epoch.  The second way is faster:
+
+[[code]]
+import calendar
+import datetime
+ 
+int(datetime.datetime.now().strftime('%s'))
+calendar.timegm(datetime.datetime.utcnow().utctimetuple())
+[[/code]]
+
+Replacing {{now()}} with {{utcnow()}} in the first way, or {{utcnow()}} with {{now()}} in the second way produces an incorrect value.
+
+[[# current-unix-epoch-note]]
+++ [#current-unix-epoch current unix epoch]
+
+How to get the current time as a Unix epoch timestamp.
+
+[[# strftime-note]]
+++ [#strftime strftime]
+
+How to format a date/time as a string using the format notation of the //strftime// function from the standard C library.  This same format notation is used by the Unix //date// command.
+
+**php:**
+
+PHP supports strftime but it also has its own time formatting system used by {{date}}, {{DateTime::format}}, and {{DateTime::createFromFormat}}.  The letters used in the PHP time formatting system are [http://www.php.net/manual/en/datetime.createfromformat.php described here].
+
+[[# date-time-str-note]]
+++ [#date-time-str default format example]
+
+Examples of how a date/time object appears when treated as a string such as when it is printed to standard out.
+
+The formats are in all likelihood locale dependent.  The provided examples come from a machine running Mac OS X in the Pacific time zone of the USA.
+
+**php:**
+
+It is a fatal error to treat a DateTime object as a string.
+
+[[# strptime-note]]
+++ [#strptime strptime]
+
+How to parse a date/time using the format notation of the {{strptime}} function from the standard C library.
+
+[[# parse-date-note]]
+++ [#parse-date parse date w/o format]
+
+How to parse a date without providing a format string.
+
+[[# date-subtraction-note]]
+++ [#date-subtraction result date subtraction]
+
+The data type that results when subtraction is performed on two combined date and time values.
+
+[[# add-time-duration-note]]
+++ [#add-time-duration add time duration]
+
+How to add a time duration to a date/time.
+
+A time duration can easily be added to a date/time value when the value is a Unix epoch value. 
+
+ISO 8601 distinguishes between a time interval, which is defined by two date/time endpoints, and a duration, which is the length of a time interval and can be defined by a unit of time such as '10 minutes'.  A time interval can also be defined by date and time representing the start of the interval and a duration.
+
+ISO 8601 defines [http://en.wikipedia.org/wiki/ISO_8601#Durations notation for durations].  This notation starts with a 'P' and uses a 'T' to separate the day and larger units from the hour and smaller units.  Observing the location relative to the 'T' is important for interpreting the letter 'M', which is used for both months and minutes.
+
+[[# local-tmz-note]]
+++ [#local-tmz local timezone]
+
+Do date/time values include timezone information.  When a date/time value for the local time is created, how the local timezone is determined.
+
+A date/time value can represent a local time but not have any timezone information associated with it.
+
+On Unix systems processes determine the local timezone by inspecting the file {{/etc/localtime}}.
+
+**php:**
+
+The default timezone can also be set in the {{php.ini}} file.
+
+[[code]]
+date.timezone = "America/Los_Angeles"
+[[/code]]
+
+Here is the list of [http://php.net/timezones timezones supported by PHP]. 
+
+[[# arbitrary-tmz-note]]
+++ [#arbitrary-tmz arbitrary timezone]
+
+How to convert a timestamp to the equivalent timestamp in an arbitrary timezone.
+
+[[# timezone-offset-note]]
+++ [#timezone-offset timezone name, offset from UTC, is daylight savings?]
+
+How to get time zone information: the name of the timezone, the offset in hours from UTC, and whether the timezone is currently in daylight savings.
+
+Timezones are often identified by [http://en.wikipedia.org/wiki/List_of_time_zone_abbreviations three or four letter abbreviations].  As can be seen from the list, many of the abbreviations do not uniquely identify a timezone.  Furthermore many of the timezones have been altered in the past.  The [http://en.wikipedia.org/wiki/Tz_database Olson database] (aka Tz database) decomposes the world into zones in which the local clocks have all been set to the same time since 1970 and it gives these zones unique names.
+
+**ruby:**
+
+The {{Time}} class has a {{zone}} method which returns the time zone abbreviation for the object.  There is a {{tzinfo}} gem which can be used to create timezone objects using the Olson database name.  This can in turn be used to convert between UTC times and local times which are daylight saving aware.
+
+[[# microseconds-note]]
+++ [#microseconds microseconds]
+
+How to get the microseconds component of a combined date and time value.  The SI abbreviations for milliseconds and microseconds are {{ms}} and {{@<&mu;>@s}}, respectively.  The C standard library uses the letter {{u}} as an abbreviation for {{micro}}.  Here is a struct defined in {{/usr/include/sys/time.h}}:
+
+[[code]]
+struct timeval {
+  time_t       tv_sec;   /* seconds since Jan. 1, 1970 */
+  suseconds_t  tv_usec;  /* and microseconds */
+};
+[[/code]]
+
+[[# sleep-note]]
+++ [#sleep sleep]
+
+How to put the process to sleep for a specified number of seconds.  In Python and Ruby the default version of {{sleep}} supports a fractional number of seconds.
+
+**php:**
+
+PHP provides {{usleep}} which takes an argument in microseconds:
+
+[[code]]
+usleep(500000);
+[[/code]]
+
+[[# timeout-note]]
+++ [#timeout timeout]
+
+How to cause a process to timeout if it takes too long.
+
+Techniques relying on SIGALRM only work on Unix systems.
+
+[[# arrays-note]]
++ [#arrays Arrays]
+
+What the languages call their basic container types:
+
+||~ ||~ javascript||~ php||~ python||~ ruby||
+||[#array-literal array]|| ||array||list, tuple, sequence||Array, Enumerable||
+||[#dict-literal dictionary]|| ||array||dict, mapping||Hash||
+
+**javascript:**
+
+**php:**
+
+PHP uses the same data structure for arrays and dictionaries.
+
+**python:**
+
+Python has the mutable //list// and the immutable //tuple//.  Both are //sequences//.  To be a //sequence//, a class must implement @@__getitem__@@, @@__setitem__@@, @@__delitem__@@, @@__len__@@, @@__contains__@@, @@__iter__@@, @@__add__@@, @@__mul__@@, @@__radd__@@, and @@__rmul__@@.
+
+**ruby:**
+
+Ruby provides an //Array// datatype.  If a class defines an //each// iterator and a comparison operator <=>, then it can mix in the //Enumerable// module.
+
+[[# array-literal-note]]
+++ [#array-literal literal]
+
+Array literal syntax.
+
+**ruby:**
+
+The {{%w}} operator splits the following string on whitespace and creates an array of strings from the words.  The character following the {{%w}} is the string delimiter.  If the following character is (, [, or {, then the character which terminates the string must be ), ], or }.
+
+The {{%W}} operator is like the {{%w}} operator, except that double-quote style {{#{ } }} expressions will be interpolated.
+
+[[# quote-words-note]]
+++ [#quote-words quote words]
+
+The quote words operator, which is a literal for arrays of strings where each string contains a single word.
+
+[[# array-size-note]]
+++ [#array-size size]
+
+How to get the number of elements in an array.
+
+[[# array-empty-note]]
+++ [#array-empty empty test]
+
+How to test whether an array is empty.
+
+[[# array-lookup-note]]
+++ [#array-lookup lookup]
+
+How to access a value in an array by index.
+
+**python:**
+
+A negative index refers to the //length - index// element.
+
+[[code]]
+>>> a = [1,2,3]
+>>> a[-1]
+3
+[[/code]]
+
+**ruby:**
+
+A negative index refers to to the //length - index// element.
+
+[[# array-update-note]]
+++ [#array-update update]
+
+How to update the value at an index.
+
+[[# array-out-of-bounds-note]]
+++ [#array-out-of-bounds out-of-bounds behavior]
+
+What happens when the value at an out-of-bounds index is referenced.
+
+[[# array-element-index-note]]
+++ [#array-element-index index of element]
+
+[[# array-slice-note]]
+++ [#array-slice slice]
+
+How to slice a subarray from an array by specifying a start index and an end index; how to slice a subarray from an array by specifying an offset index and a length index.
+
+**python:**
+
+Slices can leave the first or last index unspecified, in which case the first or last index of the sequence is used:
+
+[[code]]
+>>> a=[1,2,3,4,5]
+>>> a[:3]
+[1, 2, 3]
+[[/code]]
+
+Python has notation for taking every nth element:
+
+[[code]]
+>>> a=[1,2,3,4,5]
+>>> a[::2] 
+[1, 3, 5]
+[[/code]]
+
+The third argument in the colon-delimited slice argument can be negative, which reverses the order of the result:
+
+[[code]]
+>>> a = [1,2,3,4]
+>>> a[::-1]
+[4, 3, 2, 1]
+[[/code]]
+
+[[# array-slice-to-end-note]]
+++ [#array-slice-to-end slice to end]
+
+How to slice to the end of an array.
+
+The examples take all but the first element of the array.
+
+[[# array-back-note]]
+++ [#array-back manipulate back]
+
+How to add and remove elements from the back or high index end of an array.
+
+These operations can be used to use the array as a stack.
+
+[[# array-front-note]]
+++ [#array-front manipulate front]
+
+How to add and remove elements from the front or low index end of an array.
+
+These operations can be used to use the array as a stack.  They can be used with the operations that manipulate the back of the array to use the array as a queue.
+
+[[# array-concatenation-note]]
+++ [#array-concatenation concatenate]
+
+How to create an array by concatenating two arrays; how to modify an array by concatenating another array to the end of it.
+
+[[# array-replication-note]]
+++ [#array-replication replicate]
+
+How to create an array containing the same value replicated //n// times.
+
+[[# array-copy-note]]
+++ [#array-copy copy]
+
+How to make an address copy, a shallow copy, and a deep copy of an array.
+
+After an address copy is made, modifications to the copy also modify the original array.
+
+After a shallow copy is made, the addition, removal, or replacement of elements in the copy does not modify of the original array.  However, if elements in the copy are modified, those elements are also modified in the original array.
+
+A deep copy is a recursive copy.  The original array is copied and a deep copy is performed on all elements of the array.  No change to the contents of the copy will modify the contents of the original array.
+
+**python:**
+
+The slice operator can be used to make a shallow copy:
+
+[[code]]
+a2 = a[:]
+[[/code]]
+
+{{list(v)}} always returns a list, but {{v[:]}} returns a value of the same as {{v}}.  The slice operator can be used in this manner on strings and tuples but there is little incentive to do so since both are immutable.
+
+{{copy.copy}} can be used to make a shallow copy on types that don't support the slice operator such as a dictionary.  Like the slice operator {{copy.copy}} returns a value with the same type as the argument.
+
+[[# array-arguments-note]]
+++ [#array-arguments arrays as function arguments]
+
+How arrays are passed as arguments.
+
+[[# array-iterate-note]]
+++ [#array-iterate iterate over elements]
+
+How to iterate through the elements of an array.
+
+[[# indexed-array-iteration-note]]
+++ [#indexed-array-iteration iterate over indices and elements]
+
+How to iterate through the elements of an array while keeping track of the index of each element.
+
+[[# range-iteration-note]]
+++ [#range-iteration iterate over range]
+
+Iterate over a range without instantiating it as a list.
+
+[[# range-array-note]]
+++ [#range-array instantiate range as array]
+
+How to convert a range to an array.
+
+Python 3 ranges and Ruby ranges implement some of the functionality of arrays without allocating space to hold all the elements.
+
+**python:**
+
+In Python 2 {{range()}} returns a list.
+
+In Python 3 {{range()}} returns an object which implements the immutable sequence API.
+
+**ruby:**
+
+The Range class includes the Enumerable module.
+
+[[# array-reverse-note]]
+++ [#array-reverse reverse]
+
+How to create a reversed copy of an array, and how to reverse an array in place.
+
+**python:**
+
+{{reversed}} returns an iterator which can be used in a {{for/in}} construct:
+
+[[code]]
+print("counting down:")
+for i in reversed([1,2,3]):
+  print(i)
+[[/code]]
+
+{{reversed}} can be used to create a reversed list:
+
+[[code]]
+a = list(reversed([1,2,3]))
+[[/code]]
+
+[[# array-sort-note]]
+++ [#array-sort sort]
+
+How to create a sorted copy of an array, and how to sort an array in place.  Also, how to set the comparison function when sorting.
+
+**php:**
+
+{{usort}} sorts an array in place and accepts a comparison function as a 2nd argument:
+
+[[code]]
+function cmp($x, $y) {
+  $lx = strtolower($x);
+  $ly = strtolower($y);
+  if ( $lx < $ly ) { return -1; }
+  if ( $lx == $ly ) { return 0; }
+  return 1;
+}
+
+$a = ["b", "A", "a", "B"];
+
+usort($a, "cmp");
+[[/code]]
+
+**python:**
+
+In Python 2 it is possible to specify a binary comparision function when calling {{sort}}:
+
+[[code]]
+a = [(1, 3), (2, 2), (3, 1)]
+
+a.sort(cmp=lambda a, b: -1 if a[1] < b[1] else 1)
+
+# a now contains:
+[(3, 1), (2, 2), (1, 3)]
+[[/code]]
+
+In Python 3 the {{cmp}} parameter was removed.  One can achieve the same effect by defining {{__cmp__}} method on the class of the list element.
+
+[[# array-dedupe-note]]
+++ [#array-dedupe dedupe]
+
+How to remove extra occurrences of elements from an array.
+
+**python:**
+
+Python sets support the {{len}}, {{in}}, and {{for}} operators.  It may be more efficient to work with the result of the set constructor directly rather than convert it back to a list.
+
+[[# membership-note]]
+++ [#membership membership]
+
+How to test for membership in an array.
+
+[[# intersection-note]]
+++ [#intersection intersection]
+
+How to compute an intersection.
+
+**python:**
+
+Python has literal notation for sets:
+
+[[code]]
+{1,2,3}
+[[/code]] 
+
+Use {{set}} and {{list}} to convert lists to sets and vice versa:
+
+[[code]]
+a = list({1,2,3})
+ensemble = set([1,2,3])
+[[/code]]
+
+**ruby:**
+
+The intersect operator {{&}} always produces an array with no duplicates.
+
+[[# union-note]]
+++ [#union union]
+
+**ruby:**
+
+The union operator {{|}} always produces an array with no duplicates.
+
+[[# set-diff-note]]
+++ [#set-diff relative complement, symmetric difference]
+
+How to compute the relative complement of two arrays or sets; how to compute the symmetric difference.
+
+**ruby:**
+
+If an element is in the right argument, then it will not be in the return value even if it is contained in the left argument multiple times. 
+
+[[# map-note]]
+++ [#map map]
+
+Create an array by applying a function to each element of a source array.
+
+**ruby:**
+
+The {{map!}} method applies the function to the elements of the array in place.
+
+{{collect}} and {{collect!}} are synonyms for {{map}} and {{map!}}.
+
+[[# filter-note]]
+++ [#filter filter]
+
+Create an array containing the elements of a source array which match a predicate.
+
+**ruby:**
+
+The in place version is {{select!}}.
+
+{{reject}} returns the complement of {{select}}.  {{reject!}} is the in place version.
+
+The {{partition}} method returns two arrays:
+
+[[code]]
+a = [1, 2, 3]
+lt2, ge2 = a.partition { |n| n < 2 }
+[[/code]]
+
+[[# reduce-note]]
+++ [#reduce reduce]
+
+Return the result of applying a binary operator to all the elements of the array.  
+
+**python:**
+
+{{reduce}} is not needed to sum a list of numbers:
+
+[[code]]
+sum([1,2,3])
+[[/code]]
+
+**ruby:**
+
+The code for the reduction step can be provided by name.  The name can be a symbol or a string:
+
+[[code]]
+[1,2,3].inject(:+)
+
+[1,2,3].inject("+")
+
+[1,2,3].inject(0, :+)
+
+[1,2,3].inject(0, "+")
+[[/code]]
+
+[[# universal-existential-test-note]]
+++ [#universal-existential-test universal and existential tests]
+
+How to test whether a condition holds for all members of an array; how to test whether a condition holds for at least one member of any array.
+
+A universal test is always true for an empty array.  An existential test is always false for an empty array.
+
+A existential test can readily be implemented with a filter. A universal test can also be implemented with a filter, but it is more work: one must set the condition of the filter to the negation of the predicate and test whether the result is empty.
+
+[[# shuffle-sample-note]]
+++ [#shuffle-sample shuffle and sample]
+
+How to shuffle an array.  How to extract a random sample from an array.
+
+**php:**
+
+The {{array_rand}} function returns a random sample of the indices of an array.  The result can easily be converted to a random sample of array values:
+
+[[code]]
+$a = [1, 2, 3, 4];
+$sample = [];
+foreach (array_rand($a, 2) as $i) { array_push($sample, $a[$i]); }
+[[/code]]
+
+[[# flatten-note]]
+++ [#flatten flatten]
+
+How to flatten nested arrays by one level or completely.
+
+When nested arrays are flattened by one level, the depth of each element which is not in the top level array is reduced by one.
+
+Flattening nested arrays completely leaves no nested arrays.  This is equivalent to extracting the leaf nodes of a tree.
+
+**php, python:**
+
+To flatten by one level use reduce.  Remember to handle the case where an element is not array.
+
+To flatten completely write a recursive function.
+
+[[# zip-note]]
+++ [#zip zip]
+
+How to interleave arrays.  In the case of two arrays the result is an array of pairs or an associative list.
+
+[[# dictionaries-note]]
++ [#dictionaries Dictionaries]
+
+[[# dict-literal-note]]
+++ [#dict-literal literal]
+
+The syntax for a dictionary literal.
+
+[[# dict-size-note]]
+++ [#dict-size size]
+
+How to get the number of dictionary keys in a dictionary.
+
+[[# dict-lookup-note]]
+++ [#dict-lookup lookup]
+
+How to lookup a dictionary value using a dictionary key.
+
+[[# dict-out-of-bounds-note]]
+++ [#dict-out-of-bounds out-of-bounds behavior]
+
+What happens when a lookup is performed on a key that is not in a dictionary.
+
+**python:**
+
+Use {{dict.get()}} to avoid handling {{KeyError}} exceptions:
+
+[[code]]
+d = {}
+d.get('lorem')      # returns None
+d.get('lorem', '')  # returns ''
+[[/code]]
+
+[[# dict-key-check-note]]
+++ [#dict-key-check is key present]
+
+How to check for the presence of a key in a dictionary without raising an exception.  Distinguishes from the case where the key is present but mapped to null or a value which evaluates to false.
+
+[[# dict-delete-note]]
+++ [#dict-delete delete entry]
+
+How to remove a key/value pair from a dictionary.
+
+[[# dict-assoc-array-note]]
+++ [#dict-assoc-array from array of pairs, from even length array]
+
+How to create a dictionary from an array of pairs; how to create a dictionary from an even length array.
+
+[[# dict-merge-note]]
+++ [#dict-merge merge]
+
+How to merge the values of two dictionaries.
+
+In the examples, if the dictionaries {{d1}} and {{d2}} share keys then the values from {{d2}} will be used in the merged dictionary.
+
+[[# dict-invert-note]]
+++ [#dict-invert invert]
+
+How to turn a dictionary into its inverse.  If a key 'foo' is mapped to value 'bar' by a dictionary, then its inverse will map the key 'bar' to the value 'foo'.  However, if multiple keys are mapped to the same value in the original dictionary, then some of the keys will be discarded in the inverse.
+
+[[# dict-iter-note]]
+++ [#dict-iter iteration]
+
+How to iterate through the key/value pairs in a dictionary.
+
+**python:**
+
+In Python 2.7 {{dict.items()}} returns a list of pairs and {{dict.iteritems()}} returns an iterator on the list of pairs.
+
+In Python 3 {{dict.items()}} returns an iterator and {{dict.iteritems()}} has been removed.
+
+[[# dict-key-val-note]]
+++ [#dict-key-val keys and values as arrays]
+
+How to convert the keys of a dictionary to an array; how to convert the values of a dictionary to an array.
+
+**python:**
+
+In Python 3 {{dict.keys()}} and {{dict.values()}} return read-only views into the dict.  The following code illustrates the change in behavior:
+
+[[code]]
+d = {}
+keys = d.keys()
+d['foo'] = 'bar'
+
+if 'foo' in keys:
+  print('running Python 3')
+else:
+  print('running Python 2')
+[[/code]]
+
+[[# dict-sort-values-note]]
+++ [#dict-sort-values sort by values]
+
+How to iterate through the key-value pairs in the order of the values.
+
+[[# dict-default-val-note]]
+++ [#dict-default-val default value, computed value]
+
+How to create a dictionary with a default value for missing keys; how to compute and store the value on lookup.
+
+**php:**
+
+Extend {{ArrayObject}} to compute values on lookup:
+
+[[code]]
+class Factorial extends ArrayObject {
+
+  public function offsetExists($i) {
+    return true;
+  }
+
+  public function offsetGet($i) {
+    if(!parent::offsetExists($i)) {
+      if ( $i < 2 ) {
+        parent::offsetSet($i, 1);
+      }
+      else {
+        $n = $this->offsetGet($i-1);
+        parent::offsetSet($i, $i*$n);
+      }
+    }
+    return parent::offsetGet($i);
+  }
+}
+
+$factorial = new Factorial();
+[[/code]]
+
+
+[[# functions-note]]
++ [#functions Functions]
+
+Python has both functions and methods.  Ruby only has methods: functions defined at the top level are in fact methods on a special main object.  Perl subroutines can be invoked with a function syntax or a method syntax.
+
+[[# def-func-note]]
+++ [#def-func define function]
+
+How to define a function.
+
+[[# invoke-func-note]]
+++ [#invoke-func invoke function]
+
+How to invoke a function.
+
+**python:**
+
+Parens are mandatory, even for functions which take no arguments.  Omitting the parens returns the function or method as an object.  Whitespace can occur between the function name and the following left paren.
+
+In Python 3 print is a function instead of a keyword; parens are mandatory around the argument.
+
+**ruby:**
+
+Ruby parens are optional.  Leaving out the parens results in ambiguity when function invocations are nested.  The interpreter resolves the ambiguity by assigning as many arguments as possible to the innermost function invocation, regardless of its actual arity.  It is mandatory that the left paren not be separated from the method name by whitespace.
+
+[[# apply-func-note]]
+++ [#apply-func apply function to array]
+
+How to apply a function to an array.
+
+**perl:**
+
+Perl passes the elements of arrays as individual arguments.  In the following invocation, the function {{foo()}} does not know which arguments came from which array.  For that matter it does not know how many arrays were used in the invocation:
+
+[[code]]
+foo(@a, @b);
+[[/code]]
+
+If the elements must be kept in their respective arrays the arrays must be passed by reference:
+
+[[code]]
+sub foo {
+  my @a = @{$_[0]};
+  my @b = @{$_[1]};
+}
+
+foo(\@a, \@b);
+[[/code]]
+
+When hashes are used as arguments, each key and value becomes its own argument.
+
+[[# missing-arg-note]]
+++ [#missing-arg missing argument behavior]
+
+How incorrect number of arguments upon invocation are handled.
+
+[[# default-arg-note]]
+++ [#default-arg default argument]
+
+How to declare a default value for an argument.
+
+[[# variable-num-arg-note]]
+++ [#variable-num-arg variable number of arguments]
+
+How to write a function which accepts a variable number of argument.
+
+**python:**
+
+This function accepts one or more arguments.  Invoking it without any arguments raises a {{TypeError}}:
+
+[[code]]
+def poker(dealer, *players):
+  ...
+[[/code]]
+
+**ruby:**
+
+This function accepts one or more arguments.  Invoking it without any arguments raises an {{ArgumentError}}:
+
+[[code]]
+def poker(dealer, *players)
+  ...
+end
+[[/code]]
+
+[[# named-param-note]]
+++ [#named-param named parameters]
+
+How to write a function which uses named parameters and how to invoke it.
+
+**python:**
+
+The caller can use named parameter syntax at the point of invocation even if the function was defined using positional parameters.
+
+The splat operator * collects the remaining arguments into a list.  In a function invocation, the splat can be used to expand an array into separate arguments.
+
+The double splat operator ** collects named parameters into a dictionary.  In a function invocation, the double splat expands a dictionary into named parameters.
+
+A double splat operator can be used to force the caller to use named parameter syntax.  This method has the disadvantage that spelling errors in the parameter name are not caught:
+
+[[code]]
+def fequal(x, y, **kwargs):
+  eps = opts.get('eps') or 0.01
+  return abs(x - y) < eps
+[[/code]]
+
+In Python 3 named parameters can be made mandatory:
+
+[[code]]
+def fequal(x, y, *, eps):
+  return abs(x-y) < eps
+ 
+fequal(1.0, 1.001, eps=0.01)  # True
+
+fequal(1.0, 1.001)                 # raises TypeError
+[[/code]]
+
+[[# pass-num-str-by-ref-note]]
+++ [#pass-num-str-by-ref pass number or string by reference]
+
+How to pass numbers or strings by reference.
+
+The three common methods of parameter passing are //pass by value//, //pass by reference//, and //pass by address//.  Pass by value is the default in most languages.
+
+When a parameter is passed by reference, the callee can changed the value in the variable that was provided as a parameter, and the caller will see the new value when the callee returns.  When the parameter is passed by value the callee cannot do this.
+
+When a language has mutable data types it can be unclear whether the language is using pass by value or pass by reference. 
+
+[[# pass-array-dict-by-ref-note]]
+++ [#pass-array-dict-by-ref pass array or dictionary by reference]
+
+How to pass an array or dictionary without making a copy of it.
+
+[[# retval-note]]
+++ [#retval return value]
+
+How the return value of a function is determined.
+
+[[# multiple-retval-note]]
+++ [#multiple-retval multiple return values]
+
+How to return multiple values from a function.
+
+[[# lambda-note]]
+++ [#lambda lambda declaration and invocation]
+
+How to define and invoke a lambda function.
+
+**python:**
+
+Python lambdas cannot contain newlines or semicolons, and thus are limited to a single statement or expression.  Unlike named functions, the value of the last statement or expression is returned, and a //return// is not necessary or permitted. Lambdas are closures and can refer to local variables in scope, even if they are returned from that scope.
+
+If a closure function is needed that contains more than one statement, use a nested function:
+
+[[code]]
+def make_nest(x):
+    b = 37
+    def nest(y):
+        c = x*y
+        c *= b
+        return c
+    return nest
+
+n = make_nest(12*2)
+print(n(23))
+[[/code]]
+
+Python closures are read only.  
+
+A nested function can be returned and hence be invoked outside of its containing function, but it is not visible by its name outside of its containing function.
+
+**ruby:**
+
+The following lambda and Proc object behave identically:
+
+[[code]]
+sqr = lambda { |x| x * x }
+
+sqr = Proc.new {|x| x * x }
+[[/code]]
+
+With respect to control words, Proc objects behave like blocks and lambdas like functions.  In particular, when the body of a Proc object contains a {{return}} or {{break}} statement, it acts like a {{return}} or {{break}} in the code which invoked the Proc object.  A {{return}} in a lambda merely causes the lambda to exit, and a {{break}} inside a lambda must be inside an appropriate control structure contained with the lambda body.
+
+Ruby are alternate syntax for defining lambdas and invoking them:
+
+[[code]]
+sqr = ->(x) {x*x}
+
+sqr.(2)
+[[/code]]
+
+[[# func-as-val-note]]
+++ [#func-as-val function as value]
+
+How to store a function in a variable and pass it as an argument.
+
+**php:**
+
+If a variable containing a string is used like a function then PHP will look for a function with the name in the string and attempt to invoke it.
+
+**python:**
+
+Python function are stored in variables by default.  As a result a function and a variable with the same name cannot share the same scope.  This is also the reason parens are mandatory when invoking Python functions.
+
+[[# private-state-func-note]]
+++ [#private-state-func function with private state]
+
+How to create a function with private state which persists between function invocations.
+
+**python:**
+
+Here is a technique for creating private state which exploits the fact that the expression for a default value is evaluated only once:
+
+[[code]]
+def counter(_state=[0]):
+  _state[0] += 1
+  return _state[0]
+
+print(counter())
+[[/code]]
+
+[[# closure-note]]
+++ [#closure closure]
+
+How to create a first class function with access to the local variables of the local scope in which it was created.
+
+**python:**
+
+Python 2 has limited closures: access to local variables in the containing scope is read only and the bodies of anonymous functions must consist of a single expression.
+
+Python 3 permits write access to local variables outside the immediate scope when declared with {{nonlocal}}.
+
+[[# generator-note]]
+++ [#generator generator]
+
+How to create a function which can yield a value back to its caller and suspend execution.
+
+**python:**
+
+A Python generator is a function which returns an iterator.
+
+An iterator is an object with two methods: {{__iter__()}}, which returns the iterator itself, and {{next()}}, which returns the next item or raises a {{StopIteration}} exception.
+
+Python sequences, of which lists are an example, define an {{__iter__()}} for returned an iterator which traverses the sequence.
+
+Python iterators can be used in //for/in// statements and list comprehensions.
+
+In the table below, {{p}} and {{q}} are variables for iterators.
+
+||||~ itertools||
+||~ generator||~ description||
+||count(start=0, step=1)||arithmetic sequence of integers||
+||cyle(p)||cycle over {{p}} endlessly||
+||repeat(v, [n])||return {{v}} {{n}} times, or endlessly||
+||chain(p, q)||{{p}} followed by {{q}}||
+||compress(p, q)||{{p}} if {{q}}||
+||groupby(p, func)|| ||
+||ifilter(pred, p)||{{p}} if {{pred(p)}}||
+||ifilterfalse(pred, p)||{{p}} if not {{pred(p)}}||
+||islice(p, [start], stop, [step])|| ||
+||imap|| ||
+||starmap()|| ||
+||tee()|| ||
+||takewhile()|| ||
+||izip()|| ||
+||izip_longest()|| ||
+||product()|| ||
+||permutations()|| ||
+||combinations()|| ||
+||combinations_with_replacement()|| ||
+
+**ruby:**
+
+Ruby generators are called fibers.
+
+[[# decorator-note]]
+++ [#decorator decorator]
+
+A decorator replaces an invocation of one function with another in a way that that is imperceptible to the client.
+
+Normally a decorator will add a small amount of functionality to the original function which it invokes.  A decorator can modify the arguments before passing them to the original function or modify the return value before returning it to the client.  Or it can leave the arguments and return value unmodified but perform a side effect such as logging the call.
+
+[[# op-as-func-note]]
+++ [#op-as-func operator as function]
+
+How to call an operator using the function invocation syntax.
+
+This can be useful when dealing with an API which accepts a function as an argument.
+
+**python:**
+
+The {{operator}} module provides functions which perform the same operations as the various operators.  Using these functions is more efficient than wrapping the operators in lambdas.
+
+**ruby:**
+
+All operators can be invoked with method invocation syntax.  The binary operator invocation syntax can be regarded as syntactic sugar.
+
+[[# execution-control-note]]
++ [#execution-control Execution Control]
+
+[[# if-note]]
+++ [#if if]
+
+The {{if}} statement.
+
+**php:**
+
+PHP has the following alternate syntax for {{if}} statements:
+
+[[code]]
+if ($n == 0): 
+  echo "no hits\n";
+elseif ($n == 1):
+  echo "one hit\n";
+else:
+  echo "$n hits\n";
+endif;
+[[/code]]
+
+**ruby:**
+
+If an {{if}} statement is the last statement executed in a function, the return value is the value of the branch that executed.  
+
+Ruby {{if}} statements are expressions.  They can be used on the right hand side of assignments:
+
+[[code]]
+m = if n
+  1
+else
+  0
+end
+[[/code]]
+
+[[# switch-note]]
+++ [#switch switch]
+
+The {{switch}} statement.
+
+[[# while-note]]
+++ [#while while]
+
+**php:**
+
+PHP provides a {{do-while}} loop.  The body of such a loop is guaranteed to execute at least once.
+
+[[code]]
+$i = 0;
+do {
+    echo $i;
+} while ($i > 0);
+[[/code]]
+
+**ruby:**
+
+Ruby provides a loop with no exit condition:
+
+[[code]]
+def yes(expletive="y")
+  loop do
+   puts expletive
+  end
+end
+[[/code]]
+
+Ruby also provides the {{until}} loop.
+
+Ruby loops can be used in expression contexts but they always evaluate to {{nil}}.
+
+[[# for-note]]
+++ [#for c-style for]
+
+How to write a C-style for loop.
+
+[[# break-continue-note]]
+++ [#break-continue break, continue, redo]
+
+//break// exits a //for// or //while// loop immediately.  //continue// goes to the next iteration of the loop.  //redo// goes back to the beginning of the current iteration.
+
+[[# control-keywords-note]]
+++ [#control-keywords control structure keywords]
+
+A list of control structure keywords.  The loop control keywords from the previous line are excluded.
+
+The list summarizes the available control structures.  It excludes the keywords for exception handling, loading libraries, and returning from functions.
+
+[[# do-note]]
+++ [#do what do does]
+
+How the {{do}} keyword is used.
+
+
+[[# statement-modifiers-note]]
+++ [#statement-modifiers statement modifiers]
+
+Clauses added to the end of a statement to control execution.
+
+Ruby has conditional statement modifiers.  Ruby also has looping statement modifiers.
+
+**ruby:**
+
+Ruby has the looping statement modifiers {{while}} and {{until}}:
+
+[[code]]
+i = 0
+i += 1 while i < 10
+
+j = 10
+j -= 1 until j < 0
+[[/code]]
+
+[[# exceptions-note]]
++ [#exceptions Exceptions]
+
+[[# base-exc-note]]
+++ [#base-exc base exception]
+
+[[# predefined-exc-note]]
+++ [#predefined-exc predefined exceptions]
+
+[[# raise-exc-note]]
+++ [#raise-exc raise exception]
+
+How to raise exceptions.
+
+**ruby:**
+
+Ruby has a //throw// keyword in addition to //raise//.  //throw// can have a symbol as an argument, and will not convert a string to a RuntimeError exception.
+
+[[# catch-exc-note]]
+++ [#catch-exc catch exception]
+
+How to catch exceptions.
+
+**php:**
+
+PHP code must specify a variable name for the caught exception.  //Exception// is the top of the exception hierarchy and will catch all exceptions.
+
+Internal PHP functions usually do not throw exceptions.  They can be converted to exceptions with this signal handler:
+
+[[code]]
+function exception_error_handler($errno, $errstr, $errfile, $errline ) {
+    throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+}
+set_error_handler("exception_error_handler");
+[[/code]]
+
+**ruby:**
+
+A //rescue Exception// clause will catch any exception.  A //rescue// clause with no exception type specified will catch exceptions that are subclasses of //StandardError//.  Exceptions outside //StandardError// are usually unrecoverable and hence not handled in code.
+
+In a //rescue// clause, the //retry// keyword will cause the //begin// clause to be re-executed.
+
+In addition to //begin// and //rescue//, ruby has //catch//:
+
+[[code]]
+catch (:done) do
+  loop do
+    retval = work
+    throw :done if retval < 10
+  end
+end
+[[/code]]
+
+
+[[# re-raise-exc-note]]
+++ [#re-raise-exc re-raise exception]
+
+How to re-raise an exception preserving the original stack trace.
+
+**python:**
+
+If the exception is assigned to a variable in the {{except}} clause and the variable is used as the argument to {{raise}}, then a new stack trace is created.
+
+**ruby:**
+
+If the exception is assigned to a variable in the {{rescue}} clause and the variable is used as the argument to {{raise}}, then the original stack trace is preserved.
+
+[[# last-exc-global-note]]
+++ [#last-exc-global global variable for last exception]
+
+The global variable name for the last exception raised.
+
+[[# def-exc-note]]
+++ [#def-exc define exception]
+
+How to define a new variable class.
+
+[[# name-exc-note]]
+++ [#name-exc catch exception by type]
+
+How to catch exceptions of a specific type and assign the exception a name.
+
+**php:**
+
+PHP exceptions when caught must always be assigned a variable name.
+
+[[# finally-ensure-note]]
+++ [#finally-ensure finally/ensure]
+
+Clauses that are guaranteed to be executed even if an exception is thrown or caught.
+
+[[# concurrency-note]]
++ [#concurrency Concurrency]
+
+[[# start-thread-note]]
+++ [#start-thread start thread]
+
+**ruby:**
+
+Ruby MRI threads are operating system threads, but a global interpreter lock prevents more than one thread from executing Ruby code at a time.
+
+[[# wait-on-thread-note]]
+++ [#wait-on-thread wait on thread]
+
+How to make a thread wait for another thread to finish.
+
+[[# javascript]]
++ [#top JavaScript]
+
+[https://developer.mozilla.org/en-US/docs/Web/JavaScript Mozilla Developer Network: JavaScript]
+
+[[# browsers]] 
++ [#top Browsers]
+
+[https://developer.mozilla.org/en-US/docs/Web/API/document Mozilla Developer Network: Document]
+[https://developer.mozilla.org/en-US/docs/Web/API/Window Mozilla Document Network: Window]
+[http://www.w3.org/TR/DOM-Level-3-Core/ W3C: Document Object Model (DOM) Level 3 Core Specification]
+[http://www.w3.org/TR/DOM-Level-3-Events/ W3C: Document Object Model (DOM) Level 3 Events Specification]
+
+Most browsers include a debugger which can be launched with a keystroke:
+
+||~ browser||~ mac||~ windows||~ linux||
+||Chrome||⌥⌘J||Cmd+Shift+J||Cmd+Shift+J||
+||Firefox||⌥⌘S||Cmd+Shift+S||Cmd+Shift+S||
+||Safari||⌥⌘C|| || ||
+
+The debugger has a console pane, which is a JavaScript REPL.
+
+[[code]]
+> Math.log(10)
+2.302585092994046
+
+> alert("Hello, World!")
+[[/code]]
+
+The console provides a global object named {{document}} which provides access to the DOM of the current page:
+
+[[code]]
+> document.getElementsByTagName("div").length
+302
+[[/code]]
+
+//TODO: more ways to select node elements.  Attributes of node elements.//
+
+There is also a global object named {{window}} which is useful.
+
+JavaScript can be embedded in an HTML document using the {{<script>}} tag:
+
+[[code]]
+<script>
+  var sum = 1 + 2;
+  alert('the sum is ' + sum);
+</script>
+[[/code]]
+
+Alternatively the JavaScript can be in a separate file served by the same server:
+
+[[code]]
+<script src="foo.js"></script>
+[[/code]]
+
+{{<script>}} tags can be placed in either the {{<head>}} or the {{<body>}} of an {{<html>}} document.  They are executed as they are encountered by the browser.  If there is a syntax error, then none of the JavaScript in the {{<script>}} tag is executed.  If there is an unhandled exception, the browser stops execution of the {{<script>}} at that point.  Neither syntax errors nor unhandled exceptions prevent the browser from executing JavaScript in subsequent {{<script>}} tags.
+
+//using JavaScript to modify the DOM//
+
+//waiting for all JavaScript to load//
+
+//javascript URL//
+
+//DOM events//
+
+To guard against websites serving malicious JavaScript code, the JavaScript interpreters in browsers do not provide the ability to interact with the local operating system.  In particular, client-side JavaScript cannot read or write to files.  Client-side JavaScript cannot spawn other processes. 
+
+Client-side JavaScript can make HTTP requests.  Client-side JavaScript can modify the DOM of an HTML page which was served from the same [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Same_origin_policy_for_JavaScript origin] as the JavaScript.  To be from the same origin, the URLs must have the same protocol, domain, and port.  Client-side JavaScript can also get and set cookies which share the same origin.  The origin policy for cookies is slightly relaxed, since the JavaScript can also get and set cookies for a parent domain, excluding public top level domains such as {{.com}}, {{.net}}, and {{.org}}.
+
+[[# node]]
++ [#top Node]
+
+[http://nodejs.org/api/ Node.js]
+
+//using node//
+
+//asynchronous programming//
+
+[[# php]]
++ [#top PHP]
+
+[http://www.php.net/manual/en/ PHP Manual]
+
+The PHP interpreter is packaged in 3 different ways: (1) as a standalone executable which can be executed as a CGI script, (2) as a dynamically linked library which adheres to the SAPI of a webserver such as Apache or IIS, and (3) as a standalone executable which can be used to run PHP scripts from the command line.  The latter executable is called PHP CLI.
+
+From the perspective of a PHP programmer, there no important differences between PHP CGI and PHP SAPI.  The programmer should be aware of the following differences between PHP CGI/SAPI and PHP CLI:
+
+* PHP CGI/SAPI  writes HTTP headers to standard out before any output specified by the program.  PHP CLI does not.
+* PHP CLI sets the constants STDIN, STDOUT, and STDERR.  PHP CGI/SAPI do not.
+* PHP CLI has no timeout.  PHP CGI/SAPI will typically timeout a script after 30 seconds.
+* PHP CGI/SAPI add HTML markup to error messages.  PHP CLI does not.
+* PHP CLI does not buffer output, so calling {{flush}} is never necessary.  PHP CGI/SAPI buffer output.
+
+[[# python]]
++ [#top Python]
+
+2.7: [http://docs.python.org/reference/index.html Language], [http://docs.python.org/library/index.html Standard Library]
+3.2: [http://docs.python.org/py3k/reference/index.html Language], [http://docs.python.org/py3k/library/index.html Standard Library]
+
+Python uses leading whitespace to indicate block structure.  It is not recommended to mix tabs and spaces in leading whitespace, but when this is done, a tab is equal to 8 spaces.  The command line options '-t' and '-tt' will warn and raise an error respectively when tabs are used inconsistently for indentation.
+
+Regular expressions and functions for interacting with the operating system are not available by default and must be imported to be used, i.e.
+
+[[code]]
+import re, sys, os
+[[/code]]
+
+Identifiers in imported modules must be fully qualified unless imported with //from/import//:
+
+[[code]]
+from sys import path
+from re import *
+[[/code]]
+
+There are two basic sequence types: the mutable list and the immutable tuple. The literal syntax for lists uses square brackets and commas [1,2,3] and the literal syntax for tuples uses parens and commas (1,2,3).
+
+The dictionary data type literal syntax uses curly brackets, colons, and commas { “hello”:5, “goodbye”:7 }.  Python 3 adds a literal syntax for sets which uses curly brackets and commas: {1,2,3}.  This notation is also available in Python 2.7.  Dictionaries and sets are implemented using hash tables and as a result dictionary keys and set elements must be hashable.
+
+All values that can be stored in a variable and passed to functions as arguments are objects in the sense that they have methods which can be invoked using the method syntax.
+
+Attributes are settable by default. This can be changed by defining a @@__setattr__@@ method for the class. The attributes of an object are stored in the @@__dict__@@ attribute. Methods must declare the receiver as the first argument.
+
+Classes, methods, functions, and modules are objects. If the body of a class, method, or function definition starts with is a string, it is available available at runtime via @@__doc__@@. Code examples in the string which are preceded with @@'>>>'@@ (the python repl prompt)  can be executed by doctest and compared with the output that follows.
+
+[[# ruby]]
++ [#top Ruby]
+
+[http://www.ruby-doc.org/core-1.9.3/ 1.9.3 core], [http://ruby-doc.org/stdlib/ stdlib]
+
+Ruby has a type of value called a symbol.  The literal syntax for a symbol is :##gray|//identifier//## or :"##gray|//arbitrary string//##".  The methods {{to_s}} and {{to_sym}} can be used to convert symbols to strings and strings to symbols.  Symbols can be used to pass functions or methods as arguments by name.  They can be used as keys in Hash objects in place of strings, but the client must remember the type of the keys since {{:foo != "foo"}}.  Also note that converting a Hash object with symbols as keys to JSON and then back will yield a Hash object with strings as keys.
+
+In Ruby all values that can be stored in a variable and passed to functions as arguments are objects in the sense that they have methods which can be invoked using the method syntax.  Moreover classes are objects.  The system provided classes are open and as a result the user can add methods to classes such as {{String}}, {{Array}}, or {{Fixnum}}.  Ruby only permits single inheritance, but Ruby modules are mix-ins and can be used to add methods to a class via the {{include}} statement.
+
+Ruby methods can be declared private and this is enforced by the interpreter.  Object attributes are private by default and attribute names have an ampersand @ prefix.  The methods {{attr_reader}}, {{attr_writer}}, and {{attr_accessor}} can be used in a class block to define a getter, setter, or both for an attribute.
+
+When invoking a method the parens are optional.  If there are two or more arguments they must still be separated by commas.  If one of the arguments is an expression containing a method invocation with arguments, then the Ruby interpreter will assign as many arguments as possible to the innermost method invocation.
+
+Inside a Ruby method, the {{self}} keyword refers to the receiver.  It is not declared when defining the method.  Ruby functions are implemented as methods on an object called //main// which has the special property that any methods defined on it become instance methods in the {{Object}} class which is a base class of most Ruby objects.  This makes the method available everywhere.  Methods defined at the top level are also added to the //main// object and the {{Object}} class.  Functions which Ruby provides by default are instance methods defined the {{Object}} class or the {{Kernel}} module.
+
+Ruby methods are not objects and cannot directly be stored in variables.   It is worth emphasizing that the Python interpreter when encountering a method identifier with no parens returns the method as an object value, but the Ruby interpreter invokes the method.  As mentioned earlier, methods can be passed by name using symbols.  If a method receives a symbol representing a method as an argument, it can invoke the method with the syntax :##gray|//symbol//##.to_proc.call(##gray|//args...//##).  Note that {{to_proc}} resolves the symbol to the method that is in scope where it is invoked.
+
+Although passing a method or a function is a bit awkward, Ruby provides a convenient mechanism called //blocks// for simultaneously defining an anonymous function at the invocation of a method and providing it to the method as an argument.  The block appears immediately after the closing paren of the method invocation and uses either the { |##gray|//args...//##| ##gray|//body//## } or {{do}} |##gray|//args...//##| ##gray|//body//## {{end}} syntax.  The invoked method can in turn invoke the block with the {{yield}} keyword.
+
+Ruby blocks are closures like lambda functions and can see local variables in the enclosing scope in which they were defined.  The parameters of the block are local to the block. Semicolon syntax is available so that identifiers listed after the arguments could be made local to the block even if already defined in the containing scope.
+
+The {{lambda}} keyword or the {{Proc.new}} constructor can be used to store an anonymous function in a variable.  The function can be invoked with ##gray|//variable//##.call().  If such a function is passed to a method argument as the last argument and preceded with an ampersand, the function will be used as the block for the method.  Conversely, if the last argument in a method definition is preceded with an ampersand, any block provided to the function will be bound to the argument name as an anonymous function.

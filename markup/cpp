@@ -1,0 +1,3723 @@
+[[# top]]//a side-by-side reference sheet//
+
+[#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#fixed-length-arrays fixed-length arrays] | [#resizable-arrays resizable arrays] | [#tuples tuples] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#concurrency concurrency] | [#file-handles file handles] | [#files files] | [#file-fmt file formats] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#user-defined-types user-defined types] | [#generic-types generic types] | [#objects objects] | [#polymorphism polymorphism] | [#reflection reflection] | [#net-web net and web] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling]
+
+||~ [[# general]]||~ [#cpp c++]||~ [#objective-c objective c]||~ [#java java]||~ [#c-sharp c#]||
+||[[# version-used]][#version-used-note version used] _
+@<&nbsp;>@||##gray|//g++ 4.6 with -std=c++0x flag//##||##gray|//gcc 4.2//##||##gray|//java 1.7//##||##gray|//mono 2.10 (C# 4.0)//##||
+||[[# show-version]][#show-version-note show version] _
+@<&nbsp;>@||$ g++ @@--@@version||$ gcc @@--@@version||$ javac -version||$ mcs @@--@@version||
+||[[# implicit-prologue]][#implicit-prologue-note implicit prologue]||##darkslateblue|#include## ##maroon|<iostream>## _
+##darkslateblue|#include## ##maroon|<string>## _
+ _
+##purple|using namespace## ##teal|std##;|| || || ||
+||||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
+||~ ||~ c++||~ objective c||~ java||~ c#||
+||[[# hello-world]][#hello-world-note hello world]||$ cat hello.cpp _
+#include <iostream> _
+ _
+using namespace std; _
+ _
+int main(int argc, char@@**@@ arg) { _
+@<&nbsp;&nbsp;>@cout @@<<@@ "Hello, World!" @@<<@@ endl; _
+} _
+ _
+$ g++ -std=c++0x hello.cpp _
+ _
+$ ./a.out||$ cat hello.m _
+#include <stdio.h> _
+ _
+int main(int argc, char @@**@@argv) { _
+@<&nbsp;&nbsp;>@printf("Hello, World!\n"); _
+} _
+ _
+$ gcc hello.m _
+ _
+$ ./a.out||$ cat Hello.java _
+public class Hello { _
+@<&nbsp;&nbsp;>@public static void main(String[] args) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@System.out.println("Hello, World!"); _
+@<&nbsp;&nbsp;>@} _
+} _
+ _
+$ javac Hello.java _
+ _
+$ java Hello||$ cat hello.cs _
+using System; _
+ _
+public class Hello { _
+@<&nbsp;&nbsp;>@public static void Main() { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Console.WriteLine("Hello, World!"); _
+@<&nbsp;&nbsp;>@} _
+} _
+ _
+$ mcs hello.cs _
+ _
+$ mono hello.exe||
+||[[# file-suffixes]][#file-suffixes-note file suffixes] _
+##gray|//source, header, object file//##||foo.cpp _
+foo.h _
+foo.o||Foo.m _
+Foo.h _
+Foo.o||Foo.java _
+##gray|//none//## _
+Foo.class _
+ _
+##gray|Foo.java //must define a single top level class// Foo##||Foo.cs _
+##gray|//none//## _
+Foo.exe ##gray|//or//## Foo.dll _
+ _
+##gray|//although files are often named after a class they contain, this is not required//##||
+||[[# block-delimiters]][#block-delimiters-note block delimiters]||{ }||{ }||{ }||{ }||
+||[[# stmt-terminator]][#stmt-terminator-note statement terminator]||;||;||;||;||
+||[[# top-level-stmt]][#top-level-stmt-note top level statements]||##gray|//A source file will normally have// #include //directives at the top, followed by declarations, definitions, and namespaces containing declarations and definitions. _
+ _
+After the preprocessor has finished processing a source file, the compilation unit will only contain declarations, definitions, and namespaces at the top level.//##|| ||##gray|//each file contains the following elements in order: _
+ _
+(1) optional package directive _
+(2) zero or more import directives _
+(3) one public class definition and zero or more private class definitions//##|| ||
+||[[# eol-comment]][#eol-comment-note end-of-line comment]||##gray|@@//@@ comment##||##gray|@@//@@ comment##||##gray|@@//@@ comment##||##gray|@@//@@ comment##||
+||[[# multiple-line-comment]][#multiple-line-comment-note multiple line comment]||##gray|/* comment _
+another comment */##||##gray|/* comment _
+another comment */##||##gray|/* comment _
+another comment */##||##gray|/* comment _
+another comment */##||
+||||||||||~ [[# variables-expressions]][#variables-expressions-note variables and expressions]||
+||~ ||~ c++||~ objective c||~ java||~ c#||
+||[[# local-var]][#local-var-note local variable]||##green|int## ##peru|i##; _
+##green|int## ##peru|j## = 3; _
+##green|int## ##peru|k##(7);||int i; _
+int j = 3;||##green|int## ##peru|i##; _
+##green|int## ##peru|j## = 3;||int i; _
+int j = 3;||
+||[[# uninitialized-local-var]][#uninitialized-local-var-note uninitialized local variable]||##gray|//The behavior is undefined. _
+ _
+Most implementations do not zero-initialize stack variables, so the value will be whatever happened to be in memory.//##||##gray|//behavior is undefined. _
+ _
+Most implementations do not zero-initialize stack variables, so the value will be whatever happened to be in memory.//##||##gray|//zero initialized//##||##gray|//compiler prevents use of uninitialized local variable//##||
+||[[# global-var]][#global-var-note global variable]||##gray|@@//@@ in foo.cpp and outside of any function _
+@@//@@ or class definition:## _
+##green|int## ##peru|foo## = 7; _
+ _
+##gray|@@//@@ in bar.cpp and outside of any function _
+@@//@@ or class definition:## _
+##purple|extern## ##green|int## ##peru|foo##;||##gray|//in// foo.cpp //outside of any function or class definition://## _
+int foo = 7; _
+ _
+##gray|//in// bar.cpp //outside of any function or class definition://## _
+extern int foo;||##gray|//foo/Foo.java://## _
+##purple|package## ##teal|foo##; _
+ _
+##gray|@@//@@ globals must be declared inside a _
+@@//@@ class:## _
+##purple|public class## ##green|Foo## { _
+@<&nbsp;&nbsp;>@##purple|public static## ##green|int## ##peru|bar##; _
+} _
+ _
+##gray|//UseFoo.java://## _
+##purple|import## ##teal|foo##.##green|Foo##; _
+ _
+##purple|public class## ##green|UseFoo## { _
+@<&nbsp;&nbsp;>@##purple|public static## ##green|void## ##mediumblue|main##(##green|String##[] ##peru|args##) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@System.out.println(Foo.bar); _
+@<&nbsp;&nbsp;>@} _
+}|| ||
+||[[# uninitialized-global-var]][#uninitialized-global-var-note uninitialized global variable]||##gray|//Zero initialized: numeric types and pointers are set to zero.  Classes, structs, and arrays have all of their members or elements zero-initialized recursively.//##|| ||##gray|//Zero initialized.//##|| ||
+||[[# write-once-var]][#write-once-var-note write-once variable]||##purple|const## ##type|int## ##peru|i## = 7;||const int i = 7;||##purple|final## ##green|int## ##peru|i## = 7;||const int i = 7;||
+||[[# assignment]][#assignment-note assignment]||##green|int## ##peru|n##; _
+n = 3;|| ||##green|int## ##peru|n##; _
+n = 3;|| ||
+||[[# compound-assignment]][#compound-assignment-note compound assignment] _
+##gray|//arithmetic, bit//##||+= -= *= /= %= _
+@@<<= >>= @@&= ^= |=|| ||+= -= *= /= %= _
+@@<<= >>= @@&= ^= |= _
+ _
+##gray|@@>>=@@ //is arithmetic right shift,// @@>>>=@@ //is logical right shift//##|| ||
+||[[# incr-decr]][#incr-decr-note increment and decrement]||##green|int## ##peru|n## = 1; _
+##green|int## ##peru|one## = n++; _
+##green|int## ##peru|three## = ++n; _
+##green|int## ##peru|two## = @@--@@n;|| ||##green|int## ##peru|n## = 1; _
+##green|int## ##peru|one## = n++; _
+##green|int## ##peru|three## = ++n; _
+##green|int## ##peru|two## = @@--@@n;|| ||
+||[[# addr]][#addr-note address]||##green|int## ##peru|i##(3); _
+##green|int##* ##peru|ip## = &i;|| ||##gray|//none//##|| ||
+||[[# dereference]][#dereference-note dereference]||##green|int## ##peru|i##(3); _
+##green|int##* ##peru|ip## = &i; _
+##green|int## ##peru|i2## = *ip + 1;|| ||##gray|//none//##|| ||
+||[[# type-size]][#type-size-note type size]||cout @@<<@@ ##purple|sizeof##(##green|int##) @@<<@@ endl; _
+cout @@<<@@ ##purple|sizeof##(##green|int##*) @@<<@@ endl;|| ||##gray|//none//##|| ||
+||[[# addr-arith]][#addr-arith-note address arithmetic]|| || ||##gray|//none//##|| ||
+||[[# unique-ptr]][#unique-ptr-note unique pointer]|| || ||##gray|//none//##|| ||
+||[[# ref-cnt-ptr]][#ref-cnt-ptr-note reference count pointer]|| || ||##gray|//none//##|| ||
+||[[# weak-ptr]][#weak-ptr-note weak pointer]|| || ||##gray|//none//##|| ||
+||[[# allocate-heap]][#allocate-heap-note allocate heap]||##green|int##* ##peru|ip## = ##purple|new## ##green|int##;||#include <stdlib.h> _
+ _
+int *ip = malloc(sizeof(int));||##gray|@@//@@ Primitive types are stack allocated. _
+@@//@@ Use a wrapper class to store on the _
+@@//@@ heap:## _
+##green|Integer## ##peru|i## = ##purple|new## ##green|Integer##(0);||object i = 0;||
+||[[# uninitialized-heap]][#uninitialized-heap-note uninitialized heap]||##gray|//Memory allocated by the// new //operator is zero-initialized.//##|| ||##gray|//zero-initialized//##|| ||
+||[[# free-heap]][#free-heap-note free heap]||##purple|delete## i;||#include <stdlib.h> _
+ _
+free(ip);||##gray|//garbage collected//##||##gray|//garbage collected//##||
+||[[# null]][#null-note null] _
+@<&nbsp;>@||##teal|NULL##||NULL||##teal|null##||null||
+||[[# coalesce]][#coalesce-note coalesce] _
+@<&nbsp;>@||##green|string## ##peru|s1## = s2 @@||@@ ##maroon|"was null"##;||NSString *s1 = s2 @@||@@ @"was null";||##green|String## ##peru|s1## = s2 == ##teal|null## ? ##maroon|"was null"## : s2;||string s1  = s2 ?? "was null";||
+||||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
+||~ ||~ c++||~ objective c||~ java||~ c#||
+||[[# boolean-type]][#boolean-type-note boolean type] _
+@<&nbsp;>@||##green|bool##||BOOL||##green|boolean##||bool||
+||[[# true-false]][#true-false-note true and false] _
+@<&nbsp;>@||##teal|true false##||YES NO||##teal|true false##||true false||
+||[[# falsehoods]][#falsehoods-note falsehoods] _
+@<&nbsp;>@||##teal|false## 0 0.0 ##teal|NULL##||0 0.0 NULL||##teal|false##||false||
+||[[# logical-op]][#logical-op-note logical operators]||&& @@||@@ ! _
+##purple|and or not##||&& @@||@@ !||&& @@||@@ !||&& @@||@@ !||
+||[[# relational-op]][#relational-op-note relational operators]||== != < > <= >=||== != < > <= >=||== != < > <= >=||== != < > <= >=||
+||[[# int-type]][#int-type-note integer type]||##green|signed char## ##peru|n1##;@<&nbsp;&nbsp;>@@<&nbsp;>@##gray|@@//@@ 1+ bytes## _
+##green|short int## ##peru|n2##;@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@##gray|@@//@@ 2+ bytes## _
+##green|int## ##peru|n3##;@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@##gray|@@//@@ 2+ bytes## _
+##green|long int## ##peru|n4##;@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|@@//@@ 4+ bytes## _
+##green|long long int## ##peru|n5##;@<&nbsp;>@##gray|@@//@@ 4+ bytes##||signed char ##gray|//1+ byte//## _
+short int ##gray|//2+ bytes//## _
+int ##gray|//2+ bytes//## _
+long int ##gray|//4+ bytes//## _
+long long int ##gray|//4+ bytes//##||##green|byte## ##peru|n1##;@<&nbsp;&nbsp;>@##gray|@@//@@ 1 byte## _
+##green|short## ##peru|n2##; ##gray|@@//@@ 2 bytes## _
+##green|int## ##peru|n3##;@<&nbsp;&nbsp;&nbsp;>@##gray|@@//@@ 4 bytes## _
+##green|long## ##peru|n4##;@<&nbsp;&nbsp;>@##gray|@@//@@ 8 bytes##||sbyte ##gray|//1 byte//## _
+short ##gray|//2 bytes//## _
+int ##gray|//4 bytes//## _
+long ##gray|//8 bytes//##||
+||[[# unsigned-type]][#unsigned-type-note unsigned type]||##green|unsigned char## ##peru|n1##;@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|@@//@@ 1+ bytes## _
+##green|unsigned short int## ##peru|n2##;@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@##gray|@@//@@ 2+ bytes## _
+##green|unsigned int## ##peru|n3##;@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@##gray|@@//@@ 2+ bytes## _
+##green|unsigned long int## ##peru|n4##;@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|@@//@@ 4+ bytes## _
+##green|unsigned long long int## ##peru|n5##; ##gray|@@//@@ 4+ bytes##||unsigned char: 8+ _
+unsigned short int ##gray|//2 bytes+//## _
+unsigned int ##gray|//2 bytes+//## _
+unsigned long int ##gray|//4+ bytes//## _
+unsigned long long int ##gray|//4+ bytes//##||##green|char## ##peru|n1##;@<&nbsp;&nbsp;>@##gray|@@//@@2 bytes##||byte ##gray|//1 byte//## _
+ushort ##gray|//2 bytes//## _
+uint ##gray|//4 bytes//## _
+ulong ##gray|//8 bytes//##||
+||[[# float-type]][#float-type-note float type]||##green|float## ##peru|x1##;@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@##gray|@@//@@ 4 bytes## _
+##green|double## ##peru|x2##;@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|@@//@@ 8 bytes## _
+##green|long double## ##peru|x3##; ##gray|@@//@@ 16 bytes##||float _
+double _
+long double||##green|float## ##peru|x1##;@<&nbsp;&nbsp;>@##gray|@@//@@ 4 bytes## _
+##green|double## ##peru|x2##; ##gray|@@//@@ 8 bytes##||float ##gray|//4 bytes//## _
+double ##gray|//8 bytes//##||
+||[[# fixed-type]][#fixed-type-note fixed type] _
+@<&nbsp;>@||##gray|//none//##||##gray|//none//##||##gray|//none//##||decimal ##gray|//12 bytes//##||
+||[[# arithmetic-op]][#arithmetic-op-note arithmetic operators]||+ - * / %||+ - * / %||+ - * / %||+ - * / %||
+||[[# int-div]][#int-div-note integer division]||##gray|@@//@@ evaluates to 2:## _
+7 / 3||##gray|@@//@@ evaluates to 2:## _
+7 / 3||##gray|@@//@@ evaluates to 2:## _
+7 / 3||##gray|@@//@@ evaluates to 2:## _
+7 / 3||
+||[[# int-div-zero]][#int-div-zero-note integer division by zero]||##gray|//process sent a//## SIGFPE ##gray|//signal//##||##gray|//process sent a//## SIGFPE ##gray|//signal//##||##gray|//throws//## java.lang.ArithmeticException||##gray|//Syntax error if divisor is a constant.  Otherwise throws//## System.DivideByZeroException||
+||[[# float-div]][#float-div-note float division] _
+@<&nbsp;>@||7 / ##purple|static_cast##<##green|float##>(3)||7 / (float)3||7 / (##green|float##)3||7 / (float)3||
+||[[# float-div-zero]][#float-div-zero-note float division by zero] _
+##gray|//dividend is positive, zero, negative//##||inf _
+nan _
+-inf _
+ _
+##gray|//There are no portably defined literals or constants for the above values.//##||inf _
+nan _
+-inf _
+ _
+##gray|//there are no portably defined literals or constants for the above values.//##||##teal|Float##.POSITIVE_INFINITY _
+##teal|Float##.NaN _
+##teal|Float##.NEGATIVE_INFINITY _
+ _
+##gray|//constants with same names defined in//## ##teal|Double##||float.PositiveInfinity _
+float.NaN _
+float.NegativeInfinity _
+ _
+##gray|//constants with same names defined in//## double||
+||[[# power]][#power-note power]||##darkslateblue|#include## ##maroon|<cmath>##  _
+ _
+##green|double## ##peru|x## = pow(2.0, 32.0);||#include <math.h>  _
+ _
+pow(2.0, 32.0);||Math.pow(2.0, 32.0);||System.Math.Pow(2.0, 32.0);||
+||[[# sqrt]][#sqrt-note sqrt]||##darkslateblue|#include## ##maroon|<cmath>## _
+ _
+##green|double## ##peru|x## = sqrt(2);||#include <math.h> _
+ _
+sqrt(2)||Math.sqrt(2)||Math.Sqrt(2)||
+||[[# sqrt-negative-one]][#sqrt-negative-one-note sqrt -1]||nan||nan||##teal|Double##.NaN||double.NaN||
+||[[# transcendental-func]][#transcendental-func-note transcendental functions]||##darkslateblue|#include## ##maroon|<cmath>## _
+ _
+exp log log2 log10 _
+sin cos tan _
+asin acos atan _
+atan2||#include <math.h> _
+ _
+exp log log2 log10 _
+sin cos tan _
+asin acos atan _
+atan2||Math.exp Math.log ##gray|//none//## Math.log10 _
+Math.sin Math.cos Math.tan _
+Math.asin Math.acos Math.atan _
+Math.atan2||using System; _
+@<&nbsp;>@ _
+Math.Exp Math.Log ##gray|//none//## Math.Log10 _
+Math.Sin Math.Cos Math.Tan _
+Math.Asin Math.Acos Math.Atan _
+Math.Atan2||
+||[[# transcendental-const]][#transcendental-const-note transcendental constants]||##darkslateblue|#include## ##maroon|<cmath>## _
+ _
+##green|double## ##peru|e## = M_E; _
+##green|double ## ##peru|pi## = M_PI;||#include <math.h> _
+ _
+M_E _
+M_PI||##teal|Math##.E _
+##teal|Math##.PI||System.Math.E _
+System.Math.PI||
+||[[# float-truncation]][#float-truncation-note float truncation] _
+##gray|//towards zero, to nearest integer, towards -∞, towards ∞//##||##darkslateblue|#include## ##maroon|<cmath>## _
+@<&nbsp;>@ _
+##green|double## ##peru|x## = 3.7; _
+@<&nbsp;>@ _
+##green|long## ##peru|trnc## = ##purple|static_cast##<##green|long##>(x); _
+##green|long## ##peru|rnd## = round(x); _
+##green|long## ##peru|flr## = floorl(x); _
+##green|long## ##peru|cl## = ceill(x);||#include <math.h> _
+@<&nbsp;>@ _
+double d = 3.77; _
+@<&nbsp;>@ _
+long trnc = (long)d; _
+long rnd = round(d); _
+long flr = floorl(d); _
+long cl = ceill(d);||(##green|long##)3.77 _
+Math.round(3.77) _
+(##green|long##)Math.floor(3.77) _
+(##green|long##)Math.ceil(3.77)||using System; _
+@<&nbsp;>@ _
+(long)3.77 _
+Math.Round(3.77) _
+Math.Floor(3.77) _
+Math.Ceiling(3.77)||
+||[[# absolute-val]][#absolute-val-note absolute value]||##darkslateblue|#include## ##maroon|<cmath>##@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|@@//@@ fabs()## _
+##darkslateblue|#include## ##maroon|<cstdlib>##@<&nbsp;&nbsp;>@##gray|@@//@@ abs()## _
+ _
+##green|int## ##peru|n## = -7; _
+##green|int## ##peru|absn## = abs(n); _
+ _
+##green|double## ##peru|x## = -7.77; _
+##green|double## ##peru|absx## = fabs(x);||#include <stdlib.h>@<&nbsp;&nbsp;>@##gray|@@//@@ abs()## _
+#include <math.h>@<&nbsp;&nbsp;>@##gray|@@//@@ fabs()## _
+ _
+int i = -7; _
+int ai = abs(i); _
+ _
+float x = -7.77; _
+float ax = fabs(x);||Math.abs(-7) _
+Math.abs(-7.77)||System.Math.Abs(-7) _
+System.Math.Abs(-7.77)||
+||[[# int-overflow]][#int-overflow-note integer overflow]||##gray|//modular arithmetic _
+ _
+The C standard does not define behavior for signed integers, however.//##||##gray|//modular arithmetic _
+ _
+The C standard does not define behavior for signed integers, however.//##||##gray|//modular arithmetic//##||##gray|//modular arithmetic//##||
+||[[# float-overflow]][#float-overflow-note float overflow]||##gray|//no behavior defined by standard; many implementations return// inf##||##gray|//no behavior defined by standard; many implementations return// inf##||##teal|Float##.POSITIVE_INFINITY||float.PositiveInfinity||
+||[[# float-limits]][#float-limits-note float limits] _
+##gray|//largest finite float, smallest positive float//##||##darkslateblue|#include## ##maroon|<cfloat>## _
+ _
+FLT_MAX _
+FLT_MIN _
+DBL_MAX _
+DBL_MIN _
+LDBL_MAX _
+LDBL_MIN|| ||##teal|Float##.MAX_VALUE _
+##teal|Float##.MIN_VALUE _
+##teal|Double##.MAX_VALUE _
+##teal|Double##.MIN_VALUE||float.MaxValue _
+float.Epsilon _
+double.MaxValue _
+double.Epsilon||
+||[[# complex-construction]][#complex-construction-note complex construction]||##darkslateblue|#include## ##maroon|<complex>## _
+ _
+##green|complex##<##green|double##> ##peru|z##(1.0, 2.0);|| || || ||
+||[[# complex-decomposition]][#complex-decomposition-note complex decomposition] _
+##gray|//real and imaginary component, argument, absolute value, conjugate//##||z.real() _
+z.imag() _
+arg(z) _
+abs(z) _
+conj(z)|| || || ||
+||[[# random-num]][#random-num-note random number] _
+##gray|//uniform integer, uniform float, normal float//##||##darkslateblue|#include## ##maroon|<random>## _
+ _
+##green|default_random_engine## ##peru|dre##; _
+ _
+##green|uniform_int_distribution##<##green|int##> ##peru|uid##(0, 99); _
+##green|uniform_real_distribution##<##green|double##> _
+@<&nbsp;&nbsp;>@##peru|urd##(0.0, 1.0); _
+##green|normal_distribution##<##green|double##> ##peru|nd##(0.0, 1.0); _
+ _
+##green|int## ##peru|i## = uid(dre); _
+##green|double## ##peru|x## = urd(dre); _
+##green|double## ##peru|y## = nd(dre);||#include <stdlib.h> _
+ _
+##gray|@@//@@ assuming 100 much smaller than RAND_MAX:## _
+int i = rand() % 100; _
+double x = drand48(); _
+##gray|//none//##||##purple|import## ##teal|java##.##teal|util##.##green|Random##; _
+ _
+##green|Random## ##peru|rnd## = ##purple|new## ##green|Random##(); _
+ _
+##green|int## ##peru|i## = rnd.nextInt(100); _
+##green|double## ##peru|x## = rnd.nextDouble(); _
+##green|double## ##peru|y## = rnd.nextGaussian();||using System; _
+ _
+Random rnd = new Random(); _
+ _
+int i = rnd.Next(); _
+double x = rnd.NextDouble(); _
+##gray|//none//##||
+||[[# random-seed]][#random-seed-note random seed]||##darkslateblue|#include## ##maroon|<random>## _
+ _
+##gray|@@//@@ set seed in constructor:## _
+##green|default_random_engine## ##peru|dre##(17); _
+ _
+##gray|@@//@@ set seed of existing engine:## _
+dre.seed(17);|| ||##purple|import## ##teal|java##.##teal|util##.##green|Random##; _
+ _
+##green|Random## ##peru|rnd## = ##purple|new## ##green|Random##(); _
+ _
+rnd.setSeed(17); _
+ _
+##gray|@@//@@ seed can also be passed to constructor##||using System; _
+ _
+Random rnd = new Random(17);||
+||[[# bit-op]][#bit-op-note bit operators]||@@ << >> & | ^ ~ @@ _
+@<&nbsp;>@##purple|bitand bitor compl## _
+ _
+##gray|@@>>@@ //is arithmetic right shift on signed integers and logical right shift on unsigned integers//##||@@ << >> & | ^ ~ @@||@@ << >> & | ^ ~ @@ _
+ _
+##gray|@@>>@@ //is arithmetic right shift, @@>>>@@ is logical right shift//##||@@ << >> & | ^ ~ @@||
+||[[# binary-octal-hex-literals]][#binary-octal-hex-literals-note binary, octal, and hex literals]||0b0101010 _
+052 _
+0x2a|| ||##gray|//none in Java 1.6//## _
+052 _
+0x2a||##gray|//none//## _
+052 _
+0x2a||
+||[[# radix]][#radix-note radix] _
+##gray|//convert integer to and from string with radix//##|| || ||Integer.toString(42, 7) _
+Integer.parseInt(##maroon|"60"##, 7)|| ||
+||||||||||~ [[# strings]][#strings-note strings]||
+||~ ||~ c++||~ objective c||~ java||~ c#||
+||[[# str-type]][#str-type-note string type] _
+@<&nbsp;>@||##green|string## ##peru|s##(##maroon|"lorem ipsum"##); _
+ _
+##gray|@@//@@ convert to C string:## _
+##purple|const## ##green|char##* ##peru|s2## = s.c_str();||NSString* s = @"lorem ipsum"; _
+ _
+##gray|@@//@@ convert to C string:## _
+const char* s2 = [s UTF8String];||java.lang.String||string||
+||[[# str-literal]][#str-literal-note string literal] _
+@<&nbsp;>@||##gray|@@//@@ const char*:## _
+##maroon|"don't say \"no\""##||@"don't say \"no""||"don't say\"no\""||"don't say \"no\""||
+||[[# newline-literal]][#newline-literal-note newline in literal]||##gray|//Newlines in string literals are ignored.//##||##gray|//string literals can extend over multiple lines, but the newlines do not appear in the resulting string//##||##gray|//no//##||##gray|//string literals can extend over multiple lines, but the newlines do not appear in the resulting string//##||
+||[[# str-literal-escape]][#str-literal-escape-note literal escapes] _
+@<&nbsp;>@||\a \b \f \n \r \t \v _
+\\ \" \' _
+\x##gray|//hh//## \##gray|//o//## \##gray|//oo//## \##gray|//ooo//##||\a \b \f \n \r \t \v _
+\\ \" \' _
+\x##gray|//hh//## \##gray|//o//## \##gray|//oo//## \##gray|//ooo//##||\b \f \n \r \t _
+\\ \" \' _
+\u##gray|//hhhh//## \##gray|//o//## \##gray|//oo//## \##gray|//ooo//##||\a \b \f \n \r \t \v _
+\\ \" \' _
+\x##gray|//hh//## \x##gray|//hhhh//## \##gray|//o//## \##gray|//oo//## \##gray|//ooo//##||
+||[[# allocate-str]][#allocate-str-note allocate string]||##green|string##* ##peru|s## = ##purple|new## ##green|string##(##maroon|"hello"##);||NSString *s = @"hello";||String s = "hello"; _
+String t = new String(s);||string s = "hello"; _
+string t = string.Copy(s);||
+||[[# mutable-str]][#mutable-str-note are strings mutable?]||##green|string## ##peru|s##(##maroon|"bar"##); _
+s[2] = ##maroon|'z'##;|| ||##gray|String //objects are immutable.//## _
+ _
+##gray|StringBuffer //has// append(), delete(), deleteCharAt(), insert(), replace(), setCharAt().##|| ||
+||[[# copy-str]][#copy-str-note copy string]||##green|string## ##peru|s##(##maroon|"bar"##); _
+ _
+##gray|@@//@@ use assignment or copy constructor:## _
+##green|string## ##peru|s2## = s; _
+##green|string## ##peru|s3##(s); _
+ _
+##gray|@@//@@ s contains "baz";## _
+##gray|@@//@@  s2 and s3 contain "bar":## _
+s[2] = ##maroon|'z'##;|| ||String s = "bar"; _
+StringBuffer sb = new StringBuffer(s); _
+sb.setCharAt(2, 'z'); _
+##gray|@@//@@ s contains "bar"; s2 contains "baz":## _
+String s2 = sb.toString();|| ||
+||[[# fmt-str]][#fmt-str-note format string]||##darkslateblue|#include## ##maroon|<sstream>## _
+ _
+##green|ostringstream## ##peru|oss##; _
+oss @@<<@@ ##maroon|"Spain: "## @@<<@@ 7; _
+##green|string## ##peru|s##(oss.str());||[NSString stringWithFormat:@"%@: %d", @"Spain", 7]||String.format("%s: %d", "Spain", 7)||string.Format("{0}: {1}", "Spain", 7)||
+||[[# compare-str]][#compare-str-note compare strings]||##green|string## ##peru|s1##(##maroon|"hello"##); _
+##green|string## ##peru|s2##(##maroon|"world"##); _
+ _
+##gray|@@//@@ negative if s1 lexically before s2; _
+@@//@@ zero if s1 and s2 are equal:## _
+##green|int## ##peru|result1## = s1.compare(s2); _
+ _
+##green|bool## ##peru|result2## = s1 == s2;||[@"hello" compare:@"hello"]||"hello".compareTo("world")||"hello".CompareTo("world")||
+||[[# str-concat]][#str-concat-note concatenate] _
+##gray|//and append//##||##green|string## ##peru|s##(##maroon|"hello"##); _
+##green|string## ##peru|s2## = s + ##maroon|" world"##; _
+s += ##maroon|" world"##;||NSString *s1 = @"hello"; _
+NSString *s2 = @" world"; _
+NSString *s3 = [s1 stringByAppendingString:s2];||"hello" + " world"||"hello" + " world"||
+||[[# str-replicate]][#str-replicate-note replicate] _
+@<&nbsp;>@||##green|string## ##peru|hbar##(80, ##maroon|'-'##);|| ||import java.util.Arrays; _
+ _
+char[] a = new char[80]; _
+Arrays.fill(a, '-'); _
+String s = new String(a);|| ||
+||[[# translate-case]][#translate-case-note translate case]||##darkslateblue|#include## ##maroon|<algorithm>## _
+ _
+##green|string## ##peru|s##(##maroon|"foo"##); _
+ _
+##gray|@@//@@ in place:## _
+transform(s.begin(), s.end(), _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@s.begin(), ::toupper); _
+transform(s.begin(), s.end(), _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@s.begin(), ::tolower); _
+ _
+##gray|@@//@@ non-destructive:## _
+##green|string## ##peru|s2##; _
+s2.resize(s.size(); _
+transform(s.begin(), s.end(), _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@s2.begin(), ::toupper);||[@"HELLO" lowercaseString]||"hello".toUpperCase() _
+"HELLO".toLowerCase()||"hello".ToUpper() _
+HELLO".ToLower()||
+||[[# trim]][#trim-note trim]||##darkslateblue|#include## ##maroon|<algorithm>## _
+ _
+##green|string## ##peru|s##(##maroon|" hello "##); _
+##gray|@@//@@ trim in place on left:## _
+s.erase( _
+@<&nbsp;&nbsp;>@s.begin(), _
+@<&nbsp;&nbsp;>@find_if( _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@s.begin(), _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@s.end(), _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@not1(ptr_fun<##green|int##, ##green|int##>(isspace)) _
+@<&nbsp;&nbsp;>@) _
+); _
+ _
+##gray|@@//@@ trim in place on right:## _
+s.erase( _
+@<&nbsp;&nbsp;>@find_if( _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@s.rbegin(), _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@s.rend(), _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@not1(ptr_fun<##green|int##, ##green|int##>(isspace)) _
+@<&nbsp;&nbsp;>@).base(), _
+@<&nbsp;&nbsp;>@s.end() _
+);||[@" hello " stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]]||" hello ".trim()||"  hello ".Trim()||
+||[[# pad]][#pad-note pad] _
+##gray|//on right, on left//##||##darkslateblue|#include## ##maroon|<iomanip>## _
+##darkslateblue|#include## ##maroon|<sstream>## _
+ _
+##green|string## ##peru|s##(##maroon|"hello"##); _
+##green|string## ##peru|rpad##(s); _
+rpad += string(10 - s.length(), ##maroon|' '##); _
+ _
+##green|ostringstream## ##peru|oss##; _
+oss @@<<@@ setw(10) @@<<@@ s; _
+##green|string## ##peru|lpad##(oss.str());||[@"hello" stringByPaddingToLength:10 withString:@" " startingAtIndex:0]|| || ||
+||[[# num-to-str]][#num-to-str-note number to string]|| || ||Integer.toString(14) _
+Long.toString(14) _
+Double.toString(14.7)||14.ToString() _
+14.7.ToString()||
+||[[# str-to-num]][#str-to-num-note string to number]||##darkslateblue|#include## ##maroon|<sstream>## _
+ _
+##green|stringstream## ##peru|ss##(##maroon|"7 14.3 12"##); _
+##green|int## ##peru|n1##; _
+##green|double## ##peru|x##; _
+##green|long## ##peru|n2##; _
+ _
+ss @@>>@@ n1 @@>>@@ x @@>>@@ n2;||[@"14" integerValue] _
+[@"14" longLongvalue] _
+[@"14.7" floatValue] _
+[@"14.7" doubleValue]||Byte.parseByte("14") _
+Short.parseShort("14") _
+Integer.parseInt("14") _
+Long.parseLong("14") _
+Float.parseFloat("14.7") _
+Double.parseDouble("14.7")||byte.Parse("14") _
+short.Parse("14") _
+int.Parse("14") _
+long.Parse("14") _
+float.Parse("14") _
+double.Parse("14") _
+decimal.Parse("14")||
+||[[# join]][#join-note join] _
+@<&nbsp;>@|| || || ||System.String.Join(", ", names)||
+||[[# split]][#split-note split]|| ||[@"Bob Ned Amy" componentsSeparatedByString:@" "]||"Bob Ned Amy".split(" ")||string[] names = "Bob Ned Amy".Split(' ');||
+||[[# serialize]][#serialize-note serialize]|| || || || ||
+||[[# str-length]][#str-length-note string length] _
+@<&nbsp;>@||##green|string## ##peru|s##(##maroon|"hello"##); _
+##green|size_t## ##peru|len## = s.length();||[s length]||s.length()||s.Length||
+||[[# index-substr]][#index-substr-note index of substring] _
+@<&nbsp;>@||string(##maroon|"hello"##).find(##maroon|"ll"##)||[@"hello" rangeOfString:@"ll"].location||"hello".indexOf("ll")||"hello".IndexOf("ll")||
+||[[# extract-substr]][#extract-substr-note extract substring]||string(##maroon|"hello"##).substr(2, 2)||[@"hello" substringWithRange:NSMakeRange(2, 2)]||"hello".substring(2,4)||"hello".Substring(2, 2)||
+||[[# char-type]][#char-type-note character type]||##green|char## _
+##green|wchar_t##|| ||##green|char## _
+##green|Character##|| ||
+||[[# char-literal]][#char-literal-note character literal]||##green|char## ##peru|n## = ##maroon|'X'##;|| ||char n = 'X';|| ||
+||[[# test-char]][#test-char-note test character] _
+##gray|//letter, digit, whitespace, uppercase letter, lowercase letter//##||##gray|@@//@@ functions have this signature: _
+@@//@@ _
+@@//@@ @<&nbsp;&nbsp;>@int (*)(int): _
+@@//@@## _
+isalpha _
+isdigit _
+isspace _
+isupper _
+islower|| || || ||
+||||||||||~ [[# regexes]][#regexes-note regular expressions]||
+||~ ||~ c++||~ objective c||~ java||~ c#||
+||[[# regex-type]][#regex-type-note regex type]||##green|regex## _
+##green|wregex##|| || || ||
+||[[# char-class-abbrev]][#char-class-abbrev-note character class abbreviations]||. \d \D \s \S \w \W|| || || ||
+||[[# regex-anchors]][#regex-anchors-note anchors]||^ $ \b \B|| || || ||
+||[[# regex-lookahead]][#regex-lookahead-note lookahead] _
+##gray|//positive, negative//##||(?=##gray|//subpattern//##) _
+(?!##gray|//subpattern//##)|| || || ||
+||[[# regex-test]][#regex-test-note match test]||#include <regex> _
+ _
+regex rx(".*ll.*"); _
+bool match = regex_match("hello", rx);||NSPredicate *pred = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", @".*ll.*"]; _
+BOOL is_match = [pred evaluateWithObject:@"hello"];||boolean isMatch = "hello".matches(".*ll.*");||using System.Text.RegularExpressions; _
+Regex regex = new Regex("ll"); _
+bool isMatch = regex.IsMatch("hello");||
+||[[# case-insensitive-regex]][#case-insensitive-regex-note case insensitive match test]||#include <regex> _
+ _
+regex rx("lorem", icase); _
+bool match = regex_match("Lorem", rx);|| || || ||
+||[[# regex-modifiers]][#regex-modifiers-note modifiers]|| || || || ||
+||[#regex-substitute substitution]|| || ||String s1 = "hello".replace("ll","LL"); _
+String s2 = "hello".replaceAll("l","L");||using System.Text.RegularExpressions; _
+Regex r1 = new Regex("ll"); _
+String s1 = r1.Replace("hello", "LL", 1); _
+Regex r2 = new Regex("l"); _
+String s2 = r2.Replace("hello", "L");||
+||[[# match-prematch-postmatch]][#match-prematch-postmatch-note match, prematch, postmatch]|| || || || ||
+||[[# group-capture]][#group-capture-note group capture]|| || || || ||
+||||||||||~ [[# dates-time]][#dates-time-note dates and time]||
+||~ ||~ c++||~ objective c||~ java||~ c#||
+||[[# date-time-type]][#date-time-type-note date and time type] _
+@<&nbsp;>@|| || ||java.util.Date||System.DateTime||
+||[[# current-date-time]][#current-date-time-note current date and time]|| || ||import java.util.Date; _
+ _
+long millis = System.currentTimeMillis(); _
+Date dt = new Date(millis);||DateTime dt = DateTime.Now();||
+||[[# unix-epoch]][#unix-epoch-note to unix epoch, from unix epoch]|| || ||long epoch = dt.getTime() / 1000; _
+ _
+Date dt2 = new Date(epoch * 1000);||long hundredM = 100 * 1000 * 1000; _
+long sec = dt.ToFileTimeUtc() / hundredM; _
+long epoch = sec - 1164444480; _
+ _
+long ft = (epoch + 1164444480) * hundredM; _
+Date dt2 = DateTime.FromFiltTimeUtc(ft);||
+||[[# date-time-to-str]][#date-time-to-str-note date and time to string]|| || ||dt.toString()|| ||
+||[[# format-date]][#format-date-note format date]|| || ||String s = "yyyy-MM-dd HH:mm:ss"; _
+DateFormat fmt = new SimpleDateFormat(s); _
+String s2 = fmt.format(dt);||String s = "yyyy-MM-dd HH:mm:ss"); _
+String s2 = dt.ToString(s);||
+||[[# parse-date]][#parse-date-note parse date]|| || ||String s = "2011-05-03 17:00:00"; _
+Date dt2 = fmt.parse(s);||CultureInfo enUS = _
+@<&nbsp;&nbsp;>@new CultureInfo("en-US"); _
+ _
+DateTime dt2 = DateTime.ParseExact( _
+@<&nbsp;&nbsp;>@"2011-05-03 17:00:00", _
+@<&nbsp;&nbsp;>@"yyyy-MM-dd HH:mm:ss", _
+@<&nbsp;&nbsp;>@enUS);||
+||[[# date-subtraction]][#date-subtraction-note date subtraction]|| || ||##gray|//difference in milliseconds as a long://## _
+dt2.getTime() - dt.getTime()|| ||
+||[[# add-duration]][#add-duration-note add duration]|| || ||long day_ms = 24 * 3600 * 1000; _
+Date dt = new Date(dt.getTime() + day_ms));|| ||
+||[[# date-parts]][#date-parts-note date parts]|| || || || ||
+||[[# time-parts]][#time-parts-note time parts]|| || || || ||
+||||||||||~ [[# fixed-length-arrays]][#fixed-length-arrays-note fixed-length arrays]||
+||~ ||~ c++||~ objective c||~ java||~ c#||
+||[[# fixed-len-array-stack]][#fixed-len-array-stack-note declare on stack]||##green|int## ##peru|a##[10];||int a[10];||##gray|//arrays must be allocated on heap//##||##gray|//arrays must be allocated on heap//##||
+||[[# fixed-len-array-heap]][#fixed-len-array-heap-note declare on heap]||##green|int##* ##peru|a## = ##purple|new## ##green|int##[10];||#include <stdlib.h> _
+int *a = calloc(10, sizeof(int));||int[] a = new int[10];||int[] a = new int[10];||
+||[[# free-fixed-len-array-heap]][#free-fixed-len-array-heap-note free heap]||##purple|delete##[] a;||#include <stdlib.h> _
+free(a);||##gray|//garbage collected//##||##gray|//garbage collected//##||
+||[[# fixed-len-array-init-list]][#fixed-len-array-init-list-note initialization list]||##green|int## ##peru|a##[] = {1, 2, 3};|| NSArray *a = [NSArray arrayWithObjects:@"hello", @"goodbye", nil];||int[] a = {1,2,3};||int[] a = {1,2,3};||
+||[[# fixed-len-array-size]][#fixed-len-array-size-note size]||##green|int## ##peru|a##[10]; _
+ _
+##gray|@@//@@ stack arrays only:## _
+##green|size_t## ##peru|len## = ##purple|sizeof##(a) / ##purple|sizeof##(a[0]);||[a count]||a.length||a.Length||
+||[[# fixed-len-array-lookup]][#fixed-len-array-lookup-note lookup] _
+@<&nbsp;>@||##green|int## ##peru|first## = a[0];||[a objectAtIndex:0]||a[0]||a[0]||
+||[[# fixed-len-array-update]][#fixed-len-array-update-note update] _
+@<&nbsp;>@||a[0] = 7;|| || || ||
+||[[# fixed-len-array-out-of-bounds]][#fixed-len-array-out-of-bounds-note out-of-bounds]||##gray|//No defined behavior//## _
+ _
+##gray|//An out-of-bounds lookup may return the value the memory location contains; an out-of-bounds update may cause memory corruption.  The system may detect an invalid address and send the process a// SIGSEGV.##||##gray|//raises//## NSRangeException exception||ArrayIndexOutOfBoundsException||IndexOutOfRangeException||
+||[[# copy-fixed-len-array]][#copy-fixed-len-array-note copy]||##purple|const## ##green|size_t## ##peru|LEN##(4); _
+##green|int## ##peru|src##[LEN] = {3, 2, 4, 1}; _
+##green|int## ##peru|dest##[LEN]; _
+ _
+##gray|@@//@@ 3rd arg is number of bytes to copy:## _
+memcpy(dest, src, LEN * ##purple|sizeof##(src[0]));|| || || ||
+||[[# fixed-len-array-as-func-arg]][#fixed-len-array-as-func-arg-note as function argument]||##green|void## _
+##mediumblue|reverse##(##green|int##* ##peru|a##, ##green|size_t## ##peru|len##) { _
+@<&nbsp;&nbsp;>@##purple|for## (##green|int## ##peru|i## = 0; i < len / 2; ++i) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##green|int## ##peru|tmp## = a[len - i - 1]; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@a[len - i - 1] = a[i]; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@a[i] = tmp; _
+@<&nbsp;&nbsp;>@} _
+} _
+ _
+##purple|const## ##green|size_t## ##peru|LEN##(4); _
+##green|int## ##peru|a##[LEN] = {3, 2, 4, 1}; _
+reverse(a, LEN);|| || || ||
+||[[# iterate-over-fixed-len-array]][#iterate-over-fixed-len-array-note iterate]||##purple|const## ##green|size_t## ##peru|LEN##(4); _
+##green|int## ##peru|a##[LEN] = {3, 2, 4, 1}; _
+ _
+##purple|for## (##green|int## ##peru|i## = 0; i < LEN; ++i) { _
+@<&nbsp;&nbsp;>@cout @@<<@@ ##maroon|"value at "## @@<<@@ i @@<<@@ ##maroon|" is "## _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@@@<<@@ a[i] @@<<@@ endl; _
+}||NSEnumerator *i = [a objectEnumerator]; _
+id o; _
+while (o = [i nextObject]) { _
+@<&nbsp;&nbsp;>@##gray|//do something with o//## _
+}||for (String name : names) {||foreach (string name in names) {||
+||[[# sort-fixed-len-array]][#sort-fixed-len-array-note sort]||##darkslateblue|#include## ##maroon|<cstdlib>## _
+ _
+##green|int## _
+##mediumblue|comp##(##purple|const## ##green|void##* ##peruap##, ##purple|const## ##green|void##* ##peru|bp##) { _
+@<&nbsp;&nbsp;>@##green|int## ##peru|a## = *(##green|int##*)ap; _
+@<&nbsp;&nbsp;>@##green|int## ##peru|b## = *(##green|int##*)bp; _
+@<&nbsp;&nbsp;>@##purple|return## a < b ? -1 : (a == b ? 0 : 1); _
+} _
+  _
+##purple|const## ##green|size_t## ##peru|LEN##(4); _
+##green|int## ##peru|a##[LEN] = {3, 2, 1, 4}; _
+ _
+qsort(a, LEN, ##purple|sizeof##(a[0]), &comp);|| || || ||
+||||||||||~ [[# resizable-arrays]][#resizable-arrays-note resizable arrays]||
+||~ ||~ c++||~ objective c||~ java||~ c#||
+||[[# decl-resizable-array]][#decl-resizable-array-note declare]||##darkslateblue|#include## ##maroon|<vector>## _
+ _
+##green|vector## <##green|int##> ##peru|a##;||NSMutableArray *a = [NSMutableArray arrayWithCapacity:10];||java.util.Vector<String> vec = new java.util.Vector<String>();||using System.Collections.Generic; _
+List<string> l = new List<string>();||
+||[[# resizable-array-init-list]][#resizable-array-init-list-note initialization list]||##darkslateblue|#include## ##maroon|<vector>## _
+ _
+##green|vector##<##green|int##> ##peru|a## = {1, 2, 3}; _
+##green|vector##<##green|int##> ##peru|a2##({7, 8, 9});|| || || ||
+||[[# resizable-array-size]][#resizable-array-size-note size] _
+@<&nbsp;>@||##green|size_t## ##peru|len## = a.size();||[a count]||vec.size()||l.Count||
+||[[# resizable-array-capacity]][#resizable-array-capacity-note capacity] _
+##gray|//get, increase//##||##green|size_t## ##peru|cap## = a.capacity(); _
+ _
+##gray|@@//@@ will not decrease capacity:## _
+a.reserve(10);|| || || ||
+||[[# resizable-array-empty-test]][#resizable-array-empty-test-note empty test] _
+##gray|//and clear//##||##green|bool## ##peru|is_empty## = a.empty(); _
+a.clear();|| || || ||
+||[[# resizable-array-lookup]][#resizable-array-lookup-note lookup]||##green|int## ##peru|n## = a[0]; _
+ _
+##gray|@@//@@ can raise out_of_range:## _
+##green|int## ##peru|n2## = a.at(0);||[a objectAtIndex:0]||vec.elementAt(0)||l[0]||
+||[[# resizable-array-update]][#resizable-array-update-note update] _
+@<&nbsp;>@||a[2] = 4;|| || || ||
+||[[# resizable-array-out-of-bounds]][#resizable-array-out-of-bounds-note out-of-bounds behavior]||##gray|//using [] with out-of-bounds index has undefined behavior//##||##gray|//raises//## NSRangeException||##gray|//throws//## ArrayIndexOutOfBoundsException||##gray|//throws//## System.ArgumentOutOfRangeException||
+||[[# resizable-array-elem-index]][#resizable-array-elem-index-note element index]||##darkslateblue|#include## ##maroon|<vector>## _
+ _
+##green|vector##<##green|int##> ##peru|a##({6, 7, 8, 9}); _
+ _
+##purple|auto## ##peru|iter## = find(a.cbegin(), a.cend(), 8); _
+##purple|if## (iter != a.cend()) { _
+@<&nbsp;&nbsp;>@##green|size_t## ##peru|pos## = *iter; _
+}|| || || ||
+||[[# slice-resizable-array]][#slice-resizable-array-note slice]||##darkslateblue|#include## ##maroon|<vector>## _
+ _
+##green|vector##<##green|int##> ##peru|a##({6, 7, 8, 9}); _
+ _
+##gray|@@//@@ a2 contains {7, 8}:## _
+##green|vector##<##green|int##> ##peru|a2##(a.cbegin() + 1, _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@a.cbegin() + 3);|| || || ||
+||[[# slice-resizable-array-to-end]][#slice-resizable-array-to-end-note slice to end]||##darkslateblue|#include## ##maroon|<vector>## _
+ _
+##green|vector##<##green|int##> ##peru|a##({6, 7, 8, 9}); _
+ _
+##gray|@@//@@ a2 contains {7, 8, 9}:## _
+##green|vector##<##green|int##> ##peru|a2##(a.cbegin() + 1, a.cend());|| || || ||
+||[[# resizable-array-back]][#resizable-array-back-note manipulate back]||##darkslateblue|#include## ##maroon|<vector>## _
+ _
+##green|vector##<##green|int##> ##peru|a##({6, 7, 8}); _
+ _
+a.push_back(9); _
+##green|int## ##peru|elem## = a.pop_back();||[a addObject:@"hello"]; _
+[a removeLastObject];||vec.add("hello"); _
+##gray|//or//## _
+vec.add(vec.size(), "hello"); _
+vec.removeElementAt(vec.size()-1);||l.Add("hello"); _
+l.RemoveAt(l.Count - 1);||
+||[[# resizable-array-front]][#resizable-array-front-note manipulate front]||##darkslateblue|#include## ##maroon|<vector>## _
+ _
+##green|vector##<##green|int##> ##peru|a##({6, 7, 8}); _
+ _
+##gray|@@//@@ slower than manipulating back:## _
+a.insert(a.cbegin(), 5); _
+##green|int## ##peru|elem## = a[0]; _
+a.erase(a.cbegin());|| || || ||
+||[[# concat-resizable-array]][#concat-resizable-array-note concatenate]||##darkslateblue|#include## ##maroon|<vector>## _
+ _
+##green|vector##<##green|int##> ##peru|a1##({1, 2, 3}); _
+##green|vector##<##green|int##> ##peru|a2##({4, 5, 6}); _
+ _
+ a1.insert(a1.cend(), _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@a2.cbegin(), _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@a2.cend());|| || || ||
+||[[# replicate-resizable-array-elem]][#replicate-resizable-array-elem-note replicate element]||##darkslateblue|#include## ##maroon|<vector>## _
+ _
+##gray|@@//@@ array of 10 zeros:## _
+##green|vector##<##green|int##> ##peru|a##(10, 0);|| || || ||
+||[[# copy-resizable-array]][#copy-resizable-array-note copy]||##darkslateblue|#include## ##maroon|<vector>## _
+ _
+##green|vector##<##green|int##> ##peru|a##({1, 2, 3}); _
+##gray|@@//@@ copy constructor:## _
+##green|vector##<##green|int##> ##peru|a2##(a); _
+##green|vector##<##green|int##> ##peru|a3##; _
+ _
+##gray|@@//@@ assignment performs copy:## _
+a3 = a;|| || || ||
+||[[# resizable-array-as-func-arg]][#resizable-array-as-func-arg-note array as function argument]||##gray|//use reference or pointer to avoid copying array//##|| || || ||
+||[[# iterate-over-resizable-array]][#iterate-over-resizable-array-note iterate]||##darkslateblue|#include## ##maroon|<vector>## _
+ _
+##green|int## ##peru|sum##(0); _
+##green|vector##<##green|int##> ##peru|a##({1, 2, 3}); _
+ _
+##purple|for## (##purple|const auto##& ##peru|n##: a) { _
+@<&nbsp;&nbsp;>@sum += n; _
+}||NSEnumerator *i = [a objectEnumerator]; _
+id o; _
+while (o = [i nextObject]) { _
+@<&nbsp;&nbsp;>@##gray|//do something with o//## _
+}||for ( String s : vec ) { _
+@<&nbsp;&nbsp;>@##gray|//do something with s//## _
+}||foreach ( string s in l ) { _
+@<&nbsp;&nbsp;>@##gray|//do something with s//## _
+}||
+||indexed iteration||#include <vector> _
+ _
+vector<int> a({6, 7, 8}); _
+ _
+for (auto iter = a.cbegin(); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@iter != a.cend(); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@++iter) { _
+ _
+@<&nbsp;&nbsp;>@cout @@<<@@ "value at " @@<<@@ iter - a.cbegin() _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@@@<<@@ " is " @@<<@@ *iter @@<<@@ endl; _
+}|| || || ||
+||reverse||#include <vector> _
+ _
+vector<int> a({1, 2, 3}); _
+vector<int> a2(a.crbegin(), a.crend());|| || || ||
+||sort||#include <vector> _
+ _
+vector<int> a({3, 2, 4, 1}); _
+sort(a.begin(), a.end());|| || || ||
+||dedupe||#include <set> _
+#include <vector> _
+ _
+vector<int> a({1, 1, 2, 2, 3}); _
+set<int> tmp(a.cbegin(), a.cend()); _
+##gray|@@//@@ often unnecessary since sets provide _
+@@//@@ many of the same methods  as vectors:## _
+vector<int> a2(tmp.cbegin(), tmp.cend());|| || || ||
+||membership||#include <vector> _
+ _
+vector<int> a({1, 2, 3}); _
+if (find(a.cbegin(), a.cend(), 7) != _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@a.cend()) { _
+ _
+@<&nbsp;&nbsp;>@cout @@<<@@ "contains 7" @@<<@@ endl; _
+}|| || || ||
+||intersection|| || || || ||
+||union|| || || || || ||
+||relative complement, symmetric difference|| || || || ||
+||map|| || || || ||
+||filter|| || || || ||
+||reduce|| || || || ||
+||min and max element|| || || || ||
+||universal and existential tests|| || || || ||
+||shuffle and sample|| || || || ||
+||zip|| || || || ||
+||||||||||~ [[# tuples]][#tuples-note tuples]||
+||~ ||~ c++||~ objective c||~ java||~ c#||
+||declare pair||pair <string, int> p1; _
+pair <string, int> p2("foo", 7); _
+auto p3 = make_pair("foo", 7);|| || ||using System.Collections.Generic; _
+KeyValuePair<string,int> pr = new KeyValuePair<string,int>("hello",5); _
+System.Console.WriteLine("{0} {1}", pr.Key, pr.Value);||
+||lookup pair elements||auto p = make_pair("foo", 7); _
+cout @@<<@@ "first: " @@<<@@ p.first @@<<@@ endl; _
+cout @@<<@@ "second: " @@<<@@ p.second @@<<@@ endl;|| || || ||
+||update pair elements||p.first = "bar"; _
+p.second = 8;|| || || ||
+||declare tuple||tuple<string, int, float> tup1; _
+tuple<string, int, float> tup2( _
+@<&nbsp;&nbsp;>@"foo", 1, 3.7); _
+auto tup3 = make_tuple("foo", 1, 3.7);|| || || ||
+||lookup tuple elements|| || || || ||
+||update tuple elements|| || || || ||
+||tuple size|| || || || ||
+||create references for tuple elements|| || || || ||
+||||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
+||~ ||~ c++||~ objective c||~ java||~ c#||
+||[#map map declaration]||#include <map> _
+map<string, int> m;||NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:10];||java.util.TreeMap<String, Integer> m = new java.util.TreeMap<String, Integer>();||using System.Collections.Generic; _
+Dictionary<string, int> dict = new Dictionary<string, int>();||
+||[#map-access map access]||m["hello"] = 5; _
+cout @@<<@@ m["hello"] @@<<@@ endl;||[dict setObject:@"5" forKey:@"hello"]; _
+[dict objectForKey:@"hello"]||m.put("hello", 5); _
+m.get("hello")||dict.Add("hello", 5); _
+dict["hello"]||
+||[#map-size map size] _
+@<&nbsp;>@||m.size()||[dict count]||m.size()||dict.Count||
+||[#map-remove map remove element]||m.erase(m.find("hello"));||[dict removeObjectForKey:@"hello"];||m.remove("hello");||dict.Remove("hello");||
+||[#map-element-not-found map element not found result]||##gray|//returns element created by default constructor of value type//##||NULL||null||##gray|//throws//## KeyNotFoundException _
+##gray|//in//  System.Collections.Generic##||
+||[#map-iterator map iterate]||map<string,int>::iterator mi; _
+for (mi = m.begin(); mi != m.end(); ++mi) { _
+@<&nbsp;&nbsp;>@printf("%s %d", mi->first, mi->second) _
+}||NSEnumerator *i = [dict keyEnumerator]; _
+id key; _
+while ((key = [i nextObject])) { _
+@<&nbsp;&nbsp;>@##gray|//do something with key//## _
+}||for ( java.util.Map.Entry<String, Integer> e : m.entrySet() ) { _
+@<&nbsp;&nbsp;>@##gray|//use e.getKey() or e.getValue()//## _
+}||foreach ( KeyValuePair<string,int> e in dict) { _
+@<&nbsp;&nbsp;>@##gray|//use e.Key and e.Value//## _
+}||
+||||||||||~ [[# functions]][#functions-note functions]||
+||~ ||~ c++||~ objective c||~ java||~ c#||
+||[[# decl-func]][#decl-func-note declare function]||##gray|@@//@@ parameter names are optional:## _
+##green|int## _
+##mediumblue|add##(##green|int## ##peru|m##, ##green|int## ##peru|n##);|| || || ||
+||[[# def-func]][#def-func-note define function]||##green|int## _
+##mediumblue|add##(##green|int## ##peru|m##, ##green|int## ##peru|n##) { _
+@<&nbsp;&nbsp;>@##purple|return## m + n; _
+}|| || || ||
+||[[# invoke-func]][#invoke-func-note invoke function] _
+@<&nbsp;>@||##green|int## ##peru|sum## = add(3, 7);|| || || ||
+||[[# def-static-class-method]][#def-static-class-method-note define static class method]||##gray|@@//@@ Ops.h:## _
+##purple|class## ##green|Ops## { _
+##purple|public##: _
+@<&nbsp;&nbsp;>@##purple|static## ##green|int## ##mediumblue|add##(##green|int## ##peru|m##, ##green|int## ##peru|n##); _
+}; _
+ _
+##gray|@@//@@ Ops.cpp:## _
+##green|int## ##teal|Ops##::##mediumblue|add##(##green|int## ##peru|m##, ##green|int## ##peru|n##) { _
+@<&nbsp;&nbsp;>@##purple|return## m + n; _
+}|| || || ||
+||[[# invoke-static-class-method]][#invoke-static-class-method-note invoke static class method]||##green|int## ##peru|sum## = ##teal|Ops##::add(3, 7); _
+ _
+##gray|@@//@@ class name not needed _
+@@//@@ inside class namespace:## _
+##green|int## ##peru|sum## = add(3, 7);|| || || ||
+||[[# overload-func]][#overload-func-note overload function]||##green|int## ##mediumblue|add##(##green|int## ##peru|m##, ##green|int## ##peru|n##) { _
+@<&nbsp;&nbsp;>@##purple|return## m + n; _
+} _
+ _
+##green|float## ##mediumblue|add##(##green|float## ##peru|x##, ##green|float## ##peru|y##) { _
+@<&nbsp;&nbsp;>@##purple|return## x + y; _
+}||##gray|//method overloading only//##||##gray|//yes//##||##gray|//yes//##||
+||[[# default-arg]][#default-arg-note default argument]||##darkslateblue|#include## ##maroon|<cmath>## _
+ _
+##green|float## _
+##mediumblue|logarithm##(##green|float## ##peru|x##, ##green|float## ##peru|base## = 10.0) { _
+@<&nbsp;&nbsp;>@##purple|return## log(x) / log(base); _
+}||##gray|//none//##||##gray|//use method overloading//##||##gray|//use method overloading//##||
+||[[# variable-num-arg]][#variable-num-arg-note variable number of arguments]|| ||##gray|//use C; use method overloading for finite arities//##||public static String concat(String first, String... rest) { _
+@<&nbsp;&nbsp;>@StringBuilder sb = new StringBuilder(first); _
+@<&nbsp;&nbsp;>@for (String arg: rest) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@sb.append(arg); _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@return sb.toString(); _
+} _
+String s = Concat.concat("Hello", ", ", "World", "!");||public static string concat(params string[] args) { _
+@<&nbsp;&nbsp;>@return System.String.Join("",args); _
+} _
+string s = Concat.concat("Hello", ", ", "World", "!")||
+||[[# named-param]][#named-param-note named parameters]||##gray|//none//##||+(float)weight: (float) w height: (float) h { _
+@<&nbsp;&nbsp;>@return (w * 703) / (h * h); _
+} _
++(float)height: (float) h weight: (float) w { _
+@<&nbsp;&nbsp;>@return [BMI weight: w height: h]; _
+} _
+[BMI weight:155 height:70]; _
+[BMI  height:70 weight:155];||##gray|//none//##||##gray|//added in C# 4.0://## _
+static int BMI(int weight, int height) { _
+@<&nbsp;&nbsp;>@return (weight * 703) / (height * height); _
+} _
+BMI(weight: 123, height: 64); _
+BMI(height: 64, weight: 123);||
+||[[# pass-by-val]][#pass-by-val-note pass by value]||##green|int## ##mediumblue|add1##(##green|int## ##peru|n##) { _
+@<&nbsp;&nbsp;>@##purple|return## ++n; _
+} _
+ _
+##green|int## ##peru|i##(7); _
+ _
+##gray|@@//@@ set i2 to 8 w/o modifying i:## _
+##green|int## ##peru|i2## = ##mediumblue|add1##(i);||void use_integer(int i) { _
+@<&nbsp;&nbsp;>@##gray|//function body//## _
+} _
+int i = 7; _
+use_integer(i);||##gray|//primitive types are always passed by value//##||##gray|//primitive types are always passed by value//##||
+||[[# pass-by-ref]][#pass-by-ref-note pass by reference]||##green|int## ##mediumblue|add1##(##peru|int##& ##peru|n##) { _
+@<&nbsp;&nbsp;>@##purple|return## ++n; _
+} _
+ _
+##green|int## ##peru|i##(7); _
+ _
+##gray|@@//@@ set i and i2 to 8:## _
+##green|int## ##peru|i2## = add1(i);||##gray|//none//##||##gray|//objects and arrays are always passed by reference//##||##gray|//objects and arrays are always passed by reference//## _
+ _
+##gray|//also out parameter//##||
+||[[# pass-by-addr]][#pass-by-addr-note pass by address]||##green|int## ##mediumblue|add1##(##green|int##* ##peru|n##) { _
+@<&nbsp;&nbsp;>@##purple|return## ++*n; _
+} _
+ _
+##green|int## ##peru|i##(7); _
+ _
+##gray|@@//@@ set i and i2 to 8:## _
+##green|int## ##peru|i2## = add1(&i);||void use_iptr(int *i) { _
+@<&nbsp;&nbsp;>@##gray|//function body//## _
+} _
+int i = 7; _
+use_iptr(&i);||##gray|//none//##||##gray|//none//##||
+||[[# retval]][#retval-note return value] _
+@<&nbsp;>@||##gray|//argument of// return; //type must be declared//##|| || || ||
+||[[# no-retval]][#no-retval-note no return value]||##green|void## _
+##mediumblue|message##(##purple|const## ##green|string##& ##peru|msg##) { _
+@<&nbsp;&nbsp;>@cout @@<<@@ msg @@<<@@ endl; _
+}|| || || ||
+||[[# recursive-func]][#recursive-func-note recursive function]||##green|int## _
+##mediumblue|factorial##(##green|int## ##peru|n##) { _
+@<&nbsp;&nbsp;>@##purple|if## (n <= 1) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|return## 1; _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@##purple|return## n * factorial(n - 1); _
+}|| || || ||
+||[[# anonymous-func]][#anonymous-func-note anonymous function]||##purple|auto## ##peru|add## = [](##green|int## ##peru|n##, ##green|int## ##peru|m##) { _
+@<&nbsp;&nbsp;>@##purple|return## n + m; _
+};|| || || ||
+||[[# invoke-anonymous-func]][#invoke-anonymous-func-note invoke anonymous function]||##gray|@@//@@on variable holding anon. function:## _
+##green|int## ##peru|sum## = add(3, 7); _
+ _
+##gray|@@//@@ on lambda expression:## _
+##green|int## ##peru|sum2## = [](##green|int## ##peru|n##, ##green|int## ##peru|m##) { _
+@<&nbsp;&nbsp;>@##purple|return## n + m; _
+}(3, 7);|| || || ||
+||[[# closure]][#closure-note closure]|| || || || ||
+||[[# func-private-state]][#func-private-state-note function with private state]||##green|int## _
+##mediumblue|counter##() { _
+@<&nbsp;&nbsp;>@##purple|static## ##green|int## ##peru|i## = 0; _
+@<&nbsp;&nbsp;>@##purple|return## ++i; _
+}|| || || ||
+||[[# func-as-val]][#func-as-val-note function as value]|| || || || ||
+||[[# overload-op]][#overload-op-note overload operator]||Rational Rational::operator+(Rational& o) { _
+@<&nbsp;&nbsp;>@return Rational(this->num * o.denom + o.num * this->denom, this->denom * o.denom); _
+}||##gray|//none//##||##gray|//none//##||public static Rational operator+(Rational a, Rational b) { _
+@<&nbsp;&nbsp;>@return new Rational(a.num*b.denom + b.num *a.denom,a.denom*b.denom); _
+}||
+||||||||||~ [[# execution-control]][#execution-control-note execution control]||
+||~ ||~ c++||~ objective c||~ java||~ c#||
+||[[# if]][#if-note if]||##green|int## ##peru|signum##; _
+ _
+##purple|if## (n > 0) { _
+@<&nbsp;&nbsp;>@signum = 1; _
+} _
+##purple|else if## (n == 0) { _
+@<&nbsp;&nbsp;>@signum = 0; _
+} _
+##purple|else## { _
+@<&nbsp;&nbsp;>@signum = -1; _
+}||if (i>0) { _
+@<&nbsp;&nbsp;>@signum = 1; _
+} else if (i==0) { _
+@<&nbsp;&nbsp;>@signum = 0; _
+} else { _
+@<&nbsp;&nbsp;>@signum = -1; _
+}||if (i>0) { _
+@<&nbsp;&nbsp;>@signum = 1; _
+} else if (i==0) { _
+@<&nbsp;&nbsp;>@signum = 0; _
+} else { _
+@<&nbsp;&nbsp;>@signum = -1; _
+}||if (i>0) { _
+@<&nbsp;&nbsp;>@signum = 1; _
+} else if (i==0) { _
+@<&nbsp;&nbsp;>@signum = 0; _
+} else { _
+@<&nbsp;&nbsp;>@signum = -1; _
+}||
+||[[# dangling-else]][#dangling-else-note dangling else]||##purple|if## (n == 0) _
+@<&nbsp;&nbsp;>@##purple|if## (m == 0) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@cout @@<<@@ ##maroon|"n and m are zero"## @@<<@@ endl; _
+@<&nbsp;&nbsp;>@##purple|else## _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@cout @@<<@@ ##maroon|"n is zero; m isn't"## @@<<@@ endl;|| || || ||
+||[[# switch]][#switch-note switch]||##purple|const## ##green|int## ##peru|INVALID_BINARY_DIGIT##(-1); _
+##green|int## ##peru|bin_digit##; _
+ _
+##purple|switch##(n) { _
+##purple|case## 0: _
+##purple|case## 1: _
+@<&nbsp;&nbsp;>@bin_digit = n; _
+@<&nbsp;&nbsp;>@##purple|break##; _
+##purple|default##: _
+@<&nbsp;&nbsp;>@bin_digit = INVALID_BINARY_DIGIT; _
+@<&nbsp;&nbsp;>@##purple|break##; _
+}||switch(i) { _
+case 0: _
+@<&nbsp;&nbsp;>@0; _
+@<&nbsp;&nbsp;>@break; _
+case 1: _
+@<&nbsp;&nbsp;>@1; _
+@<&nbsp;&nbsp;>@break; _
+default: _
+@<&nbsp;&nbsp;>@-1; _
+@<&nbsp;&nbsp;>@break; _
+}||switch(i) { _
+case 0: _
+@<&nbsp;&nbsp;>@0; _
+@<&nbsp;&nbsp;>@break; _
+case 1: _
+@<&nbsp;&nbsp;>@1; _
+@<&nbsp;&nbsp;>@break; _
+default: _
+@<&nbsp;&nbsp;>@-1; _
+@<&nbsp;&nbsp;>@break; _
+}||switch(i) { _
+case 0: _
+@<&nbsp;&nbsp;>@0; _
+@<&nbsp;&nbsp;>@break; _
+case 1: _
+@<&nbsp;&nbsp;>@1; _
+@<&nbsp;&nbsp;>@break; _
+default: _
+@<&nbsp;&nbsp;>@-1; _
+@<&nbsp;&nbsp;>@break; _
+}||
+||[[# while]][#while-note while]||##green|int## ##peru|i##(1), ##peru|fact##(1), ##peru|n##(10); _
+ _
+##purple|while## (i < n) { _
+@<&nbsp;&nbsp;>@fact *= i; _
+@<&nbsp;&nbsp;>@++i; _
+}||int i = 0; _
+while (i<10) { _
+##gray|...## _
+@<&nbsp;&nbsp;>@i++; _
+}||int i = 0; _
+while (i<10) { _
+##gray|...## _
+@<&nbsp;&nbsp;>@i++; _
+}||int i = 0; _
+while (i<10) { _
+##gray|...## _
+@<&nbsp;&nbsp;>@i++; _
+}||
+||[[# for]][#for-note for]||##green|int## ##peru|fact##, ##peru|n##(10); _
+ _
+##purple|for## (##green|int## ##peru|i## = 1, fact = 1; i <= n; ++i) { _
+@<&nbsp;&nbsp;>@fact *= i; _
+}||int i, n; _
+for (i=1,n=1; i<=10; i++) { _
+@<&nbsp;&nbsp;>@n *= i; _
+}||int n = 1; _
+for (int i=1; i<=10; i++) { _
+@<&nbsp;&nbsp;>@n *= i; _
+}||int i, n; _
+for (i=1,n=1; i<=10; i++) { _
+@<&nbsp;&nbsp;>@n *= i; _
+}||
+||[[# break]][#break-note break]||##green|int## ##peru|data##[4] = {3, 2, 0, 1}; _
+##green|int## ##peru|i##; _
+##green|bool## ##peru|has_zero##(##teal|false##); _
+ _
+##purple|for## (i = 0; i < 4; ++i) { _
+@<&nbsp;&nbsp;>@##purple|if## (data[i] == 0) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@has_zero = ##teal|true##; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|break##; _
+@<&nbsp;&nbsp;>@} _
+}|| || || ||
+||[[# break-nested-loops]][#break-nested-loops-note break out of nested loops]||##green|int## ##peru|data##[2][2] = @@{{@@3, 2}, {0, 1@@}}@@; _
+##green|int## ##peru|i##, ##peru|j##; _
+##green|bool## ##peru|has_zero##(##teal|false##); _
+ _
+##purple|for## (i = 0; i < 2; ++i) { _
+@<&nbsp;&nbsp;>@##purple|for## (j = 0; j < 2; ++j) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|if## (data[i][j] == 0) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@has_zero = ##teal|true##; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|goto## ##teal|end_of_loops##; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@} _
+} _
+:end_of_loops|| || || ||
+||[[# continue]][#continue-note continue]||##green|int## ##peru|a##[4] = {3, 2, 0, 1}; _
+ _
+##purple|for## (##green|int## ##peru|i## = 0; i < 4; ++i) { _
+@<&nbsp;&nbsp;>@##purple|if## (a[i] == 0) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|continue##; _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@cout @@<<@@ 1.0 / a[i] @@<<@@ endl; _
+}|| || || ||
+||[[# goto]][#goto-note goto]|| || || || ||
+||||||||||~ [[# exceptions]][#exceptions-note exceptions]||
+||~ ||~ c++||~ objective c||~ java||~ c#||
+||[[# base-exc]][#base-exc-note base exception]||##gray|//Any type can be thrown. _
+ _
+All exceptions thrown by the language or the standard library derive from// exception, //defined in// <exception>.##|| ||##gray|//Any type which implements the interface// java.lang.Throwable //can be thrown. _
+ _
+Exceptions thrown by the language and the standard libraries derive from// java.lang.Errror //or// java.lang.Exception.##|| ||
+||[[# predefined-exc]][#predefined-exc-note predefined exceptions]||##darkslateblue|#include## ##maroon|<exception>## _
+##darkslateblue|#include## ##maroon|<stdexcept>## _
+##darkslateblue|#include## ##maroon|<system_error>## _
+##darkslateblue|#include## ##maroon|<typeinfo>## _
+ _
+exception _
+@<&nbsp;&nbsp;>@logic_error _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@domain_error _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@invalid_argument _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@length_error _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@out_of_range _
+@<&nbsp;&nbsp;>@runtime_error _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@system_error _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@ios_base::failure _
+@<&nbsp;&nbsp;>@bad_cast _
+@<&nbsp;&nbsp;>@bad_exception _
+@<&nbsp;&nbsp;>@bad_alloc|| ||##gray|//java.lang.Throwable//## _
+@<&nbsp;&nbsp;>@java.lang.Error _
+@<&nbsp;&nbsp;>@java.lang.Exception _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@java.lang.IOException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@java.lang.RuntimeException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@java.lang.ArithmeticException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@java.lang.IllegalArgumentException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@java.lang.IndexOutOfBoundsException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@java.lang.NullPointerException|| ||
+||[[# raise-exc]][#raise-exc-note raise exception]||##darkslateblue|#include## ##maroon|<cstdlib>## _
+##darkslateblue|#include## ##maroon|<stdexcept>## _
+ _
+##green|void## ##mediumblue|risky##() { _
+@<&nbsp;&nbsp;>@##purple|if## (rand() < 10) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|throw## runtime_error(##maroon|"bam!"##); _
+@<&nbsp;&nbsp;>@} _
+}||NSException *exc = [NSException exceptionWithName:@"error" reason:@"failed" userInfo:nil]; _
+@throw exc;||throw new Exception("failed");||throw new System.Exception("failed");||
+||[[# handle-exc]][#handle-exc-note handle exception]||##darkslateblue|#include## ##maroon|<stdexcept>## _
+ _
+##purple|try## { _
+@<&nbsp;&nbsp;>@risky(); _
+} _
+##purple|catch## (##purple|const## ##green|exception## &##peru|e##) { _
+@<&nbsp;&nbsp;>@cout @@<<@@ e.what() @@<<@@ endl; _
+}||@try { _
+@<&nbsp;&nbsp;>@[NSException raise:@"error" format:@"failed"]; _
+} @catch (NSException *e) { _
+@<&nbsp;&nbsp;>@printf([[e reason] UTF8String]); _
+}||try { _
+@<&nbsp;&nbsp;>@throw new Exception("failed"); _
+} _
+catch (Exception e) { _
+@<&nbsp;&nbsp;>@System.out.println(e.getMessage()); _
+}||try { _
+@<&nbsp;&nbsp;>@throw new System.Exception("failed"); _
+} catch (System.Exception e) { _
+@<&nbsp;&nbsp;>@System.Console.WriteLine(e.Message); _
+}||
+||[[# def-exc]][#def-exc-note define exception]||##darkslateblue|#include## ##maroon|<stdexcept>## _
+ _
+##purple|class## ##green|Bam## : ##purple|public## ##green|runtime_error## { _
+##purple|public##: _
+@<&nbsp;&nbsp;>@Bam() : runtime_error(##maroon|"bam!"##) {} _
+}; _
+ _
+##purple|throw## ##green|Bam##();|| || || ||
+||[[# re-raise-exc]][#re-raise-exc-note re-raise exception]||##darkslateblue|#include## ##maroon|<stdexcept>## _
+ _
+##purple|try## { _
+@<&nbsp;&nbsp;>@risky(); _
+} _
+##purple|catch## (##purple|const## ##green|exception##& ##peru|e##) { _
+@<&nbsp;&nbsp;>@cout @@<<@@ ##maroon|"an error occurred@@...@@"## @@<<@@ endl; _
+@<&nbsp;&nbsp;>@##purple|throw##; _
+}|| || || ||
+||[[# catch-all-handler]][#catch-all-handler-note  catch-all handler]||##darkslateblue|#include## ##maroon|<stdexcept>## _
+ _
+##purple|try## { _
+@<&nbsp;&nbsp;>@risky(); _
+} _
+##purple|catch## (@@...@@) { _
+@<&nbsp;&nbsp;>@cout @@<<@@ ##maroon|"an error was ignored"## _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@@@<<@@ endl; _
+}|| || || ||
+||[[# multiple-handlers]][#multiple-handlers-note multiple handlers]||##darkslateblue|#include## ##maroon|<stdexcept>## _
+ _
+##purple|try## { _
+@<&nbsp;&nbsp;>@risky(); _
+} _
+##purple|catch## (##purple|const## ##green|system_error## &##peru|e##) { _
+@<&nbsp;&nbsp;>@cout @@<<@@ ##maroon|"system error: "## @@<<@@ e.name() _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@@@<<@@ endl; _
+} _
+##purple|catch## (##purple|const## ##green|exception## &##peru|e##) { _
+@<&nbsp;&nbsp;>@cout @@<@@< ##maroon|"exception: "## @@<<@@ e.what() _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@@@<<@@ endl; _
+} _
+##purple|catch## (@@...@@) { _
+@<&nbsp;&nbsp;>@cout @@<<@@ ##maroon|"unknown error"## @@<<@@ endl; _
+}|| || || ||
+||[[# uncaught-exc]][#uncaught-exc-note uncaught exception behavior]||##gray|//calls// terminate() //which by default calls// abort()##|| || || ||
+||[[# error-msg]][#error-msg-note error message]||##darkslateblue|#include## ##maroon|<exception>## _
+ _
+##purple|try## { _
+@<&nbsp;&nbsp;>@risky(); _
+} _
+##purple|catch## (##purple|const## ##green|exception## &##peru|e##) { _
+@<&nbsp;&nbsp;>@##purple|const## ##green|char## *##peru|msg## = e.what(); _
+}|| || || ||
+||[[# errno]][#errno-note system call errno]||##darkslateblue|#include## ##maroon|<system_error>## _
+ _
+##purple|try## { _
+@<&nbsp;&nbsp;>@risky(); _
+} _
+##purple|catch## (##purple|const## ##green|system_error## &##peru|e##) { _
+@<&nbsp;&nbsp;>@##green|int## ##peru|err_code_val## = e.code().value(); _
+}|| || || ||
+||[[# finally-clause]][#finally-clause-note finally clause]||##gray|//none//##||@try { _
+@<&nbsp;&nbsp;>@##gray|//risky code//## _
+} @finally { _
+@<&nbsp;&nbsp;>@##gray|//perform cleanup//## _
+}||try { _
+@<&nbsp;&nbsp;>@##gray|//risky code//## _
+} finally { _
+@<&nbsp;&nbsp;>@##gray|//perform cleanup//## _
+}||try { _
+@<&nbsp;&nbsp;>@##gray|//risky code//## _
+} finally { _
+@<&nbsp;&nbsp;>@##gray|//perform cleanup//## _
+}||
+||[[# exc-specification]][#exc-specification-note exception specification]||##gray|@@//@@ Use noexcept to declare that a function _
+@@//@@ does not raise exceptions; _
+@@//@@ declaring which exceptions a function _
+@@//@@ raises is deprecated in C++11.## _
+##green|int## _
+##mediumblue|add##(##green|int## ##peru|a##, ##green|int## ##peru|b##) noexcept { _
+@<&nbsp;&nbsp;>@##purple|return## a + b; _
+}||##gray|//no//##||##gray|//yes//##||##gray|//no//##||
+||||||||||~ [[# concurrency]][#concurrency-note concurrency]||
+||~ ||~ c++||~ objective c||~ java||~ c#||
+||[[# start-thread]][#start-thread-note start thread] _
+@<&nbsp;>@|| || || || ||
+||[[# terminate-current-thread]][#terminate-current-thread-note terminate current thread]|| || || || ||
+||[[# terminate-other-thread]][#terminate-other-thread-note terminate other thread]|| || || || ||
+||[[# list-threads]][#list-threads-note list threads]|| || || || ||
+||[[# wait-on-thread]][#wait-on-thread-note wait on thread] _
+@<&nbsp;>@|| || || || ||
+||[[# lock]][#lock-note lock]|| || || || ||
+||[[# create-msg-queue]][#create-msg-queue-note create message queue]|| || || || ||
+||[[# send-msg]][#send-msg-note send message]|| || || || ||
+||[[# receive-msg]][#receive-msg-note receive message]|| || || || ||
+||||||||||~ [[# file-handles]][#file-handles-note file handles]||
+||~ ||~ c++||~ objective c||~ java||~ c#||
+||standard file handles||cin _
+cout _
+cerr _
+clog|| ||System.in _
+System.out _
+System.err|| ||
+||[[# printf]][#printf-note printf] _
+@<&nbsp;>@||cout @@<<@@ "count: " @@<<@@ 7 @@<<@@ endl;||printf("count: %d\n", 7);||System.out.printf("count: %d", 7);||System.Console.WriteLine("count: {0}", 7);||
+||[#read-file read from file]||#include <fstream> _
+string line; _
+ifstream f("/etc/passwd"); _
+if (f.is_open()) { _
+@<&nbsp;&nbsp;>@while (!f.eof()) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@getline(f, line); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|//process line//## _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@f.close(); _
+@<&nbsp;&nbsp;>@if ( 0 != f.fail() ) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|//handle error//## _
+@<&nbsp;&nbsp;>@} _
+} _
+else { _
+@<&nbsp;&nbsp;>@##gray|//handle error//## _
+}||NSError *error = nil; _
+NSString *s = [NSString stringWithContentsOfFile: @"/etc/passwd" encoding:NSUTF8StringEncoding error:&error]; _
+if ( error != nil ) { _
+@<&nbsp;&nbsp;>@##gray|//handle error//## _
+} _
+NSArray *a = [s componentsSeparatedByString:@"\n"]; _
+id line; _
+while (line = [i nextObject]) { _
+@<&nbsp;&nbsp;>@##gray|//process line//## _
+}||import java.io.BufferedReader; _
+import java.io.FileReader; _
+ _
+BufferedReader in = new BufferedReader(new FileReader("/etc/passwd")); _
+String line; _
+while ((line = in.readLine()) != null) { _
+@<&nbsp;&nbsp;>@##gray|//process line//## _
+}||using System.IO; _
+StreamReader sr = new StreamReader("/etc/passwd"); _
+string line; _
+while ((line = sr.ReadLine()) != null) { _
+@<&nbsp;&nbsp;>@##gray|//use line//## _
+}||
+||[#write-file write to file]||#include <fstream> _
+ofstream f("/tmp/test4"); _
+int i; _
+for (i = 0; i < 10; ++i) { _
+@<&nbsp;&nbsp;>@f @@<<@@ i @@<<@@ endl; _
+} _
+f.close(); _
+if (0 != f.fail()) { _
+@<&nbsp;&nbsp;>@##gray|//handle error//## _
+}|| ||import java.io.BufferedWriter; _
+import java.io.FileWriter; _
+BufferedWriter fout = new BufferedWriter(new FileWriter("/tmp/test2")); _
+int i; _
+for (i=0; i<10; i++) { _
+@<&nbsp;&nbsp;>@fout.write(String.format("%d", i)); _
+@<&nbsp;&nbsp;>@fout.newLine(); _
+} _
+fout.close();||using System.IO; _
+StreamWriter fout = new StreamWriter("/tmp/test3"); _
+int i; _
+for (i=0; i<10; i++) { _
+@<&nbsp;&nbsp;>@fout.WriteLine(i.ToString()); _
+} _
+fout.Close();||
+||||||||||~ [[# files]][#files-note files]||
+||~ ||~ c++||~ objective c||~ java||~ c#||
+||[[# file-test]][#file-test-note file exists test, file regular test]|| || ||import java.io.File; _
+ _
+File f = new File("/etc/hosts"); _
+f.exists() _
+f.isFile()||System.IO.File.Exists("/etc/hosts")||
+||[[# file-size]][#file-size-note file size]|| || ||import java.io.File; _
+ _
+File f = new File("/etc/hosts"); _
+f.length()|| ||
+||[[# readable-writable-executable]][#readable-writable-executable is file readable, writable, executable]|| || ||import java.io.File; _
+ _
+File f = new File("/etc/hosts"); _
+ _
+f.canRead() _
+f.canWrite() _
+f.canExecute()|| ||
+||[[# chmod]][#chmod-note set file permissions]|| || ||import java.io.File; _
+ _
+File f = new File("/tmp/foo"); _
+ _
+##gray|@@//@@ sets owner perms; to turn perms off _
+@@//@@ set arg to false:## _
+f.setReadable(true); _
+f.setWritable(true); _
+f.setExecutable(true); _
+ _
+##gray|@@//@@ if 2nd arg is false, perms are _
+@@//@@ for owner, group, and other:## _
+f.setReadable(true, false); _
+f.setWritable(true, false); _
+f.setExecutable(true, false);|| ||
+||[[# file-cp-rm-mv]][#file-cp-rm-mv-note copy file, remove file, rename file]|| || ||import java.io.File; _
+ _
+##gray|//??//## _
+ _
+File f2 = new File("/tmp/foo"); _
+f2.delete(); _
+ _
+File f3 = new File("/tmp/bar"); _
+f3.renameTo(new File("/tmp/bar"));|| ||
+||||||||||~ [[# file-fmt]][#file-fmt-note file formats]||
+||~ ||~ c++||~ objective c||~ java||~ c#||
+||csv|| || || || ||
+||json|| || || || ||
+||build xml|| || || || ||
+||parse xml|| || || || ||
+||parse html|| || || || ||
+||||||||||~ [[# directories]][#directories-note directories]||
+||~ ||~ c++||~ objective c||~ java||~ c#||
+||[[# build-pathname]][#build-pathname-note build pathname]|| || ||import java.io.File; _
+ _
+File root = File.listRoots()[0]; _
+File etc = new File(root, "etc"); _
+File hosts = newFile(etc, "hosts"); _
+String path = hosts.getPath();|| ||
+||[[# dirname-basename]][#dirname-basename-note dirname and basename]||##darkslateblue|#include## ##maroon|<libgen.h>## _
+ _
+##green|string## ##peru|s1## = dirname(##maroon|"/etc/hosts"##); _
+##green|string## ##peru|s2## = basename(##maroon|"/etc/hosts"##);|| ||import java.io.File; _
+ _
+File f = new File("/etc/hosts"); _
+String dirname = f.getParent(); _
+String basename = f.getName();|| ||
+||[[# absolute-pathname]][#absolute-pathname-note absolute pathname]||##darkslateblue|#include## ##maroon|<climits>## _
+##darkslateblue|#include## ##maroon|<cstdlib>## _
+ _
+##green|char## ##peru|buf##[PATH_MAX]; _
+if (realpath(##maroon|".."##, buf) == NULL) { _
+@<&nbsp;&nbsp;>@throw exception(); _
+} _
+else { _
+@<&nbsp;&nbsp;>@string path(buf); _
+}|| ||import java.io.File; _
+ _
+File f = new File("foo"); _
+String abspath = f.getAbsolutePath(); _
+ _
+##gray|@@//@@ getCanonicalPath() expands .. and .:## _
+File f2 = new File("../foo"); _
+String abspath2 = f2.getCanonicalPath(); _
+File f3 = new File("./foo"); _
+String abspath3 = f3.getCanonicalPath();|| ||
+||[[# iterate-dir]][#dir-iterate-note iterate over directory by file]|| || ||import java.io.File; _
+ _
+File dir = new File("/etc"); _
+ _
+##gray|@@//@@ iterate over names:## _
+for (String name: dir.list()) { _
+@<&nbsp;&nbsp;>@System.out.println(name); _
+} _
+ _
+##gray|@@//@@ iterate over file objects:## _
+for (File f: dir.listFiles()) { _
+@<&nbsp;&nbsp;>@System.out.println(f.getName()); _
+}|| ||
+||[[# glob]][#glob-note glob paths]|| || || || ||
+||[[# mkdir]][#mkdir-note make directory]|| || ||import java.io.File; _
+ _
+File f = new File("/tmp/foo/bar"); _
+f.mkdirs();|| ||
+||[[# recursive-cp]][#recursive-cp-note recursive copy]|| || || || ||
+||[[# rmdir]][#rmdir-note remove empty directory]|| || || || ||
+||[[# rm-rf]][#rm-rf-note remove directory and contents]|| || || || ||
+||[[# dir-test]][#dir-test-note directory test] _
+@<&nbsp;>@|| || ||import java.io.File; _
+ _
+File f = new File("/tmp"); _
+f.isDirectory()|| ||
+||[[# unused-dir]][#unused-dir-note generate unused directory name]|| || || || ||
+||[[# system-tmp-dir]][#system-tmp-dir-note system temporary file directory]|| || || || ||
+||||||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
+||~ ||~ c++||~ objective c||~ java||~ c#||
+||[#main signature of main]||int main(int argc, char@@**@@ argv) {||int main(int argc, char @@**@@argv) {||public class //Foo// { _
+@<&nbsp;&nbsp;>@public static void main(String[] args) {||public class //Foo// { _
+@<&nbsp;&nbsp;>@public static void Main(string[] args) {||
+||[#first-argument first argument] _
+@<&nbsp;>@||##gray|//pathname of executable//##||##gray|//pathname of executable//##||##gray|//first command line argument//##||##gray|//first command line argument//##||
+||[#environment-variable environment variable]||#include <stdlib.h> _
+char* home = getenv("HOME"); _
+setenv("EDITOR", "emacs", 1); _
+unsetenv("EDITOR");||NSString *home =  [[[NSProcessInfo processInfo] environment] objectForKey:@"HOME"];||String home = System.getenv("HOME");||using System.Environment; _
+string home = GetEnvironmentVariable("HOME"); _
+SetEnvironmentVariable("EDITOR", "emacs"); _
+SetEnvironmentVariable("EDITOR", null);||
+||[#iterate-environment-variable iterate through environment variables]|| ||NSEnumerator *i = [[[NSProcessInfo processInfo] environment] keyEnumerator]; _
+id key; _
+while ((key = [i nextObject])) { _
+@<&nbsp;&nbsp;>@##gray|//use NSString key//## _
+}||import java.util.Map; _
+Map<String, String> env = System.getenv(); _
+for (String name : env.keySet()) { _
+@<&nbsp;&nbsp;>@String value = env.get(name)); _
+}||using System.Collections; _
+using System.Environment; _
+IDictionary env = GetEnvironmentVariables(); _
+foreach (DictionaryEntry de in env) { _
+@<&nbsp;&nbsp;>@##gray|//use de.Key or de.Value//## _
+}||
+||||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
+||~ ||~ c++||~ objective c||~ java||~ c#||
+||[[# std-lib-name]][#std-lib-name-note standard library name]||##gray|//C++ Standard Library//##||##gray|//Foundation Framework//##||##gray|//Java API//##||##gray|//Base Class Library//##||
+||[#declare-namespace declare namespace]||namespace foo { _
+@<&nbsp;&nbsp;>@namespace bar { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@class Baz { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@static const int ANSWER = 42; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@}; _
+@<&nbsp;&nbsp;>@} _
+}|| ||package foo.bar; _
+public class Baz { _
+@<&nbsp;&nbsp;>@public static final int ANSWER = 42; _
+}||namespace foo { _
+@<&nbsp;&nbsp;>@namespace bar { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@public class Baz { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@public const int ANSWER = 42; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@}; _
+@<&nbsp;&nbsp;>@} _
+}||
+||[#namespaces-per-file multiple namespaces per file]||##gray|//yes//##|| ||##gray|//no//##||##gray|//yes//##||
+||[#namespace-directory-mapping namespaces map to directories]||##gray|//no//##|| ||##gray|//yes//##||##gray|//no//##||
+||[#import-namespace import namespace]||using namespace foo::bar; _
+cout @@<<@@ Baz::ANSWER @@<<@@ endl;|| ||import foo.bar.*; _
+System.out.println(Baz.ANSWER);||using foo.bar; _
+System.Console.WriteLine(Baz.ANSWER);||
+||[#import-part-namespace import part of namespace]||using namespace foo; _
+cout @@<<@@ bar::Baz::ANSWER @@<<@@ endl;|| ||##gray|//none//##||##gray|//none//##||
+||[#import-symbol import symbol]||using foo::bar::Baz; _
+cout @@<<@@ Baz::ANSWER @@<<@@ endl;|| ||import foo.bar.Baz; _
+System.out.println(Baz.ANSWER);||##gray|//none//##||
+||[#import-static-symbol import static symbol]||##gray|//none//##|| ||import static foo.bar.Baz.ANSWER; _
+System.out.println(ANSWER);||##gray|//none//##||
+||[#import-position import position] _
+@<&nbsp;>@||##gray|//anywhere a statement is legal//##|| ||##gray|//after package and before type definitions//##||##gray|//outside of class definitions//##||
+||[#not-imported-symbol using a symbol that hasn't been imported]||cout @@<<@@ foo::bar::Baz::ANSWER @@<<@@ endl;|| ||System.out.println(foo.bar.Baz.ANSWER);||using System.Console; _
+WriteLine(foo.bar.Baz.ANSWER);||
+||[[# app-env]][#app-env-note application environment]|| || || || ||
+||[[# multiple-installations]][#multiple-installations-note multiple installations]|| || ||##gray|//set// JAVA_HOME //environment variable to directory containing a// bin //subdirectory with// java, javac, //and other command line tools.  Put// $JAVA_HOME/bin //at front of search path.//##|| ||
+||[[# pkg-manager]][#pkg-manager-note package manager]|| || || || ||
+||||||||||~ [[# user-defined-types]][#user-defined-types-note user-defined types]||
+||~ ||~ c++||~ objective c||~ java||~ c#||
+||[[# typedef]][#typedef-note typedef]||typedef int customer_id; _
+customer_id cid = 3;||typedef int customer_id; _
+customer_id cid = 3;||##gray|//none//##||##gray|//none//##||
+||[[# enum]][#enum-note enum]||enum day_of_week { mon, tue, wed, thu, fri, sat, sun }; _
+day_of_week d = tue;||enum day_of_week { mon, tue, wed, thu, fri, sat, sun }; _
+enum day_of_week d = tue;||public enum DayOfWeek { MON, TUE, WED, THU, FRI, SAT, SUN }; _
+DayOfWeek d = DayOfWeek.TUE;||public enum DayOfWeek { MON, TUE, WED, THU, FRI, SAT, SUN }; _
+DayOfWeek d = DayOfWeek.TUE;||
+||[#struct-definition struct definition]||class MedalCount { _
+public: _
+@<&nbsp;&nbsp;>@const char *country; _
+@<&nbsp;&nbsp;>@int gold; _
+@<&nbsp;&nbsp;>@int silver; _
+@<&nbsp;&nbsp;>@int bronze; _
+};||struct medal_count { _
+@<&nbsp;&nbsp;>@const char* country; _
+@<&nbsp;&nbsp;>@int gold; _
+@<&nbsp;&nbsp;>@int silver; _
+@<&nbsp;&nbsp;>@int bronze; _
+};||public class MedalCount { _
+@<&nbsp;&nbsp;>@public String country; _
+@<&nbsp;&nbsp;>@public int gold; _
+@<&nbsp;&nbsp;>@public int silver; _
+@<&nbsp;&nbsp;>@public int bronze; _
+}||public class MedalCount { _
+@<&nbsp;&nbsp;>@public string country; _
+@<&nbsp;&nbsp;>@public int gold; _
+@<&nbsp;&nbsp;>@public int silver; _
+@<&nbsp;&nbsp;>@public int bronze; _
+}||
+||[#struct-declaration struct declaration]||MedalCount spain;||struct medal_count spain;||MedalCount spain = new MedalCount();||MedalCount spain = new MedalCount();||
+||[#struct-initialization struct initialization]||MedalCount spain = { "Spain", 3, 7, 4 };||struct medal_count spain = { "Spain", 3, 7, 4}; _
+struct medal_count france = { .gold = 8, .silver = 7, .bronze = 9, .country = "France" };||##gray|//no object literal syntax; define a constructor//##||##gray|//no object literal syntax; define a constructor//##||
+||[#struct-member-assignment struct member assignment]||spain.country = "Spain"; _
+spain.gold = 3; _
+spain.silver = 7; _
+spain.bronze = 4;||spain.country = "Spain"; _
+spain.gold = 3; _
+spain.silver = 7; _
+spain.bronze = 4;||spain.country = "Spain"; _
+spain.gold = 3; _
+spain.silver = 7; _
+spain.bronze = 4;||spain.country = "Spain"; _
+spain.gold = 3; _
+spain.silver = 7; _
+spain.bronze = 4;||
+||[#struct-member-access struct member access]||int spain_total = spain.gold + spain.silver + spain.bronze;||int spain_total = spain.gold + spain.silver + spain.bronze;||int spain_total = spain.gold + spain.silver + spain.bronze;||int spain_total = spain.gold + spain.silver + spain.bronze;||
+||||||||||~ [[# generic-types]][#generic-types-note generic types]||
+||~ ||~ c++||~ objective c||~ java||~ c#||
+||[#define-generic define generic type]||template <class A> _
+class Foo { _
+public: _
+@<&nbsp;&nbsp;>@A a; _
+@<&nbsp;&nbsp;>@Foo(A a); _
+}; _
+@<&nbsp;>@ _
+template <class A> _
+Foo<A>::Foo(A a) : a(a) { _
+}|| ||public class Foo<A> { _
+@<&nbsp;&nbsp;>@public A a; _
+@<&nbsp;&nbsp;>@public Foo(A a) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@this.a = a; _
+@<&nbsp;&nbsp;>@} _
+}||public class Foo<A> { _
+@<&nbsp;&nbsp;>@public A a; _
+@<&nbsp;&nbsp;>@public Foo(A a) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@this.a = a; _
+@<&nbsp;&nbsp;>@} _
+}||
+||[#instantiate-generic instantiate generic type]||Foo<string> f = Foo<string>("foo");|| ||Foo<String> f = new Foo<String>("foo");||Foo<string> f = new Foo<string>("foo");||
+||[#generic-function generic function]||template <class C> _
+C add(C a, C b) { _
+@<&nbsp;&nbsp;>@return a + b; _
+}|| || || ||
+||[#generic-array generic array]||template <class C> _
+class Foo { _
+public: _
+@<&nbsp;&nbsp;>@C a[10]; _
+};|| ||##gray|//not permitted.  Use// Object //as the element type for the array or use an// ArrayList.##||public class Bar<C> { _
+@<&nbsp;&nbsp;>@public C[] a; _
+@<&nbsp;&nbsp;>@public Bar(C c) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@this.a = new C[10]; _
+@<&nbsp;&nbsp;>@} _
+}||
+||[#value-parameter value parameter]||template <int N> _
+int add(int i) { _
+@<&nbsp;&nbsp;>@return N+i; _
+} _
+@<&nbsp;>@ _
+cout @@<<@@ add<7>(3) @@<<@@ endl;|| || || ||
+||[#template-parameter template parameter]|| || || || ||
+||[#template-specialization template specialization]|| || || || ||
+||[#multiple-type-parameters multiple type parameters]||template <class A, class B> _
+class Pair { _
+public: _
+@<&nbsp;&nbsp;>@A a; _
+@<&nbsp;&nbsp;>@B b; _
+@<&nbsp;&nbsp;>@Pair(A a, B b); _
+}; _
+@<&nbsp;>@ _
+template <class A, class B> _
+Pair<A, B>::Pair(A a, B b) : _
+@<&nbsp;&nbsp;>@a(a), b(b) { } _
+@<&nbsp;&nbsp;>@ _
+Pair<int, string> p = _
+@<&nbsp;&nbsp;>@Pair<int, string>(7, "foo");|| || || ||
+||[#generic-type-parameters generic type parameters]||Pair<int, Foo<string> > p = _
+@<&nbsp;&nbsp;>@Pair<int, Foo<string> >( _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@7, Foo<string>("foo"));|| || || ||
+||[#template-parameters template parameters]|| || || || ||
+||variadic template|| || || || ||
+||||||||||~ [[# objects]][#objects-note objects]||
+||~ ||~ c++||~ objective c||~ java||~ c#||
+||[[# str-equal]][#str-equal-note semantics of ==]||##gray|//value comparison//##||##gray|//object identity comparison//##||##gray|//object identity comparison//##||##gray|//value comparison//##||
+||[#define-class define class]||##gray|//Rational.hpp://## _
+class Rational { _
+@<&nbsp;>@public: _
+@<&nbsp;&nbsp;>@int num,  denom; _
+@<&nbsp;&nbsp;>@Rational(int num, int denom); _
+@<&nbsp;&nbsp;>@virtual ~Rational(); _
+@<&nbsp;&nbsp;>@Rational operator+(Rational& addend); _
+@<&nbsp;&nbsp;>@static Rational max(Rational& a, Rational& b); _
+};||##gray|//Rational.h://## _
+#import <Foundation/Foundation.h> _
+@interface Rational : NSObject { _
+@<&nbsp;&nbsp;>@int num; _
+@<&nbsp;&nbsp;>@int denom; _
+} _
+@property int num, denom; _
+-(Rational*) initWith: (int) n: (int) d; _
+-(Rational*) add: (Rational *) o; _
+@end _
+##gray|//Rational.m://## _
+#include "Rational.h" _
+@implementation Rational _
+@synthesize num, denom; _
+-(Rational*) add: (Rational*) o { _
+@<&nbsp;&nbsp;>@int sum_n = self.num * o.denom + o.num * self.denom; _
+@<&nbsp;&nbsp;>@int sum_d = self.denom * o.denom; _
+@<&nbsp;&nbsp;>@Rational* sum = [[Rational alloc] initWith: sum_n: sum_d]; _
+@<&nbsp;&nbsp;>@return sum; _
+} _
+@end||public class Rational { _
+@<&nbsp;&nbsp;>@public int num; _
+@<&nbsp;&nbsp;>@public int denom; _
+@<&nbsp;&nbsp;>@public Rational add(Rational o) throws Exception { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return new Rational(this.num*o.denom + o.num*this.denom,this.denom*o.denom); _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@public static Rational max(Rational a, Rational b) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return (a.num*b.denom > a.num*b.denom) ? a : b; _
+@<&nbsp;&nbsp;>@} _
+}||public class Rational { _
+@<&nbsp;&nbsp;>@public int num; _
+@<&nbsp;&nbsp;>@public int denom; _
+}||
+||[#class-definition-location class definition location]||##gray|//top level, class block, or function block//##||##gray|//top level//##||##gray|//top level, class block, or function block for anonymous classes//##|| ||
+||[#constructor constructor]||Rational::Rational(int n, int d) : num(n), denom(d) { _
+@<&nbsp;&nbsp;>@if (denom == 0) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@throw "zero denominator"; _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@int div = gcd(n,d); _
+@<&nbsp;&nbsp;>@num = num / div; _
+@<&nbsp;&nbsp;>@denom = denom / div; _
+}||-(Rational*) initWith: (int) n: (int) d { _
+@<&nbsp;&nbsp;>@self = [super init]; _
+@<&nbsp;&nbsp;>@if (self) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@self.num = n; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@self.denom = d; _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@return self; _
+}||public Rational(int n, int d) throws Exception { _
+@<&nbsp;&nbsp;>@if (d == 0) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@throw new Exception("zero denominator"); _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@if ( d < 0 ) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@this.num = -1 * n; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@this.denom = -1 * d; _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@else { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@this.num = n; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@this.denom = d; _
+@<&nbsp;&nbsp;>@} _
+}||public Rational(int n, int d) { _
+@<&nbsp;&nbsp;>@if (0 == d) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@throw new System.Exception("zero denominator"); _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@if (d < 0) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@this.num = -1 * n; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@this.denom = -1 * d; _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@else { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@this.num = n; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@this.denom = d; _
+@<&nbsp;&nbsp;>@} _
+}||
+||[#create-object create object]||Rational r1(7, 3); _
+Rational* r2 = new Rational(8, 5);||Rational *r = [[Rational alloc] initWith: 7: 3];||Rational r = new Rational(7,3);||Rational r = new Rational(7,3);||
+||[#destructor destructor]||Rational::~Rational() {};||-(void) dealloc { _
+@<&nbsp;&nbsp;>@[super dealloc]; _
+@<&nbsp;&nbsp;>@printf("deallocated..."); _
+}||protected void finalize() throws Throwable { _
+@<&nbsp;&nbsp;>@super.finalize(); _
+}||~Rational() { _
+@<&nbsp;&nbsp;>@##gray|//perform cleanup//## _
+}||
+||[#destroy-object destroy object] _
+@<&nbsp;>@||delete r2;||[r release];||##gray|//none//##||##gray|//none//##||
+||[#define-method define method]||int Rational::height() { _
+@<&nbsp;&nbsp;>@return (abs(num) > abs(denom)) ? abs(num) : abs(denom); _
+}||-(int) height { _
+@<&nbsp;&nbsp;>@if ( abs(self.num) > abs(self.denom) ) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return abs(self.num); _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@return abs(self.denom); _
+}||public int height() { _
+@<&nbsp;&nbsp;>@return (Math.abs(this.num) > this.denom) ? Math.abs(this.num) : this.denom; _
+}||public int Height() { _
+@<&nbsp;&nbsp;>@return (System.Math.Abs(this.num) > this.denom) ? System.Math.Abs(this.num) : this.denom; _
+}||
+||[#invoke-method invoke method]||r1.height(); _
+r2->height();||[r1 height];||r.height();||r.Height();||
+||[#define-class-method define class method]||##gray|//declare static in class definition//##||##gray|//precede definition with +://## _
++(Rational*) max: (Rational*) a: (Rational*) b { _
+@<&nbsp;&nbsp;>@if ( a.num * b.denom > b.num * a.denom ) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return a; _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@return b; _
+}||##gray|//declare static in class definition//##||##gray|//declare static in class definition//##||
+||[#invoke-class-method invoke class method]|| || || || ||
+||[#receiver name of receiver]||this||self||this||this||
+||[#access-control access control]||##gray|//access keywords define regions://## _
+class Foo { _
+@<&nbsp;&nbsp;>@int privateInt1; _
+@<&nbsp;&nbsp;>@int privateInt2; _
+public: _
+@<&nbsp;&nbsp;>@int publicInt1; _
+@<&nbsp;&nbsp;>@int publicInt2; _
+protected: _
+@<&nbsp;&nbsp;>@int protectedInt1; _
+@<&nbsp;&nbsp;>@int protectedInt2; _
+private: _
+@<&nbsp;&nbsp;>@int privateInt3; _
+@<&nbsp;&nbsp;>@int privateInt4; _
+};||##gray|//access keywords define regions://## _
+@interface Foo : NSObject  { _
+@<&nbsp;&nbsp;>@int protectedInt1; _
+@<&nbsp;&nbsp;>@int protectedInt2; _
+@public _
+@<&nbsp;&nbsp;>@int publicInt1; _
+@<&nbsp;&nbsp;>@int publicInt2; _
+@protected _
+@<&nbsp;&nbsp;>@int protectedInt3; _
+@<&nbsp;&nbsp;>@int protectedInt4; _
+@private _
+@<&nbsp;&nbsp;>@int privateInt1; _
+@<&nbsp;&nbsp;>@int privateInt2; _
+} _
+@end||##gray|//access keywords required for methods and members://## _
+public class Foo { _
+@<&nbsp;&nbsp;>@private int privateInt; _
+@<&nbsp;&nbsp;>@protected int protectedInt; _
+@<&nbsp;&nbsp;>@public int publicInt; _
+}||##gray|//access keywords available for methods and members://## _
+public class Foo { _
+@<&nbsp;&nbsp;>@private int privateInt1; _
+@<&nbsp;&nbsp;>@int privateInt2; _
+@<&nbsp;&nbsp;>@protected int protectedInt; _
+@<&nbsp;&nbsp;>@public int publicInt; _
+}||
+||[#anonymous-class anonymous class]||##gray|//possible but not useful//##||##gray|//none//##||(new Object() { public void hello() { System.out.println("hello!"); } }).hello();|| ||
+||||||||||~ [[# polymorphism]][#polymorphism-note polymorphism]||
+||~ ||~ c++||~ objective c||~ java||~ c#||
+||[#dynamic-dispatch dynamic dispatch]||##gray|//declare as virtual in base class//##||##gray|//dispatch always dynamic//##||##gray|//dispatch dynamic by default//##||##gray|//declare as virtual in base class and override in derived class//##||
+||[#static-dispatch static dispatch]||##gray|//dispatch static by default//##||##gray|//dispatch always dynamic//##||##gray|//declare as final, private, or static (i.e. make it a class method)//##||##gray|//dispatch static by default; compiler error if same method defined in base and derived class and not marked virtual in base class//##||
+||[#subclass subclass]||class Integer : public Rational { _
+@<&nbsp;>@public: _
+@<&nbsp;&nbsp;>@Integer(int n); _
+@<&nbsp;&nbsp;>@virtual ~Integer(); _
+};|| ||public class RInteger extends Rational { _
+@<&nbsp;&nbsp;>@public RInteger(int n) throws Throwable { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@super(n, 1); _
+@<&nbsp;&nbsp;>@} _
+}|| ||
+||[#superclass-constructor invoking superclass constructor]||Integer::Integer(int n) : Rational(n, 1) { _
+}|| ||super(n, 1);|| ||
+||[#underivable-class mark class underivable or method unoverrideable]||##gray|//none//##||##gray|//none//##||final||sealed||
+||[#root-class root class] _
+@<&nbsp;>@||##gray|//none//##||NSObject||java.lang.Object||System.Object||
+||[#root-class-methods root class methods]||##gray|//none//##||autorelease _
+class _
+conformsToProtocol: _
+hash _
+isEqual: _
+isKindOfClass: _
+isProxy _
+performSelector: _
+performSelector:withObject: _
+performSelector:withObject:withObject: _
+release _
+respondsToSelector: _
+retain _
+retainCount _
+self _
+superclass||clone() _
+equals() _
+finalize() _
+getClass() _
+hashCode() _
+toString()||Equals() _
+Finalize() _
+GetHashCode() _
+GetType() _
+MemberwiseClone() _
+ReferenceEquals() _
+ToString()||
+||||||||||~ [[# reflection]][#reflection-note reflection]||
+||~ ||~ c++||~ objective c||~ java||~ c#||
+||[#type-class get type class of object]|| || || o = new Object(); _
+Class c = o.getClass();||object o = new object(); _
+System.Type t = o.GetType(); _
+##gray|//or//## _
+System.type t = typeof(o);||
+||[#get-type-class-string get type class from string]|| || ||Class c = Class.forName("java.io.File");||using System; _
+Type t = Type.GetType("object");||
+||[#get-type-class-identifier get type class from type identifier]||typeid(Foo)|| || ||System.Type t = typeof(object);||
+||[#class-name class name] _
+@<&nbsp;>@||typeid(Foo).name()|| ||String name = c.getName();||t.ToString();||
+||[#get-methods get methods]|| || ||import java.lang.reflect.*; _
+Method[] m = c.getMethods();||using System.Reflection; _
+System.Type t = typeof(object); _
+MethodInfo[] a = t.GetMethods();||
+||[#has-method has method]|| || || import java.lang.reflect.*; _
+ Class c = Class.forName("java.io.File"); _
+ Method[] a = c.getMethods(); _
+ boolean hasMethod = false; _
+for (int i=0; i < a.length; i++) { _
+@<&nbsp;&nbsp;>@if (a[i].getName() == "toString") { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@hasMethod = true; _
+@<&nbsp;&nbsp;>@} _
+}||##gray|//null if method not found://## _
+MethodInfo m = t.GetMethod("ToString");||
+||[#invoke-method-object invoke method object]|| || ||import java.lang.reflect.*; _
+Class c = Class.forName("java.io.File"); _
+Method m = c.getMethod("toString"); _
+Object o = new Object(); _
+m.invoke(o);||m.Invoke(o);||
+||||||||||~ [[# net-web]][#net-web-note net and web]||
+||~ ||~ c++||~ objective c||~ java||~ c#||
+||get local hostname, dns lookup, reverse dns lookup|| || || || ||
+||http get|| || || || ||
+||http post|| || || || ||
+||absolute url|| || || || ||
+||parse url|| || || || ||
+||[[# url-encode]][#url-encode-note url encode/decode]|| || ||import java.net.URLEncoder; _
+import java.net.URLDecoder; _
+ _
+String url = "@@http://www.google.com@@"; _
+String s = URLEncoder.encode(url, "utf8"); _
+String s2 = URLDecoder.decode(s, "utf8");|| ||
+||base64 encode/decode|| || || || ||
+||||||||||~ [[# unit-tests]][#unit-tests-note unit tests]||
+||~ ||~ c++||~ objective c||~ java||~ c#||
+||[[# test-class]][#test-class-note test class]||$ cat > test_foo.cpp _
+#include <cppunit/TestCaller.h> _
+#include <cppunit/TestCase.h> _
+#include <cppunit/TestSuite.h> _
+#include "test_foo.h" _
+ _
+using namespace CppUnit; _
+ _
+void TestFoo::test_01() { _
+@<&nbsp;&nbsp;>@CPPUNIT_ASSERT_EQUAL(1, 1); _
+} _
+ _
+Test* TestFoo::suite() { _
+@<&nbsp;&nbsp;>@TestSuite* suiteOfTests = new TestSuite("Foo"); _
+@<&nbsp;&nbsp;>@suiteOfTests->addTest( _
+@<&nbsp;&nbsp;>@new TestCaller<TestFoo>( _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@"test_01", _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@&TestFoo::test_01)); _
+ _
+@<&nbsp;&nbsp;>@return suiteOfTests; _
+} _
+ _
+$ cat > test_foo.h _
+#include <cppunit/TestCase.h> _
+ _
+class TestFoo: public CppUnit::TestCase { _
+public: _
+@<&nbsp;&nbsp;>@void test_01(); _
+ _
+@<&nbsp;&nbsp;>@static CppUnit::Test* suite(); _
+};|| || || ||
+||[[# run-all-tests]][#run-all-tests-note run all tests]||$ cat > test_runner.cpp _
+#include <cppunit/ui/text/TestRunner.h> _
+#include "test_foo.h" _
+ _
+int main( int argc, char** argv) _
+{ _
+@<&nbsp;&nbsp;>@CppUnit::TextUi::TestRunner runner; _
+@<&nbsp;&nbsp;>@runner.addTest(TestFoo::suite()); _
+@<&nbsp;&nbsp;>@runner.run(); _
+@<&nbsp;&nbsp;>@return 0; _
+} _
+ _
+$ sudo apt-get install libcppunit-dev _
+ _
+$ cat > Makefile _
+test_runner: test_runner.o test_foo.o _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@g++ -o $@ $^ -lcppunit _
+ _
+check: test_runner  _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@./test_runner _
+ _
+$ make check|| || || ||
+||[[# assert-equal]][#assert-equal-note equality assertion]||#include <cppunit/TestCase.h> _
+ _
+CPPUNIT_ASSERT_EQUAL(1, 1); _
+CPPUNIT_ASSERT_EQUAL("foo", "bar"); _
+CPPUNIT_ASSERT_EQUAL_MESSAGE("1 != 1", _
+@<&nbsp;&nbsp;>@1, 1);|| || || ||
+||[[# assert-approx]][#assert-approx-note approximate assertion]|| || || || ||
+||[[# assert-exc]][#assert-exc-note exception assertion]|| || || || ||
+||[[# setup]][#setup-note setup]|| || || || ||
+||[[# teardown]][#teardown-note teardown]|| || || || ||
+||||||||||~ [[# debugging-profiling]][#debugging-profiling-note debugging and profiling]||
+||~ ||~ c++||~ objective c||~ java||~ c#||
+||flag for stronger warnings||$ g++ -Wall foo.cpp|| || || ||
+||suppress warnings||$ g++ -w foo.cpp|| || || ||
+||treat warnings as errors||$ g++ -Werror foo.cpp|| || || ||
+||run debugger||$ g++ -g -o foo foo.cpp _
+ _
+$ gdb foo _
+(gdb) b main _
+(gdb) run|| || || ||
+||[[# debugger-cmds]][#debugger-cmds-note debugger commands] _
+##gray|//help, list source, (re)load executable, next, step, set breakpoint, show breakpoints, delete breakpoint, continue, backtrace, up stack, down stack, print, run, quit//##||@@>@@ h _
+@@>@@ l ##gray|[FIRST_LINENO, LAST_LINENO]## _
+@@>@@ file ##gray|PATH## _
+@@>@@ n _
+@@>@@ s _
+@@>@@ b ##gray|[FILE:]LINENO## _
+@@>@@ i _
+@@>@@ d ##gray|NUM## _
+@@>@@ c _
+@@>@@ bt _
+@@>@@ up _
+@@>@@ do _
+@@>@@ p ##gray|EXPR## _
+@@>@@ r ##gray|[ARG1[, [ARG2 @@...@@]]## _
+@@>@@ q|| || || ||
+||benchmark code|| || || || ||
+||profile code||##gray|//gprof does not work on Mac OS X://## _
+ _
+$ g++ -pg -o foo foo.cpp _
+ _
+$ ./foo _
+ _
+$ gprof foo|| || || ||
+||memory tool||$ sudo apt-get install valgrind _
+ _
+$ g++ -o foo foo.cpp _
+ _
+$ valgrind ./foo|| || || ||
+||~ ||~ ##EFEFEF|@@_______________________________________________@@##||~ ##EFEFEF|@@_______________________________________________@@##||~ ##EFEFEF|@@_______________________________________________@@##||~ ##EFEFEF|@@_______________________________________________@@##||
+
+
+
+[[# general-note]]
+++ [#general General]
+
+[[# version-used-note]]
+++ [#version-used version used]
+
+The compiler version used for this sheet.
+
+[[# show-version-note]]
+++ [#show-version show version]
+
+How to get the compiler version.
+
+[[# implicit-prologue-note]]
+++ [#implicit-prologue implicit prologue]
+
+Code which examples in the sheet assume to have already been executed.
+
+[[# grammar-invocation-note]]
++ [#grammar-invocation Grammar and Invocation]
+
+[[# hello-world-note]]
+++ [#hello-world hello world]
+
+How to write, compile, and run a "Hello, World!" program.
+
+
+[[# file-suffixes-note]]
+++ [#file-suffixes file suffixes]
+
+For source files, header files, and compiled object files.
+
+**C++**
+
+The {{gcc}} compiler will treat a file with any of the following suffixes as C++ source:
+
+[[code]]
+ .cc .cp .cxx .cpp .CPP .c++ .C
+[[/code]]
+
+GNU {{make}} has built-in rules which treat the following suffixes as C++ source:
+
+[[code]]
+.cc .C .cpp
+[[/code]]
+
+The Google C++ Style Guide recommends that {{.cc}} be used as the suffix for C++ source files.  Visual Studio uses {{.cpp}} as the C++ source file suffix.
+
+One sometimes sees suffixes for headers which distinguish C++ code from C code, but the Google C++ Style Guide and Visual Studio both use {{.h}} as the C++ header suffix.
+
+The C++11 standard library uses no suffix at all in headers, at least in the {{#include}} statements.  This change was made so that the new and the old standard library headers could be distributed together and new headers could have the same basename as the old headers.  
+
+[[# block-delimiters-note]]
+++ [#block-delimiters block delimiters]
+
+How blocks are delimited.
+
+A block contains a sequence of statements.  Blocks for function bodies in function definitions; to define the branches of {{if}} statements and the bodies of {{while}} loops.
+
+Class definition bodies are blocks, though the statements that appear in them are restricted to declarations and definitions.
+
+Bare blocks can be used to limit the scope of variables which are declared inside them.
+
+[[# stmt-terminator-note]]
+++ [#stmt-terminator statement terminator]
+
+How statements are terminated.
+
+[[# top-level-stmt-note]]
+++ [#top-level-stmt top level statements]
+
+Statements that can appear at the top level of a source file.
+
+[[# eol-comment-note]]
+++ [#eol-comment end-of-line comment]
+
+The syntax for a comment which is terminated by the end of the line.
+
+[[# multiple-line-comment-note]]
+++ [#multiple-line-comment multiple line comment]
+
+The syntax for a comment which can span multiple lines.
+
+The {{/* */}} delimiters do not nest.  Using them to comment out code which already contains a {{/* */}} comment usually results in a syntax error.
+
+[[# variables-expressions-note]]
++ [#variables-expressions Variables and Expressions]
+
+[[# local-var-note]]
+++ [#local-var local variable]
+
+How to declare a variable which is allocated on the stack.
+
+[[# uninitialized-local-var-note]]
+++ [#uninitialized-local-var uninitialized local variable]
+
+The value contained by a local variable that wasn't initialized.
+
+[[# global-var-note]]
+++ [#global-var global variable]
+
+How to declare a global variable.
+
+[[# uninitialized-global-var-note]]
+++ [#uninitialized-global-var uninitialized global variable]
+
+The value assigned to an uninitialized global variable.
+
+[[# write-once-var-note]]
+++ [#write-once-var write-once variable]
+
+How to declare a constant variable.
+
+[[# assignment-note]]
+++ [#assignment assignment]
+
+How to assign a value to a variable.
+
+[[# compound-assignment-note]]
+++ [#compound-assignment compound assignment]
+
+The compound assignment operators.
+
+If {{<OP>}} is a binary operator and the language has the compound assignment operator {{<OP>=}}, then the following are equivalent:
+
+[[code]]
+x <OP>= y
+x = x <OP> y
+[[/code]]
+
+[[# incr-decr-note]]
+++ [#incr-decr increment and decrement]
+
+The C-style increment and decrement operators.
+
+There are prefix (preincrement and predecrement) and postfix (postincrement and postdecrement) versions.  The prefix version returns the value after mutation, and the postfix version returns the value before mutation.
+
+**c++**
+
+Since the compound assignment operators also return the value after mutation, the following are equivalent for primitive types:
+
+[[code]]
+cout << ++i << endl;
+cout << (i += 1) << endl;
+[[/code]]
+
+The parens are necessary because compound assignment has lower precedence than the {{@@<<@@}} operator.
+
+The caveat about primitive types is necessary because the {{++}} operator can be overloaded.  In fact the prefix and postfix versions can be overloaded separately.
+
+In the case of the the postfix operator, the following are equivalent for primitive types:
+
+[[code]]
+cout << i-- << endl;
+cout << (i += 1, i - 1) << endl;
+[[/code]]
+
+The compiler may have to allocate a temporary variable to hold the value of {{i - 1}}, which means the postfix version might be slower.
+
+[[# addr-note]]
+++ [#addr address]
+
+How to get the memory address for a variable.  Memory addresses are stored in a type which records the type of the variable whose address was taken.
+
+[[# dereference-note]]
+++ [#dereference dereference]
+
+How to get the value stored at a memory address.
+
+[[# type-size-note]]
+++ [#type-size type size]
+
+How to get the size of a type in bytes.
+
+[[# allocate-heap-note]]
+++ [#allocate-heap allocate heap]
+
+How to allocate memory for a primitive type on the heap.
+
+**C++**
+
+//new// and //delete// can be used to manage the memory of both primitive types and objects.
+
+**objective c**
+
+Object C has a different memory management schemes for primitive types and objects.  Objects are allocated with //alloc// and freed by means of //NSAutoreleasePool//.  For primitive types the same techniques are used as for C.  However, idiomatic Objective C will declare primitive types as local variables or as part of the state of an object and avoid explicit calls to //malloc//.
+
+Arrays of objects can be created with //NSArray// and //NSMutableArray//.
+
+**java**
+
+In Java, arrays are always stored on the heap and the JVM is responsible for garbage collection.  The primitive types are stored (1) on the local frame, (2) as part of the state of an object, or (3) as part of the state of a class.  The primitive types are never stored in the heap directly and when they are part of object state they are garbage collected with the object.  Primitive types are passed by value unless they are encapsulated in an object.
+
+Each of the primitive types has a wrapper class, and instantiating this class is the best approximation in Java to allocating the primitive type on the heap:
+
+[[code]]
+Integer i = new Integer(0);
+[[/code]]
+
+The compiler may instantiate the wrapper class implicitly; this is called boxing.  The compiler also permits use of a wrapper class in the place of the primitive type, or unboxing.
+
+**C#**
+
+C# behavior is like Java.  Note that C# lacks specific wrapper classes for each primitive data type.
+
+[[# free-heap-note]]
+++ [#free-heap free heap]
+
+How to free the memory for a primitive type that was allocated on the heap.
+
+[[# null-note]]
+++ [#null null]
+
+**C++**
+
+A typical definition:
+
+[[code]]
+const int NULL = 0;
+[[/code]]
+
+[[# coalesce-note]]
+++ [#coalesce coalesce]
+
+The equivalent of the COALESCE function from SQL.
+
+**C++, Objective C++:**
+
+The short circuit or operator @@||@@ can be used as a coalesce operator. However, in C++ and Objective C, NULL is identical to zero, whereas in databases they are two distinct values.
+
+**Java:**
+
+The ternary operator provides the closest approximation to COALESCE, but it does not have the same behavior if the tested value has a side effect.
+
+[[# arithmetic-logic-note]]
++ [#arithmetic-logic Arithmetic and Logic]
+
+[[# boolean-type-note]]
+++ [#boolean-type boolean type]
+
+**C**
+
+The following definitions are common:
+
+[[code]]
+typedef int BOOL;
+#define TRUE 1
+#define FALSE 0
+[[/code]]
+
+**Objective C**
+
+From objc.h:
+
+[[code]]
+typedef signed char BOOL;
+#define YES (BOOL)1
+#define NO (BOOL)0
+[[/code]]
+
+**C#**
+
+bool is an alias for System.Boolean
+
+[[# true-false-note]]
+++ [#true-false true and false]
+
+Literals for the boolean values true and false.
+
+**C**
+
+The following definitions are common:
+
+[[code]]
+typedef int BOOL;
+#define TRUE 1
+#define FALSE 0
+[[/code]]
+
+**Objective C**
+
+From objc.h:
+
+[[code]]
+typedef signed char BOOL;
+#define YES (BOOL)1
+#define NO (BOOL)0
+[[/code]]
+
+[[# falsehoods-note]]
+++ [#falsehoods falsehoods]
+
+Values which evaluate as false in the conditional expression of an {{if}} statement.
+
+[[# logical-op-note]]
+++ [#logical-op logical operators]
+
+The logical operators.
+
+In all languages on this sheet the && and @@||@@ operators short circuit: i.e. && will not evaluate the 2nd argument if the 1st argument is false, and @@||@@ will not evaluate the 2nd argument if the 1st argument is true.  If the 2nd argument is not evaluated, side-effects that it contains are not executed.
+
+**C++**
+
+C++ defines //and//, //or//, and //not// to be synonyms of &&, @@||@@, and !, with the same semantics and precedence.
+
+**Java**
+
+The arguments of the logical operators must be of type //boolean//.
+
+**C#**
+
+The arguments of the logical operators must be of type //bool//.
+
+[[# relational-op-note]]
+++ [#relational-op relational operators]
+
+Binary operators which return boolean values.
+
+[[# int-type-note]]
+++ [#int-type integer type]
+
+Signed integer types.
+
+**C++**
+
+Whether //char// is a signed or unsigned type depends on the implementation.
+
+**C#**
+
+C# has the following aliases:
+
+sbyte: System.SByte
+short: System.Int16
+int: System.Int32
+long: System.Int64
+
+[[# unsigned-type-note]]
+++ [#unsigned-type unsigned type]
+
+Unsigned integer types.
+
+**C++**
+
+Whether //char// is a signed or unsigned type depends on the implementation.
+
+**C#**
+
+C# has the following aliases:
+
+byte: System.Byte
+ushort: System.UInt16
+uint: System.UInt32
+ulong: System.UInt64
+
+[[# float-type-note]]
+++ [#float-type float type]
+
+Floating point types.
+
+**C#**
+
+C# has the following aliases:
+
+float: System.Single
+double: System.Double
+
+[[# fixed-type-note]]
+++ [#fixed-type fixed type]
+
+Fixed-point decimal types.
+
+**C#:**
+
+C# has the following alias:
+
+decimal: System.Decimal
+
+[[# arithmetic-op-note]]
+++ [#arithmetic-op arithmetic operators]
+
+The arithmetic binary operators: addition, subtraction, multiplication, division, modulus.
+
+[[# int-div-note]]
+++ [#int-div integer division]
+
+How to get the quotient of two integers.
+
+[[# int-div-zero-note]]
+++ [#int-div-zero integer division by zero]
+
+The results of integer division by zero.
+
+**C++, Objective C**
+
+The behavior for division by zero is system dependent; the behavior described is nearly universal on Unix.
+
+**C#**
+
+It is a compilation error to divide by a zero constant.  Division by a variable set to zero results in a runtime exception.
+
+[[# float-div-note]]
+++ [#float-div float division]
+
+How to perform floating point division on two integers.
+
+[[# float-div-zero-note]]
+++ [#float-div-zero float division by zero]
+
+The result of floating point division by zero.
+
+Modern hardware, if it implements floating point instructions, will implement instructions which conform to the IEEE 754 standard.  The standard requires values for positive infinity, negative infinity, and not-a-number (NaN).  
+
+The C and C++ standards do not assume that they are running on hardware which provides these values; code which assumes they exist is not strictly speaking portable.
+
+[[# power-note]]
+++ [#power power]
+
+How to perform exponentiation.
+
+**C++**
+
+//powm1// is an abbreviation for "power minus one".  Hence the need to add one to get the answer.
+
+[[# sqrt-note]]
+++ [#sqrt sqrt]
+
+The positive square root function.
+
+[[# sqrt-negative-one-note]]
+++ [#sqrt-negative-one sqrt -1]
+
+The result of taking the square root of a negative number.
+
+Here is a list of the standard mathematical functions whose domains do not cover the entire real number line:
+
+||~ function||~ returns inf on||~ returns nan on||~ returns -inf on||
+||sqrt||inf||[-inf, 0)|| ||
+||log||inf||[-inf, 0)||0||
+||asin|| ||[-inf, -1) U (1, inf]|| ||
+||acos|| ||[-inf, -1) U (1, inf]|| ||
+
+[[# transcendental-func-note]]
+++ [#transcendental-func transcendental functions]
+
+The exponential and logarithm functions; the trigonometric functions; the inverse trigonometric functions.
+
+The arguments of the trigonometric functions are in radians as are the return values of the inverse trigonometric functions.
+
+[[# transcendental-const-note]]
+++ [#transcendental-const transcendental constants]
+
+The transcendental constants //e// and //pi//.
+
+[[# float-truncation-note]]
+++ [#float-truncation float truncation]
+
+Functions for converting a float to a nearby integer value.
+
+**C:**
+
+The {{math.h}} library also provides {{floor}} and {{ceil}} which return {{double}} values.
+
+**Java:**
+
+{{Math.floor}} and {{Math.ceil}} return {{double}} values.
+
+[[# absolute-val-note]]
+++ [#absolute-val absolute value]
+
+The absolute value of a numeric quantity.
+
+[[# int-overflow-note]]
+++ [#int-overflow integer overflow]
+
+What happens when an integer expression results in a value larger than what can be stored in the integer type.
+
+[[# float-overflow-note]]
+++ [#float-overflow float overflow]
+
+What happens when a float expression results in a value larger than largest representable finite float value.
+
+[[# float-limits-note]]
+++ [#float-limits float limits]
+
+The largest finite floating point number and the smallest positive floating point number.
+
+[[# complex-construction-note]]
+++ [#complex-construction complex construction]
+
+How to construct a complex number.
+
+[[# complex-decomposition-note]]
+++ [#complex-decomposition complex decomposition]
+
+How to get the components of a complex number.  Both Cartesian and polar decompositions are illustrated.  Also how to get the complex conjugate.
+
+[[# random-num-note]]
+++ [#random-num random number]
+
+Ways to generate random numbers.  The distributions are a uniform integer from 0 to 99; a uniform float from 0.0 to 1.0; a standard normal float.
+
+**c++:**
+
+The standard library includes functions for generating random numbers from [[[distributions|other distributions]]].
+
+[[# random-seed-note]]
+++ [#random-seed random seed]
+
+How to set the seed for the random number generator.
+
+[[# bit-op-note]]
+++ [#bit-op bit operators]
+
+The bit operators: left shift, right shift, and, or, xor, and complement.
+
+**C++**
+
+//bitand//, //bitor//, and //compl// are synonyms of &, |, and ~ with identical precedence and semantics.
+
+[[# binary-octal-hex-literals-note]]
+++ [#binary-octal-hex-literals binary, octal, and hex literals]
+
+Binary, octal, and hex integer literals.
+
+[[# radix-note]]
+++ [#radix radix]
+
+How to convert integers to strings of digits of a given base. How to convert such strings into integers.
+
+[[# strings-note]]
++ [#strings Strings]
+
+[[# str-type-note]]
+++ [#str-type string type]
+
+The type for strings.
+
+[[# str-literal-note]]
+++ [#str-literal string literal]
+
+The syntax for string literals.
+
+[[# newline-literal-note]]
+++ [#newline-literal newline in literal]
+
+Can a newline be used in a string literal?  Does the newline appear in the resulting string object?
+
+[[# str-literal-escape-note]]
+++ [#str-literal-escape literal escapes]
+
+Escape sequences that can be used in string literals.
+
+[[# allocate-str-note]]
+++ [#allocate-str allocate string]
+
+How to allocate a string.
+
+**Java**
+
+The following code
+
+[[code]]
+String t = new String(s);
+[[/code]]
+
+creates a copy of the string //s//.  However, because Java strings are immutable, it would be safe to store the same string object it //t// as follows:
+
+[[code]]
+String t = s;
+[[/code]]
+
+[[# mutable-str-note]]
+++ [#mutable-str are strings mutable?]
+
+[[# copy-str-note]]
+++ [#copy-str copy string]
+
+[[# fmt-str-note]]
+++ [#fmt-str format string]
+
+
+[[# compare-str-note]]
+++ [#compare-str compare strings]
+
+**C++**
+
+//string::compare// returns a positive value, 0, or a negative value depending upon whether the receiver is lexicographically greater, equal, or less than the argument.  C++ overload the comparison operators (<, >, ==, !=, <=, >=) so that they can be used for string comparison.
+
+**Objective C**
+//compare// will return -1, 0, or 1.
+
+**Java**
+
+//compareTo// will return a negative value, 0, or a positive value.
+
+**C#**
+
+//CompareTo// will return -1, 0, or 1.
+
+[[# str-concat-note]]
+++ [#str-concat concatenate]
+
+[[# str-replicate-note]]
+++ [#str-replicate replicate]
+
+[[# translate-case-note]]
+++ [#translate-case translate case]
+
+[[# trim-note]]
+++ [#trim trim]
+
+[[# pad-note]]
+++ [#pad pad]
+
+
+[[# num-to-str-note]]
+++ [#num-to-str number to string]
+
+
+[[# str-to-num-note]]
+++ [#str-to-num string to number]
+
+**C++**
+
+//strtoimax//,  //strtol//, //strtoll//, //strtoumax//, //strtoul//, and //strtoull// take three arguments: 
+
+[[code]]
+intmax_t
+strtoimax(const char *str, char **endp, int base);
+[[/code]]
+
+The 2nd argument, if not NULL, will be set to first character in the string that is not part of the number.  The 3rd argument can specify a base between 2 and 36.
+
+//strtof//, //strtod//, and //strtold// take three arguments:
+
+[[code]]
+double
+strtod(const char *str, char **endp);
+[[/code]]
+
+**Java**
+
+//parseInt// has an optional second argument for the base.
+
+
+[[# join-note]]
+++ [#join join]
+
+**java:**
+
+Use {{StringBuilder}} to implement join:
+
+[[code]]
+public static String join(String[] a, String sep) {
+
+    StringBuilder sb = new StringBuilder();
+
+    for (int i=0; i<a.length; i++) {
+        if (i > 0) {
+            sb.append(sep);
+        }
+        sb.append(a[i]);
+    }
+
+    return sb.toString();
+}
+[[/code]]
+
+[[# split-note]]
+++ [#split split]
+
+
+[[# serialize-note]]
+++ [#serialize serialize]
+
+[[# str-length-note]]
+++ [#str-length string length]
+
+[[# index-substr-note]]
+++ [#index-substr index of substring]
+
+[[# extract-substr-note]]
+++ [#extract-substr extract substring]
+
+[[# char-type-note]]
+++ [#char-type character type]
+
+[[# char-literal-note]]
+++ [#char-literal character literal]
+
+[[# test-char-note]]
+++ [#test-char test character]
+
+
+[[# regexes-note]]
++ [#regexes Regular Expressions]
+
+[[# regex-match]]
+++ regex match
+
+[[# regex-substitute]]
+++ regex substitute
+
+[[# dates-time-note]]
++ [#dates-time Date and Time]
+
+[[# date-time-type-note]]
+++ [#date-time-type date and time type]
+
+The data type used to store a combined date and time.
+
+[[# current-date-time-note]]
+++ [#current-date-time current date and time] 
+
+How to get the current date and time.
+
+[[# unix-epoch-note]]
+++ [#unix-epoch to unix epoch, from unix epoch]
+
+How to convert a date/time object to the Unix epoch.  How to convert the Unix epoch to a date/time object.
+
+The Unix epoch is the number of seconds since 1 January 1970 UTC.
+
+**c#:**
+
+Windows file time is the number of nanoseconds since 1 January 1601 UTC divided by 100.  The concept was introduced when journaling was added to NTFS with Windows 2000.
+
+The magic constant (1164444480) used for the conversion can be calculated with the following code:
+
+[[code]]
+using System;
+using System.Globalization;
+
+CultureInfo enUS = new CultureInfo("en-US");
+DateTime startEpoch = DateTime.ParseExact("1970-01-01 00:00:00 -00", "yyyy-MM-dd HH:mm:ss zz", enUS);
+
+Console.WriteLine(startEpoch.ToFileTimeUtc() / (100*1000*1000));
+[[/code]]
+
+
+[[# format-date-note]]
+++ [#format-date format date]
+
+How to use a format string to display a date/time object.
+
+The canonical example of doing this is the {{strftime}} function from the C standard library which defines used letters prefix by percent signs as conversion specification characters, e.g. %Y-%m-%d.
+
+[[# parse-date-note]]
+++ [#parse-date parse date]
+
+How to use a format string to parse date data from a string.
+
+[[# date-subtraction-note]]
+++ [#date-subtraction date subtraction]
+
+[[# add-duration-note]]
+++ [#add-duration add duration]
+
+[[# date-parts-note]]
+++ [#date-parts date parts]
+
+[[# time-parts-note]]
+++ [#time-parts time parts]
+
+[[# fixed-length-arrays-note]]
++ [#fixed-length-arrays Fixed-Length Arrays]
+
+[[# fixed-len-array-stack-note]]
+++ [#fixed-len-array-stack declare on stack]
+
+How to allocate an array which is freed when the block in which it is defined goes out of scope.
+
+[[# fixed-len-array-heap-note]]
+++ [#fixed-len-array-heap declare on heap]
+
+How to allocate an array on the heap.
+
+[[# free-fixed-len-array-heap-note]]
+++ [#free-fixed-len-array-heap free heap]
+
+How to free an array that was allocated on the heap.
+
+[[# fixed-len-array-init-list-note]]
+++ [#fixed-len-array-init-list initialization list]
+
+**Objective C**
+
+NSArray can only store instances of NSObject. For primitive types, use C arrays.
+
+**Java**
+
+Java permits arrays to be declared with C-style syntax:
+
+[[code]]
+int a[] = {1,2,3}
+[[/code]]
+
+[[# fixed-len-array-size-note]]
+++ [#fixed-len-array-size size]
+
+How to get the size of a fixed-length array.
+
+[[# fixed-len-array-lookup-note]]
+++ [#fixed-len-array-lookup lookup]
+
+How to get the value stored at an index in a fixed-length array.
+
+**C++**
+
+Arrays can be manipulated with pointer syntax.  The following sets //x// and //y// to the same value:
+
+[[code]]
+int a[] = {3,7,4,8,5,9,6,10};
+int x = a[4];
+int y = *(a+4);
+[[/code]]
+
+[[# fixed-len-array-update-note]]
+++ [#fixed-len-array-update update]
+
+How to update the value stored at an index in a fixed-length array.
+
+[[# fixed-len-array-out-of-bounds-note]]
+++ [#fixed-len-array-out-of-bounds out-of-bounds]
+
+What happens when an out-of-bounds index is used to access a value in a fixed-length array.
+
+[[# copy-fixed-len-array-note]]
+++ [#copy-fixed-len-array copy]
+
+How to copy a fixed-length array.
+
+[[# fixed-len-array-as-func-arg-note]]
+++ [#fixed-len-array-as-func-arg as function argument]
+
+How to pass a fixed-length array as a function argument.
+
+[[# iterate-over-fixed-len-array-note]]
+++ [#iterate-over-fixed-len-array iterate]
+
+How to iterate over the values of the fixed-length array.
+
+**C++**
+
+Range-based for loops can be used with fixed-length arrays (but not pointers):
+
+[[code]]
+int a[4] = {3, 2, 4, 1};
+int sum(0);
+
+for (const auto& n: a) {
+  sum += n;
+}
+[[/code]]
+
+[[# sort-fixed-len-array-note]]
+++ [#sort-fixed-len-array sort]
+
+[[# resizable-arrays-note]]
++ [#resizable-arrays Resizable Arrays]
+
+[[# decl-resizable-array-note]]
+++ [#decl-resizable-array declare]
+
+[[# resizable-array-init-list-note]]
+++ [#resizable-array-init-list initialization list]
+
+[[# resizable-array-size-note]]
+++ [#resizable-array-size size]
+
+[[# resizable-array-capacity-note]]
+++ [#resizable-array-capacity capacity]
+
+[[# resizable-array-empty-test-note]]
+++ [#resizable-array-empty-test empty test]
+
+[[# resizable-array-lookup-note]]
+++ [#resizable-array-lookup lookup]
+
+[[# resizable-array-update-note]]
+++ [#resizable-array-update update]
+
+[[# resizable-array-out-of-bounds-note]]
+++ [#resizable-array-out-of-bounds out-of-bounds behavior]
+
+[[# resizable-arary-elem-index-note]]
+++ [#resizable-array-elem-index element index]
+
+[[# slice-resizable-array-note]]
+++ [#slice-resizable-array slice]
+
+[[# slice-resizable-array-to-end-note]]
+++ [#slice-resizable-array-to-end slice to end]
+
+[[# resizable-array-back-note]]
+++ [#resizable-array-back manipulate back]
+
+[[# resizable-array-front-note]]
+++ [#resizable-array-front manipulate front]
+
+[[# concat-resizable-array-note]]
+++ [#concat-resizable-array concatenate]
+
+[[# replicate-resizable-array-elem-note]]
+++ [#replicate-resizable-array-elem replicate element]
+
+[[# copy-resizable-array-note]]
+++ [#copy-resizable-array copy]
+
+[[# resizable-array-as-func-arg-note]]
+++ [#resizable-array-as-func-arg array as function argument]
+
+[[# iterate-over-resizable-array-note]]
+++ [#iterate-over-resizable-array iterate]
+
+How to iterate over a resizable array.
+
+**C++**
+
+The range-based for loop was introduced in C++11.  It it can be used to iterate over an initialization list:
+
+[[code]]
+for (const auto& n: {1, 2, 3}) {
+  sum += n;
+}
+[[/code]]
+
+[[# tuples-note]]
++ [#tuples Tuples]
+
+[[# pair]]
+++ pair
+
+[[# dictionaries-note]]
++ [#dictionaries Dictionaries]
+
+[[# map]]
+++ map declaration
+
+**C:**
+
+For those interested in an industrial strength hashtable implementation for C, here is the [http://svn.ruby-lang.org/cgi-bin/viewvc.cgi/trunk/include/ruby/st.h?revision=26401&view=markup header file] and the [http://svn.ruby-lang.org/cgi-bin/viewvc.cgi/trunk/st.c?revision=26672&view=markup source file] for the hashtable used by Ruby.
+For those interested in a "Computer Science 101" implementation of a hashtable, here is a simpler [http://gist.github.com/400762 source file] and [http://gist.github.com/400764 header file].
+
+[[# map-access]]
+++ map access
+
+[[# map-size]]
+++ map size
+
+[[# map-remove]]
+++ map remove
+
+[[# map-element-not-found]]
+++ map element not found result
+
+[[# map-iterator]]
+++ map iterator
+
+[[# functions-note]]
++ [#functions Functions]
+
+[[# decl-func-note]]
+++ [#decl-func declare function]
+
+How to declare the type of a function.
+
+[[# def-func-note]]
+++ [#def-func define function]
+
+How to define a function.
+
+[[# invoke-func-note]]
+++ [#invoke-func invoke function]
+
+How to invoke a function.
+
+[[# def-static-method-note]]
+++ [#def-static-class-method define static class method]
+
+[[# invoke-static-method-note]]
+++ [#invoke-static-class-method invoke static class method]
+
+
+[[# overload-func-note]]
+++ [#overload-func overload function]
+
+[[# default-arg-note]]
+++ [#default-arg default argument]
+
+[[# variable-num-arg-note]]
+++ [#variable-num-arg variable number of arguments]
+
+[[# named-param-note]]
+++ [#named-param named parameters]
+
+**Objective C:**
+
+Named parameters must be invoked in the order in which they are defined in the method signature.
+
+**C#:**
+
+Named parameter do not need to be invoked in the order in which they are defined in the method signature.  Additionally, their use in
+invocation is optional: the arguments can be provided without names in which case the definition order must be used.
+
+[[# pass-by-val-note]]
+++ [#pass-by-val pass by value]
+
+[[# pass-by-ref-note]]
+++ [#pass-by-ref pass by reference]
+
+[[# pass-by-addr-note]]
+++ [#pass-by-addr pass by address]
+
+[[# retval-note]]
+++ [#retval return value]
+
+[[# no-retval-note]]
+++ [#no-retval no return value]
+
+[[# recursive-func-note]]
+++ [#recursive-func recursive function]
+
+[[# anonymous-func-note]]
+++ [#anonymous-func anonymous function]
+
+[[# invoke-anonymous-func-note]]
+++ [#invoke-anonymous-func invoke anonymous function]
+
+[[# closure-note]]
+++ [#closure closure]
+
+[[# func-private-state-note]]
+++ [#func-private-state function with private state]
+
+[[# func-as-val-note]]
+++ [#func-as-val function as value]
+
+[[# overload-op-note]]
+++ [#overload-op overload operator]
+
+**C++**
+
+A note on how to overload postfix and prefix {{++}} and {{--}}.
+
+[[# execution-control-note]]
++ [#execution-control Execution Control]
+
+[[# if-note]]
+++ [#if if]
+
+The syntax for an {{if}} statement.
+
+[[# dangling-else-note]]
+++ [#dangling-else dangling else]
+
+The curly braces around the branches of an {{if}} statement are optional when the branch contains a single statement.
+
+From the perspective of the parser, the branches are statements.  Curly branch delimited blocks are legal wherever a statement is legal.
+
+When {{if}} statements are nested and the outer {{if}} statement does not put its if-clause in curly braces, the parser will match a subsequent {{else}} to the inner {{if}}.  Code which puts the {{else}} on the same level of indentation as the outer {{if}} is deceptive.
+
+[[# switch-note]]
+++ [#switch switch]
+
+The syntax for a {{switch}} statement.
+
+A {{switch}} checks the value of integer expression and jumps to the correct label.  This can faster than an {{if}} statement with numerous {{else if}} branches which tests the expression until a match is found.
+
+Execution falls through to code after subsequent labels unless a {{break}} statement is encountered.   This makes it possible to write code once which handles multiple values.
+
+[[# while-note]]
+++ [#while while]
+
+The syntax for a {{while}} loop.
+
+If the body of a {{while}} loop is a single statement, the curly braces are optional.
+
+The languages in this sheet also have a {{do-while}} loop, which is a loop which always executes at least once.  
+
+Here is an example of a {{do-while}} loop which converts an unsigned integer to a string.  The corresponding {{while}} loop would require extra handling when the integer is zero.
+
+[[code]]
+/*  unsigned int n;
+ *  char* s;
+ */
+
+do {
+  s[i++] = n % 10 + '0';
+} while ((n /= 10) > 0);
+s[i] = '\0';
+reverse(s);
+[[/code]]
+
+[[# for-note]]
+++ [#for for]
+
+The syntax for a C-style {{for}} loop.
+
+The parens of the {{for}} loop contain three expressions set off by semicolons: the //initialization//, the //condition//, and the //increment//.
+
+The initialization expression executes once before the loop starts.
+
+The condition expression executes once before the start of each iteration.  The loop stops if the condition is false.
+
+The increment executes at the end of each iteration.
+
+[[# break-note]]
+++ [#break break]
+
+The {{break}} statement terminates execution of the innermost containing loop or switch statement.
+
+[[# break-nested-loops-note]]
+++ [#break-nested-loops break out of nested loops]
+
+A method for breaking out of nested loops.
+
+[[# continue-note]]
+++ [#continue continue]
+
+The {{continue}} statement, which terminates execution of the current loop iteration.
+
+[[# goto-note]]
+++ [#goto goto]
+
+[[# exceptions-note]]
++ [#exceptions Exceptions]
+
+[[# base-exc-note]]
+++ [#base-exc base exception]
+
+The base class or interface for exceptions.
+
+[[# predefined-exc-note]]
+++ [#predefined-exc predefined exceptions]
+
+A partial list of exceptions raised by the language or the standard library.
+
+[[# raise-exc-note]]
+++ [#raise-exc raise exception]
+
+How to raise an exception.
+
+**C++**
+
+C++ code can throw or catch any type of object or primitive data type.  The C++ standard library throws subclasses of std::exception, which does not have a message member.
+
+**Objective C**
+
+Objective C can only throw an instance of NSException or one of its subclasses.
+
+**Java**
+
+Java can only throw an implementation of java.lang.Throwable.
+
+**C#**
+
+C# can only throw an instance of System.Exception of one of its subclasses.
+
+[[# handle-exc-note]]
+++ [#handle-exc handle exception]
+
+How to handle an exception.
+
+**C++**
+
+Exceptions can be caught by value or by reference.  If the exception is an object and it is caught by value, the copy constructor and the destructor will be invoked.
+
+**Objective C**
+
+Exceptions are thrown and caught by pointer value.
+
+[[# def-exc-note]]
+++ [#def-exc define exception]
+
+How to define a new exception type.
+
+[[# re-raise-exc-note]]
+++ [#re-raise-exc re-raise exception]
+
+How to handle and re-raise an exception.
+
+[[# catch-all-handler-note]]
+++ [#catch-all-handler catch-all handler]
+
+How to write a handler witch catches any exception.
+
+[[# multiple-handlers-note]]
+++ [#multiple-handlers multiple handlers]
+
+[[# error-msg-note]]
+++ [#error-msg error message]
+
+[[# errno-note]]
+++ [#errno system call errno]
+
+[[# finally-clause-note]]
+++ [#finally-clause finally clause]
+
+**C++**
+
+[[code]]
+Class Finally {
+
+  void (*finally)();
+
+  Finally(void (*f)()) : finally(f) {
+    
+  }
+
+  ~Finally() {
+    do_cleanup();
+  }
+};
+
+{
+  Cleanup c();
+
+  risky();
+}
+
+[[/code]]
+
+[[# exc-specification-note]]
+++ [#exc-specification exception specification]
+
+**Java**
+
+If a method throws a subclass of java.lang.Exception, it must declare the exception in its throws clause.  This includes exceptions originating in code called by the method.  On the other hand, if the method throws a subclass of java.lang.Error, no declaration in the throws clause is necessary.
+
+[[# concurrency-note]]
++ [#concurrency Concurrency]
+
+[[# file-handles-note]]
++ [#file-handles File Handles]
+
+[[# printf-note]]
+++ [#printf printf]
+
+How to print a formatted string to standard out.
+
+[[# read-file]]
+++ read from file
+
+**C**
+
+If there is an error, the global variable //errno// will be set to a nonzero value, and //strerror(errno)// will return an error message for the error.
+
+[[# write-file]]
+++ write to file
+
+[[# files-note]]
++ [#files Files]
+
+[[# file-fmt-note]]
++ [#file-fmt File Formats]
+
+[[# directories-note]]
++ [#directories Directories]
+
+[[# processes-environment-note]]
++ [#processes-environment Processes and Environment]
+
+[[# main]]
+++ signature of main
+
+[[# first-argument]]
+++ first argument
+
+**C**
+
+The first argument is the pathname to the executable.  Whether the pathname is absolute or relative depends on how the executable was invoked.  If the executable was invoked via a symlink, then the first argument is the pathname of the symlink, not the executable the symlink points to.
+
+[[# environment-variable]]
+++ environment variable
+
+[[# iterate-through-environment-variables]]
+++ iterate through environment variables
+
+[[# libraries-namespaces-note]]
++ [#libraries-namespaces Library and Namespaces]
+
+[[# std-lib-name-note]]
+++ [#std-lib-name standard library name]
+
+The name of the standard library.
+
+**C++**
+
+[http://www.sgi.com/tech/stl/ Standard Template Library (STL)]
+
+The STL might not be installed by default.
+
+**Objective C**
+
+[http://developer.apple.com/mac/library/documentation/cocoa/reference/foundation/objc_classic/index.html Foundation Framework]
+
+The Foundation Framework is the core of Cocoa, a set of libraries for Objective C development on Mac OS X and the iPhone.  The Foundation Framework descends from NextStep, hence the NS prefix in the class names.  NextStep was made available to operating systems other than Next as OpenStep and the GNU implementation is called GNUStep.
+
+**Java**
+
+[http://java.sun.com/javase/6/docs/api/ Java 1.6 API]
+
+**C#**
+
+[http://msdn.microsoft.com/en-us/library/ms229335(v=VS.100).aspx .NET Framework 4 Class Library]
+[http://www.go-mono.com/docs/ Mono Documentation]
+
+The core of the .NET framework is called the Base Class Library.  Mono implements the BCL, but not all of the .NET framework.
+
+[[# user-defined-types-note]]
++ [#user-defined-types User-Defined Types]
+
+[[# typedef-note]]
+++ [#typedef typedef]
+
+**C**
+
+Because C integer types don't have well defined sizes, //typedef// is sometimes employed to as an aid to writing portable code.  One might include the following in a header file:
+
+[[code]]
+typedef int int32_t;
+[[/code]]
+
+The rest of the code would declare integers that need to be 32 bits in size using //int32_t// and if the code needed to be ported to a platform with a 16 bit //int//, only a single place in the code requires change.  In practice the //typedef// abstraction is leaky because functions in the standard library such as //atoi//, //strtol//, or the format strings used by //printf// depend on the underlying type used.
+
+**Java**
+
+Java has well defined integer sizes so //typedef// is not needed as a portability aid.  In other situations where a C programmer would use a //typedef// for data abstraction, a Java programmer must either define a class or retain the raw primitive type throughout the code.
+
+[[# enum-note]]
+++ [#enum enum]
+
+**C**
+
+Enums were added to the C standard when the language was standardized by ANSI in 1989.
+
+An enum defines a family of integer constants.  If an integer value is not explicitly provided for a constant, it is given a value one greater than the previous constant in the list.  If the first constant in the list is not given an explicit value, it is assigned a value of zero.  it is possible for constants in a list to share values.  For example, in the following enum, //a// and //c// are both zero and //b// and //d// are both one.
+
+[[code]]
+enum { a=0, b, c=0, d };
+[[/code]]
+
+A //typedef// can be used to make the //enum// keyword unnecessary in variable declarations:
+
+[[code]]
+typedef enum { mon, tue, wed, thu, fri, sat, sun } day_of_week;
+day_of_week d = tue;
+[[/code]]
+
+From the point of view of the C compiler, an enum is an //int//.  The C compiler does not prevent assigning values to an enum type that are not in the enumerated list.  Thus, the following code compiles:
+
+[[code]]
+enum day_of_week { mon, tue, wed, thu, fri, sat, sun };
+day_of_week d = 10;
+
+typedef enum { mon, tue, wed, thu, fri, sat, sun } day_of_week2;
+day_of_week2 d2 = 10;
+[[/code]]
+
+
+**C++**
+
+C++ enums are more strongly typed the C enums.  The compiler rejects attempts to assign a value to an enum variable that is not in the enumerated list.  The following code:
+
+[[code]]
+enum day_of_week { mon, tue, wed, thu, fri, sat, sun };
+day_of_week d = 10;
+[[/code]]
+
+produces an error like the following:
+
+[[code]]
+main.cpp: In function ‘int main()’:
+main.cpp:21: error: invalid conversion from ‘int’ to ‘main()::day_of_week’
+[[/code]]
+
+**Java**
+
+Java added enums in 1.5.
+
+Java enums are strongly typed like C++ enums.  Unlike C++ enums, it is an error to use an enum value in an integer context.  The value has a method //ordinal()// which returns the integer value, however.
+
+When used in a string context, an enum will evaluate as the string corresponding to its identifier: i.e. "TUE" for DayOfWeek.TUE.  This string can be accessed explicitly with DayOfWeek.TUE.toString().  Conversely, DayOfWeek.valueOf("TUE") returns DayofWeek.TUE.  
+
+Java enums are subclasses of java.lang.Enum.  In particular, an enum is a class, and if the last value if the enum definition is followed by a semicolon, what follows is a class body which can contain methods and constructors.  An enum class is final and cannot be subclassed, but an enum can implement an interface.
+
+**C#**
+
+Like Java enums, C# enums will return the string corresponding to their identifier.  Unlike Java enums, C# enums will evaluate as integers in a numeric context.
+
+When used as an argument in a C# style format string, an enum value returns the string corresponding to its identifier.
+
+[[# struct-definition]]
+++ struct definition
+
+A struct provides names for elements in a  predefined set of data and permits the data to be accessed directly without the intermediation of getters and setters.  C++, Java, and C# classes can be used to define structs by making the data members public.  However, public data members violates the [http://en.wikipedia.org/wiki/Uniform_access_principle uniform access principle]. 
+
+**C++:**
+
+From //The C++ Programming Language: 3rd Edition//:
+
+[[code]]
+by definition, a struct is a class in which members are by default public; that is,
+
+    struct s { ...
+
+is simply shorthand for
+
+    class s { public: ...
+[[/code]]
+
+[[# struct-declaration]]
+++ struct declaration
+
+[[# struct-initialization]]
+++ struct initialization
+
+**C**
+
+The literal format for a struct can only be used during initialization.  If the member names are not provided, the values must occur in the order used in the definition.
+
+[[# struct-member-assignment]]
+++ struct member assignment
+
+[[# struct-member-access]]
+++ struct member access
+
+**C**
+
+The period operator used for member access has higher precedence than the pointer operator.  Thus parens must be used
+to get at the member of a struct referenced by a pointer:
+
+[[code]]
+struct medal_count {
+char* country;
+int gold;
+int silver;
+int bronze;
+}
+
+struct medal_count spain = { "Spain", 3, 7 4 };
+struct medal_count *winner = &spain;
+printf("The winner is %s with %d gold medals", (*winner).country, (*winner).gold);
+[[/code]]
+
+//ptr->mem// is a shortcut for //(*ptr).mem//: 
+
+[[code]]
+printf("The winner (%s) earned %d silver medals", winner->country, winner->silver);
+[[/code]]
+
+[[# generic-types-note]]
++ [#generic-types Generic Types]
+
+[[# define-generic]]
+++ define generic type
+
+[[# instantiate-generic]]
+++ instantiate generic type
+
+[[# objects-note]]
++ [#objects Objects]
+
+[[# define-class]]
+++ define class
+
+[[# constructor]]
+++ constructor
+
+[[# create-object]]
+++ create object
+
+[[# destructor]]
+++ destructor
+
+**C++**
+
+The C++ compiler will normally see to it that the destructor for a class and all its superclasses is called.  The compiler may not be aware of the true class of the object if it was upcast to one of its base class.  If the destructor was not declared virtual, then the derived class destructor and any other base class constructors will not get called.  Thus many developers declare all destructors virtual.
+
+**Java**
+
+Java does not chain finalize() methods, so the derived class should explicitly call the parent.
+
+[[# destroy-object]]
+++ destroy object
+
+**Java**
+
+finalize() is called by the Java garbage collector.
+
+[[# define-method]]
+++ define method
+
+[[# invoke-method]]
+++ invoke method
+
+[[# define-class-method]]
+++ define class method
+
+[[# invoke-class-method]]
+++ invoke class method
+
+[[# receiver]]
+++ name of receiver
+
+[[# access-control]]
+++ access control
+
+**objective c:**
+
+Access control only applies to members; all methods are public.  gcc 4.0 does not enforce the access restrictions; it merely gives warnings.
+
+[[# anonymous-class]]
+++ anonymous class
+
+[[# polymorphism-note]]
++ [#polymorphism Polymorphism]
+
+[[# dynamic-dispatch]]
+++ dynamic dispatch
+
+[[# static-dispatch]]
+++ static dispatch
+
+Method dispatch is //static// if the method is determined by the variable type, and //dynamic// if it is determined by the value type.  These techniques of method dispatch yield different results when both the base class and the derived class have implementations for a method, and an instance of the derived class is being stored in a variable with type of the base class.
+
+When dispatch is static, the compiler can determine the code that will be executed for the method call.  When dispatch is dynamic, the code that will be executed is a runtime decision.  C++ implementations usually achieve this by storing function pointers in the object: qv [http://en.wikipedia.org/wiki/Virtual_method_table virtual method table].
+
+The use of the keyword //static// in the declaration of a class method in C++, Java, and C# is perhaps unfortunate.  Class methods are always statically dispatched, so the concepts are not unrelated.
+
+[[# subclass]]
+++ subclass
+
+[[# superclass-constructor]]
+++ superclass constructor
+
+[[# underivable-class]]
+++ mark class underivable or method overrideable
+
+[[# root-class]]
+++ root class
+
+Name of the root class, if there is one.
+
+**objective c:**
+
+It is possible to define a root class other than NSObject.
+
+[[# root-class-methods]]
+++ root class methods
+
+A selection of methods available on the root class.
+
+[[# reflection-note]]
++ [#reflection Reflection]
+
+[[# type-class]]
+++ get type class of object
+
+[[# get-type-class-string]]
+++ get type class from string
+
+[[# get-type-class-identifier]]
+++ get type class from type identifier
+
+**c++:**
+
+//typeid// returns a value of type //type_info//.  The assignment method and copy constructor of //type_info// are private.
+
+[[# class-name]]
+++ class name
+
+*c++:**
+
+The string returned by //type_info.name()// contains more than the class name.  The code below displayed the string "Z4mainE3Foo" when run on my system.
+
+[[code]]
+class Foo {
+  int i;
+};
+puts(typeid(Foo).name());
+[[/code]]
+
+[[# get-methods]]
+++ get methods
+
+[[# has-method]]
+++ has method
+
+[[# invoke-method-object]]
+++ invoke method object
+
+[[# net-web-note]]
++ [#net-web Net and Web]
+
+[[# url-encode-note]]
+++ [#url-encode url encode/decode]
+
+How to URL encode and URL decode a string.
+
+URL encoding is also called percent encoding.  It is used to escape special characters in GET query string parameters.
+
+Reserved characters according to [http://www.ietf.org/rfc/rfc3986.txt RFC 3986] are replaced by a percent sign % followed by a two hex digit representation of the ASCII code.  The reserved characters are:
+
+[[code]]
+! * ' ( ) ; : @ & = + $ , / ? # [ ]
+[[/code]]
+
+Spaces can optionally be represented by a plus sign +.
+
+[[# unit-tests-note]]
++ [#unit-tests Unit Tests]
+
+[[# debugging-profiling-note]]
++ [#debugging-profiling Debugging and Profiling]
+
+[[# cpp]]
++ [#top C++]
+
+[http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3337.pdf C++11 Standard (pdf)]
+[http://www.cplusplus.com/reference/ Standard C++ Library Reference]
+[http://gcc.gnu.org/onlinedocs/libstdc++/ The GNU C++ Library]
+[http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml Google C++ Style Guide]
+[http://doc.qt.digia.com/qq/qq13-apis.html Designing Qt-Style C++ APIs]
+
+**C++11 and gcc**
+
+{{gcc}} provides a C++11 compiler which will run on Linux, Mac OS X, and Windows.  For a complete implementation of the C++11 standard one should use {{gcc}} 4.8 or later, but {{gcc}} 4.6 is sufficient for the examples in this sheet.  Support for C++11 features must be requested with the {{-std=c++0x}} flag.
+
+**C++11 on Mac OS X**
+
+The version of {{gcc}} that comes with XCode in Mac OS X 10.8 as part of the command line tools package is 4.2.  This version of {{gcc}} does not support C++11, but the command line tools package also provides the {{clang}} compiler which does:
+
+[[code]]
+clang++ -std=c++11 -stdlib=libc++ -o hello hello.cpp
+[[/code]]
+
+Like {{gcc}}, {{clang}} does not compile C++11 by default, hence the {{-std=c++11}} flag.  One must also specify the C++ standard library, since the {{libc++}} library which comes with {{clang}} will support C++11, but the {{libstdc++}} library provided with {{gcc}} 4.2 will not, and {{clang}} uses the {{gcc}} library by default.
+
+**C++11 Windows**
+
+The Visual Studio 2012 C++ compiler does not completely support C++11, but it has support for the features mentioned in this sheet.  For a complete C++11 compiler, install MinGW and {{gcc}} 4.8.
+
+**Compatibility with C**
+
+**What's New in C++11**
+
+
+[[# objective-c]]
++ [#top Objective-C]
+
+[https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html Programming with Objective-C] Apple
+[http://www.gnu.org/software/gnustep/resources/documentation/Developer/Base/ProgrammingManual/manual_toc.html GNUstep]
+[http://developer.apple.com/mac/library/documentation/cocoa/reference/foundation/objc_classic/index.html Mac OS X Foundation Framework]
+
+[[# java]]
++ [#top Java]
+
+[http://java.sun.com/javase/6/docs/api/ Java 1.6 API]
+[https://jdk7.java.net/ JDK 7 Project]
+[http://java.sun.com/docs/books/jvms/second_edition/html/VMSpecTOC.doc.html JVM Specification 2nd Ed]
+[http://java.sun.com/docs/books/jls/ The Java Language Specification 3rd Ed]
+
+[[# c-sharp]]
++ [#top C#]
+
+[http://standards.iso.org/ittf/PubliclyAvailableStandards/c042926_ISO_IEC_23270_2006(E).zip C# Standard: ECMA-334]
+[http://www.go-mono.com/docs/ Mono API]
+[http://msdn.microsoft.com/en-us/library/67ef8sbd.aspx C# Programming Guide] Microsoft

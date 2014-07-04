@@ -1,0 +1,2685 @@
+[[# top]]//a side-by-side reference sheet//
+
+[#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#lists lists] _
+[#arrays arrays] | [#dictionaries dictionaries] | [#functions functions] | [#macros macros] | [#execution-control execution control] | [#file-handles file handles] | [#file-buffers file buffers] | [#files files] | [#directories directories] _
+[#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#reflection reflection] |  [#java-interop java interop]
+||~ [[# general]]||~ [#common-lisp common lisp]||~ [#racket racket]||~ [#clojure clojure]||~ [#emacs-lisp emacs lisp]||
+||[[# version-used]][#version-used-note version used] _
+@<&nbsp;>@||##gray|//SBCL 1.0.48//##||##gray|//Racket 5.1//##||##gray|//Clojure 1.2//##||##gray|//Emacs 24.1//##||
+||[[# show-version]][#show-version-note show version] _
+@<&nbsp;>@||$ sbcl @@--@@version||$ racket @@--@@version||##gray|//displayed by repl on startup//##||$ emacs @@--@@version||
+||||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
+||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
+||[[# compiler]][#compiler-note compiler]|| ||$ mzc ##gray|//module//##.rkt|| ||M-x byte-compile-file||
+||[#executable making a standalone executable]||(sb-ext:save-lisp-and-die _
+@<&nbsp;&nbsp;>@"##gray|//executable//##" _
+@<&nbsp;&nbsp;>@:executable t _
+@<&nbsp;&nbsp;>@:toplevel '##gray|//function//##)||$ mzc --exe ##gray|//executable//## ##gray|//file//##|| ||##gray|//see note//##||
+||[[# shebang]][#shebang-note shebang]||#!/usr/bin/env sbcl @@--@@script||#!/usr/bin/env racket @@--@@script||##gray|//specify full path to clojure jar://## _
+#!/usr/bin/env java -jar clojure.jar||#!/usr/bin/env emacs @@--@@script||
+||[[# repl]][#repl-note repl] _
+@<&nbsp;>@||$ sbcl||$ racket||$ java -jar /PATH/TO/clojure.jar||M-x ielm||
+||[[# word-separator]][#word-separator-note word separator]||##gray|//whitespace//##||##gray|//whitespace//##||##gray|//whitespace and commas//##||##gray|//whitespace//##||
+||[[# identifiers-case-sensitive]][#identifiers-case-sensitive-note are identifiers case sensitive?] _
+@<&nbsp;>@||##gray|//no//##||##gray|//yes//##||##gray|//yes//##||##gray|//yes//##||
+||[[# identifier-char]][#identifier-char-note identifier characters]||##gray|//everything except whitespace and://## _
+( ) " , ' @@`@@ : ; # | \ _
+ _
+##gray|//reserved for user macros://## _
+?  !  [  ]  {  }||##gray|//everything except whitespace and://## _
+( ) [ ] { } " , ' @@`@@ ; # | \||##gray|//alphanumerics and these://## _
+* + ! -  _ ? _
+ _
+##gray|//these have special meaning or are reserved://## _
+/ . :||##gray|//everything except whitespace and://## _
+( ) " , ' @@`@@ ; # | \ _ [  ] ||
+||[[# esc-char-in-identifiers]][#esc-char-in-identifiers-note escaping characters in identifiers]||(setq white\ space\ symbol 3)||##gray|//racket://## _
+(define white\ space\ symbol 3)||##gray|//none//##||(setq white\ space\ symbol 3)||
+||[[# quoting-char-in-identifiers]][#quoting-char-in-identifiers-note quoting characters in identifiers]||(setq |white space symbol| 3)||(define |white space symbol| 3)||##gray|//none//##||##gray|//none//##||
+||[[# eol-comment]][#eol-comment-note end-of-line comment]||(+ 1 1) ; adding ||(+ 1 1) ; adding||(+ 1 1) ; adding||(+ 1 1) ; adding||
+||[[# multiple-line-comment]][#multiple-line-comment-note multiple line comment]||(+ 1 #| adding |# 1)||##gray|//r6rs://## _
+(+ 1 #| adding |# 1)|| || ||
+||||||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
+||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
+||[#label label] _
+@<&nbsp;>@||set,setq,defun||define||def,defn||set,setq,defun||
+||[#quote quote] _
+@<&nbsp;>@||quote||quote||quote||quote||
+||[#cell-types cell types] _
+@<&nbsp;>@||##gray|//value, function, struct, class, ...//##||##gray|//value//##||##gray|//value//##||##gray|//value, function, struct, ...//##||
+||[[# null]][#null-note null]||nil||null||nil||nil||
+||[[# null-test]][#null-test-note null test]||(null foo)||(null? foo)||(nil? foo)||(null foo)||
+||is the empty list null?||##gray|//yes//##||##gray|//yes//##||##gray|//no//##||##gray|//yes//##||
+||is null literal a symbol?||##gray|//yes//##||##gray|//yes//##||##gray|//no//##||##gray|//yes//##||
+||[#type-predicates type predicates]||null symbolp atom consp listp numberp characterp stringp||null? symbol? ##gray|//none//## pair? list? number? char? string? _
+##gray|//racket://## cons? ##gray|//synonym for//## pair?||nil? symbol? ##gray|//none//## ##gray|//none//## list? number? ##gray|//none//## string?||null symbolp atom consp listp numberp characterp stringp||
+||[#set-property set property] _
+@<&nbsp;>@||(setf (get 'foo :prop) 13)||##gray|//none//##||(def foo (with-meta 'x { :prop 13 }))||(setf (get 'foo :prop) 13)||
+||[#get-property get property] _
+@<&nbsp;>@||(get 'foo :prop)||##gray|//none//##||(get (meta foo) :prop)||(get 'foo :prop)||
+||[#remove-property remove property]||(remprop 'foo :prop)||##gray|//none//##||##gray|//none//##||(remprop 'foo :prop)||
+||[#quoted-symbol quoted symbol]||'foo _
+(quote foo)||'foo _
+(quote foo)||'foo _
+(quote foo)||'foo _
+(quote foo)||
+||[#keyword keyword] _
+@<&nbsp;>@||:foo||#:foo||:foo||:foo||
+||||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
+||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
+||[[# true-false]][#true-false-note true and false]||t nil||#t #f _
+##gray|//racket://## true false||true false||t nil||
+||[[# falsehoods]][#falsehoods-note falsehoods]||nil ()||#f _
+##gray|//racket://## #f false||false nil||nil ()||
+||[[# is-true-symbol]][#is-true-symbol-note is true a symbol?]||##gray|//yes//##||##gray|//no//##||##gray|//no//##||##gray|//yes//##||
+||[[# logical-op]][#logical-op-note logical operators]||(or (not t) (and t nil))||(or (not #t) (and #t #f))||(or (not true) (and true false))||(or (not t) (and t nil))||
+||[[# relational-op]][#relational-op-note relational operators]||@@=@@ /= < > <= >=||@@=@@ ##gray|//none//## < > <= >=||@@=@@ ##gray|//none//## < > <= >=||@@=@@ /= < > <= >=||
+||[#eq eq, equal, =]||eq, equal, =||eq?, equal?, =||@@=@@ ##gray|//works on symbols and is true for lists with identical members//##||eq, equal, =||
+||[[# min-max]][#min-max-note min and max]||(min 1 2 3) _
+(max 1 2 3)||(min 1 2 3) _
+(max 1 2 3)||(min 1 2 3) _
+(max 1 2 3)||(min 1 2 3) _
+(max 1 2 3)||
+||[[# num-predicates]][#num-predicates-note numeric predicates]||numberp integerp _
+rationalp floatp _
+realp complexp||number? integer? _
+rational? inexact? _
+real? complex?||number? integer? _
+rational? float? _
+##gray|//none//## ##gray|//none//##||numberp integerp _
+##gray|//none//## floatp _
+##gray|//none//## ##gray|//none//##||
+||[[# arith-op]][#arith-op-note arithmetic operators]||+ - * / mod||+ - * / modulo||+ - * / mod||+ - * / %||
+||algebraic notation|| || || || ||
+||[[# int-div]][#int-div-note integer division] _
+##gray|//and remainder//##||(truncate 7 3) _
+(rem 7 3)||(quotient 7 3) _
+(remainder 7 3)||(quot 7 3) _
+(rem 7 3)||(/ 7 3) _
+(% 7 3)||
+||[[# int-div-zero]][#int-div-zero-note integer division by zero]|| || || ||##gray|arith-error##||
+||[[# float-div]][#float-div-note float division]||##gray|//rational://## _
+(/ 7 3) _
+ _
+##gray|//float://## _
+(/ 7 (* 3 1.0))||##gray|//rational://## _
+(/ 7 3) _
+ _
+##gray|//float://## _
+(/ 7 (float 3))||##gray|//rational://## _
+(/ 7 3) _
+ _
+##gray|//float://## _
+(/ 7 (* 3 1.0))||##gray|//integer quotient://## _
+(/ 7 3) _
+ _
+##gray|//float://## _
+(/ 7 (* 3 1.0))||
+||[[# float-div-zero]][#float-div-zero-note float division by zero]|| || || ||-1.0e+INF, -0.0e+NaN, ##gray|//or//## 1.0e+INF||
+||[[# power]][#power-note power]||(expt 2 32)||(expt 2 32)||##gray|//returns float://## _
+(Math/pow 2 32)||(expt 2 32)||
+||[[# sqrt]][#sqrt-note sqrt]||(sqrt 2)||(sqrt 2)||(Math/sqrt 2)||(sqrt 2)||
+||[[# sqrt-negative-one]][#sqrt-negative-one sqrt -1]||#C(0.0 1.0)||0+1i|| ##gray|//(Math/sqrt -1)://## NaN||-0.0e+NaN||
+||[[# transcendental-func]][#transcendental-func-note transcendental functions]||exp log sin cos tan asin acos atan atan||exp log sin cos tan asin acos atan atan||Math/exp Math/log Math/sin Math/cos Math/tan Math/asin Math/acos Math/atan Math/atan2||exp log sin cos tan asin acos atan atan||
+||[[# float-truncation]][#float-truncation-note float truncation]||##gray|//return two values, first is integer://## _
+truncate round ceiling floor||##gray|//return floats://## _
+truncate round ceiling floor||##gray|//return integers://## _
+int Math/round _
+##gray|//return floats://## _
+Math/ceil Math/floor||truncate round ceiling floor _
+fround fceiling ffloor _
+##gray|truncate //returns integer//##||
+||[[# abs-val]][#abs-val-note absolute value] _
+##gray|//and signum//##||abs signum||abs _
+##gray|//racket://## sgn||Math/abs Math/signum||abs signum||
+||[[# rational-decomposition]][#rational-decomposition-note rational decomposition]||numerator denominator||numerator denominator||(.numerator x) _
+(.denominator x)||##gray|//none//## ##gray|//none//##||
+||[[# complex-decomposition]][#complex-decomposition-note complex decomposition]||realpart imagpart||real-part imag-part||##gray|//none//## _
+##gray|//none//##||##gray|//none//## ##gray|//none//##||
+||[[# random-num]][#random-num-note random number] _
+##gray|//uniform integer, uniform float, normal float//##||(random 100) _
+(random 1.0) _
+##gray|//none//##||##gray|//gambit and srfi 27://## _
+(random-integer 100) _
+(random-real) _
+##gray|//none//## _
+@<&nbsp;>@ _
+##gray|//racket://## _
+(random 100) _
+(random) _
+##gray|//none//##||(def rnd (java.util.Random.)) _
+(.nextInt rnd 100) _
+(.nextFloat rnd) _
+(.nextGaussian rnd)||(random 100) _
+##gray|//none//## _
+##gray|//none//##||
+||[[# random-seed]][#random-seed-note random seed]|| || || || ||
+||[[# bit-op]][#bit-op-note bit operators]||ash ##gray|//left shift when 2nd argument positive//## logand logior logxor lognot||arithmetic-shift ##gray|//left shift when 2nd argument positive//## bitwise-and bitwise-ior bitwise-xor bitwise-not||bit-shift-left bit-shift-right bit-and bit-or bit-xor bit-not||lsh ##gray|//left shift when 2nd argument positive//## logand logior logxor lognot||
+||||||||||~ [[# strings]][#strings-note strings]||
+||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
+||[#character-literal character literals]||#\a #\Space #\Newline #\Backspace #\Tab #\Linefeed #\Page #\Return #\Rubout||#\a #\space #\newline #\backspace #\tab #\linefeed #\page #\return #\nul #\vtab  #\alarm #\esc #\delete _
+##gray|//not in racket:// #\alarm #\esc #\delete##||\a \newline \space \backspace \tab ##gray|//?//## \formfeed \return ##gray|//?//##||?a ?\b ?\t ?\n ?\f ?\r ?\" ?\\ ?\##gray|//ooo//## ?\u##gray|//hhhh//## ?\x##gray|//h//## - ?\x##gray|//hhhhhh//## ?\C-##gray|//x//## ?\M-##gray|//x//##||
+||[#string-literal string literal] _
+@<&nbsp;>@||"foo bar"||"foo bar"||"foo bar"||"foo bar"||
+||[#string-escapes string escapes]||\" \\||\t \n \r \" \\ \##gray|//ooo//## \u##gray|//hhhh//##||\b \t \n \f \r \" \\ \##gray|//ooo//## \u##gray|//hhhh//##||\b \t \n \f \r \" \\ \##gray|//ooo//## \u##gray|//hhhh//## \x##gray|//h//## - \x##gray|//hhhhhh//## \C-##gray|//x//## \M-##gray|//x//##||
+||[#string-char character access]||(char "foo" 0)||(string-ref "foo" 0)||(.charAt "foo" 0)||(aref "foo" 0)||
+||[#find-substring find substring]||(search "bar" "foo bar")||##gray|//racket://## _
+(require srfi/13/string) _
+(string-contains "foo bar" "bar")||(.indexOf "foo bar" "bar")||(search "bar" "foo bar")||
+||[#extract-substring extract substring]||(subseq "foo bar" 4 7)||(substring "foo bar" 4 7)||(.substring "foo bar" 4 7)||(substring "foo bar" 4 7)||
+||[#string-length length] _
+@<&nbsp;>@||(length "foo")||(string-length "foo")||(.length "foo")||(length "foo")||
+||[#string-constructors constructors]||(make-string 3 :initial-element #\f) _
+@<&nbsp;>@ _
+(reduce (lambda (m o) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(concatenate 'string m _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(string o))) _
+@<&nbsp;&nbsp;>@'(#\f #\o #\o) _
+@<&nbsp;&nbsp;>@:initial-value "")||(make-string 3 #\f) _
+@<&nbsp;>@ _
+(string #\f #\o #\o)||(String. (into-array _
+@<&nbsp;&nbsp;>@(. Character TYPE) _
+@<&nbsp;&nbsp;>@(repeat 3 \f))) _
+@<&nbsp;>@ _
+(String. (into-array _
+@<&nbsp;&nbsp;>@(. Character TYPE) _
+@<&nbsp;&nbsp;>@'(\f \o \o)))||(make-string 3 ?f) _
+@<&nbsp;>@ _
+(string ?f ?o ?o)||
+||[#string-comparison comparison]||(string= "foo" "bar") _
+(string< "foo" "bar")||(string=? "foo" "bar") _
+(string<? "foo" "bar")||(.equals "foo" "bar") _
+(.compareTo "foo" "bar")||(string= "foo" "bar") _
+(string< "foo" "bar")||
+||[#string-case case]||(string-downcase "FOO") _
+(string-upcase "foo") _
+(string-capitalize "foo")||(string-downcase "FOO")||(.toLowerCase "FOO")||(downcase "FOO") _
+(upcase "foo") _
+(capitalize "foo")||
+||[#string-trim trim]||(string-trim _
+@<&nbsp;&nbsp;>@'(#\Space #\Tab #\Newline) _
+@<&nbsp;&nbsp;>@" foo ")|| (require srfi/13/string) _
+(string-trim-both " foo ")||(.trim " foo ")||##gray|//none; see notes for an implementation//##||
+||[#string-concat concat]||(concatenate 'string _
+@<&nbsp;&nbsp;>@"foo " _
+@<&nbsp;&nbsp;>@"bar " _
+@<&nbsp;&nbsp;>@"baz")||(string-append _
+@<&nbsp;&nbsp;>@"foo " _
+@<&nbsp;&nbsp;>@"bar " _
+@<&nbsp;&nbsp;>@"baz")||(str "foo " "bar " "baz")||(concat "foo " "bar " "baz")||
+||[#number-string convert from string, to string]|| (+ 7 (parse-integer "12")) _
+@<&nbsp;>@ _
+(+ 73.9 (read-from-string ".037")) _
+@<&nbsp;>@ _
+(concatenate 'string _
+@<&nbsp;&nbsp;>@"value: " _
+@<&nbsp;&nbsp;>@(princ-to-string 8))||(+ 7 (string->number "12")) _
+@<&nbsp;>@ _
+(+ 73.9 (string->number ".037")) _
+@<&nbsp;>@ _
+(string-append _
+@<&nbsp;&nbsp;>@"value: " _
+@<&nbsp;&nbsp;>@(number->string 8))||(+ 7 (Integer/parseInt "12")) _
+@<&nbsp;>@ _
+(+ 73.9 (Float/parseFloat ".037")) _
+@<&nbsp;>@ _
+(str "Value: " 8)||(+ 7 (string-to-number "12")) _
+@<&nbsp;>@ _
+(+ 73.9 _
+@<&nbsp;&nbsp;>@(string-to-number ".037")) _
+@<&nbsp;>@ _
+(concat _
+@<&nbsp;&nbsp;>@"value: " _
+@<&nbsp;&nbsp;>@(number-to-string 8))||
+||[#string-split split]||(cl-ppcre:split _
+@<&nbsp;&nbsp;>@"[ \t\n]+" _
+@<&nbsp;&nbsp;>@"foo bar baz")||(regexp-split #rx"[ \n\t]+" _
+@<&nbsp;&nbsp;>@"foo bar baz")||(seq _
+@<&nbsp;&nbsp;>@(.split "foo bar baz" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@"[ \t\n]+"))||(split-string "foo bar baz")||
+||[#string-join join]||(reduce _
+@<&nbsp;&nbsp;>@(lambda (m o) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(concatenate 'string m " " o)) _
+@<&nbsp;&nbsp;>@'("foo" "bar" "baz"))||(string-join _
+@<&nbsp;&nbsp;>@'("foo" "bar" "baz") _
+@<&nbsp;&nbsp;>@" ")||(reduce #(str %1 " " %2) _
+@<&nbsp;&nbsp;>@'("foo" "bar" "baz"))||(reduce _
+@<&nbsp;&nbsp;>@(lambda (m o) (concat m " " o)) _
+@<&nbsp;&nbsp;>@'("foo" "bar" "baz"))||
+||[#format format]||(format nil "~a: ~a ~,2F" _
+@<&nbsp;&nbsp;>@"Foo" _
+@<&nbsp;&nbsp;>@7 _
+@<&nbsp;&nbsp;>@13.457)||(format "~a ~a ~a" "Foo" 7 13.457)||(String/format "%s: %d %.2f" _
+@<&nbsp;&nbsp;>@(to-array ["Foo" 7 13.457]))|| (format "%s: %d %.2f" _
+@<&nbsp;&nbsp;>@"Foo" _
+@<&nbsp;&nbsp;>@7 _
+@<&nbsp;&nbsp;>@13.457)||
+||[#regular-expressions regular expressions]||(cl-ppcre:all-matches _
+@<&nbsp;&nbsp;>@"bar" _
+@<&nbsp;&nbsp;>@"foo bar")||(regexp-match #rx"bar" "foo bar")||(re-seq #"bar" "foo bar")||(string-match "bar" "foo bar")||
+||[#regex-substitution regex substitution]||(cl-ppcre:regex-replace "[^l]l" _
+@<&nbsp;&nbsp;>@"hello" _
+@<&nbsp;&nbsp;>@"EL") _
+@<&nbsp;>@ _
+(cl-ppcre:regex-replace-all "[^l]l" _
+@<&nbsp;&nbsp;>@"hello hello" _
+@<&nbsp;&nbsp;>@"EL")||(regexp-replace #rx"el" _
+@<&nbsp;&nbsp;>@"hello" _
+@<&nbsp;&nbsp;>@"EL") _
+@<&nbsp;>@ _
+(regexp-replace* #rx"el" _
+@<&nbsp;&nbsp;>@"hello hello" _
+@<&nbsp;&nbsp;>@"EL")||(.replaceFirst "hello" "[^l]l" "XX") _
+@<&nbsp;>@ _
+(.replaceAll "hello hello" _
+@<&nbsp;&nbsp;>@"[^l]l" "XX")||##gray|//?//## _
+@<&nbsp;>@ _
+(replace-regexp-in-string "[^l]l" _
+@<&nbsp;&nbsp;>@"EL" _
+@<&nbsp;&nbsp;>@"hello hello")||
+||[#regex-special-chars regex special characters]||(cl-ppcre:all-matches _
+@<&nbsp;&nbsp;>@"^[0-9a-f]+$" _
+@<&nbsp;&nbsp;>@"1ab7") _
+@<&nbsp;>@ _
+(cl-ppcre:all-matches _
+@<&nbsp;&nbsp;>@"(\\d\\w\\s)\\1" _
+@<&nbsp;&nbsp;>@"8a 8a ")||(regexp-match #rx"^[a-f0-9]+$" _
+@<&nbsp;&nbsp;>@"1ab7") _
+@<&nbsp;>@ _
+(regexp-match #px"(\\d\\w\\s)\\1" _
+@<&nbsp;&nbsp;>@"8a 8a ")||(re-seq #"^[0-9a-f]+$" "1ab7") _
+@<&nbsp;>@ _
+(re-seq #"(\d\w\s)\1" "8a 8a ")||(string-match _
+@<&nbsp;&nbsp;>@"^[0-9a-f]+$" _
+@<&nbsp;&nbsp;>@"1abf")||
+||||||||||~ [[# lists]][#lists-note lists]||
+||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
+||[#list-literal list literal] _
+@<&nbsp;>@||'(1 2 3)||'(1 2 3) ##gray|//or//## '[1 2 3] ##gray|//or//## '{1 2 3}||'(1 2 3)||'(1 2 3)||
+||[#pair-literal pair literal] _
+@<&nbsp;>@||'(1 . 2)||'(1 . 2)||##gray|//none//##||'(1 . 2)||
+||[#car car] _
+@<&nbsp;>@||car, first||car ##gray|//racket://## car, first ||first||car||
+||[#cdr cdr] _
+@<&nbsp;>@||cdr, rest||cdr ##gray|//racket://## cdr, rest||rest, next||cdr||
+||[#cons cons] _
+@<&nbsp;>@||cons||cons||cons ##gray|//2nd arg must be a list//##||cons||
+||[#atom atom] _
+@<&nbsp;>@||(atom x)||(not (pair? x))||(not (list? x))||(atom x)||
+||[#car-nil (car '())] _
+@<&nbsp;>@||nil||##gray|//error//##||##gray|//first://## nil||nil||
+||[#cdr-nil (cdr '())]||nil||##gray|//error//##||##gray|//rest://## () _
+##gray|//next://## nil||nil||
+||[#eval-nil (eval '())] _
+@<&nbsp;>@||nil||##gray|//error//##||()||nil||
+||[#list-functions list functions] _
+@<&nbsp;>@||list listp length append reverse||list list? length append reverse||list list? count concat reverse||list listp length append reverse||
+||[#nth nth] _
+@<&nbsp;>@||(nth 3 '(0 1 2 3))||(list-ref '(0 1 2 3) 3)||(nth '(0 1 2 3) 3)||(nth 3 '(0 1 2 3))||
+||[#list-element-index index of list element]||(position 7 '(5 6 7 8))||##gray|//srfi-1://## _
+(list-index _
+@<&nbsp;&nbsp;>@(lambda (x) (= x 7)) _
+@<&nbsp;&nbsp;>@'(5 6 7 8))||##gray|//none//##||(position 7 '(5 6 7 8))||
+||[#last-butlast last butlast]||(setq a '(1 2 3)) _
+(car (last a)) _
+(butlast a)||##gray|//racket://## _
+(define a '(1 2 3)) _
+(last a) _
+ (take a (- (length a) 1))||(def a '(1 2 3)) _
+(last a) _
+(butlast a)||(car (last a)) _
+(butlast a)||
+||[#set-car-cdr set-car set-cdr]||(setq a '(1 2 3)) _
+(setf (car a) 3) _
+(setf (cdr a) '(4 5 6))||##gray|//r5rs only://## _
+(define a '(1 2 3)) _
+(set-car! a 3) _
+(set-cdr! a '(4 5 6))||##gray|//none//##||(setq a '(1 2 3) _
+(setcar a 3) _
+(setcdr a '(4 5 6))||
+||[#sort sort] _
+@<&nbsp;>@||(sort '(3 2 4 1) '<)||(sort '(3 2 4 1) <)||(sort < '(3 2 4 1))||(sort '(3 2 4 1) '<)||
+||[#assoc assoc] _
+@<&nbsp;>@||(assoc 3 '((1 2) (3 4)))||(assoc 3 '((1 2) (3 4)))||##gray|//none, see note//##||(assoc 3 '((1 2) (3 4)))||
+||[#getf getf] _
+@<&nbsp;>@||(getf '(1 2 3 4) 3)||##gray|//none//##||##gray|//none//##||(getf '(1 2 3 4) 3)||
+||[#map map]||(mapcar _
+@<&nbsp;&nbsp;>@(lambda (x) (* x x)) _
+@<&nbsp;&nbsp;>@'(1 2 3))||(map (lambda (x) (* x x)) '(1 2 3))||(map #(* % %) '(1 2 3))||(mapcar _
+@<&nbsp;&nbsp;>@(lambda (x) (* x x)) _
+@<&nbsp;&nbsp;>@'(1 2 3))||
+||[#filter filter]||(remove-if-not _
+@<&nbsp;&nbsp;>@(lambda (x) (> x 2)) _
+@<&nbsp;&nbsp;>@'(1 2 3)) _
+##gray|remove-if //returns complement//##||##gray|//racket and srfi-1://## _
+(filter _
+@<&nbsp;&nbsp;>@(lambda (x) (> x 2)) _
+@<&nbsp;&nbsp;>@'(1 2 3)) _
+##gray|filter-not //returns complement//##||(filter #(> % 2) '(1 2 3)) _
+##gray|remove //returns complement//##||(remove-if-not _
+@<&nbsp;&nbsp;>@(lambda (x) (> x 2)) _
+@<&nbsp;&nbsp;>@'(1 2 3)) _
+##gray|remove-if //returns complement//##||
+||[#reduce reduce (left fold)]||(reduce '- _
+@<&nbsp;&nbsp;>@'(1 2 3 4) _
+@<&nbsp;&nbsp;>@:initial-value 0)||##gray|//srfi-1://## _
+(fold - 0 '(1 2 3 4)) _
+##gray|//racket://## _
+(foldl - 0 '(1 2 3 4))||(reduce - 0 '(1 2 3 4))||(reduce '- _
+@<&nbsp;&nbsp;>@'(1 2 3 4) _
+@<&nbsp;&nbsp;>@:initial-value 0)||
+||[#right-fold right fold]||(reduce '- _
+@<&nbsp;&nbsp;>@'(1 2 3 4) _
+@<&nbsp;&nbsp;>@:initial-value 0 _
+@<&nbsp;&nbsp;>@:from-end t)||##gray|//srfi-1://## _
+(fold-right - 0 '(1 2 3 4)) _
+##gray|//racket://## _
+(foldr - 0 '(1 2 3 4))||##gray|//none//##||(reduce '- _
+@<&nbsp;&nbsp;>@'(1 2 3 4) _
+@<&nbsp;&nbsp;>@:initial-value 0 _
+@<&nbsp;&nbsp;>@:from-end t)||
+||[#sublis sublis]||(sublis '((1 . 2) (3 . 4)) _
+@<&nbsp;&nbsp;>@'(1 (3 3 (1))))|| || ||(sublis '((1 . 2) (3 . 4)) _
+@<&nbsp;&nbsp;>@'(1 (3 3 (1))))||
+||[#dolist dolist]||(dolist (x '(1 2 3)) _
+@<&nbsp;&nbsp;>@(print x) _
+@<&nbsp;&nbsp;>@(print (- x)))||##gray|//racket://## _
+(for ((x '(1 2 3))) _
+@<&nbsp;&nbsp;>@(printf "~a~n" x) _
+@<&nbsp;&nbsp;>@(printf "~a~n" (- x)))||(doseq [x '(1 2 3)] _
+@<&nbsp;&nbsp;>@(println x) _
+@<&nbsp;&nbsp;>@(println (- x)))||(dolist (x '(1 2 3)) _
+@<&nbsp;&nbsp;>@(print x) _
+@<&nbsp;&nbsp;>@(print (- x)))||
+||[#universal-predicate universal predicate]||(every _
+@<&nbsp;&nbsp;>@(lambda (i) (= 0 (rem i 2))) _
+@<&nbsp;&nbsp;>@'(1 2 3 4))||##gray|//racket://## _
+(for/and ((i '(1 2 3 4))) _
+@<&nbsp;&nbsp;>@(= 0 (remainder i 2)))||(every? #(= 0 (rem % 2)) '(1 2 3 4))||(every _
+@<&nbsp;&nbsp;>@(lambda (i) (= 0 (% i 2))) _
+@<&nbsp;&nbsp;>@'(1 2 3 4))||
+||[#existential-predicate existential predicate]||(some _
+@<&nbsp;&nbsp;>@(lambda (i) (= 0 (rem i 2))) _
+@<&nbsp;&nbsp;>@'(1 2 3 4))||##gray|//racket://## _
+(for/or ((i '(1 2 3 4))) _
+@<&nbsp;&nbsp;>@(= 0 (remainder i 2)))||(some #(= 0 (rem % 2)) '(1 2 3 4))||(some _
+@<&nbsp;&nbsp;>@(lambda (i) (= 0 (% i 2))) _
+@<&nbsp;&nbsp;>@'(1 2 3 4))||
+||[#take take]||##gray|//none//##||##gray|//racket and srfi-1://## _
+(take '(1 2 3 4) 2)||(take 2 '(1 2 3 4))||##gray|//none//##||
+||[#drop drop]||(nthcdr 2 '(1 2 3 4))||##gray|//racket and srfi-1://## _
+(drop '(1 2 3 4) 2)||(drop 2 '(1 2 3 4))||(nthcdr 2 '(1 2 3 4))||
+||[#push-pop push and pop]||(setq x '(1 2 3)) _
+(push 4 x) _
+(pop x)||##gray|//none//##||(def x '(1 2 3) _
+##gray|//none//## _
+(pop x)||(setq x '(1 2 3)) _
+(push 4 x) _
+(pop x)||
+||||||||||~ [[# arrays]][#arrays-note arrays]||
+||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
+||[#vector-literal vector literal] _
+@<&nbsp;>@||#(1 2 3)||#(1 2 3)||[1 2 3]||[1 2 3]||
+||[#vector-access vector access]||(elt #(1 2 3) 0) ##gray|//or//## _
+(aref #(1 2 3) 0)||(vector-ref #(1 2 3) 0)||(nth [1 2 3] 0)||(elt [1 2 3] 0)||
+||[#set-vector-element set vector element]||(setq v [1 2 3]) _
+(setf (aref v 2) 4)||(define v (vector 1 2 3)) _
+(vector-set! v 2 4)||(replace { 2 4 } [1 2 3])||(setq v #(1 2 3)) _
+(setf (aref v 2) 4)||
+||[#vector-to-list vector to list] _
+@<&nbsp;>@||(coerce #(1 2 3) 'list)||(vector->list #(1 2 3))||(seq [1 2 3])||(coerce [1 2 3] 'list)||
+||[#list-to-vector list to vector] _
+@<&nbsp;>@||(coerce '(1 2 3) 'vector)||(list->vector '(1 2 3))||(vec '(1 2 3))||(coerce '(1 2 3) 'vector)||
+||[#sequence-data-types sequence data types]||list vector||list vector hash-table string input-port range||all collections and strings||list vector||
+||[#sequence-predicate sequence predicate]||(typep '(1 2 3) 'sequence) _
+(typep #(1 2 3) 'sequence)||(sequence? '(1 2 3))||(seq? '(1 2 3)) _
+(seq? (seq [1 2 3]))||(typep '(1 2 3) 'sequence) _
+(typep [1 2 3] 'sequence)||
+||[#sequence-functions list functions usable on sequences]||length reduce remove-if-not sort||for for/list for/hash for/and for/or for/fold||##gray|//vectors support all list functions;//## seq ##gray|//will convert any other collection to an object which supports list functions//##||length reduce remove-if-not||
+||[#make-array make-array]||(make-array '(4 3 2) _
+@<&nbsp;&nbsp;>@:initial-element 0) _
+@<&nbsp;>@ _
+(make-array '(3 2) _
+@<&nbsp;&nbsp;>@:initial-contents _
+@<&nbsp;&nbsp;>@'((1 2) (3 4) (5 6)))||##gray|//none//##||##gray|//none//##||##gray|//none//##||
+||[#array-access array access]||(setq a _
+@<&nbsp;&nbsp;>@(make-array '(3 2) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@:initial-contents _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@'((1 2) (3 4) (5 6)))) _
+@<&nbsp;>@ _
+(aref a 2 1)||##gray|//none//##||##gray|//none//##||##gray|//none//##||
+||[#set-array-element set array element]||(setf (aref a 2 1) 7)||##gray|//none//##||##gray|//none//##||##gray|//none//##||
+||[#array-dimensions array dimensions]||(setq a _
+@<&nbsp;&nbsp;>@(make-array '(4 3 2) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@:initial-element 0)) _
+@<&nbsp;>@ _
+(array-rank a) _
+(array-dimensions a) _
+(array-dimension a 0)||##gray|//none//##||##gray|//none//##||##gray|//none//##||
+||[#range range]||##gray|//none//##||(in-range 1 101) ##gray|//use in for constructs//##||(range 1 101)||##gray|//none//##||
+||[#list-comprehension list comprehension]||##gray|//none//##||(for*/list ((file "ABCDEFGH") (rank (in-range 1 9))) (printf "~a~a" file rank))||(for [file "ABCDEFGH" rank (range 1 9)] (format "%c%d" file rank))||##gray|//none//##||
+||||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
+||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
+||[#make-hash make-hash]||(setq h (make-hash-table))||(define h (make-hash)) _
+(define ih (make-immutable-hash '(("hello" . 5))))||(def h (hash-map "hello" 5))||(setq h _
+@<&nbsp;&nbsp;>@(make-hash-table _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@:test 'equal))||
+||[#hash-literal hash literal] _
+@<&nbsp;>@||##gray|//none//##|| #hash(("hello" . 5) ("goodbye" . 7))||{"hello" 5 "goodbye" 7}||##gray|//none//##||
+||[#put-hash put-hash]||(setf (gethash "hello" h) 5)||(hash-set! h "hello" 5) _
+(define ih2 (hash-set ih "goodbye" 7))||##gray|//none//## _
+(def h2 (assoc h "goodbye" 7)) ||(puthash "hello" 5 h)||
+||[#get-hash get-hash] _
+@<&nbsp;>@||(gethash "hello" h)||(hash-ref h "hello")||(get h "hello")||(gethash "hello" h)||
+||[#hash-key-not-found hash key not found]||nil||##gray|//error//##||nil||nil||
+||[#rem-hash rem-hash]||(remhash "hello" h)||(hash-remove! h "hello") _
+@<&nbsp;>@ _
+(define ih2 _
+@<&nbsp;&nbsp;>@(hash-remove ih "hello"))||##gray|//none//## _
+(def h2 (dissoc h "hello"))||(remhash "hello" h)||
+||[#hash-size hash size] _
+@<&nbsp;>@||(hash-table-count h)||(hash-count h)||(count h)||(hash-table-count h)||
+||[#iterate-hash iterate over hash entries]|| (maphash _
+@<&nbsp;&nbsp;>@(lambda (k v) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(print k) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(print v)) _
+@<&nbsp;&nbsp;>@h)|| (hash-for-each h _
+@<&nbsp;&nbsp;>@(lambda (k v) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(printf "~a~n" k) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(printf "~a~n" v)))||(doseq [p h] _
+@<&nbsp;&nbsp;>@(println (first p)) _
+@<&nbsp;&nbsp;>@(println (second p)))||(maphash _
+@<&nbsp;&nbsp;>@(lambda (k v) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(print k) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(print v)) _
+@<&nbsp;&nbsp;>@h)||
+||[#map-hash map hash to list]||##gray|//none//##||(define hkeys (hash-map h (lambda (k v) k))) _
+(define hvals (hash-map h (lambda (k v) v)))||(def hkeys (map (fn [p] (first p)) h)) _
+(def hvals (map (fn [p] (second p)) h))||##gray|//none//##||
+||[#defstruct defstruct]||(defstruct account id balance)||(define-struct account (id (balance #:mutable)))||(defstruct account :id :balance)||(defstruct account id balance)||
+||[#struct struct]||(setq a _
+@<&nbsp;&nbsp;>@(make-account _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@:id 3 _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@:balance 17.12))||(define a (make-account 3 17.12))||(def a (struct account 3 17.12))||(setq a _
+@<&nbsp;&nbsp;>@(make-account :id 3 :balance 17.12))||
+||[#struct-getter struct getter] _
+@<&nbsp;>@||(account-id a)||(account-id a)||(:id a)||(account-id a)||
+||[#struct-setter struct setter] _
+@<&nbsp;>@||(setf (account-balance a) 0)||(set-account-balance! a 0)||##gray|//none//##||(setf (account-balance a) 0)||
+||[#struct-predicate struct predicate] _
+@<&nbsp;>@||(account-p a)||(account? a)||##gray|//none//##||(account-p a)||
+||||||||||~ [[# functions]][#functions-note functions]||
+||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
+||[#let let]||(let ((x 3) (y 4)) _
+@<&nbsp;&nbsp;>@(+ x y))||(let ((x 3) (y 4)) _
+@<&nbsp;&nbsp;>@(+ x y))||(let [x 3 y 4] _
+@<&nbsp;&nbsp;>@(+ x y))||(let ((x 3) (y 4)) _
+@<&nbsp;&nbsp;>@(+ x y)) _
+##gray|//use// lexical-let //for lexical scope//##||
+||[#let-star let*]||(let* ((x 3) (y (* x x))) _
+@<&nbsp;&nbsp;>@(+ x y))||(let* ((x 3) (y (* x x))) _
+@<&nbsp;&nbsp;>@(+ x y))||(let [x 3 y (* x x)] _
+@<&nbsp;&nbsp;>@(+ x y))||(let* ((x 3) (y (* x x))) _
+@<&nbsp;&nbsp;>@(+ x y)) _
+##gray|//use// lexical-let* //for lexical scope//##||
+||[#define-function define function] _
+@<&nbsp;>@||(defun add (x y) (+ x y))||(define (add x y) (+ x y))||(defn add [x y] (+ x y))||(defun add (x y) (+ x y))||
+||[#optional-argument optional argument]||(defun add (a &optional b) _
+@<&nbsp;&nbsp;>@(if (null b) a (+ a b)))||(define (add a (b null)) _
+@<&nbsp;&nbsp;>@(if (null? b) a (+ a b)))|| (defn add ([a] a) ([a b] (+ a b))) _
+##gray|//no syntax error if called with more than 2 args://## _
+(defn add [a & [b]] _
+@<&nbsp;&nbsp;>@(if (nil? b) a (+ a b)))||(defun add (a &optional b) _
+@<&nbsp;&nbsp;>@(if (null b) a (+ a b)))||
+||[#variable-arguments variable number of arguments]||(defun add (a &rest b) _
+@<&nbsp;&nbsp;>@(if (null b) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@a _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(+ a (eval (cons '+ b)))))||(define (add a . b) _
+@<&nbsp;&nbsp;>@(if (null? b) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@a _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(+ a (apply + b))))||(defn add [a & b] _
+@<&nbsp;&nbsp;>@(if (nil? b) a (+ a (apply + b))))||(defun add (a &rest b) _
+@<&nbsp;&nbsp;>@(if (null b) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@a _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(+ a (eval (cons '+ b)))))||
+||[#default-value default value]||(defun add (a &optional (b 0)) _
+@<&nbsp;&nbsp;>@(+ a b))||##gray|//racket://## _
+(define (add a (b 0)) (+ a b))||(defn add _
+@<&nbsp;&nbsp;>@([a] (add a 0)) _
+@<&nbsp;&nbsp;>@([a b] (+ a b)))||##gray|//none//##||
+||[#named-parameter named parameter]||(defun logarithm (&key number base) _
+@<&nbsp;&nbsp;>@(/ (log number) (log base))) _
+@<&nbsp;>@ _
+(logarithm :base 2 :number 8)||##gray|//none//##|| (defn logarithm [{x :number b :base}] (/ (Math/log x) (Math/log b))) _
+ (logarithm {:base 2 :number 8})||(defun logarithm _
+@<&nbsp;&nbsp;>@(&key number &key base) _
+@<&nbsp;&nbsp;>@(if base _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(/ (log number) (log base)) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(log number))) _
+@<&nbsp;>@ _
+##gray|//order significant, not key names://## _
+(logarithm :foo 8 :bar 2)||
+||[#return-multiple-values return multiple values]||(defun sqrts (x) _
+@<&nbsp;&nbsp;>@(values (sqrt x) (- (sqrt x))))||(define (sqrts x) _
+@<&nbsp;&nbsp;>@(values (sqrt x) (- (sqrt x))))||(defn sqrts [x] (list (Math/sqrt x) (- (Math/sqrt x))))||##gray|values //creates a list://## _
+(defun sqrts (x) _
+@<&nbsp;&nbsp;>@(values (sqrt x) (- (sqrt x))))||
+||[#multiple-values-local-variables assign multiple values to local variables]||(multiple-value-bind (r1 r2) _
+@<&nbsp;&nbsp;>@(sqrts 3) _
+@<&nbsp;&nbsp;>@r2)||(let-values _
+@<&nbsp;&nbsp;>@(((r1 r2) (sqrts 3))) _
+@<&nbsp;&nbsp;>@r2)||(let [[r1 r2] (sqrts 3)] r2)||(multiple-value-bind _
+@<&nbsp;&nbsp;>@(r1 r2) _
+@<&nbsp;&nbsp;>@(sqrts 3) _
+@<&nbsp;&nbsp;>@r2)||
+||[#multiple-values-global-variables assign multiple values to global variables]||(multiple-value-setq (r1 r2) _
+@<&nbsp;&nbsp;>@(sqrts 3))||(define-values (r1 r2) (sqrts 3))||##gray|//none//##||(multiple-value-setq (r1 r2) (sqrts 3))||
+||[#list-to-multiple-values convert list to multiple values]||(values-list '(1 2 3))||(apply values '(1 2 3))||##gray|//multiple values are lists//##||##gray|//multiple values are lists//##||
+||[#multiple-values-list assign multiple values to list]||(multiple-value-list (sqrts 3))||(call-with-values _
+@<&nbsp;&nbsp;>@(lambda () (sqrts 3)) _
+@<&nbsp;&nbsp;>@list)||##gray|//multiple values are lists//##||##gray|//multiple values are lists//##||
+||[#tail-call tail call optimization]||##gray|//yes for sbcl//##||##gray|//yes//##||##gray|//yes with//## recur||##gray|//no//##||
+||[#lambda lambda]||(lambda (x) (* x x))||(lambda (x) (* x x))||#(* % %) _
+(fn [x] (* x x))||(lambda (x) (*	x x))||
+||[#apply apply]||((lambda (x) (* x x)) 2) _
+@<&nbsp;>@ _
+(apply #'(lambda (x) (* x x)) '(2))||((lambda (x) (* x x)) 2) _
+@<&nbsp;>@ _
+(apply (lambda (x) (* x x)) '(2))||(#(* % %) 2) _
+@<&nbsp;>@ _
+((fn [x] (* x x)) 2) _
+@<&nbsp;>@ _
+(apply #(* % %) '(2))||((lambda (x) (* x x)) 2) _
+@<&nbsp;>@ _
+(apply _
+@<&nbsp;&nbsp;>@#'(lambda (x) (* x x)) _
+@<&nbsp;&nbsp;>@'(2))||
+||[[# docstring]][#docstring-note get docstring] _
+@<&nbsp;>@||(describe #'mapcar)||##gray|//none//##||(doc map)||(describe-function 'mapcar)||
+||[[# define-docstring]][#define-docstring-note define function with docstring]||(defun add (x y) _
+@<&nbsp;&nbsp;>@"add x and y" _
+@<&nbsp;&nbsp;>@(+ x y))||##gray|//none//##||(defn add "add x and y" [x y] _
+@<&nbsp;&nbsp;>@(+ x y))||(defun add (x y) _
+@<&nbsp;&nbsp;>@"add x and y" _
+@<&nbsp;&nbsp;>@(+ x y))||
+||[[# search-doc]][#search-doc-note apropos and documentation search]||##gray|//none//##||##gray|//none//##||(apropos #"^add$") _
+(find-doc #"add \S+ and \S+")||(apropos "^add$") _
+##gray|//none//##||
+||||||||||~ [[# macros]][#macros-note macros]||
+||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
+||[#backquote-comma backquote and comma]||(setq op '+) _
+(eval @@`@@(,op 1 1))||(define op '+) _
+(eval @@`@@(,op 1 1)) _
+(eval (quasiquote ((unquote op) 1 1)))||(def op +) _
+(eval @@`@@(,op 1 1))||(setq op '+) _
+(eval @@`@@(,op 1 1))||
+||[#defmacro defmacro]||(defmacro rpn (arg1 arg2 op) _
+@<&nbsp;&nbsp;>@(list op arg1 arg2))||(define-syntax-rule (rpn arg1 arg2 op) (op arg1 arg2))||(defmacro rpn [arg1 arg2 op] _
+@<&nbsp;&nbsp;>@(list op arg1 arg2))||(defmacro rpn (arg1 arg2 op) _
+@<&nbsp;&nbsp;>@(list op arg1 arg2))||
+||[#defmacro-backquote defmacro w/ backquote]||(defmacro rpn (arg1 arg2 op) _
+@<&nbsp;&nbsp;>@@@`@@(,op ,arg1 ,arg2))||(define-syntax-rule (rpn3 arg1 arg2 op) _
+@<&nbsp;&nbsp;>@(eval `(,op ,arg1 ,arg2)))||(defmacro rpn [arg1 arg2 op] @@`@@(~op ~arg1 ~arg2))||(defmacro rpn (arg1 arg2 op) _
+@<&nbsp;&nbsp;>@@@`@@(,op ,arg1 ,arg2))||
+||[#macro-predicate macro predicate]||(macro-function rpn)||##gray|//none//##||##gray|//none//##||##gray|//none//##||
+||[#macroexpand macroexpand]||(macroexpand '(rpn 1 2 +))||(syntax-object->datum (expand-to-top-form '(rpn 1 2 +)))||(macroexpand '(rpn 1 2 +))||(macroexpand '(rpn 1 2 +))||
+||[#splice-quote splice quote]||(defmacro add ( &rest args ) _
+@<&nbsp;&nbsp;>@@@`@@(+ ,@args))||(define-syntax-rule ( add first ...) (+ first ...))||(defmacro add [ & args ] @@`@@(+ ~@args))||(defmacro add ( &rest args ) _
+@<&nbsp;&nbsp;>@@@`@@(+ ,@args))||
+||[#recursive-macro recursive macro]||(defmacro add (a &rest b) _
+@<&nbsp;&nbsp;>@@@`@@(if (null ',b) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(+ ,a) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(+ ,a (add ,@b))))||(define-syntax add (syntax-rules () _
+@<&nbsp;&nbsp;>@[(add x) x] _
+@<&nbsp;&nbsp;>@[(add x y) (+ x y)] _
+@<&nbsp;&nbsp;>@[(add x y ...) (+ x (add y ...))]))||(defmacro add ([a] @@`@@(+ ~a)) ([a & b] @@`@@(+ ~a (add ~@b))))||(defmacro add (a &rest b) _
+@<&nbsp;&nbsp;>@@@`@@(if (null ',b) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(+ ,a) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(+ ,a (add ,@b))))||
+||[#hygienic hygienic] _
+@<&nbsp;>@||##gray|//no//##||##gray|//yes//##||##gray|//with// # //suffix//##||##gray|//no//##||
+||[#local-values local values]||(defmacro square-sum (x y) _
+@<&nbsp;&nbsp;>@(let ((sum (gensym))) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@@`@@(let ((,sum (+ ,x ,y))) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(* ,sum ,sum))))||(define-syntax-rule (square-sum x y) _
+@<&nbsp;&nbsp;>@(let ((sum (+ x y))) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(* sum sum)))||(defmacro two-list [x] @@`@@(let [arg# ~x] (list arg# arg#)))||(defmacro square-sum (x y) _
+@<&nbsp;&nbsp;>@(let ((sum (gensym))) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@@`@@(let ((,sum (+ ,x ,y))) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(* ,sum ,sum))))||
+||||||||||~ [[# execution-control]][#execution-control-note execution control]||
+||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
+||[#progn progn] _
+@<&nbsp;>@||progn prog1 prog2||begin ##gray|//none//## ##gray|//none//## _
+##gray|//r6rs://## _
+begin begin0 ##gray|//none//##||do ##gray|//none//## ##gray|//none//##||progn prog1 prog2||
+||[#loop loop]||(setq i 1) _
+(loop (print "hello") _
+@<&nbsp;&nbsp;>@(if (> i 10) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(return) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(setq i (+ i 1))))||##gray|//none, use recursion//##||(loop [i 1] _
+@<&nbsp;&nbsp;>@(if (<= i 10) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(do (println "hello") _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(recur (+ i 1)))))||(setq i 1) _
+(loop (print "hello") _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(if (> i 10) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(return) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(setq i (+ i 1))))||
+||[#do do]||(do ((i 1) (sum 0)) _
+@<&nbsp;&nbsp;>@((> i 100) sum) _
+@<&nbsp;&nbsp;>@(setq sum (+ sum i)) _
+@<&nbsp;&nbsp;>@(setq i (+ i 1))) _
+##gray|do* //initializes serially//##||##gray|//none//##||##gray|//none//##||(do ((i 1) (sum 0)) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@((> i 100) sum) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(setq sum (+ sum i)) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(setq i (+ i 1))) _
+##gray|do* //initializes sequentially//##||
+||[#dotimes dotimes]||(dotimes (i 10 nil) _
+@<&nbsp;&nbsp;>@(format t "hello~%"))||##gray|//none//##||(dotimes [_ 10] _
+@<&nbsp;&nbsp;>@(println "hello"))||(dotimes (i 10 nil) _
+@<&nbsp;&nbsp;>@(print "hello\n"))||
+||[#if if] _
+@<&nbsp;>@||(if (< x 0) (- x) x)||(if (< x 0) (- x) x)||(if (< x 0) (- x) x)||(if (< x 0) (- x) x)||
+||[#when when]||(when (< x y) _
+@<&nbsp;&nbsp;>@(print "x is less ") _
+@<&nbsp;&nbsp;>@(print "than y"))||##gray|//racket://## _
+(when (< x y) _
+@<&nbsp;&nbsp;>@(display "x is less ") _
+@<&nbsp;&nbsp;>@(display "than y"))||(when (< x y) _
+@<&nbsp;&nbsp;>@(println "x is less ") _
+@<&nbsp;&nbsp;>@(println "than y"))||(when (< x y) _
+@<&nbsp;&nbsp;>@(print "x is less ") _
+@<&nbsp;&nbsp;>@(print "than y"))||
+||[#cond cond]||(cond ((> x 0) 1) _
+@<&nbsp;&nbsp;>@((= x 0) 0) _
+@<&nbsp;&nbsp;>@(t -1))||(cond ((> x 0) 1) _
+@<&nbsp;&nbsp;>@((= x 0) 0) _
+@<&nbsp;&nbsp;>@(else -1))||(cond (> x 0) 1 _
+@<&nbsp;&nbsp;>@(= x 0) 0 _
+@<&nbsp;&nbsp;>@true -1)||(cond ((> x 0) 1) _
+@<&nbsp;&nbsp;>@((= x 0) 0) _
+@<&nbsp;&nbsp;>@(t -1))||
+||[#error error] _
+@<&nbsp;>@||(error "failed")||(error "failed")||(throw (Exception. "failed"))||(error "failed")||
+||[#handle-error handle error]||(handler-case _
+@<&nbsp;&nbsp;>@(error "failed") _
+@<&nbsp;&nbsp;>@(simple-error (e) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(format t "error: ~a" e)))|| (with-handlers _
+@<&nbsp;&nbsp;>@((exn:fail? _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;&nbsp;>@(lambda (e) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;&nbsp;>@(printf "error: ~a" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;&nbsp;>@(exn-message e))))) _
+@<&nbsp;&nbsp;>@(error "failed"))|| (try (throw (Exception. "failure")) _
+@<&nbsp;&nbsp;>@(catch Exception e _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(printf "error: %s" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(.getMessage e))))||(condition-case e _
+@<&nbsp;&nbsp;>@(error "failed") _
+@<&nbsp;&nbsp;>@(error (message "error: %s" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(error-message-string e))))||
+||[#define-exception define exception]||(define-condition odd-err (error) _
+@<&nbsp;&nbsp;>@((num :accessor odd-err-num _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@:initarg :num)) _
+@<&nbsp;&nbsp;>@(:report _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(lambda (e s) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(format s "odd number: ~a" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(odd-err-num e)))))||(define exn:odd-err? "odd number")|| ||##gray|//only symbols and keywords can be thrown and caught//##||
+||[#throw-exception throw exception]||(error 'odd-err :num 7)||(raise exn:odd-err?)||(throw (Exception. "failed"))||(throw 'odd-err t)||
+||[#catch-exception catch exception]||(handler-case (/ 1 0) _
+@<&nbsp;&nbsp;>@(division-by-zero () _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(progn _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(format t "division by zero") _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@nil)))||(with-handlers ((exn:fail? (lambda (e) (begin (printf "division by zero~n") null)))) (/ 1 0))||(try (/ 1 0) (catch ArithmeticException _ (do (println "division by zero") nil)))||(catch 'failed (throw 'failed nil) t)||
+||[#restart-case restart-case]||(defun halve (l) _
+@<&nbsp;&nbsp;>@(mapcar (lambda (x) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(restart-case _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(if (= (rem x 2) 0) (/ x 2) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(error 'odd-error :num x)) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(round-down () (/ (- x 1) 2)) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(round-up () (/ (+ x 1) 2)))) l))|| ||##gray|//none//##||##gray|//none//##||
+||[#invoke-restart invoke-restart]|| (handler-bind _
+@<&nbsp;&nbsp;>@((odd-err _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(lambda (c) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(invoke-restart _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@'round-down)))) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(halve '(1 2 4 9)))|| ||##gray|//none//##||##gray|//none//##||
+||[#finally-clause finally clause]||(unwind-protect _
+@<&nbsp;&nbsp;>@(error "failure") _
+@<&nbsp;&nbsp;>@(print "clean up"))||##gray|//none//##||(try (throw (Exception. "failure")) _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@(finally (println "clean up")))||(unwind-protect _
+@<&nbsp;&nbsp;>@(error "failure") _
+@<&nbsp;&nbsp;>@(print "clean up"))||
+||[#lazy-evaluation lazy evaluation]|| ||(define x (delay (/ 1 0))) _
+(promise? x) _
+(+ 1 (force x))|| || ||
+||[#continuations continuations]|| ||(define cc null) _
+(+ 1 (call/cc (lambda (x) (set! cc x) 0))) _
+(cc 5)|| || ||
+||[#create-thread create thread]|| || ||(.start (Thread. #(println "running...")))|| ||
+||[#wait-thread wait on a thread]|| || ||(def t (Thread. #(Thread/sleep (* 30 1000)))) _
+(.start t) _
+(.join t)|| ||
+||||||||||~ [[# file-handles]][#file-handles-note file handles]||
+||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
+||[[# std-file-handles]][#std-file-handles-note standard file handles]||*standard-input* _
+*standard-output* _
+*error-output*|| || || ||
+||[[# eof]][#eof-note end-of-file behavior]||##gray|read-line //returns two values, the 2nd set to// T //at end-of-file.// _
+ _
+ EOF-OF-FILE //is signaled when reading past end of file.//##|| || || ||
+||[[# read-stdin]][#read-stdin-note read line from stdin]||(setq line (read-line))|| || || ||
+||[[# chomp]][#chomp-note chomp]|| || || || ||
+||[[# println]][#println-note write line to stdout]||(defun println (s) _
+@<&nbsp;&nbsp;>@(format t "~a~%" s)) _
+@<&nbsp;>@ _
+(println "hello")||(define (println s) _
+@<&nbsp;&nbsp;>@(printf "~a~n" s)) _
+ _
+(println "hello")||(println "hello")|| ||
+||[[# format-stdout]][#format-stdout-note write formatted string to stdout]||(format t "~s ~d: ~2$~%" _
+@<&nbsp;&nbsp;>@"foo" _
+@<&nbsp;&nbsp;>@7 _
+@<&nbsp;&nbsp;>@13.7)||(printf "~a ~a: ~a~n" _
+@<&nbsp;&nbsp;>@"foo" _
+@<&nbsp;&nbsp;>@7 _
+@<&nbsp;&nbsp;>@(/ (round (* 13.7 100)) 100))||(printf "%s %d %.2f\n" "foo" 7 13.7)|| ||
+||[[# open-file]][#open-file-note open file for reading]||(setq in (open "/etc/hosts"))||(define in (open-input-file "/etc/hosts"))||(def in (java.io.BufferedReader. (java.io.FileReader. "/etc/hosts")))|| ||
+||[[# open-file-write]][#open-file-write-note open file for writing]||(setq out (open "/tmp/test" :direction :output :if-exists :supersede))|| || || ||
+||[[# open-file-append]][#open-file-append-note open file for appending]||(setq out (open "/tmp/test" :direction :output :if-exists :append))|| || || ||
+||[[# close-file]][#close-file-note close file] _
+@<&nbsp;>@||(close in)||(close-input-port in)||(.close in)|| ||
+||[[# close-file-implicitly]][#close-file-implicitly-note close file implicitly]|| (with-open-file (out #P"/tmp/test" :direction :output) (write-line "lorem ipsum" out))|| || || ||
+||[[# read-line]][#read-line-note read line] _
+@<&nbsp;>@||(setq line (read-line in))||(define line (read-line in))||(def line (.readLine in))|| ||
+||[[# iterate-file]][#iterate-file-note iterate over file by line]|| || || || ||
+||[[# read-file-array]][#read-file-array-note read file into array of strings]|| || || || ||
+||[[# read-file-str]][#read-file-str-note read file into string]|| || || || ||
+||[[# write-str]][#write-str-note write string]|| || || || ||
+||[[# write-line]][#write-line-note write line]|| || || || ||
+||[[# flush-file]][#flush-file-note flush file handle]|| || || || ||
+||||||||||~ [[# file-buffers]][#file-buffers-note file buffers]||
+||~ ||~ ||~ ||~ ||~ emacs lisp||
+||[[# list-buffers]][#list-buffers-note list buffers]|| || || ||##gray|;; list of buffer objects:## _
+(buffer-list) _
+ _
+##gray|;; name of first buffer in list:## _
+(buffer-name (car (buffer-list))) _
+ _
+##gray|;; name of current buffer:## _
+(buffer-name (current-buffer))||
+||[[# current-buffer]][#current-buffer-note current buffer] _
+##gray|//get and set//##|| || || ||##gray|;; name of current buffer:## _
+(buffer-name (current-buffer)) _
+ _
+##gray|;; open in current pane:## _
+(switch-to-buffer "foo.txt") _
+ _
+##gray|;; open in other pane:## _
+(switch-to-buffer-other-window _
+@<&nbsp;&nbsp;>@"bar.txt")||
+||[[# clear-buffer]][#clear-buffer-note clear buffer]|| || || ||##gray|;; current buffer:## _
+(erase-buffer) _
+ _
+##gray|;; buffer named "foo.txt:## _
+(with-current-buffer "foo.txt" _
+@<&nbsp;&nbsp;>@(erase-buffer))||
+||[[# point]][#point-note point] _
+##gray|//get and set//##|| || || ||##gray|;; 1-based index of char under cursor:## _
+(point) _
+ _
+##gray|;; go to beginning of current buffer:## _
+(goto-char 1) _
+ _
+##gray|;; go to end of current buffer:## _
+(goto-char (buffer-size))||
+||search and set point|| || || ||##gray|;; Set point to character after string. _
+;; 1st arg is position in buffer beyond _
+;;@<&nbsp;&nbsp;&nbsp;>@which search stops. _
+;; If 2nd arg is true, return nil _
+;;@<&nbsp;&nbsp;&nbsp;>@on failure, otherwise raise error. _
+;; 3rd argument is the occurrence _
+;;@<&nbsp;&nbsp;&nbsp;>@of the string, if negative _
+;;@<&nbsp;&nbsp;&nbsp;>@search backwards from point.## _
+(search-forward "lorem" nil t 1)||
+||insert at string point|| || || ||##gray|;; takes 1 or more args:## _
+(insert "lorem" " ipsum")||
+||current buffer as string|| || || ||(buffer-string)||
+||insert file contents at point|| || || ||(insert-file "/etc/passwd")||
+||[[# mark]][#mark-note mark] _
+##gray|//get and set//##|| || || ||##gray|;; to beginning of current buffer:## _
+(set-mark 1) _
+ _
+##gray|;; to point of current buffer:## _
+(set-mark (point))||
+||||||||||~ [[# files]][#files-note files]||
+||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
+||[[# file-test]][#file-test-note file test, regular file test]||(osicat:file-exists-p "/tmp/foo") _
+(osicat:regular-file-exists-p "/tmp/foo")|| || ||(file-exists-p "/etc/hosts") _
+ _
+(file-regular-p "/etc/hosts")||
+||[[# file-size]][#file-size-note file size]|| || || ||(eighth _
+@<&nbsp;&nbsp;>@(file-attributes "/etc/hosts"))||
+||[[# file-readable-writable-executable]][#file-readable-writable-executable-note is file readable, writable, executable]|| || || || ||
+||[[# chmod]][#chmod-note set file permissions]|| || || ||(set-file-modes "/tmp/foo" #o755)||
+||[[# cp-rm-mv]][#cp-rm-mv-note copy file, remove file, rename file]||(cl-fad:copy-file #P"/tmp/foo" _
+@<&nbsp;&nbsp;>@#P"/tmp/bar") _
+ _
+(delete-file #P"/tmp/foo") _
+ _
+(rename-file #P"/tmp/bar" _
+@<&nbsp;&nbsp;>@#P"/tmp/foo")|| || ||(copy-file "/tmp/foo" "/tmp/bar") _
+(delete-file "/tmp/foo") _
+(rename-file "/tmp/bar" "/tmp/foo")||
+||[[# symlink]][#symlink-note create symlink, symlink test, get target]||(osicat:make-link "/tmp/hosts" :target "/etc/hosts")|| || ||(make-symbolic-link "/etc/hosts" /tmp/hosts") _
+ _
+##gray|//returns target if symlink or nil://## _
+(file-symlink-p "/tmp/hosts")||
+||[[# tmp-file]][#tmp-file-note temporary file]|| || || ||(make-temp-file "foo")||
+||[[# in-memory-file]][#in-memory-file-note in memory file]||(setq out (make-string-output-stream) _
+ _
+(write-string "lorem ipsum) _
+ _
+(get-output-stream-string out) _
+ _
+(setq in (make-string-input-stream "dolor sit amet")) _
+ _
+(read-line in)|| || || ||
+||||||||||~ [[# directories]][#directories-note directories]||
+||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
+||[[# build-pathname]][#build-pathname-note build pathname]||(make-pathname _
+@<&nbsp;&nbsp;>@:directory '(:absolute "etc") _
+@<&nbsp;&nbsp;>@:name "hosts")|| || || ||
+||[[# dirname-basename]][#dirname-basename-note dirname and basename]||(pathname-directory #P"/etc/hosts") _
+ _
+(pathname-name #P"/etc/hosts")|| || ||(file-name-directory "/etc/hosts") _
+ _
+(file-name-nondirectory _
+@<&nbsp;&nbsp;>@"/etc/hosts")||
+||[[# abs-pathname]][#abs-pathname-note absolute pathname]|| || || ||(expand-file-name "..")||
+||[[# iterate-dir]][#iterate-dir-note iterate over directory by file]||(dolist (file (osicat:list-directory "/tmp")) (format t "~a~%" file))|| || ||(dolist _
+@<&nbsp;&nbsp;>@(file (directory-files "/etc")) _
+@<&nbsp;&nbsp;>@(print file)))||
+||[[# mkdir]][#mkdir-note make directory]|| || || ||##gray|//creates parents if 2nd arg non-nil://## _
+(make-directory "/tmp/foo/bar" t)||
+||[[# recursive-cp]][#recursive-cp-note recursive copy]|| || || || ||
+||[[# rmdir]][#rmdir-note remove empty directory]||(delete-directory "/tmp/foodir")|| || ||(delete-directory "/tmp/foodir")||
+||[[# rm-rf]][#rm-rf-note remove directory and contents]|| (osicat:delete-directory-and-files "/tmp/foodir")|| || ||(delete-directory "/tmp/foodir" t)||
+||[[# dir-test]][#dir-test-note directory test]||(osicat:directory-exists-p #P"/etc")|| || ||(file-directory-p "/etc")||
+||||||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
+||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
+||[#external-command external command]||(run-program "ls" '( "/etc"))||(require scheme/system) _
+(system "ls /etc")||(.exec (Runtime/getRuntime) "ls")||(shell-command "ls /etc")||
+||[#backticks backticks]|| || || ||(shell-command-to-string "ls /etc")||
+||[#command-line-arguments command line arguments]||*posix-argv*||current-command-line-arguments||*command-line-args*||##gray|//in shebang mode only://## _
+command-line-args ##gray|//or//## argv||
+||[#environment-variables environment variables]||(posix-getenv "HOME")||(getenv "HOME")||(System/getenv "HOME")||(getenv "HOME")||
+||||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
+||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
+||[#load-file load a file] _
+@<&nbsp;>@||(load "a.lisp")||(load "a.rkt")||(load-file "a.clj")||(load-file "a.el")||
+||[#load-library load a library] _
+@<&nbsp;>@|| ||(require a)||(require 'a)||(load "a")||
+||list installed packages, install a package||(ql:quickload "osicat")|| || || ||
+||||||||||~ [[# objects]][#objects-note objects]||
+||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
+||[#defclass define class]||(defclass rectangle () _
+@<&nbsp;&nbsp;>@( _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(height _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@:accessor rectangle-height _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@:initarg :height) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(width _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@:accessor rectangle-width _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@:initarg :width)))||(define rectangle% _
+@<&nbsp;&nbsp;>@(class object% _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(init width) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(init height) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(super-new) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(define curr-height height) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(define curr-width width) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(define/public (get-height) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@curr-height) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(define/public (get-width) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@curr-width) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(define/public (set-height ht) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(set! curr-height ht)) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(define/public (set-width wd) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(set! curr-width wd))))||##gray|//use java://## _
+public class Rectangle { _
+@<&nbsp;&nbsp;>@public float height; _
+@<&nbsp;&nbsp;>@public float width; _
+@<&nbsp;&nbsp;>@public Rectangle(float h, float w) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@this.height = h; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@this.width = w; _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@public void setHeight(float h) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@this.height = h; _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@public void setWidth(float w) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@this.width = w; _
+}|| ||
+||[#make-instance make instance]||(make-instance 'rectangle _
+@<&nbsp;&nbsp;>@:height 3 _
+@<&nbsp;&nbsp;>@:width 7)||(define rect _
+@<&nbsp;&nbsp;>@(new rectangle _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(height 7) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(width 3)))||(import 'Rectangle) _
+(def r (Rectangle. 7 3))|| ||
+||[#read-attribute read attribute] _
+@<&nbsp;>@||(rectangle-height rect)||(send rect get-height)||(.height r)|| ||
+||[#write-attribute write attribute] _
+@<&nbsp;>@||(setf (rectangle-height rect) 4)||(send rect set-height 4)||(.setHeight r 8)|| ||
+||[#defmethod define method]||(defmethod area ((figure rectangle)) _
+@<&nbsp;&nbsp;>@(* (rectangle-height figure) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(rectangle-width figure)))||(define/public (area) _
+@<&nbsp;&nbsp;>@(* curr-height curr-width))||(defmulti area class) _
+(defmethod area Rectangle [r] (* (.height r) (.width r)))|| ||
+||[#invoke-method invoke method] _
+@<&nbsp;>@||(area rect)||(send rect area)||(area r)|| ||
+||[#universal-superclass universal superclass]||standard-object t||object%||Object|| ||
+||[#multiple-inheritance multiple inheritance]||yes||no||##gray|//only one direct superclass; can implement multiple interfaces//##|| ||
+||||||||||~ [[# reflection]][#reflection-note reflection]||
+||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
+||[#type-of type-of] _
+@<&nbsp;>@||type-of||##gray|//none//##||type class||type-of||
+||||||||||~ [[# java-interop]][#java-interop-note java interoperation]||
+||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
+||[#java-new new]|| || ||(def rnd (new java.util.Random)) _
+(def rnd (java.util.Random.))|| ||
+||[#java-method method]|| || ||(. rnd nextFloat) _
+(.nextFloat rnd) _
+(. rnd nextInt 10) _
+(.nextInt rnd 10)|| ||
+||[#java-class-method class method] _
+@<&nbsp;>@|| || ||(Math/sqrt 2)|| ||
+||[#java-chain chain] _
+@<&nbsp;>@|| || || || ||
+||[#java-import import]|| || ||(import '(java.util Random)) _
+(def rnd (Random.))|| ||
+||[#java-to-array to java array]|| || ||(to-array '(1 2 3)) _
+(into-array Integer '(1 2 3))|| ||
+||~ ||~ ##EFEFEF|@@__________________________________________@@##||~ ##EFEFEF|@@__________________________________________@@##||~ ##EFEFEF|@@__________________________________________@@##||~ ##EFEFEF|@@__________________________________________@@##||
+
+[[# general-note]]
+++ [#general General]
+
+[[# version-used-note]]
+++ [#version-used version used]
+
+Versions used to verify data in the cheat sheet.
+
+[[# show-version-note]]
+++ [#show-version show version]
+
+How to determine the version.
+
+[[# grammar-invocation-note]]
++ [#grammar-invocation Grammar and Invocation]
+
+[[# compiler-note]]
+++ [#compiler compiler]
+
+**racket**
+
+Compiling a.ss creates the byte-code compiled file a_ss.zo, which will be used by //mzscheme// in preference to the source code if it encounters
+
+[[code]]
+(require a)
+[[/code]]
+
+[[# executable]]
+++ making a standalone executable
+
+**common lisp**
+
+A standalone executable is created by the //sb-ext:save-lisp-and-die// function.
+
+**racket**
+
+In order for code to be compiled as a standalone executable, it must be packaged as a module.  This can be accomplished by putting the //#lang scheme// shorthand the top of the file.  All functions that are defined in the module will be executed in order.  Here is a simple example:
+
+[[code]]
+#lang scheme
+(define hello
+  (printf "Hello world!~n"))
+[[/code]]
+
+A standalone executable can be created with //DrScheme// using //Scheme | Create Executable...//
+
+**emacs**
+
+[http://www.gnu.org/s/emacs/manual/html_node/elisp/Building-Emacs.html Building Emacs]
+
+
+[[# shebang-note]]
+++ [#shebang shebang]
+
+How to have a script run by the interpreter automatically.  Replace the given path with the path to the interpreter on your system.
+
+**emacs lisp**
+
+To run some lisp code from within emacs, use //M-x load// or //M-x load-file//.  The first command will use the list of strings in //load-path// to search for the file.  It is not necessary to specify the //.el// or //.elc// suffix if the file has one.
+
+The following snippet is an emacs lisp shebang script implementation of //cat//:
+
+[[code]]
+#!/usr/bin/env emacs --script
+(condition-case nil
+  (let (line)
+    (while (setq line (read-from-minibuffer ""))
+        (princ line)
+        (princ "\n")))
+  (error nil))
+[[/code]]
+
+An implementation of //echo//:
+
+[[code]]
+#!/usr/bin/env emacs --script
+(condition-case nil
+  (progn
+    (dotimes (i (length argv) nil)
+            (princ (nth i argv))
+            (princ " "))
+    (princ "\n"))
+  (error nil))
+[[/code]]
+
+[[# repl-note]]
+++ [#repl repl]
+
+How to invoke the repl from the command line.
+
+**racket:**
+
+Racket also provides a GUI repl environment called DrRacket.
+
+**clojure:**
+
+The clojure repl saves the result of each evaluation in the variables *1, *2, ...  and the last exception in *e.
+
+[[# word-separator-note]]
+++ [#word-separator word separator]
+
+What is used to separate the operator and data of a S-expression.
+
+[[# identifiers-case-sensitive-note]]
+++ [#identifiers-case-sensitive are identifiers case sensitive?]
+
+Whether symbols are case sensitive.  Common lisp is case insensitive, and as a result //eq// and //EQ// invoke the same function.
+
+[[# identifier-char-note]]
+++ [#identifier-char identifier characters]
+
+In lisps other than clojure, any character can be used in a symbol.  Some characters are special to the reader and must be escaped to include them in a symbol.  The reader will interpret a sequence of characters starting with a digit as a number instead of a symbol, so escaping must be used to create such a symbol.
+
+**common lisp:**
+
+Common Lisp is case insensitive, and the reader converts all letters to upper case.  A symbol consisting of just periods "." must be escaped.  Symbols that start and end with an asterisk "*" may conflict with system defined special variables.
+
+**racket:**
+
+@@#@@ is only disallowed by the reader at the beginning of symbols.  A symbol consisting of a single period must be escaped. 
+
+[[# esc-char-in-identifiers-note]]
+++ [#esc-char-in-identifiers escaping characters in identifiers]
+
+How to escape characters which are special to the reader.
+
+**clojure:**
+
+Clojure does not have a mechanism for escaping special reader characters.  As a result some characters cannot be used in a symbol.
+
+[[# quoting-char-in-identifiers-note]]
+++ [#quoting-char-in-identifiers quoting characters in identifiers]
+
+[[# eol-comment-note]]
+++ [#eol-comment end-of-line comment]
+
+
+[[# multiple-line-comment-note]]
+++ [#multiple-line-comment multiple line comment]
+
+#| |# delimited comments in Common Lisp and Scheme can span multiple lines, and thus can be used to comment out code.
+
+**clojure:**
+
+Code with balanced parens can be commented out in the following manner:
+
+[[code]]
+(comment
+(+ 1 1)
+)
+[[/code]]
+
+[[# var-expr-note]]
++ [#var-expr Variables and Expressions]
+
+[[# cell-types]]
+++ cell types
+
+The different cell types.  A lisp-1 only stores a single entity under a symbol in a given environment.  A lisp-2 stores multiple entities, and which entity a symbol will resolve to depends on how the symbol is used.  In particular, a value and a function can be stored under the same symbol without collision.
+
+[[# type-predicates]]
+++ type predicates
+
+Some basic data type predicates.
+
+[[# nil]]
+++ nil, is () null?, is () symbol?
+
+[[code]]
+(eq nil ())
+[[/code]]
+
+is true in common lisp and emacs lisp.
+
+[[code]]
+(eq? () null)
+[[/code]]
+
+is true in Scheme.
+
+[[# set-property]]
+++ set property
+
+How to associate additional data with a symbol.  In the example, the symbol is //foo//, the property is //:prop//, and the value is 13.
+
+**clojure:##
+
+The properties associated with a symbol must be set when the value for the symbol is set.
+
+[[# get-property]]
+++ get property
+
+How to get the value of a property.
+
+[[# remove-property]]
+++ remove property
+
+How to remove a property from a symbol.
+
+[[# quoted-symbol]]
+++ quoted symbol
+
+How to prevent the evaluation of a symbol.
+
+[[# keyword]]
+++ keyword
+
+Keywords are pre-defined symbols that evaluate to their printed representation.  The reader recognizes them by the initial colon, or in the case of Scheme, by the initial "#:".  In Scheme it is an error to use a keyword as an expression.
+[[# ten-primitives-note]]
++ [#ten-primitives Ten Primitives]
+
+McCarthy introduced the ten primitives of lisp in [http://www-formal.stanford.edu/jmc/recursive/recursive.html 1960].  All other pure lisp functions (i.e. all functions which don't do I/O or interact with the environment) can be implemented with these primitives.  Thus, when implementing or porting lisp, these are the only functions which need to be implemented in a lower language.  The way the non-primitives of lisp can be constructed from primitives is analogous to the way theorems can be proven from axioms in mathematics.
+
+The primitives are: //atom//, //quote//, //eq//, //car//, //cdr//, //cons//, //cond//, //lambda//, //label//, //apply//.  
+
+One method of implementing logic and arithmetic with the ten primitives is [http://en.wikipedia.org/wiki/Church_encoding Church encoding] which represents natural numbers and logical values with lambda functions.  Church numerals are not an efficient way to represent natural numbers; practical implementations implement arithmetic using underlying machine instructions.
+
+[[# atom]]
+++ atom
+
+//atom// is is a predicate which returns false for cons cells, and true for anything else.  All lists except for the empty list are cons cells.
+
+**racket**
+
+Scheme lacks //atom//, but //cons?// is its logical negation.
+
+**clojure**
+
+Clojure lacks cons cells.  Thus //atom// if implemented in the language would always return true.  However, //(not (list? x))// is closer to the spirit and certainly more useful.  Because //nil// is not the empty list in clojure there is also ambiguity about what the value of //(atom ())// would be.
+
+[[# quote]]
+++ quote
+
+All lisps have a single quote macro abbreviation for //quote//.  Here are identical ways to quote a symbol and a list:
+
+[[code]]
+(quote a)
+'a
+
+(quote (+ 3 7))
+'(+ 3 7)
+[[/code]]
+
+//eval// is a one-sided inverse of //quote//.  If X is arbitrary lisp code, then the following are identical
+[[code]]
+X
+(eval (quote X))
+[[/code]]
+
+[[# eq]]
+++ eq, equal, =
+
+In his 1960 paper, McCarthy described //eq// as undefined if either or both arguments are not atomic.  Common Lisp and Scheme (eq?) return true if the arguments both evaluate to the same list in memory, otherwise false.  //equal// and //equal?// (Scheme) return true if the arguments evaluate to lists with the same elements as determined by calling //equal// or //equal?// recursively.
+
+In Common Lisp and Scheme, = can only be called on numeric arguments.  The predicates for whether a symbol is numeric are //numberp// and //number?//, respectively.
+
+Clojure dispenses with //eq// and //equal// and defines //=// to be equivalent to the Common Lisp //equal//.
+
+[[# car]]
+++ car
+
+Because //car// and //cdr// are abbreviations for parts of the word of the IBM 704, there is a trend to replace them with //first// and //rest//.  However, //car// and //cdr// are short, and convenient notation exists for abbreviating nested calls to //car// and //cdr//.
+
+In terms of //car//, //cdr//, and combinations thereof, here is what the dialects define:
+
+||~ common lisp||~ r5rs||~ racket||~ clojure||~ emacs lisp||
+||car,first||car||car,first||first||car,first||
+||cadr,second||cadr||cadr,second||second,fnext||cadr,second||
+||caddr,third||caddr||caddr,third|| ||caddr,third||
+||cadddr,fourth||cadddr||cadddr,fourth|| ||cadddr,fourth||
+||fifth|| ||fifth|| ||fifth||
+||sixth|| ||sixth|| ||sixth||
+||seventh|| ||seventh|| ||seventh||
+||eighth|| ||eighth|| ||eighth||
+||ninth|| ||ninth|| ||ninth||
+||tenth|| ||tenth|| ||tenth||
+||cdr, rest||cdr||cdr, rest||rest,next||cdr, rest||
+||cddr||cddr||cddr|| ||cddr||
+||cdddr||cdddr||cdddr|| ||cdddr||
+||cddddr||cddddr||cddddr|| ||cddddr||
+||caar ||caar||caar||ffirst||caar||
+||cdar||cdar||cdar||nfirst||cdar||
+
+[[# cdr]]
+++ cdr
+
+**common lisp**
+
+//cdr// and //rest// return //nil// when called on an empty list.
+
+**racket**
+
+//cdr// and //rest// raise an error when called on an empty list.
+
+**clojure**
+
+//rest// returns an empty set () when called on an empty or singleton list, whereas //next// returns //nil//.  In clojure, the empty set evaluates as true in a boolean context and //nil// evaluates as false.
+
+[[# cons]]
+++ cons
+
+**clojure**
+
+Clojure does not implement a list as a linked list of cons cells.  The second argument to //cons// must be a list.
+
+[[# cond]]
+++ cond
+
+[[# lambda]]
+++ lambda
+
+**clojure:**
+
+[[code]]
+(#(+ %1 %2) 1 2)
+[[/code]]
+
+[[# label]]
+++ label
+
+[[# apply]]
+++ apply
+
+[[# arithmetic-logic-note]]
++ [#arithmetic-logic Arithmetic and Logic]
+
+[[# true-false-note]]
+++ [#true-false true and false]
+
+Literals for true and false.
+
+[[# falsehoods-note]]
+++ [#falsehoods falsehoods]
+
+Values which evaluate to false in a boolean context.
+
+**common lisp**
+
+//nil// and the empty list () are identical.
+
+**racket**
+
+The empty list does not evaluate as false in a boolean context.  There is no predefined symbol //nil//.
+
+**clojure**
+
+//nil// evaluates as false in a boolean context, but is not identical as the empty list.
+
+**emacs lisp**
+
+//nil// and empty list () are identical.
+
+[[# is-true-symbol-note]]
+++ [#is-true-symbol is true a symbol?]
+
+
+[[# logical-op-note]]
+++ [#logical-op logical operators]
+
+The logical operators.
+
+[[# relational-op-note]]
+++ [#relational-op relational operators]
+
+Relational operators for performing comparisons.
+
+[[# min-max-note]]
+++ [#min-max min and max]
+
+Functions for returning the least and greatest of the arguments.
+
+[[# num-predicates-note]]
+++ [#num-predicates numeric predicates]
+
+A selection of numeric predicates.
+
+//realp// and //real?// are true of all numbers which have a zero imaginary component.  //floatp// and //inexact?// are true if the number is being stored in a floating point representation.
+
+**racket:**
+
+The following all evaluate as #t:
+
+[[code]]
+(rational? 1.1)
+(rational? (sqrt 2))
+(rational? pi)
+[[/code]]
+
+[[# closure-of-integers]]
+++ closure of integers under division
+
+The number system that containing the potential results of integer division.  In mathematics, the closure of integers under division is the rationals, and this is true for common lisp, scheme, and clojure as well.
+
+Emacs lisp performs integer division (i.e. computes the quotient), so the closure of the integers under division is the integers.
+
+[[# arith-op-note]]
+++ [#arith-op arithmetic operators]
+
+In Lisp, + and * take zero or more arguments and - and / take one or more arguments.  With zero arguments + and * return the additive and multiplicative identities 0 and 1.  With one argument + and * return the argument and - and / return the additive and multiplicative inverses: i.e. the negation and the reciprocal.  When evaluating 3 or more arguments - and / are computed from left to right: i.e. (- 3 4 5) is computed as (- (- 3 4) 5).
+
+**clojure:**
+
+//Math.pow// returns a double.
+
+**emacs:**
+
+Unary division (i.e. computing the reciprocal) generates a wrong number of arguments error.
+
+
+[[# transcendental-func-note]]
+++ [#transcendental-func transcendental functions]
+
+[[# float-truncation-note]]
+++ [#float-truncation float truncation]
+
+ For rounding, floor, and ceiling, the return value is integer if the argument is rational and floating point if the argument is floating point, unless otherwise noted.
+
+**racket:**
+
+//inexact->exact// can be used to convert a float returned by //round//, //ceiling//, or //floor// to an integer.
+
+**clojure:**
+
+//Math/round// always returns an integer and throws and error if called on a rational.  //Math/floor// and //Math/ceil// can be called on a rational, but always return a float.
+
+**emacs:**
+
+//round//, //ceiling//, and //floor// return integers.  //fround//, //fceiling//, and //ffloor// return floats.
+
+
+[[# quotient-remainder]]
+++ quotient and remainder
+
+[[# sqrt-negative-two]]
+++ (sqrt -2)
+
+The value of //(sqrt -2)//.  Common lisp and Scheme support complex numbers.  Clojure and Emacs Lisp do not.
+
+[[# integer-rational-complex-decomposition]]
+++ decomposition of integer, rational, complex
+
+For absolute value, the type of the return value is the same of the type of the argument. 
+
+**racket:**
+
+The //scheme/math// library must be loaded to use //sgn//.
+
+**clojure:**
+
+//Math/signum// only operates on a float and returns a float
+
+[[# random-num-note]]
+++ [#random-num random number]
+
+How to generate a random integer, and a random float in a uniform and a normal distribution.
+
+[[# bit-op-note]]
+++ [#bit-op bit operators]
+
+**racket:**
+
+The bitwise operators implemented by Gambit and Racket are specified in the withdrawn standard [http://srfi.schemers.org/srfi-33/ SRFI 33].
+
+**emacs:**
+
+Also has //ash//, which gives a different value when both arguments are negative.
+
+[[# strings-note]]
++ [#strings Strings]
+
+[[# character-literal]]
+++ character literals
+
+The syntax for character literals.  The first literal uses the letter "a" as an example of how to write a literal for all ASCII printing characters.
+
+**common lisp:**
+
+Characters are of type standard-char.  The predicate is //characterp//.
+
+**racket:**
+
+The predicate is //char?//.
+
+**clojure:**
+
+Characters are of type java.lang.Character.
+
+**emacs:**
+
+Characters are of type integer and can be manipulated by arithmetic operators.  //characterp// and //integerp// are synonyms.
+
+[[# string-literal]]
+++ string literal
+
+The syntax for a string literal.
+
+[[# string-escapes]]
+++ string escapes
+
+A list of escape sequences that can be used in string literals.
+
+**emacs lisp:**
+
+The \x escape sequence is followed by one to six hex digits.  Because a variable number of hex digits can be used, it may be necessary to indicate the end of the sequence with a backslash and a space, e.g. the following string literal is "λ123":
+
+[[code]]
+  "\x3bb\ 123"
+[[/code]]
+
+[[# string-char]]
+++ character access
+
+How to get the character at a given position in a string.
+
+[[# find-substring]]
+++ find substring
+
+Find the location of a substring in a string.
+
+[[# extract-substring]]
+++ extract substring
+
+[[# string-length]]
+++ length
+
+[[# string-constructors]]
+++ constructors
+
+[[# string-comparison]]
+++ comparison
+
+**common lisp:**
+
+Here is the complete list of string comparison functions:
+
+[[code]]
+string=
+string<
+string>
+string<=
+string>=
+string/=
+[[/code]]
+
+There are also case insensitive versions of the above functions:
+
+[[code]]
+string-equal
+string-lessp
+string-greaterp
+string-not-greaterp
+string-not-lessp
+string-not-equal
+[[/code]]
+
+**racket:**
+
+Case sensitive string comparison:
+
+[[code]]
+string<=?
+string<?
+string=?
+string>=?
+string>?
+[[/code]]
+
+Case insensitive string comparison:
+
+[[code]]
+string-ci<=?
+string-ci<?
+string-ci=?
+string-ci>=?
+string-ci>?
+[[/code]]
+
+**emacs lisp:**
+
+Emacs has only these string comparison functions, all of which are case sensitive:
+
+[[code]]
+string=
+string-equal
+string<
+string-lessp
+[[/code]]
+
+//string=// and //string-equal// are synonyms, as are //string<// and //string-lessp//.
+
+[[# string-case]]
+++ case
+
+[[# string-trim]]
+++ trim
+
+**emacs:**
+
+An implementation of {{trim}}:
+
+[[code]]
+(defun trim (s)
+  (let ((s1 (replace-regexp-in-string "[ \t]*$" "" s)))
+    (replace-regexp-in-string "^[ \t]*" "" s1)))
+[[/code]]
+
+[[# number-string]]
+++ convert from string, to string
+
+How to convert strings to numbers, and numbers to strings.
+
+**common lisp:**
+
+//read-from-string// invokes the reader, so the return value is not guaranteed to be a floating point number.
+
+Here is a //parse-float// function which will convert all real numeric types to floats and raise a simple error if another condition is encountered.
+
+[[code]]
+(defun parse-float (s)
+  (let ((readval (handler-case
+                  (read-from-string s)
+                  (sb-int:simple-reader-error nil)
+                  (end-of-file nil))))
+    (cond ((realp readval ) (+ readval 0.0))
+          (t (error (concatenate 'string "not a float: " s))))))
+[[/code]]
+
+[[# string-concat]]
+++ concat
+
+[[# string-split]]
+++ split
+
+[[# string-join]]
+++ join
+
+[[# format]]
+++ format
+
+[[# regular-expressions]]
+++ regular expressions
+
+**common lisp**
+
+http://weitz.de/cl-ppcre/
+
+**emacs lisp**
+
+//string-match// returns the first index of the first matching substring, or nil.
+
+The following code moves the point to next position following the point that matches the argument, and returns the index of the that position.
+
+[[code]]
+(re-search-forward "hello")
+[[/code]]
+
+[[# regex-substitution]]
+++ regex substitution
+
+[[# regex-special-chars]]
+++ regex special characters
+
+[[# lists-note]]
++ [#lists Lists]
+
+[[# list-literal]]
+++ list literal
+
+[[# pair-literal]]
+++ pair literal
+
+[[# car-nil]]
+++ (car '())
+
+[[# cdr-nil]]
+++ (cdr '())
+
+[[# eval-nil]]
+++ (eval '())
+
+A practical advantage of having //(eval '())// be equal to '() is that the empty list doesn't have to be quoted.
+
+[[# list-functions]]
+++ list functions
+
+[[# nth]]
+++ nth
+
+//nth// and //list-ref// count from zero.  //nth// returns //nil// if the index is too large.  //list-ref// throws an error.
+
+[[# list-element-index]]
+++ index of list element
+
+How to get the index of a list element.  The first element of a list has an index of zero.
+
+[[# last-butlast]]
+++ last butlast
+
+In clojure, //last// and //butlast// are analogs of //first// and //rest// which operate at the end of a list.  If X is a list, then the following code pairs are identities:
+
+[[code]]
+(last X)
+(first (reverse X))
+
+(butlast X)
+(reverse (rest (reverse X)))
+[[/code]]
+
+The analogy breaks down in Common Lisp because //last// returns a list with a single element.
+
+[[# set-car-cdr]]
+++ set-car set-cdr
+
+**common lisp:**
+
+The following code pairs perform the same operation on the list:
+
+[[code]]
+(setf (car l) 3)
+(rplaca l 3)
+
+(setf (cdr l) '(4 5 6))
+(rplacd l '(4 5 6))
+[[/code]]
+
+However, they are not identical because //rplaca// and //rplacd// return the modified list instead of their 2nd argument.
+
+**racket:**
+
+Racket provides a separate interpreter //plt-r5rs// for an R5RS compliant version of Scheme.  Also, the language can be set to R5RS within DrRacket.
+
+**emacs lisp:**
+
+Also has //setf//.
+
+[[# sort]]
+++ sort
+
+[[# assoc]] 
+++ assoc
+
+**clojure**
+
+In Clojure, //assoc// returns a new association with the specified values replaced:
+
+[[code]]
+(def numbers {1 :one 2 :two 3 :three 4 :four})
+(def jumble (assoc numbers 1 :uno 3 :drei 4 :quatre))
+[[/code]]
+
+[[# getf]]
+++ getf
+
+**racket:**
+
+How to implement //getf// in Scheme:
+
+[[code]]
+(define (getf lst key (default null))
+    (cond ((null? lst) default)
+          ((null? (cdr lst)) default)
+          ((eq? (car lst) key) (cadr lst))
+          (else (getf (cddr lst) key default))))
+[[/code]]
+
+[[# map]]
+++ map
+
+**common lisp**
+
+The lambda can accept multiple arguments:
+
+[[code]]
+(mapcar '+ '(1 2 3) '(4 5 6))
+[[/code]]
+
+**racket**
+
+[[code]]
+(map + '(1 2 3) '(4 5 6))
+[[/code]]
+
+**clojure**
+
+[[code]]
+(map + '(1 2 3) '(4 5 6))
+[[/code]]
+
+**emacs lisp**
+
+//mapcar// does not accept multiple argument lambdas
+
+[[# filter]]
+++ filter
+
+**common lisp**
+
+Also the negative version:
+
+[[code]]
+(remove-if (lambda (x) (> x 2)) '(1 2 3))
+[[/code]]
+
+**clojure**
+
+Also the negative version:
+
+[[code]]
+(remove #(> % 2) '(1 2 3))
+[[/code]]
+
+**emacs lisp**
+
+Also has negative version:
+
+[[code]]
+(remove-if (λ (x) (> x 2)) '(1 2 3))
+[[/code]]
+
+[[# reduce]]
+++ reduce (left fold)
+
+[[# right-fold]]
+++ right fold
+
+**clojure:**
+
+How to define {{foldr}}:
+
+[[code]]
+(defn foldr [f init list] (reduce #(f %2 %1) (reverse list)))
+[[/code]]
+
+[[# sublis]]
+++ sublis
+
+How to apply the mapping defined by an associative list to a recursive list.
+
+++ dolist
+
+[[# take]]
+++ take
+
+Here is how to define //take// for common lisp or emacs lisp:
+
+[[code]]
+(defun take (n l)
+  (cond ((< n 0) (error "index negative"))
+        ((= n 0) ())
+        ((null l) (error "index too large"))
+        (t (cons (car l) (take (- n 1) (cdr l))))))
+[[/code]]
+
+[[# drop]]
+++ drop
+
+[[# push-pop]]
+++ push and pop
+
+**racket:**
+
+Here is an implementation of //push// and //pop// in Racket using boxes:
+
+[[code]]
+(define (push x a-list)
+  (set-box! a-list (cons x (unbox a-list))))
+
+(define (pop a-list)
+  (let ((result (first (unbox a-list))))
+    (set-box! a-list (rest (unbox a-list)))
+    result))
+[[/code]]
+
+**clojure:**
+
+Note the in clojure, //pop// only returns the first element; the original list is left unmodified.
+
+[[# arrays-note]]
++ [#arrays Arrays]
+
+[[# vector-literal]]
+++ vector literal
+
+**racket**
+
+//#(1 2 3)// creates an immutable vect.  //(vector 1 2 3)// creates a mutable vector.
+
+
+[[# vector-access]]
+++ vector access
+
+
+[[# set-vector-element]]
+++ set vector element
+
+**racket**
+
+//vector-set!// throws an error if called on an immutable vector.
+
+[[# vector-to-list]]
+++ vector to list
+
+[[# list-to-vector]]
+++ list to vector
+
+[[# abstract-sequence]]
+++ abstract sequence
+
+Lists and vectors support the same operations; the only difference is the speed at which the operations can be performed.  It is a convenience for the developer if functions that perform the operations have the same name; i.e. if lists and vectors are members of an abstract sequence type.  Clojure has gone furthest in this direction, making all the customary list functions work on vectors as well.  In common lisp and emacs lisp, some of the list functions also work on vectors, and some don't.  In Scheme none of the list functions work on vectors.
+
+[[# sequence-data-types]]
+++ sequence data types
+
+The containers that respond to sequence functions.
+
+[[# sequence-predicate]]
+++ sequence predicate
+
+[[# sequence-functions]]
+++ list functions usable on sequences
+
+[[# make-array]]
+++ make-array
+
+In Lisp terminology, both arrays and vectors refer to collections which are of fixed size; vectors are arrays with rank 1.  Only common lisp supports arrays with rank greater than 1.
+
+[[# array-access]]
+++ array access
+
+[[# set-array-element]]
+++ set array element
+
+[[# array-dimensions]]
+++ array dimensions
+
+//array-rank// returns the number of indices required to specify an element in the array.  //array-dimensions// returns the size of the array; the number of cells is the product of the elements of the list.
+
+[[# range]]
+++ range
+
+[[# list-comprehension]]
+++ list comprehension
+[[# dictionaries-note]]
++ [#dictionaries Dictionaries]
+
+[[# make-hash]]
+++ make hash
+
+**racket**
+
+Use the following to get access to the hash functions:
+
+[[code]]
+(require scheme/dict)
+[[/code]]
+
+[[# put-hash]]
+++ put hash
+
+Put a key/value pair in a hash.
+
+**clojure**
+
+The hash map is immutable.  The //assoc// function returns a new version of the hash with the additional key/value pairs provided as arguments.
+
+[[# get-hash]]
+++ get-hash
+
+Lookup a value in a hash by key.
+
+[[# hash-key-not-found]]
+++ hash key not found
+
+**racket:**
+
+Racket throws and error when the key is not found.  Here is how to handle the error and return a null when the key is not found:
+
+[[code]]
+(with-handlers ((exn:fail? (lambda (e) null))) (get h "goodbye"))
+[[/code]]
+
+[[# rem-hash]]
+++ rem-hash
+
+[[# hash-size]]
+++ hash size
+
+[[# map-hash]]
+++ map hash
+
+[[# defstruct]]
+++ defstruct
+
+[[# struct]]
+++ struct
+
+[[# struct-getter]]
+++ struct getter
+
+[[# struct-setter]]
+++ struct setter
+
+[[# struct-predicate]]
+++ struct predicate
+
+[[# functions-note]]
++ [#functions Functions]
+
+[[# let]][[# let-star]]
+++ let, let*
+
+Traditionally {{let}} performs its assignments in parallel and {{let*}} serially.
+
+**clojure**
+
+In Clojure, //let// and //let*// are synonyms and both perform serial assignment.
+
+**emacs**
+
+Note that {{let}} uses dynamic scope.  Use {{lexical-let}} for lexical scope:
+
+[[code]]
+ELISP> (let ((x 3)) (defun get-x () x))
+get-x
+ELISP> (get-x)
+*** Eval error ***  Symbol's value as variable is void: x
+ELISP> (let ((x 4)) (get-x))
+4
+ELISP> (lexical-let ((x 3)) (defun get-x-2 () x))
+get-x-2
+ELISP> (get-x-2)
+3
+ELISP> (lexical-let ((x 4)) (get-x-2))
+3
+[[/code]]
+
+[[# define-function]]
+++ define function
+
+[[# optional-argument]]
+++ optional argument
+
+[[# variable-arguments]]
+++ variable number of arguments
+
+[[# default-value]]
+++ default value
+
+[[# named-parameter]]
+++ named parameter
+
+**common lisp:**
+
+In common lisp, named parameters are optional.  Named values can be assigned default values:
+
+[[code]]
+ (defun logarithm (&key number (base 10)) (/ (log number) (log base)))
+[[/code]]
+
+If a named parameter is not provided at invocation and has not been assigned a default value, then it is set to //nil//.
+
+**racket:**
+
+[http://rosettacode.org/wiki/Named_parameters#Scheme How to Implement Named Parameters in Scheme]
+
+**emacs lisp:**
+
+In emacs lisp named parameters are mandatory.  A runtime error results in they are not provided when the function is invoked.
+
+[[# tail-call]]
+++ tail call optimization
+
+**common lisp:**
+
+The ANSI Common Lisp specification does not require an implementation to perform tail call optimization.
+
+[[# docstring-note]]
+++ [#docstring get docstring]
+
+How to get the documentation string for a function.
+
+**common lisp:**
+
+{{describe}} returns the documentation string with additional information such as the function signature.  To get just the documentation string use this:
+
+[[code]]
+(documentation #'mapcar 'function)
+[[/code]]
+
+[[# define-docstring-note]]
+++ [#define-docstring define function with docstring]
+
+How to define a function that has a documentation string.
+
+[[# search-doc-note]]
+++ [#search-doc apropos and documentation search]
+
+How to search definitions and documentation.
+
+Apropos takes a pattern and returns all defined symbol names which match the pattern.
+
+**clojure:**
+
+{{apropos}} returns matching symbol names as a list.
+
+{{find-doc}} searches all documentation strings and writes any which match to standard out.
+
+Both {{apropos}} and {{find-doc}} can take a string or a regular expression as an argument.
+
+**emacs lisp:**
+
+{{apropos}} displays the documentation for matching definitions in the {{*Apropos*}} buffer.  The argument is a string but will be treated as a regular expression.
+
+[[# macros-note]]
++ [#macros Macros]
+
+[[# backquote-comma]]
+++ backquote and comma
+
+[[# defmacro]]
+++ defmacro
+
+[[# defmacro-backquote]]
+++ defmacro-backquote
+
+[[# macro-predicate]]
+++ macro predicate
+
+[[# macroexpand]]
+++ macroexpand
+
+//macroexpand// recursively expands a sexp until the head is no longer a macro.  It does not expand arguments that are macros.
+
+**common lisp**
+
+Common lisp also has //macroexpand-1//, which will non-recursively expand a macro once.  The head of the expansion may thus be a macro.
+
+**clojure**
+
+Clojure also has //macroexpand-1//.  See above for an example of use.
+
+**emacs lisp**
+
+Emacs has //macroexpand-all//, which will recursively expand a sexp until head and arguments are free of macros.
+
+[[# splice-quote]]
+++ splice quote
+
+[[# recursive-macro]]
+++ recursive macro
+
+[[# hygienic]]
+++ hygienic
+
+Does the language have macros whose expansions are guaranteed not to introduce name collisions.
+
+[[# local-values]]
+++ local values
+
+[[# execution-control-note]]
++ [#execution-control Execution Control]
+
+[[# progn]]
+++ progn
+
+//progn// and its equivalents in other dialects returns the value of the last expression.  Common Lisp and Emacs Lisp also have //prog1// and //prog2// for returning the value of the 1st or 2nd expression.
+
+[[# loop]]
+++ loop
+
+[[# do]]
+++ do
+
+[[# dotimes]]
+++ dotimes
+
+[[# if]]
+++ if
+
+[[# when]]
+++ when
+
+[[# error]]
+++ error
+
+[[# handle-error]]
+++ handle error
+
+**racket:**
+
+Calling //error// raises an exception of type exn:fail
+
+**emacs:**
+
+In the example:
+
+[[code]]
+(condition-case nil (error "failed") (error (message "caught error") nil))
+[[/code]]
+
+the 2nd argument to //condition-case// is the code which might raise an error, and the 3rd argument is the error handler.  The error handler starts with condition to be caught.  The last //nil// is the return value of the entire //condition-case// expression.
+
+An error cannot be handled by catch.  An uncaught throw will generate an error, which can be handled by a condition-case error handler.
+
+[[# define-exception]]
+++ define exception
+
+How to define a custom exception with a payload.
+
+**common lisp:**
+
+The :report clause is not necessary.  If defined it will be displayed if the exception is handled by the lisp debugger.
+
+[[# throw-exception]]
+++ throw exception
+
+**emacs:**
+
+The 1st argument of an emacs //throw// expression identifies the type of exception, and the 2nd argument will be the return value of the //catch// expression that catches the exception.  
+
+[[# catch-exception]]
+++ catch exception
+
+**emacs**
+
+The following //catch// expression will return //nil//:
+
+[[code]]
+(catch 'failed (throw 'failed nil) t)
+[[/code]]
+
+[[# restart-case]]
+++ restart case
+
+[[# invoke-restart]]
+++ invoke restart
+
+[[# finally-clause]]
+++ finally clause
+
+**racket:**
+
+* [http://www.nhplace.com/kent/PFAQ/unwind-protect-vs-continuations-original.html Unwind-protect vs. Continuations] Kent Pitman
+* [http://www.ccs.neu.edu/home/dorai/uwcallcc/uwcallcc.html Unwind-protect in Portable Scheme] Dorai Sitiram
+
+**clojure:**
+
+Here is an optional technique for making sure that a file handle is closed:
+
+[[code]]
+(with-open [#^PrintWriter w (writer f)] (.print w content))
+[[/code]]
+
+[[# lazy-evaluation]]
+++ lazy evaluation
+
+[[# continuations]]
+++ continuations
+
+[[# create-thread]]
+++ create thread
+
+[[# wait-thread]]
+++ wait on thread
+
+[[# file-handles-note]]
++ [#file-handles File Handles]
+
+[[# std-file-handles-note]]
+++ [#std-file-handles standard file handles]
+
+[[# eof-note]]
+++ [#eof end-of-file behavior]
+
+[[# read-stdin-note]]
+++ [#read-stdin read line from stdin]
+
+[[# chomp-note]]
+++ [#chomp chomp]
+
+[[# println-note]]
+++ [#println write line to stdout]
+
+
+[[# format-stdout-note]]
+++ [#format-stdout write formatted string to stdout]
+
+**racket**
+
+//printf// prints to stdout.  //format// returns a string.
+
+**emacs lisp**
+
+The //format// statement returns the generated string.  When used for i/o, it prints in the emacs minibuffer.
+
+[[# open-file-note]]
+++ [#open-file open file for reading]
+
+[[# open-file-write-note]]
+++ [#open-file-write open file for writing]
+
+[[# open-file-append-note]]
+++ [#open-file-append open file for appending]
+
+[[# close-file-note]]
+++ [#close-file close file]
+
+[[# close-file-implicitly-note]]
+++ [#close-file-implicitly close file implicitly]
+
+[[# read-line-note]]
+++ [#read-line read line]
+
+[[# iterate-file-note]]
+++ [#iterate-file iterate over file by line]
+
+[[# read-file-array-note]]
+++ [#read-file-array read file into array of strings]
+
+[[# read-file-str-note]]
+++ [#read-file-str read file into string]
+
+[[# write-str-note]]
+++ [#write-str write string]
+
+[[# write-line-note]]
+++ [#write-line write line]
+
+[[# flush-file-note]]
+++ [#flush-file flush filehandle]
+
+[[# file-buffers-note]]
++ [#file-buffers File Buffers]
+
+[[# files-note]]
++ [#files Files]
+
+[[# file-test-note]]
+++ [#file-test file test, regular file test]
+
+[[# file-size-note]]
+++ [#file-size file size]
+
+[[# file-readable-writable-executable-note]]
+++ [#file-readable-writable-executable is file readable, writable, executable]
+
+[[# chmod-note]]
+++ [#chmod set file permissions]
+
+[[# cp-rm-mv-note]]
+++ [#cp-rm-mv copy file, remove file, rename file]
+
+[[# symlink-note]]
+++ [#symlink create symlink, symlink test, get target]
+
+[[# tmp-file-note]]
+++ [#tmp-file temporary file]
+
+[[# in-memory-file-note]]
+++ [#in-memory-file in memory file]
+
+[[# directories-note]]
++ [#directories Directories]
+
+[[# build-pathname-note]]
+++ [#build-pathname build pathname]
+
+How to build a file pathname from components.
+
+[[# dirname-basename-note]]
+++ [#dirname-basename dirname and basename]
+
+How to extract the directory portion of a pathname; how to extract the non-directory portion.
+
+[[# abs-pathname-note]]
+++ [#abs-pathname absolute pathname]
+
+How to get the get the absolute pathname for a pathname. If the pathname is relative the current working directory will be appended.
+
+[[# iterate-dir-note]]
+++ [#iterate-dir iterate over a directory by file]
+
+How to iterate over the files in a directory.
+
+[[# mkdir-note]]
+++ [#mkdir make directory]
+
+How to create a directory, including any parents directories specified in the path.
+
+[[# recursive-cp-note]]
+++ [#recursive-cp recursive copy]
+
+How to copy a directory and its contents.
+
+[[# rmdir-note]]
+++ [#rmdir remove empty directory]
+
+How to remove an empty directory.
+
+[[# rm-rf-note]]
+++ [#rm-rf remove directory and its contents]
+
+How to remove a directory and its contents.
+
+[[# dir-test-note]]
+++ [#dir-test directory test]
+
+How to test whether a directory exists.
+
+[[# processes-environment-note]]
++ [#processes-environment Processes and Environment]
+
+[[# external-command]]
+++ external command
+
+[[# command-line-arguments]]
+++ command line arguments
+
+**emacs**
+
+The global variables //command-line-args// and //argv// are set when emacs is run in shebang mode: i.e. with the --script option.  //command-line-args// contains the pathname used to invoke emacs, as well as any options processed by emacs at startup, in addition to any additional arguments.  //argv// only contains the additional arguments.
+
+[[# environment-variables]]
+++ environment variables
+
+[[# libraries-namespaces-note]]
++ [#libraries-namespaces Libraries and Namespaces]
+
+[[# load-file]]
+++ loading a file
+
+How to load a file and evaluate the top level expressions.
+
+**common lisp**
+
+Does not display the result of any evaluations.
+
+**racket**
+
+Displays the result of the last evaluation.
+
+[[# load-library]]
+++ loading a library
+
+[[# objects-note]]
++ [#objects Objects]
+
+[[# defclass]]
+++ define class
+
+[[# make-instance]]
+++ make instance
+
+[[# read-attribute]]
+++ read attribute
+
+[[# write-attribute]]
+++ write attribute
+
+[[# defmethod]]
+++ define method
+
+[[# invoke-method]]
+++ invoke method
+
+[[# define-subclass]]
+++ define subclass
+
+[[# universal-superclass]]
+++ universal superclass
+
+[[# multiple-inheritance]]
+++ multiple inheritance
+
+[[# reflection-note]]
++ [#reflection Reflection]
+
+[[# type-of]]
+++ type-of
+
+How to get the data type of the entity referred to by a symbol.
+
+[[# java-interop-note]]
++ [#java-interop Java Interoperation]
+
+[[# version-used-jvm]]
+++ version used on jvm
+
+[[# java-extra-libraries]]
+++ extra libraries used
+
+**racket:**
+
+The srfi-1 library brings in a common list functions which Kawa does not make available by default.  See [http://srfi.schemers.org/srfi-1/srfi-1.html SRFI].
+
+[[# java-new]]
+++ new
+
+[[# java-method]]
+++ method
+
+[[# java-class-method]]
+++ class method
+
+[[# java-chain]]
+++ chain
+
+[[# java-import]]
+++ import
+
+[[# java-to-array]]
+++ to java array
+
+[[# common-lisp]]
++ [#top Common Lisp]
+
+[http://www.lispworks.com/documentation/HyperSpec/Front/ ANSI Specification]
+[http://www.cs.cmu.edu/afs/cs/project/ai-repository/ai/lang/lisp/doc/cltl/cltl_ht.tgz Common Lisp: The Language 2nd Ed.] gizpped download
+[http://www.sbcl.org/manual/ SBCL User Manual]
+[http://clisp.cons.org/impnotes/clisp.html CLISP Man Page]
+[http://www.cliki.net/index CLiki: Common Lisp Wiki]
+[http://www.gigamonkeys.com/book/ Practical Common Lisp] Seibel
+[http://common-lisp.net/project/asdf/asdf.html ASDF Manual]
+[http://www.quicklisp.org/ Quicklisp]
+
+Common Lisp was designed by committee.  The initial standard was agreed upon in 1983, and the Common Lisp Object System (CLOS) was added in 1988.  Common Lisp became an ANSI standard in 1994.
+
+To test examples in the reference sheet we are using SBCL (Steel Bank Common Lisp) which is fast and feature complete.  The only potential downside to SBCL is that the Windows port is considered experimental.  CLISP, by contrast, is easy to install and works well on Windows.
+
+For a package manager we use Quicklisp.  It works with SBCL and CLISP.  Here is how to install it and use it to load the {{cl-ppcre}} library:
+
+[[code]]
+$ curl -O http://beta.quicklisp.org/quicklisp.lisp
+$ sbcl
+* (load "quicklisp.lisp")
+* (quicklisp-quickstart:install)
+* (ql:quickload "cl-ppcre")
+* (cl-ppcre:all-matches "foo" "foo bar")
+[[/code]]
+
+Quicklisp creates a {{quicklisp}} directory in the user's home directory.  Once quicklisp is downloaded and installed, it can be used like this:
+
+[[code]]
+$ sbcl
+* (load "~/quicklisp/setup.lisp")
+* (ql:quickload "cl-ppcre")
+* (cl-ppcre:all-matches "foo" "foo bar")
+[[/code]]
+
+When using SBCL we can ensure that Quicklisp is automatically loaded at startup by putting the load command into the {{.sbclrc}} file:
+
+[[code]]
+$ cat ~/.sbclrc
+(load "~/quicklisp/setup.lisp")
+[[/code]]
+
+[[# racket]]
++ [#top Racket]
+
+[http://schemers.org/Documents/Standards/R5RS/HTML/r5rs-Z-H-2.html R5RS]
+[http://www.r6rs.org/final/html/r6rs/r6rs-Z-H-2.html R6RS]
+[http://docs.racket-lang.org/guide/index.html Guide: Racket]
+[http://docs.racket-lang.org/reference/index.html Reference: Racket]
+[http://dynamo.iro.umontreal.ca/~gambit/wiki/index.php/Documentation Gambit Documentation]
+[http://www.gnu.org/software/kawa/index.html Kawa Language Framework]
+[http://srfi.schemers.org/ Scheme Requests for Implementation (SRFI)]
+[http://tunes.org/wiki/scheme.html Scheme Links]
+[http://snow.iro.umontreal.ca/ Scheme Now]
+[http://wiki.call-cc.org/ Chicken Scheme]
+[http://wiki.call-cc.org/chicken-projects/egg-index-4.html Chicken Egg Index]
+[http://sicp.ai.mit.edu/Fall-2004/manuals/scheme-7.5.5/doc/scheme_toc.html MIT Scheme Reference]
+
+Scheme as a dialect of Lisp is characterized by lexical scope, mandatory tail call optimization, and first class continuations.
+
+The R5RS standard (1998) added hygienic macros to the language.  In all standards up to and including R5RS the standards body focused on defining a small core of features.  The result was a language ideal for instruction or academic experimentation.  The R6RS standard (2007) by contrast defined support for libraries, modules, networking, and Unicode.  Most Scheme implementations only aim to be R5RS compliant.  Racket is the only implementation which has implemented a significant portion of the R6RS features.
+
+Because of the inconsistent adoption of R6RS, a universal package manager for all Scheme implementations is a difficult undertaking.  Scheme Now (Snow) is an effort in this direction, but the package manager {{snowman}} doesn't work with Racket, Gambit, or Kawa, the implementations used in this reference sheet.
+
+A process was initiated in 1998 called Scheme Request For Implementation (SRFI) which develops specifications for Scheme standard libraries.  As of 2010 74 of the specifications have achieved a final status.  Here is a [http://srfi.schemers.org/srfi-implementers.html page] showing which SRFIs have been implemented for which Scheme implementations.
+
+Racket ships with a large number of libraries in the {{collects}} directory of the installation which can be loaded with the {{require}} command, which takes a raw symbol which is the relative pathname from the {{collects}} directory to the file, not including the {{.rkt}} suffix.  The Racket 5.1 distribution includes 50 SRFI libraries.
+
+Racket also has a built in package management system.  Browse the [http://planet.racket-lang.org/ list of available packages].  To install a package, click through to the detail page for the package and get the {{require}} string to load it.  If the {{require}} string is executed by Racket, the library will be downloaded somewhere in the user's home directory.  When I ran this on my Mac
+
+[[code]]
+$ racket
+> (require (planet "spgsql.rkt" ("schematics" "spgsql.plt" 2 3)))
+[[/code]]
+
+the files for the PostgreSQL database bindings were installed in {{~/Library/Racket}}.
+
+Chicken Scheme packages are called eggs.  Use the command line utility {{chicken-install}} to install an egg.  The egg can be loaded in the interpreter with the {{use}} commnad:
+
+[[code]]
+$ sudo chicken-install srfi-19
+$ csi
+#;1> (use srfi-19)
+#;2> (define d (make-date 0 0 0 0 9 7 2011))
+#;3> (leap-year? d)
+#f
+[[/code]]
+
+[[# clojure]]
++ [#top Clojure]
+
+[http://clojure.org/Reference Clojure Reference]
+[http://java.sun.com/javase/6/docs/api/ Java 1.6 API]
+
+++ Calling Java
+
+Here are the basics of calling Java code:
+
+[[code]]
+(def rnd (new java.util.Random))  ; create Java object
+(. rnd nextFloat)  ; invoke method on object
+(. rnd nextInt 10)  ; invoke method with argument
+(. Math PI)  ; static member
+(import '(java.util Random))  ; import 
+[[/code]]
+
+Clojure automatically imports everything in java.lang.
+
+There are shortcuts for the above syntax:
+
+[[code]]
+(Random.)
+(new Random)
+
+Math/PI
+(. Math PI)
+
+(.nextInt rnd)
+(. rnd nextInt)
+[[/code]]
+
+Because they are primitive types and not objects, Clojure provides functions specific to Java arrays:
+
+[[code]]
+(make-array CLASS LEN)
+(make-array CLASS DIM & DIMS)
+(aset ARY IDX VAL)
+(aset ARY IDX_DIM1 IDX_DIM2 ... VAL)
+(aget ARY IDX)
+(aget ARY IDX_DIM1 IDX_DIM2 ...)
+(alength JARY)
+(to-array SEQ)
+(into-array TYPE SEQ)
+(amap ARY I COPY EXPR)
+(areduce ARY IDX  COPY INIT EXPR )
+[[/code]]
+
+[[# emacs-lisp]]
++ [#top Emacs Lisp]
+
+[http://www.gnu.org/software/emacs/manual/html_mono/emacs.html GNU Emacs Manual]
+[http://www.gnu.org/software/emacs/manual/html_mono/elisp.html GNU Emacs Lisp Reference Manual]
+
+To get an introduction to Emacs Lisp Programming from within Emacs use
+
+[[code]]
+  C-h i m Emacs Lisp Intro
+[[/code]]
+
+Run {{M-x lisp-interaction-mode}} to put Emacs in lisp interaction mode.   In lisp interaction mode the command {{C-x e}} will evaluate the s-expression on the current line.  {{M-x eval-buffer}} will evaluate the entire buffer.
+
+Use lisp interaction mode to define functions which can be called from Emacs.  The following defines a function called {{dired-emacs-lisp}} for browsing the Emacs Lisp directory:  
+
+[[code]]
+(defun dired-emacs-lisp ()
+  "Open the Emacs Lisp directory in dired."
+  (interactive)
+   (dired "/Applications/Emacs.app/Contents/Resources/lisp"))
+[[/code]]
+
+The directory is hard-coded into the function and may be different on your system.  Once defined the function can be invoked with {{M-x dired-emacs-lisp}}.  Not all Lisp functions can be called in this manner.  Those that can are called //commands//.  The body of a command has an optional documentation string, followed by a call to {{interactive}}, followed by the code which executes when the command is invoked.  The documentation string can be accessed from Emacs by running {{M-x describe-function}} and entering the name of the function when prompted.
+
+The call to {{interactive}} is what makes a Lisp function a command.  It can takes optional arguments.  Use {{M-x describe-function}} on {{interactive}} to see a description of these arguments.
+
+To bind the command to the key {{C-c l}} run the following in Lisp interaction mode:
+
+[[code]]
+(global-set-key "\C-cl" 'dired-emacs-lisp)
+[[/code]]
+
+If it is desired to have the above command and key binding always available when Emacs starts up, put them in {{~/.emacs.d/init.el}}.

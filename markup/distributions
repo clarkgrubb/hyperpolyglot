@@ -1,0 +1,162 @@
+||~ [[[numerical-analysis#distribution-note|distribution]]]||~ parameters||~ support||~ density f(x)||~ mean||~ variance||~ excel function||~ [[[numerical-analysis#matlab|matlab/octave]]]||~ [[[numerical-analysis#r|r]]]||~ [[[numerical-analysis#numpy|numpy/scipy]]]||~ [[[cpp|c++]]]||
+||[[[numerical-analysis#binomial-note|binomial]]]||B(n,p)||{0,1,...,n}||[[$ \frac{n!}{x!(n-x)!} p^x(1-p)^{n-x} $]]||np||np(1-p)||BINOMDIST(x,n,p,FALSE) _
+BINOMDIST(x,n,p,TRUE) _
+BINOM.INV(n, p, @<&alpha;>@) _
+BINOM.INV(n, p, RAND())||binopdf(x, ##gray|//n//##, ##gray|//p//##) _
+binocdf(x, ##gray|//n//##, ##gray|//p//##) _
+binoinv(y, ##gray|//n//##, ##gray|//p//##) _
+binornd(##gray|//n//##, ##gray|//p//##)||dbinom(x, ##gray|//n//##, ##gray|//p//##) _
+pbinom(x, ##gray|//n//##, ##gray|//p//##) _
+qbinom(y, ##gray|//n//##, ##gray|//p//##) _
+rbinom(1, ##gray|//n//##, ##gray|//p//##)||stats.binom.pmf(x, ##gray|//n//##, ##gray|//p//##) _
+stats.binom.cdf(x, ##gray|//n//##, ##gray|//p//##) _
+stats.binom.ppf(y, ##gray|//n//##, ##gray|//p//##) _
+stats.binom.rvs(##gray|//n//##, ##gray|//p//##)||#include <random> _
+ _
+default_random_engine dre; _
+binomial_distribution<int> bd(##gray|//n//##, ##gray|//p//##); _
+int m = bd(dre);||
+||[[[numerical-analysis#poisson-note|poisson]]]||Pois(@<&lambda;>@)||{0,1,2,...}||[[$ \frac{\mu^x e^{-\mu}}{x!} $]]||@<&lambda;>@||@<&lambda;>@||POISSON(x, @<&lambda;>@, FALSE) _
+POISSON(x, @<&lambda;>@, TRUE) _
+##gray|//none//## _
+##gray|//none//##||poisspdf(x, ##gray|//lambda//##) _
+poisscdf(x, ##gray|//lambda//##) _
+poissinv(y, ##gray|//lambda//##) _
+poissrnd(##gray|//lambda//##)||dpois(x, ##gray|//lambda//##) _
+ppois(x, ##gray|//lambda//##) _
+qpois(y, ##gray|//lambda//##) _
+rpois(1, ##gray|//lambda//##)||stats.poisson.pmf(x, ##gray|//lambda//##) _
+stats.poisson.cdf(x, ##gray|//lambda//##) _
+stats.poisson.ppf(y, ##gray|//lambda//##) _
+stats.poisson.rvs(##gray|//lambda//##, size=1)||#include <random> _
+ _
+default_random_engine dre; _
+poisson_distribution<int> pd(##gray|//lambda//##); _
+int m = pd(dre);||
+||[[[numerical-analysis#normal-note|normal]]]||N(@<&mu;>@, @<&sigma;>@)||(-@<&infin;>@,@<&infin;>@)||[[$ \frac{1}{\sqrt{2\pi \sigma}} e^{-\frac{(x-\mu)^2}{2\sigma^2}} $]]||@<&mu;>@||@<&sigma;>@^^2^^||NORMDIST(x, @<&mu;>@, @<&sigma;>@, FALSE) _
+NORMDIST(x, @<&mu;>@, @<&sigma;>@, TRUE) _
+NORMINV(@<&alpha;>@, @<&mu;>@, @<&sigma;>@) _
+NORMINV(RAND(), @<&mu;>@, @<&sigma;>@)||normpdf(x, ##gray|//mu//##, ##gray|//sigma//##) _
+normcdf(x, ##gray|//mu//##, ##gray|//sigma//##) _
+norminv(y, ##gray|//mu//##, ##gray|//sigma//##) _
+normrnd(##gray|//mu//##, ##gray|//sigma//##)||dnorm(x, ##gray|//mu//##, ##gray|//sigma//##) _
+pnorm(x, ##gray|//mu//##, ##gray|//sigma//##) _
+qnorm(y, ##gray|//mu//##, ##gray|//sigma//##) _
+rnorm(1, ##gray|//mu//##, ##gray|//sigma//##)||stats.norm.pdf(x, ##gray|//mu//##, ##gray|//sigma//##) _
+stats.norm.cdf(x, ##gray|//mu//##, ##gray|//sigma//##) _
+stats.norm.ppf(y, ##gray|//mu//##, ##gray|//sigma//##) _
+stats.norm.rvs(##gray|//mu//##, ##gray|//sigma//##)||#include <random> _
+ _
+default_random_engine dre; _
+normal_distribution<double> nd(##gray|//mu//##, ##gray|//sigma//##); _
+double x = nd(dre);||
+||[[[numerical-analysis#gamma-note|gamma]]]||@<&Gamma;>@(k, @<&theta;>@)||[0,@<&infin;>@)||[[$ x^{k-1}\frac{exp(\frac{-x}{\theta})}{\Gamma(k) \theta^k} $]]||k@<&theta;>@||k@<&theta;>@^^2^^||GAMMADIST(x, k, @<&theta;>@, FALSE) _
+GAMMADIST(x, k, @<&theta;>@, TRUE) _
+GAMMAINV(@<&alpha;>@, k, @<&theta;>@) _
+GAMMAINV(RAND(), k, @<&theta;>@)||gampdf(x, ##gray|//k//##, ##gray|//theta//##) _
+gamcdf(x, ##gray|//k//##, ##gray|//theta//##) _
+gaminv(y, ##gray|//k//##, ##gray|//theta//##) _
+gamrnd(##gray|//k//##, ##gray|//theta//##)||dgamma(x, ##gray|//k//##, scale=##gray|//theta//##) _
+pgamma(x, ##gray|//k//##, scale=##gray|//theta//##) _
+qgamma(y, ##gray|//k//##, scale=##gray|//theta//##) _
+rgamma(1, ##gray|//k//##, scale=##gray|//theta//##)||stats.gamma.pdf(x, ##gray|//k//##, scale=##gray|//theta//##) _
+stats.gamma.cdf(x, ##gray|//k//##, scale=##gray|//theta//##) _
+stats.gamma.ppf(y, ##gray|//k//##, scale=##gray|//theta//##) _
+stats.gamma.rvs(##gray|//k//##, scale=##gray|//theta//##)||#include <random> _
+ _
+default_random_engine dre; _
+gamma_distribution<double> gd(##gray|//k//##, ##gray|//theta//##); _
+double x = gd(dre);||
+||[[[numerical-analysis#exponential-note|exponential]]]||Exp(@<&lambda;>@)||[0, @<&infin;>@)||[[$ \lambda e^{-\lambda x} $]]||@<&lambda;>@^^-1^^||@<&lambda;>@^^-2^^||EXPON.DIST(x, @<&lambda;>@, FALSE) _
+EXPON.DIST(x, @<&lambda;>@, TRUE) _
+GAMMAINV(y, 1, 1/@<&lambda;>@) _
+GAMMAINV(RAND(), 1, 1/@<&lambda;>@)||exppdf(x, ##gray|//lambda//##) _
+expcdf(x, ##gray|//lambda//##) _
+expinv(y, ##gray|//lambda//##) _
+exprnd(##gray|//lambda//##)||dexp(x, ##gray|//lambda//##) _
+pexp(x, ##gray|//lambda//##) _
+qexp(y, ##gray|//lambda//##) _
+rexp(1, ##gray|//lambda//##)||stats.expon.pdf(x, scale=1.0/##gray|//lambda//##) _
+stats.expon.cdf(x, scale=1.0/##gray|//lambda//##) _
+stats.expon.ppf(x, scale=1.0/##gray|//lambda//##) _
+stats.expon.rvs(scale=1.0/##gray|//lambda//##)||#include <random> _
+ _
+default_random_engine dre; _
+exponential_distribution<double> ed(##gray|//lambda//##); _
+double x = ed(dre);||
+||[[[numerical-analysis#chi-squared-note|chi-squared]]]||@<&Chi;>@^^2^^(@<&nu;>@)||[0, @<&infin;>@)||[[$ \frac{1}{2^{k/2}\Gamma(k/2)} x^{k/2 - 1} e^{-x/2} $]]||@<&nu;>@||2@<&nu;>@||CHISQ.DIST(x, @<&nu;>@, FALSE) _
+CHISQ.DIST(x, @<&nu;>@, TRUE) _
+CHISQ.INV(y, @<&nu;>@) _
+CHISQ.INV(RAND(), @<&nu;>@)||chi2pdf(x, ##gray|//nu//##) _
+chi2cdf(x, ##gray|//nu//##) _
+chi2inv(y, ##gray|//nu//##) _
+chi2rnd(##gray|//nu//##)||dchisq(x, ##gray|//nu//##) _
+pchisq(x, ##gray|//nu//##) _
+qchisq(y, ##gray|//nu//##) _
+rchisq(1, ##gray|//nu//##)||stats.chi2.pdf(x, ##gray|//nu//##) _
+stats.chi2.cdf(x, ##gray|//nu//##) _
+stats.chi2.ppf(y, ##gray|//nu//##) _
+stats.chi2.rvs(##gray|//nu//##)||#include <random> _
+ _
+default_random_engine dre; _
+chi_squared_distribution<double> csd(##gray|//nu//##); _
+double x = csd(dre);||
+||[[[numerical-analysis#beta-note|beta]]]||Be(@<&alpha;>@, @<&beta;>@)||[0, 1]||[[$\frac{x^{\alpha-1}(1-x)^{\beta-1}}{B(\alpha, \beta)}$]]||[[$ \frac{\alpha}{\alpha + \beta} $]]||[[$ \frac{\alpha\beta}{(\alpha+\beta)^2(\alpha+\beta+1)} $]]||BETADIST(x, @<&alpha;>@, @<&beta;>@, FALSE) _
+BETADIST(x, @<&alpha;>@, @<&beta;>@, TRUE) _
+BETAINV(p, @<&alpha;>@, @<&beta;>@) _
+BETAINV(RAND(), @<&alpha;>@, @<&beta;>@)||betapdf(x, ##gray|//alpha//##, ##gray|//beta//##) _
+betacdf(x, ##gray|//alpha//##, ##gray|//beta//##) _
+betainvf(y, ##gray|//alpha//##, ##gray|//beta//##) _
+betarnd(##gray|//alpha//##, ##gray|//beta//##)||dbeta(x, ##gray|//alpha//##, ##gray|//beta//##) _
+pbeta(x, ##gray|//alpha//##, ##gray|//beta//##) _
+qbeta(y, ##gray|//alpha//##, ##gray|//beta//##) _
+rbeta(1, ##gray|//alpha//##, ##gray|//beta//##)||stats.beta.pdf(x, ##gray|//alpha//##, ##gray|//beta//##) _
+stats.beta.cdf(x, ##gray|//alpha//##, ##gray|//beta//##) _
+stats.beta.ppf(y, ##gray|//alpha//##, ##gray|//beta//##) _
+stats.beta.pvs(##gray|//alpha//##, ##gray|//beta//##)||##gray|//none//##||
+||[[[numerical-analysis#uniform-note|uniform]]]||U(a, b)||[a, b]||[[$ \frac{1}{b-a} $]]||[[$ \frac{a+b}{2} $]]||[[$ \frac{(b-a)^2}{12} $]]||1/(b-a) _
+(x-a)/(b-a) _
+@<&alpha;>@ * (b-a) + a _
+RAND()*(b-a) + a||unifpdf(x, ##gray|//a//##, ##gray|//b//##) _
+unifcdf(x, ##gray|//a//##, ##gray|//b//##) _
+unifinv(y, ##gray|//a//##, ##gray|//b//##) _
+unifrnd(##gray|//a//##, ##gray|//b//##)||dunif(x, ##gray|//a//##, ##gray|//b//##) _
+punif(x, ##gray|//a//##, ##gray|//b//##) _
+qunif(y, ##gray|//a//##, ##gray|//b//##) _
+runif(1, ##gray|//a//##, ##gray|//b//##)||stats.uniform.pdf(x, ##gray|//a//##, ##gray|//b//##) _
+stats.uniform.cdf(x, ##gray|//a//##, ##gray|//b//##) _
+stats.uniform.ppf(y, ##gray|//a//##, ##gray|//b//##) _
+stats.unifrom.rvs(##gray|//a//##, ##gray|//b//##)||#include <random> _
+ _
+default_random_engine dre; _
+uniform_real_distribution<double> urd(##gray|//a//##, ##gray|//b//##); _
+double x = urd(dre);||
+||[[[numerical-analysis#students-t-note|Student's t]]]||t(@<&nu;>@)||(-@<&infin;>@,@<&infin;>@)||[[$ \frac{\Gamma(\frac{\nu+1}{2})}{\sqrt{\nu \pi} \Gamma(\frac{\nu}{2})} (1 + \frac{x^2}{\nu})^{-\frac{\nu+1}{2}}$]]||[[$ \begin{cases} 0 & \nu > 1 \\ \text{undefined} & \text{otherwise} \end{cases} $]]||[[$ \begin{cases} \frac{\nu}{\nu - 2} & \nu > 2 \\ \infty & 1 < \nu \le 2 \\ \text{undefined} & \text{otherwise} \end{cases} $]]||T.DIST(x, @<&nu;>@, FALSE) _
+T.DIST(x, @<&nu;>@, TRUE) _
+T.INV(@<&alpha;>@, @<&nu;>@) _
+T.INV(RAND(), @<&nu;>@)|| ||dt(x, ##gray|//nu//##) _
+pt(x, ##gray|//nu//##) _
+qt(y, ##gray|//nu//##) _
+rt(1, ##gray|//nu//##)||stats.t.pdf(x, ##gray|//nu//##) _
+stats.t.cdf(x, ##gray|//nu//##) _
+stats.t.ppf(y, ##gray|//nu//##) _
+stats.t.rvs(##gray|//nu//##)||#include <random> _
+ _
+default_random_engine dre; _
+student_t_distribution<double> td(##gray|//nu//##); _
+double x = td(dre);||
+||[[[numerical-analysis#snedecors-f-note|Snedecor's F]]]||F(d,,1,,, d,,2,,)||[0, @<&infin;>@)||[[$ \frac{\sqrt{\frac{(d_1 x)^{d_1} d_2^{d_2}}{(d_1 x + d_2)^{d_1+d_2}}}}{x B(d_1, d_2)} $]]||[[$ \frac{d_2}{d_2 - 2} $]] ##gray|//for d,,2,, > 2//##|| ||F.DIST(x,  d,,1,,, d,,2,,, FALSE) _
+F.DIST(x,  d,,1,,, d,,2,,, TRUE) _
+F.INV(@<&alpha;>@, d,,1,,, d,,2,,) _
+F.INV(RAND(), d,,1,,, d,,2,,)|| ||df(x, ##gray|//d1//##, ##gray|//d2//##) _
+pf(x, ##gray|//d1//##, ##gray|//d2//##) _
+qf(y, ##gray|//d1//##, ##gray|//d2//##) _
+rf(1, ##gray|//d1//##, ##gray|//d2//##)||stats.f.pdf(x, ##gray|//d1//##, ##gray|//d2//##) _
+stats.f.cdf(x, ##gray|//d1//##, ##gray|//d2//##) _
+stats.f.ppf(y, ##gray|//d1//##, ##gray|//d2//##) _
+stats.f.rvs(##gray|//d1//##, ##gray|//d2//##)||#include <random> _
+ _
+default_random_engine dre; _
+fisher_f_distribution<double> fd(##gray|//d1//##, ##gray|//d2//##); _
+double x = urd(dre);||
+||~ ||~ ||~  ##EFEFEF|@@________@@##||~ ||~ ||~ ||~ ##EFEFEF|@@__________________________@@##||~ ##EFEFEF|@@_________________________@@##||~ ##EFEFEF|@@_________________________@@##||~ ##EFEFEF|@@____________________________________@@##||~ ##EFEFEF|@@____________________________________________@@##||

@@ -1,0 +1,1282 @@
+//a side-by-side reference sheet//
+
+[#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#arrays arrays] _
+[#sequences sequences] | [#multidimensional-arrays multidimensional arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#files files] | [#libraries-namespaces libraries and namespaces] |  [#reflection reflection] _
+  _
+ [#algebra algebra] | [#calculus calculus] | [#number-theory number theory] | [#vectors vectors] | [#matrices matrices] | [#distributions distributions] | [#univariate-charts univariate charts] | [#bivariate-charts bivariate charts] _
+[#trivariate-charts trivariate charts]
+
+||~ ||~ [#mathematica mathematica]||~ [#sympy sympy]||~ [#pari-gp pari/gp]||
+||[[# version-used]][#version-used-note version used] _
+@<&nbsp;>@||##gray|//8.0//##||##gray|//Python 2.7; SymPy 0.7//##||##gray|//2.3//##||
+||[[# show-version]][#show-version-note show version] _
+@<&nbsp;>@||##gray|//select// About Mathematica //in// Mathematica //menu//##||@@sympy.__version__@@||$ gp @@--@@version||
+||[[# implicit-prologue]][#implicit-prologue-note implicit prologue]|| ||from sympy import * _
+ _
+x, y, z, w = symbols('x y z w')|| ||
+||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
+||~ ||~ mathematica||~ sympy||~ pari/gp||
+||[[# interpreter]][#interpreter-note interpreter] _
+@<&nbsp;>@|| || ||$ gp -q ##gray|//foo//##.gp||
+||[[# repl]][#repl-note repl] _
+@<&nbsp;>@||$ math|| ||$ gp||
+||[[# block-delimiters]][#block-delimiters-note block delimiters] _
+@<&nbsp;>@||( ##gray|//stmt//##; ##gray|//...//##)|| ||{ ##gray|//...//## }||
+||[[# stmt-separator]][#stmt-separator-note statement separator]||; ##gray|//or sometimes newline//## _
+ _
+; ##gray|//before a newline suppresses output//##|| ||##gray|//newline or//## ; _
+ _
+##gray|//a trailing semicolon suppresses output//##||
+||[[# eol-comment]][#eol-comment-note end-of-line comment] _
+@<&nbsp;>@||##gray|//none//##|| ||1 + 1 ##gray|\\ addition##||
+||[[# multiple-line-comment]][#multiple-line-comment-note multiple line comment] _
+@<&nbsp;>@||1 + ##gray|(* addition *)## 1|| ||1 + ##gray|/* addition */## 1||
+||||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
+||~ ||~ mathematica||~ sympy||~ pari/gp||
+||[[# assignment]][#assignment-note assignment]||a = 3 _
+Set[a, 3]|| ||a = 3||
+||[[# parallel-assignment]][#parallel-assignment-note parallel assignment]||{a, b} = {3, 4} _
+Set[{a, b}, {3, 4}]|| ||##gray|//none//##||
+||[[# compound-assignment]][#compound-assignment-note compound assignment]||+= -= *= /= _
+##gray|//corresponding functions://## _
+AddTo SubtractFrom TimeBy DivideBy|| ||+= -= *= /= %=||
+||[[# incr-decr]][#incr-decr-note increment and decrement]||++x @@--@@x _
+PreIncrement[x] PreDecrement[x] _
+x++ x@@--@@ _
+Increment[x] Decrement[x]|| ||##gray|//return value after increment or decrement://## _
+x++ x@@--@@||
+||[[# null]][#null-note null] _
+@<&nbsp;>@||Null|| || ||
+||[[# null-test]][#null-test-note null test] _
+@<&nbsp;>@|| || || ||
+||[[# undef-var]][#undef-var-note undefined variable access] _
+@<&nbsp;>@||##gray|//treated as an unknown number//##|| ||##gray|//treated as an unknown number//##||
+||[[# rm-var-binding]][#rm-var-binding-note remove variable binding]||Clear[x] _
+Remove[x]|| ||kill(x)||
+||[[# cond-expr]][#cond-expr-note conditional expression] _
+@<&nbsp;>@||If[x > 0, x, -x]|| ||if(x > 0, x, -x)||
+||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
+||~ ||~ mathematica||~ sympy||~ pari/gp||
+||[[# true-false]][#true-false-note true and false] _
+@<&nbsp;>@||True False||True False||1 0||
+||[[# falsehoods]][#falsehoods-note falsehoods] _
+@<&nbsp;>@||False||False None 0 0.0 '' [] {}||0||
+||[[# logical-op]][#logical-op-note logical operators]||! True @@||@@ (True && False) _
+Or[Not[True], And[True, False]]|| ||! 1 @@||@@ (1 @@&&@@ 0)||
+||[[# relational-op]][#relational-op-note relational operators]||== != > < >= <= _
+##gray|//corresponding functions://## _
+Equal Unequal Greater Less GreaterEqual LessEqual|| ||== != > < >= <=||
+||[[# arith-op]][#arith-op-note arithmetic operators]||+ - * / Quotient Mod _
+##gray|//adjacent terms are multiplied, so * is not necessary.// Quotient //and// Mod //are functions, not binary infix operators.  These functions are also available://## _
+Plus Subtract Times Divide|| ||+ - * / ##gray|//none//## %||
+||[[# int-div]][#int-div-note integer division] _
+@<&nbsp;>@||Quotient[a, b]|| ||divrem(a, b)[1]||
+||[[# int-div-zero]][#int-div-zero-note integer division by zero]||##gray|//dividend is zero://## _
+Indeterminate _
+##gray|//otherwise://## _
+ComplexInfinity|| ||##gray|//error//##||
+||[[# float-div]][#float-div-note float division]||##gray|//exact division://## _
+a / b|| ||##gray|//exact division://## _
+a / b||
+||[[# float-div-zero]][#float-div-zero-note float division by zero]||##gray|//dividend is zero://## _
+Indeterminate _
+##gray|//otherwise://## _
+ComplexInfinity|| ||##gray|//error//##||
+||[[# power]][#power-note power]||2 ^ 16 _
+Power[2, 16]|| ||2 ^ 16||
+||[[# sqrt]][#sqrt-note sqrt]||##gray|//returns symbolic expression://## _
+Sqrt[2]|| ||##gray|//returns float://## _
+sqrt(2)||
+||[[# sqrt-negative-one]][#sqrt-negative-one-note sqrt -1] _
+@<&nbsp;>@||I||I||1.000 * I||
+||[[# transcendental-func]][#transcendental-func-note transcendental functions]||Exp Log Sin Cos Tan ArcSin ArcCos ArcTan ArcTan _
+##gray|ArcTan //accepts 1 or 2 arguments//##||exp log sin cos tan asin acos atan atan2||exp log sin cos tan asin acos atan ##gray|//none//##||
+||[[# transcendental-const]][#transcendental-const-note transcendental constants] _
+##gray|//pi and the euler constant//##||Pi E||pi e||Pi exp(1)||
+||[[# float-truncation]][#float-truncation-note float truncation] _
+##gray|//round towards zero, round to nearest integer, round down, round up//##||IntegerPart Round Floor Ceiling|| ||truncate round floor ceil||
+||[[# absolute-val]][#absolute-val-note absolute value] _
+##gray|//and signum//##||Abs Sign||abs sign||abs sign||
+||[[# int-overflow]][#int-overflow-note integer overflow] _
+@<&nbsp;>@||##gray|//none, has arbitrary length integer type//##|| ||##gray|//none, has arbitrary length integer type//##||
+||[[# float-overflow]][#float-overflow-note float overflow] _
+@<&nbsp;>@||##gray|//none//##|| ||##gray|//error//##||
+||[[# rational-construction]][#rational-construction-note rational construction]||##gray|//use integer division://## _
+1 / 7|| ||##gray|//use integer division://## _
+1 / 7||
+||[[# rational-decomposition]][#rational-decomposition-note rational decomposition] _
+@<&nbsp;>@||Numerator Denominator|| ||numerator denominator||
+||[[# complex-construction]][#complex-construction-note complex construction] _
+@<&nbsp;>@||1 + 3I|| ||1 + 3 * I||
+||[[# complex-decomposition]][#complex-decomposition-note complex decomposition] _
+##gray|//real and imaginary part, argument and modulus, conjugate//##||Re Im _
+Arg Abs _
+Conjugate|| ||real imag _
+##gray|//??//## abs _
+conj||
+||[[# random-num]][#random-num-note random number] _
+##gray|//uniform integer, uniform float//##||RandomInteger[{0, 99}] _
+RandomReal[]|| ||random(100) _
+##gray|//??//##||
+||[[# random-seed]][#random-seed-note random seed] _
+##gray|//set, get//##||SeedRandom[17] _
+##gray|//??//##|| ||setrand(17) _
+getrand()||
+||[[# binary-octal-hex-literals]][#binary-octal-hex-literals-note binary, octal, and hex literals]||2@@^^@@101010 _
+8@@^^@@52 _
+16@@^^@@2a|| || ||
+||[[# radix]][#radix-note radix]||BaseForm[42, 7] _
+BaseForm[7^^60, 10]|| ||##gray|\\ 42 as powers of 7 up to 9th power:## _
+42 + O(7^10)||
+||||||||~ [[# strings]][#strings-note strings]||
+||~ ||~ mathematica||~ sympy||~ pari/gp||
+||[#string-literals string literals]||"don't say \"no\""|| ||"don't say \"no\""||
+||[#string-newline newline in literal]||##gray|//yes//##|| ||##gray|//no; use \n escape//##||
+||[#string-escapes string literal escapes]||\\ \" \b \f \n \r \t \##gray|//ooo//##|| ||\n \t \" \\||
+||[#character-access character access]||Characters["hello"][[1]]|| || ||
+||[#chr-ord chr and ord]||FromCharacterCode[{65}] _
+ToCharacterCode["A"][[1]]|| || ||
+||[#string-length length]||StringLength["hello"]|| ||length("hello")||
+||[#string-concatenate concatenate]||"one " <> "two " <> "three"|| ||Str("one", "two", "three")||
+||[#index-substring index of substring]||StringPosition["hello", "el"][[1]][[1]] _
+##gray|StringPosition //returns an array of pairs, one for each occurrence of the substring.  Each pair contains the index of the first and last character of the occurrence.//##|| || ||
+||[#extract-substring extract substring]||StringTake["hello", {1, 4}]|| || ||
+||[#split split]||StringSplit["foo,bar,baz", ","]|| || ||
+||[#join join]||StringJoin[Riffle[{"foo", "bar", "baz"}, ","]]|| || ||
+||[#trim trim]||StringTrim[" foo "]|| || ||
+||[#number-string-conversion convert from string, to string]||7 + ToExpression["12"] _
+73.9 + ToExpression[".037"] _
+"value: " <> ToString[8]|| || ||
+||[#case-manipulation case manipulation]||ToUpperCase["foo"] _
+ToLowerCase["FOO"]|| || ||
+||||||||~ [[# regexes]][#regexes-note regular expressions]||
+||~ ||~ mathematica||~ sympy||~ pari/gp||
+||[#regex-match regex test]||re = RegularExpression["[a-z]+"] _
+sc = StringCases["hello", re] _
+Length[sc] > 0|| || ||
+||[#regex-substitute regex substitution]||s = "foo bar bar" _
+re = RegularExpression["bar"] _
+StringReplace[s, re -> "baz", 1] _
+StringReplace[s, re -> "baz"]|| || ||
+||||||||~ [[# arrays]][#arrays-note arrays]||
+||~ ||~ mathematica||~ sympy||~ pari/gp||
+||[[# array-literal]][#array-literal-note literal]||{1, 2, 3} _
+ _
+List[1, 2, 3]|| ||##gray|\\ [1, 2, 3] is a vector literal:## _
+List([1, 2, 3])||
+||[[# array-size]][#array-size-note size] _
+@<&nbsp;>@||Length[{1, 2, 3}]|| ||length(List([1, 2, 3]))||
+||[[# empty-array-test]][#empty-array-test-note empty test] _
+@<&nbsp;>@||Length[{}] == 0|| ||length(List([])) == 0||
+||[[# array-lookup]][#array-lookup-note lookup]||##gray|(* access time is O(1) *)## _
+##gray|(* indices start at one: *)## _
+{1, 2, 3}[[1]] _
+ _
+Part[{1, 2, 3}, 1]|| ||##gray|\\ access time is O(1).## _
+##gray|\\ indices start at one:## _
+List([1, 2, 3])[1]||
+||[[# array-update]][#array-update-note update] _
+@<&nbsp;>@||a[[1]] = 7|| ||listput(a, 7, 1)||
+||[[# array-out-of-bounds]][#array-out-of-bounds-note out-of-bounds behavior]||##gray|//left as unevaluated// Part[] //expression//##|| ||##gray|//out of allowed range error//##||
+||[[# array-element-index]][#array-element-index-note element index]||##gray|(* returns list of all positions: *)## _
+First /@ Position[{7, 8, 9, 9}, 9]|| ||##gray|//none//##||
+||[[# array-slice]][#array-slice-note slice] _
+@<&nbsp;>@||{1, 2, 3}[[1 ;; 2]]|| ||##gray|//none//##||
+||[[# array-of-integers-as-index]][#array-of-integers-as-index-note array of integers as index]||##gray|(* evaluates to {7, 9, 9} *)## _
+{7, 8, 9}[[{1, 3, 3}]]|| ||##gray|//none//##||
+||[[# array-back]][#array-back-note manipulate back]||a = {6,7,8} _
+AppendTo[a, 9] _
+elem = a[[Length[a]]] _
+a = Delete[a, Length[a]] _
+elem|| ||a = List([6, 7, 8]) _
+listput(a, 9) _
+elem = listpop(a)||
+||[[# array-front]][#array-front-note manipulate front]||a = {6,7,8} _
+PrependTo[a, 5] _
+elem = a[[1]] _
+a = Delete[a, 1] _
+elem|| ||a = List([6, 7, 8]); _
+listinsert(a, 5, 1); _
+elem = a[1]; _
+listpop(a, 1);||
+||[[# array-head]][#array-head-note head] _
+@<&nbsp;>@||First[{1, 2, 3}]|| ||List([1, 2, 3])[1]||
+||[[# array-tail]][#array-tail-note tail] _
+@<&nbsp;>@||Rest[{1, 2, 3}]|| ||##gray|//none//##||
+||[[# array-cons]][#array-cons-note cons]||##gray|(* first arg must be an array *)## _
+Prepend[{2, 3}, 1]|| ||a = List([1, 2, 3]); _
+listinsert(a, 1, 1);||
+||[[# array-concatenate]][#array-concatenate-note concatenate] _
+@<&nbsp;>@||Join[{1, 2, 3}, {4, 5, 6}]|| ||concat(List([1, 2, 3]), List([4, 5, 6]))||
+||[[# array-replicate]][#array-replicate-note replicate] _
+@<&nbsp;>@||ten_zeros = Table[0, {i, 0, 9}]|| || ||
+||[[# copy-array]][#copy-array-note copy] _
+@<&nbsp;>@||a2 = a|| ||a2 = a||
+||[[# iterate-over-array]][#iterate-over-array-note iterate] _
+@<&nbsp;>@||Function[x, Print[x]] /@ {1, 2, 3}|| ||a = List([1, 2, 3]) _
+ _
+for(i=1, length(a), print(a[i]))||
+||[[# reverse-array]][#reverse-array-note reverse] _
+@<&nbsp;>@||Reverse[{1, 2, 3}]|| ||a = List([1, 2, 3]) _
+a2 = listcreate() _
+while(i > 0, listput(a2, a[i]); i--)||
+||[[# sort-array]][#sort-array-note sort]||Sort[{3, 1, 4, 2}]|| ||a = List([3,1,4,2]) _
+listsort(a) _
+a||
+||[[# dedupe-array]][#dedupe-array-note dedupe] _
+@<&nbsp;>@||Union[{1, 2, 2, 3}]|| || ||
+||[[# membership]][#membership-note membership] _
+@<&nbsp;>@||MemberQ[{1, 2, 3}, 2]|| ||##gray|/* The Set() constructor takes an array or vector as _
+@<&nbsp;&nbsp;>@an argument.  It converts the elements to strings _
+@<&nbsp;&nbsp;>@and sorts them, discarding duplicates. _
+@<&nbsp;&nbsp;>@setsearch() returns the index of the element or zero _
+@<&nbsp;&nbsp;>@if not in the set. */## _
+setsearch(Set([1, 2, 3]), 2)||
+||[[# intersection]][#intersection-note intersection]||Intersect[{1, 2}, {2, 3, 4}]|| ||setintersect(Set([1, 2]), Set([2, 3, 4]))||
+||[[# union]][#union-note union] _
+@<&nbsp;>@||Union[{1, 2}, {2, 3, 4}]|| ||setunion(Set([1, 2]), Set([2, 3, 4]))||
+||[[# set-diff]][#set-diff-note relative complement, symmetric difference]||Complement[{1, 2, 3}, {2}] _
+##gray|//none//##|| ||setminus(Set([1, 2, 3]), Set([2]))||
+||[[# map]][#map-note map]||Function[x, x x] /@ {1, 2, 3} _
+ _
+Map[Function[x, x x], {1, 2, 3}]|| || ||
+||[[# filter]][#filter-note filter] _
+@<&nbsp;>@||Select[{1, 2, 3}, # > 2 &]|| || ||
+||[[# reduce]][#reduce-note reduce]||Fold[Plus, 0, {1, 2, 3}]|| || ||
+||[[# universal-existential-test]][#universal-existential-test-note universal and existential tests]||##gray|//none//##|| || ||
+||[[# min-max-elem]][#min-max-elem-note min and max element]||Min[{1, 2, 3}] _
+Max[{1, 2, 3}]|| || ||
+||[[# shuffle-sample]][#shuffle-sample-note shuffle and sample]||x = {3, 7, 5, 12, 19, 8, 4} _
+ _
+RandomSample[x] _
+RandomSample[x, 3]|| || ||
+||[[# zip]][#zip-note zip]||##gray|(* list of six elements: *)## _
+Riffle[{1, 2, 3}, {"a", "b", "c"}]|| || ||
+||||||||~ [[# sequences]][#sequences-note sequences]||
+||~ ||~ mathematica||~ sympy||~ pari/gp||
+||[#range range]||Range[1, 100]|| || ||
+||[#arithmetic-sequence-integer arithmetic sequence of integers with difference 10]||Range[1, 100, 10]|| || ||
+||[#airthmetic-sequence-float arithmetic sequence of floats with difference 0.1]||Range[1, 100, .1]|| || ||
+||||||||~ [[# multidimensional-arrays]][#multidimensional-arrays-note multidimensional-arrays]||
+||~ ||~ mathematica||~ sympy||~ pari/gp||
+||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
+||~ ||~ mathematica||~ sympy||~ pari/gp||
+||[#record-literal record literal]||r = { n -> 10, avg -> 3.7, sd -> 0.4}|| || ||
+||[#record-access record member access]||n /. r|| || ||
+||||||||~ [[# functions]][#functions-note functions]||
+||~ ||~ mathematica||~ sympy||~ pari/gp||
+||[#function-definition definition]||add[a_, b_] := a + b _
+ _
+##gray|(* alternate syntax: *)## _
+add = Function[{a, b}, a + b]|| ||add(x, y) = x + y||
+||[#function-invocation invocation]||add[3, 7] _
+ _
+add @<@@>@ {3, 7}|| ||add(3, 7)||
+||[#return-value return value]|| || || ||
+||[#function-value function value]|| || || ||
+||[#anonymous-function anonymous function]||Function[{a, b}, a + b] _
+ _
+(#1 + #2) &|| || ||
+||[#missing-argument missing argument]|| || || ||
+||[#extra-argument extra argument]|| || || ||
+||[#default-argument default argument]|| || || ||
+||[#variable-number-arguments variable number of arguments]|| || || ||
+||||||||~ [[# execution-control]][#execution-control-note execution control]||
+||~ ||~ mathematica||~ sympy||~ pari/gp||
+||[#if if]||If[x > 0, _
+@<&nbsp;&nbsp;>@Print["positive"], _
+@<&nbsp;&nbsp;>@If[x < 0, _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Print["negative"], _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Print["zero"]]]|| ||if(x > 0, \ _
+@<&nbsp;&nbsp;>@print("positive"), \ _
+@<&nbsp;&nbsp;>@if(x < 0, \ _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print("negative"), \ _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print("zero")))||
+||[#while while]||i = 0 _
+While[i < 10, Print[i]; i++]|| ||i = 0 _
+while(i < 10, print(i); i++)||
+||[#for for]||For[i = 0, i < 10, i++, Print[i]]|| ||for(i=0, 9, print(i))||
+||[#break-continue break/continue]||Break[] Continue[]|| ||break continue||
+||[#raise-exception raise exception]||Throw["failed"]|| ||error("failed")||
+||[#handle-exception handle exception]||Print[Catch[Throw["failed"]]]|| || ||
+||[#finally finally block]||##gray|//none//##|| || ||
+||||||||~ [[# files]][#files-note files]||
+||~ ||~ mathematica||~ sympy||~ pari/gp||
+||[#write-stdout write to stdout]||Print["hello"]|| ||print("hello")||
+||[#read-file-string-array read entire file into string or array]||s = Import["/etc/hosts"] _
+a = StringSplit[s, "\n"]|| || ||
+||[#redirect-to-file redirect to file]|| || || ||
+||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
+||~ ||~ mathematica||~ sympy||~ pari/gp||
+||[#load load]|| || || ||
+||||||||~ [[# reflection]][#reflection-note reflection]||
+||~ ||~ mathematica||~ sympy||~ pari/gp||
+||[#list-function-documentation list function documentation]|| || ||?||
+||[#function-documentation get function documentation]||?Tan _
+Information[Tan]|| ||? tan||
+||[#grep-documentation grep documentation]|| || || ||
+||[#data-type query data type]||Head[x]|| ||type(x)||
+||[#list-variables list variables in scope]|| || ||? 0||
+||||||||~ [[# algebra]][#algebra-note algebra]||
+||~ ||~ mathematica||~ sympy||~ pari/gp||
+||[#solution solution to an equation]||Solve[x^3 + x + 3 == 0, x]||solve(x@@**@@3 + x + 3, x)|| ||
+||[#solution-two-eqn solution to two equations]||Solve[x + y == 3 &&  x == 2y, _
+@<&nbsp;&nbsp;>@{x, y}]||solve([x + y - 3, 3*x - 2*y], [x, y])|| ||
+||[#numerical-approximation numerical approximation]||N[Exp[1]] _
+Exp[1] + 0. _
+N[Exp[1], 10]||N(exp(1)) _
+N(exp(1), 10)||1/7 + 0.||
+||[#expand-polynomial expand polynomial]||Expand[(1 + x)^5]||expand((1+x)@@**@@5)|| ||
+||[#factor-polynomial factor polynomial]||Factor[3 + 10 x + 9 x^2 + 2 x^3]||factor(3 + 10*x + 9*x@@**@@2 + 2*x@@**@@3)|| ||
+||[#add-fractions add fractions]||Together[a/b + c/d]||together(x/y + z/w)|| ||
+||[#decompose-fraction decompose fraction]||Apart[(b c + a d)/(b d)]|| || ||
+||||||||~ [[# calculus]][#calculus-note calculus]||
+||~ ||~ mathematica||~ sympy||~ pari/gp||
+||[#differentiation differentiation]||D[x^3 + x + 3, x]||diff(x@@**@@3 + x + 3, x)||P = x^3 + x + 3 _
+P' _
+sin(x)'||
+||[#higher-order-differentiation higher order differentiation]||D[Log[x], {x, 3}]||diff(log(x), x, 3)|| ||
+||[#antiderivative antiderivative]||Integrate[x^3 + x + 3, x]||integrate(x@@**@@3 + x + 3, x)|| ||
+||[#integration definite integral]||Integrate[x^3 + x + 3, {x, 0, 1}]||integrate(x**3 + x + 3, [x, 0, 1])|| ||
+||[#improper-integral improper integral]|| || || ||
+||[#minimize find minimal value]||Minimize[Sqrt[a^2 + x^2] + Sqrt[(b - x)^2 + c^2], x]|| || ||
+||||||||~ [[# number-theory]][#number-theory-note number theory]||
+||~ ||~ mathematica||~ sympy||~ pari/gp||
+||[#number-tests number tests]||IntegerQ[7] _
+PrimeQ[7] _
+##gray|//rational test?//## _
+##gray|//real test?//##|| || ||
+||[#solve-diophantine solve diophantine equation]||Solve[a^2 + b^2 == c^2 && _
+a > 0  && a < 10 && _
+b > 0 && b < 10 && _
+c > 0 && c < 10, _
+{a, b, c}, Integers]|| || ||
+||[#factorial factorial]||10!||factorial(10)||10!||
+||[#binomial-coefficient binomial coefficient]||Binomial[10,3]||binomial(10, 3)|| ||
+||[#gcd greatest common divisor]||GCD[14, 21]||gcd(14, 21)||gcd(14, 21)||
+||[#prime-factors prime factors]||##gray|//returns// @<{{>@2, 2}, {3, 1}, {7, 1}}## _
+FactorInteger[84]||factorint(84)||##gray|//returns// [2,2; 3,1; 7,1]## _
+factor(84)||
+||[#euler-totient Euler totient]||EulerPhi[256]|| || ||
+||||||||~ [[# vectors]][#vectors-note vectors]||
+||~ ||~ mathematica||~ sympy||~ pari/gp||
+||[[# vec-literal]][#vec-literal-note vector literal]||##gray|(* same as array: *)## _
+{1, 2, 3}|| ||[1, 2, 3]||
+||[[# vec-coordinate]][#vec-coordinate-note vector coordinate]||##gray|//indices start at one://## _
+{1,v2, 3}[[1]]|| ||##gray|//indices start at one://## _
+[1, 2, 3][1]||
+||[[# vec-dim]][#vec-dim-note vector dimension] _
+@<&nbsp;>@||Length[{1, 2, 3}]|| ||length([1, 2, 3])||
+||[[# vec-element-wise]][#vec-element-wise-note element-wise arithmetic operators]||+ - * / _
+##gray|//adjacent lists are multiplied element-wise//##|| ||+ -||
+||[[# vec-length-mismatch]][#vec-length-mismatch-note vector length mismatch] _
+@<&nbsp;>@||##gray|//error//##|| ||##gray|//error//##||
+||[[# vec-scalar]][#vec-scalar-note scalar multiplication]||3 {1, 2, 3} _
+{1, 2, 3} 3 _
+##gray|//* may also be used//##|| ||3 * [1, 2, 3] _
+[1, 2, 3] * 3||
+||[[# vec-dot]][#vec-dot-note dot product]||{1, 1, 1} . {2, 2, 2} _
+Dot[{1, 1, 1}, {2, 2, 2}]|| || ||
+||[[# vec-cross]][#vec-cross-note cross product]||Cross[{1, 0, 0}, {0, 1, 0}]|| || ||
+||[[# vec-norms]][#vec-norms-note norms]||Norm[{1, 2, 3}, 1] _
+Norm[{1, 2, 3}] _
+Norm[{1, 2, 3}, Infinity]|| || ||
+||||||||~ [[# matrices]][#matrices-note matrices]||
+||~ ||~ mathematica||~ sympy||~ pari/gp||
+||[#matrix-literal-constructor literal or constructor]||A = @@{{@@1, 2}, {3, 4}} _
+B = @@{{@@4, 3}, {2, 1}}|| ||A = [1, 2; 3, 4] _
+B = [4, 3; 2, 1]||
+||[#common-matrices zero, identity, ones, diagonal matrix]||ConstantArray[0, {3, 3}] _
+IdentityMatrix[3] _
+ConstantArray[1, {3, 3}] _
+DiagonalMatrix[{1, 2, 3}]|| || ||
+||[#matrix-dimensions dimensions] _
+##gray|//rows, columns//##||Length[A] _
+Length[A[[1]]]|| || ||
+||[#matrix-access element access]||A[[1, 1]]|| ||A[1, 1]||
+||[#matrix-row-access row access]||A[[1]]|| || ||
+||[#matrix-column-access column access]|| || || ||
+||[#submatrix-access submatrix access]||# [[1]] & /@ A|| || ||
+||[#matrix-scalar-multiplication scalar multiplication]||3 A _
+A 3 _
+##gray|//* can also be used//##|| || ||
+||[#matrix-element-wise-operators element-wise operators]||+ - * / _
+##gray|//adjacent matrices are multiplied element-wise//##|| || ||
+||[#matrix-multiplication multiplication]||A . B|| || ||
+||[#kronecker-product kronecker product]||KroneckerProduct[A, B]|| || ||
+||[#matrix-comparison comparison]||A == B _
+A != B|| || ||
+||[#matrix-norms norms]||Norm[A, 1] _
+Norm[A] _
+Norm[A, Infinity] _
+Norm[A, "Frobenius"]|| || ||
+||[#matrix-transpose transpose]||Transpose[A]|| || ||
+||[#matrix-conjugate-transpose conjugate transpose]||A = @@{{@@I, 2 I}, {3 I, 4 I}} _
+ConjugateTranspose[A]|| || ||
+||[#matrix-inverse inverse]||Inverse[A]|| || ||
+||[#matrix-determinant determinant]||Det[A]|| ||matdet(A)||
+||[#matrix-trace trace]||Tr[A]|| ||trace(A)||
+||[#matrix-eigenvalues eigenvalues]||Eigenvalues[A]|| || ||
+||[#matrix-eigenvectors eigenvectors]||Eigenvectors[A]|| || ||
+||[#matrix-solution system of equations]||Solve[A. {x, y} == { 2, 3}, {x, y}]|| || ||
+||||||||~ [[# distributions]][#distribution-note distributions]||
+||~ ||~ mathematica||~ sympy||~ pari/gp||
+||[#random-normal normal]||nd = NormalDistribution[0,1] _
+RandomVariate[nd]|| || ||
+||[#random-exponential exponential]||ed = ExponentialDistribution[1] _
+RandomVariate[ed]|| || ||
+||[#random-poisson poisson]||pd = PoissonDistribution[1] _
+RandomVariate[pd]|| || ||
+||||||||~ [[# univariate-charts]][#univariate-chart-note univariate charts]||
+||~ ||~ mathematica||~ sympy||~ pari/gp||
+||[[image http://farm5.static.flickr.com/4090/5039793334_f76edece33_m.jpg]] [#bar-chart vertical bar chart]||BarChart[{7, 3, 8, 5, 5}, _
+@<&nbsp;&nbsp;>@ChartLegends-> _
+@<&nbsp;&nbsp;&nbsp;&nbsp;>@{"a","b","c","d","e"}]|| || ||
+||[[image http://farm5.static.flickr.com/4092/5039776078_cc38a4ff5f_m.jpg]] _
+[#horizontal-bar-chart horizontal bar chart]||BarChart[{7, 3, 8, 5, 5}, BarOrigin -> Left]|| || ||
+||[[image http://farm5.static.flickr.com/4145/5037819710_d932767cd5_m.jpg]] [#pie-chart pie chart]||PieChart[{7, 3, 8, 5, 5}]|| || ||
+||[[image http://farm5.static.flickr.com/4089/5037399669_13c8e585e0_m.jpg]] _
+[#stem-and-leaf-plot stem-and-leaf plot]||Needs["StatisticalPlots@@`@@"] _
+nd = NormalDistribution[0, 1] _
+n100 = RandomVariate[nd, 100] _
+StemLeafPlot[20 * n100]|| || ||
+||[[image http://farm5.static.flickr.com/4106/5037415497_4c6fbfcab2_m.jpg]] [#histogram histogram]||nd = NormalDistribution[0, 1] _
+Histogram[RandomReal[nd, 100], 10]|| || ||
+||[[image http://farm5.static.flickr.com/4106/5037525393_7ac86e81c3_m.jpg]] [#box-and-whisker-plot box-and-whisker plot]||nd = NormalDistribution[0, 1] _
+n100 = RandomVariate[nd, 100] _
+BoxWhiskerChart[d] _
+ _
+ed = ExponentialDistribution[1] _
+e100 = RandomVariate[ed, 100] _
+u100 = RandomReal[1, 100] _
+d = {n100, e100, u100} _
+BoxWhiskerChart[d]|| || ||
+||[#univariate-title set chart title]||BoxWhiskerChart[data, _
+@<&nbsp;&nbsp;>@PlotLabel -> "chart example"]|| || ||
+||[#chart-options chart options]||PlotLabel -> "an example" _
+ _
+AxisLabel -> {"time", "distance"}|| || ||
+||||||||~ [[# bivariate-charts]][#bivariate-chart-note bivariate charts]||
+||~ ||~ mathematica||~ sympy||~ pari/gp||
+||[[image http://farm5.static.flickr.com/4154/5039126187_e340b3f4aa_m.jpg]] _
+[#stacked-bar-chart stacked bar chart]||d = @@{{@@7, 1}, {3, 2}, {8, 1}, _
+@<&nbsp;&nbsp;>@{5, 3}, {5, 1}} _
+BarChart[d, ChartLayout -> _
+@<&nbsp;&nbsp;>@"Stacked"]|| || ||
+||[[image http://farm6.static.flickr.com/5044/5267212089_a7749bbe3e_s.jpg]] [#scatterplot scatter plot]||nd = NormalDistribution[0, 1] _
+rn = Function[RandomReal[nd]] _
+d = {rn[],rn[]} & /@ Range[1,50] _
+ListPlot[d]|| || ||
+||[[image http://farm6.static.flickr.com/5089/5267975488_2216ae147e_s.jpg]][#linear-regression-line linear regression line]||d = Table[{i, _
+@<&nbsp;&nbsp;>@2 i + RandomReal[{-5, 5}]}, _
+@<&nbsp;&nbsp;>@{i, 0, 20}] _
+model = LinearModelFit[d, x, x] _
+Show[ListPlot[d], _
+@<&nbsp;&nbsp;>@Plot[model["BestFit"], _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@{x, 0, 20}]]|| || ||
+||[[image http://farm6.static.flickr.com/5125/5267434941_f8537c9d26_s.jpg]] [#polygonal-plot polygonal line plot]||f = Function[i, {i, rn[]}] _
+d = f /@ Range[1, 20] _
+ListLinePlot[d]|| || ||
+||[[image http://farm6.static.flickr.com/5041/5268071368_75c3aee42e_t.jpg]] [#area-chart area chart]||d = @@{{@@7, 1, 3, 2, 8}, _
+@<&nbsp;&nbsp;>@{1, 5, 3, 5, 1}} _
+sd = {d[[1]], d[[1]] + d[[2]]} _
+ListLinePlot[sd, Filling -> _
+@<&nbsp;&nbsp;>@{1 -> {Axis, LightBlue}, _
+@<&nbsp;&nbsp;&nbsp;>@2 -> @@{{@@1}, LightRed}}]|| || ||
+||[[image http://farm6.static.flickr.com/5049/5268229340_0b96b5e223_s.jpg]] [#cubic-spline cubic spline]||d = Table[{i, RandomReal[nd]}, _
+@<&nbsp;&nbsp;>@{i, 0, 20}] _
+f = Interpolation[d, _
+@<&nbsp;&nbsp;>@InterpolationOrder -> 3] _
+Show[ListPlot[d], _
+@<&nbsp;&nbsp;>@Plot[f[x], {x, 0, 20}]]|| || ||
+||[[image http://farm6.static.flickr.com/5204/5268208606_b745646ea6_s.jpg]] [#function-plot function plot]||Plot[Sin[x], {x, -4, 4}]|| ||ploth(x=-4, 4, sin(x))||
+||[[image http://farm6.static.flickr.com/5048/5267567389_27a19429e4_s.jpg]] [#qq-plot quantile-quantile plot]||nd = NormalDistribution[0, 1] _
+d1 = RandomReal[1, 50] _
+d2 = RandomReal[nd, 50] _
+QuantilePlot[d1, d2]|| || ||
+||[#axis-label axis label]||d = Table[{i, i^2}, {i, 1, 20}] _
+ListLinePlot[d, _
+@<&nbsp;&nbsp;>@AxesLabel -> {x, x^2}]|| || ||
+||[#logarithmic-y-axis logarithmic y-axis]||LogPlot[{x^2, x^3, x^4, x^5}, _
+@<&nbsp;&nbsp;>@{x, 0, 20}]|| || ||
+||||||||~ [[# trivariate-charts]][#trivariate-chart-note trivariate charts]||
+||~ ||~ mathematica||~ sympy||~ pari/gp||
+||[#3d-scatter-plot 3d scatter plot]||nd = NormalDistribution[0,1] _
+d = RandomReal[nd, {50, 3}] _
+ListPointPlot3D[d]|| || ||
+||[[image http://farm6.static.flickr.com/5245/5268191292_a75a367c39_s.jpg]] [#additional-data additional data set]||nd = NormalDistribution[0, 1] _
+x1 = RandomReal[nd, 20] _
+x2 = RandomReal[nd, 20] _
+ListLinePlot[{x1, x2}]|| || ||
+||[#bubble-chart bubble chart]||nd = NormalDistribution[0,1] _
+d = RandomReal[nd, {50, 3}] _
+BubbleChart[d]|| || ||
+||[#surface-plot surface plot]||Plot3D[Sinc[Sqrt[x^2 + y^2]], _
+@<&nbsp;&nbsp;>@{x, -25, 25}, _
+@<&nbsp;&nbsp;>@{y, -25, 25}]|| || ||
+||~ ||~ ##EFEFEF|@@__________________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________________@@##||
+
+[[# version-used-note]]
+++ [#version-used version used]
+
+The version of software used to check the examples in the reference sheet.
+
+[[# show-version-note]]
+++ [#show-version show version]
+
+How to determine the version of an installation.
+
+[[# grammar-invocation-note]]
++ [#grammar-invocation Grammar and Invocation]
+
+[[# interpreter-note]]
+++ [#interpreter interpreter]
+
+How to execute a script.
+
+**pari/gp**
+
+The shebang style notation doesn't work because GP doesn't recognize the hash tag # as the start of a comment.
+
+The {{-q}} option suppresses the GP startup message.
+
+After the script finishes it will drop the user into the REPL unless there is a quit statement in the script:
+
+[[code]]
+print("Hello, World!")
+
+quit
+[[/code]]
+
+[[# repl-note]]
+++ [#repl repl]
+
+How to launch a command line read-eval-print loop for the language.
+
+**mathematica:**
+
+One can create a REPL called //math// on Mac OS X with the following command:
+
+[[code]]
+$ sudo ln -s /Applications/Mathematica.app/Contents/MacOS/MathKernel /usr/local/bin/math
+
+$ math 
+[[/code]]
+
+[[# block-delimiters-note]]
+++ [#block-delimiters block delimiters]
+
+How blocks are delimited.
+
+[[# stmt-separator-note]]
+++ [#stmt-separator statement separator]
+
+How statements are separated.
+
+[[# eol-comment-note]]
+++ [#eol-comment end-of-line comment]
+
+Character used to start a comment that goes to the end of the line.
+
+[[# multiple-line-comment-note]]
+++ [#multiple-line-comment multiple line comment]
+
+[[# var-expr-note]]
++ [#var-expr Variables and Expressions]
+
+[[# assignment-note]]
+++ [#assignment assignment]
+
+How to perform assignment.
+
+In all three languages an assignment is an expression that evaluates to the right side of the expression.  Assignments can be chained to assign the same value to multiple variables.
+
+**mathematica:**
+
+The {{Set}} function behaves identically to assignment and can be nested:
+
+[[code]]
+Set[a, Set[b, 3]]
+[[/code]]
+
+[[# parallel-assignment-note]]
+++ [#parallel-assignment parallel assignment]
+
+How to assign values in parallel.
+
+Parallel assignment can be used to swap the values held in two variables.
+
+[[# compound-assignment-note]]
+++ [#compound-assignment compound assignment]
+
+The compound assignment operators.
+
+[[# incr-decr-note]]
+++ [#incr-decr increment and decrement]
+
+[[# null-note]]
+++ [#null null]
+
+[[# null-test-note]]
+++ [#null-test null test]
+
+How to test if a value is null.
+
+[[# undef-var-note]]
+++ [#undef-var undefined variable access]
+
+[[# rm-var-binding-note]]
+++ [#rm-var-binding remove variable binding]
+
+How to remove a variable.  Subsequent references to the variable will be treated as if the variable were undefined.
+
+[[# cond-expr-note]]
+++ [#cond-expr conditional expression]
+
+A conditional expression.
+[[# arithmetic-logic-note]]
++ [#arithmetic-logic Arithmetic and Logic]
+
+[[# true-false-note]]
+++ [#true-false true and false]
+
+The boolean literals.
+
+[[# falsehoods-note]]
+++ [#falsehoods falsehoods]
+
+Values which evaluate to false in a conditional test.
+
+[[# logical-op-note]]
+++ [#logical-op logical operators]
+
+The boolean operators.
+
+[[# relational-op-note]]
+++ [#relational-op relational operators]
+
+The relational operators.
+
+[[# arith-op-note]]
+++ [#arith-op arithmetic operators]
+
+The arithmetic operators.
+
+[[# int-div-note]]
+++ [#int-div integer division]
+
+How to compute the quotient of two integers.
+
+[[# int-div-zero-note]]
+++ [#int-div-zero integer division by zero]
+
+The result of dividing an integer by zero.
+
+[[# float-div-note]]
+++ [#float-div float division]
+
+How to perform float division, even if the arguments are integers.
+
+[[# float-div-zero-note]]
+++ [#float-div-zero float division by zero]
+
+The result of dividing a float by zero.
+
+[[# power-note]]
+++ [#power power]
+
+How to compute exponentiation.
+
+Note that zero to a negative power is equivalent to division by zero, and negative numbers to a fractional power may have multiple complex solutions.
+
+[[# sqrt-note]]
+++ [#sqrt sqrt]
+
+The square root function.
+
+For positive arguments the positive square root is returned.
+
+[[# sqrt-negative-one-note]]
+++ [#sqrt-negative-one sqrt -1]
+
+How the square root function handles negative arguments.
+
+**mathematica:**
+
+An uppercase {{I}} is used to enter the imaginary unit, but Mathematica displays it as a lowercase {{i}}.
+
+[[# transcendental-func-note]]
+++ [#transcendental-func transcendental functions]
+
+The standard transcendental functions such as one might find on a scientific calculator.
+
+The functions are the exponential (not to be confused with exponentiation), natural logarithm, sine, cosine, tangent, arcsine, arccosine, arctangent, and the two argument arctangent.
+
+[[# transcendental-const-note]]
+++ [#transcendental-const transcendental constants]
+
+The transcendental constants //pi// and //e//.
+
+The transcendental functions can used to computed to compute the transcendental constants:
+
+[[code]]
+pi = acos(-1)
+pi = 4 * atan(1)
+e = exp(1)
+[[/code]]
+
+[[# float-truncation-note]]
+++ [#float-truncation float truncation]
+
+Ways to convert a float to a nearby integer.
+
+[[# absolute-val-note]]
+++ [#absolute-val absolute value]
+
+How to get the absolute value and signum of a number.
+
+[[# int-overflow-note]]
+++ [#int-overflow integer overflow]
+
+What happens when the value of an integer expression cannot be stored in an integer.
+
+The languages in this sheet all support arbitrary length integers so the situation does not happen.
+
+[[# float-overflow-note]]
+++ [#float-overflow float overflow]
+
+What happens when the value of a floating point expression cannot be stored in a float.
+
+[[# rational-construction-note]]
+++ [#rational-construction rational construction]
+
+How to construct a rational number.
+
+[[# rational-decomposition-note]]
+++ [#rational-decomposition rational decomposition]
+
+How to extract the numerator and denominator from a rational number.
+
+[[# complex-construction-note]]
+++ [#complex-construction complex construction]
+
+How to construct a complex number.
+
+[[# complex-decomposition-note]]
+++ [#complex-decomposition complex decomposition]
+
+How to extract the real and imaginary part from a complex number; how to extract the argument and modulus; how to get the complex conjugate.
+
+[[# random-num-note]]
+++ [#random-num random number]
+
+How to generate a random integer or a random float.
+
+[[# random-seed-note]]
+++ [#random-seed random seed]
+
+How to set or get the random seed.
+
+**pari/gip:**
+
+The seed is set to a fixed value at start up.
+
+**mathematica:**
+
+The seed is not set to the same value at start up.
+
+[[# binary-octal-hex-literals-note]]
+++ [#binary-octal-hex-literals binary, octal, and hex literals]
+
+Binary, octal, and hex integer literals.
+
+**mathematica:**
+
+The notation works for any base from 2 to 36.
+
+[[# strings-note]]
++ [#strings Strings]
+
+[[# string-literals]]
+++ string literals
+
+[[# string-newline]]
+++ newline in literal
+
+[[# character-access]]
+++ character access
+
+[[# chr-ord]]
+++ chr and ord
+
+[[# string-length]]
+++ length
+
+[[# string-concatenate]]
+++ concatenate
+
+[[# index-substring]]
+++ index of substring
+
+[[# extract-substring]]
+++ extract substring
+
+[[# split]]
+++ split
+
+[[# number-string-conversion]]
+++ convert from string, to string
+
+How to convert strings to numbers and vice versa.
+
+
+[[# join]]
+++ join
+
+[[# trim]]
+++ trim
+
+[[# case-manipulation]]
+++ case manipulation
+
+[[# sprintf]]
+++ sprintf
+
+[[# regexes-note]]
++ [#regexes Regular Expressions]
+
+[[# regex-match]]
+++ regex test
+
+How to test whether a string matches a regular expression.
+
+[[# regex-substitute]]
+++ regex substitution
+
+How to replace substrings which match a regular expression.
+
+[[# arrays-note]]
++ [#arrays Arrays]
+
+[[# array-literal-note]]
+++ [#array-literal literal]
+
+The notation for an array literal.
+
+[[# array-size-note]]
+++ [#array-size size]
+
+The number of elements in the array.
+
+[[# empty-array-test-note]]
+++ [#empty-array-test empty test]
+
+How to test whether an array is empty.
+
+[[# array-lookup-note]]
+++ [#array-lookup lookup]
+
+How to access an array element by its index.
+
+[[# array-update-note]]
+++ [#array-update update]
+
+How to change the value stored at an array index.
+
+[[# array-out-of-bounds-note]]
+++ [#array-out-of-bounds out-of-bounds behavior]
+
+What happens when an attempt is made to access an element at an out-of-bounds index.
+
+[[# array-element-index-note]]
+++ [#array-element-index element index]
+
+How to get the index of an element in an array.
+
+[[# array-slice-note]]
+++ [#array-slice slice]
+
+How to extract a subset of the elements.  The indices for the elements must be contiguous.
+
+[[# array-of-integers-as-index-note]]
+++ [#array-of-integers-as-index array of integers as index]
+
+[[# array-back-note]]
+++ [#array-back manipulate back]
+
+[[# array-front-note]]
+++ [#array-front manipulate front]
+
+[[# array-head-note]]
+++ [#array-head head]
+
+[[# array-tail-note]]
+++ [#array-tail tail]
+
+[[# array-cons-note]]
+++ [#array-cons cons]
+
+[[# array-concatenate-note]]
+++ [#array-concatenate concatenate]
+
+[[# array-replicate-note]]
+++ [#array-replicate replicate]
+
+[[# copy-array-note]]
+++ [#copy-array copy]
+
+How to copy an array.  Updating the copy will not alter the original.
+
+[[# iterate-over-array-note]]
+++ [#iterate-over-array iterate]
+
+[[# reverse-array-note]]
+++ [#reverse-array reverse]
+
+[[# sort-array-note]]
+++ [#sort-array sort]
+
+[[# dedupe-array-note]]
+++ [#dedupe-array dedupe]
+
+[[# membership-note]]
+++ [#membership membership]
+
+How to test whether a value is an element of a list.
+
+[[# intersection-note]]
+++ [#intersection intersection]
+
+How to to find the intersection of two lists.
+
+[[# union-note]]
+++ [#union union]
+
+How to find the union of two lists.
+
+[[# set-diff-note]]
+++ [#set-diff relative complement, symmetric difference]
+
+How to find all elements in one list which are not in another; how to find all elements which are in one of two lists but not both.
+
+[[# map-note]]
+++ [#map map]
+
+[[# filter-note]]
+++ [#filter filter]
+
+[[# reduce-note]]
+++ [#reduce reduce]
+
+[[# universal-existential-test-note]]
+++ [#universal-existential-test universal and existential tests]
+
+[[# min-max-elem-note]]
+++ [#min-max-elem min and max element]
+
+[[# shuffle-sample-note]]
+++ [#shuffle-sample shuffle and sample]
+
+How to shuffle an array. How to extract a random sample from an array without replacement.
+
+[[# zip-note]]
+++ [#zip zip]
+
+How to interleave two arrays.
+[[# sequences-note]]
++ [#sequences Sequences]
+
+[[# multidimensional-arrays-note]]
++ [#multidimensional-arrays Multidimensional Arrays]
+
+[[# dictionaries-note]]
++ [#dictionaries Dictionaries]
+
+[[# record-literal]]
+++ record literal
+
+
+[[# record-access]]
+++ record member access
+
+[[# functions-note]]
++ [#functions Functions]
+
+[[# definition]]
+++ definition
+
+[[# invocation]]
+++ invocation
+
+[[# function-value]]
+++ function value
+
+[[# execution-control-note]]
++ [#execution-control Execution Control]
+
+[[# if]]
+++ if
+
+How to write a branch statement.
+
+**mathematica:**
+
+The 3rd argument (the else clause) of an //If// expression is optional.
+
+[[# while]]
+++ while
+
+How to write a conditional loop.
+
+**mathematica:**
+
+//Do// can be used for a finite unconditional loop:
+
+[[code]]
+Do[Print[foo], {10}]
+[[/code]]
+
+[[# for]]
+++ for
+
+How to write a C-style for statement.
+
+[[# break-continue]]
+++ break/continue
+
+How to break out of a loop.  How to jump to the next iteration of a loop.
+
+[[# raise-exception]]
+++ raise exception
+
+How to raise an exception.
+
+[[# handle-exception]]
+++ handle exception
+
+How to handle an exception.
+
+[[# finally]]
+++ finally block
+
+How to write code that executes even if an exception is raised.
+
+[[# files-note]]
++ [#files Files]
+
+[[# libraries-namespaces-note]]
++ [#libraries-namespaces Libraries and Namespaces]
+
+[[# reflection-note]]
++ [#reflection Reflection]
+
+[[# function-documentation]]
+++ function documentation
+
+How to get the documentation for a function.
+
+[[# algebra-note]]
++ [#algebra Algebra]
+
+[[# calculus-note]]
++ [#calculus Calculus]
+
+[[# number-theory-note]]
++ [#number-theory Number Theory]
+
+[[# vectors-note]]
++ [#vectors Vectors]
+
+[[# vec-literal-note]]
+++ [#vec-literal vector literal]
+
+The notation for a vector literal.
+
+[[# vec-coordinate-note]]
+++ [#vec-coordinate vector coordinate]
+
+How to get one of the coordinates of a vector.
+
+[[# vec-dim-note]]
+++ [#vec-dim vector dimension]
+
+How to get the number of coordinates of a vector.
+
+[[# vec-element-wise-note]]
+++ [#vec-element-wise element-wise arithmetic operators]
+
+How to perform an element-wise arithmetic operation on vectors.
+
+[[# vec-length-mismatch-note]]
+++ [#vec-length-mismatch vector length mismatch]
+
+What happens when an element-wise arithmetic operation is performed on vectors of different dimension.
+
+[[# vec-scalar-note]]
+++ [#vec-scalar scalar multiplication]
+
+How to multiply a scalar with a vector.
+
+[[# vec-dot-note]]
+++ [#vec-dot dot product]
+
+How to compute the dot product of two vectors.
+
+[[# vec-cross-note]]
+++ [#vec-cross cross product]
+
+How to compute the cross product of two three-dimensional vectors.
+
+[[# vec-norms-note]]
+++ [#vec-norms norms]
+
+How to compute the norm of a vector.
+
+
+[[# matrices-note]]
++ [#matrices Matrices]
+
+[[# matrix-literal-constructor]]
+++ literal or constructor
+
+Literal syntax or constructor for creating a matrix.
+
+**mathematica:**
+
+Matrices are represented as lists of lists.  No error is generated if one of the rows contains too many or two few elements.  The //MatrixQ// predicate can be used to test whether a list of lists is matrix: i.e. all of the sublists contain numbers and are of the same length.
+
+Matrices are displayed by Mathematica using list notation.  To see a matrix as it would be displayed in mathematical notation, use the //MatrixForm// function.
+
+[[# matrix-dimensions]]
+++ dimensions
+
+How to get the dimensions of a matrix.
+
+[[# matrix-access]]
+++ element access
+
+How to access an element of a matrix.  All languages described here follow the convention from mathematics of specifying the row index before the column index.
+
+[[# matrix-row-access]]
+++ row access
+
+How to access a row.
+
+[[# matrix-column-access]]
+++ column access
+
+How to access a column.
+
+[[# submatrix-access]]
+++ submatrix access
+
+How to access a submatrix.
+
+[[# matrix-scalar-multiplication]]
+++ scalar multiplication
+
+How to multiply a matrix by a scalar.
+
+[[# matrix-element-wise-operators]]
+++ element-wise operators
+
+Operators which act on two identically sized matrices element by element.  Note that element-wise multiplication of two matrices is used less frequently in mathematics than matrix multiplication.
+
+[[# matrix-multiplication]]
+++ multiplication
+
+How to multiply matrices.  Matrix multiplication should not be confused with element-wise multiplication of matrices.  Matrix multiplication in non-commutative and only requires that the number of columns of the matrix on the left match the number of rows of the matrix.  Element-wise multiplication, by contrast, is commutative and requires that the dimensions of the two matrices be equal.
+
+[[# kronecker-product]]
+++ kronecker product
+
+The [http://en.wikipedia.org/wiki/Kronecker_product Kronecker product] is a non-commutative operation defined on any two matrices.  If A is m x n and B is p x q, then the Kronecker product is a matrix with dimensions mp x nq.
+
+[[# matrix-comparison]]
+++ comparison
+
+How to test two matrices for equality.
+
+[[# matrix-norms]]
+++ norms
+
+How to compute the 1-norm, the 2-norm, the infinity norm, and the frobenius norm.
+
+[[# distribution-note]]
++ [#distributions Distributions]
+
+[[# univariate-chart-note]]
++ [# univariate-charts Univariate Charts]
+
+A univariate chart can be used to display a list or array of numerical values.  Univariate data can be displayed in a table with a single column or two columns if each numerical value is given a name.  A multivariate chart, by contrast, is used to display a list or array of //tuples// of numerical values.
+
+In order for a list of numerical values to be meaningfully displayed in a univariate chart, it must be meaningful to perform comparisons (<, >, =) on the values.  Hence the values should have the same unit of measurement.
+
+[[# bar-chart]]
+++ vertical bar chart
+
+A chart which represents values with rectangular bars which line up on the bottom.  It is a deceptive practice for the bottom not to represent zero, even if a y-axis with labelled tick marks or grid lines is provided.  A cut in the vertical axis and one of the bars may be desirable if the cut value is a large outlier.  Putting such a cut all of the bars near the bottom is a deceptive practice similar not taking to the base of the bars to be zero, however.
+
+Another bad practice is the 3D bar chart.  In such a chart heights are represented by the height of what appear to be three dimensional blocks.  Such charts impress an undiscriminating audience but make it more difficult to make a visual comparison of the charted quantities.
+
+**mathematica**
+
+[[# horizontal-bar-chart]]
+++ horizontal bar chart
+
+A bar chart in which zero is the y-axis and the bars extend to the right.
+
+[[# pie-chart]]
+++ pie chart
+
+A bar chart displays values using the areas of circular sectors or equivalently, the lengths of the arcs of those sectors.  A pie chart implies that the values are percentages of a whole.  The viewer is likely to make an assumption about what the whole circle represents.  Thus, using a pie chart to show the revenue of some companies in a line of business could be regarded as deceptive if there are other companies in the same line of business which are left out.  The viewer may mistakenly assume the whole circle represents the total market.
+
+If two values are close in value, people cannot determine visually which of the corresponding sectors in a pie chart is larger without the aid of a protractor.  For this reason many consider bar charts superior to pie charts.
+
+Many software packages make 3D versions of pie charts which communicate no additional information and in fact make it harder to interpret the data.
+
+[[# stem-and-leaf-plot]]
+++ stem-and-leaf plot
+
+[[# histogram]]
+++ histogram
+
+[[# box-and-whisker-plot]]
+++ box-and-whisker plot
+
+[[# univariate-title]]
+++ set chart title
+
+[[# bivariate-chart-note]]
++ [#bivariate-charts Bivariate Charts]
+
+[[# stacked-bar-chart]]
+++ stacked bar chart
+
+[[# trivariate-chart-note]]
++ [#trivariate-charts Trivariate Charts]
+
+[[# mathematica]]
++ Mathematica
+
+[http://reference.wolfram.com/mathematica/guide/Mathematica.html Mathematica Documentation Center]
+[http://wolframalpha.com WolframAlpha]
+
+[[# sympy]]
++ SymPy
+
+[http://docs.sympy.org/latest/index.html Welcome to SymPy’s documentation!]
+
+When using SymPy in IPython, the following command enables LaTeX formatted output:
+
+[[code]]
+from sympy import *
+interactive.printing.init_printing(use_latex=True)
+[[/code]]
+
+[[# pari-gp]]
++ Pari/GP
+
+[http://pari.math.u-bordeaux.fr/pub/pari/manuals/2.5.0/tutorial.pdf A Tutorial for Pari/GP (pdf)]
+[http://pari.math.u-bordeaux.fr/dochtml/html.stable/ Pari/GP Functions by Category]
+[http://www.staff.science.uu.nl/~beuke106/boek/refcard.pdf Pari/GP Reference Card (pdf)]

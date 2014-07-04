@@ -1,0 +1,1422 @@
+||~ ||||||~ distributed||||||~ client-server||||~ local||
+||~ ||~ [#git git] (2005)||~ [#hg hg] (2005)||~ [#bzr bzr] (2005)||~ [#svn svn] (2000)||~ [#perforce p4] (1995)||~ [#cvs cvs] (1990)||~ [#rcs rcs] (1982)||~ [#sccs sccs] (1972)||
+||put file under version control||[#git-add add]||[#hg-add add]||[http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/add-help.html add]||[http://svnbook.red-bean.com/en/1.7/svn.ref.svn.c.add.html add]||[http://www.perforce.com/perforce/doc.091/manuals/cmdref/add.html add]||[http://ximbiot.com/cvs/manual/cvs-1.11.23/cvs_7.html#IDX133 add]|| || ||
+||annotate lines of source code with commit info||[#git-blame blame]||[#hg-annotate annotate]||[http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/annotate-help.html annotate]/[http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/annotate-help.html ann]||[http://svnbook.red-bean.com/en/1.7/svn.ref.svn.c.blame.html blame]/[http://svnbook.red-bean.com/en/1.7/svn.ref.svn.c.blame.html ann]||[http://www.perforce.com/perforce/doc.091/manuals/cmdref/annotate.html annotate]||[http://ximbiot.com/cvs/manual/cvs-1.11.23/cvs_16.html#SEC126 annotate]|| || ||
+||create a git-style branch||[#git-branch branch]||[#hg-bookmarks bookmarks]|| || || || || || ||
+||create an svn-style branch|| ||[#hg-branch branch]([#hg-branches es])||[http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/branch-help.html branch]||[http://svnbook.red-bean.com/en/1.7/svn.ref.svn.c.copy.html copy]/[http://svnbook.red-bean.com/en/1.7/svn.ref.svn.c.copy.html cp]||[http://www.perforce.com/perforce/doc.091/manuals/cmdref/branch.html branch]([http://www.perforce.com/perforce/doc.091/manuals/cmdref/branches.html es)]||[http://ximbiot.com/cvs/manual/cvs-1.11.23/cvs_4.html#SEC49 tag -b]|| || ||
+||update working directory to most recent version of a branch||[#git-checkout checkout]||[#hg-update update]/[#hg-update up]||[http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/checkout-help.html checkout]/[http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/checkout-help.html co]||[http://svnbook.red-bean.com/en/1.7/svn.ref.svn.c.update.html update]/[http://svnbook.red-bean.com/en/1.7/svn.ref.svn.c.update.html up]||[http://www.perforce.com/perforce/doc.091/manuals/cmdref/sync.html sync]||[http://ximbiot.com/cvs/manual/cvs-1.11.23/cvs_16.html#SEC165 update]||[http://linux.die.net/man/1/co co -l]||[http://www.lehman.cuny.edu/cgi-bin/man-cgi?sccs-get+1 get -e]||
+||get local copy of repository from server or existing repository||[#git-clone clone]||[#hg-clone clone]||[http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/branch-help.html branch]||[http://svnbook.red-bean.com/en/1.7/svn.ref.svn.c.checkout.html checkout]/[http://svnbook.red-bean.com/en/1.7/svn.ref.svn.c.checkout.html co]||[http://www.perforce.com/perforce/doc.091/manuals/cmdref/sync.html sync]||[http://ximbiot.com/cvs/manual/cvs-1.11.23/cvs_16.html#SEC129 checkout]/[http://ximbiot.com/cvs/manual/cvs-1.11.23/cvs_16.html#SEC129 co]|| || ||
+||create a new commit||[#git-commit commit]||[#hg-commit commit]/[#hg-commit ci]||[http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/commit-help.html commit]/[http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/commit-help.html ci]||[http://svnbook.red-bean.com/en/1.7/svn.ref.svn.c.commit.html commit]/[http://svnbook.red-bean.com/en/1.7/svn.ref.svn.c.commit.html ci]||[http://www.perforce.com/perforce/doc.091/manuals/cmdref/submit.html submit]||[http://ximbiot.com/cvs/manual/cvs-1.11.23/cvs_16.html#SEC132 commit]/[http://ximbiot.com/cvs/manual/cvs-1.11.23/cvs_16.html#SEC132 ci]||[http://linux.die.net/man/1/ci ci]||[http://www.lehman.cuny.edu/cgi-bin/man-cgi?sccs-delta+1 delta]||
+||show difference between file in working directory and most recent commit||[#git-diff diff]||[#hg-diff diff]||[http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/diff-help.html diff]/[http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/diff-help.html di]||[http://svnbook.red-bean.com/en/1.7/svn.ref.svn.c.diff.html diff]/[http://svnbook.red-bean.com/en/1.7/svn.ref.svn.c.diff.html di]||[http://www.perforce.com/perforce/doc.091/manuals/cmdref/diff.html diff]||[http://ximbiot.com/cvs/manual/cvs-1.11.23/cvs_16.html#SEC137 diff]||[http://linux.die.net/man/1/rcsdiff rcsdiff]||[http://www.lehman.cuny.edu/cgi-bin/man-cgi?sccs-sccsdiff sccsdiff]||
+||show commits available to be pulled _
+##gray|//git: pull changes into remote branches; don't modify local branches//##||[#git-fetch fetch]||[#hg-incoming incoming]/[#hg-incoming in]||[http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/missing-help.html missing]|| || || || || ||
+||online documentation||[#git-help help]||[#hg-help help]||[http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/help-help.html help]||[http://svnbook.red-bean.com/en/1.7/svn.ref.svn.c.help.html help]||[http://www.perforce.com/perforce/doc.091/manuals/cmdref/help.html help]|| || || ||
+||create a repository from ||[#git-init init]||[#hg-init init]||[http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/init-help.html init]|| || ||[http://ximbiot.com/cvs/manual/cvs-1.11.23/cvs_2.html#IDX63 init]||[http://linux.die.net/man/1/ci ci]||[http://www.lehman.cuny.edu/cgi-bin/man-cgi?sccs-admin+1 admin]||
+||show commit information for current branch in reverse chronological order||[#git-log log]||[#hg-log log -b tip]||[http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/log-help.html log]||[http://svnbook.red-bean.com/en/1.7/svn.ref.svn.c.log.html log]||[http://www.perforce.com/perforce/doc.091/manuals/cmdref/filelog.html filelog]||[http://ximbiot.com/cvs/manual/cvs-1.11.23/cvs_16.html#SEC150 log]||[http://linux.die.net/man/1/rlog rlog]|| ||
+||merge branches||[#git-merge merge]||[#hg-merge merge]||[http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/merge-help.html merge]||[http://svnbook.red-bean.com/en/1.7/svn.ref.svn.c.merge.html merge]||[http://www.perforce.com/perforce/doc.091/manuals/cmdref/integrate.html integrate]|| || || ||
+||change the name of a file under version control||[#git-mv mv]||[#hg-rename rename]/[#hg-rename mv]||[http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/mv-help.html mv]||[http://svnbook.red-bean.com/en/1.7/svn.ref.svn.c.move.html move]/[http://svnbook.red-bean.com/en/1.7/svn.ref.svn.c.move.html mv]||[http://www.perforce.com/perforce/doc.091/manuals/cmdref/move.html move]|| || || ||
+||get commits from a remote repository||[#git-pull pull]||[#hg-pull pull]||[http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/pull-help.html pull]|| || || || || ||
+||push commits to a remote repository||[#git-push push]||[#hg-push push]||[http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/push-help.html push]|| || || || || ||
+||move the commits on a branch to the end of another branch||[#git-rebase rebase]||[#hg-rebase rebase]|| || || || || || ||
+||show remote repositories||[#git-remote remote -v show]||[#hg-paths paths]|| || || || || || ||
+||make the working directory match the most recent commit||[#git-reset reset]||[#hg-revert revert]|| ||[http://svnbook.red-bean.com/en/1.7/svn.ref.svn.c.revert.html revert]||[http://www.perforce.com/perforce/doc.091/manuals/cmdref/revert.html revert]|| || || ||
+||create a commit which undoes the result of a previous commit||[#git-revert revert]||[#hg-backout backout]||[http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/revert-help.html revert]|| || || || || ||
+||mark a file with merge conflicts as resolved||[#git-add add]||[#hg-resolve resolve]||[http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/resolve-help.html resolve]||[http://svnbook.red-bean.com/en/1.7/svn.ref.svn.c.resolve.html resolve]||[http://www.perforce.com/perforce/doc.091/manuals/cmdref/resolve.html resolve]|| || || ||
+||mark a file as not present in the next commit||[#git-rm rm]||[#hg-remove remove]/[#hg-remove rm]||[http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/remove-help.html remove]/[http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/remove-help.html rm]||[http://svnbook.red-bean.com/en/1.7/svn.ref.svn.c.delete.html delete]/[http://svnbook.red-bean.com/en/1.7/svn.ref.svn.c.delete.html rm]||[http://www.perforce.com/perforce/doc.091/manuals/cmdref/delete.html delete]||[http://ximbiot.com/cvs/manual/cvs-1.11.23/cvs_16.html#SEC160 remove]|| || ||
+||write contents of a file version to standard out||[#git-show show]||[#hg-cat cat]||[http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/cat-help.html cat]||[http://svnbook.red-bean.com/en/1.7/svn.ref.svn.c.cat.html cat]||[http://www.perforce.com/perforce/doc.091/manuals/cmdref/print.html print]||[http://ximbiot.com/cvs/manual/cvs-1.11.23/cvs_16.html#SEC132 checkout -p]||[http://linux.die.net/man/1/co co]||[http://www.lehman.cuny.edu/cgi-bin/man-cgi?sccs-get+1 get -p]||
+||store uncommitted working directory changes in a temporary location||[#git-stash stash]||[#hg-shelve shelve]||[http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/shelve-help.html shelve]|| || || || || ||
+||show files in working directory which don't match the most recent commit||[#git-status status]||[#hg-status status]/[#hg-status st]||[http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/status-help.html status]/[http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/status-help.html st]||[http://svnbook.red-bean.com/en/1.7/svn.ref.svn.c.status.html status]/[http://svnbook.red-bean.com/en/1.7/svn.ref.svn.c.status.html st]||[http://www.perforce.com/perforce/doc.091/manuals/cmdref/changes.html changes]||[http://www.lodestar2.com/people/dyork/talks/2001/ols/frames/foil23.html status]|| || ||
+||give a name to a commit||[#git-tag tag]||[#hg-tag tag]([#hg-tags s])||[http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/tag-help.html tag]([http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/tags-help.html s])||[http://svnbook.red-bean.com/en/1.7/svn.ref.svn.c.copy.html copy]/[http://svnbook.red-bean.com/en/1.7/svn.ref.svn.c.copy.html cp]||[http://www.perforce.com/perforce/doc.091/manuals/cmdref/tag.html tag]||[http://ximbiot.com/cvs/manual/cvs-1.11.23/cvs_4.html#SEC49 tag]|| || ||
+
+
+
+**archiving and patching tools:** [#diff diff] | [#cpio cpio] | [#diff3 diff3] | [#ar ar] | [#tar tar] | [#patch patch] | [#zip zip] | [#jar jar] | [#rsync rsync]
+
+[[# dvc]]
++ Distributed Version Control
+
+**git and hg compared:** [#repo-version repositories and versions] | [#file-dir-commit files, directories, and commits] | [#branch-tag-merge branches, tags, and merges] | [#renamed-files renamed files] | [#identifiers identifiers] | [#repo-url repository urls] | [#config-file config files] | [#ignore-file ignore files] | [#hook hooks] | [#metasyntactic-var metasyntactic variables]
+
+||~ [#git git] usage ||~ [#git git] description||~ [#hg hg] usage||~ [#hg hg] description||
+||[[span class="fixed"]][[# git-add]][http://schacon.github.com/git/git-add.html add] [#PATH PATH] ... _
+[http://schacon.github.com/git/git-add.html add] -e [#FILE FILE] _
+[http://schacon.github.com/git/git-add.html add] -i [#FILE FILE] ... _
+[http://schacon.github.com/git/git-add.html add] -u [#PATH PATH] ...[[/span]]||Add file contents to the index.  If PATH is a directory it is added with all its contents recursively.  Error if no arguments are provided. _
+ _
+Add a portion of a change to the index by editing the diff. _
+ _
+Add file contents to the index interactively. _
+ _
+Only add file contents to the index which are already tracked.  Newly created files will never be added to the index when the -u flag is used.||[[# hg-add]][http://www.selenic.com/mercurial/hg.1.html#add add] @@[@@[#HG-PATH PATH]] ...||Put files under version control.  If no argument is provided all files in the working directory are put under version control; equivalent to _
+ _
+@<&nbsp;&nbsp;>@git add . _
+@<&nbsp;>@ _
+##gray|//Under// hg //a file must be added only once, before it is first committed.  Under// git //a file must be added each time it is modified.// hg add //is used to notify Mercurial that a file is being tracked by the version control system.  It is not possible to add part of a file change.//  git add, //by contrast, adds the changes to a file, including partial changes, to a staging area called the index to be flushed out with the next commit.//##||
+||[[span class="fixed"]]##gray|//none//##[[/span]]||##gray|//how to perform equivalent of Mercurial addremove with Git://## _
+@<&nbsp;>@ _
+@<&nbsp;&nbsp;>@git add . _
+@<&nbsp;&nbsp;>@git ls-files -deleted | xargs git rm||[http://www.selenic.com/mercurial/hg.1.html#addremove addremove] @@[@@[#HG-PATH PATH]] ...||Add or remove files depending upon whether they are in the working directory;  if no PATHs are provided, all new files are added and all missing files are removed.||
+||[[span class="fixed"]][http://schacon.github.com/git/git-archive.html archive] @@--@@format=tar [#TREEISH TREEISH] > [#NAME NAME].tar[[/span]]||Create a tarball from TREEISH.||[http://www.selenic.com/mercurial/hg.1.html#archive archive] -t tar ../[#HG-NAME NAME].tar||archives root directory; git does not.||
+|| || ||[#hg-backout backout] ##gray|//described below//##|| ||
+||[[span class="fixed"]][[# git-bisect]][http://schacon.github.com/git/git-bisect.html bisect] ##gray|//see manual//##[[/span]]||Find by binary search the change that introduced a bug.||[http://www.selenic.com/mercurial/hg.1.html#bisect bisect]|| ||
+||[[span class="fixed"]][[# git-blame]][http://schacon.github.com/git/git-blame.html blame] [#PATH PATH] [[#COMMIT COMMIT]][[/span]]||Show the revision number, author and timestamp of the last commit which modified each line in FILE.  COMMIT can be used to specify an older version of FILE.||[[# hg-annotate]][http://www.selenic.com/mercurial/hg.1.html#annotate annotate] -cudln [-r [#HG-REV REV]] @@[@@[#HG-PATH PATH]] ||Mercurial by default only indicates the local revision number.  The flags -c, -u, -d, -l, and -n add changeset, user, date, line number, and local revision number.||
+||[[span class="fixed"]][[# git-branch]][http://schacon.github.com/git/git-branch.html branch] [-r|-a] _
+[http://schacon.github.com/git/git-branch.html branch] [@@--@@contains|@@--@@merged] [#COMMIT COMMIT] _
+[http://schacon.github.com/git/git-branch.html branch] [#NAME NAME] @@[@@[#COMMIT COMMIT]@@]@@ _
+[http://schacon.github.com/git/git-branch.html branch] @@--@@track [#NAME NAME] @@[@@[#BRANCH BRANCH]@@]@@ _
+[http://schacon.github.com/git/git-branch.html branch] -m [#BRANCH BRANCH] [#NAME NAME] _
+[http://schacon.github.com/git/git-branch.html branch] (-d|-D) [#BRANCH BRANCH][[/span]]||List branches.  If -r option is provided remote tracking branches are listed.  If -a option is provided both local and remote tracking branches are listed. _
+ _
+List branches that are descendants of COMMIT if @@--@@contains option is used.  List branches that are ancestors of COMMIT if _
+@@--@@merged is used. _
+ _
+Create a branch named NAME using COMMIT as a starting point.  If COMMIT is not specified then HEAD is the starting point. _
+ _
+Create a branch NAME which tracks BRANCH.  Usually BRANCH is a remote tracking branch.  This configures the repository so that when {{git pull}} is executed on NAME a merge equivalent to {{git merge BRANCH}} is automatically performed. If BRANCH is not specified the current branch is tracked. _
+ _
+Rename the branch BRANCH to NAME. _
+ _
+Delete branch BRANCH.  Use -D to delete a branch with commits which have not been merged.||[[# hg-bookmarks]][http://www.selenic.com/mercurial/hg.1.html#bookmarks bookmarks]|| ||
+|| || ||[[# hg-branches]][http://www.selenic.com/mercurial/hg.1.html#branches branches] _
+[[# hg-branch]][http://www.selenic.com/mercurial/hg.1.html#branch branch] _
+[http://www.selenic.com/mercurial/hg.1.html#branch branch] [#HG-BRANCH BRANCH]||List branches. _
+ _
+Show the current branch. A close git equivalent is _
+ _
+@<&nbsp;&nbsp;>@git branch | grep '*' _
+ _
+Create a branch named BRANCH which will be created from the working directory with the next commit. _
+ _
+##gray|//Mercurial does not provide a mechanism for renaming or deleting branches.  The recommended way to get rid of unwanted branches is to rename the repository and then clone it to the original name with// _
+ _
+@<&nbsp;&nbsp;>@hg clone -r REV##||
+||[[span class="fixed"]][http://schacon.github.com/git/git-bundle.html bundle] ##gray|//see manual//##[[/span]]||Move objects and refs by archive.||[http://www.selenic.com/mercurial/hg.1.html#bundle bundle] _
+[[# hg-unbundle]][http://www.selenic.com/mercurial/hg.1.html#unbundle unbundle]|| ||
+|| || ||[#hg-cat cat] ##gray|//described below//##|| ||
+||[[span class="fixed"]][[# git-cat-file]][http://schacon.github.com/git/git-cat-file.html cat-file] -p [#HASH HASH] _
+[http://schacon.github.com/git/git-cat-file.html cat-file] -t [#HASH HASH][[/span]]||Display content of repository object HASH. _
+ _
+Get the type of repository object HASH.  The type can be 'blob', 'tree', or 'commit'.||##gray|//none//##||##gray|//Mercurial does not assign identifiers to files and directories, so no equivalent of// git cat-file //is possible.  The following are equivalent, however:// _
+ _
+@<&nbsp;&nbsp;>@git cat-file commit HASH _
+@<&nbsp;&nbsp;>@hg log -r REV##||
+||[[span class="fixed"]][[# git-checkout]][http://schacon.github.com/git/git-checkout.html checkout] [-f] [#BRANCH BRANCH] _
+[http://schacon.github.com/git/git-checkout.html checkout] [#TREEISH TREEISH] [#PATH PATH] ... _
+[http://schacon.github.com/git/git-checkout.html checkout] -p [#PATH PATH] ... _
+[http://schacon.github.com/git/git-checkout.html checkout] -b [#NAME NAME] @@[@@[#COMMIT COMMIT]@@]@@[[/span]]||Checkout the branch named BRANCH.  BRANCH becomes the current branch.  Changes in the index are carried over but if there are changes to tracked files that are not in the index the checkout fails.  If the -f option is specified changes in the index and to tracked files will be discarded. _
+ _
+Copy the files or directories {{PATH ...}} from TREEISH to the working directory.  The current branch is not changed. _
+ _
+Copy files or directories {{PATH ...}} from the index.  The current branch is not changed. _
+ _
+Create a branch named NAME using COMMIT as the starting point.  If COMMIT is not specified the HEAD of the current branch is used.  NAME becomes the current branch.||[[# hg-update]][http://www.selenic.com/mercurial/hg.1.html#update update] [-c|-C] ([#HG-BRANCH BRANCH]|-r [#HG-REV REV]) _
+[http://www.selenic.com/mercurial/hg.1.html#revert revert] [-a] [-C] [-r [#HG-REV REV]] [#HG-PATH PATH] ... _
+##gray|//none//## _
+[http://www.selenic.com/mercurial/hg.1.html#branch branch] [#HG-BRANCH BRANCH]||Checkout BRANCH or REV.  If there are changes in the working directory they are applied to the new working directory; the -C option discards changes in the working directory and the -c option prevents an update when there are changes. _
+ _
+Revert PATHs to how they are according to the parent of the working directory or REV if specified.  If this makes the files different from how they are in the parent of the working directory then the file will have a modified status.  Backup copies of the files will be saved with .orig suffixes unless the -C option is used.  If no PATHs are provided and the _
+-a option is used, the entire working tree will be reverted. _
+ _
+##gray|//Mercurial has no index and thus no equivalent to// git checkout -p.## _
+ _
+Start a new BRANCH using the current working directory which will be created with the next commit.||
+||[[span class="fixed"]][http://schacon.github.com/git/git-cherry-pick.html cherry-pick] [#COMMIT COMMIT] ...[[/span]]||Apply the changes introduced by some COMMITs to current branch.  Although it is possible to specify multiple commits, it is better to use git rebase @@--@@onto if the commits are a chain because rebasing provides mechanisms (continue, skip, abort) for dealing with conflicts.||[http://www.selenic.com/mercurial/hg.1.html#export export] _
+[http://www.selenic.com/mercurial/hg.1.html#import import] _
+[http://www.selenic.com/mercurial/hg.1.html#graft graft]|| ||
+||[[span class="fixed"]][http://schacon.github.com/git/git-clean.html clean] -n _
+[http://schacon.github.com/git/git-clean.html clean] -f[[/span]]||Show what files would be removed if run with {{-f}} option. _
+ _
+Remove untracked files from the working tree.||[http://www.selenic.com/mercurial/hg.1.html#purge purge] -p _
+[http://www.selenic.com/mercurial/hg.1.html#purge purge]||Show what files would be removed if run without {{-p}} option. _
+ _
+Remove untracked files from the working tree.||
+||[[span class="fixed"]][[# git-clone]][http://schacon.github.com/git/git-clone.html clone] [-b [#BRANCH BRANCH]] [#URL URL] @@[@@[#DIR DIR]] _
+[http://schacon.github.com/git/git-clone.html clone] [-o [#NAME NAME]] [#URL URL] @@[@@[#DIR DIR]] _
+[http://schacon.github.com/git/git-clone.html clone] [-c SECTION.KEY=VAL] [#URL URL] @@[@@[#DIR DIR]] _
+[http://schacon.github.com/git/git-clone.html clone] (@@--@@bare|@@--@@mirror) [#URL URL] @@[@@[#DIR DIR]] _
+[http://schacon.github.com/git/git-clone.html clone] @@--@@recursive [#URL URL][[/span]]||Clone a repository.  If BRANCH is provided, then it will be the current branch in the new repository.  If DIR is provided it will be the name of the directory containing the repository. _
+ _
+If NAME is provided it is used as the name of the origin instead of the default 'origin'. _
+ _
+If any KEY=VAL pairs are provided they are written in the .git/config file of the new repository. _
+ _
+If @@--@@bare is provided as an option a bare repository will be created.  In a bare repository there is no working directory and the contents of the top directory are what would have been in the .git directory had the @@--@@bare flag not been used. _
+ _
+Clone a repository and any submodules.||[[# hg-clone]][http://www.selenic.com/mercurial/hg.1.html#clone clone] [-r [#HG-REV REV]|-b [#HG-BRANCH BRANCH]] ... [#HG-URL URL] @@[@@[#HG-DIR DIR]] _
+##gray|//none//## _
+##gray|//none//## _
+[http://www.selenic.com/mercurial/hg.1.html#clone clone] -U [#HG-URL URL] @@[@@[#HG-DIR DIR]]||Clone the repository at URL.  Only changesets in the history of REV or BRANCH are copied over to the new repository.  If DIR is provided it will be the name of the directory containing the new repository. _
+ _
+##gray|//The name// default //which is assigned to// URL //can be changed by editing// .hg/hgrc.## _
+ _
+##gray|//Configuration settings are changed by editing// ~/.hgrc.## _
+ _
+Clone the repository at URL.  The clone will have no working directory files, only a .hg subdirectory.||
+||[[span class="fixed"]][[# git-commit]][http://schacon.github.com/git/git-commit.html commit] [-m [#STR STR]] _
+[http://schacon.github.com/git/git-commit.html commit] -a [-m [#STR STR]] _
+[http://schacon.github.com/git/git-commit.html commit] @@--@@amend _
+[http://schacon.github.com/git/git-commit.html commit] @@--@@amend @@--@@author=[#STR STR][[/span]]||Record changes to the repository.  STR is the commit message. _
+ _
+Commit all changes to tracked files. _
+ _
+Merge index with head commit. _
+ _
+Change author of most recent commit.||[[# hg-commit]][http://www.selenic.com/mercurial/hg.1.html#commit commit] [-m [#HG-STR STR]] _
+[http://www.selenic.com/mercurial/hg.1.html#commit commit] -A [-m [#HG-STR STR]] _
+##gray|//none//## _
+##gray|//none//##||With both {{git}} and {{hg}} the files to be committed can be specified on the command line.  _
+@<&nbsp;>@ _
+If no files are specified {{hg commit}} will commit all modified files that are currently tracked in the working directory.  Newly created files that have not be added with {{hg add}} will not be committed.  {{git commit}} without arguments by contrast will only commit the files that have been specified with {{git add}}.  {{git commit -a}} behaves like the {{hg commit}}, however.||
+||[[span class="fixed"]][[# git-config]][http://schacon.github.com/git/git-config.html config] -l [@@--@@global] _
+[http://schacon.github.com/git/git-config.html config] -e [@@--@@global] _
+[http://schacon.github.com/git/git-config.html config] @@--@@get [@@--@@global] SECTION.KEY _
+[http://schacon.github.com/git/git-config.html config] [@@--@@global] SECTION.KEY VAL _
+[http://schacon.github.com/git/git-config.html config] @@--@@unset [@@--@@global] SECTION.KEY _
+[http://schacon.github.com/git/git-config.html config] @@--@@remove-section SECTION[[/span]]||List configuration settings. _
+ _
+Open configuration settings file in an editor. _
+ _
+Lookup configuration setting KEY in section SECTION. _
+ _
+Add configuration setting KEY in section SECTION with value VAL. _
+ _
+Remove configuration setting KEY in section SECTION. _
+ _
+Remove all keys in SECTION. _
+ _
+##gray|//Writes modify// .git/config //unless// @@--@@global //is specified, in which case// ~/.gitconfig //is edited.  Reads look at both files unless// @@--@@global //is specified, in which case they only look at// ~/.gitconfig.##||[[# hg-showconfig]][http://www.selenic.com/mercurial/hg.1.html#showconfig showconfig] _
+ _
+##gray|//none//##||List configuration settings. _
+ _
+##gray|//Configuration settings are changed by editing// ~/.hgrc##||
+||[[span class="fixed"]] [[/span]]|| ||[http://www.selenic.com/mercurial/hg.1.html#copy copy]|| ||
+||[[span class="fixed"]] [[/span]]|| ||[http://www.selenic.com/mercurial/hg.1.html#copy debugdata] [#HG-FILE FILE] [#HG-REV REV]|| ||
+||[[span class="fixed"]][http://schacon.github.com/git/git-describe.html describe][[/span]]||Show the most recent tag that is reachable from a commit.|| || ||
+||[[span class="fixed"]][[# git-diff]][http://schacon.github.com/git/git-diff.html diff] @@[@@[#PATH PATH] ...] _
+[http://schacon.github.com/git/git-diff.html diff] @@--@@cached @@[@@[#COMMIT COMMIT]] @@[@@[#PATH PATH] ...] _
+[http://schacon.github.com/git/git-diff.html diff] [#COMMIT COMMIT1] [#COMMIT COMMIT2] @@[@@[#PATH PATH] ...] _
+[http://schacon.github.com/git/git-diff.html diff] [#COMMIT COMMIT] @@[@@[#PATH PATH] ...][[/span]]||Produce a diff between the working directory and the index.  If PATHs are provided only diffs for those files are produced.  _
+ _
+Produce a diff between the index and COMMIT.  If COMMIT is not specified it defaults to HEAD. _
+ _
+Produce a diff between COMMIT1 and COMMIT2. _
+ _
+Produce a diff between the working directory and COMMIT.||[[# hg-diff]][http://www.selenic.com/mercurial/hg.1.html#diff diff] @@[@@[#HG-PATH PATH] ...] _
+[http://www.selenic.com/mercurial/hg.1.html#diff diff] -r [#HG-REV REV] @@[@@[#HG-PATH PATH] ...] _
+[http://www.selenic.com/mercurial/hg.1.html#diff diff] -r [#HG-REV REV1] -r [#HG-REV REV2] @@[@@[#HG-PATH PATH] ...] _
+[http://www.selenic.com/mercurial/hg.1.html#diff diff] -c [#HG-REV REV] @@[@@[#HG-PATH PATH] ...]||Produce a diff between tracked files in the working directory and the last commit.  If PATHs are provided only diffs for those files are produced. _
+ _
+Produce a diff between tracked files in the working directory and REV. _
+ _
+Produce a diff between REV1 and REV2. _
+ _
+Produce a diff between the previous revision to REV and REV.||
+||[[span class="fixed"]][[# git-fetch]][http://schacon.github.com/git/git-fetch.html fetch] [-f] [#REPO REPO] @@[[+]@@[#REF REF1]:[#REF REF2]] _
+[http://schacon.github.com/git/git-fetch.html fetch] [-f] _
+[http://schacon.github.com/git/git-fetch.html fetch] [-f] @@--@@all _
+[http://schacon.github.com/git/git-fetch.html fetch] [-f] @@--@@multiple [#REPO REPO] ...[[/span]]||Fetch objects and refs from REPO.  If REF1 and REF2 are not supplied, then all tracking branches are fetched if REPO is a remote; HEAD is fetched if REPO is a URL.  FETCH_HEAD is set to point to the local copy of the remote HEAD.  The branch to fetch can be specified with REF1 and the destination in the local repository with REF2.  The -f option will force a fetch if the destination exists and the update isn't a fast forward. _
+ _
+Fetch objects and refs from origin. _
+ _
+Fetch objects and refs from all remotes. _
+ _
+Fetch objects and refs from multiple REPOs.||##gray|//none//##||##gray|//Mercurial does not have remote tracking branches; hence no equivalent to// git fetch.##||
+||[http://schacon.github.com/git/git-fsck.html fsck]|| ||[[# hg-verify]][http://www.selenic.com/mercurial/hg.1.html#verify verify]|| ||
+|| || ||[[# hg-grep]][http://www.selenic.com/mercurial/hg.1.html#forget forget] [#HG-PATH PATH] ...||Mark files to removed in next commit, but don't remove from working directory.||
+||[[span class="fixed"]][http://schacon.github.com/git/git-gc.html gc] ##gray|//see manual//##[[/span]]||Remove unnecessary files and optimize the local repository.|| || ||
+||[[# git-grep]][[span class="fixed"]][http://schacon.github.com/git/git-grep.html grep] [-i] [-v] [-E|F|P] [#STR STR] _
+[http://schacon.github.com/git/git-grep.html grep] [-h|H] [-l|L] [-n] [#STR STR] _
+[http://schacon.github.com/git/git-grep.html grep] -e [#STR STR] (@@--@@and|@@--@@or) -e [#STR STR] _
+[http://schacon.github.com/git/git-grep.html grep] [#STR STR] (@@--@@cached|[#TREEISH TREEISH])[[/span]]||Print lines matching a pattern.||[[# hg-grep]][http://www.selenic.com/mercurial/hg.1.html#grep grep]|| ||
+||[[# git-hash-object]][[span class="fixed"]][http://schacon.github.com/git/git-hash-object.html hash-object] [#PATH PATH] _
+[http://schacon.github.com/git/git-hash-object.html hash-object] -w [#PATH PATH][[/span]]||Compute the object ID for a file. _
+ _
+Add a blob to the object database.||##gray|//none//##|| ||
+|| || ||[http://www.selenic.com/mercurial/hg.1.html#heads heads]|| ||
+||[[# git-help]][[span class="fixed"]][http://schacon.github.com/git/git-help.html help] _
+[http://schacon.github.com/git/git-help.html help] [#CMD CMD][[/span]] _
+[http://schacon.github.com/git/git-help.html help] -a _
+[http://schacon.github.com/git/git-help.html help] -g||List most common commands and shared options. _
+ _
+Show help for git command CMD. _
+ _
+List all subcommands. _
+ _
+List available concept guides.  Use {{git help GUIDE}} to read a concept guide. _
+ _
+##gray|//man pages might also be installed:// _
+ _
+@<&nbsp;&nbsp;>@man git _
+@<&nbsp;&nbsp;>@man git-clone##||[[# hg-help]][http://www.selenic.com/mercurial/hg.1.html#help help] [-v] _
+[http://www.selenic.com/mercurial/hg.1.html#help help] [#HG-CMD CMD]||List commands and additional help topics.  With the -v flag shared options are also listed. _
+ _
+Show help for {{hg}} command CMD.  Use {{hg help TOPIC}} to read a help topic.||
+|| || ||[http://www.selenic.com/mercurial/hg.1.html#identify identify]|| ||
+||[[span class="fixed"]]##gray|//none//##[[/span]]|| ||[[# hg-incoming]][http://www.selenic.com/mercurial/hg.1.html#incoming incoming]||Shows the changesets that are available to be pulled.||
+||[[# git-init]][[span class="fixed"]][http://schacon.github.com/git/git-init.html init] @@[@@[#DIR DIR]] _
+[http://schacon.github.com/git/git-init.html init] @@--@@bare @@[@@[#DIR DIR]][[/span]]||Create an empty git repository or reinitialize an existing one.  If DIR is not specified the current directory is used. _
+ _
+Create a bare empty git repository or reinitialize an existing one. In a bare repository there is no working tree and the files normally in {{.git}} are in the top directory.  If DIR is not specified the current directory is used.||[[# hg-init]][http://www.selenic.com/mercurial/hg.1.html#init init] @@[@@[#HG-DIR DIR]] _
+##gray|//none//##|| ||
+|| || ||[http://www.selenic.com/mercurial/hg.1.html#locate locate]|| ||
+||[[# git-log]][[span class="fixed"]][http://schacon.github.com/git/git-log.html log] [-N] @@[@@[#PATH PATH] ...] _
+[http://schacon.github.com/git/git-log.html log] [-N] @@--@@branches @@[@@[#PATH PATH] ...][[/span]]||Show commit log for current branch.  If N is provided limit output to last N commits.  If PATHs are provided, limit output to commits that affected one or more of them. _
+ _
+Show commit log for all branches.||[[# hg-log]][http://www.selenic.com/mercurial/hg.1.html#log log] [-l N] -b [#HG-BRANCH BRANCH] @@[@@[#HG-PATH PATH] ...] _
+[http://www.selenic.com/mercurial/hg.1.html#log log] [-l N] @@[@@[#HG-PATH PATH] ...]||Show commit log for BRANCH.  Use 'tip' for the current branch.  If N is provided limit output to last N commits.  If PATHs are provided limit output to commits that affected one or more of them. _
+ _
+Show commit log for all branches.||
+||[[# git-ls-files]][[span class="fixed"]][http://schacon.github.com/git/git-ls-files.html ls-files] @@[@@[#PATH PATH]] ... _
+[http://schacon.github.com/git/git-ls-files.html ls-files] @@--@@stage @@[@@[#PATH PATH]] ... _
+[http://schacon.github.com/git/git-ls-files.html ls-files] @@--@@delete @@[@@[#PATH PATH]] ...[[/span]]||List files under version control.  This is the files which have had "git add" run on them and have not subsequently had "git rm" run on them.  If PATH is not specified, all files are listed.  Otherwise only files in PATH are listed. _
+ _
+With the @@--@@stage option the command includes the mode bits, object ID, and stage number of the files. _
+ _
+List files under version control which aren't in the working directory.||[http://www.selenic.com/mercurial/hg.1.html#manifest manifest] [-r [#HG-REV REV]] _
+##gray|//none//## _
+[http://www.selenic.com/mercurial/hg.1.html#status status] -d|| ||
+||[[# git-ls-tree]][[span class="fixed"]][http://schacon.github.com/git/git-ls-tree.html ls-tree] [#TREEISH TREEISH] _
+[http://schacon.github.com/git/git-ls-tree.html ls-tree] -r[t] [#TREEISH TREEISH][[/span]]||List the contents of a tree. _
+ _
+List the contents of a tree and all its subtrees recursively.  Use the -t option to include subtrees and their object IDs in the output.|| || ||
+||[[# git-merge]][[span class="fixed"]][http://schacon.github.com/git/git-merge.html merge] [#COMMIT COMMIT] ... _
+[http://schacon.github.com/git/git-merge.html merge] @@--@@abort _
+[http://schacon.github.com/git/git-merge.html merge] @@--@@squash[[/span]]||Merge one or more commits into the current branch. _
+ _
+Restore the working directory to the state it had before a merge was attempted.  This might not be possible if there were uncommitted changes in the working directory. _
+ _
+Modify index and working directory with results of merge but don't commit.||[[# hg-merge]][http://www.selenic.com/mercurial/hg.1.html#merge merge] @@[@@[-r] [#HG-REV REV]] _
+[http://www.selenic.com/mercurial/hg.1.html#update update] @@--@@clean|| ||
+||[[# git-mv]][[span class="fixed"]][http://schacon.github.com/git/git-mv.html mv] [#PATH OLDPATH] [#PATH NEWPATH] _
+[http://schacon.github.com/git/git-mv.html mv] [#FILE FILE] ... [#DIR DIR][[/span]]||Move or rename a file, a directory, or a symlink. _
+ _
+Move one or more files into a directory.||[[# hg-rename]][http://www.selenic.com/mercurial/hg.1.html#rename rename] OLD NEW _
+[http://www.selenic.com/mercurial/hg.1.html#rename rename] FILE ... DIR|| ||
+||[[span class="fixed"]][http://schacon.github.com/git/git-notes.html notes] ##gray|//see manual//##[[/span]]||Add or inspect object notes.|| || ||
+||[[span class="fixed"]]##gray|//none//##[[/span]]|| ||[http://www.selenic.com/mercurial/hg.1.html#outgoing outgoing]||Show the changesets that have not been pushed.  Synonym: out||
+||[[span class="fixed"]] [[/span]]|| ||[http://www.selenic.com/mercurial/hg.1.html#parents parents]|| ||
+||[[span class="fixed"]] [[/span]]|| ||[http://www.selenic.com/mercurial/hg.1.html#phase phase]|| ||
+||[[# git-pull]][[span class="fixed"]][http://schacon.github.com/git/git-pull.html pull] [-f] [#REPO REPO] @@[[+]@@[#REF REF1]:[#REF REF2]] _
+[http://schacon.github.com/git/git-pull.html pull] [-f][[/span]]||Short for _
+ _
+@<&nbsp;&nbsp;>@git fetch [-f] REPO @@[@@[+]REF1:REF2] _
+@<&nbsp;&nbsp;>@git merge FETCH_HEAD _
+ _
+Short for _
+ _
+@<&nbsp;&nbsp;>@git fetch [-f] _
+@<&nbsp;&nbsp;>@git merge FETCH_HEAD||[[# hg-pull]][http://www.selenic.com/mercurial/hg.1.html#pull pull] [-u] @@[@@[#HG-SOURCE SOURCE]] _
+[http://www.selenic.com/mercurial/hg.1.html#pull pull] (-b [#HG-BRANCH BRANCH]) ... @@[@@[#HG-SOURCE SOURCE]]||Pull changesets from SOURCE.  If no SOURCE is specified, the value of default in the [paths] section of .hg/hgrc is used.  Only changesets which affect branches already on local repository are pulled.  If the -u flag is used and there were changesets affecting the current branch, make the working directory match the most recent changeset. _
+ _
+Pull changesets affecting BRANCH from SOURCE.  The -b flag can be used multiple times.||
+||[[# git-push]][[span class="fixed"]][http://schacon.github.com/git/git-push.html push] [-f] _
+[http://schacon.github.com/git/git-push.html push] [-f] [-u] [#REPO REPO] @@[@@[#BRANCH BRANCH]] ... _
+[http://schacon.github.com/git/git-push.html push] [-f] @@--@@all [#REPO REPO] _
+[http://schacon.github.com/git/git-push.html push] [-f] [#REPO REPO] [+][#REF REF1]:[#REF REF2] _
+[http://schacon.github.com/git/git-push.html push] @@--@@delete [#REPO REPO] [#BRANCH BRANCH] ...[[/span]]||If the current branch is a tracking branch for a remote branch, then push to the repository for the remote branch.  Otherwise the command does nothing.  If the {{-f}} option is used conflicts will be overwritten in favor of the local repository. _
+ _
+Push to REPO.  If one or more BRANCHES are specified, all necessary objects are copied to the remote repository and the remote refs are updated.  If no BRANCHES are specified, the branches that were set using 'remote set-branch' are used. With the -u flag make the branches tracking branches for the corresponding remote branches. _
+ _
+Push all local branches to REPO.  If any local branches do not have remote branches and remote tracking branches they are added. _
+ _
+Push local branch REF1 to remote branch REF2 on REPO.  If necessary a remote tracking branch is created. _
+ _
+Delete the specified remote BRANCHES and their remote tracking branches.||[[# hg-push]][http://www.selenic.com/mercurial/hg.1.html#push push] [-f] @@[@@[#HG-SOURCE SOURCE]] _
+[http://www.selenic.com/mercurial/hg.1.html#push push] -b [#HG-BRANCH BRANCH] [@@--@@new-branch] @@[@@[#HG-SOURCE SOURCE]]||Push changesets to SOURCE.  If no SOURCE is specified, the value of default in the [paths] section of .hg/hgrc is used.  Only changesets which affect branches already on SOURCE are pushed unless the -f flag is used. _
+ _
+Push changesets affecting BRANCH to SOURCE.  The -b flag can be used multiple times. This will fail if BRANCH is not on SOURCE unless the @@--@@new-branch flag is used.||
+||[[# git-rebase]][[span class="fixed"]][http://schacon.github.com/git/git-rebase.html rebase] [#BRANCH BRANCH] _
+[http://schacon.github.com/git/git-rebase.html rebase] @@--@@onto [#BRANCH BRANCH] [#COMMIT COMMIT1] [#COMMIT COMMIT2] _
+[http://schacon.github.com/git/git-rebase.html rebase] @@--@@abort _
+[http://schacon.github.com/git/git-rebase.html rebase] @@--@@continue _
+[http://schacon.github.com/git/git-rebase.html rebase] @@--@@skip _
+[http://schacon.github.com/git/git-rebase.html rebase] -i [#COMMIT COMMIT][[/span]]||Rebase BRANCH onto the current branch.  All commits on BRANCH going back to the latest common ancestor are applied to the current branch; the head of BRANCH remains the same and the head of the current branch points to the new branch. _
+ _
+Apply all commits after but not including COMMIT1 and up to and including COMMIT2 to BRANCH.  If successful the repository will have a detached HEAD, meaning that HEAD points at a commit and not a named branch.  Use git branch NAME to assign a branch name to HEAD and then git checkout NAME to switch to the new branch. _
+ _
+Abort the results of a rebase that had conflicts. _
+ _
+Continue with a rebase that had conflicts which have been resolved by editing the files and running {{add}} on them. _
+ _
+Skip commit that caused conflicts and continue with rebase. _
+ _
+Perform an interactive rebase on current branch using all commits after but not including COMMIT.  This can be used to squash multiple commits into a single commit.||[http://www.selenic.com/mercurial/hg.1.html#rebase rebase]|| ||
+|| || ||[http://www.selenic.com/mercurial/hg.1.html#recover recover]|| ||
+||[[# git-reflog]][[span class="fixed"]][http://schacon.github.com/git/git-reflog.html reflog] ##gray|//see manual//##[[/span]]||Show the history of changes to refs and HEAD.  This will contain branch commits as well as the creation and switching of branches.|| || ||
+||[[# git-remote]][[span class="fixed"]][http://schacon.github.com/git/git-remote.html remote] _
+[http://schacon.github.com/git/git-remote.html remote] add [-t [#BRANCH BRANCH]] ... [#NAME NAME] [#URL URL] _
+[http://schacon.github.com/git/git-remote.html remote] add [-m [#BRANCH BRANCH]] [#NAME NAME] [#URL URL] _
+[http://schacon.github.com/git/git-remote.html remote] rm [#REMOTE REMOTE] _
+[http://schacon.github.com/git/git-remote.html remote] rename [#REMOTE REMOTE] [#NAME NAME] _
+[http://schacon.github.com/git/git-remote.html remote] show [-v]  _
+[http://schacon.github.com/git/git-remote.html remote] show [-n] [#REMOTE REMOTE] _
+[http://schacon.github.com/git/git-remote.html remote] set-head [#REMOTE REMOTE] (-a|-d) [#BRANCH BRANCH] _
+[http://schacon.github.com/git/git-remote.html remote] set-url @@--@@add [#REMOTE REMOTE] [#URL URL] _
+[http://schacon.github.com/git/git-remote.html remote] set-url @@--@@delete [#REMOTE REMOTE] [#URL URL] _
+[http://schacon.github.com/git/git-remote.html remote] set-branches [#REMOTE REMOTE] [@@--@@add] \ _
+@<&nbsp;&nbsp;>@[#BRANCH BRANCH] ...[[/span]]||List the remotes. _
+ _
+Add a remote NAME at url URL.  The -t option can be used repeatedly to track specific branches.  Otherwise all branches are tracked. _
+ _
+Add a remote NAME at url URL.  The -m option can be used to set the head.  The head can also be set with the set-head subcommand. _
+ _
+Remove REMOTE. _
+ _
+Rename REMOTE to NAME. _
+ _
+Show the name of the remote repository.  With -v flag show the url for the remote repository. _
+ _
+Get information about REMOTE including remote branches.  This requires connecting to the remote machine unless the -n option is used. _
+ _
+Set the head for the remote to BRANCH.  Having a remote head permits the remote name to be used in places a branch name would normally be used. _
+ _
+Add a URL to REMOTE. This can be used to push to multiple repositories simultaneously. _
+ _
+Delete a URL from REMOTE. _
+ _
+Set branches for REMOTE.  If the _
+@@--@@add option is used, the branches are added to the existing branches.  Otherwise the new branches replace the existing branches.  These are the branches that will get pushed or pulled when no branches are explicitly specified.||[[# hg-paths]][http://www.selenic.com/mercurial/hg.1.html#paths paths] _
+##gray|//none//##||List the paths. _
+ _
+##gray|//Names are assigned to repository urls in the// [paths] //section of the// .hg/hgrc //file.  When a repository is cloned the source url is given the name// default.## _
+ _
+##gray|//Mercurial does not provide commands for adding and removing paths.  Instead one edits the// .hg/hgrc //file.//##||
+||[[# git-reset]][[span class="fixed"]][http://schacon.github.com/git/git-reset.html reset]  [-p] @@[@@[#PATH PATH]@@]@@ ... _
+[http://schacon.github.com/git/git-reset.html reset]  @@--@@soft [#COMMIT COMMIT] _
+[http://schacon.github.com/git/git-reset.html reset] [@@--@@mixed] [#COMMIT COMMIT] _
+[http://schacon.github.com/git/git-reset.html reset]  @@--@@hard [#COMMIT COMMIT][[/span]]||Set index to HEAD.  If PATHs are provided, only set those PATHs to HEAD. With the -p flag, interactively select the hunks to set to HEAD. _
+ _
+Move branch head to COMMIT.  Neither the index nor the working directory are modified. _
+ _
+Move branch head to COMMIT and reset the index.  The working directory is not modified. _
+ _
+Move branch head to COMMIT and reset index and working directory. _
+ _
+##gray|//Use// checkout //to restore the working directory without changing the index//.||##gray|//none//## _
+ _
+##gray|//none//## _
+ _
+##gray|//none//## _
+ _
+##gray|//none//## _
+ _
+##gray|//Use// revert //to restore the working directory.//##||##gray|//Mercurial does not have an equivalent to the Git index.//##||
+|| || ||[[# hg-resolve]][[span class="fixed"]][http://www.selenic.com/mercurial/hg.1.html#resolve resolve] FILE ... _
+[http://www.selenic.com/mercurial/hg.1.html#resolve resolve] -a _
+[http://www.selenic.com/mercurial/hg.1.html#resolve resolve] -l _
+[http://www.selenic.com/mercurial/hg.1.html#resolve resolve] -m FILE ... _
+[http://www.selenic.com/mercurial/hg.1.html#resolve resolve] -u FILE ...[[/span]]||List all unresolved ||
+||[[# git-revert]][[span class="fixed"]][http://schacon.github.com/git/git-revert.html revert] [-n] [#COMMIT COMMIT] ... _
+[http://schacon.github.com/git/git-revert.html revert] [-n] [#COMMIT COMMIT1]..[#COMMIT COMMIT2][[/span]]||Create one or more commits which reverse the effects of the COMMITs.  If the {{-n}} the reversing changes are not committed but merely applied to the index and working directory. _
+ _
+Create one or more commits which reverse the effects of COMMIT1 up to but not including COMMIT2.||[[# hg-backout]][http://www.selenic.com/mercurial/hg.1.html#backout backout] -r ##gray|//REV//##|| ||
+||[[# git-rev-list]][[span class="fixed"]][http://schacon.github.com/git/git-rev-list.html rev-list] [#COMMIT COMMIT] _
+[http://schacon.github.com/git/git-rev-list.html rev-list] [#COMMIT COMMIT1] ^[#COMMIT COMMIT2][[/span]]||Show commits which are ancestors of COMMIT in reverse chronological order. _
+ _
+Show commits which are ancestors of COMMIT1 and not ancestors of COMMIT2 in reverse chronological order.|| || ||
+||[[# git-rm]][[span class="fixed"]][http://schacon.github.com/git/git-rm.html rm] [-f] [#FILE FILE] ... _
+[http://schacon.github.com/git/git-rm.html rm] -r [#DIR DIR] ... _
+[http://schacon.github.com/git/git-rm.html rm] @@--@@cached [#FILE FILE] ...[[/span]]||Remove files from the working tree and from the index.  The {{-f}} option can be used to remove the files even if they have changes staged in the index. _
+ _
+Remove directories from the working tree and from the index. _
+ _
+Remove files from the index only.||[[# hg-remove]][http://www.selenic.com/mercurial/hg.1.html#remove remove] [-f] [#HG-PATH PATH] ... _
+[http://www.selenic.com/mercurial/hg.1.html#remove remove] -A [#HG-PATH PATH] ... _
+[http://www.selenic.com/mercurial/hg.1.html#remove remove] @@--@@include [#HG-PATTERN PATTERN]||Remove files.  The {{-f}} option can be used to remove the files even if they have been modified or added. _
+ _
+With the -A flag remove files which are no longer in the working directory. _
+ _
+With the @@--@@include flag remove files which match PATTERN.||
+|| || ||[http://www.selenic.com/mercurial/hg.1.html#root root]|| ||
+|| || ||[http://www.selenic.com/mercurial/hg.1.html#serve serve]|| ||
+||[[span class="fixed"]][http://schacon.github.com/git/git-shortlog.html shortlog] @@[@@[#COMMIT COMMIT1]..[#COMMIT COMMIT2]][[/span]]||Summarize the commit history in a one-line-per-commit format.  The commits are grouped by author.  If a commit range is provided, it will include commits after COMMIT1 and up to and including COMMIT2.|| || ||
+||[[# git-show]][[span class="fixed"]][http://schacon.github.com/git/git-show.html show] COMMIT:FILE[[/span]]||Show blob.||[[# hg-cat]][http://www.selenic.com/mercurial/hg.1.html#cat cat] -r REV FILE|| ||
+|| || ||[#hg-showconfig showconfig] ##gray|//described above//##|| ||
+||[[# git-show-ref]][[span class="fixed"]][http://schacon.github.com/git/git-show-ref.html show-ref][[/span]]||List all references.||##gray|//none//##|| ||
+||[[# git-stash]][[span class="fixed"]][http://schacon.github.com/git/git-stash.html stash] [save @@[@@[#STR STR]]] _
+[http://schacon.github.com/git/git-stash.html stash] show @@[@@[#STASH STASH]] _
+[http://schacon.github.com/git/git-stash.html stash]  pop @@[@@[#STASH STASH]] _
+[http://schacon.github.com/git/git-stash.html stash] list _
+[http://schacon.github.com/git/git-stash.html stash] drop @@[@@[#STASH STASH]] _
+[http://schacon.github.com/git/git-stash.html stash] clear[[/span]]||Stash the changes in a dirty working dir.  If STR is provided it is used as an identifier. _
+ _
+Show specified or latest stash. _
+ _
+Recover specified or latest stash. _
+ _
+List stashes. _
+ _
+Delete specified or latest stash. _
+ _
+Delete all stashes.||[http://www.selenic.com/mercurial/hg.1.html#shelve shelve]|| ||
+||[[# git-status]][[span class="fixed"]][http://schacon.github.com/git/git-status.html status] @@[@@[#PATH PATH] ...][[/span]]||Show paths in the working tree that differ from the index, paths in the index which differ from HEAD, and paths in the working directory which are not in the index or HEAD.  Reports on all files unless PATHs are provided.||[[# hg-status]][http://www.selenic.com/mercurial/hg.1.html#status status]|| ||
+||[[span class="fixed"]][http://schacon.github.com/git/git-submodule.html submodule] ##gray|//see manual//##[[/span]]||Initialize, update or inspect submodules.||[http://www.selenic.com/mercurial/hg.1.html#subrepo subrepo]|| ||
+|| || ||[http://www.selenic.com/mercurial/hg.1.html#summary summary]|| ||
+||[[# git-tag]][[span class="fixed"]][http://schacon.github.com/git/git-tag.html tag] _
+[http://schacon.github.com/git/git-tag.html tag] [#NAME NAME] @@[@@[#COMMIT COMMIT]] _
+[http://schacon.github.com/git/git-tag.html tag] -d [#TAG TAG][[/span]]||List tags. _
+ _
+Create a tag.  If COMMIT is not specified, HEAD is used. _
+ _
+Delete a tag.||[[# hg-tags]][[span class="fixed"]][http://www.selenic.com/mercurial/hg.1.html#tags tags] _
+[http://www.selenic.com/mercurial/hg.1.html#tag tag] [-r REV] NAME _
+[http://www.selenic.com/mercurial/hg.1.html#tag tag] @@--@@remove NAME[[/span]]|| ||
+|| || ||[http://www.selenic.com/mercurial/hg.1.html#tip tip]|| ||
+|| || ||[#hg-unbundle unbundle] ##gray|//described above//##|| ||
+|| || ||[#hg-update update] ##gray|//described above//##|| ||
+|| || ||[#hg-verify verify] ##gray|//described above//##|| ||
+||[http://schacon.github.com/git/git-version.html version]||Show git version.||[http://www.selenic.com/mercurial/hg.1.html#version version]||Show Mercurial version.||
+||~ ##EFEFEF|@@_______________________________________________@@##||~ ##EFEFEF|@@______________________________________________@@##||~ ##EFEFEF|@@______________________________________________@@##||~ ##EFEFEF|@@______________________________________________@@##||
+
+[[# git]][[# hg]][[# diff-git-hg]]
++ [#dvc Git and Mercurial Compared]
+
+**git and hg compared:** [#repo-version repositories and versions] | [#file-dir-commit files, directories, and commits] | [#branch-tag-merge branches, tags, and merges] | [#renamed-files renamed files] | [#identifiers identifiers] | [#repo-url repository urls] | [#config-file config files] | [#ignore-file ignore files] | [#hook hooks] | [#metasyntactic-var metasyntactic variables]
+
+[[# repo-version]]
+++ [#dvc repositories and versions]
+
+A set of files and directories under version control is called a //repository//.  
+
+**git**
+
+A file or directory under version control has one or more //versions//.  One adds new versions to the repository by making a //commit//.  The set of all files and directories in the repository can also be seen as having versions; these versions are called //commits//; they consist of at most one version of each file or directory in the repository.
+
+**hg**
+
+A file or directory under version control has one or more //revisions//.  One adds new revisions to the repository by making a //commit//.  The set of files and directories in the repository can also be seen as having revisions; these revisions are called //changesets//.
+
+[[# file-dir-commit]]
+++ [#dvc files, directories, and commits]
+
+**git**
+
+Git keeps copies of all versions of files and directories that have been committed, as well as the commits themselves, in the directory {{.git/objects}}.   All objects are identified by their 40 character SHA-1 checksum called the //hash//.  There are three types of git objects in this directory: a //blob//, which is the contents of a file.  A //tree//, which corresponds to file system directory, and which contains the file system name of the objects, which can be blobs (regular files) or trees (directories) and their hashes.  Finally, a //commit// contains the top level tree for the commit and the parents of the commit.  Their will be zero parents for the initial commit and more than one parent for a commit which was created by a merge.   Git stores a separate, albeit compressed, copy of each version of a file, tree, or commit in the {{.git/objects}} directory.
+
+The {{git cat-file -p HASH}} command, though not needed for day-to-day use, provides a way to inspect a git object.  It shows the additional information stored in trees and commits which we have not mentioned here.
+
+**hg**
+
+Mercurial uses a storage format called a //revlog// to store the versions of a file.  Most revlogs are kept in {{.hg/store/data}}.  A revlog usually consists of two files: one with an {{.i}} suffix and another with a {{.d}} suffix.  If the file is small and has little or no history, the revlog might consist of only a {{.i}} file.  A revlog which tracks the history of a file is called a //filelog//.  When the file is first committed, it is written to the filelog.  Each time a commit is made which alters it, a delta describing the change is appended to the file.  Thus, to fetch the current version of a file, all the deltas must be applied in order to the original version of the file.  As an performance optimization, Mercurial will sometimes append the full version of the file to a filelog.  Thus, when reconstructing the current version, one need only apply delta starting from the last time the full version was stored.
+
+Mercurial does not store directly.  Instead, it stores a //manifest// for each version of the repository.  A version of the repository is called a //changeset//.  The manifest is list of the pathnames relative to the root of all files in the changeset.  Rather than store the manifests in separate files, all the manifests for the repository are stored in a revlog in {{.hg/store}}.  Each time a new changeset is added to a repository by a {{push}}, {{pull}}, or {{commit}} command, it is assigned a local revision number which is the order in which it was appended to the local manifest revlog.  If the changeset was pulled from a different repository, the local revision numbers might not match.
+
+Information about changesets is also stored in the //changelog//, which is another type of revlog.  The changelog has a pointer to manifest revision, pointers to parents of the changeset, and information about the committer.
+
+[[# branch-tag-merge]]
+++ [#dvc branches, tags, and merges]
+
+**git**
+
+Git has a low level feature called a //ref// which it uses to implement branches and tags.  A ref is a file in {{.git/refs}} which contains the hash of a commit.  Branches are in {{.git/refs/heads}} and tags are in {{.git/refs/tags}}.  Whenever a commit is made, the value in {{.git/refs/heads/BRANCH}} is updated where BRANCH is the current branch.  The values in {{.git/refs/tags/TAG}} do not change.
+
+Git also stores remote branches and tags in {{.git/refs/remotes/REPO}}.  The {{git branch -r}} command can be used to list remote branches.  Remote branches have names of the form REPO/BRANCH, and each remote branch will usually have a tracking branch, which is a local branch named BRANCH.  This will be the case for any branches which were copied when a repository is created via {{git clone}}.  A tracking branch can also be created when a remote repository is added using {{git remote -t BRANCH REPO URL}}.  {{git fetch}} will only update remote branches.  {{git pull}} will update remote branches and merge them with their tracking branches.
+
+The default branch is called {{master}}.  It is created by {{git init}}, and is the branch that is copied by {{git clone}} if no branch is explicitly specified.
+
+Commits have zero or more parent commits.  {{git commit}} creates a commit with one parent, except in the case of the initial commit.  {{git merge}} creates a commit with two or more parent commits.  If the commit has three or more parents, the merge is called an octopus merge.
+
+**hg**
+
+A Mercurial branch is a name which is stored in a changeset.  When a commit is made, the new changeset inherits the branch name of the previous changeset, unless a different name was specified before the commit with {{hg branch}}.   To switch to a new branch one must make a commit.
+
+Mercurial tags are names for changesets.  They are stored in the {{.hgtags}} file at the repository root.  Creating a tag requires making a commit.
+
+Mercurial does not support octopus merges.  Thus changesets have at most two parents.  A changeset created by {{hg merge}} sets the branch of the new changeset to be the branch of the first argument of 
+
+Changesets can have no branch specified.  This is also called the {{default}} branch.
+
+[[# renamed-files]]
+++ [#dvc renamed files]
+
+It is desirable for a version control system to track file name changes.  Otherwise commands like {{blame}} and {{log}} when used on a single path will not show activity before the name change.  If the version control system is aware of a name change, it can correctly handle the case when merging where the name was changed on one branch and edited on the other.
+
+**git**
+
+Although Git provides a {{git mv}} subcommand, it does not actually track name changes.  Instead, it will assume that a name change occurred during a commit when one file disappeared, another appeared, and they have similar contents.  Hence, even if the user uses {{git rm}}, a Unix command {{mv}}, and {{git add}}, Git will preserve the history for the file.
+
+**hg**
+
+Mercurial keeps track of the name a file had in each revision of a filelog.  The {{hg rename}} subcommand must be used to preserve history.
+
+[[# identifiers]]
+++ [#dvc identifiers]
+
+**git**
+
+Git has three types of objects: commits, trees, and blobs.  Each is assigned a unique hash ID which is a 40 digit hex string.  The identifier is called the hash, SHA1, object name, or object identifier with no difference in meaning.  When the underlying object is a commit or tree it is also called a tree-ish.
+
+Commit hashes are the hashes the user most commonly sees and needs to reference.  Only as many of the digits that are necessary to uniquely identify an object in the object database need to be provided to a git command; usually the first 6 or 7 is sufficient.
+
+HEAD is a special name which refers to the most recent commit of the current branch.  It is stored in {{.git/HEAD}}. The previous commit is HEAD^ and the commit before that is HEAD@@^^@@.  The is also numerical notation: HEAD~4 is 4 commits ahead of HEAD.  If HEAD is the result of a merge, then the antecedents can be be referenced with HEAD^1 and HEAD^2.
+
+**hg**
+
+In Mercurial, every commit is assigned two identifiers: a //local revision number// and a universal //changeset identifier//.  The local revision number is a small integer that is unique only to the local repository.  The first local revision number issued is zero, and it increments with each local commit.  The changeset identifier is a twelve digit hex number which is unique across all repositories.
+
+The {{-r}} option is used to pass a mercurial commit identifier to a command.  The argument can be a local revision number, a changeset identifier, or both separated by a colon.
+
+[[# repo-url]]
+++ [#dvc repository urls]
+
+**git**
+
+||~ protocol||~ format||
+||ssh||ssh:@@//[user@]host.xz[:port]/path/to/repo.git/@@ _
+[user@]host.xz:path/to/repo.git/||
+||git||@@git:@@//@@host.xz[:port]/path/to/repo.git/@@||
+||http||http[s]:@@//@@host.xz[:port]/path/to/repo.git/||
+||ftp||ftp[s]:@@//@@host.xz[:port]/path/to/repo.git/||
+||rsync||rsync:@@//@@host.xz/path/to/repo.git/||
+||local||/path/to/repo.git/ _
+file:@@///@@path/to/repo.git/||
+
+**hg**
+
+[[code]]
+local/filesystem/path[#revision]
+file://local/filesystem/path[#revision]
+http://[user[:pass]@]host[:port]/[path][#revision]
+https://[user[:pass]@]host[:port]/[path][#revision]
+ssh://[user@]host[:port]/[path][#revision]
+[[/code]]
+
+[[# config-file]]
+++ [#dvc config files]
+
+**git**
+
+* .gitconfig
+
+**mercurial**
+
+* .hgrc
+
+[[# ignore-file]]
+++ [#dvc ignore files]
+
+**git**
+
+[http://schacon.github.com/git/gitignore.html man gitignore]
+
+A list of file patterns, one per line.  The patterns specify files that {{git status}} and {{git add}} should ignore.  Shell glob syntax (i.e. the asterisk: *) can be used.
+
+A .gitignore can be placed in any directory in the repository.  The rules in a given .giitignore file will only apply to the current directory and the directories beneath it.
+
+Lines starting with a pound sign: # are ignored.
+
+A pattern starting with an exclamation point: ! will negate a pattern.  This can be used to include files that were excluded by a pattern higher in the file matching a broader set of files.
+
+**hg**
+
+Unlike {{.gitignore}}, an {{.hgignore}} file must be in the root of the working directory.
+
+The format is one Perl regular expression per line.  All files which match the regular expression will be ignored.
+
+Comments start with the pound sign: #
+
+It is also possible to use glob syntax:
+
+[[code]]
+
+# regexp to ignore twiddle files:
+~$
+
+# glob to ignore compiled python files:
+syntax: glob
+*.pyc
+
+# additional patterns will use regexp format:
+syntax: regexp
+[[/code]]
+
+[[# hook]]
+++ [#dvc hooks]
+
+**git**
+
+**hg**
+
+[[# metasyntactic-var]]
+++ [#dvc metasyntactic variables]
+
+In subcommand usage we use the following metasyntactic variables:
+
+**git**
+
+||[[# BRANCH]]BRANCH||the name of a branch.||
+||[[# CMD]]CMD||the name of a version control command: the first argument of the base command.||
+||[[# COMMIT]]COMMIT||the [#HASH HASH] for a commit.   A commit can be referenced indirectly via a branch or tag name or via [#git-identifiers-notation commit notation].  The symbolic references HEAD or FETCH_HEAD can also be used to reference commits.||
+||[[# DIR]]DIR||a directory on the file system.  In some cases it must exist; in others it will be created.||
+||[[# FILE]]FILE||a regular file on the file system.  In some cases it must exist; in others it will be created.||
+||[[# HASH]]HASH||a 40 digit hex string used as an identifier for something in the object database.||
+||[[# HEAD]]HEAD||the literal string HEAD.||
+||[[# NAME]]NAME||a name for an entity which will be created.  Usually there are restrictions on the characters that can be used.||
+||[[# PATH]]PATH||a path on the file system.  In some cases it must exist; in others it will be created.||
+||[[# REF]]REF||[#HEAD HEAD] or refs/heads/[#BRANCH BRANCH]||
+||[[# REMOTE]]REMOTE||the name of a remote.||
+||[[# REPO]]REPO||A REMOTE or a URL.||
+||[[# STASH]]STASH||stash identifier format: stash@{0}, stash@{1}, ...||
+||[[# STR]]STR||a string.  There are no restrictions on the characters that can be used, but if they include whitespace or characters special to the shell they must be escaped or quoted.||
+||[[# TREEISH]]TREEISH||the [#HASH HASH] for a tree, a commit, or a tag.  If the HASH is for a commit or a tag the tree in the commit is used.||
+||[[# URL]]URL||a url for a repository.||
+
+**hg**
+
+||[[# HG-BRANCH]]BRANCH||the name of a branch.||
+||[[# HG-CMD]]CMD||the name of a version control command: the first argument of the base command.||
+||[[# HG-DIR]]DIR||a directory on the file system.  In some cases it must exist; in others it will be created.||
+||[[# HG-FILE]]FILE||a regular file on the file system.  In some cases it must exist; in others it will be created.||
+||[[# HG-NAME]]NAME||a name for an entity which will be created.  Usually there are restrictions on the characters that can be used.||
+||[[# HG-PATH]]PATH||a path on the file system.  In some cases it must exist; in others it will be created.||
+||[[# HG-PATTERN]]PATTERN||a file glob pattern.  The metacharacters ?, *, and @@**@@ are supported.||
+||[[# HG-REV]]REV||the revision number for a changeset.  It can be either the local revision number, which is a small decimal integer, or the 12 hex digit universal revision number.||
+||[[# HG-SOURCE]]SOURCE||A URL or a name for a URL in the [paths] section of the .hg/hgrc file||
+||[[# HG-STR]]STR||a string.  There are no restrictions on the characters that can be used, but if they include whitespace or characters special to the shell they must be escaped or quoted.||
+||[[# HG-URL]]URL||a url for a repository.||
+
++ [#top Version Control, Archiving, and Patching Tools]
+
+[#sccs sccs] | [#diff diff] | [#cpio cpio] | [#diff3 diff3] | [#ar ar] | [#tar tar] | [#rcs rcs] | [#patch patch] | [#zip zip] | [#cvs cvs] | [#p4 p4] | [#jar jar] | [#rsync rsync] | [#svn svn] | [#bzr bzr]
+
+[[# sccs]]
++ [#top sccs (1972)]
+
+* [http://www.gnu.org/software/cssc/manual/index.html CSSC Documentation] CSSC is the GNU implementation of SCCS
+* [http://basepath.com/aup/talks/SCCS-Slideshow.pdf The Source Code Control System] Rochkind 1975
+
+In his 1975 paper Rochkind describes SCCS as a "radical departure from conventional methods for controlling source code".  SCCS was initially implemented in 1972 on the IBM 370.  The implementation language was SNOBOL.  Rochkind was an employee of Bell Laboratories and SCCS was soon ported to Unix where it became a cornerstone of the "Programmer's Workbench", a suite of software distributed with early Unix.
+
+The radical departure of SCCS appears to be the decision to store every version of each file under source control.  This is done in a space efficient manner by means of deltas: the original file is stored with a delta for each change.  To get the most recent version of the file all of the deltas must be applied to the original file.  Also stored with each delta is the name of the user who made the change, the date and time of the change, and a user supplied comment explaining the change. 
+
+SCCS introduces a file format so that the original file, the deltas, and the meta-information can all be stored in a single history file.  If the original file was {{foo.c}}, a common early convention was for the history file to be named {{s.foo.c}}.  In the original Unix implementation the SCCS commands were standalone Unix commands.  Starting with the version of SCCS which Allman wrote for BSD Unix in 1980 the SCCS commands became arguments or subcommands to a {{sccs}} executable.
+
+Here is an sample SCCS session.  The file {{foo.txt}} is put under source control.  It is then checked out, edited, and the change committed.  Finally a non-editable copy of the most recent version is checked out.
+
+[[code]]
+$ echo "foo" > foo.txt
+$ sccs admin -ifoo.txt s.foo.txt
+$ rm foo.txt
+$ sccs get -e s.foo.txt
+$ vi foo.txt
+$ sccs delta s.foo.txt
+$ sccs get -p s.foo.txt > foo.txt
+[[/code]]
+
+The SCCS history file format consists of fields separated by the Ctrl-A (ASCII 1) characters.  The fields are divided into headers, which contain the meta-information, and the body, which contains the original file and the deltas.  The original file is given revision number 1, and the number is incremented with each change.  
+
+The body consists of the original file interspersed with nested insert blocks and delete blocks.  The format for an insert block is
+
+[[code]]
+^AI REV
+added line one
+added line two
+...
+^AE REV
+[[/code]]
+
+where REV is the revision number for which the lines were added.  Similarly the format for a delete block is
+
+[[code]]
+^AD REV
+deleted line one
+deleted line two
+...
+^AE REV
+[[/code]]
+
+When extracting a version of the file, the desired version is compared with each block.  Insert blocks are ignored if they have a higher number than the desired version and delete blocks are ignored if they have a lower or equal number than the desired version.
+
+[[# diff]]
++ [#top diff (1974)]
+
+* [http://www.cs.dartmouth.edu/~doug/diff.ps An Algorithm for Differential File Comparison] Hunt & McIlroy 1976
+* [http://linux.die.net/man/1/diff man diff]
+
+To implement an efficient version control system one needs to find a minimal delta or difference between two similar text files.  The problem led to the development of the Unix {{diff}} utility.  Regarding a file as a sequence of lines, the problem can be treated as an example of the [http://en.wikipedia.org/wiki/Longest_common_subsequence_problem longest common subsequence problem].  The standard solution to this problem has O(nm) performance in both time and space, where {{n}} and {{m}} are the lengths of the two files.  To facilitate quick comparison of lines, each line is replaced with a hash code.  When implementing {{diff}} McIlroy developed an algorithm that was more efficient than the standard solution in most cases.  
+
+The standard {{diff}} notation prefixes lines with < and > to indicate whether the line originated in the first or second file.  It also uses the letters {{a}}, {{c}}, and {{d}} to indicate lines being added, changed, or deleted:
+
+[[code]]
+$ echo "foo" > foo.txt
+
+$ echo "bar" > bar.txt
+
+$ diff foo.txt bar.txt 
+1c1
+< foo
+---
+> bar
+
+$ diff foo.txt /dev/null
+1d0
+< foo
+
+$ diff /dev/null foo.txt 
+0a1
+> foo
+[[/code]]
+
+These letters used in {{diff}} notation are also {{ed}} commands.  In fact, {{diff -e}} will output an {{ed}} script which can be used to convert the first file into the second:
+
+[[code]]
+$ diff -e foo.txt bar.txt > diff.ed
+
+$ ( cat diff.ed ; echo "w" ) | ed foo.txt
+[[/code]]
+
+The version of diff released with BSD 2.8 in 1981 added the {{-c}} option to show three lines of context around each change.  This is called the //context format//.
+
+The BSD 2.8 {{diff}} also added an {{-r}} option to perform a recursive diff on directories.
+
+In 1990 the {{-u}} option was added, which gives a diff in//unified format//.  In the //context format//, if a line is changed, the context is repeated: once around the old version of the line and once around the new.  The uniformed format puts both version of the line in the same context, reducing the size of the diff file.
+
+The {{-C NUM}} and {{-U NUM}} options are like the {{-c} and {{-u}} options, except that they show {{NUM}} lines of context.
+
+//normal format://
+
+[[code]]
+$ sed s/^root:/ROOT:/ /etc/passwd > /tmp/passwd
+
+$ diff /etc/passwd /tmp/passwd
+12c12
+< root:*:0:0:System Administrator:/var/root:/bin/sh
+---
+> ROOT:*:0:0:System Administrator:/var/root:/bin/sh
+[[/code]]
+
+//ed script format://
+
+[[code]]
+$ sed s/^root:/ROOT:/ /etc/passwd > /tmp/passwd
+
+$ diff -e /etc/passwd /tmp/passwd
+12c
+ROOT:*:0:0:System Administrator:/var/root:/bin/sh
+.
+[[/code]]
+
+//context format://
+
+[[code]]
+$ sed s/^root:/ROOT:/ /etc/passwd > /tmp/passwd
+
+$ diff -c /etc/passwd /tmp/passwd
+*** /etc/passwd	2013-10-24 17:38:39.000000000 -0700
+--- /tmp/passwd	2014-04-26 12:57:57.000000000 -0700
+***************
+*** 9,15 ****
+  # Open Directory.
+  ##
+  nobody:*:-2:-2:Unprivileged User:/var/empty:/usr/bin/false
+! root:*:0:0:System Administrator:/var/root:/bin/sh
+  daemon:*:1:1:System Services:/var/root:/usr/bin/false
+  _uucp:*:4:4:Unix to Unix Copy Protocol:/var/spool/uucp:/usr/sbin/uucico
+  _taskgated:*:13:13:Task Gate Daemon:/var/empty:/usr/bin/false
+--- 9,15 ----
+  # Open Directory.
+  ##
+  nobody:*:-2:-2:Unprivileged User:/var/empty:/usr/bin/false
+! ROOT:*:0:0:System Administrator:/var/root:/bin/sh
+  daemon:*:1:1:System Services:/var/root:/usr/bin/false
+  _uucp:*:4:4:Unix to Unix Copy Protocol:/var/spool/uucp:/usr/sbin/uucico
+  _taskgated:*:13:13:Task Gate Daemon:/var/empty:/usr/bin/false
+[[/code]]
+
+//unified format://
+
+[[code]]
+$ sed s/^root:/ROOT:/ /etc/passwd > /tmp/passwd
+
+$ diff -u /etc/passwd /tmp/passwd
+--- /etc/passwd	2013-10-24 17:38:39.000000000 -0700
++++ /tmp/passwd	2014-04-26 12:57:57.000000000 -0700
+@@ -9,7 +9,7 @@
+ # Open Directory.
+ ##
+ nobody:*:-2:-2:Unprivileged User:/var/empty:/usr/bin/false
+-root:*:0:0:System Administrator:/var/root:/bin/sh
++ROOT:*:0:0:System Administrator:/var/root:/bin/sh
+ daemon:*:1:1:System Services:/var/root:/usr/bin/false
+ _uucp:*:4:4:Unix to Unix Copy Protocol:/var/spool/uucp:/usr/sbin/uucico
+ _taskgated:*:13:13:Task Gate Daemon:/var/empty:/usr/bin/false
+[[/code]]
+
+//recursive format://
+
+[[code]]
+$ mkdir /tmp/a /tmp/b
+
+$ cp /etc/passwd /tmp/a
+
+$ $ sed s/^root:/ROOT:/ /etc/passwd > /tmp/b/passwd
+
+$ diff -r /tmp/a /tmp/b
+diff -r /tmp/a/passwd /tmp/b/passwd
+12c12
+< root:*:0:0:System Administrator:/var/root:/bin/sh
+---
+> ROOT:*:0:0:System Administrator:/var/root:/bin/sh
+[[/code]]
+
+[[# cpio]]
++ [#top cpio (1977)]
+
+* [http://linux.die.net/man/1/cpio man cpio]
+* [http://pubs.opengroup.org/onlinepubs/9699919799/utilities/pax.html#tag_20_92_13_07 cpio file format (POSIX 2008)]
+
+An ancient and to most people unfamiliar Unix archiving tool which is roughly equivalent to {{tar}}.  The suffix {{.cpio}} is often used for {{cpio}} archive files.
+
+The format is used by RPM packages, though RPM 5.0 and later also support the {{xar}} format.  The Linux kernel since version 2.6 has a cpio archive called {{initramfs}} which it uses during the boot process.  {{cpio}} is also used by the Mac OS X {{.pkg}} format.
+
+The {{cpio}} file format is similar to the {{tar}} file format in that for each file which is added to an archive, a header and the file contents are appended to the archive file.  In the case of {{cpio}} the header is smaller (76 bytes vs 512 bytes).  This is in part because the header only contains the file name length; the actual file name is appended to the archive file between the header and the file contents.  By contrast the {{tar}} format stores the name in fixed length fields, putting a limit on the possible path length.  Another different is the {{cpio}} format lacks a checksum.
+
+||||||||~ header format||
+||~ offset||~ length||~ field||~ description||
+||0||6||c_magic||The identifying value "070707"||
+||6||6||c_dev|| ||
+||12||6||c_ino||c_dev and c_ino together must be unique for each file in the archive||
+||18||6||c_mode|| ||
+||24||6||c_uid|| ||
+||30||6||c_gid|| ||
+||36||6||c_nlink||number of links to the file in the archive; can be incorrect if the -a flag was used to append files||
+||42||6||c_rdev||a place for implementations to store character or block special file information||
+||48||11||c_mtime|| ||
+||59||6||c_namesize|| ||
+||65||11||c_filesize|| ||
+
+Another difference between {{tar}} and {{cpio}} is that whereas {{tar}} takes the files to be archived on the command line, recursively descending any arguments which are directories, {{cpio}} when used with the {{-o}} flag takes its list of files to be archived from standard input.  {{cpio}} was designed to be used with the {{find}} command.  Similarly when using the {{i}} flag {{cpio}} reads the files to be extracted from an archive from standard input.
+
+[[# diff3]]
++ [#top diff3 (1979)]
+
+* [http://linux.die.net/man/1/diff3 man diff3]
+
+{{diff3}} displays the differences between three versions of the same file.
+
+The three way diff is the foundation of branch merging.  A two way diff is insufficient for merging because deleting a line in one branch looks like adding a line in the other branch.  Only by comparing both branches with the original can these two cases be distinguished.
+
+{{diff3}} has three basic invocations:
+
+[[code]]
+diff3 EDIT1 ORIG EDIT2
+diff3 -e EDIT1 ORIG EDIT2
+diff3 -m EDIT1 ORIG EDIT2
+[[/code]]
+
+The first invocation writes a description of the three-way diff to standard out.
+
+The second invocation writes an {{ed}} script to standard out which will merge the changes in EDIT2 to EDIT1.
+
+The third invocation performs the merge.  It writes a version of the file with changes from both EDIT1 and EDIT2 to standard out.
+
+Here is an example of the output format used by the first invocation:
+
+[[code]]
+$ cat /tmp/orig.txt 
+a
+b
+c
+d
+e
+
+$ cat /tmp/edit1.txt 
+a
+b1
+c
+d
+e
+f
+
+$ cat /tmp/edit2.txt 
+a
+b
+c
+d1
+e
+
+$ diff3 /tmp/edit1.txt /tmp/orig.txt /tmp/edit2.txt
+====1
+1:2c
+  b1
+2:2c
+3:2c
+  b
+====3
+1:4c
+2:4c
+  d
+3:4c
+  d1
+====1
+1:6c
+  f
+2:5a
+3:5a
+[[/code]]
+
+Each hunk of the {{diff3}} output starts with four hyphens.  All of the hunks in the example above are two-way hunks, meaning that two of the three files are the same.  In this case the number of the differing file as it appears in the {{diff3}} arguments is placed after the hyphens.
+
+Here is an example of a three-way hunk, where all three files differ and no number is placed after the hyphens:
+
+[[code]]
+$ cat /tmp/orig.txt 
+a
+
+$ cat /tmp/edit1.txt                               
+a1
+
+$ cat /tmp/edit2.txt 
+a2
+
+$ diff3 /tmp/edit1.txt /tmp/orig.txt /tmp/edit2.txt
+====
+1:1c
+  a1
+2:1c
+  a
+3:1c
+  a2
+[[/code]]
+
+[[# ar]]
++ [#top ar (1979)]
+
+* [http://linux.die.net/man/1/ar man ar]
+
+A tool on Unix systems to create static libraries from compiled objects.  In other words, to create a {{.a}} file from a set of {{.o}} files.  The format is understood by the linker—which these days is usually built into the compiler—and the loader {{ld}}.
+
+The command line interface is broadly similar to tar.  Here is how to create an archive; remove files from an archive; list the archive contents; extract files from an archive:
+
+[[code]]
+ar -c NAME.a FILE ...
+ar -d ARCHIVE FILE ...
+ar -t ARCHIVE
+ar -x ARCHIVE FILE ...
+[[/code]]
+
+The {{ar}} file format is not standardized and may differ between systems.
+
+The file format used by GNU {{ar}} on Linux starts with the new line terminated string "!<arch>". 
+
+Each file starts with a 60 bytes header, followed by the file contents.  The header has the following fixed-width fields:
+
+||~ offfset||~ length||~ name||
+||0||16||file name in ASCII||
+||16||12||file modification timestamp||
+||28||6||uid||
+||34||6||gid||
+||40||8||file mode||
+||48||10||file size in bytes||
+||58||2||0x60 0x0A||
+
+The space allocated for the file name in the header is quite short.  GNU {{ar}} actually stores a special file named @@"//"@@ in the archive with a new line separated list of file names.  A header can reference a name in this special file by storing "/" and a the decimal offset in the @@"//"@@ file of the file name.  When file names are stored directly in the header, a "/" is used to mark the end of the file and the rest of the field is space padded.  This supports spaces in the file name.
+
+GNU {{ar}} also stores a special file named "/" is the archive for a symbol table.  The format is
+
+* a 32-bit integer containing the number of symbols
+* a list of 32-bit integers, one for each symbol, containing the offset of the header in the archive for the file containing the symbol
+* a list of null terminated strings, in the same order as the previous list, containing the symbol names
+
+[[# tar]]
++ [#top tar (1979)]
+
+* [http://linux.die.net/man/1/tar man tar]
+
+The more portable twin of {{ar}}.  Originally used for creating and using magnetic tape archives.
+
+How to create a tar file; list the contents of a tar file; compare a tar file with the file system; and extract the contents of a tar file:
+
+[[code]]
+tar [-]cf NAME.tar DIR
+tar [-]tf TARFILE
+tar [-]df TARFILE [DIR]
+tar [-]xf TARFILE
+[[/code]]
+
+The {{-v}} option can be used with {{-c}} or {{-x}} to write the files being added or extracted to standard error.
+
+Tar files store the files in sequential order.  Each file is precede by a 512 byte header.  The file itself is null byte padded to a multiple of 512 bytes.
+
+Tar can write to and read from stdout.  The following two invocations behave identically:
+
+[[code]]
+tar cf - . | (cd DIR ; tar xf -)
+tar cf . - | tar xf - -C DIR
+[[/code]]
+
+Tar can append data to an existing tar file.  These commands append the contents of a directory to a tar file; append the contents of the directory which are newer than what is already on a tarfile; append subsequent tar files to the first tar file:
+
+[[code]]
+tar [-]rf TARFILE DIR
+tar [-]uf TARFILE DIR
+tar [-]Af TARFILE1 TARFILE2 ...
+[[/code]]
+
+How to create a compressed tar file:
+
+[[code]]
+tar [-]czf NAME.tar.gz
+tar [-]cjf NAME.tar.bz2
+tar [-]cJf NAME.tar.xz
+[[/code]]
+
+In 1988 POSIX extended the format of the header block in a backwardly compatible way.  Additional header type flags were added in 2001.
+
+||||||||~ header format||
+||~ offset||~ length||~ original format||~ ustar||
+||0||100||file name|| ||
+||100||8||file mode|| ||
+||108||8||owner user id|| ||
+||116||8||group id|| ||
+||124||12||file size in bytes|| ||
+||136||12||last modification time|| ||
+||148||8||header checksum|| ||
+||156||1||type flag|| ||
+||157||100||name of linked file|| ||
+||257||6|| ||"ustar"||
+||263||2|| ||"00"||
+||265||32|| ||owner user name||
+||297||32|| ||group name||
+||329||8|| ||device major number||
+||337||8|| ||device minor number||
+||345||155|| ||filename prefix||
+
+||||||||~ header type flags||
+||~ flag||~ original meaning||~ ustar||~ 2001||
+||'\0'||normal file|| || ||
+||'0'||normal file|| || ||
+||'1'||hard line|| || ||
+||'2'||symlink|| || ||
+||'3'|| ||character device|| ||
+||'4'|| ||block device|| ||
+||'5'|| ||directory|| ||
+||'6'|| ||FIFO|| ||
+||'7'|| ||contiguous file|| ||
+||'g'|| || ||global extended header||
+||'x'|| || ||extended header for the next file||
+
+[[# rcs]]
++ [#top rcs (1982)]
+
+* [http://www.burlingtontelecom.net/~ashawley/rcs/tichy1985rcs/rcs.html RCS--A System for Version Control] Tichy 1985
+* [http://linux.die.net/man/5/rcsfile man rcsfile] The RCS history file format
+
+RCS works in a similar manner to SCCS.  There is a history file which is indicated with a {{,v}} suffix.  Thus, the history file for {{foo.txt}} would be {{foo.txt,v}}.  The RCS commands take the original file as an argument instead of the history file like in SCCS.  RCS supports multiline commit messages and it adds the {{rlog}} command for getting all the commit messages for a file.  RCS has always been freely available software, a factor which has promoted its use over SCCS.
+
+Here is a sample work session using RCS.  It is equivalent to the SCCS work session in the previous section.
+
+[[code]]
+$ echo "foo" > foo.txt
+$ ci foo.txt
+$ co -l foo.txt
+$ vi foo.txt
+$ ci foo.txt
+$ co foo.txt
+[[/code]]
+
+Examining an RCS history reveals some improvements in the implementation over SCCS.  First of all, ampersands (@) are used instead of Ctrl-A to demarcate sections of the file.  Ampersands in the data are escaped by doubling them.  This makes the history files easier to inspect at the command line.
+
+Another change is that the current version of the file is stored in its entirety.  Older revisions are obtained by applying a chain of reverse diffs.  The advantage of this design is that it is optimized for the common case of fetching the current version.
+
+Here is an example of adding two lines after line 6:
+
+[[code]]
+@a6 2
+added line one
+added line two
+@
+[[/code]]
+
+Here is an example of deleting two lines after line 6:
+
+[[code]]
+@d6 2
+@
+[[/code]]
+
+[[# patch]]
++ [#top patch (1985)]
+
+* [http://linux.die.net/man/1/patch man patch]
+
+The {{patch}} command can apply the output of {{diff}} to the file that was the first argument of {{diff}} to recover the file that was the second argument of {{diff}}.  {{patch}} reads the  output of {{diff}} from standard input:
+
+[[code]]
+$ echo "foo" > foo.txt
+$ echo "bar" > bar.txt 
+$ diff foo.txt bar.txt > foo.patch
+$ patch foo.txt < foo.patch 
+patching file foo.txt
+$ cat foo.txt 
+bar
+[[/code]]
+
+The above is only a slight improvement over what could have been achieved with {{diff -e}} and {{ed}}.  The novelty of {{patch}} is its ability to apply a patch file to an entire directory:
+
+[[code]]
+$ mkdir old
+$ echo "bar" > old/bar.txt
+$ echo "baz" > old/baz.txt
+$ cp -R old new
+$ echo "qux" > new/bar.txt
+$ diff -Naur old new > foo.patch
+$ rm -rf fnew
+$ patch -Np0 < foo.patch
+patching file old/bar.txt
+$ cat old/bar.txt 
+qux
+[[/code]]
+
+This is a good way to create a patch file:
+
+[[code]]
+diff -Naur OLD NEW
+[[/code]]
+
+When creating the patch file with {{diff}}, the {{-u}} or {{-c}} flags seem to be necessary so that {{patch}} has the file names.  The {{-N}} flag is necessary if files are added or removed.  The {{-a}} flag prevents {{diff}} from skipping files which it thinks are binary.
+
+If the {{diff}} was performed outside of the directories, then the {{patch}} should be performed outside of the directory to be patched with the {{-p0}} flag.  Optionally the {{patch}} can be performed inside the directory to be patched with the {{-p1}} flag.  The {{-N}} flag instructs {{patch}} to not make a change if the patch appears to be reversed or already applied.
+
+[[# zip]]
++ [#top zip (1989)]
+
+* [http://linux.die.net/man/1/zip man zip]
+
+{{zip}} combines file compression and archiving.  It is a better choice for sharing files with Windows hosts than {{tar}}, which most Windows hosts don't have installed.
+
+[[code]]
+zip [-r] [-0] ARCHIVE FILE ...
+zip -d ARCHIVE FILE ...
+zip -u ARCHIVE [FILE ...]
+
+unzip -l ARCHIVE
+unzip ARCHIVE [FILE ...]
+[[/code]]
+
+Compression is the DEFLATE algorithm, or no compression if the {{-0}} flag is used.
+
+{{zip}} stores the file name, file size, and last modification time of the file.  The information is in a header which precedes the file itself and in the "central directory" at the end of the file.
+
+By default {{zip}} does not recursively descend directories, adding their contents to the archive.  Use the {{-r}} flag to get this behavior.
+
+[[# cvs]]
++ [#top cvs (1990)]
+
+* [http://ximbiot.com/cvs/manual/cvs-1.11.23/cvs.html CVS Manual]
+* [http://www.network-theory.co.uk/docs/cvsmanual/InvokingCVS.html Quick Reference to CVS Commands]
+* [http://cvs.savannah.gnu.org/viewvc/ CVS Repositories on Savannah]
+
+CVS was the first popular revision control system with a client-server architecture.   The client would have a local copy of a recent version of the source code and only the server would have the complete version history.  This made CVS somewhat cleaner to work with than RCS or SCCS which keep history files on the filesystem for the client to see.  It also permitted developers to collaborate without logging in to the same machine.  The CVS client-server protocol communicated over {{rsh}} and later over {{ssh}}.  The well known port number for a CVS server is 2401. 
+
+CVS also enabled a user to commit several files together.  Multiple file commits are sometimes necessary to keep the source code consistent after each commit.  The definition of consistency varies from project to project, but C developers want the source code to compile without errors, for example.  Although CVS permits a user to submit changes to several files with a single command, the file system operation performed by the server is not actually atomic.
+
+Setting up a CVS server is a bit of a bother and I'm not aware of any free CVS hosting services.  As a result, it is difficult these days to experiment with CVS even though the client is still installed by default on Mac OS X.  There are GNU projects which still use CVS.  One can [https://savannah.gnu.org/ register at savannah.gnu.org] and upload a public SSH key to participate in a project.  One can perform an anonymous checkout of source like this:
+
+[[code]]
+cvs -z3 -d:pserver:anonymous@cvs.savannah.gnu.org:/sources/emacs co emacs
+[[/code]]
+
+[[# perforce]]
++ [#top p4 (1995)]
+
+* [http://www.qhull.org/road/road-faq/html/p4-cmd.html Perforce Command Reference]
+
+Perforce has a client-server model.  It supports atomic commits.  It provides the ability to create and, unlike CVS, merge branches.
+
+Perforce has a reputation for being able to handle large projects.  Licenses are [http://www.perforce.com/perforce/price.html several hundred dollars per user].
+
+[[# jar]]
++ [#top jar (1995)]
+
+* [http://linux.die.net/man/1/jar-java-1.6.0-openjdk man jar]
+
+{{jar}} supports some of the {{tar}} commands:
+
+[[code]]
+jar cf NAME.jar DIR
+jar tf JARFILE
+jar xf JARFILE
+jar uf JARFILE DIR
+[[/code]]
+
+{{jar}} can write to and read from stdout; the syntax is different from {{tar}}:
+
+[[code]]
+jar c . | (cd DIR ; jar x)
+jar c . | jar x -C DIR
+[[/code]]
+
+Use {{jar -e}} to make a jar file runnable by {{java}}.  The argument to {{-e}} is a class with a {{main}} routine which will be used as the entry point.
+
+[[code]]
+$ mkdir
+
+$ cat > foo/A.java
+package foo;
+
+public class A {
+	public static void main(String[] args) {
+		System.out.println("A");
+	}
+}
+
+$ sed s/A/B/ foo/A.java > foo/B.java
+
+$ javac foo/*.java
+
+$ jar cef foo.A foo.jar foo
+
+$ java -jar foo.jar        
+A
+[[/code]]
+
+A jar file is a zip file; {{unzip}} can also be used to extract the contents.  {{jar}} stores extra information about the jar file in {{META-INF/MANIFEST.MF}}:
+
+[[code]]
+$ unzip foo.jar
+
+$ cat META-INF/MANIFEST.MF 
+Manifest-Version: 1.0
+Created-By: 1.6.0_26 (Sun Microsystems Inc.)
+Main-Class: foo.A
+[[/code]]
+
+[[# rsync]]
++ [#top rsync (1996)]
+
+* [http://linux.die.net/man/1/rsync man rsync]
+* [http://rsync.samba.org/tech_report/tech_report.html the rsync algorithm]
+
+A tool for copying files and directories between hosts.  Usually it uses {{ssh}}.  It is faster than {{scp}} when some of the files are already on the destination, or when copying files that have been modified.
+
+Here is the usage for putting and getting:
+
+[[code]]
+  rysnc -a PATH ... HOST:PATH
+  rsync -a HOST:'PATH ...' PATH
+[[/code]]
+
+The {{-a}} flag is equivalent to the flags {{-rptoglD}} which (1) recursively copy the contents of directories, (2) copy file permissions, (3) copy file times, (4) copy owner, (5) copy group, (6) copy symlinks, and (7) copy special devices.
+
+Other useful flags are {{-v}} for verbose mode and {{@@--@@exclude}} which takes a file glob pattern to specify files to skip.  
+
+If the source and target paths have the same basename, then {{rsync}} will copy the contents of the source into the contents of the target.  If the basenames are different, {{rsync}} will create a directory with the same name as the source inside the target.  This behavior can be suppressed by putting a trailing slash / on the end of the source.
+
+{{rsync}} can be used to backup a directory on a remote host.  With the {{@@--@@backup}} flag, files which are already on the destination but have been modified on the source will be copied into a separate incremental directory with a tilde (~) suffix.  The {{@@--@@backup-dir}} flag can be used to specify a different incremental directory.
+
+[[# svn]]
++ [#top svn (2000)]
+
+* [http://svnbook.red-bean.com/en/1.7/svn-book.html Version Control with Subversion]
+
+SVN has a client-server model.  SVN replaced CVS as the most popular VCS sometime after 2004. As of 2013 it is still the most widely used VCS, being twice as likely to be used as Git and six times as likely to be used as Mercurial.
+
+[[# bzr]]
++ [#top bzr (2005)]
+
+* [http://doc.bazaar.canonical.com/bzr.2.4/en/ Documentation for Bazaar 2.4]
+* [http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/index.html#commands Commands for Bazaar 2.4]
+
+The distributed VCS favored by GNU projects.  There are currently no active Bazaar maintainers, however.  Bazaar trails Git and Mercurial by a large margin in popularity.
+
+To get a list of common commands; to get help on a specific command:
+
+[[code]]
+bzr help
+bzr help commit
+[[/code]]
+
+To make a commit it is necessary to register a name and an email address:
+
+[[code]]
+bzr whoami "Joe Foo <joe@foo.com>"
+[[/code]]
+
+--------
+
+[[# git-plumbing]]
+++ [#git plumbing]
+
+[#git-cat-file cat-file] | [#git-hash-object hash-object] | [#git-ls-tree ls-tree] | [#git-rev-list rev-list] | [#git-show-ref show-ref]
+
+The Git object database is kept in {{.git/objects}}.  Git has three types of objects: blobs, trees, and commits.  Each version of a file which is under version control becomes a blob and each version of a directory becomes a tree.  Each object is uniquely identified by a 40 digit hex string called an object ID.  Also called an object name or an object id.
+
+The porcelain commands only expose the object IDs of commits.  The object ID of each commit is shown by {{git log}} for example.  One can use {{git cat-file -t}} to find out what type of object an object ID refers to:
+
+[[code]]
+git cat-file -t OBJECTID
+[[/code]]
+
+If the object is a commit, one can get information about the commit with:
+
+[[code]]
+git cat-file commit OBJECTID
+[[/code]]
+
+Included in the information are the parent commits, if any.  If the commit was an initial commit it will have no parents.  If it was the product of a merge it will have two or more parents.  If it was the product of an octopus merge it will have three or more parents.
+
+Aslo included in the commit information is the tree representing the files in the top directory of the repository when the commit was made.  To see the contents of the tree use 
+
+[[code]]
+git ls-tree OBJECTID
+[[/code]]
+
+{{git ls-tree}} can be used on any of the subtrees as well.  To see the contents of a blob in a tree, use
+
+[[code]]
+git cat-file blob OBJECTID
+[[/code]]
+
+An easy way to get the object IDs of all the blobs which are under version control and current is to run the following:
+
+[[code]]
+git ls-files --stage
+[[/code]]
+
+If a file has not been added, it is possible to get the object ID that would be assigned to it if it were with
+
+[[code]]
+git hash-object PATH
+[[/code]]
+
+Furthermore, {{git hash-object -w}} can be used to put the object in the object database.
+
+//plumbing commands for making a tree//
+
+//plumbing commands for making a commit//
+
+//how to display and manipulate refs//
+
+//plumbing for the index//
+
+[[# git-branching]]
+++ [#git branching]
+
+When a branch is created a file is created in {{.git/refs/heads}} with the name of the branch.  The file contains the COMMIT that was provided on the command line or the commit of HEAD if no commit was explicitly provided.
+
+When a commit is made on a branch the parent of the commit is the commit in the branch ref.  The branch ref is then updated to contain the new commit.
+
+One switches branches by changing {{.git/HEAD}} to contain the name of the new branch.
+
+[[# git-fetching-pulling]]
+++ [#git fetching, pushing, pulling]
+
+Fetching, pulling, and pushing is controlled by the remotes that have been set up for a repository.  When a repository is created with the {{clone}} command a remote with the name {{origin}} is created unless the {{-o}} option is used to specify a different remote name.  Remotes can be added, removed, and modified with the {{remote}} command.
+
+[[# git-merging]]
+++ [#git merging]
+
+A merge adds changes from one or more branches into the current branch.  If the merge is successful and committed, the new commit will have two or more parents.  A merge commit with more that two parents is called an octopus merge.
+
+The most common case is when one branch is merged into the current branch, yielding a merge commit with two parents.
+
+To perform a merge Git gets the tree contained in the common ancestor and puts its items into the staging area with staging number 1.  It puts the current branch tree items in the staging area with staging number 2.  It puts the tree items of the other branches in the staging area with staging number 3 or higher.
+
+Suppose that {{bar}} is a branch of {{foo}}.  If commits have subsequently been made to {{foo}} but not to bar, then running the following when {{bar}} is the current branch will perform a fast-forward:
+
+[[code]]
+git merge foo
+[[/code]]
+
+In a fast-forward no merge commit is created.  Instead the head of {{bar}} is simply moved to point to the same commit as the head of {{foo}}.

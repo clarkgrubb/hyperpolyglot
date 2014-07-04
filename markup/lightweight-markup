@@ -1,0 +1,709 @@
+[[# top]]**markup:** [#text-style text style] | [#punctuation non-ascii punctuation] | [#grouping-alignment grouping and alignment] | [#images-video images and video] | [#tables-etal tables, code, and math]
+
+**output formats:** [#html html] | [#pdf pdf] | [#epub epub] | [#word-doc word document] | [#man-page man page] | [#slide-show slide show]
+
+||~ ||~ [#markdown markdown]||~ [#restructured-text restructured text]||~ [#mediawiki mediawiki]||~ [#wikidot wikidot]||~ [#latex latex]||
+||sandbox||[http://daringfireball.net/projects/markdown/dingus daringfireball.net/projects/markdown/dingus] _
+[http://johnmacfarlane.net/pandoc/try johnmacfarlane.net/pandoc/try]||[http://rst.ninjs.org/ rst.ninjs.org]||[http://en.wikipedia.org/wiki/Wikipedia:Sandbox en.wikipedia.org/wiki/Wikipedia:Sandbox]||[http://try.wikidot.com/ try.wikidot.com]||[http://johnmacfarlane.net/pandoc/try johnmacfarlane.net/pandoc/try]||
+||command line tool||$ apt-get install markdown _
+$ markdown foo.txt > foo.html _
+ _
+$ apt-get install pandoc _
+$ pandoc foo.txt -o foo.html||$ pip install rst2html5 _
+ _
+$ rst2html5 foo.rst > foo.html|| || || ||
+||hello world||Hello world!||Hello world!||Hello world!||Hello world!||\documentclass{article} _
+##gray|% \usepackage statements go here## _
+\begin{document} _
+Hello world! _
+\end{document}||
+||autolinks CamelCase?||##gray|//no//##||##gray|//no//##||##gray|//no//##||##gray|//no//##||##gray|//no//##||
+||autolinks url?||##gray|//no//##||##gray|//yes//##||##gray|//yes//##||##gray|//yes//##||##gray|//no//##||
+||can use [http://duckduckgo.com/?q=html+entities html entities]?||##gray|//yes//##||##gray|//no//##||##gray|//yes//##||##gray|//yes if quoted://## @<@&lt;&amp;amp;&gt;@>@||##gray|//no//##||
+||##darkblue|__link offsite__##||[Website](@@http://website.com@@)||Website_ _
+ _
+##gray|//this must exist elsewhere in the document://## _
+.. _Website: @@http://website.com@@||@@[http://website.com Website]@@||@@[http://website.com Website]@@|| ||
+||##darkblue|__link onsite__##||<a href="page">Pipe Trick</a>|| ||@@[[page|Pipe Trick]]@@||@@[[[page|Pipe Trick]]]@@|| ||
+||define anchor||<a name="foo"/>|| ||##gray|//Headers automatically get anchors.  Also://## _
+<div id="foo"></div>||@@[[# foo]]@@|| ||
+||##darkblue|__link to anchor__##||<a href="#foo">Foo</a> _
+ _
+##gray|//pandoc extension://## _
+[Foo](#foo)|| ||@@[[#foo|Foo]]@@||@@[#foo Foo]@@|| ||
+||comment||<!@@--@@ comment @@--@@>||.. comment _
+@<&nbsp;&nbsp;&nbsp;>@another comment _
+ _
+##gray|//blank line terminates comment//##||<!@@--@@ comment @@--@@>||@@[!-- comment --]@@||% comment||
+||HTML||##gray|//set off block level html tags with blank lines://## _
+ _
+<h1>My Header</h1> _
+@<&nbsp;>@||@@|my_header|@@ _
+ _
+##gray|//this must exist elsewhere in document://## _
+.. |my_header| raw:: html _
+ _
+@<&nbsp;&nbsp;>@<h1>foo</h1>||[http://en.wikipedia.org/wiki/Help:HTML_in_wikitext some HTML tags are permitted]||[[html]] _
+<h1>My Header</h1> _
+[[/html]] || ||
+||||||||||||~ [[# text-style]]text style||
+||~ ||~ [#markdown markdown]||~ [#restructured-text restructured text]||~ [#mediawiki mediawiki]||~ [#wikidot wikidot]||~ [#latex latex]||
+||//italic text//||*italic text* _
+_italic text_||*italic text*||##gray|//two single quotes://## _
+''italic text''||@@//italic text//@@||\emph{italic text} _
+\textit{italic text}||
+||**bold text**||@@**bold text**@@ _
+@@__bold text__@@||@@**bold text**@@||##gray|//three single quotes://## _
+'''bold text'''||@@**bold text**@@||\textbf{bold text}||
+||[[span style="font-variant: small-caps"]]small caps text[[/span]]||<span style="font-variant: small-caps"> _
+small caps text _
+</span>|| ||@@{{smallcaps|small caps text}}@@||@@[[span style="font-variant: small-caps"]]@@ _
+small caps text _
+@@[[/span]]@@||\textsc{small caps text}||
+||{{fixed width text}}||@@`@@fixed width text@@`@@||@@``@@fixed width text@@``@@||<tt>fixed width text</tt>||@@{{fixed width text}}@@||\texttt{fixed width text}||
+||__underlined text__||<span style="text-decoration: underline">underlined text</span>|| ||<u>underlined text</u>||@@__underlined text__@@||\underline{underlined text}||
+||--striketrhough text--||<del>strikethough text</del>|| ||<del>strikethough text</del>||@@--strikethrough text--@@||\usepackage{ulem} _
+ _
+\sout{strikethrough text}||
+||literal text||\*not italics\* _
+@@`*not italics*`@@||\*not italics\*||<nowiki>''not italics''</nowiki>||@<@@//not italics//@@>@||textbackslash{}emph\{not italics\} _
+ _
+##gray|//special characters://## _
+# $ % ^ & _ { } ~ \ _
+ _
+##gray|//how to escape://## _
+\# \$ \% \textasciicircum{} \& \_ \{ \} \~{ } \textbackslash{}||
+||superscript^^2^^||superscript<sup>2</sup>|| ||superscript<sup>2</sup>||superscript@@^^2^^@@||superscript\textsuperscript{2}||
+||subscript,,2,,||subscript<sub>2</sub>|| ||subscript<sub>2</sub>||subscript@@,,2,,@@||subscript\textsubscript{2}||
+||##red|font color##||<span style="color: red">font color</span>|| ||<font color="red">font color</font>||@@##red|font color##@@||\usepackage{color} _
+ _
+\textcolor{red}{red text}||
+||font size||<font size=16>foo</font>|| ||<font size="16">foo</font>||@@[[size 16px]]foo[[/size]]@@ _
+@@[[size 120%]]foo[[/size]]@@|| ||
+||span w/ class||<span class="foo"> _
+##gray|//text//## _
+</span>|| ||<span class="foo"> _
+##gray|//text//## _
+</span>||@@[[span class="foo"]]@@ _
+##gray|//text//## _
+@@[[/span]]@@|| ||
+||||||||||||~ [[# punctuation]][#punctuation-note non-ascii punctuation]||
+||~ ||~ [#markdown markdown]||~ [#restructured-text restructured text]||~ [#mediawiki mediawiki]||~ [#wikidot wikidot]||~ [#latex latex]||
+||right and left single quotes: `lorem ipsum'||&lsquo;lorem ipsum&rsquo;|| || ||@@`lorem ipsum'@@||@@`lorem ipsum'@@||
+||right and left double quotes: ``lorem ipsum''||&ldquo;lorem ipsum&rdquo;|| || ||@@``lorem ipsum''@@||@@``lorem ipsum''@@||
+||en dash: @<&ndash;>@||&ndash;|| || ||@@<&zwnj;>@<&ndash;>@<&zwnj;>@@||@@--@@||
+||em dash: @<&mdash;>@||&mdash;|| || ||@@<&zwnj;>@<&mdash;>@<&zwnj;>@@|| ||
+||ellipsis: ...||&hellip;|| || ||@@...@@|| ||
+||||||||||||~ [[# grouping-alignment]]grouping and alignment||
+||~ ||~ [#markdown markdown]||~ [#restructured-text restructured text]||~ [#mediawiki mediawiki]||~ [#wikidot wikidot]||~ [#latex latex]||
+||paragraphs|| || || || || ||
+||line break||##gray|//space, space, newline//## _
+ _
+||##gray|//all lines in paragraph with line breaks must start with pipe://## _
+ _
+@@|@@ the line breaks _
+@@|@@ here||<br/>||##gray|//space, underscore, newline://## _
+@<&nbsp;>@_|| ||
+||horizontal rule||##gray|//three or more asterisks, hyphens, or underscores://## _
+@@***@@ _
+@@---@@ _
+@@___@@||##gray|//four or more punctuation characters set off by blank lines:## _
+ _
+@@----@@ ||##gray|//four or more hyphens://## _
+@@----@@||##gray|//four or more hyphens://## _
+@@----@@|| ||
+||align left||##gray|//none//##|| ||##gray|//none//##||@@[[<]]@@ _
+Left aligned _
+@@[[/<]]@@||{\flushleft _
+Left aligned _
+}||
+||align right||##gray|//none//##|| ||##gray|//none//##||@@[[>]]@@ _
+Right aligned _
+@@[[/>]]@@||{\flushright _
+Right aligned _
+}||
+||align center||##gray|//none//##|| ||##gray|//none//##||@@[[=]]@@ _
+Centered _
+@@[[/=]]@@||{\center _
+Centered _
+}||
+||justify||##gray|//none//##|| ||##gray|//none//##||@@[[==]]@@ _
+Justified _
+@@[[/==]]@@||##gray|//none//##||
+||document title||##gray|//pandoc extension://## _
+% document title||@@==============@@ _
+document title _
+@@==============@@|| || ||\title{document title}||
+||section header||##gray|//pandoc requires blank line before header, markdown doesn't://## _
+# section header _
+ _
+section header _
+@@==============@@||##gray|//Other punctuation can be used for title and headers.  Whatever punctuation is used must be used consistently in the document.  An// n+1 //level section must be contained in an// n //level section.//## _
+section header _
+@@==============@@||@@=@@section header=||+ section header||\section{section header}||
+||subsection header||@@##@@ subsection header _
+ _
+subsection header _
+@@-----------------@@||subsection header _
+@@-----------------@@||==subsection header==||++ subsection header||\subsection{subsection header}||
+||subsubsection header||### subsubsection header||subsubsection header _
+@@~~~~~~~~~~~~~~~~~~~~@@||===subsubsection header===||+++ subsubsection header||\subsubsection{subsubsection header}||
+||level 4 header||#### level 4 header||level 4 header _
+@@``````````````@@||====level 4 header====||++++ level 4 header||##gray|//none//##||
+||headers automatically anchored?||##gray|//markdown no, pandoc yes//## _
+ _
+##gray|//[#pandoc-header-identifiers pandoc header identifiers] are the same as the header with (1) all punctuation except hyphens, underscores, periods removed, (2) spaces and newlines replaced by hyphens, (3) lowercase, (4) everything before first letter removed//##||##gray|//yes//##||##gray|//yes//##||##gray|//no//##|| ||
+||list item||##gray|//pandoc requires sublists be indented 4 spaces://## _
+* list item _
+@<&nbsp;&nbsp;&nbsp;&nbsp;>@* sublist item _
+ _
+##gray|//plus signs + or hyphens - may be used in place of asterisks//##||##gray|//sublist must be set off by a blank line://## _
+ _
+- list item _
+ _
+@<&nbsp;&nbsp;>@- sublist item _
+ _
+##gray|//asterisks * or plus signs + may be used in place of hyphens -//##||* list item _
+** sublist item||* list item _
+@<&nbsp;>@* sublist item||\begin{itemize} _
+\item list item _
+@<&nbsp;&nbsp;>@\begin{itemize} _
+@<&nbsp;&nbsp;>@\item sublist item _
+@<&nbsp;&nbsp;>@\end{itemize} _
+\end{itemize}||
+||list item with multiple paragraphs||##gray|//pandoc requires 4 space indent://## _
+@<&nbsp;&nbsp;>@* 1st list item _
+ _
+@<&nbsp;&nbsp;&nbsp;&nbsp;>@2nd paragraph _
+ _
+@<&nbsp;&nbsp;>@* 2nd list item|| ||* 1st list item<br/><br/>2nd paragraph _
+* 2nd list item||* 1st list item @@_@@ _
+@<&nbsp;>@ @@_@@ _
+@<&nbsp;&nbsp;>@2nd paragraph _
+* 2nd list item|| ||
+||numbered list item||##gray|//markdown ignores actual numeric values; pandoc uses first value only://## _
+1. numbered one _
+2. numbered two _
+ _
+##gray|//pandoc supports other formats://## _
+1) numbered one _
+2) numbered two _
+ _
+i. roman numeral one _
+ii. roman numeral two||##gray|//numbers in source are used://## _
+1. numbered one _
+2. numbered two _
+ _
+1) numbered one _
+2 ) numbered two _
+ _
+i) roman numeral one _
+ii) roma numberal two||# numbered one _
+# numbered two||# numbered one _
+# numbered two||\begin{enumerate} _
+\item numbered one _
+\item numbered two _
+\end{enumerate}||
+||definition list||<dl> _
+<dd>one _
+<dt>the 1st cardinal _
+<dd>two _
+<dt>the 2nd cardinal _
+</dl> _
+ _
+##gray|//pandoc extension; 4 spaces after colon://## _
+one _
+:@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@the 1st cardinal _
+two _
+:@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@the 2nd cardinal||one _
+@<&nbsp;&nbsp;>@the 1st cardinal _
+two _
+@<&nbsp;&nbsp;>@the 2nd cardinal||; one : the 1st cardinal _
+; two : the 2nd cardinal||: one : the 1st cardinal _
+: two : the 2nd cardinal||\begin{description} _
+\item[one] the 1st cardinal _
+\item[two] the 2nd cardinal _
+\end{description}||
+||block quote||@@>@@ Four score and twenty _
+@@>@@ years ago... _
+ _
+##gray|//pandoc also has lazy block quotes://## _
+ _
+@@>@@ Four score and twenty _
+years ago... _
+ _
+##gray|//pandoc requires blank line before a block quote//##||Main body text. _
+ _
+@<&nbsp;&nbsp;>@Four score and twenty _
+@<&nbsp;&nbsp;>@years ago... _
+ _
+More main body text.||<blockquote> _
+Four score and twenty _
+years ago... _
+</blockquote>||@@>@@ Four score and twenty _
+@@>@@ years ago...||\begin{quote} _
+Four score and twenty years ago... _
+\end{quote}||
+||collapsible and expandable section||##gray|//none//##|| ||##gray|//none//##||@@[[collapsible show="+" hide="-"]]@@ _
+text that can be hidden _
+@@[[/collapsible]]@@|| ||
+||div w/ class||<div class="foo"> _
+##gray|//markup//## _
+</div>|| ||<div class="foo"> _
+##gray|//markup//## _
+</div>||@@[[div class="foo"]]@@ _
+##gray|//markup//## _
+@@[[/div]]@@|| ||
+||||||||||||~ [[# images-video]]images and video||
+||~ ||~ [#markdown markdown]||~ [#restructured-text restructured text]||~ [#mediawiki mediawiki]||~ [#wikidot wikidot]||~ [#latex latex]||
+||image|| ||.. image:: foo.jpg||[[File:foo.jpg]]||@@[[image foo.jpg]]@@|| ||
+||image link||<a href="@@http://foo.com@@">![](foo.jpg)</a>||.. image:: foo.jpg _
+@<&nbsp;&nbsp;&nbsp;>@:target: @@http://foo\.com@@||[[File:foo.jpg|link=@@http://foo.com@@]]||@@[[image foo.jpg link="http://foo.com"]]@@|| ||
+||image with alt||![Foo](foo.jpg)||.. image:: foo.jpg _
+@<&nbsp;&nbsp;&nbsp;>@:alt: Foo||[[File:foo.jpg|alt=Foo]]||@@[[image foo.jpg alt="Foo"]]@@|| ||
+||image size||##gray|//height can also be specified; height proportionate if not://## _
+<img width="300px" src="foo.jpg">||##gray|//height can also be specified; height proportionate if not://## _ _
+.. image:: foo.jpg _
+@<&nbsp;&nbsp;&nbsp;>@:width: 300px||##gray|//specify width; height will be proportionate://## _
+[[File:foo.jpg|300px]]||##gray|//height can also be specified; height proportionate if not://## _
+@@[[image foo.jpg width="300px"]]@@|| ||
+||embedded youtube video||##gray|//copy-and-paste youtube// <object>##|| ||##gray|//none//##||[[html]] _
+##gray|//copy-and-paste youtube// <object>## _
+[[/html]]|| ||
+||||||||||||~ [[# tables-etal]]tables, code, and math||
+||~ ||~ [#markdown markdown]||~ [#restructured-text restructured text]||~ [#mediawiki mediawiki]||~ [#wikidot wikidot]||~ [#latex latex]||
+||table||<table> _
+<tr><th>A<th>B _
+<tr><td>1<td>2 _
+<tr><td>3<td>4 _
+</table> _
+ _
+##gray|//pandoc extensions://## _
+A@<&nbsp;&nbsp;>@B _
+@@--@@ @@--@@ _
+1@<&nbsp;&nbsp;>@2 _
+3@<&nbsp;&nbsp;>@4 _
+ _
+##gray|//pandoc extension://## _
+@@+---+---+@@ _
+| A | B | _
+@@+---+---+@@ _
+| 1 | 2 | _
+@@+---+---+@@ _
+| 3 | 4 | _
+@@+---+---+@@||@@== ==@@ _
+A@<&nbsp;&nbsp;>@B _
+@@== ==@@ _
+1@<&nbsp;&nbsp;>@2 _
+3@<&nbsp;&nbsp;>@4 _
+@@== ==@@ _
+ _
+@@+---+---+@@ _
+| A | B | _
+@@+===+===+@@ _
+| 1 | 2 | _
+@@+---+---+@@ _
+| 3 | 4 | _
+@@+---+---+@@||{|border="1" _
+!A!!B _
+|- _
+|1@@||@@2 _
+|- _
+|3@@||@@4 _
+|} _
+ _
+##gray|//one cell per row of markup://## _
+{|border="1" _
+!A _
+!B _
+|- _
+|1 _
+|2 _
+|- _
+|3 _
+|4 _
+|}||@@||~ A||~ B||@@ _
+@@||1||2||@@ _
+@@||3||4||@@||\begin{tabular}{l l} _
+A & B \\ _
+\hline _
+1 & 2 \\ _
+3 & 4 \\ _
+\end{tabular}||
+||multiple column cell||<table> _
+<tr><th colspan=2>title _
+<tr><td>1<td>2 _
+</table>|| ||{|border="1" _
+!colspan="2"|title _
+|- _
+@@|1||2@@ _
+|}||@@||||~ title||@@ _
+@@||1||2||@@|| ||
+||cell alignment||<table><tr> _
+<td align="left">left _
+<td align="center">center _
+<td align="right">right _
+</tr></table>|| ||{|border="1" _
+@@|align="left"|left@@ _
+@@|align="center"|center@@ _
+@@|align="right"|right@@ _
+|}||@@||< left||= center||> right||@@|| ||
+||pre-formatted fixed-width block with no need to escape markup or < and &||##gray|//set off from surrounding blocks with blank lines and indent each line at least 4 spaces://## _
+ _
+@<&nbsp;&nbsp;&nbsp;&nbsp;>@int add(int a, int b) { _
+@<&nbsp;&nbsp;&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return (a+b); _
+@<&nbsp;&nbsp;&nbsp;&nbsp;>@} _
+@<&nbsp;>@ _
+ _
+##gray|//pandoc [#pandoc-delimited-code-block delimited code block] uses 3 or more tildes or backticks://## _
+~~~ _
+int add(int a, int b) { _
+@<&nbsp;&nbsp;>@return (a+b); _
+} _
+~~~||##gray|//If the preceding paragraph ends with two colons, it renders as a single colon.  Two colons on a line by themselves are removed.  Preformatted text is indented.//## _
+:: _
+ _
+@<&nbsp;&nbsp;>@int add(int a, int b) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return (a+b); _
+@<&nbsp;&nbsp;>@}||<pre> _
+int add(int a, int b) { _
+@<&nbsp;&nbsp;>@return (a+b); _
+} _
+</pre>||[[code]] _
+int add(int a, int b) { _
+@<&nbsp;&nbsp;>@return (a+b); _
+} _
+[[/code]]|| ||
+||highlighted code||##gray|//pandoc extension://## _
+~~~c _
+int add(int a, int b) { _
+@<&nbsp;&nbsp;>@return (a+b); _
+} _
+~~~||##gray|//none//##||<source lang=c> _
+int add(int a, int b) { _
+@<&nbsp;&nbsp;>@return (a+b); _
+} _
+</source>||[[code lang="cpp"]] _
+int add(int a, int b) { _
+@<&nbsp;&nbsp;>@return (a+b); _
+} _
+[[/code]]|| ||
+||languages which can be highlighted||##gray|//lists the supported languages://## _
+$ pandoc @@--@@version|| ||[http://www.mediawiki.org/wiki/Extension:SyntaxHighlight_GeSHi 100+ languages]||##gray|//php, html, cpp, css, diff, dtd, java, javascript, perl, python, ruby, xml//##|| ||
+||inline math||##gray|//none//##|| ||<math> _
+\int_0^\infty \frac{1}{x^2} dx _
+<\math>||@@[[$ \int_0^\infty \frac{1}{x^2} dx $]]@@||\( \int_0^\infty \frac{1}{x^2} dx \) _
+ _
+\begin{math} _
+\int_0^\infty \frac{1}{x^2} dx _
+\end{math}||
+||block math||##gray|//none//##|| || ||@@[[math]]@@ _
+\int_0^\infty \frac{1}{x^2} dx _
+[[/math]]||\[ \int_0^\infty \frac{1}{x^2} dx \] _
+ _
+\begin{displaymath} _
+\int_0^\infty \frac{1}{x^2} dx _
+\end{displaymath}||
+||numbered equation|| || || || || ||
+||~ ##EFEFEF|@@________________@@##||~ ##EFEFEF|@@_________________________________________@@##||~ ##EFEFEF|@@_________________________________________@@##||~ ##EFEFEF|@@_________________________________________@@##||~ ##EFEFEF|@@_________________________________________@@##||~ ##EFEFEF|@@_________________________________________@@##||
+
+
+@<&nbsp;>@
+
+[[# punctuation-note]]
++ [#punctuation Non-ASCII Punctuation]
+
+||~ unicode name||~ ascii approximation||~ unicode||~ html entity||
+||left single quotation mark _
+right single quotation mark||0027: ' _
+0027: '||2018: ‘ _
+2019: ’||&lsquo; _
+&rsquo;||
+||left double quotation mark _
+right double quotation mark||0022: " _
+0022: "||201C: “ _
+201D: ”||&ldquo; _
+&rdquo;||
+||prime||0027: '||2032: ′||&prime;||
+||double prime||0022: "||2033: ″||&Prime;||
+||en dash||002D 002D: @@--@@||2013: –||&ndash;||
+||em dash||002D 002D 002D: @@---@@||2014: —||&mdash;||
+||horizontal ellipsis||002E 002E 002E: @@...@@||2026: …||&hellip;||
+||minus sign||002D: -||2212: −||&minus;||
+||multiplication sign||002A: *||00D7: ×||&times;||
+||division sign||002F: /||00F7: ÷||&divide;||
+
+The ASCII character set omitted punctuation marks that are necessary to properly typeset English.  It was able to do this because there were already typewriter conventions for representing the missing characters.
+
+Prime and double prime are most often used as abbreviated units of measurement for feet and inches.
+
+Em dash is used to mark an incomplete or interrupted sentence.  It is used to mark off an utterance that is interjected into a sentence as an aside.
+
+En dash is used to indicate a range of values.  It separates the first and the last value and the other values are omitted.
+
+The hyphen is used to join nouns into a compound noun.  In English one must consult a dictionary to determine if the components of a compound noun are separated by spaces, hyphens, or nothing.  The minus sign is the symbol for subtraction.  The name for U+002D is //hyphen-minus//, suggesting that it correct to use the symbol for either.  Unicode has separate character U+2212 called //minus sign//, however.
+
+//combining and non-combining versions of prime and double prime//
+
+If one is not limited to ASCII and wants to produce typographically correct punctuation, consider entering the punctuation explicitly.  Some software will infer typographically correct punctuation from ASCII approximations, but the software tends to be a headache in contexts such as software documentation.
+
+
+[[# markdown]]
++ [#top Markdown]
+
+[http://daringfireball.net/projects/markdown/syntax Markdown]
+
+Markdown was developed in 2004.  The first implementation was in Perl.  It is used by Tumblr, Stackoverflow, and Reddit.  Here is a [http://daringfireball.net/projects/markdown/dingus sandbox].
+
+On Ubuntu you can install a script which converts Markdown to HTML with the following command:
+
+[[code]]
+sudo apt-get install markdown
+[[/code]]
+
+It is a Perl script.  If you copy it over to a Mac it will probably work as long as the necessary Perl module (Text::Markdown) is installed.
+
+The command line script converts Markdown to HTML.  Invoke it like this:
+
+[[code]]
+$ markdown foo.md > foo.html
+[[/code]]
+
+[[# pandoc]]
++ [#top Pandoc]
+
+[http://johnmacfarlane.net/pandoc/README.html Pandoc User's Guide]
+[http://johnmacfarlane.net/pandoc/README.html#pandocs-markdown Pandoc's Markdown]
+
+There are installers for [http://code.google.com/p/pandoc/downloads/list Windows and Mac].  On Ubuntu Pandoc can be installed with
+
+[[code]]
+sudo apt-get install pandoc
+[[/code]]
+
+Pandoc can read Markdown, LaTeX, HTML, and a few other formats.  It can output HTML, RTF, MediaWiki Syntax, groff man page format, Emacs Org-Mode, AsciiDoc, EPub, GNU Texinfo, Word docx, Slidy, and some other formats.
+
+Pandoc's version of Markdown has extensions.  Using the extensions avoids HTML and makes it easier for Pandoc to target other formats.
+
+[[# pandoc-header-identifiers]]
+++ header identifiers
+
+[http://johnmacfarlane.net/pandoc/README.html#header-identifiers-in-html-latex-and-context pandoc header identifiers]
+
+If the rule for generating a header identifier results in all characters being removed, the first unused identifier from the following sequence is used:
+
+* section
+* section-1
+* section-2
+* ...
+
+[[# pandoc-delimited-code-block]]
+++ delimited code block
+
+[http://johnmacfarlane.net/pandoc/README.html#delimited-code-blocks delimited code blocks]
+
+The tildes which terminate the block must be at least as numerous as the tildes which started it.  This provides a mechanism for putting code which contains a line of tildes inside the code block.
+
+The following markup will number the lines starting from 100:
+
+[[code]]
+~~~ {.C .numberLines startFrom="100"}
+int add(int a, int b) {
+  return (a+b);
+}
+~~~
+[[/code]]
+
+[[# restructured-text]]
++ [#top reStructuredText]
+
+[http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html reStructuredText Markup Specification]
+
+[[# mediawiki]]
++ [#top MediaWiki]
+
+ [http://www.mediawiki.org/wiki/Help:Formatting MediaWiki Syntax]
+
+MediaWiki powers Wikipedia and the wikifarm Wikia.  The source code is freely available.
+
+MediaWiki 1.19 includes a script called maintenance/parse.php which can be used to render MediaWiki markup on the command line.
+
+Wikipedia was launched in January 2001.  The site initially used wiki software implemented in Perl called UseModWiki.  In January 2002 the site switched to custom software written in PHP.   The PHP code was rewritten for scalability in July 2002. It was given the name MediaWiki in 2003 and was eventually open sourced.
+
+UseModWiki had a spare set of markup which did not expand much on the markup used by Wiki Base, the original wiki software used by WikiWikiWeb.
+
+||~ ||~ [http://c2.com/cgi/wiki?TextFormattingRules Wiki Base]  (1995)||~ [http://www.usemod.com/cgi-bin/wiki.pl?TextFormattingRules UseModWiki] (1999)||~ MediaWiki (2002)||
+||##darkblue|__link__##||CamelCase||CamelCase _
+@@[[Double Bracket]]@@||@@[[Double Bracket]]@@||
+||//italic//||''italic''||''italic''||''italic''||
+||**bold**||'''bold'''||'''bold'''||'''bold'''||
+||horizontal rule||@@----@@||@@----@@||@@----@@||
+||top level header||##gray|//none//##||##gray|//none//##||=top level header=||
+||second level header||##gray|//none//##||##gray|//none//##||==second level header==||
+||bullet list item||* list item||* list item||* list item||
+||numbered list item||##gray|//none//##||# list item||# list item||
+||image||##gray|//can be URL://## _
+foo.jpg||##gray|//can be URL://## _
+foo.jpg||@@[[File:foo.jpg]]@@ _
+##gray|//MediaWiki permits raw URL images like its predecessors but the feature is turned off on Wikipedia//##||
+||table||##gray|//none//##||##gray|//added in 2003://## _
+@@||A||B||@@ _
+@@||1||2||@@||{| _
+!A!!B _
+|- _
+|1@@||@@2 _
+|}||
+
+For those who like to experiment, here are sandboxes for [http://c2.com/cgi/wiki?WikiWikiSandbox Wiki Base] and [http://www.usemod.com/cgi-bin/wiki.pl?SandBox UseModWiki].  
+
+In Wiki Base the way to prevent a camel case word from becoming a link was to insert six single quotes into the word like this: C''''''amelCase.  The odd markup was not intentional.  The six single quotes actually parse as a bold empty string.
+
+UseModWiki had a feature called "free links" which was attractive to the founders of Wikipedia.  It permitted page titles to have spaces, commas, periods, or hyphens in them.  These pages could be linked with double brackets: e.g. @@[[Los Angeles]]@@. In the URL the spaces are replaced with underscores.  UseModWiki is case insensitive but MediaWiki is case sensitive except for the first letter.
+
+[[# wikidot]]
++ [#top Wikidot]
+
+[http://www.wikidot.com/doc:wiki-syntax Wikidot Syntax]
+
+A wikifarm with its own markup which is edited directly instead of via a WYSIWYG editor. 
+
+Supports a personal domain and custom CSS.  Free and ad-supported or paid and ad-free.
+
+[[# latex]]
++ [#top LaTeX]
+
+[http://en.wikibooks.org/wiki/LaTeX LaTeX] (wikibooks.org)
+[http://en.wikibooks.org/wiki/LaTeX/Mathematics LaTeX/Mathematics] (wikibooks.org)
+
+
+[[# html]]
++ [#top HTML]
+
+++ ... from latex
+
+[[code]]
+$ pandoc foo.txt -o foo.html
+[[/code]]
+
+++ ... from markdown
+
+Converting Markdown to HTML:
+
+[[code]]
+$ markdown foo.txt > foo.html
+$ pandoc foo.txt -o foo.html
+[[/code]]
+
+Converting HTML to Markdown:
+
+[[code]]
+pandoc -s -r html http://hyperpolyglot.org -o hyperpoylgot.org.txt
+[[/code]]
+
+++ ... from mediawiki markup
+
+As of 1.19 MediaWiki exposes its markup to HTML converter at the command line.  The following must be run from the installation root directory:
+
+[[code]]
+$ php maintenance/parse.php foo.txt > foo.html
+[[/code]]
+
+[[# pdf]]
++ [#top PDF]
+
+++ ... from latex
+
+[[code]]
+$ pdflatex foo.tex
+[[/code]]
+
+++ ... from markdown
+
+//a tool such as pdflatex must be in the search path://
+
+[[code]]
+$ pandoc foo.txt -o foo.pdf
+[[/code]]
+
+[[# epub]]
++ [#top ePub]
+
+++ ... from markdown
+
+[[code]]
+$ pandoc foo.txt -o foo.epub
+[[/code]]
+
+[[# word-doc]]
++ [#top Word Document]
+
+++ ... from markdown
+
+[[code]]
+$ pandoc foo.txt -o foo.docx 
+[[/code]]
+
+[[# man-page]]
++ [#top Man Page]
+
+[http://manpages.ubuntu.com/manpages/precise/man7/groff_man.7.html groff_man(7)] ##gray|(ubuntu.com)##
+
+The markup used for man pages is described in groff_man(7).
+
+++ ... from markdown
+
+[[code]]
+$ cat > foo.1.md
+% FOO(1) Foo User Manual
+% John Smith
+% November 8, 2012
+
+# NAME
+
+foo - a command line tool
+
+# SYNOPSIS
+
+foo [*file*]...
+
+# DESCRIPTION
+
+Foo performs an operation on files specified on the command line.  If no files
+are specified the operation is performed on *stdin*.
+
+# SEE ALSO
+
+`bar` (1).
+
+
+$ pandoc -s -w man foo.1.md -o foo.1
+[[/code]]
+
+[[# slide-show]]
++ [#top Slide Show]
+
+++ ... from markdown
+
+[[code]]
+$ cat > gnomes.txt
+# Business Plan
+
+* collect underpants
+* ?
+* profit
+
+# Phase 1: Collect Underpants
+
+3:30 AM is the optimal time.
+
+# Phase 2: ?
+
+Details TBD
+
+# Phase 3: Profit
+
+Financial results will be discussed in the earnings call.
+
+
+$ pandoc gnomes.txt -s --webtex -i -t slidy -o gnomes.html
+[[/code]]
