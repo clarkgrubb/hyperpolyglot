@@ -6,7 +6,7 @@ import re
 import sys
 import xml.etree.ElementTree
 
-ERROR_PAGE = re.compile('^\d{3}.html$')
+ERROR_PAGE = re.compile(r'^\d{3}.html$')
 DATE_FMT = '%Y-%m-%dT%H:%M:%S+00:00'
 DOMAIN = 'http://hyperpolyglot.org'
 

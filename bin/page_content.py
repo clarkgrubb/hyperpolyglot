@@ -60,9 +60,9 @@ def upload(page, input_stream):
     content = input_stream.read()
 
     sp = xmlrpclib.ServerProxy(uri)
-    p = sp.pages.save_one({'site': site,
-                           'page': page,
-                           'content': content})
+    sp.pages.save_one({'site': site,
+                       'page': page,
+                       'content': content})
 
 
 if __name__ == '__main__':

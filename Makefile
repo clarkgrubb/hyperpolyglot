@@ -104,6 +104,10 @@ all: instructions
 pep8:
 	find . -name '*.py' | xargs pep8
 
+.PHONY: pylint
+pylint:
+	find . -name '*.py' | xargs pylint -d missing-docstring
+
 .PHONY: clean.math
 clean.math:
 	-rm -f $(math)
