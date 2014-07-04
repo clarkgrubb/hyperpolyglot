@@ -24,6 +24,7 @@ sys.stdin = codecs.getreader(ENCODING)(sys.stdin)
 sys.stdout = codecs.getwriter(ENCODING)(sys.stdout)
 sys.stderr = codecs.getwriter(ENCODING)(sys.stderr)
 
+
 def load_config():
 
     if os.path.exists(CONFIG_FILE):
@@ -47,6 +48,7 @@ def download(page, output_stream):
     p = sp.pages.get_one({'site': site,
                           'page': page})
     output_stream.write(p['content'])
+
 
 def upload(page, input_stream):
 

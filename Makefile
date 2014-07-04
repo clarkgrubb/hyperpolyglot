@@ -100,6 +100,10 @@ instructions:
 .PHONY: all
 all: instructions
 
+.PHONY: pep8
+pep8:
+	find . -name '*.py' | xargs pep8
+
 .PHONY: clean.math
 clean.math:
 	-rm -f $(math)
