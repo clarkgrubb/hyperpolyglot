@@ -28,7 +28,7 @@ static := $(errors) $(icons) $(robots) $(css)
 
 .PHONY: install
 install:
-	cp site.conf $(conf_dir)
+	cp ../hyperpolyglot-site-conf/site.conf $(conf_dir)
 	$(nginx) reload
 
 .PHONY: error
