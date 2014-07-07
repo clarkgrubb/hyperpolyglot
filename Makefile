@@ -91,9 +91,9 @@ instructions:
 	@echo
 	@echo '  Remember to set the access policy back to  "Private and click "Save changes".'
 	@echo
-	@echo '  To edited markup to the wiki, use this command:'
+	@echo '  To upload edited markup to the wiki, use this command:'
 	@echo
-	@echo '    $$ ./bin/page_content.py --page=PAGE < markup/PAGE'
+	@echo '    $$ ./bin/page_content.py --page=PAGE --upload < markup/PAGE'
 	@echo
 	@echo '------------------------------------------------------------------------------'
 
