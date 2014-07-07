@@ -1,6 +1,6 @@
 [[# top]]//a side-by-side reference sheet//
 
-[#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#arrays arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#concurrency concurrency] | [#file-handles file handles] | [#files files] | [#file-fmt file formats] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#user-defined-types user-defined types] | [#macros macros] | [#net-web net and web] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling] _
+[#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#dates-time dates and time] | [#arrays arrays] | [#functions functions] | [#execution-control execution control] | [#file-handles file handles]
  _
 [#multidimensional-arrays multidimensional arrays] | [#vectors vectors] | [#matrices matrices]
 
@@ -177,16 +177,6 @@ trim('foo ')||
 ||[#char-access character access]||"hello"(1:1)||
 ||[#chr-ord chr and ord]||achar(65) _
 iachar('A')||
-||||~ [[# regexes]][#regexes-note regular expressions]||
-||~ ||~ fortran||
-||[[# regex-metachar]][#regex-metachar-note metacharacters]|| ||
-||[[# char-class-abbrev]][#char-class-abbrev-note character class abbrevations]|| ||
-||[[# regex-anchors]][#regex-anchors-note anchors]|| ||
-||[[# regex-test]][#regex-test-note match test]|| ||
-||[[# case-insensitive-regex]][#case-insensitive-regex-note case insensitive match test]|| ||
-||[[# regex-modifiers]][#regex-modifiers-note modifiers]|| ||
-||[[# subst]][#subst-note substitution]|| ||
-||[[# group-capture]][#group-capture-note group capture]|| ||
 ||||~ [[# dates-time]][#dates-time-note dates and time]||
 ||~ ||~ fortran||
 ||[[# unix-epoch-type]][#unix-epoch-type-note unix epoch type]||##gray|//integer representing seconds since Jan 1, 1970 UTC//##||
@@ -255,14 +245,6 @@ a2 = a1(1:2)||
 ||[[# array-as-func-arg]][#array-as-func-arg-note array as function argument]|| ||
 ||[[# iterate-over-array]][#iterate-over-array-note iterate]|| ||
 ||[[# sort-array]][#sort-array-note sort]|| ||
-||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
-||~ ||~ fortran||
-||[#map map declaration]|| ||
-||[#map-literal map literal]|| ||
-||[#map-access map access]|| ||
-||[#map-is-key-present is key present]|| ||
-||[#map-remove map remove element]|| ||
-||[#map-iterator map iterate]|| ||
 ||||~ [[# functions]][#functions-note functions]||
 ||~ ||~ fortran||
 ||[[# def-func]][#def-func-note define function]||integer function add(n, m) _
@@ -318,17 +300,6 @@ end do||
 ||[[# switch]][#switch-note switch]|| ||
 ||[[# break-continue]][#break-continue-note break/continue] _
 @<&nbsp;>@||exit cycle||
-||||~ [[# concurrency]][#concurrency-note concurrency]||
-||~ ||~ fortran||
-||start thread|| ||
-||terminate current thread|| ||
-||terminate other thread|| ||
-||list threads|| ||
-||wait on thread|| ||
-||lock|| ||
-||create message queue|| ||
-||send message|| ||
-||receive message|| ||
 ||||~ [[# file-handles]][#file-handles-note file handles]||
 ||~ ||~ fortran||
 ||[[# std-file-handles]][#std-file-handles-note standard file handles]||##gray|! common unit identifiers for stdin, stdout, and stderr:## _
@@ -356,91 +327,6 @@ read(*, fmt="(a)") line||
 @<&nbsp;>@|| ||
 ||[[# seek]][#seek-note get and set file handle position]|| ||
 ||[[# tmp-file]][#tmp-file-note open unused file]|| ||
-||||~ [[# files]][#files-note files]||
-||~ ||~ fortran||
-||[[# file-test]][#file-test-note file test, regular file test] _
-@<&nbsp;>@|| ||
-||[[# file-size]][#file-size-note file size] _
-@<&nbsp;>@|| ||
-||[[# readable-writable-executable]][#readable-writable-executable-note is file readable, writable, executable]|| ||
-||[[# chmod]][#chmod-note set file permissions]|| ||
-||[[# file-cp-rm-mv]][#file-cp-rm-mv-note copy file, remove file, rename file]|| ||
-||[[# symlink]][#symlink-note create symlink, symlink test, readlink]|| ||
-||[[# unused-file-name]][#unused-file-name-note generate unused file name]|| ||
-||||~ [[# file-fmt]][#file-fmt-note file formats]||
-||~ ||~ fortran||
-||||~ [[# directories]][#directories-note directories]||
-||~ ||~ fortran||
-||[[# build-pathname]][#build-pathname-note build pathname]|| ||
-||[[# dirname-basename]][#dirname-basename-note dirname and basename]|| ||
-||[[# absolute-pathname]][#absolute-pathname-note absolute pathname]|| ||
-||[[# dir-iterate]][#dir-iterate-note iterate over directory by file]|| ||
-||[[# glob]][#glob-note glob paths]|| ||
-||[[# mkdir]][#mkdir-note make directory]|| ||
-||[[# recursive-cp]][#recursive-cp-note recursive copy]|| ||
-||[[# rmdir]][#rmdir-note remove empty directory]|| ||
-||[[# rm-rf]][#rm-rf-note remove directory and contents]|| ||
-||[[# dir-test]][#dir-test-note directory test] _
-@<&nbsp;>@|| ||
-||[[# unused-dir]][#unused-dir-note generate unused directory]|| ||
-||[[# system-tmp-dir]][#system-tmp-dir-note system temporary file directory]|| ||
-||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
-||~ ||~ fortran||
-||[#main signature of main]|| ||
-||[#first-argument first argument] _
-@<&nbsp;>@|| ||
-||[[# getopt]][#getopt-note getopt]|| ||
-||[#environment-variable environment variable]|| ||
-||[#iterate-environment-variable iterate thru environment variables]|| ||
-||[[# user-id-name]][#user-id-name-note get user id and name]|| ||
-||[[# exit]][#exit-note exit]|| ||
-||[[# executable-test]][#executable-test-note executable test]|| ||
-||[[# external-cmd]][#external-cmd-note external command]|| ||
-||[[# fork]][#fork-note fork]|| ||
-||[[# exec]][#exec-note exec]|| ||
-||[[# pipe]][#pipe-note pipe]|| ||
-||[[# wait]][#wait-note wait]|| ||
-||[[# pid]][#pid-note get pid, parent pid]|| ||
-||[[# signal-handler]][#signal-handler-note set signal handler]|| ||
-||[[# send-signal]][#send-signal-note send signal]|| ||
-||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
-||~ ||~ fortran||
-||||~ [[# user-defined-types]][#user-defined-types-note user-defined types]||
-||~ ||~ fortran||
-||[[# typedef]][#typedef-note typedef]|| ||
-||[[# enum]][#enum-note enum]|| ||
-||[#struct-definition struct definition]|| ||
-||[#struct-declaration struct declaration]|| ||
-||[#struct-initialization struct initialization]|| ||
-||[#struct-member-assignment struct member assignment]|| ||
-||[#struct-member-access struct member access]|| ||
-||[#union-definition union definition]|| ||
-||[#union-declaration union declaration]|| ||
-||[#union-access union access] _
-@<&nbsp;>@|| ||
-||||~ [[# macros]][#macros-note macros]||
-||~ ||~ fortran||
-||||~ [[# net-web]][#net-web-note net and web]||
-||~ ||~ fortran||
-||||~ [[# unit-tests]][#unit-tests-note unit tests]||
-||~ ||~ fortran||
-||unit test example|| ||
-||equality assertion|| ||
-||setup and teardown|| ||
-||unit test coverage|| ||
-||||~ [[# debugging-profiling]][#debugging-profiling-note debugging and profiling]||
-||~ ||~ fortran||
-||[[# check-syntax]][#check-syntax-note check syntax]|| ||
-||[[# stronger-warnings]][#stronger-warnings-note flag for stronger warnings]|| ||
-||[[# suppress-warnings]][#suppress-warnings-note suppress warnings]|| ||
-||[[# warnings-as-err]][#warnings-as-err-note treat warnings as errors]|| ||
-||[[# lint]][#lint-note lint]|| ||
-||[[# src-cleanup]][#src-cleanup-note source cleanup]|| ||
-||[[# debugger]][#debugger-note run debugger]|| ||
-||[[# debugger-cmds]][#debugger-cmds-note debugger commands] _
-##gray|//help, list source, (re)load executable, next, step, set breakpoint, show breakpoints, delete breakpoint, continue, backtrace, up stack, down stack, print, run, quit//##|| ||
-||[[# profile]][#profile-note profile code]|| ||
-||[[# memory-tool]][#memory-tool-note memory tool]|| ||
 ||||~ [[# multidimensional-arrays]][#multidimensional-arrays-note multidimensional arrays]||
 ||~ ||~ fortran||
 ||2d array literal||integer::a(2,2) = & _

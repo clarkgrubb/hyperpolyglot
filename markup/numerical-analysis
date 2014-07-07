@@ -4,7 +4,7 @@
 
 [#tables tables] | [#import-export import and export] | [#relational-algebra relational algebra] | [#aggregation aggregation]
 
-[#vectors vectors] | [#matrices matrices] | [#descriptive-statistics descriptive statistics] | [#distributions distributions] | [#linear-models linear models] | [#polynomial-interpolation polynomial interpolation] | [#statistical-tests statistical tests] | [#time-series time series] | [#univariate-charts univariate charts] | [#bivariate-charts bivariate charts] | [#multivariate-charts multivariate charts]
+[#vectors vectors] | [#matrices matrices] | [#descriptive-statistics descriptive statistics] | [#distributions distributions] | [#linear-models linear models] | [#statistical-tests statistical tests] | [#time-series time series] | [#curve-fitting curve fitting] | [#univariate-charts univariate charts] | [#bivariate-charts bivariate charts] | [#multivariate-charts multivariate charts]
 
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
 ||[[# version-used]][#version-used-note version used]||##gray|//MATLAB 8.3//## _
@@ -53,11 +53,10 @@ $ octave||$ r||$ python||
 ||[[# cmd-line-program]][#cmd-line-program-note command line program]||$ matlab -nojvm -nodisplay -r 'disp(1 + 1); exit' _
  _
 $ octave @@--@@silent @@--@@eval '1 + 1'||$ Rscript -e 'print("hi")'||python -c 'print("hi")'||
-||[[# block-delimiters]][#block-delimiters-note block delimiters]||function endfunction _
-if elseif else endif _
-while endwhile _
-do until _
-for endfor||{ }||##gray|//offside rule//##||
+||[[# block-delimiters]][#block-delimiters-note block delimiters]||function end _
+if elseif else end _
+while end _
+for end||{ }||##gray|//offside rule//##||
 ||[[# stmt-separator]][#stmt-separator-note statement separator]||; ##gray|//or newline//## _
  _
 ##gray|//Newlines not separators after three dots:// @@...@@## _
@@ -357,11 +356,17 @@ t = datetime.datetime.strptime(s, fmt)||
 @<&nbsp;>@||datestr(t, 'yyyy-mm-dd HH:MM:SS')||format(t, format='%Y-%m-%d %H:%M:%S')||t.strftime('%Y-%m-%d %H:%M:%S')||
 ||||||||~ [[# tuples]][#tuples-note tuples]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
-||[[# tuple-type]][#tuple-type-note type]|| ||list||tuple||
+||[[# tuple-type]][#tuple-type-note type] _
+@<&nbsp;>@||cell||list||tuple||
 ||[[# tuple-literal]][#tuple-literal-note literal] _
 @<&nbsp;>@||tup = {1.7, 'hello', [1 2 3]}||tup = list(1.7, "hello", c(1, 2, 3))||tup = (1.7, "hello", [1,2,3])||
-||[[# tuple-access]][#tuple-access-note lookup element]||tup{1}||tup[[1]]||tup[0]||
-||[[# tuple-update]][#tuple-update-note update element]|| ||tup[[1]] = 2.7||##gray|//tuples are immutable//##||
+||[[# tuple-access]][#tuple-access-note lookup element] _
+@<&nbsp;>@||##gray|% indices start at one:##  _
+tup{1}||##gray|# indices start at one:##  _
+tup[[1]]||##gray|# indices start at zero:##  _
+tup[0]||
+||[[# tuple-update]][#tuple-update-note update element] _
+@<&nbsp;>@||tup{1} = 2.7||tup[[1]] = 2.7||##gray|//tuples are immutable//##||
 ||[[# tuple-len]][#tuple-len-note length] _
 @<&nbsp;>@||length(tup)||length(tup)||len(tup)||
 ||||||||~ [[# arrays]][#arrays-note arrays]||
@@ -378,10 +383,7 @@ class(c(1, 2, 3)) _
 a = [1 2 3 4]||##gray|# use c() constructor:## _
 a = c(1, 2, 3, 4)||a = [1, 2, 3, 4]||
 ||[[# array-size]][#array-size-note size] _
-@<&nbsp;>@||length(a) _
- _
-##gray|% also works for cell arrays:## _
-length(a2)||length(a)||len(a)||
+@<&nbsp;>@||length(a)||length(a)||len(a)||
 ||[[# array-empty-test]][#array-empty-test-note empty test] _
 @<&nbsp;>@||length(a) == 0 _
  _
@@ -390,17 +392,11 @@ length(a2)||length(a)||len(a)||
 % as true.##||length(a) == 0||not a||
 ||[[# array-lookup]][#array-lookup-note lookup] _
 @<&nbsp;>@||##gray|% indices start at one:## _
-a(1) _
- _
-##gray|% cell array indices also start at one:## _
-a2{1}||##gray|# indices start at one## _
+a(1)||##gray|# indices start at one## _
 a[1]||##gray|# indices start at zero## _
 a[0]||
 ||[[# array-update]][#array-update-note update] _
-@<&nbsp;>@||a(1) = -1 _
- _
-##gray|% cell array:## _
-a2{1} = 'lorem'||a[1] = "lorem"||a[0] = 'lorem' ||
+@<&nbsp;>@||a(1) = -1||a[1] = -1||a[0] = -1||
 ||[[# array-out-of-bounds]][#array-out-of-bounds-note out-of-bounds behavior]||a = [] _
  _
 ##gray|% error:## _
@@ -445,14 +441,6 @@ a[2:4]||
 @<&nbsp;>@||a(2:end)||tail(a, n=length(a) - 1)||a[1:]||
 ||[#integer-array-as-index integer array as index]||[1 2 3]([1 3 3])||c(1, 2, 3)[c(1, 3, 3)]||np.array([1, 2,3])[[0, 2, 2]]||
 ||[#logical-array-as-index logical array as index]||[1 2 3]([true false true])||c(1, 2, 3)[c(T, F, T)]||np.array([1, 2, 3])[[True, False, True]]||
-||[[# array-back]][#array-back-note manipulate back] _
-@<&nbsp;>@|| ||##gray|//none//##||a = [6, 7, 8] _
-a.append(9) _
-a.pop()||
-||[[# array-front]][#array-front-note manipulate front] _
-@<&nbsp;>@|| ||##gray|//none//##||a = [6, 7, 8] _
-a.insert(0, 5) _
-a.pop(0)||
 ||[[# array-concatenation]][#array-concatenation-note concatenate]||a = [1 2 3] _
 a2 = [a [4 5 6]] _
 a = [a [4 5 6]] _
@@ -467,22 +455,21 @@ a.extend([4, 5, 6])||
 rep(c("a", "b", "c"), c(30, 50, 90))||a = [None] * 10 _
 a = [None for i in range(0, 10)]||
 ||[[# array-copy]][#array-copy-note copy] _
-##gray|//address copy, shallow copy, deep copy//##|| ||##gray|# arrays cannot be elements of arrays## _
-a = [1, 2, 3, 4] _
- _
-##gray|//none//## _
-a2 = a||import copy _
+##gray|//address copy, shallow copy, deep copy//##||##gray|//There is no address copy.  Because arrays cannot be nested, there is no distinction between shallow copy and deep copy.  Assignment and passing an array to a function can be regarded as performing a shallow or deep copy, though MATLAB does not allocate memory for a 2nd array until one of the arrays is modified.//##||##gray|//Arrays in R behave like arrays in MATLAB.//##||import copy _
  _
 a = [1, 2, [3, 4]] _
  _
 a2 = a _
 a3 = list(a) _
 a4 = copy.deepcopy(a)||
-||[[# array-arguments]][#array-arguments-note arrays as function arguments]|| ||##gray|//modifying parameter will not modify original array//##||##gray|//parameter contains address copy; modifying parameter modifies original array//##||
 ||[[# array-iteration]][#array-iteration-note iteration] _
-@<&nbsp;>@|| ||for (x in c(1, 2, 3)) { _
+@<&nbsp;>@||a = [9 7 3] _
+for i = 1:numel(a) _
+@<&nbsp;&nbsp;>@x = a(i) _
+@<&nbsp;&nbsp;>@disp(x) _
+end||for (x in c(9, 7, 3)) { _
 @<&nbsp;&nbsp;>@print(x) _
-}||for i in [1, 2, 3]: _
+}||for i in [9, 7, 3]: _
 @<&nbsp;&nbsp;>@print(i)||
 ||[[# indexed-array-iteration]][#indexed-array-iteration-note indexed iteration]|| ||for (i in seq_along(a)) { _
 @<&nbsp;&nbsp;>@cat(sprintf("%s at index %d\n", i, a[i])) _
@@ -503,19 +490,22 @@ a = sort(a)||a = ['b', 'A', 'a', 'B'] _
 sorted(a) _
 a.sort() _
 a.sort(key=str.lower)||
-||[[# array-dedupe]][#array-dedupe-note dedupe]|| ||a = c(1, 2, 2, 3) _
-a2 = unique(a) _
-a = unique(a)||a = [1, 2, 2, 3] _
-a2 = list(set(a)) _
-a = list(set(a))||
+||[[# array-dedupe]][#array-dedupe-note dedupe]||a = [1 2 2 3] _
+a2 = unique(a)||a = c(1, 2, 2, 3) _
+a2 = unique(a)||a = [1, 2, 2, 3] _
+a2 = list(set(a)))||
 ||[[# membership]][#membership-note membership] _
-@<&nbsp;>@|| ||7 %in% a _
+@<&nbsp;>@||ismember(7, a)||7 %in% a _
 is.element(7, a)||7 in a||
 ||[[# intersection]][#intersection-note intersection] _
-@<&nbsp;>@|| ||intersect(c(1, 2), c(2, 3, 4))||{1, 2} & {2, 3, 4}||
+@<&nbsp;>@||intersect([1 2], [2 3 4])||intersect(c(1, 2), c(2, 3, 4))||{1, 2} & {2, 3, 4}||
 ||[[# union]][#union-note union] _
-@<&nbsp;>@|| ||union(c(1, 2), c(2, 3, 4))||{1, 2} | {2, 3, 4}||
-||[[# set-diff]][#set-diff-note relative complement, symmetric difference]|| ||setdiff(c(1, 2, 3), c(2)) _
+@<&nbsp;>@||union([1 2], [2 3 4])||union(c(1, 2), c(2, 3, 4))||{1, 2} | {2, 3, 4}||
+||[[# set-diff]][#set-diff-note relative complement, symmetric difference]||setdiff([1 2 3], [2]) _
+ _
+a1 = [1 2] _
+a2 = [2 3 4] _
+union(setdiff(a1, a2), setdiff(a2, a1))||setdiff(c(1, 2, 3), c(2)) _
  _
 union(setdiff(c(1, 2), c(2, 3, 4)), _
 @<&nbsp;&nbsp;>@setdiff(c(2, 3, 4), c(1, 2)))||{1, 2, 3} - {2} _
@@ -536,7 +526,8 @@ Filter(function(x) { x > 2}, a)||filter(lambda x: x > 1, [1, 2, 3]) _
 ||[[# reduce]][#reduce-note reduce] _
 @<&nbsp;>@|| ||Reduce(function(x, y) { x + y }, c(1, 2, 3), 0)||reduce(lambda x, y: x + y, [1 ,2, 3], 0)||
 ||[[# universal-existential-test]][#universal-existential-test-note universal  and existential tests] _
-@<&nbsp;>@|| ||all(c(1, 2, 3, 4) %% 2 == 0) _
+@<&nbsp;>@||all(mod([1 2 3 4], 2) == 0) _
+any(mod([1 2 3 4]) == 0)||all(c(1, 2, 3, 4) %% 2 == 0) _
 any(c(1, 2, 3, 4) %% 2 == 0)||all(i % 2 == 0 for i in [1, 2, 3, 4]) _
 any(i % 2 == 0 for i in [1, 2, 3, 4])||
 ||[[# shuffle-sample]][#shuffle-sample-note shuffle and sample]|| ||a = c(1, 1, 2, 3, 9, 28) _
@@ -547,7 +538,7 @@ a = [1, 2, 3, 4] _
 shuffle(a) _
 sample(a, 2)||
 ||[[# zip]][#zip-note zip] _
-@<&nbsp;>@|| ||##gray|# R vectors can't be nested. _
+@<&nbsp;>@||##gray|//none; MATLAB arrays can't be nested//##||##gray|# R arrays can't be nested. _
 # One approximation of zip is a 2d array:## _
 a = rbind(c(1, 2, 3), c('a', 'b', 'c')) _
  _
@@ -739,26 +730,31 @@ rot90(a)|| || ||
 ||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
 ||[[# dict-literal]][#dict-literal-note literal] _
-@<&nbsp;>@||d = struct('n', 10, 'avg', 3.7, 'sd', 0.4)||##gray|# keys are 'n', 'avg', and 'sd':## _
+@<&nbsp;>@||##gray|% no literal; use constructor:## _
+d = struct('n', 10, 'avg', 3.7, 'sd', 0.4) _
+ _
+##gray|% or build from two cell arrays:## _
+d = cell2struct({10 3.7 0.4}, {'n' 'avg' 'sd'}, 2)||##gray|# keys are 'n', 'avg', and 'sd':## _
 d = list(n=10, avg=3.7, sd=0.4) _
  _
 ##gray|# keys are 1, 2, and 3:## _
 d2 = list('do', 're', 'mi')||d = {'n': 10, 'avg': 3.7, 'sd': 0.4}||
 ||[[# dict-size]][#dict-size-note size]||length(fieldnames(d))||length(d)||len(d)||
 ||[[# dict-lookup]][#dict-lookup-note lookup] _
-@<&nbsp;>@||d.n||d[['n']] _
+@<&nbsp;>@||d.n _
+getfield(d, 'n')||d[['n']] _
  _
 ##gray|# if 'n' is a key:## _
 d$n||d['n']||
 ||[[# dict-update]][#dict-update-note update] _
 @<&nbsp;>@||d.var = d.sd@@**2@@||d$var = d$sd@@**@@2||d['var'] = d['sd']@@**@@2||
-||[[# dict-out-of-bounds]][#dict-out-of-bounds-note out-of-bounds behavior] _
+||[[# dict-missing-key]][#dict-missing-key-note missing key behavior] _
 @<&nbsp;>@||##gray|//error//##||NULL||##gray|//raises// KeyError##||
 ||[[# dict-is-key-present]][#dict-is-key-present-note is key present] _
 @<&nbsp;>@||isfield(d, 'var')||is.null(d$var)||'var' in d||
 ||[[# dict-delete]][#dict-delete-note delete] _
 @<&nbsp;>@||d = rmfield(d, 'sd')||d$sd = NULL||del(d['sd'])||
-||iterate||for i = 1:numel(fieldnames(d)) _
+||[[# dict-iterate]][#dict-iterate-note iterate]||for i = 1:numel(fieldnames(d)) _
 @<&nbsp;&nbsp;>@k = fieldnames(d){i} _
 @<&nbsp;&nbsp;>@v = d.(k) _
 @<&nbsp;&nbsp;>@##gray|//code//## _
@@ -767,75 +763,50 @@ end||for (k in names(d)) { _
 @<&nbsp;&nbsp;>@##gray|//code//## _
 }||for k, v in d.iteritems(): _
 @<&nbsp;&nbsp;>@##gray|//code//##||
-||keys and values as arrays|| ||names(d) _
+||[[# dict-keys-values-arrays]][#dict-keys-values-arrays-note keys and values as arrays]||##gray|% these return cell arrays:## _
+fieldnames(d) _
+struct2cell(d)||names(d) _
 unlist(d, use.names=F)||d.keys() _
 d.values()||
-||merge|| ||d1 = list(a=1, b=2) _
+||[[# dict-merge]][#dict-merge-note merge]||##gray|//none//##||d1 = list(a=1, b=2) _
 d2 = list(b=3, c=4) _
-##gray|//values of first dictionary take precedence://## _
+##gray|# values of first dictionary take precedence:## _
 d3 = c(d1, d2)||d1 = {'a':1, 'b':2} _
 d2 = {'b':3, 'c':4} _
 d1.update(d2)||
-||invert|| || ||to_num = {'t':1, 'f':0} _
-to_let = {v:k for k, v _
-@<&nbsp;&nbsp;>@in to_num.items()}||
-||sort by values|| || ||from operator import itemgetter _
- _
-pairs = sorted(d.iteritems(), _
-@<&nbsp;&nbsp;>@key=itemgetter(1)) _
- _
-for k, v in pairs: _
-@<&nbsp;&nbsp;>@print('{}: {}'.format(k, v))||
 ||||||||~ [[# functions]][#functions-note functions]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
-||[#function-definition definition]||function add(a,b) _
-@<&nbsp;&nbsp;>@a+b; _
-endfunction||add = function(a,b) {a + b}|| ||
-||[#function-invocation invocation] _
+||[[# def-func]][#def-func-note define function]||function add(x, y) _
+@<&nbsp;&nbsp;>@x + y _
+end||add = function(x, y) {x + y}|| ||
+||[[# invoke-func]][#invoke-func-note invoke function] _
 @<&nbsp;>@||add(3, 7)||add(3, 7)|| ||
-||[#return-value return value]||##gray|//how to declare a return variable://## _
-function retvar = add(a,b) _
-@<&nbsp;&nbsp;>@retvar = a + b; _
-endfunction _
- _
-##gray|//the return value is the value assigned to the return variable if one is defined; otherwise it's the last expression evaluated.//##||##gray|return //argument or last expression evaluated.//  NULL //if// return //called without an argument.//##|| ||
-||[[# multiple-return-values]][#multiple-return-values multiple return values]||function [x, y] = first_two(a) _
-@<&nbsp;&nbsp;>@x = a(1); _
-@<&nbsp;&nbsp;>@y = a(2); _
-endfunction _
- _
-##gray|% sets first to 7; second to 8:## _
-[first, second] = first_two([7 8 9])|| || ||
-||[#function-value function value] _
-@<&nbsp;>@||@add||add|| ||
 ||[[# nested-func]][#nested-func-note nested function]||function ret1 = foo(x, y) _
 @<&nbsp;&nbsp;>@function ret2 = bar(x, y) _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@ret2 = x + y; _
-@<&nbsp;&nbsp;>@endfunction _
+@<&nbsp;&nbsp;>@end _
  _
 @<&nbsp;&nbsp;>@ret1 = bar(x, y); _
-endfunction||foo = function(x, y) { _
+end||foo = function(x, y) { _
 @<&nbsp;&nbsp;>@bar = function(x, y) { x + y } _
 @<&nbsp;&nbsp;>@bar(x, y) _
 }|| ||
-||[#anonymous-function anonymous function]||##gray|% body must be an expression:## _
-@(a,b) a+b||function(a,b) {a+b}|| ||
-||[#missing-argument missing argument]||##gray|//raises error if code with the parameter that is missing an argument is executed//##||##gray|//raises error//##|| ||
-||[#extra-argument extra argument] _
+||[[# missing-arg]][#missing-arg-note missing argument behavior]||##gray|//raises error if code with the parameter that is missing an argument is executed//##||##gray|//raises error//##|| ||
+||[[# extra-arg]][#extra-arg-note extra argument behavior] _
 @<&nbsp;>@||##gray|//ignored//##||##gray|//raises error//##|| ||
-||[#default-argument default argument]||function mylog(x, base=10) _
+||[[# default-arg]][#default-arg-note default argument]||function mylog(x, base=10) _
 @<&nbsp;&nbsp;>@log(x) / log(base) _
-endfunction||mylog = function(x,base=10) { _
+end||mylog = function(x,base=10) { _
 @<&nbsp;&nbsp;>@log(x) / log(base) _
 }|| ||
-||[#variable-number-arguments variable number of arguments]||function s = add(varargin) _
+||[[# variadic-func]][#variadic-func-note variadic function]||function s = add(varargin) _
 @<&nbsp;&nbsp;>@if nargin == 0 _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@s = 0 _
 @<&nbsp;&nbsp;>@else _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@r = add(varargin{2:nargin}) _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@s = varagin{1} + r _
-@<&nbsp;&nbsp;>@endif _
-endfunction||add = function (@@...@@) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@s = varargin{1} + r _
+@<&nbsp;&nbsp;>@end _
+end||add = function (@@...@@) { _
 @<&nbsp;&nbsp;>@a = list(@@...@@) _
 @<&nbsp;&nbsp;>@if (length(a) == 0) _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return(0) _
@@ -845,15 +816,44 @@ endfunction||add = function (@@...@@) { _
 @<&nbsp;&nbsp;>@} _
 @<&nbsp;&nbsp;>@return(s) _
 }|| ||
+||[[# retval]][#retval-note return value]||function ret = add(x, y) _
+@<&nbsp;&nbsp;>@ret = x + y; _
+end _
+ _
+##gray|% If a return variable is declared, the value assigned _
+% to it is returned.  Otherwise the value of the last _
+% statement will be used if it does not end with a _
+% semicolon.##||##gray|return //argument or last expression evaluated.//  NULL //if// return //called without an argument.//##|| ||
+||[[# multiple-retval]][#multiple-retval-note multiple return values]||function [x, y] = first_two(a) _
+@<&nbsp;&nbsp;>@x = a(1); _
+@<&nbsp;&nbsp;>@y = a(2); _
+end _
+ _
+##gray|% sets first to 7; second to 8:## _
+[first, second] = first_two([7 8 9])|| || ||
+||[[# anonymous-func-literal]][#anonymous-func-literal-note anonymous function literal]||##gray|% body must be an expression:## _
+@(a,b) a+b||function(a,b) {a+b}|| ||
+||[[# invoke-anonymous-func]][#invoke-anonymous-func-note invoke anonymous function]|| || || ||
+||[[# closure]][#closure-note closure]|| ||make_counter = function() { _
+@<&nbsp;&nbsp;>@i = 0 _
+@<&nbsp;&nbsp;>@function() { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@i @@<<@@- i + 1 _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@i _
+@<&nbsp;&nbsp;>@} _
+}|| ||
+||[[# func-as-val]][#func-as-val-note function as value] _
+@<&nbsp;>@||@add||add|| ||
+||[[# overload-operator]][#overload-operator-note overload operator]|| || || ||
+||invoke operator like function|| ||@@`+`@@(3, 7)|| ||
 ||||||||~ [[# execution-control]][#execution-control-note execution control]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
 ||[[# if]][#if-note if]||if (x > 0) _
-@<&nbsp;&nbsp;>@printf('positive\n') _
+@<&nbsp;&nbsp;>@disp('positive') _
 elseif (x < 0) _
-@<&nbsp;&nbsp;>@printf('negative\n') _
+@<&nbsp;&nbsp;>@disp('negative') _
 else _
-@<&nbsp;&nbsp;>@printf('zero\n') _
-endif||if (x > 0) { _
+@<&nbsp;&nbsp;>@disp('zero') _
+end||if (x > 0) { _
 @<&nbsp;&nbsp;>@print('positive') _
 } else if (x < 0) { _
 @<&nbsp;&nbsp;>@print('negative') _
@@ -867,17 +867,17 @@ else: _
 @<&nbsp;&nbsp;>@print('zero')||
 ||[[# while]][#while-note while]||i = 0 _
 while (i < 10) _
-@<&nbsp;&nbsp;>@i++ _
-@<&nbsp;&nbsp;>@printf('%d\n', i) _
-endwhile||while (i < 10) { _
+@<&nbsp;&nbsp;>@i = i + 1 _
+@<&nbsp;&nbsp;>@disp(i) _
+end||while (i < 10) { _
 @<&nbsp;&nbsp;>@i = i + 1 _
 @<&nbsp;&nbsp;>@print(i) _
 }||while i < 10: _
 @<&nbsp;&nbsp;>@i += 1 _
 @<&nbsp;&nbsp;>@print(i)||
 ||[[# for]][#for-note for]||for i = 1:10 _
-@<&nbsp;&nbsp;>@printf('%d\n', i) _
-endfor||for (i in 1:10) { _
+@<&nbsp;&nbsp;>@disp(i) _
+end||for (i in 1:10) { _
 @<&nbsp;&nbsp;>@print(i) _
 }||for i in range(1,11): _
 @<&nbsp;&nbsp;>@print(i)||
@@ -887,29 +887,14 @@ endfor||for (i in 1:10) { _
 @<&nbsp;>@||error('%s', 'failed')||stop('failed')||raise Exception('failed')||
 ||[[# handle-exc]][#handle-exc-note handle exception]||try _
 @<&nbsp;&nbsp;>@error('failed') _
-catch _
-@<&nbsp;&nbsp;>@printf('%s\n', lasterr()) _
-end_try_catch||tryCatch( _
+catch err _
+@<&nbsp;&nbsp;>@disp(err) _
+end||tryCatch( _
 @<&nbsp;&nbsp;>@stop('failed'), _
 @<&nbsp;&nbsp;>@error=function(e) print(message(e)))||try: _
 @<&nbsp;&nbsp;>@raise Exception('failed') _
 except Exception as e: _
 @<&nbsp;&nbsp;>@print(e)||
-||[[# finally]][#finally-note finally block]||unwind_protect _
-@<&nbsp;&nbsp;>@if ( rand > 0.5 ) _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@error('failed') _
-@<&nbsp;&nbsp;>@endif _
-unwind_protect_cleanup _
-@<&nbsp;&nbsp;>@printf('cleanup') _
-end_unwind_protect||risky = function() { _
-@<&nbsp;&nbsp;>@if (runif(1) > 0.5) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@stop('failed') _
-@<&nbsp;&nbsp;>@} _
-} _
- _
-tryCatch( _
-@<&nbsp;&nbsp;>@risky(), _
-@<&nbsp;&nbsp;>@finally=print('cleanup'))|| ||
 ||||||||~ [[# file-handle]][#file-handle-note file handles]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
 ||[[# std-file-handles]][#std-file-handles-note standard file handles]||stdin stdout stderr||stdin() stdout() stderr()||sys.stdin sys.stdout sys.stderr||
@@ -1027,29 +1012,34 @@ endif||if (system("ls -l /tmp")) { _
 @<&nbsp;&nbsp;>@raise Exception('ls failed')||
 ||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
-||[[# load-lib]][#load-lib-note load library]||##gray|% if installed as Octave package:## _
-pkg load foo||require("foo") ##gray|//or//## _
+||[[# load-lib]][#load-lib-note load library]||##gray|//When a function is invoked, MATLAB searches the library path for a file with the same name and a// .m //suffix.  Other functions defined in the file are not visible outside the file.//##||require("foo") _
+##gray|% or: ## _
 library("foo")||import foo||
 ||[[# list-lib]][#list-lib-note list loaded libraries]||##gray|//none//##||search()||dir()||
 ||[[# lib-path]][#lib-path-note library search path]||path() _
 addath('~/foo') _
 rmpath('~/foo')||.libPaths()||sys.path||
 ||[[# source-file]][#source-file-note source file] _
-@<&nbsp;>@||source('foo.m')||source("foo.r")||##gray|//none//##||
-||[[# install-pkg]][#install-pkg-note install package]||##gray|% installs packages downloaded from _
-% Octave-Forge in Octave: ## _
+@<&nbsp;>@||run('foo.m')||source("foo.r")||##gray|//none//##||
+||[[# install-pkg]][#install-pkg-note install package]||##gray|% Octave: how to install package _
+% downloaded from Octave-Forge: ## _
 pkg install foo-1.0.0.tar.gz ||install.packages("ggplot2")||$ pip install scipy||
-||[[# list-pkg]][#list-pkg-note list installed packages]||pkg list||library() _
+||[[# load-pkg]][#load-pkg-note load package library]||##gray|% Octave:## _
+pkg load foo||require("foo") _
+##gray|# or:## _
+library("foo")||import foo||
+||[[# list-pkg]][#list-pkg-note list installed packages]||##gray|% Octave:## _
+pkg list||library() _
 installed.packages()||$ pip freeze||
 ||||||||~ [[# reflection]][#reflection-note reflection]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
 ||[[# data-type]][#data-type-note data type]||class(x)||class(x) _
 ##gray|# often more informative:## _
 str(x)||type(x)||
-||[[# attr]][#attr-note attributes]||##gray|//if x is an object value://## _
+||[[# attr]][#attr-note attributes]||##gray|% if x holds an object:## _
 x||attributes(x)||[m for m in dir(x) _
 @<&nbsp;&nbsp;>@if not callable(getattr(o,m))]||
-||[[# methods]][#method-note methods]||##gray|//note that most values are not objects://## _
+||[[# methods]][#method-note methods]||##gray|% if x holds an object:## _
 methods(x)||##gray|//none; objects are implemented by functions which dispatch based on type of first arg//##||[m for m in dir(x) _
 @<&nbsp;&nbsp;>@if callable(getattr(o,m))]||
 ||[[# var-in-scope]][#var-in-scope-note variables in scope]||who() _
@@ -1064,15 +1054,18 @@ ls.str()||dir()||
 @<&nbsp;>@||clear('x')||rm(v)||del(x)||
 ||[[# undef-all-var]][#undef-all-var-note undefine all variables]||clear -a||rm(list=objects())|| ||
 ||[[# eval]][#eval-note eval] _
-@<&nbsp;>@||eval('1+1')||eval(parse(text='1+1'))||eval('1+1')||
+@<&nbsp;>@||eval('1 + 1')||eval(parse(text='1 + 1'))||eval('1 + 1')||
 ||[[# func-doc]][#func-doc-note function documentation]||help tan||help(tan) _
 ?tan||math.tan.@@__doc__@@||
 ||[[# ls-lib]][#ls-lib-note list library functions]||##gray|//none//##||ls("package:moments")||dir(stats)||
-||[[# grep-doc]][#grep-doc-note search documentation]||##gray|//not in Octave://## _
-docsearch tan||??tan||$ pydoc -k tan||
+||[[# grep-doc]][#grep-doc-note search documentation]||docsearch tan||??tan||$ pydoc -k tan||
 ||||||||~ [[# tables]][#tables-note tables]||
 ||~ ||~ ||~ [#r r]||~ [#numpy numpy]||
-||[[# construct-from-column-arrays]][#construct-from-column-arrays-note construct from column arrays]|| ||##gray|# gender, height, weight of some people _
+||[[# construct-from-column-arrays]][#construct-from-column-arrays-note construct from column arrays]||sx = {'F' 'F' 'F' 'M' 'M' 'M'} _
+ht = [69 64 67 68 72 71] _
+wt = [148 132 142 149 167 165] _
+cols = {'sx', 'ht', 'wt'} _
+people = table(sx', ht', wt', 'VariableNames', cols)||##gray|# gender, height, weight of some people _
 # in inches and lbs:## _
 sx = c("F", "F", "F", "M", "M", "M") _
 ht = c(69, 64, 67, 68, 72, 71) _
@@ -1081,29 +1074,32 @@ people = data.frame(sx, ht, wt)||sx = ['F', 'F', 'F', 'F', 'M', 'M'] _
 ht = [69, 64, 67, 66, 72, 70] _
 wt = [150, 132, 142, 139, 167, 165] _
 people = pd.DataFrame({'sx': sx, 'ht': ht, 'wt': wt})||
-||size|| ||nrow(people) _
+||[[# table-size]][#table-size-note size]||height(people) _
+width(people)||nrow(people) _
 ncol(people) _
  _
 ##gray|# number of rows and cols in 2-element vector:## _
 dim(people)|| ||
-||[[# column-names-as-array]][#column-names-as-array-note column names as array]|| ||names(people) _
+||[[# column-names-as-array]][#column-names-as-array-note column names as array]||people.Properties.VariableNames||names(people) _
 colnames(people)||##gray|//returns// Index //object://## _
 people.columns||
-||[[# access-column-as-array]][#access-column-as-array-note access column as array]|| ||##gray|//vectors://## _
+||[[# access-column-as-array]][#access-column-as-array-note access column as array]||people.ht _
+people.(2)||##gray|# vectors:## _
 people$ht _
 people[,2] _
 people[['ht']] _
 people[[2]] _
-##gray|//1 column data frame://## _
+##gray|# 1 column data frame:## _
 people[2]||people['ht'] _
  _
 ##gray|//if name does not conflict with any// DataFrame //attributes://## _
 people.ht||
-||[[# access-row-as-tuple]][#access-row-as-tuple-note access row as tuple]|| ||##gray|//1 row data frame://## _
+||[[# access-row-as-tuple]][#access-row-as-tuple-note access row as tuple]||people(1,:)||##gray|# 1 row data frame:## _
 people[1, ] _
-##gray|//list://## _
+##gray|# list:## _
 as.list(people[1, ])||people.ix[0]||
-||[[# access-datum]][#access-datum-note access datum]|| ||##gray|//datum in 1st row, 2nd column://## _
+||[[# access-datum]][#access-datum-note access datum]||##gray|% height of 1st person:## _
+people(1,2)||##gray|# height of 1st person:## _
 people[1,2]||people.get_value(0, 'ht')||
 ||[[# order-rows-by-column]][#order-rows-by-column-note order rows by column]|| ||people[order(people$ht), ]|| ||
 ||[[# order-rows-by-multiple-columns]][#order-rows-by-multiple-columns-note order rows by multiple columns]|| ||people[order(sx, ht), ]|| ||
@@ -1669,8 +1665,6 @@ x2 = y + rnorm(100) _
  _
 fit = glm(y ~ x1 + x2, family="binomial") _
 summary(fit)|| ||
-||||||||~ [[# polynomial-interpolation]][#polynomial-interpolation-note polynomial interpolation]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
 ||||||||~ [[# statistical-tests]][#statistical-tests-note statistical tests]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
 ||[[# wilcoxon]][#wilcoxon-note wilcoxon signed-rank test] _
@@ -1905,6 +1899,22 @@ plot(yd) _
 ##gray|# multiplicative model: t * s * r:## _
 yd2 = decompose(y, type="multiplicative")|| ||
 ||[[# arima]][#arima-note arima]|| || || ||
+||||||||~ [[# curve-fitting]][#curve-fitting-note curve fitting]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+||exact polynomial fit||x = [1 2 3 4] _
+y = [3 9 2 1] _
+##gray|% polynomial coefficient array:## _
+p = polyfit(x, y, 3) _
+ _
+##gray|% plot polynomial:## _
+xx = -10:.1:10 _
+yy = polyval(p, xx) _
+plot(xx, yy)|| || ||
+||least square polynomial fit|| || || ||
+||[[image http://farm6.static.flickr.com/5049/5268229340_0b96b5e223_s.jpg]] _
+[[# cubic-spline]][#cubic-spline-note cubic spline]|| ||f = splinefun(rnorm(20)) _
+x = seq(1, 20, .1) _
+plot(x, f(x), type="l")|| ||
 ||||||||~ [[# univariate-charts]][#univariate-chart-note univariate charts]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy matplotlib]||
 ||[[image http://farm5.static.flickr.com/4090/5039793334_f76edece33_m.jpg]] [[# bar-chart]][#bar-chart-note vertical bar chart]||bar([7 3 8 5 5])||cnts = c(7,3,8,5,5) _
@@ -1926,20 +1936,19 @@ names(cnts) = c("a","b","c","d","e") _
 pie(cnts)||cnts = [7,3,8,5,5] _
 labs = ['a','b','c','d','e'] _
 plt.pie(cnts, labels=labs)||
-||[[image http://farm5.static.flickr.com/4113/5037283957_9499b8529a_m.jpg]] _
-[[# dot-plot]][#dot-plot-note dot plot]|| ||stripchart(floor(10*runif(50)), _
-@<&nbsp;&nbsp;&nbsp;&nbsp;>@method="stack", _
-@<&nbsp;&nbsp;&nbsp;&nbsp;>@offset=1, _
-@<&nbsp;&nbsp;&nbsp;&nbsp;>@pch=19)|| ||
 ||[[image http://farm5.static.flickr.com/4089/5037399669_13c8e585e0_m.jpg]] _
-[[# stem-plot]][#stem-plot-note stem plot]|| ||##gray|//generates an ascii chart://## _
+[[# stem-leaf-plot]][#stem-leaf-plot-note stem-and-leaf plot]||##gray|//none//##||##gray|//generates an ascii chart://## _
  _
-stem(20*rnorm(100))|| ||
+stem(20*rnorm(100))||##gray|//none//##||
 ||[[image http://farm5.static.flickr.com/4106/5037415497_4c6fbfcab2_m.jpg]] _
 [[# histogram]][#histogram-note histogram]||hist(randn(1, 100), 10)||hist(rnorm(100), breaks=10)||plt.hist(sp.randn(100), _
 @<&nbsp;&nbsp;>@bins=range(-5,5))||
 ||[[image http://farm5.static.flickr.com/4106/5037525393_7ac86e81c3_m.jpg]] _
-[[# box-plot]][#box-plot-note box plot]|| ||boxplot(rnorm(100)) _
+[[# box-plot]][#box-plot-note box plot]||boxplot(randn(1, 100)) _
+ _
+boxplot([randn(1, 100) _
+@<&nbsp;&nbsp;>@exprnd(1, 1, 100) _
+@<&nbsp;&nbsp;>@unifrnd(0, 1, 1, 100)]')||boxplot(rnorm(100)) _
  _
 boxplot(rnorm(100), _
 @<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@rexp(100), _
@@ -1954,14 +1963,22 @@ boxplot(rnorm(100), _
 @<&nbsp;&nbsp;>@main="boxplot example", _
 @<&nbsp;&nbsp;>@sub="to illustrate options")||plt.boxplot(sp.randn(100)) _
 plt.title('boxplot example')||
-||grid of subplots[[image subplots.png]]|| ||for (i in split.screen(c(2, 2))) { _
+||[[# subplot-grid]][#subplot-grid-note grid of subplots][[image subplots.png]]||##gray|% 3rd arg refers to the subplot; _
+% subplots are numbered in row-major order.## _
+for i = 1:4 _
+@<&nbsp;&nbsp;>@subplot(2, 2, i), hist(randn(50)) _
+end||for (i in split.screen(c(2, 2))) { _
 @<&nbsp;&nbsp;>@screen(n=i) _
 @<&nbsp;&nbsp;>@hist(rnorm(100)) _
 }|| ||
-||open new plot window|| ||hist(rnorm(100)) _
+||[[# new-plot-window]][#new-plot-window-note open new plot window]||open new plot _
+figure _
+open new plot||hist(rnorm(100)) _
 dev.new() _
 hist(rnorm(100))|| ||
-||save plot as png|| ||png('hist.png') _
+||[[# save-plot-as-png]][#save-plot-as-png-note save plot as png]|| f = figure _
+hist(randn(100)) _
+print(f, '-dpng', 'histogram.png')||png('hist.png') _
 hist(rnorm(100)) _
 dev.off()|| ||
 ||||||||~ [[# bivariate-charts]][#bivariate-chart-note bivariate charts]||
@@ -2011,10 +2028,6 @@ plt.scatter(x, y) _
 plt.plot(x, [m*i + c for i in x])||
 ||[[image http://farm6.static.flickr.com/5125/5267434941_f8537c9d26_s.jpg]] _
 [[# polygonal-plot]][#polygonal-plot-note polygonal line plot]||plot(1:20,randn(1,20))||plot(1:20, rnorm(20), type="l")||plot(range(0,20), randn(20))||
-||[[image http://farm6.static.flickr.com/5049/5268229340_0b96b5e223_s.jpg]] _
-[[# cubic-spline]][#cubic-spline-note cubic spline]|| ||f = splinefun(rnorm(20)) _
-x = seq(1, 20, .1) _
-plot(x, f(x), type="l")|| ||
 ||[[image http://farm6.static.flickr.com/5204/5268208606_b745646ea6_s.jpg]] _
 [[# function-plot]][#function-plot-note function plot]||fplot(@sin, [-4 4])||x = seq(-4, 4, .01) _
 plot(sin(x), type="l")|| ||
@@ -2682,10 +2695,10 @@ How to write a date/time value to a string in the manner of strftime from the C 
 [[# tuples-note]]
 + [#tuples Tuples]
 
-||~ ||~ homogeneous array||~ vector||~ tuple||~ record||~ map||
-||~ NumPy||list||vector||tuple||dict||dict||
-||~ Octave||rank 1 matrix||rank 1 matrix||cell array||struct|| ||
-||~ R||vector||vector||list||list|| ||
+[[# tuple-type-note]]
+++ [#tuple-type type]
+
+The name of the data type which implements tuples.
 
 [[# tuple-literal-note]]
 ++ [#tuple-literal literal]
@@ -2826,11 +2839,6 @@ How to get the number of values in an array.
 [[# array-slice-to-end-note]]
 ++ [#array-slice-to-end slice to end]
 
-[[# array-back-note]]
-++ [#array-back manipulate back]
-
-[[# array-front-note]]
-++ [#array-front manipulate front]
 
 [[# array-concatenation-note]]
 ++ [#array-concatenation concatenate]
@@ -2848,12 +2856,6 @@ After an address copy is made, modifications to the copy also modify the origina
 After a shallow copy is made, the addition, removal, or replacement of elements in the copy does not modify of the original array.  However, if elements in the copy are modified, those elements are also modified in the original array.
 
 A deep copy is a recursive copy.  The original array is copied and a deep copy is performed on all elements of the array.  No change to the contents of the copy will modify the contents of the original array.
-
-**r:**
-
-R does not provide a way to perform an address copy.
-
-Because arrays cannot be elements of arrays, there is no distinction between a shallow copy and a deep copy.
 
 [[# arithmetic-sequences-note]]
 + [#arithmetic-sequences Arithmetic Sequences]
@@ -2986,30 +2988,74 @@ How to get the type of the values stored in a multidimensional array.
 + [#dictionaries Dictionaries]
 
 [[# dict-literal-note]]
-++ [#dict-literal dictionary literal]
+++ [#dict-literal literal]
 
 The syntax for a dictionary literal.
 
+[[# dict-size-note]]
+++ [#dict-size size]
+
+How to get the number of keys in a dictionary.
+
 [[# dict-lookup-note]]
-++ [#dict-lookup dictionary lookup]
+++ [#dict-lookup lookup]
 
 How to use a key to lookup a value in a dictionary.
+
+[[# dict-update-note]]
+++ [#dict-update update]
+
+How to add or key-value pair or change the value for an existing key.
+
+[[# dict-missing-key-note]]
+++ [#dict-missing-key missing key behavior]
+
+What happens when looking up a key that isn't in the dictionary.
+
+[[# dict-delete-note]]
+++ [#dict-delete delete]
+
+How to delete a key-value pair from a dictionary.
+
+[[# dict-iterate-note]]
+++ [#dict-iterate iterate]
+
+How to iterate over the key-value pairs.
+
+[[# dict-keys-values-arrays-note]]
+++ [#dict-keys-values-arrays keys and values as arrays]
+
+How to get an array containing the keys; how to get an array containing the values.
+
+[[# dict-merge-note]]
+++ [#dict-merge merge]
+
+How to merge two dictionaries.
 
 [[# tables-note]]
 + [#tables Tables]
 
-||~ ||~ r||~ pandas||
-||ordered dictionary||list()||Series()||
-||data frame||data frame||DataFrame()||
-||data frame column type||vector||Series|| 
-|| ||row.names||Index()||
-||hierarchical index|| || ||
-|| ||factor (ordered and unordered)|| ||
+Tables are a data type which correspond to the tables of relational databases.  In R this data type is called a //data frame//.  The Python library Pandas provides a table data type called //DataFrame//.
+
+A table is an array of tuples, each of the same length and type.  If the type of the first element of the first type is integer, then all the tuples in the table must have first elements which are integers.  The type of the tuples corresponds to the schema of a relational database table.
+
+A table can also be 
+
+Pandas types: Series(), DataFrame(), Index()
 
 [[# construct-from-column-arrays-note]]
 ++ [#construct-from-column-arrays construct from column arrays]
 
 How to construct a data frame from a set of arrays representing the columns.
+
+**octave:**
+
+Octave does not have the {{table}} data type.
+
+[[# table-size-note]]
+++ [#table-size size]
+
+How to get the number of columns and number of rows in a table.
 
 [[# construct-from-row-tuples-note]]
 ++ [#construct-from-row-tuples construct from row tuples]
@@ -3178,14 +3224,64 @@ How to select the rows of a data set that satisfy a predicate.
 [[# functions-note]]
 + [#functions Functions]
 
-[[# definition]]
-++ definition
+[[# def-func-note]]
+++ [#def-func define function]
 
-[[# invocation]]
-++ invocation
+How to define a function.
 
-[[# function-value]]
-++ function value
+[[# invoke-func-note]]
+++ [#invoke-func invoke function]
+
+How to invoke a function.
+
+[[# nested-func-note]]
+++ [#nested-func nested function]
+
+[[# missing-arg-note]]
+++ [#missing-arg missing argument behavior]
+
+What happens when a function is invoked with too few arguments.
+
+[[# extra-arg-note]]
+++ [#extra-arg extra argument behavior]
+
+What happens when a function is invoked with too many arguments.
+
+[[# default-arg-note]]
+++ [#default-arg default argument]
+
+How to assign a default argument to a parameter.
+
+[[# variadic-func-note]]
+++ [#variadic-func variadic function]
+
+How to define a function which accepts a variable number of arguments.
+
+[[# retval-note]]
+++ [#retval return value]
+
+How the return value of a function is determined.
+
+[[# multiple-retval-note]]
+++ [#multiple-retval multiple return values]
+
+How to return multiple values from a function.
+
+[[# anonymous-func-literal-note]]
+++ [#anonymous-func-literal anonymous function literal]
+
+The syntax for an anonymous function.
+
+[[# invoke-anonymous-func-note]]
+++ [#invoke-anonymous-func invoke anonymous function]
+
+[[# closure-note]]
+++ [#closure closure]
+
+[[# func-as-value-note]]
+++ [#func-as-value function as value]
+
+How to store a function in a variable.
 
 [[# execution-control-note]]
 + [#execution-control Execution Control]
@@ -3220,11 +3316,6 @@ How to raise an exception.
 ++ [#handle-exc handle exception]
 
 How to handle an exception.
-
-[[# finally-note]]
-++ [#finally finally block]
-
-How to write code that executes even if an exception is raised.
 
 [[# file-handle-note]]
 + [#file-handle File Handles]
@@ -3970,9 +4061,6 @@ The residuals are the difference between the actual values of //y// and the calc
 [[# logistic-regression-note]]
 ++ [#logistic-regression logistic regression]
 
-[[# polynomial-interpolation-note]]
-+ [#polynomial-interpolation Polynomial Interpolation]
-
 [[# statistical-tests-note]]
 + [#statistical-tests Statistical Tests]
 
@@ -4105,6 +4193,18 @@ A test whether variables are drawn from distributions with the same variance.
 [[# arima-note]]
 ++ [#arima arima]
 
+[[# curve-fitting-note]]
++ [#curve-fitting Curve Fitting]
+
+++ exact polynomial fit
+
+++ least squares polynomial fit
+
+[[# cubic-spline-note]]
+++ [#cubic-spline cubic spline]
+
+How to connect the dots of a data set with a line which has a continuous 2nd derivative.
+
 [[# univariate-chart-note]]
 + [#univariate-charts Univariate Charts]
 
@@ -4136,17 +4236,10 @@ A pie chart displays values using the areas of circular sectors or equivalently 
 
 A pie chart implies that the values are percentages of a whole.
 
-[[# dot-plot-note]]
-++ [#dot-plot dot plot]
+[[# stem-leaf-plot-note]]
+++ [#stem-leaf-plot stem-and-leaf plot]
 
-A chart which displays small, integral values with stacks of dots.
-
-[[# stem-plot-note]]
-++ [#stem-plot stem plot]
-
-Also called a stem-and-leaf plot.
-
-A stem plot is a concise way of storing a small set of numbers which makes their distribution visually evident.
+A stem-and-leaf plot is a concise way of storing a small set of numbers which makes their distribution visually evident.
 
 The original set of numbers can be recovered with some loss of accuracy by appending the number on the left with each of the digits on the right.    In the example below the original data set contained -43, -42, -41, -39, -38, -35, ..., 35, 44, 46, 50, 58. 
 
@@ -4262,11 +4355,6 @@ How to plot a line determined by linear regression on top of a scatter plot.
 ++ [#polygonal-plot polygonal line plot]
 
 How to connect the dots of a data set with a polygonal line.
-
-[[# cubic-spline-note]]
-++ [#cubic-spline cubic spline]
-
-How to connect the dots of a data set with a line which has a continuous 2nd derivative.
 
 [[# function-plot-note]]
 ++ [#function-plot function plot]

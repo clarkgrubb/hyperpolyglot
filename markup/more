@@ -1,6 +1,6 @@
 [[# top]]//a side-by-side reference sheet//
 
-[#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#arrays arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#file-handles file handles] | [#files files] | [#file-fmt file formats] | [#directories directories] | [#processes-environment processes and environment] | [#option-parsing option parsing] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#polymorphism polymorphism] | [#reflection reflection] | [#net-web net and web] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling] | [#java-interop java interop]
+[#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#arrays arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#file-handles file handles] | [#files files] | [#file-fmt file formats] | [#directories directories] | [#processes-environment processes and environment] | [#option-parsing option parsing] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#reflection reflection] | [#net-web net and web] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling] | [#java-interop java interop]
 
 ||~ [[# general]]||~ [#perl perl]||~ [#tcl tcl]||~ [#lua lua]||~ [#groovy groovy]||
 ||[[# version-used]][#version-used-note version used] _
@@ -1338,7 +1338,7 @@ sub AUTOLOAD { _
 ||[[# invoke-class-method]][#invoke-class-method-note invoke class method]||Counter->instances();|| || || ||
 ||[[# def-class-var]][#def-class-var-note define class variable]|| || || || ||
 ||[[# get-set-class-var]][#get-set-class-var-note get and set class variable]|| || || || ||
-||||||||||~ [[# polymorphism]][#polymorphism-note polymorphism]||
+||||||||||~ [[# inheritance-polymorphism]][#inheritance-polymorphism-note inheritance and polymorphism]||
 ||~ ||~ perl||~ tcl||~ lua||~ groovy||
 ||[[# subclass]][#subclass-note subclass]||package Counter; _
  _
@@ -3460,8 +3460,8 @@ How to invoke an object method.
 [[# get-set-class-var-note]]
 ++ [#get-set-class-var get and set class variable]
 
-[[# polymorphism-note]]
-+ [#polymorphism Polymorphism]
+[[# inheritance-polymorphism-note]]
++ [#inheritance-polymorphism Inheritance and Polymorphism]
 
 [[# subclass-note]]
 ++ [#subclass subclass]

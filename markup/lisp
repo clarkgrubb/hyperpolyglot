@@ -1,8 +1,7 @@
 [[# top]]//a side-by-side reference sheet//
 
 [#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#lists lists] _
-[#arrays arrays] | [#dictionaries dictionaries] | [#functions functions] | [#macros macros] | [#execution-control execution control] | [#file-handles file handles] | [#file-buffers file buffers] | [#files files] | [#directories directories] _
-[#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#reflection reflection] |  [#java-interop java interop]
+[#arrays arrays] | [#dictionaries dictionaries] | [#functions functions]  | [#execution-control execution control] | [#file-handles file handles] | [#file-buffers file buffers] | [#files files] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#macros macros] | [#reflection reflection] |  [#java-interop java interop]
 ||~ [[# general]]||~ [#common-lisp common lisp]||~ [#racket racket]||~ [#clojure clojure]||~ [#emacs-lisp emacs lisp]||
 ||[[# version-used]][#version-used-note version used] _
 @<&nbsp;>@||##gray|//SBCL 1.0.48//##||##gray|//Racket 5.1//##||##gray|//Clojure 1.2//##||##gray|//Emacs 24.1//##||
@@ -605,48 +604,6 @@ fround fceiling ffloor _
 ||[[# search-doc]][#search-doc-note apropos and documentation search]||##gray|//none//##||##gray|//none//##||(apropos #"^add$") _
 (find-doc #"add \S+ and \S+")||(apropos "^add$") _
 ##gray|//none//##||
-||||||||||~ [[# macros]][#macros-note macros]||
-||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
-||[#backquote-comma backquote and comma]||(setq op '+) _
-(eval @@`@@(,op 1 1))||(define op '+) _
-(eval @@`@@(,op 1 1)) _
-(eval (quasiquote ((unquote op) 1 1)))||(def op +) _
-(eval @@`@@(,op 1 1))||(setq op '+) _
-(eval @@`@@(,op 1 1))||
-||[#defmacro defmacro]||(defmacro rpn (arg1 arg2 op) _
-@<&nbsp;&nbsp;>@(list op arg1 arg2))||(define-syntax-rule (rpn arg1 arg2 op) (op arg1 arg2))||(defmacro rpn [arg1 arg2 op] _
-@<&nbsp;&nbsp;>@(list op arg1 arg2))||(defmacro rpn (arg1 arg2 op) _
-@<&nbsp;&nbsp;>@(list op arg1 arg2))||
-||[#defmacro-backquote defmacro w/ backquote]||(defmacro rpn (arg1 arg2 op) _
-@<&nbsp;&nbsp;>@@@`@@(,op ,arg1 ,arg2))||(define-syntax-rule (rpn3 arg1 arg2 op) _
-@<&nbsp;&nbsp;>@(eval `(,op ,arg1 ,arg2)))||(defmacro rpn [arg1 arg2 op] @@`@@(~op ~arg1 ~arg2))||(defmacro rpn (arg1 arg2 op) _
-@<&nbsp;&nbsp;>@@@`@@(,op ,arg1 ,arg2))||
-||[#macro-predicate macro predicate]||(macro-function rpn)||##gray|//none//##||##gray|//none//##||##gray|//none//##||
-||[#macroexpand macroexpand]||(macroexpand '(rpn 1 2 +))||(syntax-object->datum (expand-to-top-form '(rpn 1 2 +)))||(macroexpand '(rpn 1 2 +))||(macroexpand '(rpn 1 2 +))||
-||[#splice-quote splice quote]||(defmacro add ( &rest args ) _
-@<&nbsp;&nbsp;>@@@`@@(+ ,@args))||(define-syntax-rule ( add first ...) (+ first ...))||(defmacro add [ & args ] @@`@@(+ ~@args))||(defmacro add ( &rest args ) _
-@<&nbsp;&nbsp;>@@@`@@(+ ,@args))||
-||[#recursive-macro recursive macro]||(defmacro add (a &rest b) _
-@<&nbsp;&nbsp;>@@@`@@(if (null ',b) _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(+ ,a) _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(+ ,a (add ,@b))))||(define-syntax add (syntax-rules () _
-@<&nbsp;&nbsp;>@[(add x) x] _
-@<&nbsp;&nbsp;>@[(add x y) (+ x y)] _
-@<&nbsp;&nbsp;>@[(add x y ...) (+ x (add y ...))]))||(defmacro add ([a] @@`@@(+ ~a)) ([a & b] @@`@@(+ ~a (add ~@b))))||(defmacro add (a &rest b) _
-@<&nbsp;&nbsp;>@@@`@@(if (null ',b) _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(+ ,a) _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(+ ,a (add ,@b))))||
-||[#hygienic hygienic] _
-@<&nbsp;>@||##gray|//no//##||##gray|//yes//##||##gray|//with// # //suffix//##||##gray|//no//##||
-||[#local-values local values]||(defmacro square-sum (x y) _
-@<&nbsp;&nbsp;>@(let ((sum (gensym))) _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@@`@@(let ((,sum (+ ,x ,y))) _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(* ,sum ,sum))))||(define-syntax-rule (square-sum x y) _
-@<&nbsp;&nbsp;>@(let ((sum (+ x y))) _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(* sum sum)))||(defmacro two-list [x] @@`@@(let [arg# ~x] (list arg# arg#)))||(defmacro square-sum (x y) _
-@<&nbsp;&nbsp;>@(let ((sum (gensym))) _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@@`@@(let ((,sum (+ ,x ,y))) _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(* ,sum ,sum))))||
 ||||||||||~ [[# execution-control]][#execution-control-note execution control]||
 ||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
 ||[#progn progn] _
@@ -976,6 +933,48 @@ public class Rectangle { _
 @<&nbsp;>@||(area rect)||(send rect area)||(area r)|| ||
 ||[#universal-superclass universal superclass]||standard-object t||object%||Object|| ||
 ||[#multiple-inheritance multiple inheritance]||yes||no||##gray|//only one direct superclass; can implement multiple interfaces//##|| ||
+||||||||||~ [[# macros]][#macros-note macros]||
+||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
+||[#backquote-comma backquote and comma]||(setq op '+) _
+(eval @@`@@(,op 1 1))||(define op '+) _
+(eval @@`@@(,op 1 1)) _
+(eval (quasiquote ((unquote op) 1 1)))||(def op +) _
+(eval @@`@@(,op 1 1))||(setq op '+) _
+(eval @@`@@(,op 1 1))||
+||[#defmacro defmacro]||(defmacro rpn (arg1 arg2 op) _
+@<&nbsp;&nbsp;>@(list op arg1 arg2))||(define-syntax-rule (rpn arg1 arg2 op) (op arg1 arg2))||(defmacro rpn [arg1 arg2 op] _
+@<&nbsp;&nbsp;>@(list op arg1 arg2))||(defmacro rpn (arg1 arg2 op) _
+@<&nbsp;&nbsp;>@(list op arg1 arg2))||
+||[#defmacro-backquote defmacro w/ backquote]||(defmacro rpn (arg1 arg2 op) _
+@<&nbsp;&nbsp;>@@@`@@(,op ,arg1 ,arg2))||(define-syntax-rule (rpn3 arg1 arg2 op) _
+@<&nbsp;&nbsp;>@(eval `(,op ,arg1 ,arg2)))||(defmacro rpn [arg1 arg2 op] @@`@@(~op ~arg1 ~arg2))||(defmacro rpn (arg1 arg2 op) _
+@<&nbsp;&nbsp;>@@@`@@(,op ,arg1 ,arg2))||
+||[#macro-predicate macro predicate]||(macro-function rpn)||##gray|//none//##||##gray|//none//##||##gray|//none//##||
+||[#macroexpand macroexpand]||(macroexpand '(rpn 1 2 +))||(syntax-object->datum (expand-to-top-form '(rpn 1 2 +)))||(macroexpand '(rpn 1 2 +))||(macroexpand '(rpn 1 2 +))||
+||[#splice-quote splice quote]||(defmacro add ( &rest args ) _
+@<&nbsp;&nbsp;>@@@`@@(+ ,@args))||(define-syntax-rule ( add first ...) (+ first ...))||(defmacro add [ & args ] @@`@@(+ ~@args))||(defmacro add ( &rest args ) _
+@<&nbsp;&nbsp;>@@@`@@(+ ,@args))||
+||[#recursive-macro recursive macro]||(defmacro add (a &rest b) _
+@<&nbsp;&nbsp;>@@@`@@(if (null ',b) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(+ ,a) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(+ ,a (add ,@b))))||(define-syntax add (syntax-rules () _
+@<&nbsp;&nbsp;>@[(add x) x] _
+@<&nbsp;&nbsp;>@[(add x y) (+ x y)] _
+@<&nbsp;&nbsp;>@[(add x y ...) (+ x (add y ...))]))||(defmacro add ([a] @@`@@(+ ~a)) ([a & b] @@`@@(+ ~a (add ~@b))))||(defmacro add (a &rest b) _
+@<&nbsp;&nbsp;>@@@`@@(if (null ',b) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(+ ,a) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(+ ,a (add ,@b))))||
+||[#hygienic hygienic] _
+@<&nbsp;>@||##gray|//no//##||##gray|//yes//##||##gray|//with// # //suffix//##||##gray|//no//##||
+||[#local-values local values]||(defmacro square-sum (x y) _
+@<&nbsp;&nbsp;>@(let ((sum (gensym))) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@@`@@(let ((,sum (+ ,x ,y))) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(* ,sum ,sum))))||(define-syntax-rule (square-sum x y) _
+@<&nbsp;&nbsp;>@(let ((sum (+ x y))) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(* sum sum)))||(defmacro two-list [x] @@`@@(let [arg# ~x] (list arg# arg#)))||(defmacro square-sum (x y) _
+@<&nbsp;&nbsp;>@(let ((sum (gensym))) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@@`@@(let ((,sum (+ ,x ,y))) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(* ,sum ,sum))))||
 ||||||||||~ [[# reflection]][#reflection-note reflection]||
 ||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
 ||[#type-of type-of] _
@@ -2111,52 +2110,6 @@ Both {{apropos}} and {{find-doc}} can take a string or a regular expression as a
 
 {{apropos}} displays the documentation for matching definitions in the {{*Apropos*}} buffer.  The argument is a string but will be treated as a regular expression.
 
-[[# macros-note]]
-+ [#macros Macros]
-
-[[# backquote-comma]]
-++ backquote and comma
-
-[[# defmacro]]
-++ defmacro
-
-[[# defmacro-backquote]]
-++ defmacro-backquote
-
-[[# macro-predicate]]
-++ macro predicate
-
-[[# macroexpand]]
-++ macroexpand
-
-//macroexpand// recursively expands a sexp until the head is no longer a macro.  It does not expand arguments that are macros.
-
-**common lisp**
-
-Common lisp also has //macroexpand-1//, which will non-recursively expand a macro once.  The head of the expansion may thus be a macro.
-
-**clojure**
-
-Clojure also has //macroexpand-1//.  See above for an example of use.
-
-**emacs lisp**
-
-Emacs has //macroexpand-all//, which will recursively expand a sexp until head and arguments are free of macros.
-
-[[# splice-quote]]
-++ splice quote
-
-[[# recursive-macro]]
-++ recursive macro
-
-[[# hygienic]]
-++ hygienic
-
-Does the language have macros whose expansions are guaranteed not to introduce name collisions.
-
-[[# local-values]]
-++ local values
-
 [[# execution-control-note]]
 + [#execution-control Execution Control]
 
@@ -2471,6 +2424,52 @@ Displays the result of the last evaluation.
 
 [[# multiple-inheritance]]
 ++ multiple inheritance
+
+[[# macros-note]]
++ [#macros Macros]
+
+[[# backquote-comma]]
+++ backquote and comma
+
+[[# defmacro]]
+++ defmacro
+
+[[# defmacro-backquote]]
+++ defmacro-backquote
+
+[[# macro-predicate]]
+++ macro predicate
+
+[[# macroexpand]]
+++ macroexpand
+
+//macroexpand// recursively expands a sexp until the head is no longer a macro.  It does not expand arguments that are macros.
+
+**common lisp**
+
+Common lisp also has //macroexpand-1//, which will non-recursively expand a macro once.  The head of the expansion may thus be a macro.
+
+**clojure**
+
+Clojure also has //macroexpand-1//.  See above for an example of use.
+
+**emacs lisp**
+
+Emacs has //macroexpand-all//, which will recursively expand a sexp until head and arguments are free of macros.
+
+[[# splice-quote]]
+++ splice quote
+
+[[# recursive-macro]]
+++ recursive macro
+
+[[# hygienic]]
+++ hygienic
+
+Does the language have macros whose expansions are guaranteed not to introduce name collisions.
+
+[[# local-values]]
+++ local values
 
 [[# reflection-note]]
 + [#reflection Reflection]

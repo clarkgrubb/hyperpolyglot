@@ -1,6 +1,6 @@
 [[# top]]//a side-by-side reference sheet//
 
-[#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#fixed-length-arrays fixed-length arrays] | [#resizable-arrays resizable arrays] | [#tuples tuples] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#concurrency concurrency] | [#file-handles file handles] | [#files files] | [#file-fmt file formats] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#user-defined-types user-defined types] | [#generic-types generic types] | [#objects objects] | [#polymorphism polymorphism] | [#reflection reflection] | [#net-web net and web] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling]
+[#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#fixed-length-arrays fixed-length arrays] | [#resizable-arrays resizable arrays] | [#tuples tuples] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#concurrency concurrency] | [#file-handles file handles] | [#files files] | [#file-fmt file formats] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#user-defined-types user-defined types] | [#generic-types generic types] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#reflection reflection] | [#net-web net and web] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling]
 
 ||~ [[# general]]||~ [#cpp c++]||~ [#objective-c objective c]||~ [#java java]||~ [#c-sharp c#]||
 ||[[# version-used]][#version-used-note version used] _
@@ -1853,7 +1853,7 @@ public class Foo { _
 @<&nbsp;&nbsp;>@public int publicInt; _
 }||
 ||[#anonymous-class anonymous class]||##gray|//possible but not useful//##||##gray|//none//##||(new Object() { public void hello() { System.out.println("hello!"); } }).hello();|| ||
-||||||||||~ [[# polymorphism]][#polymorphism-note polymorphism]||
+||||||||||~ [[# inheritance-polymorphism]][#inheritance-polymorphism-note inheritance and polymorphism]||
 ||~ ||~ c++||~ objective c||~ java||~ c#||
 ||[#dynamic-dispatch dynamic dispatch]||##gray|//declare as virtual in base class//##||##gray|//dispatch always dynamic//##||##gray|//dispatch dynamic by default//##||##gray|//declare as virtual in base class and override in derived class//##||
 ||[#static-dispatch static dispatch]||##gray|//dispatch static by default//##||##gray|//dispatch always dynamic//##||##gray|//declare as final, private, or static (i.e. make it a class method)//##||##gray|//dispatch static by default; compiler error if same method defined in base and derived class and not marked virtual in base class//##||
@@ -3567,8 +3567,8 @@ Access control only applies to members; all methods are public.  gcc 4.0 does no
 [[# anonymous-class]]
 ++ anonymous class
 
-[[# polymorphism-note]]
-+ [#polymorphism Polymorphism]
+[[# inheritance-polymorphism-note]]
++ [#inheritance-polymorphism Inheritance and Polymorphism]
 
 [[# dynamic-dispatch]]
 ++ dynamic dispatch

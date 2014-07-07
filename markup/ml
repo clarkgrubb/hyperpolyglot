@@ -1,6 +1,6 @@
 //a side-by-side reference sheet//
 
-[#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#dates-time dates and time] | [#arrays arrays] | [#lists lists] | [#tuples tuples] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#concurrency concurrency] | [#file-handles file handles] | [#files files] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#user-defined-types user-defined types] | [#objects objects] | [#polymorphism polymorphism] | [#net-web net and web] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling] | [#repl repl]
+[#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#dates-time dates and time] | [#arrays arrays] | [#lists lists] | [#tuples tuples] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#concurrency concurrency] | [#file-handles file handles] | [#files files] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#user-defined-types user-defined types] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#net-web net and web] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling] | [#repl repl]
 
 ||~ ||~ [#ocaml ocaml]||~ [#fsharp f#]||~ [#scala scala]||~ [#haskell haskell]||
 ||[[# version-used]][#version-used-note version used] _
@@ -1226,7 +1226,7 @@ end;;|| ||class Counter { _
 c#get;;|| ||c.incr _
 c.get|| ||
 ||[#field-access field access]||##gray|//none//##|| || || ||
-||||||||||~ [[# polymorphism]][#polymorphism-note polymorphism]||
+||||||||||~ [[# inheritance-polymorphism]][#inheritance-polymorphism-note inheritance and polymorphism]||
 ||~ ||~ ocaml||~ f#||~ scala||~ haskell||
 ||overload function|| || || || ||
 ||[#inheritance inheritance]|| || || || ||
@@ -2171,8 +2171,8 @@ PATTERN MATCHING.
 [[# objects-note]]
 + [#objects Objects]
 
-[[# polymorphism-note]]
-+ [#polymorphism Polymorphism]
+[[# inheritance-polymorphism-note]]
++ [#inheritance-polymorphism Inheritance and Polymorphism]
 
 [[# repl-note]]
 + [#repl REPL]

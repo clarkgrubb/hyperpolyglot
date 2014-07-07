@@ -2,7 +2,7 @@
 
 **[[[scripting|sheet one]]]:** [[[scripting#grammar-invocation|grammar and invocation]]] | [[[scripting#var-expr|variables and expressions]]] | [[[scripting#arithmetic-logic|arithmetic and logic]]] | [[[scripting#strings|strings]]] | [[[scripting#regexes|regexes]]] | [[[scripting#dates-time|dates and time]]] | [[[scripting#arrays|arrays]]] | [[[scripting#dictionaries|dictionaries]]] | [[[scripting#functions|functions]]] | [[[scripting#execution-control|execution control]]] | [[[scripting#exceptions|exceptions]]] | [[[scripting#concurrency|concurrency]]] 
 
-**sheet two:** [#file-handles file handles] | [#files files] | [#file-fmt file formats] | [#directories directories ] | [#processes-environment processes and environment] | [#option-parsing option parsing] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#polymorphism polymorphism] | [#reflection reflection] | [#net-web net and web] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling] | [#java-interop java interop]
+**sheet two:** [#file-handles file handles] | [#files files] | [#file-fmt file formats] | [#directories directories ] | [#processes-environment processes and environment] | [#option-parsing option parsing] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#reflection reflection] | [#net-web net and web] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling] | [#java-interop java interop]
 
 ||||||||||~ [[# file-handles]][#file-handles-noate file handles]||
 ||~  ||~ node||~ php||~ python||~ ruby||
@@ -791,7 +791,7 @@ i.value = v + 1||
 ##green|ObjectSpace##.define_finalizer(int) { _
 @<&nbsp;&nbsp;>@puts ##maroon|"bye, #{val}"## _
 }||
-||||||||||~ [[# polymorphism]][#polymorphism-note polymorphism]||
+||||||||||~ [[# inheritance-polymorphism]][#inheritance-polymorphism-note inheritance and polymorphism]||
 ||~  ||~ javascript||~ php||~ python||~ ruby||
 ||[[# inheritance]][#inheritance-note subclass] _
 @<&nbsp;>@|| ||##purple|class## ##green|Counter## ##purple|extends## ##green|Int## _
@@ -2261,8 +2261,8 @@ How to create an alias for a method.
 
 Ruby provides the keyword {{alias}} and the method {{alias_method}} in the class {{Module}}.  Inside a class body they behave idenitically.  When called from inside a method {{alias}} has no effect but {{alias_method}} works as expected.  Hence some recommend always using {{alias_method}}.
 
-[[# polymorphism-note]]
-+ [#polymorphism Polymorphism]
+[[# inheritance-polymorphism-note]]
++ [#inheritance-polymorphism Inheritance and Polymorphism]
 
 A //subclass// is a class whose objects contain all of the methods from another class called the //superclass//.  Objects in the subclass should in principle be usable anywhere objects in the superclass can be used.  The subclass may have extra methods which are not found in the superclass.  Moreover it may replace method definitions in the superclass with its own definitions provided the signature remains the same.  This is called //overriding//.
 
