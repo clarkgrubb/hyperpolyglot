@@ -35,13 +35,13 @@
 [[# dvc]]
 + Distributed Version Control
 
-**git and hg compared:** [#repo-version repositories and versions] | [#file-dir-commit files, directories, and commits] | [#branch-tag-merge branches, tags, and merges] | [#renamed-files renamed files] | [#identifiers identifiers] | [#repo-url repository urls] | [#config-file config files] | [#ignore-file ignore files] | [#hook hooks] | [#metasyntactic-var metasyntactic variables]
+**git and hg compared:** [#repo-version repositories and versions] | [#file-dir-commit files, directories, and commits] | [#branch-tag-merge branches, tags, and merges] | [#pulling-pushing pulling and pushing] | [#renamed-files renamed files] | [#identifiers identifiers] | [#repo-url repository urls] | [#config-file config files] | [#ignore-file ignore files] | [#hook hooks] | [#metasyntactic-var metasyntactic variables]
 
 ||~ [#git git] usage ||~ [#git git] description||~ [#hg hg] usage||~ [#hg hg] description||
-||[[span class="fixed"]][[# git-add]][http://schacon.github.com/git/git-add.html add] [#PATH PATH] ... _
+||[[span class="fixed"]][[# git-add]][http://schacon.github.com/git/git-add.html add] [#PATHSPEC PATHSPEC] ... _
 [http://schacon.github.com/git/git-add.html add] -e [#FILE FILE] _
 [http://schacon.github.com/git/git-add.html add] -i [#FILE FILE] ... _
-[http://schacon.github.com/git/git-add.html add] -u [#PATH PATH] ...[[/span]]||Add file contents to the index.  If PATH is a directory it is added with all its contents recursively.  Error if no arguments are provided. _
+[http://schacon.github.com/git/git-add.html add] -u [#PATHSPEC PATHSPEC] ...[[/span]]||Add file contents to the index.  If PATH is a directory it is added with all its contents recursively.  Error if no arguments are provided. _
  _
 Add a portion of a change to the index by editing the diff. _
  _
@@ -67,8 +67,7 @@ Only add file contents to the index which are already tracked.  Newly created fi
 [http://schacon.github.com/git/git-branch.html branch] -m [#BRANCH BRANCH] [#NAME NAME] _
 [http://schacon.github.com/git/git-branch.html branch] (-d|-D) [#BRANCH BRANCH][[/span]]||List branches.  If -r option is provided remote tracking branches are listed.  If -a option is provided both local and remote tracking branches are listed. _
  _
-List branches that are descendants of COMMIT if @@--@@contains option is used.  List branches that are ancestors of COMMIT if _
-@@--@@merged is used. _
+List branches that are descendants of COMMIT if @@--@@contains option is used.  List branches that are ancestors of COMMIT if @@--@@merged is used. _
  _
 Create a branch named NAME using COMMIT as a starting point.  If COMMIT is not specified then HEAD is the starting point. _
  _
@@ -76,8 +75,23 @@ Create a branch NAME which tracks BRANCH.  Usually BRANCH is a remote tracking b
  _
 Rename the branch BRANCH to NAME. _
  _
-Delete branch BRANCH.  Use -D to delete a branch with commits which have not been merged.||[[# hg-bookmarks]][http://www.selenic.com/mercurial/hg.1.html#bookmarks bookmarks]|| ||
-|| || ||[[# hg-branches]][http://www.selenic.com/mercurial/hg.1.html#branches branches] _
+Delete branch BRANCH.  Use -D to delete a branch with commits which have not been merged.||[[# hg-bookmarks]][http://www.selenic.com/mercurial/hg.1.html#bookmarks bookmarks] _
+##gray|//none//## _
+[http://www.selenic.com/mercurial/hg.1.html#bookmarks bookmarks] [-r [#REV REV]] [#NAME NAME] _
+##gray|//none//## _
+[http://www.selenic.com/mercurial/hg.1.html#bookmarks bookmarks] -m [#NAME NAME1] [#NAME NAME2] _
+[http://www.selenic.com/mercurial/hg.1.html#bookmarks bookmarks] -d [#NAME NAME]||List the bookmarks. _
+ _
+##gray|//none//## _
+ _
+Create a bookmark for the parent changeset of the working directory or REV. _
+ _
+##gray|//Mercurial does not have tracking bookmarks.//## _
+ _
+Rename bookmark NAME1 to NAME2. _
+ _
+Delete the bookmark NAME.||
+|| ||##gray|//Git branches are the equivalent of Mercurial bookmarks.  Git does not have an equivalent of Mercurial branches.//##||[[# hg-branches]][http://www.selenic.com/mercurial/hg.1.html#branches branches] _
 [[# hg-branch]][http://www.selenic.com/mercurial/hg.1.html#branch branch] _
 [http://www.selenic.com/mercurial/hg.1.html#branch branch] [#HG-BRANCH BRANCH]||List branches. _
  _
@@ -101,8 +115,8 @@ Get the type of repository object HASH.  The type can be 'blob', 'tree', or 'com
 @<&nbsp;&nbsp;>@git cat-file commit HASH _
 @<&nbsp;&nbsp;>@hg log -r REV##||
 ||[[span class="fixed"]][[# git-checkout]][http://schacon.github.com/git/git-checkout.html checkout] [-f] [#BRANCH BRANCH] _
-[http://schacon.github.com/git/git-checkout.html checkout] [#TREEISH TREEISH] [#PATH PATH] ... _
-[http://schacon.github.com/git/git-checkout.html checkout] -p [#PATH PATH] ... _
+[http://schacon.github.com/git/git-checkout.html checkout] [#TREEISH TREEISH] [#PATHSPEC PATHSPEC] ... _
+[http://schacon.github.com/git/git-checkout.html checkout] -p [#PATHSPEC PATHSPEC] ... _
 [http://schacon.github.com/git/git-checkout.html checkout] -b [#NAME NAME] @@[@@[#COMMIT COMMIT]@@]@@[[/span]]||Checkout the branch named BRANCH.  BRANCH becomes the current branch.  Changes in the index are carried over but if there are changes to tracked files that are not in the index the checkout fails.  If the -f option is specified changes in the index and to tracked files will be discarded. _
  _
 Copy the files or directories {{PATH ...}} from TREEISH to the working directory.  The current branch is not changed. _
@@ -163,10 +177,17 @@ Merge index with head commit. _
  _
 Change author of most recent commit.||[[# hg-commit]][http://www.selenic.com/mercurial/hg.1.html#commit commit] [-m [#HG-STR STR]] _
 [http://www.selenic.com/mercurial/hg.1.html#commit commit] -A [-m [#HG-STR STR]] _
-##gray|//none//## _
-##gray|//none//##||With both {{git}} and {{hg}} the files to be committed can be specified on the command line.  _
-@<&nbsp;>@ _
-If no files are specified {{hg commit}} will commit all modified files that are currently tracked in the working directory.  Newly created files that have not be added with {{hg add}} will not be committed.  {{git commit}} without arguments by contrast will only commit the files that have been specified with {{git add}}.  {{git commit -a}} behaves like the {{hg commit}}, however.||
+[http://www.selenic.com/mercurial/hg.1.html#commit commit] @@--@@amend _
+[http://www.selenic.com/mercurial/hg.1.html#commit commit] @@--@@amend -u STR _
+[http://www.selenic.com/mercurial/hg.1.html#commit commit] @@--@@close-branch||With both {{git}} and {{hg}} the files to be committed can be specified on the command line.  _
+ _
+If no files are specified {{hg commit}} will commit all modified files that are currently tracked in the working directory.  Newly created files that have not be added with {{hg add}} will not be committed.  {{git commit}} without arguments by contrast will only commit the files that have been specified with {{git add}}.  {{git commit -a}} behaves like the {{hg commit}}, however. _
+ _
+Merge working directory with parent changeset. _
+ _
+Change author of parent changeset. _
+ _
+Close head.  A closed head will not be displayed by the heads command.||
 ||[[span class="fixed"]][[# git-config]][http://schacon.github.com/git/git-config.html config] -l [@@--@@global] _
 [http://schacon.github.com/git/git-config.html config] -e [@@--@@global] _
 [http://schacon.github.com/git/git-config.html config] @@--@@get [@@--@@global] SECTION.KEY _
@@ -189,13 +210,13 @@ Remove all keys in SECTION. _
 ##gray|//none//##||List configuration settings. _
  _
 ##gray|//Configuration settings are changed by editing// ~/.hgrc##||
-||[[span class="fixed"]] [[/span]]|| ||[http://www.selenic.com/mercurial/hg.1.html#copy copy]|| ||
+||[[span class="fixed"]] [[/span]]||##gray|//It is not possible to copy a file and preserve the history.  Note that the// git mv //command will preserve history, but this is because Git will assume that two paths are the same when one is removed and the other is added in the same commit and their contents are similar.//## ||[http://www.selenic.com/mercurial/hg.1.html#copy copy] (-f|-A) [#PATH SRC_PATH] [#PATH DEST_PATH]||Copy SRC_PATH to DEST_PATH, where SRC_PATH is already under version control.  DEST_PATH will inherit the revision history of SRC_PATH.  Use the -A flag when DEST_PATH already exists on the file system, or the -f flag when DEST_PATH already has a different revision history.||
 ||[[span class="fixed"]] [[/span]]|| ||[http://www.selenic.com/mercurial/hg.1.html#copy debugdata] [#HG-FILE FILE] [#HG-REV REV]|| ||
 ||[[span class="fixed"]][http://schacon.github.com/git/git-describe.html describe][[/span]]||Show the most recent tag that is reachable from a commit.|| || ||
-||[[span class="fixed"]][[# git-diff]][http://schacon.github.com/git/git-diff.html diff] @@[@@[#PATH PATH] ...] _
-[http://schacon.github.com/git/git-diff.html diff] @@--@@cached @@[@@[#COMMIT COMMIT]] @@[@@[#PATH PATH] ...] _
-[http://schacon.github.com/git/git-diff.html diff] [#COMMIT COMMIT1] [#COMMIT COMMIT2] @@[@@[#PATH PATH] ...] _
-[http://schacon.github.com/git/git-diff.html diff] [#COMMIT COMMIT] @@[@@[#PATH PATH] ...][[/span]]||Produce a diff between the working directory and the index.  If PATHs are provided only diffs for those files are produced.  _
+||[[span class="fixed"]][[# git-diff]][http://schacon.github.com/git/git-diff.html diff] @@[@@[#PATHSPEC PATHSPEC] ...] _
+[http://schacon.github.com/git/git-diff.html diff] @@--@@cached @@[@@[#COMMIT COMMIT]] @@[@@[#PATHSPEC PATHSPEC] ...] _
+[http://schacon.github.com/git/git-diff.html diff] [#COMMIT COMMIT1] [#COMMIT COMMIT2] @@[@@[#PATHSPEC PATHSPEC] ...] _
+[http://schacon.github.com/git/git-diff.html diff] [#COMMIT COMMIT] @@[@@[#PATHSPEC PATHSPEC] ...][[/span]]||Produce a diff between the working directory and the index.  If PATHs are provided only diffs for those files are produced.  _
  _
 Produce a diff between the index and COMMIT.  If COMMIT is not specified it defaults to HEAD. _
  _
@@ -211,10 +232,10 @@ Produce a diff between tracked files in the working directory and REV. _
 Produce a diff between REV1 and REV2. _
  _
 Produce a diff between the previous revision to REV and REV.||
-||[[span class="fixed"]][[# git-fetch]][http://schacon.github.com/git/git-fetch.html fetch] [-f] [#REPO REPO] @@[[+]@@[#REF REF1]:[#REF REF2]] _
-[http://schacon.github.com/git/git-fetch.html fetch] [-f] _
-[http://schacon.github.com/git/git-fetch.html fetch] [-f] @@--@@all _
-[http://schacon.github.com/git/git-fetch.html fetch] [-f] @@--@@multiple [#REPO REPO] ...[[/span]]||Fetch objects and refs from REPO.  If REF1 and REF2 are not supplied, then all tracking branches are fetched if REPO is a remote; HEAD is fetched if REPO is a URL.  FETCH_HEAD is set to point to the local copy of the remote HEAD.  The branch to fetch can be specified with REF1 and the destination in the local repository with REF2.  The -f option will force a fetch if the destination exists and the update isn't a fast forward. _
+||[[span class="fixed"]][[# git-fetch]][http://schacon.github.com/git/git-fetch.html fetch] [-f] [-t] [-p] [#REPO REPO] @@[@@[#REFSPEC REFSPEC]] _
+[http://schacon.github.com/git/git-fetch.html fetch] [-f] [-t] [-p] _
+[http://schacon.github.com/git/git-fetch.html fetch] [-f] [-t] [-p] @@--@@all _
+[http://schacon.github.com/git/git-fetch.html fetch] [-f] [-t] [-p]@@--@@multiple [#REPO REPO] ...[[/span]]||Fetch objects and refs from REPO.  If REFSPEC is not provided, then the value from the remotes section of .git/config for REPO is used; HEAD is fetched if REPO is a URL.  FETCH_HEAD is set to point to the local copy of the remote HEAD.  The -f option will force a fetch if the destination exists and the update isn't a fast forward.  The -t option copies tags.  The -p option removes local references that are no longer on the remote repository.  _
  _
 Fetch objects and refs from origin. _
  _
@@ -224,15 +245,34 @@ Fetch objects and refs from multiple REPOs.||##gray|//none//##||##gray|//Mercuri
 ||[http://schacon.github.com/git/git-fsck.html fsck]|| ||[[# hg-verify]][http://www.selenic.com/mercurial/hg.1.html#verify verify]|| ||
 || || ||[[# hg-grep]][http://www.selenic.com/mercurial/hg.1.html#forget forget] [#HG-PATH PATH] ...||Mark files to removed in next commit, but don't remove from working directory.||
 ||[[span class="fixed"]][http://schacon.github.com/git/git-gc.html gc] ##gray|//see manual//##[[/span]]||Remove unnecessary files and optimize the local repository.|| || ||
-||[[# git-grep]][[span class="fixed"]][http://schacon.github.com/git/git-grep.html grep] [-i] [-v] [-E|F|P] [#STR STR] _
-[http://schacon.github.com/git/git-grep.html grep] [-h|H] [-l|L] [-n] [#STR STR] _
-[http://schacon.github.com/git/git-grep.html grep] -e [#STR STR] (@@--@@and|@@--@@or) -e [#STR STR] _
-[http://schacon.github.com/git/git-grep.html grep] [#STR STR] (@@--@@cached|[#TREEISH TREEISH])[[/span]]||Print lines matching a pattern.||[[# hg-grep]][http://www.selenic.com/mercurial/hg.1.html#grep grep]|| ||
+||[[# git-grep]][[span class="fixed"]][http://schacon.github.com/git/git-grep.html grep] [-i] [-v] [-E|F|P] \ _
+@<&nbsp;&nbsp;>@[-h|H] [-l|L] [-n] -e [#STR STR] _
+[http://schacon.github.com/git/git-grep.html grep] @@--@@untracked [@@--@@no-exclude-standard] _
+@<&nbsp;&nbsp;>@[#STR STR] _
+[http://schacon.github.com/git/git-grep.html grep] -e [#STR STR] @@--@@and @@--@@or @@--@@not \( \) _
+[http://schacon.github.com/git/git-grep.html grep] -f [#PATH PATH] _
+[http://schacon.github.com/git/git-grep.html grep] @@--cached@@ -e [#STR STR] _
+[http://schacon.github.com/git/git-grep.html grep] -e [#STR STR] [#TREEISH TREEISH] _
+[http://schacon.github.com/git/git-grep.html grep] -e [#STR STR] @@--@@ [#PATHSPEC PATHSPEC][[/span]]||Print lines from files in working directory which are tracked by git and which match the pattern STR.  Flags have the same meaning as for command line grep. _
+ _
+Also print untracked files in the working directory.  With @@--@@no-exclude-standard also print lines from files excluded by .gitignore. _
+ _
+Print lines matching a logical expression of patterns. _
+ _
+Print lines matching any of the patterns read from the file PATH.  Patterns are separated by newlines. _
+ _
+Search the index. _
+ _
+Search the commit version or directory TREEISH. _
+ _
+Seach the files matching PATHSPEC.|| ||##gray|//Use command line// grep -r //to search the working directory. To search a different revision of the working directory, it must be checked out. _
+ _
+The// hg grep //command searches the entire revision history and is equivalent to// git log -S##||
 ||[[# git-hash-object]][[span class="fixed"]][http://schacon.github.com/git/git-hash-object.html hash-object] [#PATH PATH] _
 [http://schacon.github.com/git/git-hash-object.html hash-object] -w [#PATH PATH][[/span]]||Compute the object ID for a file. _
  _
 Add a blob to the object database.||##gray|//none//##|| ||
-|| || ||[http://www.selenic.com/mercurial/hg.1.html#heads heads]|| ||
+|| ||##gray|//Git branches cannot have multiple heads; a git branch is a ref which always points to the head.//##||[http://www.selenic.com/mercurial/hg.1.html#heads heads] [-c]||List all heads of a branch.  A head is a changeset with no child changesets.  With the -c flag closed heads will also be shown.||
 ||[[# git-help]][[span class="fixed"]][http://schacon.github.com/git/git-help.html help] _
 [http://schacon.github.com/git/git-help.html help] [#CMD CMD][[/span]] _
 [http://schacon.github.com/git/git-help.html help] -a _
@@ -260,15 +300,19 @@ Create a bare empty git repository or reinitialize an existing one. In a bare re
 ##gray|//none//##|| ||
 || || ||[http://www.selenic.com/mercurial/hg.1.html#locate locate]|| ||
 ||[[# git-log]][[span class="fixed"]][http://schacon.github.com/git/git-log.html log] [-N] @@[@@[#PATH PATH] ...] _
-[http://schacon.github.com/git/git-log.html log] [-N] @@--@@branches @@[@@[#PATH PATH] ...][[/span]]||Show commit log for current branch.  If N is provided limit output to last N commits.  If PATHs are provided, limit output to commits that affected one or more of them. _
+[http://schacon.github.com/git/git-log.html log] [-N] @@--@@branches @@[@@[#PATH PATH] ...] _
+[http://schacon.github.com/git/git-log.html log] (-p|@@--@@pretty=oneline)-S [#STR STR][[/span]]||Show commit log for current branch.  If N is provided limit output to last N commits.  If PATHs are provided, limit output to commits that affected one or more of them. _
  _
-Show commit log for all branches.||[[# hg-log]][http://www.selenic.com/mercurial/hg.1.html#log log] [-l N] -b [#HG-BRANCH BRANCH] @@[@@[#HG-PATH PATH] ...] _
-[http://www.selenic.com/mercurial/hg.1.html#log log] [-l N] @@[@@[#HG-PATH PATH] ...]||Show commit log for BRANCH.  Use 'tip' for the current branch.  If N is provided limit output to last N commits.  If PATHs are provided limit output to commits that affected one or more of them. _
+Show commit log for all branches. _
+ _
+Search for commits which added or removed STR.  With -p flag include a diff describing the commit.  With @@--@@pretty=oneline describe the commit in a single line.||[[# hg-log]][http://www.selenic.com/mercurial/hg.1.html#log log] [-l N] -b [#HG-BRANCH BRANCH] @@[@@[#HG-PATH PATH] ...] _
+[http://www.selenic.com/mercurial/hg.1.html#log log] [-l N] @@[@@[#HG-PATH PATH] ...] _
+[[# hg-grep]][http://www.selenic.com/mercurial/hg.1.html#grep grep]||Show commit log for BRANCH.  Use 'tip' for the current branch.  If N is provided limit output to last N commits.  If PATHs are provided limit output to commits that affected one or more of them. _
  _
 Show commit log for all branches.||
-||[[# git-ls-files]][[span class="fixed"]][http://schacon.github.com/git/git-ls-files.html ls-files] @@[@@[#PATH PATH]] ... _
-[http://schacon.github.com/git/git-ls-files.html ls-files] @@--@@stage @@[@@[#PATH PATH]] ... _
-[http://schacon.github.com/git/git-ls-files.html ls-files] @@--@@delete @@[@@[#PATH PATH]] ...[[/span]]||List files under version control.  This is the files which have had "git add" run on them and have not subsequently had "git rm" run on them.  If PATH is not specified, all files are listed.  Otherwise only files in PATH are listed. _
+||[[# git-ls-files]][[span class="fixed"]][http://schacon.github.com/git/git-ls-files.html ls-files] @@[@@[#PATHSPEC PATHSPEC]] ... _
+[http://schacon.github.com/git/git-ls-files.html ls-files] @@--@@stage @@[@@[#PATHSPEC PATHSPEC]] ... _
+[http://schacon.github.com/git/git-ls-files.html ls-files] @@--@@delete @@[@@[#PATHSPEC PATHSPEC]] ...[[/span]]||List files under version control.  This is the files which have had "git add" run on them and have not subsequently had "git rm" run on them.  If PATH is not specified, all files are listed.  Otherwise only files in PATH are listed. _
  _
 With the @@--@@stage option the command includes the mode bits, object ID, and stage number of the files. _
  _
@@ -296,10 +340,10 @@ Move one or more files into a directory.||[[# hg-rename]][http://www.selenic.com
 ||[[span class="fixed"]]##gray|//none//##[[/span]]|| ||[http://www.selenic.com/mercurial/hg.1.html#outgoing outgoing]||Show the changesets that have not been pushed.  Synonym: out||
 ||[[span class="fixed"]] [[/span]]|| ||[http://www.selenic.com/mercurial/hg.1.html#parents parents]|| ||
 ||[[span class="fixed"]] [[/span]]|| ||[http://www.selenic.com/mercurial/hg.1.html#phase phase]|| ||
-||[[# git-pull]][[span class="fixed"]][http://schacon.github.com/git/git-pull.html pull] [-f] [#REPO REPO] @@[[+]@@[#REF REF1]:[#REF REF2]] _
+||[[# git-pull]][[span class="fixed"]][http://schacon.github.com/git/git-pull.html pull] [-f] [#REPO REPO] @@[@@[#REFSPEC REFSPEC]] _
 [http://schacon.github.com/git/git-pull.html pull] [-f][[/span]]||Short for _
  _
-@<&nbsp;&nbsp;>@git fetch [-f] REPO @@[@@[+]REF1:REF2] _
+@<&nbsp;&nbsp;>@git fetch [-f] REPO @@[@@[#REFSPEC REFSPEC]] _
 @<&nbsp;&nbsp;>@git merge FETCH_HEAD _
  _
 Short for _
@@ -309,20 +353,20 @@ Short for _
 [http://www.selenic.com/mercurial/hg.1.html#pull pull] (-b [#HG-BRANCH BRANCH]) ... @@[@@[#HG-SOURCE SOURCE]]||Pull changesets from SOURCE.  If no SOURCE is specified, the value of default in the [paths] section of .hg/hgrc is used.  Only changesets which affect branches already on local repository are pulled.  If the -u flag is used and there were changesets affecting the current branch, make the working directory match the most recent changeset. _
  _
 Pull changesets affecting BRANCH from SOURCE.  The -b flag can be used multiple times.||
-||[[# git-push]][[span class="fixed"]][http://schacon.github.com/git/git-push.html push] [-f] _
+||[[# git-push]][[span class="fixed"]][http://schacon.github.com/git/git-push.html push] [-f] [@@--@@prune] [@@--@@tags] _
 [http://schacon.github.com/git/git-push.html push] [-f] [-u] [#REPO REPO] @@[@@[#BRANCH BRANCH]] ... _
 [http://schacon.github.com/git/git-push.html push] [-f] @@--@@all [#REPO REPO] _
-[http://schacon.github.com/git/git-push.html push] [-f] [#REPO REPO] [+][#REF REF1]:[#REF REF2] _
-[http://schacon.github.com/git/git-push.html push] @@--@@delete [#REPO REPO] [#BRANCH BRANCH] ...[[/span]]||If the current branch is a tracking branch for a remote branch, then push to the repository for the remote branch.  Otherwise the command does nothing.  If the {{-f}} option is used conflicts will be overwritten in favor of the local repository. _
+[http://schacon.github.com/git/git-push.html push] [-f] [#REPO REPO] [#REFSPEC REFSPEC] _
+[http://schacon.github.com/git/git-push.html push] @@--@@delete [#REPO REPO] [#BRANCH BRANCH] ...[[/span]]||If the current branch is a tracking branch for a remote branch, then push to the repository for the remote branch.  Otherwise the command does nothing.  If the {{-f}} option is used conflicts will be overwritten in favor of the local repository.  The @@--@@prune option removes remote refs which are not local.  The @@--@@tag option copies tags. _
  _
-Push to REPO.  If one or more BRANCHES are specified, all necessary objects are copied to the remote repository and the remote refs are updated.  If no BRANCHES are specified, the branches that were set using 'remote set-branch' are used. With the -u flag make the branches tracking branches for the corresponding remote branches. _
+Push to REPO.  If one or more BRANCHES are specified, all necessary objects are copied to the remote repository and the remote refs are updated.  If no BRANCHES are specified, the branches that were set using 'remote set-branch' are used. With the -u flag make local tracking branches in refs/remotes for the corresponding remote branches. _
  _
 Push all local branches to REPO.  If any local branches do not have remote branches and remote tracking branches they are added. _
  _
-Push local branch REF1 to remote branch REF2 on REPO.  If necessary a remote tracking branch is created. _
+Push local branches to REPO or origin according to REFSPEC. _
  _
 Delete the specified remote BRANCHES and their remote tracking branches.||[[# hg-push]][http://www.selenic.com/mercurial/hg.1.html#push push] [-f] @@[@@[#HG-SOURCE SOURCE]] _
-[http://www.selenic.com/mercurial/hg.1.html#push push] -b [#HG-BRANCH BRANCH] [@@--@@new-branch] @@[@@[#HG-SOURCE SOURCE]]||Push changesets to SOURCE.  If no SOURCE is specified, the value of default in the [paths] section of .hg/hgrc is used.  Only changesets which affect branches already on SOURCE are pushed unless the -f flag is used. _
+[http://www.selenic.com/mercurial/hg.1.html#push push] -b [#HG-BRANCH BRANCH] [@@--@@new-branch] @@[@@[#HG-SOURCE SOURCE]]||Push changesets to SOURCE.  If no SOURCE is specified, the value of default in the [paths] section of .hg/hgrc is used.  A push that creates a branch with multiple heads will fail unless the -f flag is used. _
  _
 Push changesets affecting BRANCH to SOURCE.  The -b flag can be used multiple times. This will fail if BRANCH is not on SOURCE unless the @@--@@new-branch flag is used.||
 ||[[# git-rebase]][[span class="fixed"]][http://schacon.github.com/git/git-rebase.html rebase] [#BRANCH BRANCH] _
@@ -392,7 +436,7 @@ Move branch head to COMMIT and reset the index.  The working directory is not mo
  _
 Move branch head to COMMIT and reset index and working directory. _
  _
-##gray|//Use// checkout //to restore the working directory without changing the index//.||##gray|//none//## _
+##gray|//Use// checkout //to restore the working directory without changing the index//.##||##gray|//none//## _
  _
 ##gray|//none//## _
  _
@@ -471,7 +515,7 @@ Delete a tag.||[[# hg-tags]][[span class="fixed"]][http://www.selenic.com/mercur
 [[# git]][[# hg]][[# diff-git-hg]]
 + [#dvc Git and Mercurial Compared]
 
-**git and hg compared:** [#repo-version repositories and versions] | [#file-dir-commit files, directories, and commits] | [#branch-tag-merge branches, tags, and merges] | [#renamed-files renamed files] | [#identifiers identifiers] | [#repo-url repository urls] | [#config-file config files] | [#ignore-file ignore files] | [#hook hooks] | [#metasyntactic-var metasyntactic variables]
+**git and hg compared:** [#repo-version repositories and versions] | [#file-dir-commit files, directories, and commits] | [#branch-tag-merge branches, tags, and merges] | [#pulling-pushing pulling and pushing] | [#renamed-files renamed files] | [#identifiers identifiers] | [#repo-url repository urls] | [#config-file config files] | [#ignore-file ignore files] | [#hook hooks] | [#metasyntactic-var metasyntactic variables]
 
 [[# repo-version]]
 ++ [#dvc repositories and versions]
@@ -497,9 +541,9 @@ The {{git cat-file -p HASH}} command, though not needed for day-to-day use, prov
 
 **hg**
 
-Mercurial uses a storage format called a //revlog// to store the versions of a file.  Most revlogs are kept in {{.hg/store/data}}.  A revlog usually consists of two files: one with an {{.i}} suffix and another with a {{.d}} suffix.  If the file is small and has little or no history, the revlog might consist of only a {{.i}} file.  A revlog which tracks the history of a file is called a //filelog//.  When the file is first committed, it is written to the filelog.  Each time a commit is made which alters it, a delta describing the change is appended to the file.  Thus, to fetch the current version of a file, all the deltas must be applied in order to the original version of the file.  As an performance optimization, Mercurial will sometimes append the full version of the file to a filelog.  Thus, when reconstructing the current version, one need only apply delta starting from the last time the full version was stored.
+Mercurial uses a storage format called a //revlog// to store the versions of a file.  Most revlogs are kept in {{.hg/store/data}}.  A revlog usually consists of two files: one with an {{.i}} suffix and another with a {{.d}} suffix.  If the file is small and has little or no history, the revlog might consist of only a {{.i}} file.  A revlog which tracks the history of a file is called a //filelog//.  When the file is first committed, it is written to the filelog.  Each time a commit is made which alters it, a delta describing the change is appended to the file.  Thus, to fetch the current version of a file, all the deltas must be applied in order to the original version of the file.  As a performance optimization, Mercurial will sometimes append the full version of the file to a filelog.  Thus, when reconstructing the current version, one need only apply delta starting from the last time the full version was stored.
 
-Mercurial does not store directly.  Instead, it stores a //manifest// for each version of the repository.  A version of the repository is called a //changeset//.  The manifest is list of the pathnames relative to the root of all files in the changeset.  Rather than store the manifests in separate files, all the manifests for the repository are stored in a revlog in {{.hg/store}}.  Each time a new changeset is added to a repository by a {{push}}, {{pull}}, or {{commit}} command, it is assigned a local revision number which is the order in which it was appended to the local manifest revlog.  If the changeset was pulled from a different repository, the local revision numbers might not match.
+Mercurial stores a //manifest// for each revision of the repository.  A reviion of the repository is called a //changeset//.  The manifest is list of the pathnames relative to the root of all files in the changeset.  Rather than store the manifests in separate files, all the manifests for the repository are stored in a revlog in {{.hg/store}}.  Each time a new changeset is added to a repository by a {{push}}, {{pull}}, or {{commit}} command, it is assigned a local revision number which is the order in which it was appended to the local manifest revlog.  If the changeset was pulled from a different repository, the local revision numbers might not match.
 
 Information about changesets is also stored in the //changelog//, which is another type of revlog.  The changelog has a pointer to manifest revision, pointers to parents of the changeset, and information about the committer.
 
@@ -510,21 +554,87 @@ Information about changesets is also stored in the //changelog//, which is anoth
 
 Git has a low level feature called a //ref// which it uses to implement branches and tags.  A ref is a file in {{.git/refs}} which contains the hash of a commit.  Branches are in {{.git/refs/heads}} and tags are in {{.git/refs/tags}}.  Whenever a commit is made, the value in {{.git/refs/heads/BRANCH}} is updated where BRANCH is the current branch.  The values in {{.git/refs/tags/TAG}} do not change.
 
+The name of the branch which is currently checked out is stored in {{.git/HEAD}}.  It is stored as the relative path {{refs/head/NAME}}.
+
 Git also stores remote branches and tags in {{.git/refs/remotes/REPO}}.  The {{git branch -r}} command can be used to list remote branches.  Remote branches have names of the form REPO/BRANCH, and each remote branch will usually have a tracking branch, which is a local branch named BRANCH.  This will be the case for any branches which were copied when a repository is created via {{git clone}}.  A tracking branch can also be created when a remote repository is added using {{git remote -t BRANCH REPO URL}}.  {{git fetch}} will only update remote branches.  {{git pull}} will update remote branches and merge them with their tracking branches.
 
 The default branch is called {{master}}.  It is created by {{git init}}, and is the branch that is copied by {{git clone}} if no branch is explicitly specified.
 
 Commits have zero or more parent commits.  {{git commit}} creates a commit with one parent, except in the case of the initial commit.  {{git merge}} creates a commit with two or more parent commits.  If the commit has three or more parents, the merge is called an octopus merge.
 
+//staging numbers://
+
+To perform a merge Git gets the tree contained in the common ancestor and puts its items into the staging area with staging number 1.  It puts the current branch tree items in the staging area with staging number 2.  It puts the tree items of the other branches in the staging area with staging number 3 or higher.
+
+//fast-forward commits aren't actually commits://
+
+Suppose that {{bar}} is a branch of {{foo}}.  If commits have subsequently been made to {{foo}} but not to bar, then running the following when {{bar}} is the current branch will perform a fast-forward:
+
+[[code]]
+git merge foo
+[[/code]]
+
+In a fast-forward no merge commit is created.  Instead the head of {{bar}} is simply moved to point to the same commit as the head of {{foo}}.
+
 **hg**
 
 A Mercurial branch is a name which is stored in a changeset.  When a commit is made, the new changeset inherits the branch name of the previous changeset, unless a different name was specified before the commit with {{hg branch}}.   To switch to a new branch one must make a commit.
 
+Mercurial branches differ from Git branches in that:
+
+* every commit belongs to a single branch
+* a branch can have multiple heads
+
 Mercurial tags are names for changesets.  They are stored in the {{.hgtags}} file at the repository root.  Creating a tag requires making a commit.
 
-Mercurial does not support octopus merges.  Thus changesets have at most two parents.  A changeset created by {{hg merge}} sets the branch of the new changeset to be the branch of the first argument of 
+Mercurial does not support octopus merges.  Thus changesets have at most two parents.  A changeset created by {{hg merge}} sets the branch of the new changeset to be the branch of the first argument.
 
 Changesets can have no branch specified.  This is also called the {{default}} branch.
+
+//bookmarks://
+
+Mercurial bookmarks work like Git branches, with the exception that Mercurial does not have the equivalent of Git tracking branches.
+
+[[# pulling-pushing]]
+++ [#dvc pulling and pushing]
+
+**git**
+
+The basic command for getting changes from a remote repository {{origin}} is:
+
+[[code]]
+$ git fetch
+[[/code]]
+
+Which branches are fetched is controlled by the {{fetch}} key in the {{remote}} section of {{.git/config}}.  If the local repository was created by {{git clone}}, here is a likely value:
+
+[[code]]
+[remote "origin"]
+        fetch = +refs/heads/*:refs/remotes/origin/*
+[[/code]]
+
+In this case, {{git fetch origin}} connects to the remote repository and copies all of the remote branches to {{refs/remotes/origin}}.  Then it adds all remote objects referred to by the remote branches to the local objects database.  It also puts the remote HEAD into FETCH_HEAD.  The + indicates that local branches should be updated even if the commits are not fast-forwards.
+
+The basic command for sending changes back to the remote repository {{origin}} is:
+
+[[code]]
+$ git push
+[[/code]]
+
+Which branches are pushed is controlled by the {{push}} key in the {{remote}} section of {{.git/config}}.  Here is an example entry which pushes commits on the master branch, and fails if the commits are not fast-forwards:
+
+[[code]]
+[remote "origin"]
+        push = refs/heads/master:refs/heads/master
+[[/code]]
+
+A {{git pull}} is a {{git fetch}} followed by a {{git merge FETCH_HEAD}}, which {{git fetch}} sets to whatever was in {{HEAD}} on the remote repository.
+
+**hg**
+
+{{hg pull}} pulls changesets for all the remote branches that are also local branches unless branches are listed explicitly with the {{-b}} flag.  {{hg pull -u}} is equivalent to {{hg pull}} followed by {{hg update}}.  Pulling can create local branches with multiple heads, in which case an {{hg update}} will fail.  An {{hg merge}} is used to merge the two heads, or an {{hg commit @@--@@close-branch}} is used to mark one of them as closed.
+
+{{hg push}} pushes changsets for all local branches that are also remote branches unless branches are listed explicitly with the {{-b}} flag.  A push which would create a branch with multiple heads will fail unless the {{-f}} flag is used.  The {{@@--@@new-branch}} flag must be used to create a new branch.
 
 [[# renamed-files]]
 ++ [#dvc renamed files]
@@ -653,7 +763,16 @@ In subcommand usage we use the following metasyntactic variables:
 ||[[# HEAD]]HEAD||the literal string HEAD.||
 ||[[# NAME]]NAME||a name for an entity which will be created.  Usually there are restrictions on the characters that can be used.||
 ||[[# PATH]]PATH||a path on the file system.  In some cases it must exist; in others it will be created.||
-||[[# REF]]REF||[#HEAD HEAD] or refs/heads/[#BRANCH BRANCH]||
+||[[# PATHSPEC]]PATHSPEC||like a file glob pattern, except that ? and * can match the directory separator: /||
+||[[# REFSPEC]]REFSPEC||[+]SRC_REF:DEST_REF where SRC_REF and DEST_REF are ref paths relative to the .git directory.  SRC_REF is on the remote repository in a fetch or a pull and on the local repository in a push. _
+ _
+An asterisk can be used in place of a component of the relative path to match everything in the directory.  If the SRC_REF has an asterisk, the DEST_REF must also have one. _
+ _
+A plus sign prefix + is used to indicate that the update should be made even when it is not a fast-forward. _
+ _
+If the SRC_REF is the empty string, then the DEST_REF is deleted. _
+ _
+Leading components of SRC_REF or DEST_REF can be omitted if no ambiguity results.||
 ||[[# REMOTE]]REMOTE||the name of a remote.||
 ||[[# REPO]]REPO||A REMOTE or a URL.||
 ||[[# STASH]]STASH||stash identifier format: stash@{0}, stash@{1}, ...||
@@ -1288,7 +1407,7 @@ Main-Class: foo.A
 * [http://linux.die.net/man/1/rsync man rsync]
 * [http://rsync.samba.org/tech_report/tech_report.html the rsync algorithm]
 
-A tool for copying files and directories between hosts.  Usually it uses {{ssh}}.  It is faster than {{scp}} when some of the files are already on the destination, or when copying files that have been modified.
+A tool for copying files and directories between hosts.  Usually it uses {{ssh}}.  It is faster than {{scp}} when some of the files are already on the destination or when copying files that have been modified.
 
 Here is the usage for putting and getting:
 
@@ -1318,8 +1437,6 @@ SVN has a client-server model.  SVN replaced CVS as the most popular VCS sometim
 * [http://doc.bazaar.canonical.com/bzr.2.4/en/ Documentation for Bazaar 2.4]
 * [http://doc.bazaar.canonical.com/bzr.2.4/en/user-reference/index.html#commands Commands for Bazaar 2.4]
 
-The distributed VCS favored by GNU projects.  There are currently no active Bazaar maintainers, however.  Bazaar trails Git and Mercurial by a large margin in popularity.
-
 To get a list of common commands; to get help on a specific command:
 
 [[code]]
@@ -1332,91 +1449,3 @@ To make a commit it is necessary to register a name and an email address:
 [[code]]
 bzr whoami "Joe Foo <joe@foo.com>"
 [[/code]]
-
---------
-
-[[# git-plumbing]]
-++ [#git plumbing]
-
-[#git-cat-file cat-file] | [#git-hash-object hash-object] | [#git-ls-tree ls-tree] | [#git-rev-list rev-list] | [#git-show-ref show-ref]
-
-The Git object database is kept in {{.git/objects}}.  Git has three types of objects: blobs, trees, and commits.  Each version of a file which is under version control becomes a blob and each version of a directory becomes a tree.  Each object is uniquely identified by a 40 digit hex string called an object ID.  Also called an object name or an object id.
-
-The porcelain commands only expose the object IDs of commits.  The object ID of each commit is shown by {{git log}} for example.  One can use {{git cat-file -t}} to find out what type of object an object ID refers to:
-
-[[code]]
-git cat-file -t OBJECTID
-[[/code]]
-
-If the object is a commit, one can get information about the commit with:
-
-[[code]]
-git cat-file commit OBJECTID
-[[/code]]
-
-Included in the information are the parent commits, if any.  If the commit was an initial commit it will have no parents.  If it was the product of a merge it will have two or more parents.  If it was the product of an octopus merge it will have three or more parents.
-
-Aslo included in the commit information is the tree representing the files in the top directory of the repository when the commit was made.  To see the contents of the tree use 
-
-[[code]]
-git ls-tree OBJECTID
-[[/code]]
-
-{{git ls-tree}} can be used on any of the subtrees as well.  To see the contents of a blob in a tree, use
-
-[[code]]
-git cat-file blob OBJECTID
-[[/code]]
-
-An easy way to get the object IDs of all the blobs which are under version control and current is to run the following:
-
-[[code]]
-git ls-files --stage
-[[/code]]
-
-If a file has not been added, it is possible to get the object ID that would be assigned to it if it were with
-
-[[code]]
-git hash-object PATH
-[[/code]]
-
-Furthermore, {{git hash-object -w}} can be used to put the object in the object database.
-
-//plumbing commands for making a tree//
-
-//plumbing commands for making a commit//
-
-//how to display and manipulate refs//
-
-//plumbing for the index//
-
-[[# git-branching]]
-++ [#git branching]
-
-When a branch is created a file is created in {{.git/refs/heads}} with the name of the branch.  The file contains the COMMIT that was provided on the command line or the commit of HEAD if no commit was explicitly provided.
-
-When a commit is made on a branch the parent of the commit is the commit in the branch ref.  The branch ref is then updated to contain the new commit.
-
-One switches branches by changing {{.git/HEAD}} to contain the name of the new branch.
-
-[[# git-fetching-pulling]]
-++ [#git fetching, pushing, pulling]
-
-Fetching, pulling, and pushing is controlled by the remotes that have been set up for a repository.  When a repository is created with the {{clone}} command a remote with the name {{origin}} is created unless the {{-o}} option is used to specify a different remote name.  Remotes can be added, removed, and modified with the {{remote}} command.
-
-[[# git-merging]]
-++ [#git merging]
-
-A merge adds changes from one or more branches into the current branch.  If the merge is successful and committed, the new commit will have two or more parents.  A merge commit with more that two parents is called an octopus merge.
-
-The most common case is when one branch is merged into the current branch, yielding a merge commit with two parents.
-
-To perform a merge Git gets the tree contained in the common ancestor and puts its items into the staging area with staging number 1.  It puts the current branch tree items in the staging area with staging number 2.  It puts the tree items of the other branches in the staging area with staging number 3 or higher.
-
-Suppose that {{bar}} is a branch of {{foo}}.  If commits have subsequently been made to {{foo}} but not to bar, then running the following when {{bar}} is the current branch will perform a fast-forward:
-
-[[code]]
-git merge foo
-[[/code]]
-
-In a fast-forward no merge commit is created.  Instead the head of {{bar}} is simply moved to point to the same commit as the head of {{foo}}.
