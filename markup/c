@@ -1,19 +1,19 @@
 [[# top]]//a side-by-side reference sheet//
 
-[#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#arrays arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#concurrency concurrency] | [#file-handles file handles] | [#files files] | [#file-fmt file formats] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#user-defined-types user-defined types] | [#objects objects] | [#macros macros] | [#net-web net and web] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling] _
+[#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#arrays arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#concurrency concurrency] | [#file-handles file handles] | [#files files] | [#file-fmt file formats] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#user-defined-types user-defined types] | [#objects objects] | [#reflection reflection] | [#macros macros] | [#net-web net and web] | [#dom dom] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling] _
 
-||~ [[# general]]||~ [#c c]||~ [#go go]||~ [#swift swift]||
+||~ [[# general]]||~ [#c c]||~ [#go go]||~ [#dart dart]||
 ||[[# version-used]][#version-used-note version used] _
-@<&nbsp;>@||##gray|//gcc 4.6 in POSIX environment//##||##gray|//1.3//##||##gray|//1.0//##||
+@<&nbsp;>@||##gray|//gcc 4.6 in POSIX environment//##||##gray|//1.3//##||##gray|//1.7//##||
 ||[[# show-version]][#show-version-note show version] _
-@<&nbsp;>@||$ gcc @@--@@version||$ go version||$ xcrun swift @@--@@version||
+@<&nbsp;>@||$ gcc @@--@@version||$ go version||$ dart @@--@@version||
 ||[[# implicit-prologue]][#implicit-prologue-note implicit prologue]||#include <errno.h> _
 #include <stdlib.h> _
 #include <stdio.h> _
 #include <string.h> _
-#include <time.h>|| ||import Foundation||
+#include <time.h>|| || ||
 ||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
-||~ ||~ c||~ go||~ swift||
+||~ ||~ c||~ go||~ dart||
 ||[[# hello-world]][#hello-world-note hello word]||$ cat hello.c _
 #include <stdio.h> _
  _
@@ -35,15 +35,20 @@ func main() { _
 $ go build hello.go _
  _
 $ ./hello _
-Hello, World!||$ cat hello.swift _
-println("Hello, World!") _
+Hello, World!||$ cat hello.dart _
+void main() { _
+@<&nbsp;&nbsp;>@print('Hello, World!'); _
+} _
  _
-$  xcrun swift hello.swift _
+$ dart hello.dart _
+Hello, World! _
  _
-$ ./hello _
+$ dart2js hello.dart _
+ _
+$ node out.js _
 Hello, World!||
 ||[[# file-suffixes]][#file-suffixes-note file suffixes] _
-##gray|//source, header, object file//##||.c .h .o|| ||.swift ##gray|//none?//## .swiftmodule||
+##gray|//source, header, object file//##||.c .h .o|| ||.dart ##gray|//none//## .js||
 ||[[# block-delimiters]][#block-delimiters-note block delimiters] _
 @<&nbsp;>@||{ ##gray|//...//## }||{ ##gray|//...//## }||{ ##gray|//...//## }||
 ||[[# stmt-terminator]][#stmt-terminator-note statement terminator]||;||; ##gray|//or sometimes newline//## _
@@ -53,21 +58,15 @@ Hello, World!||
 @<&nbsp;&nbsp;>@(2) a numeric, character, or string literal, _
 @<&nbsp;&nbsp;>@(3) one of the keywords// break, continue, _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@fallthrough, //or// return, // _
-@<&nbsp;&nbsp;>@(4) one of// ++, @@--@@, ), ], //or// }##||; ##gray|//sometimes newline//## _
- _
-##gray|//a new line does not terminate a statement when: _
-@<&nbsp;&nbsp;>@(1) inside [ ] of an array literal, _
-@<&nbsp;&nbsp;>@(2) inside of ( ) parens, _
-@<&nbsp;&nbsp;>@(3) after a binary operator, _
-@<&nbsp;&nbsp;>@(4) other situations?//##||
+@<&nbsp;&nbsp;>@(4) one of// ++, @@--@@, ), ], //or// }##||;||
 ||[[# eol-comment]][#eol-comment-note end-of-line comment] _
 @<&nbsp;>@||@@//@@ ##gray|//comment//##||@@//@@ ##gray|//comment//##||@@//@@ ##gray|//comment//##||
 ||[[# multiple-line-comment]][#multiple-line-comment-note multiple line comment]||/* ##gray|//comment line//## _
 ##gray|//another line//## */||/* ##gray|//comment line//## _
 ##gray|//another line//## */||/* ##gray|//comment line//## _
-/* ##gray|//nested comment//## */ */||
+##gray|//another line//## /* ##gray|//nested comment//## */ */||
 ||||||||~ [[# variables-expressions]][#variables-expressions-note variables and expressions]||
-||~ ||~ c||~ go||~ swift||
+||~ ||~ c||~ go||~ dart||
 ||[[# local-var]][#local-var-note variable]||##gray|/* if inside function, memory allocated on stack: */## _
 int i; _
 int j = 3; _
@@ -82,7 +81,7 @@ j := 3 _
 ip := new(int) _
 *ip = 7|| ||
 ||[[# free-heap]][#free-heap-note free heap] _
-@<&nbsp;>@||free(ip);||##gray|//none; uses mark-and-sweep garbage collection//##||##gray|//none; uses automatic reference counting//##||
+@<&nbsp;>@||free(ip);||##gray|//none; uses garbage collection//##||##gray|//none; uses garbage collection//##|||
 ||[[# global-var]][#global-var-note global variable]||##gray|/* in foo.cpp, outside of any function: */## _
 int x = 7; _
  _
@@ -97,26 +96,24 @@ package bar _
 import foo _
  _
 var y = foo.x + 3|| ||
-||[[# uninitialized-var]][#uninitialized-var-note uninitialized variable]||##gray|//stack variables and heap variables allocated with// malloc //have indeterminate values.  Global and static variables and heap variables allocated with// calloc //are zero-initialized.//##||##gray|//every type has a zero value.  For numeric types it is zero and for strings it is the empty string.//##||##gray|//compiler error to use an uninitialized variable; optionals initialize to// nil //by default//##||
+||[[# uninitialized-var]][#uninitialized-var-note uninitialized variable]||##gray|//stack variables and heap variables allocated with// malloc //have indeterminate values.  Global and static variables and heap variables allocated with// calloc //are zero-initialized.//##||##gray|//every type has a zero value.  For numeric types it is zero and for strings it is the empty string.//##|| ||
 ||[[# const]][#const-note constant]||##gray|/* usually preprocessor is used: */## _
-#define PI 3.14||const Pi = 3.14||let Pi = 3.14||
+#define PI 3.14||const Pi = 3.14|| ||
 ||[[# assignment]][#assignment-note assignment]||i = 3;||##gray|@@//@@ defines variable of appropriate type:## _
 i := 3 _
  _
 ##gray|@@//@@variable must already be declared:## _
-i = 3||var i = 0 _
- _
-i = 3||
+i = 3|| ||
 ||[[# parallel-assignment]][#parallel-assignment-note parallel assignment]||##gray|//none//##||##gray|@@//@@define variables of appropriate type:## _
 m, n := 3, 7 _
  _
 ##gray|@@//@@ x and y must already be declared:## _
-x, y = 2, 8||var (m, n) = (3, 7)||
+x, y = 2, 8|| ||
 ||[[# swap]][#swap-note swap]||int x = 1, y = 2, tmp; _
  _
 tmp = x; _
 x = y; _
-y = tmp;||x, y = y, x||(x, y) = (y, x)||
+y = tmp;||x, y = y, x|| ||
 ||[[# compound-assignment]][#compound-assignment-note compound assignment]||##gray|//arithmetic://## _
 += -= *= /= %= _
  _
@@ -125,14 +122,7 @@ y = tmp;||x, y = y, x||(x, y) = (y, x)||
 += -= *= /= %= _
  _
 ##gray|//bit://## _
-@@<<= >>= &= |= ^=@@||##gray|//arithmetic://## _
-+= -= *= /= %= _
- _
-##gray|//string://## _
-+= _
- _
-##gray|//bit://## _
-@@<<= >>= &= |= ^=@@||
+@@<<= >>= &= |= ^=@@|| ||
 ||[[# incr-decr]][#incr-decr-note increment and decrement]||##gray|//premodifiers://## _
 ++i @@--@@i _
  _
@@ -145,8 +135,7 @@ i++ i@@--@@||##gray|//premodifiers://## _
 i++ i@@--@@||
 ||[[# null]][#null-note null] _
 @<&nbsp;>@||##gray|/* pointer types only: */## _
-NULL||nil||##gray|@@//@@ option types only:## _
-nil||
+NULL||nil||null||
 ||[[# null-test]][#null-test-note null test] _
 @<&nbsp;>@||ip == NULL|| || ||
 ||[[# coalesce]][#coalesce-note coalesce] _
@@ -154,13 +143,13 @@ nil||
 ||[[# conditional-expr]][#conditional-expr-note conditional expression] _
 @<&nbsp;>@||x > 0 ? x : -x||##gray|//none//##||x > 0 ? x : -x||
 ||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
-||~ ||~ c||~ go||~ swift||
+||~ ||~ c||~ go||~ dart||
 ||[[# boolean-type]][#boolean-type-note boolean type] _
-@<&nbsp;>@||int||bool||Bool||
+@<&nbsp;>@||int||bool||bool||
 ||[[# true-false]][#true-false-note true and false] _
 @<&nbsp;>@||1 0||true false||true false||
 ||[[# falsehoods]][#falsehoods-note falsehoods] _
-@<&nbsp;>@||0 0.0 NULL||false||false||
+@<&nbsp;>@||0 0.0 NULL||false||##gray|//everything except for the boolean//## true||
 ||[[# logical-op]][#logical-op-note logical operators] _
 @<&nbsp;>@||&& @@||@@ !||&& @@||@@ !||&& @@||@@ !||
 ||[[# relational-op]][#relational-op-note relational operators] _
@@ -173,10 +162,7 @@ long long int ##gray|//4+ bytes//##||int  _
 int8  _
 int16  _
 int32  _
-int64||Int8  _
-Int16  _
-Int32 (Int)  _
-Int64||
+int64||int||
 ||[[# unsigned-type]][#unsigned-type-note unsigned type]||unsigned char: 8+ _
 unsigned short int ##gray|//2 bytes+//## _
 unsigned int ##gray|//2 bytes+//## _
@@ -184,23 +170,19 @@ unsigned long int ##gray|//4+ bytes//## _
 unsigned long long int ##gray|//4+ bytes//##||uint8 (byte) _
 uint16 _
 uint32 _
-uint64||UInt8 _
-UInt16 _
-UInt32 _
-UInt64 (UInt)||
+uint64||##gray|//none//##||
 ||[[# float-type]][#float-type-note float type]||float ##gray|//4 bytes//## _
 double ##gray|//8 bytes//## _
 long double ##gray|//16 bytes//##||float32 _
-float64||Float _
-Double||
+float64||double||
 ||[[# arith-op]][#arith-op-note arithmetic operators] _
-@<&nbsp;>@||@@+@@ - * / %||@@+@@ - * / %||+ - * / %||
+@<&nbsp;>@||@@+@@ - * / %||@@+@@ - * / %||@@+@@ - * / %||
 ||[[# int-div]][#int-div-note integer division] _
-@<&nbsp;>@||3 / 7||3 / 7||3 / 7||
+@<&nbsp;>@||3 / 7||3 / 7||3 ~/ 7||
 ||[[# int-div-zero]][#int-div-zero-note integer division by zero] _
-@<&nbsp;>@||##gray|//system dependent; process often sent a// SIGFPE //signal//##||##gray|//on Unix, process sent a// SIGFPE //signal//##||##gray|//process sent a// SIGILL //signal//##||
+@<&nbsp;>@||##gray|//system dependent; process often sent a// SIGFPE //signal//##||##gray|//on Unix, process sent a// SIGFPE //signal//##||IntegerDivisionByZeroException||
 ||[[# float-div]][#float-div-note float division] _
-@<&nbsp;>@||3 / (float)7||3 / float32(7)||3 / Double(7)||
+@<&nbsp;>@||3 / (float)7||3 / float32(7)||3 / 7||
 ||[[# float-div-zero]][#float-div-zero-note float division by zero]||##gray|/* these are float values but not literals: */##  _
 inf, nan, or -inf||##gray|@@//@@ these are float values but not literals:## _
 +Inf, NaN, ##gray|//or//## -Inf _
@@ -208,22 +190,26 @@ inf, nan, or -inf||##gray|@@//@@ these are float values but not literals:## _
 ##gray|@@//@@ to get the float values:## _
 import "math" _
  _
-math.Inf(1) math.Nan() math.Inf(-1)||##gray|@@//@@ these are float values but not literals:## _
-+Inf, NaN, ##gray|//or//## -Inf||
+math.Inf(1) math.Nan() math.Inf(-1)||##gray|@@//@@ not literals:## _
+Infinity, NaN, ##gray|//or//## -Infinity||
 ||[[# power]][#power-note power]||#include <math.h>  _
  _
 pow(2.0, 3.0)||import "math" _
  _
-math.Pow(2.0, 3.0)||pow(2.0, 3.0)||
+math.Pow(2.0, 3.0)||import 'dart:math' as math; _
+ _
+math.pow(2.0, 3.0)||
 ||[[# sqrt]][#sqrt-note sqrt]||#include <math.h> _
  _
 sqrt(2);||include "math" _
  _
-math.Sqrt(2)||sqrt(2)||
+math.Sqrt(2)||import 'dart:math' as math; _
+ _
+math.sqrt(2)||
 ||[[# sqrt-negative-one]][#sqrt-negative-one-note sqrt -1]||#include <math.h> _
  _
 ##gray|/* nan */## _
-double x = sqrt(-2.0);||import "math" _
+double x = sqrt(-1.0);||import "math" _
  _
 ##gray|@@//@@ NaN## _
 x := math.Sqrt(-2.0) _
@@ -231,8 +217,10 @@ x := math.Sqrt(-2.0) _
 import "math/cmplx" _
  _
 ##gray|@@//@@ (0+1.41421356i)## _
-z := cmplx.Sqrt(-2.0)||##gray|@@//@@ NaN:## _
-sqrt(-1)||
+z := cmplx.Sqrt(-2.0)||import 'dart:math' as math; _
+ _
+##gray|@@//@@ NaN:## _
+math.sqrt(-1)||
 ||[[# transcendental-func]][#transcendental-func-note transcendental functions]||#include <math.h> _
  _
 exp log log2 log10 _
@@ -243,17 +231,22 @@ atan2||include "math" _
 math.Exp math.Log math.Log2 math.Log10 _
 math.Sin math.Cos math.Tan _
 math.Asin math.Acos math.Atan _
-math.Atan2||exp log log2 log10 _
-sin cos tan _
-asin acos atan _
-atan2||
+math.Atan2||import 'dart:math' as math; _
+ _
+math.log ##gray|//none//## ##gray|//none//## _
+math.sin math.cos math.tan _
+math.asin math.acos math.atan _
+math.atan2||
 ||[[# transcendental-const]][#transcendental-const-note transcendental constants]||#include <math.h> _
  _
 M_PI _
 M_E||import "math" _
  _
 math.Pi _
-Math.E|| ||
+Math.E||import 'dart:math' as math; _
+ _
+math.PI _
+math.E||
 ||[[# float-truncation]][#float-truncation-note float truncation]||#include <math.h> _
 @<&nbsp;>@ _
 double d = 3.77; _
@@ -268,26 +261,27 @@ x = 3.77 _
 trunc := int(x) _
 ##gray|//none//## _
 flr := int(math.Floor(x)) _
-cl := int(math.Ceil(x))||Int(3.77) _
-Int(round(3.77)) _
-Int(floor(3.77)) _
-Int(ceil(3.77))||
+cl := int(math.Ceil(x))||3.14.truncate() _
+3.14.round() _
+3.14.floor() _
+3.14.ceil() _
+ _
+##gray|@@//@@ (-3.14).floor() is -4 but -3.14.floor() is -3.##||
 ||[[# absolute-val]][#absolute-val-note absolute value]||#include <math.h>@<&nbsp;&nbsp;>@##gray|/* fabs() */## _
  _
 int i = abs(-7); _
 float x = fabs(-7.77);||include "math" _
  _
 ##gray|//none//## _
-math.Abs(-7.77)||abs(-7) _
-fabs(-7.77)||
+math.Abs(-7.77)||(-7.77).abs()||
 ||[[# complex-type]][#complex-type-note complex type]||float complex ##gray|//8 bytes//## _
 double complex ##gray|//16 bytes//## _
 long double complex ##gray|//32 bytes//##||complex64 _
-complex128|| ||
+complex128||##gray|//none//##||
 ||[[# complex-construction]][#complex-construction-note complex construction]||#include <complex.h> _
  _
 double complex z; _
-z = 1.0 + 2.0 * I;||var z complex128 = 1.0 + 2.0i|| ||
+z = 1.0 + 2.0 * I;||var z complex128 = 1.0 + 2.0i||##gray|//none//##||
 ||[[# complex-decomposition]][#complex-decomposition-note complex decomposition] _
 ##gray|//real and imaginary component, argument, absolute value, conjugate//##||#include <complex.h> _
  _
@@ -307,24 +301,29 @@ x = real(z) _
 x = imag(z) _
 x = cmplx.Phase(z) _
 x = cmplx.Abs(z) _
-w = cmplx.Conj(z)|| ||
+w = cmplx.Conj(z)||##gray|//none//##||
 ||[[# random-num]][#random-num-note random number] _
 ##gray|//uniform integer, uniform float//##||##gray|/* Value between 0 and RAND_MAX inclusive: */## _
-int i = rand(); _
+int n = rand(); _
  _
 ##gray|/* Value in interval [0.0, 1.0]: */## _
 float x = (float)rand()/(float)RAND_MAX;||import "math/rand" _
  _
-i := rand.Int() _
-x := rand.Float64()||let i = rand() _
-##gray|//??//##||
+n := rand.Intn(100) _
+x := rand.Float64()||import 'dart:math'; _
+ _
+var rnd = new Random(); _
+int n = rnd.nextInt(100); _
+int x = rnd.nextDouble();||
 ||[[# random-seed]][#random-seed-note random seed]||srand(17);||import "math/rand" _
  _
-rand.Seed(17)||srand(17)||
+rand.Seed(17)||import 'dart:math'; _
+ _
+var rnd = new Random(17);||
 ||[[# bit-op]][#bit-op-note bit operators] _
-@<&nbsp;>@||@@ << >> & | ^ ~ @@||@@<< >> & |@@ ##gray|//none//## ^||<< >> & | ^ ~ ||
+@<&nbsp;>@||@@ << >> & | ^ ~ @@||@@<< >> & |@@ ##gray|//none//## ^||@@ << >> & | ^ ~ @@||
 ||||||||~ [[# strings]][#strings-note strings]||
-||~ ||~ c||~ go||~ swift||
+||~ ||~ c||~ go||~ dart||
 ||[[# str-type]][#str-type-note string type] _
 @<&nbsp;>@||char *||string||String||
 ||[[# str-literal]][#str-literal-note string literal] _
@@ -333,27 +332,42 @@ char *s = "hello"; _
  _
 ##gray|/* string in heap: */## _
 char *s2 = strdup(s);||"hello" _
-@@`hello`@@||"hello"||
+ _
+##gray|@@//@@ raw string literal:## _
+@@`hello`@@||var s = 'don\'t say "no"'; _
+var s2 = "don't say \"no\""; _
+var s3 = '''don't say "no"' _
+var s4 = """don't say "no\"""" _
+ _
+##gray|//raw string literals://## r'foo' r"foo"||
 ||[[# newline-in-str-literal]][#newline-in-str-literal-note newline in string literal]||##gray|/* compiler concatenates literals _
 @<&nbsp;&nbsp;&nbsp;>@separated by whitespace: */## _
 char *s = "first line\n" _
 @<&nbsp;&nbsp;>@"second line";||##gray|@@//@@ backquote literals only:## _
 let s := @@`first line@@ _
-second line@@`@@||##gray|//no//##||
+second line@@`@@||##gray|@@//@@ triple quote literals only:## _
+var s = '''first line _
+second line'''; _
+ _
+var s2 = """first line _
+second line"""||
 ||[[# str-literal-esc]][#str-literal-esc-note string escapes]||\a \b \f \n \r \t \v \" \' \? \\ _
 \##gray|//o//## \##gray|//oo//## \##gray|//ooo//## \x##gray|//hh//## \u##gray|//hhhh//## \U##gray|//hhhhhhhh//##||##gray|//Double quote literals only://## _
  _
 \a \b \f \n \r \t \v \\ \" _
-\##gray|//ooo//## \x##gray|//hh//## \u##gray|//hhhh//## \U##gray|//hhhhhhhh//##||\0 \\ \t \n \r \" \' _
-\x##gray|//hh//## \u##gray|//hhhh//## \U##gray|//hhhhhhhh//##||
-||[[# expr-interpolation]][#expr-interpolation-note expression interpolation]||##gray|//none//##|| ||let n = 3, m = 5 _
-let msg =  "\(n) + \(m) is \(n + m)"||
+\##gray|//ooo//## \x##gray|//hh//## \u##gray|//hhhh//## \U##gray|//hhhhhhhh//##||\b \f \n \r \t \v \" \' \$ \\ _
+\x##gray|//hh//## \u##gray|//hhhh//## \u{##gray|//h...//##}||
+||[[# expr-interpolation]][#expr-interpolation-note expression interpolation]||##gray|//none//##|| ||var count = 3; _
+var item = "BALL"; _
+ _
+##gray|@@//@@ 3 balls## _
+print('$count ${item.toLowerCase()}s');||
 ||[#string-comparison comparison]||##gray|/* == and < compare memory addresses: */## _
  _
 strcmp("hello", "world") == 0 _
 strcmp("hello", "world") < 0||"hello" == "world" _
 "hello" < "world"||"hello" == "world" _
-"hello" < "world"||
+"hello".compareTo("world") < 0||
 ||[#string-to-number convert string to numeric]||strtoimax strtol strtoll _
 strtoumax strtoul strtoull _
 strtof strtod strtold||import "strconv" _
@@ -362,12 +376,8 @@ strtof strtod strtold||import "strconv" _
 i, _ := strconv.ParseInt("17", 10, 32) _
  _
 ##gray|@@//@@ 2nd arg is size of float in bits:## _
-x, _ := strconv.ParseFloat("3.14", 32)||"17".toInt() _
- _
-##gray|@@//@@ evaluates to nil:## _
-"17foo".toInt() _
- _
-##gray|@@//@@ convert to float?##||
+x, _ := strconv.ParseFloat("3.14", 32)||var n = int.parse("17"); _
+  var x = double.parse("3.14");||
 ||[#number-to-string convert numeric to string]|| ||import "strconv" _
  _
 ##gray|@@//@@3rd arg is precision after decimal point; _
@@ -375,17 +385,17 @@ x, _ := strconv.ParseFloat("3.14", 32)||"17".toInt() _
 strconv.FormatFloat(3.14, 'f', 4, 32) _
  _
 ##gray|@@//@@ 2nd arg is base:## _
-strconv.FormatInt(7, 10)||let n = String(17) _
-let x = String(17.3)||
+strconv.FormatInt(7, 10)||3.14.toString() _
+7.toString()||
 ||[#split split]||##gray|//none//##||import "strings" _
  _
 s := "foo bar baz" _
-parts := strings.Split(s, " ")|| ||
+parts := strings.Split(s, " ")||var a = "foo bar bar".split(' ');||
 ||[#join join] _
 @<&nbsp;>@||##gray|//none//##||import "strings" _
  _
 parts := []string{"foo", "bar", "baz"} _
-s := strings.Join(parts, " ")|| ||
+s := strings.Join(parts, " ")||['foo', 'bar', 'baz'].join(' ')||
 ||[#string-concatenate concatenate]||char *s1 = "hello"; _
 char *s2 = " world"; _
 char *s3 = (char *)calloc(strlen(s1) + strlen(s2) + 1,sizeof(char)); _
@@ -393,17 +403,16 @@ strcpy(s3, s1); _
 strcat(s3, s2);||"hello" + " world"||"hello" + " world"||
 ||[#str-replicate replicate]||##gray|//none//##||import "strings" _
  _
-hbar := strings.Repeat("-", 80)||let ch: Character = "-" _
-let hbar = String(count: 80, repeatedValue: ch)||
+hbar := strings.Repeat("-", 80)||var hbar = "-" * 80;||
 ||[#substring substring]||char target[3]; _
  char *source = "hello"; _
-strncpy(target, source + 2, 2);||"hello"[2:4]|| ||
+strncpy(target, source + 2, 2);||"hello"[2:4]||"hello".substring(2, 4)||
 ||[#index index of substring]||const char *s = "hello"; _
 const char *p = strstr("hello", "ll"); _
 p ? p - s : -1;||import "strings" _
  _
 ##gray|@@//@@ zero-based index; -1 if not found:## _
-strings.Index("hello", "ll")|| ||
+strings.Index("hello", "ll")||"hello".indexOf("ll")||
 ||[#sprintf sprintf]||char buf[100]; _
 snprintf(buf, 100, "%s: %d", "Spain", 7);|| || ||
 ||[#uppercase uppercase]||char *s = strdup("hello"); _
@@ -413,8 +422,7 @@ for (i=0; i < strlen(s); ++i) { _
 @<&nbsp;&nbsp;>@s[i] = toupper(s[i]); _
 }||import "strings" _
  _
-strings.ToUpper("hello")||let s = "hello" _
-let s2 = s.uppercaseString||
+strings.ToUpper("hello")||"hello".toUpperCase()||
 ||[#lowercase lowercase]||char *s = strdup("HELLO"); _
 int i; _
  _
@@ -422,38 +430,50 @@ for (i=0; i < strlen(s); i++) { _
 @<&nbsp;&nbsp;>@s[i] = tolower(s[i]); _
 }||import "strings" _
  _
-strings.ToLower("HELLO")||let s = "HELLO" _
-let s2 = s.lowercaseString||
+strings.ToLower("HELLO")||"HELLO".toLowerCase()||
 ||[#trim trim] _
 ##gray|//both sides, on left, on right//##|| ||import "strings" _
  _
 s := " lorem " _
 strings.Trim(s, " ") _
 strings.TrimLeft(s, " ") _
-strings.TrimRight(s, " ")|| ||
-||[#pad pad on right]||char buf[100]; _
-snprintf(buf, 100, "%-10s", "hello");|| || ||
+strings.TrimRight(s, " ")||" lorem ".trim() _
+" lorem ".trimLeft() _
+" lorem ".trimRight()||
+||[#pad pad]||char buf[100]; _
+snprintf(buf, 100, "%-10s", "hello");|| ||"lorem".padRight(10, " ") _
+"lorem".padLeft(10, " ")||
 ||[#string-length length] _
-@<&nbsp;>@||strlen("hello")||len("hello")||countElements("hello")||
-||[[# char-type]][#char-type-note character type]||char||rune||Character||
-||[[# char-literal]][#char-literal-note character literal]|| || || ||
+@<&nbsp;>@||strlen("hello")||len("hello")||##gray|@@//@@ number of 16 bit runes:## _
+"hello".length||
+||[[# char-type]][#char-type-note character type]||char||rune||##gray|@@//@@ 16 bits:## _
+rune||
+||[[# char-literal]][#char-literal-note character literal]|| || ||##gray|//none//##||
 ||[#char-access character access]|| || || ||
-||[#chr-ord chr and ord]|| || || ||
+||[#chr-ord chr and ord]|| || ||new String.fromCharCodes([65]) _
+"A".codeUnitAt(0) _
+ _
+##gray|@@//@@ for Unicode points above U+FFFF codeUnitAt will _
+@@//@@ return part of a surrogate pair##||
 ||||||||~ [[# regexes]][#regexes-note regular expressions]||
-||~ ||~ c||~ go||~ swift||
+||~ ||~ c||~ go||~ dart||
 ||[[# regex-metachar]][#regex-metachar-note metacharacters]||##gray|/* REG_BASIC: */## _
 . [ ] \ * ^ $ _
  _
 ##gray|/* REG_EXTENDED: */## _
-. [ ] \ ( ) * + ? { } | ^ $||. [ ] \ ( ) * + ? { } | ^ $|| ||
+. [ ] \ ( ) * + ? { } | ^ $||. [ ] \ ( ) * + ? { } | ^ $ _
+  _
+##gray|//use raw string (i.e. backtick) literals to avoid having to escape backslashes.//##||. [ ] \ ( ) * + ? { } | ^ $ _
+ _
+##gray|//use raw string (i.e. with r prefix) literals to avoid having to escape backslashes.//##||
 ||[[# char-class-abbrev]][#char-class-abbrev-note character class abbrevations]||##gray|/* matches any character; does not match newline if _
 @<&nbsp;&nbsp;&nbsp;>@REG_NEWLINE is used: */## _
 . _
  _
-##gray|/* more character classes available in pcre library */##||. \d \D \s \S \w \W|| ||
+##gray|/* more character classes available in pcre library */##||. \d \D \s \S \w \W||. \d \D \s \S \w \W||
 ||[[# regex-anchors]][#regex-anchors-note anchors]||##gray|/* match beginning and end of string; match beginning and _
 @<&nbsp;&nbsp;&nbsp;>@end of line if REG_NEWLINE is used: */## _
-^ $||^ $ \A \b \B \z|| ||
+^ $||^ $ \A \b \B \z||^ $ \b \B||
 ||[[# regex-test]][#regex-test-note match test]||#include <regex.h> _
  _
 regex_t rx; _
@@ -482,7 +502,12 @@ import "regexp" _
 var rx = regexp.MustCompile("1999") _
 if (rx.MatchString("It's 1999.")) { _
 @<&nbsp;&nbsp;>@fmt.Println("Party!") _
-}|| ||
+}||  RegExp rx = new RegExp(r"1999"); _
+String s = "It's 1999"; _
+ _
+if (rx.hasMatch(s)) { _
+@<&nbsp;&nbsp;>@print("Party!"); _
+}||
 ||[[# case-insensitive-regex]][#case-insensitive-regex-note case insensitive match test]||#include <regex.h> _
  _
 regex_t rx; _
@@ -510,20 +535,29 @@ import "regexp" _
 var rx = regexp.MustCompile("(?i)lorem") _
 if (rx.MatchString("Lorem Ipsum")) { _
 @<&nbsp;&nbsp;>@fmt.Println("case insensitive match") _
-}|| ||
+}||RegExp rx = new RegExp(r"lorem", caseSensitive: false); _
+String s = "Lorem Ipsum"; _
+ _
+if (rx.hasMatch(s)) { _
+@<&nbsp;&nbsp;>@print("case insensitive match"); _
+}||
 ||[[# regex-modifiers]][#regex-modifiers-note modifiers]||##gray|/* bit flags used in 3rd arg of regcomp(): */## _
 REG_BASIC _
 REG_EXTENDED _
 REG_ICASE _
 REG_NOSUB _
 REG_NEWLINE||##gray|@@//@@ use (?i), (?m), @@...@@ to insert in regex:## _
-i m s U|| ||
+i m s U||##gray|RegExp //constructor takes two optional boolean named parameters://## _
+ _
+multiLine _
+caseSensitive||
 ||[[# subst]][#subst-note substitution]|| ||import "fmt" _
 import "regexp" _
  _
 s := "do re mi mi mi" _
 var rx = regexp.MustCompile("mi") _
-fmt.Println(rx.ReplaceAllString(s, "ma"))|| ||
+fmt.Println(rx.ReplaceAllString(s, "ma"))||RegExp re = new RegExp(r'mi'); _
+print("do re mi mi mi".replaceAll(re, "ma"));||
 ||[[# group-capture]][#group-capture-note group capture]||#include <regex.h> _
  _
 regex_t rx; _
@@ -558,9 +592,17 @@ else { _
 @<&nbsp;&nbsp;>@} _
  _
 @<&nbsp;&nbsp;>@regfree(&rx); _
-}|| || ||
+}|| ||RegExp rx = new RegExp(r'(\d{4})-(\d{2})-(\d{2})'); _
+var md = rx.firstMatch("2010-06-03"); _
+ _
+if (md != null) { _
+@<&nbsp;&nbsp;>@var yyyy = md.group(1); _
+@<&nbsp;&nbsp;>@var mm = md.group(2); _
+@<&nbsp;&nbsp;>@var dd = md.group(3); _
+@<&nbsp;&nbsp;>@print("year: $yyyy month: $mm day: $dd"); _
+}||
 ||||||||~ [[# dates-time]][#dates-time-note dates and time]||
-||~ ||~ c||~ go||~ swift||
+||~ ||~ c||~ go||~ dart||
 ||[[# unix-epoch-type]][#unix-epoch-type-note unix epoch type]||time_t|| || ||
 ||[[# broken-down-date-time-type]][#broken-down-date-time-type-note broken down type]||struct tm||Time|| ||
 ||[[# current-unix-epoch]][#current-unix-epoch-note current unix epoch]||time_t now; _
@@ -643,36 +685,34 @@ printf("wall: %f s\n", wall / ticks_per_s); _
 printf("user: %f s\n", user / ticks_per_s); _
 printf("system: %f s\n", system / ticks_per_s);|| || ||
 ||||||||~ [[# arrays]][#arrays-note arrays]||
-||~ ||~ c||~ go||~ swift||
+||~ ||~ c||~ go||~ dart||
 ||[[# declare-array]][#declare-array-note declare]||int a[10];||##gray|@@//@@ values are zero-initialized:## _
 var a [10]int _
  _
 ##gray|@@//@@ slice of length 5; capacity 10:## _
-a2 := make([]int, 5, 10)||let a: Array<Int> = [] _
-let a2: Int[] = []||
+a2 := make([]int, 5, 10)|| ||
 ||[[# allocate-array-on-stack]][#allocate-array-on-stack-note allocate on stack]||##gray|/* contents of memory undefined: */## _
-int a[10];||##gray|//compiler decides location in memory//##||##gray|//compiler decides location in memory//##||
+int a[10];||##gray|//compiler decides location in memory//##|| ||
 ||[[# allocate-array-on-heap]][#allocate-array-on-heap-note allocate on heap]||#include <stdlib.h> _
  _
 ##gray|/* memory zero-initialized: */## _
-int *a = calloc(10, sizeof(int));||##gray|//compiler decides location in memory//##||##gray|//compiler decides location in memory//##||
+int *a = calloc(10, sizeof(int));||##gray|//compiler decides location in memory//##|| ||
 ||[[# free-array-on-heap]][#free-array-on-heap-note free heap] _
-@<&nbsp;>@||free(a);||##gray|//none; garbage collected//##||##gray|//none; garbage collected//##||
-||[[# array-literal]][#array-literal-note literal]||int a[] = {1, 2, 3};||a := []int{1, 2, 3}||##gray|@@//@@ array is mutable; variable is not:## _
-let a = [1, 2, 3]||
+@<&nbsp;>@||free(a);||##gray|//none; garbage collected//##|| ||
+||[[# array-literal]][#array-literal-note literal]||int a[] = {1, 2, 3};||a := []int{1, 2, 3}||var a = [1, 2, 3];||
 ||[[# array-size]][#array-size-note size] _
 @<&nbsp;>@||##gray|//none//##||##gray|@@//@@ number of elements in array or slice:## _
 len(a) _
  _
 ##gray|@@//@@ number of elements that can be stored in allocated memory; runtime reallocates when needed:## _
-cap(a)||a.count||
+cap(a)||a.length||
 ||[[# array-lookup]][#array-lookup-note lookup] _
 @<&nbsp;>@||a[0]||a[0]||a[0]||
 ||[[# array-update]][#array-update-note update] _
-@<&nbsp;>@||a[0] = 4;||a[0] = 4||a[0] = 4||
+@<&nbsp;>@||a[0] = 4;||a[0] = 4||a[0] = 4;||
 ||[[# array-out-of-bounds]][#array-out-of-bounds-note out-of-bounds behavior]||##gray|//undefined, possible SIGSEGV//##||##gray|panic: index out of range## _
  _
-##gray|//if compiler detects a problem the code won't compile//##||##gray|//raises// SIGILL##||
+##gray|//if compiler detects a problem the code won't compile//##||RangeError||
 ||[[# array-element-index]][#array-element-index-note element index]||char *a[3] = {"foo", "bar", "baz"}; _
 int loc = -1, i; _
  _
@@ -688,17 +728,17 @@ for i, val := range a { _
 @<&nbsp;&nbsp;>@if val == "bar" { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@loc = i _
 @<&nbsp;&nbsp;>@} _
-}|| ||
+}||var a = ["a", "b", "c"]; _
+print(a.indexOf("b"));||
 ||[[# slice-array]][#slice-array-note slice]||int *a2; _
  _
 a2 = a[2];||a := []string{"a", "b", "c", "d", "e"} _
  _
 ##gray|@@//@@ {"c", "d"}:## _
-a2 := a[2:4]||var a = ["a", "b", "c", "d", "e"] _
+a2 := a[2:4]||var a = ["a", "b", "c", "d", "e"]; _
  _
 ##gray|@@//@@ ["c", "d"]:## _
-a[2@@...@@3] _
-a[2..4]||
+List a2 = a.getRange(2, 4);||
 ||[[# slice-array-to-end]][#slice-array-to-end-note slice to end]|| ||a := []string{"a", "b", "c", "d", "e"} _
  _
 ##gray|@@//@@ {"c", "d", "e"}:## _
@@ -707,20 +747,12 @@ a2 := a[2:]|| ||
  _
 a = append(a, 4) _
 num := a[len(a) - 1] _
-a = a[:len(a) - 1]||let a = [1, 2, 3] _
-a.append(4) _
-##gray|@@//@@ sets num to 4:## _
-let num = a.removeLast()||
-||[[# array-front]][#array-front-note manipulate front]|| || ||let a = [1, 2, 3] _
-a.insert(0, atIndex: 0) _
-##gray|@@//@@ sets num to 0:## _
-let num = a.removeAtIndex(0)||
+a = a[:len(a) - 1]||a.add(4); _
+var v = a.removeLast();||
+||[[# array-front]][#array-front-note manipulate front]|| || || ||
 ||[[# concatenate-array]][#concatenate-array-note concatenate]|| ||a := []int{1, 2, 3} _
 a2 := []int{4, 5, 6} _
-a3 := append(a, a2@@...@@)||let a = [1, 2, 3] _
-a += [4, 5, 6] _
- _
-let a3 = [1, 2, 3] + [4, 5, 6]||
+a3 := append(a, a2@@...@@)|| ||
 ||[[# copy-array]][#copy-array-note copy]|| ||a := []int{1, 2, 3} _
  _
 a2 := a _
@@ -730,15 +762,9 @@ a2[0] = 4 _
 a3 := make([]int, len(a)) _
 copy(a3, a) _
 ##gray|@@//@@ a[0] is unchanged:## _
-a3[0] = 5||let a = [1, 2, 3] _
+a3[0] = 5||var a = ["a", "b"]; _
  _
-let a2 = a _
-##gray|@@//@@ also modifies a[0]:## _
-a2[0] = 4 _
- _
-a3 = Array(a) _
-##gray|@@//@@ a[0] remains 4:## _
-a3[0] = 5||
+List a2 = new List<String>.from(a);||
 ||[[# iterate-over-array]][#iterate-over-array-note iterate over elements]||int a[10]; _
  _
 for (i = 0; i < 10; ++i ) { _
@@ -748,8 +774,9 @@ for (i = 0; i < 10; ++i ) { _
 ||[[# reverse-array]][#reverse-array-note reverse]|| ||import "sort" _
  _
 a := []int{1, 2, 3} _
-sort.Sort(sort.Reverse(sort.IntSlice(a)))||let a = [1, 2, 3] _
-let a2 = a.reverse()||
+sort.Sort(sort.Reverse(sort.IntSlice(a)))||var a = ["a", "b", "c"]; _
+ _
+List a2 = new List<String>.from(a.reversed);||
 ||[[# sort-array]][#sort-array-note sort]||int _
 compare(const void *a, const void *b) { _
  _
@@ -767,42 +794,42 @@ compare(const void *a, const void *b) { _
 int a[5] = {6, 8, 10, 9, 7}; _
  _
 ##gray|/* 2nd arg is array length; 3rd arg is element size */## _
-qsort(a, 5, sizeof(int), &compare);|| ||let a = [1, 3, 2, 4] _
+qsort(a, 5, sizeof(int), &compare);|| ||var a = [3, 1, 4, 2]; _
+a.sort();||
+||[[# map]][#map-note map]||##gray|//none//##||##gray|//none//##||var a = [1, 2, 3]; _
  _
-##gray|@@//@@ modifies a in-place and returns it:## _
-sort(a)||
-||[[# map]][#map-note map]||##gray|//none//##||##gray|//none//##|| ||
-||[[# filter]][#filter-note filter]||##gray|//none//##||##gray|//none//##|| ||
-||[[# reduce]][#reduce-note reduce]||##gray|//none//##||##gray|//none//##|| ||
+var a2 = new List.from(a.map((n) => n * n));||
+||[[# filter]][#filter-note filter]||##gray|//none//##||##gray|//none//##||var a = [1, 2, 3]; _
+ _
+var a2 = new List.from(a.where((n) => n > 1));||
+||[[# reduce]][#reduce-note reduce]||##gray|//none//##||##gray|//none//##||var a = [1, 2, 3]; _
+ _
+var sum = a.reduce((v, e) => v + e);||
 ||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
-||~ ||~ c||~ go||~ swift||
-||[[# declare-dict]][#declare-dict-note declare]|| ||gold := make(map[string]int)||let dict = Dictionary<String, Int>()||
+||~ ||~ c||~ go||~ dart||
+||[[# declare-dict]][#declare-dict-note declare]|| ||gold := make(map[string]int)|| ||
 ||[[# dict-literal]][#dict-literal-note literal]|| ||gold := map[string]int{ _
 @<&nbsp;&nbsp;>@"France": 7, _
 @<&nbsp;&nbsp;>@"Spain": 3, _
-}||let dict = ["t": 1, "f": 0]||
-||[[# dict-size]][#dict-size-note size]|| || ||dict.count||
+}||var d = {"t": 1, "f": 0};||
+||[[# dict-size]][#dict-size-note size]|| || ||d.length||
 ||[[# dict-lookup]][#dict-lookup-note lookup]|| ||import "fmt" _
  _
 gold["France"] = 7 _
-fmt.Printf("France: %d\n", gold["France"])||dict["t"]||
-||[[# dict-update]][#dict-update-note update]|| || ||dict["t"] = 2||
-||[[# dict-out-of-bounds]][#dict-out-of-bounds-note out-of-bounds behavior]|| || ||##gray|//returns//## nil||
+fmt.Printf("France: %d\n", gold["France"])||d["t"]||
+||[[# dict-update]][#dict-update-note update]|| || ||d["t"] = 2;||
+||[[# dict-out-of-bounds]][#dict-out-of-bounds-note out-of-bounds behavior]|| || ||##gray|//accessing nonexistent key returns// null##||
 ||[[# dict-is-key-present]][#dict-is-key-present-note is key present]|| ||##gray|//if key not present,// val //will contain zero value for type and// ok //will contain false://## _
-val, ok = gold["Norway"]||if dict["y"] { _
-@<&nbsp;&nbsp;>@println("key found") _
-} else { _
-@<&nbsp;&nbsp;>@println("no such key") _
-}||
-||[[# dict-delete]][#dict-delete-note delete]|| ||delete(gold, "France")||dict.removeValueForKey("t")||
-||[[# dict-iterate]][#dict-iterate-note iterate]|| || ||for (k, v) in dict { _
-@<&nbsp;&nbsp;>@println("\(k): \(v)") _
-}||
-||[[# dict-key-val]][#dict-key-val-note keys and values as arrays]|| || ||##gray|@@//@@ dict.keys and dict.values are iterable:## _
-Array(dict.keys) _
-Array(dict.values)||
+val, ok = gold["Norway"]||d.containsKey("y")||
+||[[# dict-delete]][#dict-delete-note delete]|| ||delete(gold, "France")||d.remove("f");||
+||[[# dict-iterate]][#dict-iterate-note iterate]|| || ||d.forEach((k, v) { _
+@<&nbsp;&nbsp;>@print(k); _
+@<&nbsp;&nbsp;>@print(v); _
+});||
+||[[# dict-key-val]][#dict-key-val-note keys and values as arrays]|| || ||List keys = d.keys; _
+List vals = d.values;||
 ||||||||~ [[# functions]][#functions-note functions]||
-||~ ||~ c||~ go||~ swift||
+||~ ||~ c||~ go||~ dart||
 ||[[# def-func]][#def-func-note define function]||int add(int n, int m) { _
 @<&nbsp;&nbsp;>@return n + m; _
 }||func add(n int, m int) int { _
@@ -812,11 +839,16 @@ Array(dict.values)||
 ##gray|@@//@@ parameters can share type declaration:## _
 func add(n, m int) int { _
 @<&nbsp;&nbsp;>@return n + m _
-}||func add(n: Int, m: Int) -> Int { _
-@<&nbsp;&nbsp;>@return n + m _
+}||num add(num n, num m) { _
+@<&nbsp;&nbsp;>@return n + m; _
+} _
+ _
+##gray|@@//@@ parameter and return types optional:## _
+add(n, m) { _
+@<&nbsp;&nbsp;>@return n + m; _
 }||
 ||[[# invoke-func]][#invoke-func-note invoke function] _
-@<&nbsp;>@||add(3, 7)||add(3, 7)||add(3, 7)||
+@<&nbsp;>@||add(3, 7)||add(3, 7)|| ||
 ||[[# forward-decl-func]][#forward-decl-func-note forward declaration of function]||float add(float x, float y); _
  _
 ##gray|/* if a function invocation is encountered before a _
@@ -834,24 +866,9 @@ fmt.Printf("%f\n", add(2.2, 3.5)) _
 func add(n float32, m float32) float32 { _
 @<&nbsp;&nbsp;>@return n + m _
 }|| ||
-||[[# overload-func]][#overload-func-note overload function]||##gray|//not permitted//##||##gray|//not permitted//##||func add(a: String, b: String) -> String { _
-@<&nbsp;&nbsp;>@return a + b _
-}||
-||[[# nest-func]][#nest-func-note nest function]||##gray|//not permitted//##||##gray|//not permitted//##||func add_one(n: Int) -> Int { _
-@<&nbsp;&nbsp;>@func add(a: Int, b: Int) -> Int { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return a + b _
-@<&nbsp;&nbsp;>@} _
-@<&nbsp;&nbsp;>@return add(1, n) _
-}||
-||[[# default-val-param]][#default-val-param-note default value for parameter]||##gray|//none//##||##gray|//none//##||func incr(n: Int, amount: Int = 1) -> Int { _
-@<&nbsp;&nbsp;>@return n + amount _
-} _
- _
-##gray|@@//@@ 4:## _
-incr(3) _
- _
-##gray|@@//@@ 5:## _
-incr(3, amount: 2)||
+||[[# overload-func]][#overload-func-note overload function]||##gray|//not permitted//##||##gray|//not permitted//##|| ||
+||[[# nest-func]][#nest-func-note nest function]||##gray|//not permitted//##||##gray|//not permitted//##|| ||
+||[[# default-val-param]][#default-val-param-note default value for parameter]||##gray|//none//##||##gray|//none//##|| ||
 ||[[# variable-num-arg]][#variable-num-arg-note variable number of arguments]||#include <stdarg.h> _
  _
 char* concat(int cnt,  @@...@@) { _
@@ -886,23 +903,8 @@ char *s = concat(4, "Hello", ", ", "World", "!");||func concat(strs @@...@@strin
 @<&nbsp;&nbsp;>@} _
  _
 @<&nbsp;&nbsp;>@return ret _
-}|| func concat(strings: String@@...@@) -> String { _
-@<&nbsp;&nbsp;>@var retval = "" _
-@<&nbsp;&nbsp;>@for string in strings { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@retval += string _
-@<&nbsp;&nbsp;>@} _
-@<&nbsp;&nbsp;>@return retval _
-}||
-||[[# named-param]][#named-param-note named parameters]||##gray|//none//##||##gray|//none//##||func my_log(#exp: Double, #base: Double) -> Double {  _
-@<&nbsp;&nbsp;>@return log(exp) / log(base) _
-} _
- _
-##gray|@@//@@ expose different parameter names:## _
-func my_log(exp e: Double, base b: Double) -> Double { _
-@<&nbsp;&nbsp;>@return log(e) / log(b) _
-} _
- _
-my_log(exp: 8, base: 2)||
+}|| ||
+||[[# named-param]][#named-param-note named parameters]||##gray|//none//##||##gray|//none//##|| ||
 ||[[# pass-by-val]][#pass-by-val-note pass by value]||void use_integer(int i) { _
 @<&nbsp;&nbsp;>@##gray|//function body//## _
 } _
@@ -918,20 +920,16 @@ int i = 7; _
  _
 use_iptr(&i);|| || ||
 ||[[# pass-by-ref]][#pass-by-ref-note pass by reference]||##gray|//not possible//##|| || ||
-||[[# retval]][#retval-note return value]||##gray|return //arg//##||##gray|return //arg.  If return values have names and no arguments are provided to// return //the values assigned to the return variables are used.//##||##gray|return //arg//##||
+||[[# retval]][#retval-note return value]||##gray|return //arg//##||##gray|return //arg.  If return values have names and no arguments are provided to// return //the values assigned to the return variables are used.//##|| ||
 ||[[# no-retval]][#no-retval-note no return value]||##gray|/* declare function void: */## _
 void print_err(char *msg) { _
 @<&nbsp;&nbsp;>@fprintf(stderr, msg); _
-}|| ||func print_err(err: String) { _
-@<&nbsp;&nbsp;>@println(err) _
-}||
+}|| || ||
 ||[[# multiple-retval]][#multiple-retval-note multiple return values]||##gray|//not permitted//##||func divmod(m, n int) (int, int) { _
 @<&nbsp;&nbsp;>@return m / n, m % n _
 } _
  _
-q, r := divmod(7, 3)||func divmod(dividend: Int, divisor: Int) -> (Int, Int) { _
-@<&nbsp;&nbsp;>@return (dividend / divisor, dividend % divisor) _
-}||
+q, r := divmod(7, 3)|| ||
 ||[[# named-retval]][#named-retval-note named return values]||##gray|//none//##||func divmod(m, n int) (q, r int) { _
 @<&nbsp;&nbsp;>@q =  m / n _
 @<&nbsp;&nbsp;>@r = m % n _
@@ -939,8 +937,8 @@ q, r := divmod(7, 3)||func divmod(dividend: Int, divisor: Int) -> (Int, Int) { _
 } _
  _
 q, r := divmod(7, 3)|| ||
-||[[# anonymous-func-literal]][#anonymous-func-literal-note anonymous function literal]||##gray|//none//##||  || let add_one = {(n: Int) -> Int in n + 1}||
-||[[# invoke-anonymous-func]][#invoke-anonymous-func-note invoke anonymous function]|| || ||add_one(2)|| 
+||[[# anonymous-func-literal]][#anonymous-func-literal-note anonymous function literal]||##gray|//none//##||  || ||
+||[[# invoke-anonymous-func]][#invoke-anonymous-func-note invoke anonymous function]|| || || ||
 ||[[# func-private-state]][#func-private-state-note function with private state]||int _
 counter() { _
 @<&nbsp;&nbsp;>@static int n = 0; _
@@ -956,13 +954,9 @@ add(int m, int n) { _
 @<&nbsp;&nbsp;>@its address can */## _
 int (* fp)(int, int) = &add; _
  _
-printf("1 + 2: %d\n", (*fp)(1, 2));|| ||func add(n: Int, m: Int) -> Int { _
-@<&nbsp;&nbsp;>@return n + m _
-} _
- _
-let f = add||
+printf("1 + 2: %d\n", (*fp)(1, 2));|| || ||
 ||||||||~ [[# execution-control]][#execution-control-note execution control]||
-||~ ||~ c||~ go||~ swift||
+||~ ||~ c||~ go||~ dart||
 ||[[# for]][#for-note for]||int i, n; _
  _
 for (i = 1, n = 1; i <= 10; ++i) { _
@@ -971,10 +965,10 @@ for (i = 1, n = 1; i <= 10; ++i) { _
  _
 for i := 1; i <= 10; i++ { _
 @<&nbsp;&nbsp;>@n *= i; _
-}|| var n = 1 _
+}||int n = 1; _
  _
-for var i = 1; i <= 10; i++ { _
-@<&nbsp;&nbsp;>@n *= i _
+for (int i = 1; i <= 10; ++i) { _
+@<&nbsp;&nbsp;>@n *= i; _
 }||
 ||[[# if]][#if-note if]||int signum; _
  _
@@ -990,15 +984,23 @@ if (i > 0) { _
 @<&nbsp;&nbsp;>@signum = 0 _
 } else { _
 @<&nbsp;&nbsp;>@signum = -1 _
-}||var signum: Int _
+}||int signum; _
  _
-if i > 0 { _
-@<&nbsp;&nbsp;>@signum = 1 _
-} else if i == 0 { _
-@<&nbsp;&nbsp;>@signum = 0 _
+if (i > 0) { _
+@<&nbsp;&nbsp;>@signum = 1; _
+} else if (i == 0) { _
+@<&nbsp;&nbsp;>@signum = 0; _
 } else { _
-@<&nbsp;&nbsp;>@signum = -1 _
+@<&nbsp;&nbsp;>@signum = -1; _
 }||
+||single statement branch||if (n < 0) _
+@<&nbsp;&nbsp;>@printf("negative\n");||import "fmt" _
+ _
+##gray|@@//@@ braces are mandatory:## _
+if n < 0 { _
+@<&nbsp;&nbsp;>@fmt.Println("negative") _
+}||if (n < 0) _
+@<&nbsp;&nbsp;>@print("negative");||
 ||[[# while]][#while-note while]||int i = 0; _
  _
 while (i < 10) { _
@@ -1007,10 +1009,10 @@ while (i < 10) { _
  _
 for  i < 10 { _
 @<&nbsp;&nbsp;>@i++ _
-}||var i = 0 _
+}||int i = 0; _
  _
-while i < 10 { _
-@<&nbsp;&nbsp;>@++i _
+while (i < 10) { _
+@<&nbsp;&nbsp;>@++i; _
 }||
 ||[[# switch]][#switch-note switch]||switch (i) { _
 case 0: _
@@ -1024,9 +1026,9 @@ default: _
 @<&nbsp;&nbsp;>@break; _
 }|| || ||
 ||[[# break-continue]][#break-continue-note break/continue] _
-@<&nbsp;>@|| || || ||
+@<&nbsp;>@||break continue||break continue||break continue||
 ||||||||~ [[# concurrency]][#concurrency-note concurrency]||
-||~ ||~ c||~ go||~ swift||
+||~ ||~ c||~ go||~ dart||
 ||start thread||#include <pthread.h> _
  _
 typedef struct { _
@@ -1074,15 +1076,10 @@ if (pthread_cancel(thr)) { _
 ||send message|| || || ||
 ||receive message|| || || ||
 ||||||||~ [[# file-handles]][#file-handles-note file handles]||
-||~ ||~ c||~ go||~ swift||
+||~ ||~ c||~ go||~ dart||
 ||[[# std-file-handles]][#std-file-handles-note standard file handles]||stdin stdout stderr||import "os" _
  _
-os.Stdin os.Stdout os.Stderr||let stdin = _
-@<&nbsp;&nbsp;>@NSFileHandle.fileHandleWithStandardInput() _
-let stdout = _
-@<&nbsp;&nbsp;>@NSFileHandle.fileHandleWithStandardOutput() _
-let stderr _
-@<&nbsp;&nbsp;>@NSFileHandle.fileHandleWithStandardError()||
+os.Stdin os.Stdout os.Stderr|| ||
 ||[[# read-line-stdin]][#read-line-stdin-note read line from stdin]||char *line = NULL; _
 size_t cap = 0; _
 ssize_t len; _
@@ -1118,50 +1115,27 @@ if err != nil { _
 @<&nbsp;&nbsp;>@os.Stderr.WriteString("error!") _
 } else { _
 @<&nbsp;&nbsp;>@##gray|@@//@@ use line here## _
-}||##gray|//none//##||
+}|| ||
 ||[[# write-line-stdout]][#write-line-stdout-note write line to stdout]||##gray|/* returns EOF on error */## _
 int retval = puts("Hello, World!");||import "os" _
  _
-os.Stdout.WriteString("Hello, World!\n")||println("Hello, World!")||
+os.Stdout.WriteString("Hello, World!\n")||print('Hello, World!');||
 ||[[# printf]][#printf-note write formatted string to stdout] _
 @<&nbsp;>@||printf("count: %d\n", 7);||import "fmt" _
  _
-fmt.Printf("count: %d\n", 7)||let s = "Spain" _
-let i = 17 _
-let x = 3.14156 _
-let fmtx = NSString(format: "%.2f", x) _
- _
-println("\(s) \(i) \(fmtx)")||
+fmt.Printf("count: %d\n", 7)|| ||
 ||[[# open-file]][#open-file-note open file for reading]||##gray|/* returns NULL on error */## _
 FILE *f = fopen("/etc/hosts", "r");||raw, err := os.Open("/etc/hosts") _
 if err == nil { _
 @<&nbsp;&nbsp;>@f := bufio.NewReader(f) _
-}||let f = NSFileHandle( _
-@<&nbsp;&nbsp;>@forReadingAtPath: "/etc/hosts")||
+}|| ||
 ||[[# open-file-write]][#open-file-write-note open file for writing]||##gray|/* returns NULL on error */## _
-FILE *f = fopen("/tmp/test", "w");|| ||let path = "/tmp/test" _
-NSFileManager().copyItemAtPath( _
-@<&nbsp;&nbsp;>@"/dev/null", _
-@<&nbsp;&nbsp;>@toPath: path, _
-@<&nbsp;&nbsp;>@error: nil) _
-let f = NSFileHandle( _
-@<&nbsp;&nbsp;>@forWritingAtPath: path)||
+FILE *f = fopen("/tmp/test", "w");|| || ||
 ||[[# open-file-append]][#open-file-append-note open file for appending]||##gray|/* returns NULL on error */## _
-FILE *f = fopen("/tmp/err.log", "a");|| ||let f = NSFileHandle( _
-@<&nbsp;&nbsp;>@forWritingAtPath: "/tmp/err.log") _
-f.seekToEndOfFile()||
+FILE *f = fopen("/tmp/err.log", "a");|| || ||
 ||[[# close-file]][#close-file-note close file]||##gray|/* returns EOF on error */## _
-int retval = fclose(f);|| ||f.closeFile()||
-||[[# close-file-implicitly]][#close-file-implicitly-note close file implicitly]||##gray|//none//##||##gray|//defer//##||class Defer { _
-@<&nbsp;&nbsp;>@var fun: ()->() _
-@<&nbsp;&nbsp;>@init(fun: ()->()) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@self.fun = fun _
-@<&nbsp;&nbsp;>@} _
-@<&nbsp;&nbsp;>@deinit { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@fun() _
-@<&nbsp;&nbsp;>@} _
-} _
-var defer = Defer({()->() in f.closeFile()})||
+int retval = fclose(f);|| || ||
+||[[# close-file-implicitly]][#close-file-implicitly-note close file implicitly]||##gray|//none//##||##gray|//defer//##|| ||
 ||[[# io-err]][#io-err-note i/o errors]||##gray|//Functions return values such as// EOF, NULL, //or// -1 //to indicate error.  In some cases errors are not distinguished from end-of-file.  The functions// ferror() //and// feof() //can be used to test a file handle. _
  _
 The type of error is stored in// errno.  strerror(errno) //converts the errors code to a string and// perror() //writes its argument to// stderr //with// sterror(errno).##|| || ||
@@ -1182,22 +1156,17 @@ if (fgets(line, BUFSIZ, f) == NULL) { _
  _
 } else { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@fprintf(stderr, "long line truncated\n"); _
-}|| ||##gray|//none//##||
-||[[# file-line-iterate]][#file-line-iterate-note iterate over file by line]|| || ||##gray|//none//##||
-||[[# read-file-array]][#read-file-array-note read file into array of strings]|| || ||##gray|//none//##||
-||[[# read-file-str]][#read-file-str-note read file into string]|| || ||let data = f.readDataToEndOfFile() _
-let s = NSString( _
-@<&nbsp;&nbsp;>@data: data, _
-@<&nbsp;&nbsp;>@encoding: NSUTF8StringEncoding)||
+}|| || ||
+||[[# file-line-iterate]][#file-line-iterate-note iterate over file by line]|| || || ||
+||[[# read-file-array]][#read-file-array-note read file into array of strings]|| || || ||
+||[[# read-file-str]][#read-file-str-note read file into string]|| || || ||
 ||[[# write-str]][#write-str-note write string]||##gray|/* returns EOF on error */## _
-int retval = fputs("Hello, World!", f);|| ||f.writeData("Hello, World!".dataUsingEncoding( _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@NSUTF8StringEncoding))||
+int retval = fputs("Hello, World!", f);|| || ||
 ||[[# write-line]][#write-line-note write line]||##gray|/* returns EOF on error */## _
-int retval = fputs("Hello, World!\n", f);|| ||f.writeData("Hello, World!\n".dataUsingEncoding( _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@NSUTF8StringEncoding))||
+int retval = fputs("Hello, World!\n", f);|| || ||
 ||[[# flush]][#flush-note flush file handle]||if (fflush(f) == EOF) { _
 @<&nbsp;&nbsp;>@perror("fflush failed"); _
-}|| ||f.synchronizeFile()||
+}|| || ||
 ||[[# eof-test]][#eof-test-note end-of-file test] _
 @<&nbsp;>@||feof(f)|| || ||
 ||[[# seek]][#seek-note get and set file handle position]||long pos; _
@@ -1208,8 +1177,7 @@ if ((pos = ftell(f)) == -1) { _
 ##gray|/* 3rd arg can also be SEEK_CUR or SEEK_END */## _
 if (fseek(f, 0, SEEK_SET) == -1) { _
 @<&nbsp;&nbsp;>@perror("fseek failed"); _
-}|| ||let pos = f.offsetInFile _
-f.seekToFileOffset(0)||
+}|| || ||
 ||[[# tmp-file]][#tmp-file-note open unused file]||#include <limits.h>@<&nbsp;&nbsp;>@##gray|/* PATH_MAX */## _
 #include <unistd.h> _
  _
@@ -1233,7 +1201,7 @@ if (fd != -1) { _
 @<&nbsp;&nbsp;>@perror("mkstemp failed"); _
 }|| || ||
 ||||||||~ [[# files]][#files-note files]||
-||~ ||~ c||~ go||~ swift||
+||~ ||~ c||~ go||~ dart||
 ||[[# file-test]][#file-test-note file test, regular file test] _
 @<&nbsp;>@||#include <sys/stat.h> _
 #include <unistd.h>@<&nbsp;&nbsp;>@##gray|/* access() */## _
@@ -1313,9 +1281,9 @@ if (size >= 0 ) { _
 @<&nbsp;&nbsp;&nbsp;>@directory.  Caller should free() return value. */## _
 char *path = tempnam("/tmp", "foo");|| || ||
 ||||||||~ [[# file-fmt]][#file-fmt-note file formats]||
-||~ ||~ c||~ go||~ swift||
+||~ ||~ c||~ go||~ dart||
 ||||||||~ [[# directories]][#directories-note directories]||
-||~ ||~ c||~ go||~ swift||
+||~ ||~ c||~ go||~ dart||
 ||[[# build-pathname]][#build-pathname-note build pathname]|| || || ||
 ||[[# dirname-basename]][#dirname-basename-note dirname and basename]||#include <libgen.h> _
  _
@@ -1395,7 +1363,7 @@ if (mkdtemp(buf) == NULL) { _
 ||[[# system-tmp-dir]][#system-tmp-dir-note system temporary file directory]||##gray|/* defined in <stdio.h> */## _
 P_tmpdir|| || ||
 ||||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
-||~ ||~ c||~ go||~ swift||
+||~ ||~ c||~ go||~ dart||
 ||[#main signature of main]||int main(int argc, char **argv) {|| || ||
 ||[#first-argument first argument] _
 @<&nbsp;>@||##gray|//pathname of executable//##|| || ||
@@ -1505,7 +1473,7 @@ if (kill(getppid(), SIGUSR1) == -1) { _
 @<&nbsp;&nbsp;>@perror("kill failed"); _
 }|| || ||
 ||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
-||~ ||~ c||~ go||~ swift||
+||~ ||~ c||~ go||~ dart||
 ||[[# load-lib]][#load-lib-note load library]||##gray|/* The library must also be linked: _
  _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@$ gcc foo.o main.c _
@@ -1533,18 +1501,14 @@ package foo|| ||
 @<&nbsp;>@||##gray|//none//##||import fu "foo"|| ||
 ||[[# unqualified-import]][#unqualified-import-note unqualified import of namespace]||##gray|//none//##||import . "foo"|| ||
 ||||||||~ [[# user-defined-types]][#user-defined-types-note user-defined types]||
-||~ ||~ c||~ go||~ swift||
+||~ ||~ c||~ go||~ dart||
 ||[[# typedef]][#typedef-note typedef]||typedef int customer_id; _
-customer_id cid = 3;|| ||typealias CustomerId = Int _
-var customer_id: CustomerId = 3||
+customer_id cid = 3;|| || ||
 ||[[# enum]][#enum-note enum]||enum day_of_week { _
 @<&nbsp;&nbsp;>@mon, tue, wed, thu, fri, sat, sun _
 }; _
  _
-enum day_of_week dow = tue;|| ||enum DayOfWeek { _
-@<&nbsp;&nbsp;>@case Mon, Tue, Wed, Thu, Fri, Sat, Sun _
-} _
-let dow = DayOfWeek.Tue||
+enum day_of_week dow = tue;|| || ||
 ||[#struct-definition struct definition]||struct medal_count { _
 @<&nbsp;&nbsp;>@const char* country; _
 @<&nbsp;&nbsp;>@int gold; _
@@ -1555,11 +1519,8 @@ let dow = DayOfWeek.Tue||
 @<&nbsp;&nbsp;>@gold int _
 @<&nbsp;&nbsp;>@silver int _
 @<&nbsp;&nbsp;>@bronze int _
-}||struct MedalCount { _
-@<&nbsp;&nbsp;>@var country: String _
-@<&nbsp;&nbsp;>@var gold: Int, silver: Int, bronze: Int _
-}||
-||[#struct-declaration struct declaration]||struct medal_count spain;|| ||var spain: MedalCount||
+}|| ||
+||[#struct-declaration struct declaration]||struct medal_count spain;|| || ||
 ||[#struct-initialization struct initialization]||struct medal_count spain = { "Spain", 3, 7, 4}; _
  _
 struct medal_count france = { _
@@ -1573,12 +1534,7 @@ france := MedalCount{ _
 @<&nbsp;&nbsp;>@bronze: 9, _
 @<&nbsp;&nbsp;>@silver: 7, _
 @<&nbsp;&nbsp;>@gold: 8, _
-@<&nbsp;&nbsp;>@country: "France"}||var spain = MedalCount( _
-@<&nbsp;&nbsp;>@country: "Spain", _
-@<&nbsp;&nbsp;>@gold: 3, _
-@<&nbsp;&nbsp;>@silver: 2, _
-@<&nbsp;&nbsp;>@bronze: 1 _
-)||
+@<&nbsp;&nbsp;>@country: "France"}|| ||
 ||[#struct-member-assignment struct member assignment]||spain.country = "Spain"; _
 spain.gold = 3; _
 spain.silver = 7; _
@@ -1586,18 +1542,26 @@ spain.bronze = 4;||france := MedalCount{} _
 france.country = "France" _
 france.gold = 7 _
 france.silver = 6 _
-france.bronze = 5||var france: MedalCount _
-france.country = "France" _
-france.gold = 7 _
-france.silver = 6 _
-france.bronze = 5||
+france.bronze = 5|| ||
 ||[#struct-member-access struct member access]||int spain_total = spain.gold + spain.silver + spain.bronze;||france_total = france.gold + _
 @<&nbsp;&nbsp;>@france.silver + _
-@<&nbsp;&nbsp;>@france.bronze||let france_total = france.gold + france.silver + france.bronze||
+@<&nbsp;&nbsp;>@france.bronze|| ||
 ||||||||~ [[# objects]][#objects-note objects]||
-||~ ||~ c||~ go||~ swift||
+||~ ||~ c||~ go||~ dart||
+||||||||~ [[# reflection]][#reflection-note reflection]||
+||~ ||~ c||~ go||~ dart||
+||test type|| || ||var n = 3; _
+if (n is int) { _
+@<&nbsp;&nbsp;>@n += 1; _
+} _
+ _
+if (n is! String) { _
+@<&nbsp;&nbsp;>@n += "s"; _
+}||
+||basic types|| || ||dynamic _
+num||
 ||||||||~ [[# macros]][#macros-note macros]||
-||~ ||~ c||~ go||~ swift||
+||~ ||~ c||~ go||~ dart||
 ||[[# include-file]][#include-file-note include file]||##gray|/* search path include system directories: */## _
 #include <stdio.h> _
  _
@@ -1626,7 +1590,7 @@ france.bronze = 5||
  _
 ##gray|#ifdef FOO //is a shortcut for// #if defined(FOO)##|| || ||
 ||||||||~ [[# net-web]][#net-web-note net and web]||
-||~ ||~ c||~ go||~ swift||
+||~ ||~ c||~ go||~ dart||
 ||[[# http-get]][#http-get-note http get]|| ||import "fmt" _
 import "io/ioutil" _
 import "net/http" _
@@ -1639,8 +1603,10 @@ if err == nil { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@fmt.Println(string(body)) _
 @<&nbsp;&nbsp;>@} _
 }|| ||
+||||||||~ [[# dom]][#dom-note dom]||
+||~ ||~ c||~ go||~ dart||
 ||||||||~ [[# unit-tests]][#unit-tests-note unit tests]||
-||~ ||~ c||~ go||~ swift||
+||~ ||~ c||~ go||~ dart||
 ||unit test example||$ sudo apt-get install check _
  _
 $ cat > check_foo.c _
@@ -1688,7 +1654,7 @@ fail_unless(strcmp(s, "ipsum"), "strings not equal");|| || ||
 ||setup and teardown|| || || ||
 ||unit test coverage|| || || ||
 ||||||||~ [[# debugging-profiling]][#debugging-profiling-note debugging and profiling]||
-||~ ||~ c||~ go||~ swift||
+||~ ||~ c||~ go||~ dart||
 ||[[# check-syntax]][#check-syntax-note check syntax]||$ gcc -fsyntax-only foo.c|| || ||
 ||[[# stronger-warnings]][#stronger-warnings-note flag for stronger warnings]||$ gcc -Wall foo.c|| || ||
 ||[[# suppress-warnings]][#suppress-warnings-note suppress warnings]||$ gcc -w foo.c|| || ||
@@ -1721,7 +1687,8 @@ $ gprof foo|| || ||
 ||[[# memory-tool]][#memory-tool-note memory tool]||$ sudo apt-get install valgrind _
 $ gcc -o foo foo.c _
 $ valgrind foo|| || ||
-||~ ||~ ##EFEFEF|@@_________________________________________________@@##||~ ##EFEFEF|@@_________________________________________________@@##||~ ##EFEFEF|@@_________________________________________________@@##||
+||~ ||~ ##EFEFEF|@@_______________________________________________________________@@##||~ ##EFEFEF|@@_______________________________________________________________@@##||~ ##EFEFEF|@@_______________________________________________________________@@##||
+
 
 
 [[# general-note]]
@@ -3052,6 +3019,9 @@ printf("The winner (%s) earned %d silver medals", winner->country, winner->silve
 [[# objects-note]]
 + [#objects Objects]
 
+[[# reflection-note]]
++ [#reflection Reflection]
+
 [[# macros-note]]
 + [#macros Macros]
 
@@ -3064,6 +3034,9 @@ printf("The winner (%s) earned %d silver medals", winner->country, winner->silve
 ++ [#http-get http get]
 
 How to make an HTTP GET request.
+
+[[# dom-note]]
++ [#dom DOM]
 
 [[# unit-tests-note]]
 + [#unit-tests Unit Tests]
@@ -3085,38 +3058,38 @@ FREQUENTLY USED GCC and CLANG OPTIONS
 
 TYPE OF BUILD
 
--E stop after preprocessor; do not compile
--S stop after compilation; do not assemble
--c stop after assembly; do not link
+-E  stop after preprocessor; do not compile
+-S  stop after compilation; do not assemble
+-c  stop after assembly; do not link
 
 PREPROCESSOR
 
--I add directory to list of directories containing header files
--D FOO define macro FOO as 1
--D FOO=VAL define macro FOO as VAL
--U FOO   undefine macro FOO
--M output make dependency info
+-I          add directory to list of directories containing header files
+-D FOO      define macro FOO as 1
+-D FOO=VAL  define macro FOO as VAL
+-U FOO      undefine macro FOO
+-M          output make dependency info
 
 LINKER
 
--lfoo search library foo for symbols when liking
--L add directory to search path used by -l
+-lfoo  search library foo for symbols when liking
+-L     add directory to search path used by -l
 
 WARNINGS
 
--w no warnings
--Werror make warnings errors
--Wall enable all warnings
+-w       no warnings
+-Werror  make warnings errors
+-Wall    enable all warnings
 
 DEBUGGING, PROFILING, and OPTIMIZATION
 
--g make object debuggable
--pg generate executable which produces output for gprof
--O1 -O2 -O2 spend progressively more time in compilation optimizing code
+-g           make object debuggable
+-pg          generate executable which produces output for gprof
+-O1 -O2 -O2  spend progressively more time in compilation optimizing code
 
 MAC SPECIFIC
 
--F add a framework directory (used in place of -I, -l, -L)
+-F  add a framework directory (used in place of -I, -l, -L)
 [[/code]]
 
 [[# go]]
@@ -3125,13 +3098,8 @@ MAC SPECIFIC
 [http://golang.org/doc/go_spec.html Language Specification]
 [http://golang.org/pkg/ Package Reference]
 
-[[# swift]]
-+ [#top Swift]
+[[# dart]]
++ [#top Dart]
 
-As of June 2014, to use Swift one must download and install a beta version of Xcode 6, then:
-
-[[code]]
-$ sudo xcode-select -s /Applications/Xcode6-Beta.app/Contents/Developer/
-
-$ xcrun swift
-[[/code]]
+[https://www.dartlang.org/docs/ Programmer's Guide]
+[https://api.dartlang.org/apidocs/channels/stable/dartdoc-viewer/home API Reference]

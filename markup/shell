@@ -2,116 +2,132 @@
 
 [#grammar-invocation grammar and invocation] | [#var-expr variables and expression] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] _
 [#arrays arrays] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] |  [#files files] | [#directories directories] | [#processes-environment processes and environment] _
-[#libraries-namespaces libraries and namespaces] | [#objects objects] | [#reflection reflection]
+[#libraries-namespaces libraries and namespaces] | [#reflection reflection]
 
-||~ [[# general]]||~ [#posix posix shell]||~ [#applescript applescript]||~ [#powershell powershell]||
+||~ [[# general]]||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
 ||[[# version-used]][#version-used-note version used] _
-@<&nbsp;>@||##gray|//dash; POSIX 2008//##||##gray|//2.1//##||##gray|//2.0//##||
+@<&nbsp;>@||##gray|//dash; POSIX 2008//##||##gray|//6.3//##||##gray|//2.0//##||
 ||[[# version]][#version-note show version] _
-@<&nbsp;>@|| ||$ osascript -e \ _
-@<&nbsp;&nbsp;>@"AppleScript's version"||$host.version||
+@<&nbsp;>@|| ||##gray|//displayed at startup//##||$host.version||
 ||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
-||~ ||~ [#posix posix shell]||~ [#applescript applescript]||~ [#powershell powershell]||
+||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
 ||[[# interpreter]][#interpreter-note interpreter] _
-@<&nbsp;>@||$ dash foo.sh||$ osascript foo.scpt||@@PS>@@ .\foo.ps1 _
+@<&nbsp;>@||$ dash foo.sh||##gray|//when foo.bat is in the search path://## _
+@@>@@ foo||@@PS>@@ .\foo.ps1 _
  _
 @@DOS>@@ powershell -file foo.ps1||
 ||[[# repl]][#repl-note repl] _
-@<&nbsp;>@||$ dash||##gray|//none//##||@@>@@ powershell||
-||[[# exec-and-exit]][#exec-and-exit-note execute command and exit]||$ dash -c 'echo hi'||$ osascript -e 'say "hi"'||@@>@@ powershell -command 'write-host "hi"'||
+@<&nbsp;>@||$ dash||@@>@@ cmd||@@>@@ powershell||
+||[[# exec-and-exit]][#exec-and-exit-note execute command and exit]||$ dash -c 'echo hi'||@@>@@ cmd /c "echo hi"||@@>@@ powershell -command 'write-host "hi"'||
 ||[[# stmt-separator]][#stmt-separator-note statement separator]||##gray|//pipelines separated by//## _
 ; & && @@||@@ _
  _
 ##gray|//lists of pipelines separated by newlines unless newline is preceded by a backslash or inside these characters://## _
-"" '' @@``@@ ()||##gray|//newline; use ⌥l (option lowercase L) to escape newline and continue statement on following line//##||; ##gray|//or newline; a newline can be escaped with a backtick://## @@`@@  ##gray|//newlines are permitted in double quotes and after a pipe://## | ||
+"" '' @@``@@ ()||##gray|//pipelines separated by//## & && @@||@@ _
+ _
+##gray|//lists of pipelines separated by newline unless preceded by caret ^ which is not inside double quote "//##||; ##gray|//or newline; a newline can be escaped with a backtick://## @@`@@  ##gray|//newlines are permitted in double quotes and after a pipe://## | ||
 ||[[# word-separator]][#word-separator-note word separators]|| | & ; ( ) < > ##gray|//space tab//##|| || ||
+||[[# esc-special-char]][#esc-special-char-note escape special character]||##gray|# write "foo" to foo.txt:## _
+echo foo > foo.txt _
+ _
+##gray|# write "foo > foo.txt" to stdout:## _
+echo foo \> foo.txt||##gray|rem write "foo" to foo.txt## _
+echo foo > foo.txt _
+ _
+##gray|rem write "foo > foo.txt" to stdout:## _
+echo foo ^> foo.txt|| ||
 ||[[# block-delimiters]][#block-delimiters-note block delimiters]||{##gray|//...//##} _
 (##gray|//...//##) _
-do ##gray|//...//## done||##gray|//keyword//## ##gray|//...//## end ##gray|//keyword//## _
-on ##gray|//funcName//## ##gray|//...//## end ##gray|//funcName//##||{ ##gray|//...//## }||
-||[#expression-statement are expressions statements]||##gray|//no//##||##gray|//yes//##||##gray|//yes//##||
+do ##gray|//...//## done||( ##gray|//...//## )||{ ##gray|//...//## }||
+||[#expression-statement are expressions statements]||##gray|//no//##||##gray|//no _
+ _
+relational expressions can only be used in the conditional of an// if //statement _
+  _
+arithmetic expressions can only be assigned to a variable using// set /a##||##gray|//yes//##||
 ||[[# comment]][#comment-note end-of-line comment] _
-@<&nbsp;>@|| # ##gray|//comment//##||@@--@@ ##gray|//comment//##||# ##gray|//comment//##||
+@<&nbsp;>@|| # ##gray|//comment//##|| rem ##gray|//comment//##||# ##gray|//comment//##||
 ||[[# multiline-comment]][#multiline-comment-note comment out multiple lines]||@@<<@@EOF _
 ##gray|//comment//## _
 ##gray|//another comment//## _
-EOF||(* ##gray|//comment//## _
-##gray|//another comment//## *)||<# ##gray|//comment//## _
+EOF|| ||<# ##gray|//comment//## _
 ##gray|//another comment//## #>||
 ||||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
-||~ ||~ [#posix posix shell]||~ [#applescript applescript]||~ [#powershell powershell]||
+||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
 ||[[# assignment]][#assignment-note assignment]||a=1 _
-##gray|//whitespace next to//## = ##gray|//not permitted//##||set a to 1 _
-copy 1 to a||$a = 1||
+##gray|//whitespace next to//## = ##gray|//not permitted//##||set a=1||$a = 1||
 ||[[# parallel-assignment]][#parallel-assignment-note parallel assignment] _
-@<&nbsp;>@||##gray|//none//##||set {a,b} to {1,2}||$a, $b = 1, 2||
+@<&nbsp;>@||##gray|//none//##||##gray|//none//##||$a, $b = 1, 2||
 ||[[# swap]][#swap-note swap]||tmp=$a _
 a=$b _
-b=$tmp||set {a,b} to {b,a}||$a, $b = $b, $a||
-||[[# compound-assignment]][#compound-assignment-note compound assignment operators: arithmetic, string, bit]||##gray|//none//##||##gray|//none//##||+= -= *= /= %= _
+b=$tmp||set tmp=%a% _
+set a=%b% _
+set b=%tmp%||$a, $b = $b, $a||
+||[[# compound-assignment]][#compound-assignment-note compound assignment operators: arithmetic, string, bit]||##gray|//none//##||+= -= *= /= %= _
+##gray|//none//## _
+<<= >>= &= |= ^=||+= -= *= /= %= _
 += *= _
 ##gray|//none//##||
 ||[[# incr-decr]][#incr-decr-note increment and decrement]||##gray|//none//##||##gray|//none//##||$x = 1 _
 $x@@++@@ _
 $x@@--@@||
 ||[[# var-decl]][#var-decl-note variable declaration] _
-@<&nbsp;>@||##gray|//assignment//##, export, readonly||##gray|//assignment//##, local, global||##gray|//assignment//##||
-||[[# identifiers-case-sensitive]][#identifiers-case-sensitive-note are identifiers case sensitive?]||##gray|//yes//##||##gray|//no//##||##gray|//no//##||
+@<&nbsp;>@||##gray|//assignment//##, export, readonly|| ||##gray|//assignment//##||
+||variable evaluation|| || || ||
+||[[# identifiers-case-sensitive]][#identifiers-case-sensitive-note are identifiers case sensitive?]||##gray|//yes//##|| ||##gray|//no//##||
 ||[[# null]][#null-note null] _
-@<&nbsp;>@||''||null||$null||
+@<&nbsp;>@||''|| ||$null||
 ||[[# null-test]][#null-test-note null test] _
-@<&nbsp;>@||[ -z $v ]||v = null||$v -eq $null||
-||[[# undef-access]][#undef-access-note undefined variable access]||''||##gray|//error to access uninitialized variable//##||$null||
+@<&nbsp;>@||[ -z $v ]|| ||$v -eq $null||
+||[[# undef-access]][#undef-access-note undefined variable access]||''|| ||$null||
 ||[[# undef-test]][#undef-test-note undefined test]||f [ ${foo+1} ]; then _
 @<&nbsp;&nbsp;>@echo "defined" _
 else _
 @<&nbsp;&nbsp;>@echo "undefined" _
-fi||try _
-@<&nbsp;&nbsp;>@set t to foo _
-@<&nbsp;&nbsp;>@display dialog ("defined") _
-on error _
-@<&nbsp;&nbsp;>@display dialog ("undefined") _
-end try||test-path variable:\foo||
+fi|| ||test-path variable:\foo||
 ||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
-||~ ||~ [#posix posix shell]||~ [#applescript applescript]||~ [#powershell powershell]||
+||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
 ||[[# true-false]][#true-false-note true and false] _
 @<&nbsp;>@||##gray|//status codes://## _
 true false _
  _
 ##gray|//inside// [ ]:## _
-1 ''||true false||$true $false||
+1 ''||##gray|//no booleans; conditional of if statement must contain a relational expression//##||$true $false||
 ||[[# falsehoods]][#falsehoods-note falsehoods]||##gray|//status codes: _
 nonzero integers//## _
  _
 ##gray|//inside// [ ]:## _
-''||##gray|//only integers convert to booleans://## _
-false 0||0 0.0 "" ''||
+''||##gray|//relational expressions which evaluate to false//##||0 0.0 "" ''||
 ||[[# logical-ops]][#logical-ops-note logical operators] _
 @<&nbsp;>@||##gray|//status codes://## _
 && @@||@@ ! _
  _
 ##gray|//inside// [ ]:## _
--a -o ! ||and or not||-and -or -not||
+-a -o ! ||##gray|//short-circuit operators://## _
+&& @@||@@ _
+ _
+##gray|//inside conditional of if://## _
+not||-and -or -not||
 ||[[# conditional-expr]][#conditional-expr-note conditional expression] _
 @<&nbsp;>@||$(( x>0 ? x : -x ))||##gray|//none//##||##gray|//none//##||
 ||[#relational-expr relational expression] _
-@<&nbsp;>@||[ $a -gt 3 ]||a > 3||$a -gt 3||
+@<&nbsp;>@||[ $a -gt 3 ]||%a% gtr 3||$a -gt 3||
 ||[#relational-operators relational operators] _
 @<&nbsp;>@||##gray|//integers://## _
 -eq -ne -gt -lt -ge -le _
  _
 ##gray|//strings://## _
-@@=@@ != > < ##gray|//none//## ##gray|//none//##||@@=@@ /= > < >= <=||-eq -ne -gt -lt -ge -le||
+@@=@@ != > < ##gray|//none//## ##gray|//none//##||equ neq gtr lss geq leq||-eq -ne -gt -lt -ge -le||
 ||[#arithmetic-expr arithmetic expression] _
-@<&nbsp;>@||$(( 1 + 3 ))||1 + 3||1 + 3||
+@<&nbsp;>@||$(( 1 + 3 ))||##gray|//arithmetic expression must be stored in a variable://## _
+set /a "foo=1+3"||1 + 3||
 ||[#arithmetic-operators arithmetic operators] _
-@<&nbsp;>@||+ - * ##gray|//none//## / % @@**@@||+ - * / div mod ^||+ - * / ##gray|//??//## % ##gray|//??//##||
+@<&nbsp;>@||+ - * ##gray|//none//## / % @@**@@||+ - * ##gray|//none//## / % ##gray|//none//##||+ - * / ##gray|//??//## % ##gray|//??//##||
 ||[#integer-division integer division] _
-@<&nbsp;>@||$(( $a / $b ))||a div b||$rem = $null _
+@<&nbsp;>@||$(( $a / $b ))|| ||$rem = $null _
 $quot = [Math]::DivRem($a, $b, [ref] $rem)||
 ||[[# int-div-zero]][#int-div-zero-note integer division by zero]||##gray|//writes "division by 0" error message; statement terminates with a 1 status//##|| ||##gray|//error: Attempted to divide by zero//##||
 ||[#float-division float division] _
-@<&nbsp;>@||@@`@@echo " scale=5; $a / $b " | bc@@`@@||a / b||$a / $b||
+@<&nbsp;>@||@@`@@echo " scale=5; $a / $b " | bc@@`@@|| ||$a / $b||
 ||[[# float-div-zero]][#float-div-zero-note float division by zero]||##gray|//writes "division by 0" error message; statement terminates with a 1 status//##|| ||##gray|//evaluates to// Infinity //which is not a float literal//##||
 ||[[# power]][#power-note power] _
 @<&nbsp;>@|| || ||[Math]::pow(2, 32)||
@@ -137,40 +153,39 @@ $quot = [Math]::DivRem($a, $b, [ref] $rem)||
 @<&nbsp;>@||##gray|//modular arithmetic//##|| ||##gray|//converts to float//##||
 ||[#float-overflow float overflow] _
 @<&nbsp;>@||##gray|//no floats//##|| ||##gray|//evaluates to// Infinity //which is not a float literal//##||
-||[#random random integer, uniform float]||echo $RANDOM ##gray|//15 bit integer//##||random number from 0 to 99 _
-random number from 0.0 to 1.0||random 100 _
+||[#random random integer, uniform float]||echo $RANDOM ##gray|//15 bit integer//##|| ||random 100 _
 random 1.0||
 ||[#seed-random seed random numbers]||RANDOM=17 _
-r=$RANDOM||set r to random number with seed 17||$r = random -setseed 17||
+r=$RANDOM|| ||$r = random -setseed 17||
 ||[#bit-operators bit operators] _
-@<&nbsp;>@||@<<< >> & | ^ ~>@||##gray|//none//##||##gray|//none//## ##gray|//none//## -band -bor -bxor -bnot _
+@<&nbsp;>@||@<<< >> & | ^ ~>@||##gray|//use with// set /a:## _
+@<<< >> & | ^ ~>@||##gray|//none//## ##gray|//none//## -band -bor -bxor -bnot _
  _
 ##gray|# powershell 3.0:## _
 -lsl -lsr||
 ||||||||~ [[# strings]][#strings-note strings]||
-||~ ||~ [#posix posix shell]||~ [#applescript applescript]||~ [#powershell powershell]||
+||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
 ||[#string-literal string literal]||'don'\''t say "no"' _
 "don't say \"no\"" _
-$'don\'t say "no"'||"don't say \"no\""||'don''t say "no"' _
+$'don\'t say "no"'||##gray|//none; barewords are used for strings//## _
+ _
+##gray|//double quotes are used for filenames which contain spaces and other special characters.  However, the double quotes are stored in variables and passed to commands.//##||'don''t say "no"' _
 "don't say @@`@@"no@@`@@""||
-||[#string-literal-newline newline in literal]||##gray|//yes//##||##gray|//yes//##||##gray|//yes//##||
-||[#barewords barewords]|| || || ||
+||[#string-literal-newline newline in literal]||##gray|//yes//##||##gray|//no; a bareword string can be continued on the following line by ending a line with ^; the CRLF is not part of the value of the string; not possible to store a CRLF in a variable//##||##gray|//yes//##||
+||[#barewords barewords]||##gray|//yes//##||##gray|//yes//##||##gray|//yes//##||
 ||[#string-escapes escapes]||##gray|//in double quotes//## _
 \\ \" _
 ##gray|//in//## $' ' ##gray|//quotes://## _
-\a \b \e \f \n \r \t \v \\ \' \c##gray|//c//## \x##gray|//hh//## \##gray|//ooo//##||\\ \" _
-\n \t \r _
-##gray|//other backslash sequences cause syntax error//##||@@`@@' @@`@@" @@``@@ _
+\a \b \e \f \n \r \t \v \\ \' \c##gray|//c//## \x##gray|//hh//## \##gray|//ooo//##|| ||@@`@@' @@`@@" @@``@@ _
 @@`@@0 @@`@@a @@`@@b @@`@@f @@`@@n @@`@@r @@`@@t @@`@@v _
 ##gray|//in other backtick sequences the backtick is ignored//##||
 ||[#variable-interpolation variable interpolation]||count=3 _
 item=ball _
-"$count ${item}s"||##gray|//none//##||$count = 3 _
+"$count ${item}s"|| ||$count = 3 _
 $item = "ball" _
 "$count $($item)s"||
 ||[#string-length length]||s="hello" _
-${#s}||set s to "hello" _
-count s||$s = "hello" _
+${#s}|| ||$s = "hello" _
 $s.length||
 ||[#string-comparison string comparison]||[ $USER  = foo ] _
 [ $USER != foo ]|| ||##gray|# case insensitive:## _
@@ -178,13 +193,11 @@ $s.length||
  _
 ##gray|# case sensitive:## _
 -ceq -cne -cgt -clt -cge -cle||
-||[#index-substring index of substring]||##gray|//none//##||set s to "foo bar" _
-offset of "bar" in s||##gray|//returns -1 if not found://## _
+||[#index-substring index of substring]||##gray|//none//##|| ||##gray|//returns -1 if not found://## _
 "foo bar".indexof("bar")||
 ||[#extract-substring extract substring]||s="foo bar" _
-${s:4:3}||set s to "foo bar" _
-characters 5 thru 7 of s as text||"foo bar".substring(4,3)||
-||[#string-concatenation string concatenation]||c="hello, ""world"||set c to "hello, " & "world"||$c = "hello, " + "world"||
+${s:4:3}|| ||"foo bar".substring(4,3)||
+||[#string-concatenation string concatenation]||c="hello, ""world"|| ||$c = "hello, " + "world"||
 ||[#string-replication string replication]|| || ||$hbar = "-" * 80||
 ||[#split split]||##gray|//none//##|| ||"foo,bar,baz" -split ","||
 ||[#join join]||##gray|//none//##|| ||@("foo","bar","baz") -join ","||
@@ -204,19 +217,15 @@ $s + " " * (10 - $s.length) _
 $(( 7 + $A )) _
  _
 B=".037" _
-@@`@@echo 73.9 + $B | bc@@`@@||set a to "12" _
-7 + a as integer _
- _
-set b = ".037" _
-73.9 + b as real||7 + "12" _
+@@`@@echo 73.9 + $B | bc@@`@@|| ||7 + "12" _
  _
 73.9 + ".037"||
 ||[#number-to-string number to string] _
-@<&nbsp;>@||##gray|//all values are strings//##||7 as text & " items"||[convert]::tostring(7) + " items" _
+@<&nbsp;>@||##gray|//all values are strings//##|| ||[convert]::tostring(7) + " items" _
  _
 ##gray|# or use variable interpolation##||
 ||||||||~ [[# regexes]][#regex-note regular expressions]||
-||~ ||~ [#posix posix shell]||~ [#applescript applescript]||~ [#powershell powershell]||
+||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
 ||[[# regex-match]][#regex-match-note regex match]||s=hello _
 rx='[a-z][a-z]*' _
 if expr $s : $rx > /dev/null _
@@ -231,90 +240,76 @@ s=$(echo $s | sed s/mi/ma/)|| || ||
 s=$(echo $s | sed s/mi/ma/g)|| ||$s = "do re mi mi mi" _
 $s = $s -replace "mi", "ma"||
 ||||||||~ [[# dates-time]][#dates-time-note dates and time]||
-||~ ||~ [#posix posix shell]||~ [#applescript applescript]||~ [#powershell powershell]||
-||sleep||sleep 10||delay 10|| ||
+||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
+||sleep||sleep 10|| || ||
 ||||||||~ [[# arrays]][#array-note arrays]||
-||~ ||~ [#posix posix shell]||~ [#applescript applescript]||~ [#powershell powershell]||
-||[#array-literal array literal]||nums=(1 2 3 4)||set nums to {1,2,3,4}||$nums = 1,2,3,4 _
+||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
+||[#array-literal array literal]||nums=(1 2 3 4)||set nums=(1 2 3 4)||$nums = 1,2,3,4 _
 $nums = @(1,2,3,4)||
-||[#array-size array size]||${#nums[@]}||count nums _
-length of nums||$nums.Length||
-||[#array-lookup array lookup]||${nums[0]}||item 1 of nums||$nums[0]||
-||[#array-modification array modification]||nums[1]=5||set item 1 of nums to 5||$nums[0] = 5||
-||[#array-slice array slice]||${nums[@]:1:2}||items 2 thru 3 of nums||$nums[1..2]||
+||[#array-size array size]||${#nums[@]}||set numsc=0 _
+for %i in %nums% do set /a numsc+=1 _
+echo %numsc%||$nums.Length||
+||[#array-lookup array lookup]||${nums[0]}|| ||$nums[0]||
+||[#array-modification array modification]||nums[1]=5|| ||$nums[0] = 5||
+||[#array-slice array slice]||${nums[@]:1:2}|| ||$nums[1..2]||
 ||[#array-concatenation concatenation]||a=(1 2 3) _
 b=(4 5 6) _
-c=(${a[@]} ${b[@]})||{1,2,3} & {4,5,6}||@(1,2,3) + @(4,5,6)||
-||[#array-back manipulate back of array]|| ||set a to {6,7,8} _
-set end of a to 9 _
-##gray|//cannot remove elements from a list//##|| ||
-||[#array-front manipulate front of array]|| ||set a to {6,7,8} _
-set beginning of a to 5 _
-##gray|//cannot remove elements from a list//##|| ||
+c=(${a[@]} ${b[@]})|| ||@(1,2,3) + @(4,5,6)||
+||[#array-back manipulate back of array]|| || || ||
+||[#array-front manipulate front of array]|| || || ||
 ||[#array-iteration array iteration]||for i in ${nums[@]} _
 do echo $i _
-done||repeat with i in nums _
-@<&nbsp;&nbsp;>@display dialog(i as text) _
-end repeat||foreach ($i in $nums) { _
+done|| ||foreach ($i in $nums) { _
 @<&nbsp;&nbsp;>@write-host $i _
 }||
-||[#array-sort sort]|| ||##gray|//none//##||$a = 3,2,4,1 _
+||[#array-sort sort]|| || ||$a = 3,2,4,1 _
 $b = $a | Sort-Object||
-||[#array-reverse reverse]|| ||set a to {1,2,3} _
-set b to reverse of a||$a = 1,2,3 _
+||[#array-reverse reverse]|| || ||$a = 1,2,3 _
 [array]::reverse($a)||
 ||||||||~ [[# functions]][#functions-note functions]||
-||~ ||~ [#posix posix shell]||~ [#applescript applescript]||~ [#powershell powershell]||
+||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
 ||[#function-definition function definition]||add() { echo $(( $1 + $2 )); } _
 ##gray|//or//## _
-function add { echo $(( $1 + $2 )); }||on add(a, b) _
-@<&nbsp;&nbsp;>@return a + b _
-end add _
-##gray|//or//## _
-to add(a, b) _
-@<&nbsp;&nbsp;>@return a + b _
-end add||function add { _
+function add { echo $(( $1 + $2 )); }||goto:eof _
+:add _
+@<&nbsp;&nbsp;>@set /a sum=%~1+%~2 _
+@<&nbsp;&nbsp;>@echo %sum% _
+goto:eof||function add { _
 @<&nbsp;&nbsp;>@param ($a, $b) _
 @<&nbsp;&nbsp;>@$a + $b _
 }||
-||[#function-invocation function invocation]||add 1 2||add(1,2)||add 1 2||
-||[#missing-argument missing argument value]||''||##gray|//error//##||$null||
-||[#extra-arguments extra arguments]||##gray|//ignored//##||##gray|//ignored//##||##gray|//ignored//##||
-||[#default-argument default argument value]||##gray|//none//##||##gray|//none//##||function add { _
+||[#function-invocation function invocation]||add 1 2||call:add 1 2||add 1 2||
+||[#missing-argument missing argument value]||''|| ||$null||
+||[#extra-arguments extra arguments]||##gray|//ignored//##|| ||##gray|//ignored//##||
+||[#default-argument default argument value]||##gray|//none//##|| ||function add { _
 @<&nbsp;&nbsp;>@param ($a=0, $b=0) _
 @<&nbsp;&nbsp;>@$a + $b _
 }||
-||[#named-parameters named parameters]||##gray|//none//##||to displayNums from x to y _
-@<&nbsp;&nbsp;>@set i to x _
-@<&nbsp;&nbsp;>@repeat while i <= y _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@display dialog (i as text) _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@set i to i + 1 _
-@<&nbsp;&nbsp;>@end repeat _
-end displayNums _
-displayNums to 5 from 1|| ||
-||[#variable-arguments variable number of arguments]||##gray|//args in//## $1, $2, ... ##gray|//with number of args in//## $#||##gray|//none//##|| ||
-||[#return-value return value]||return ##gray|//arg available in//## $? ##gray|//variable if a positive integer smaller than 256//##||##gray|//argument of// return //or value of last statement executed//##|| ||
-||[#lambda-declaration lambda declaration]||##gray|//none//##||##gray|//none//##||$x = { write-host "foo" }||
-||[#lambda-invocation lambda invocation]||##gray|//none//##||##gray|//none//##||& $x _
+||[#named-parameters named parameters]||##gray|//none//##|| || ||
+||[#variable-arguments variable number of arguments]||##gray|//args in//## $1, $2, ... ##gray|//with number of args in//## $#|| || ||
+||[#return-value return value]||return ##gray|//arg available in//## $? ##gray|//variable if a positive integer smaller than 256//##|| || ||
+||[#lambda-declaration lambda declaration]||##gray|//none//##|| ||$x = { write-host "foo" }||
+||[#lambda-invocation lambda invocation]||##gray|//none//##|| ||& $x _
 ##gray|//or//## _
 $x.invoke()||
-||[#default-scope default scope]||##gray|//global//##||##gray|//local//##|| ||
-||[#nested-functions nested function definition]||##gray|//visible outside containing function//##||##gray|//disallowed//##|| ||
+||[#default-scope default scope]||##gray|//global//##|| || ||
+||[#nested-functions nested function definition]||##gray|//visible outside containing function//##|| || ||
 ||||||||~ [[# execution-control]][#execution-control-note execution control]||
-||~ ||~ [#posix posix shell]||~ [#applescript applescript]||~ [#powershell powershell]||
+||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
 ||[#if if]||if [ $n -eq 0 ] _
 then echo "no hits" _
 elif [ $n -eq 1 ] _
 then echo "1 hit" _
 else echo $n " hits" _
-fi||if n = 0 then _
-@<&nbsp;&nbsp;>@display dialog ("0 hits") _
-else if n = 1 then _
-@<&nbsp;&nbsp;>@display dialog ("1 hit") _
-else _
-@<&nbsp;&nbsp;>@set s to n as text & " hits" _
-@<&nbsp;&nbsp;>@display dialog (s) _
-end if||if ($n -eq 0) { _
+fi||if %n% equ 0 ( _
+@<&nbsp;&nbsp;>@echo no hits _
+) else ( _
+@<&nbsp;&nbsp;>@if %n% equ 1 ( _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@echo one hit _
+@<&nbsp;&nbsp;>@) else ( _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@echo %n% hits _
+@<&nbsp;&nbsp;>@) _
+)||if ($n -eq 0) { _
 @<&nbsp;&nbsp;>@write-host "no hits" _
 } elseif ($n -eq 1) { _
 @<&nbsp;&nbsp;>@write-host "one hit" _
@@ -325,129 +320,106 @@ end if||if ($n -eq 0) { _
 while [ $i -lt 10 ] _
 do i=$(($i + 1)) _
 echo $i _
-done||set i to 0 _
-repeat while i < 10 _
-@<&nbsp;&nbsp;>@set i to i + 1 _
-@<&nbsp;&nbsp;>@display dialog (i as text) _
-end repeat||$i = 0 _
+done||set i=0 _
+:loop _
+@<&nbsp;&nbsp;>@set /a i+=1 _
+@<&nbsp;&nbsp;>@echo %i% _
+if %i% lss 10 goto :loop||$i = 0 _
 while ($i -lt 10) { _
 @<&nbsp;&nbsp;>@write-host (++$i) _
 }||
-||[#break-continue break/continue]||break continue||exit ##gray|//none//##||break continue||
+||[#break-continue break/continue]||break continue|| ||break continue||
 ||[#for for]||for i in 1 2 3 _
 do echo $i _
-done||repeat with i from 1 to 3 _
-@<&nbsp;&nbsp;>@display dialog (i as text) _
-end repeat||for ($i=1; $i -le 3; $i++) { _
+done||set nums=(1 2 3 4) _
+for %%n in %nums% do echo %%n||for ($i=1; $i -le 3; $i++) { _
 @<&nbsp;&nbsp;>@write-host $i _
 }||
 ||||||||~ [[# exceptions]][#exceptions-note exceptions]||
-||~ ||~ [#posix posix shell]||~ [#applescript applescript]||~ [#powershell powershell]||
-||[#raise-exception raise exception]||##gray|//return nonzero status//##||error "bam!"||throw "bam!"||
+||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
+||[#raise-exception raise exception]||##gray|//return nonzero status//##|| ||throw "bam!"||
 ||[#catch-exception catch exception]||trap 'echo "risky failed"' ERR _
-risky||try _
-@<&nbsp;&nbsp;>@error "bam!" _
-on error msg _
-@<&nbsp;&nbsp;>@display dialog ("error: " & msg) _
-end try||try { _
+risky|| ||try { _
 @<&nbsp;&nbsp;>@throw "bam!" _
 } _
 catch { _
 @<&nbsp;&nbsp;>@write-host "caught!" _
 }||
-||[#uncaught-exception uncaught exception behavior]||##gray|//stderr and continue//##||##gray|//display error and exits//##|| ||
+||[#uncaught-exception uncaught exception behavior]||##gray|//stderr and continue//##|| || ||
 ||||||||~ [[# files]][#file-note files]||
-||~ ||~ [#posix posix shell]||~ [#applescript applescript]||~ [#powershell powershell]||
-||[#print-to-stdout print to standard out]||echo "hi world"||##gray|//popup window://## _
-display dialog("hi world")||write-host "hi world"||
+||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
+||[#print-to-stdout print to standard out]||echo "hi world"|| ||write-host "hi world"||
 ||[#standard-filehandles standard file handles]||/dev/stdin _
 /dev/stdout _
-/dev/stderr||##gray|//none//##|| ||
-||[#read-line read line]||@@`@@head -1 /etc/passwd@@`@@||set f to POSIX file "/etc/passwd" _
-set a to read f as text using delimiter linefeed _
-item 1 of a|| ||
-||[#read-file read file]||@@`@@cat /tmp/a@@`@@||set f to POSIX file "/tmp/a" _
-set s to f as text|| ||
-||[#write-file write to file]||echo "hello" > /tmp/a||set f to POSIX file "/tmp/a" _
-open for access f with write permission _
-write "hello" to f _
-close access f|| ||
-||[#append-file append to file]||echo "hello" @@>>@@ /tmp/a||set f to POSIX file "/tmp/a" _
-open for access f with write permission _
-write "hello" to f starting at eof _
-close access f|| ||
+/dev/stderr|| || ||
+||[#read-line read line]||@@`@@head -1 /etc/passwd@@`@@|| || ||
+||[#read-file read file]||@@`@@cat /tmp/a@@`@@|| || ||
+||[#write-file write to file]||echo "hello" > /tmp/a|| || ||
+||[#append-file append to file]||echo "hello" @@>>@@ /tmp/a|| || ||
 ||||||||~ [[# directories]][#directories-note directories]||
-||~ ||~ [#posix posix shell]||~ [#applescript applescript]||~ [#powershell powershell]||
+||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
+||current directory|| || || ||
+||directory of script|| || || ||
 ||||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
-||~ ||~ [#posix posix shell]||~ [#applescript applescript]||~ [#powershell powershell]||
-||[#external-command external command]||ls||do shell script "ls"||dir||
-||[#backticks backticks]||s=@@`@@ls@@`@@||set s to do shell script "ls"||$s=dir||
-||[#command-line-args command line args]||$# _
-$1 _
+||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
+||[#external-command external command]||ls||dir||dir||
+||[#backticks backticks]||s=@@`@@ls@@`@@|| ||$s=dir||
+||[#command-line-args command line args]||$1 _
 $2 _
-##gray|//...//##||##gray|//must declare run handler://## _
-on run argv _
-@<&nbsp;&nbsp;>@length of argv _
-@<&nbsp;&nbsp;>@item 1 of argv _
-@<&nbsp;&nbsp;>@item 2 of argv _
-@<&nbsp;&nbsp;>@##gray|//...//## _
-end run|| ||
-||[#speech speech]||##gray|//depends on OS//##||say "I'm a Mac"||$sp = new-object -comobject "SAPI.SpVoice" _
+##gray|//...//## _
+ _
+##gray|# pass args as $# words to twiddle## _
+twiddle "$@" _
+ _
+##gray|# pass args as one word to twiddle## _
+twiddle "$*"||%1 _
+%2 _
+##gray|//...//## _
+ _
+##gray|rem no way to pass argument with space## _
+twiddle %*|| ||
+||number of command line arguments||$#||set #=0 _
+for %%i in %* do set /a #+=1 _
+echo %#%|| ||
+||script name|| ||%0|| ||
+||[#speech speech]||##gray|//depends on OS//##|| ||$sp = new-object -comobject "SAPI.SpVoice" _
 $sp.speak("I'm a PC")||
 ||[#environment-variable environment variable]||##gray|//shell variables are environment variables//## _
-$HOME||system attribute "HOME"||$env:home||
+$HOME|| ||$env:home||
 ||[#command-path command path]||which ping|| ||get-command ping||
-||[#exit exit]||exit 0||##gray|//none//##||exit||
+||[#exit exit]||exit 0||##gray|rem batch script exits:## _
+exit /b 0 _
+ _
+##gray|rem also closes cmd.exe window:## _
+exit 0||exit||
 ||[#set-signal-handler set signal handler]||function int_handler { _
 @<&nbsp;&nbsp;>@echo "exiting..."; _
 @<&nbsp;&nbsp;>@exit _
 } _
  _
-trap int_handler INT||##gray|//none//##|| ||
-||[#start-background-job start job in background]||sleep 1000 &||##gray|//none//##|| ||
-||[#suspend-job suspend current job]||##gray|//^Z//##||##gray|//none//##|| ||
-||[#list-jobs list jobs]||jobs||##gray|//none//##|| ||
-||[#background-suspended-job background suspended job]||bg %1||##gray|//none//##|| ||
-||[#foreground-background-job bring background job into foreground]||fg %1||##gray|//none//##|| ||
-||[#disown-job disown job]||disown %1||##gray|//none//##|| ||
+trap int_handler INT|| || ||
+||[#start-background-job start job in background]||sleep 1000 &|| || ||
+||[#suspend-job suspend current job]||##gray|//^Z//##|| || ||
+||[#list-jobs list jobs]||jobs|| || ||
+||[#background-suspended-job background suspended job]||bg %1|| || ||
+||[#foreground-background-job bring background job into foreground]||fg %1|| || ||
+||[#disown-job disown job]||disown %1|| || ||
 ||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
-||~ ||~ [#posix posix shell]||~ [#applescript applescript]||~ [#powershell powershell]||
+||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
 ||[#library library]||$ cat foo.sh _
 function add() { _
 @<&nbsp;&nbsp;>@echo $(($1 + $2)); _
-}||$ cat foo.applescript _
-on showText(theText) _
-@<&nbsp;&nbsp;>@display dialog (theText) _
-end showText _
-$ osascript -o foo.scpt foo.applescript|| ||
+}|| || ||
 ||[#import-library import library]||source foo.sh _
-add 3 7||set f to "/path/to/foo.scpt" _
-set foo to (load script POSIX file f) _
-tell foo to showText("bar")|| ||
+add 3 7|| || ||
 ||[#library-path library path]||##gray|//none//##|| || ||
 ||[#library-path-env library path environment variable]||##gray|//none//##|| || ||
 ||[#namespace-declaration namespace declaration]||##gray|//none//##|| || ||
 ||[#namespace-separator namespace separator]||##gray|//none//##|| || ||
-||||||||~ [[# objects]][#objects-note objects]||
-||~ ||~ [#posix posix shell]||~ [#applescript applescript]||~ [#powershell powershell]||
-||[#define-class define class]|| ||on makeInt(val) _
-@<&nbsp;&nbsp;>@script theInt _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@property value : val _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@on addOne() _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@set value to value + 1 _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@end addOne _
-@<&nbsp;&nbsp;>@end script _
-@<&nbsp;&nbsp;>@return theInt _
-end makeInt|| ||
-||[#create-object create object]|| ||set anInt to makeInt(7)|| ||
-||[#getter-setter getter and setter]|| ||get value of anInt _
-set value of anInt to 9|| ||
-||[#invoke-method invoke method]|| ||tell anInt to addOne()|| ||
 ||||||||~ [[# reflection]][#reflection-note reflection]||
-||~ ||~ [#posix posix shell]||~ [#applescript applescript]||~ [#powershell powershell]||
-||[#class class]|| ||set s to "hello" _
-display dialog class of s|| ||
-||[#list-variables list defined variables]||printenv|| ||get-variable||
+||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
+||[#class class]|| || || ||
+||[#list-variables list defined variables]||printenv||set||get-variable||
 ||~ ||~ ##EFEFEF|@@__________________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________________@@##||
 
 
@@ -463,6 +435,10 @@ The version of the language used for verifying the examples in the reference she
 ++ [#version show version]
 
 How to get the version.
+
+**cmd.exe**
+
+The version number displayed at start up is the Windows kernel version. 6.3 is the Windows 8.1 kernel version number.
 
 [[# grammar-invocation-note]]
 + [#grammar-invocation Grammar and Invocation]
@@ -538,10 +514,6 @@ powershell -file .\test.ps1
 
 How to invoke the REPL.
 
-**applescript:**
-
-The closest to a AppleScript REPL is to launch the AppleScript Editor.  Snippets of AppleScript code can be entered into the upper pane.  When the //Run// button is clicked, the return value of the last statement executed will be displayed in the lower pane.
-
 [[# exec-and-exit-note]]
 ++ [#exec-and-exit execute command and exit]
 
@@ -574,12 +546,17 @@ Multiple lists can be grouped inside parens ( ) or curly brackets { }.  When gro
 [[# word-separator-note]]
 ++ [#word-separator word separators]
 
+[[# esc-special-char-note]]
+++ [#esc-special-char escape special character]
+
+How to escape a special character.
+
 [[# block-delimiters-note]]
 ++ [#block-delimiters block delimiters]
 
 How blocks are delimited.
 
-**bash:**
+**posix shell:**
 
 Blocks can be delimited with {}, (), or the //do//,//done// keywords.
 
@@ -598,16 +575,12 @@ The //function// and //if// keywords open blocks which are terminated by //end//
 
 How to make the remainder of the line a comment.
 
-**zsh:**
-
-The # syntax for comments is only available in non-interactive shells unless the {{INTERACTIVE_COMMENTS}} option is set.  If an interactive shell encounters a # where a command is expected a {{command not found}} error will result.
-
 [[# multiline-comment-note]]
 ++ [#multiline-comment multiline comment]
 
 How to comment out multiple lines.
 
-**bash:**
+**posix shell:**
 
 The method described is the syntax for a here document, which is a multiline string literal.
 
@@ -618,10 +591,6 @@ The method described is the syntax for a here document, which is a multiline str
 ++ [#assignment assignment]
 
 How to assign a value to a variable.
-
-**applescript:**
-
-{{set}} and {{copy}} are not synonyms when operating on lists, records, or objects.  The {{set}} command makes the left variable an alias of the right variable: the two variables then refer to the same array, record, or object.  The {{copy}} command will put a copy of the array, record, or object contained in the left variable.
 
 [[# parallel-assignment-note]]
 ++ [#parallel-assignment parallel assignment]
@@ -638,7 +607,7 @@ How to exchange the values held by two variables.
 
 The compound assignment operators for arithmetic, string, and bit operations
 
-**powershell**
+**powershell:**
 
 Note that {{/=}} performs float division, even when both operands are integers.
 
@@ -656,7 +625,7 @@ The C-style increment and decrement operators which can be used in expressions.
 
 How to declare a variable.
 
-**bash:**
+**posix shell:**
 
 The following three lines have identical behavior:
 
@@ -700,26 +669,8 @@ function foo () {
 echo $b
 [[/code]]
 
-**applescript:**
-
-Variables can be declared as {{local}} or {{global}}. It is not possible to initialize a variable in a declaration.   Undeclared variables are {{local}}: in the example below, {{c}} and {{e}} are not visible outside the function {{foo}}:
-
-[[code]]
-on foo(a,b)
-  local c
-  global d
-  set c to a+b
-  set d to a+b
-  set e to a+b
-end foo
-[[/code]]
-
 [[# identifiers-case-sensitive-note]]
 ++ [#identifiers-case-sensitive are identifiers case sensitive?]
-
-**applescript:**
-
-In AppleScript, identifiers are case insensitive.  This holds for reserved keywords as well as user defined variable names.  The AppleScript Editor converts all keywords and identifiers in the source code to lower case when it is compiled.
 
 **powershell:**
 
@@ -792,13 +743,12 @@ The literals for true and false.
 
 Values which are false in conditional expressions.
 
-
 [[# logical-ops-note]]
 ++ [#logical-ops logical operators]
 
 Logical and, or, and not.
 
-**bash:**
+**posix shell:**
 
 && || and ! are available inside [[ ]], (( )), and $(( )) expressions.  Inside [ ] expressions use -a, -o, and !.
 
@@ -815,7 +765,7 @@ Whether an expression can be used where a statement is expected.
 [[# relational-expr]]
 ++ relational expressions
 
-**bash:**
+**posix shell:**
 
 Bash has three types of relational expressions: [[ ]], [ ], and (( )).  For a description of [ ], read the [http://www.google.com/search?q=man+test man page for test].
 
@@ -825,22 +775,17 @@ Bash has three types of relational expressions: [[ ]], [ ], and (( )).  For a de
 
 [#bash-expressions Bash expressions] discusses the different types of bash expressions in more detail.
 
-
 [[# relational-operators]]
 ++ relational operators
 
-**bash:**
+**posix shell:**
 
 If == and =! have an unquoted string on the right, then * and ? within the string will be treated as wild cards for matching.
-
-**applescript:**
-
-Verbal synonyms for the relational operators are provided.  For {{=}} the synonyms are {{equals}}, {{is equal}}, {{equal to}}, and {{is equal to}}.
 
 [[# string-to-number]]
 ++ convert from string
 
-**bash:**
+**posix shell:**
 
 All values are strings.  The $(( )) operator will interpolate any variables and then evaluate the resulting string as an arithmetic expression composed of integers.  The variables are not limited to containing integers.  The following script outputs 10:
 
@@ -860,7 +805,7 @@ To perform floating point arithmetic, bash must shell out to a floating point ut
 
 How to evaluate an arithmetic expression.
 
-**bash:**
+**posix shell:**
 
 Bash arithmetic is available within $(( )) and (( )).  The latter form evaluates the arithmetic expression and returns status 1 if the result zero, and 0 otherwise.
 
@@ -872,7 +817,7 @@ Bash only has integer arithmetic.  For floating point arithmetic, use the extern
 
 The operators for addition, subtraction, multiplication, float division, integer division, modulus, and exponentiation.  Some languages provide a function //pow// instead of an operator for exponentiation.
 
-**bash:**
+**posix shell:**
 
 arithmetic operators are available in $(( )) and (( )).
 
@@ -887,7 +832,7 @@ How to perform integer division.
 
 How to perform floating point division, even if the operands might be integers.
 
-**bash:**
+**posix shell:**
 
 The bash shell lacks built-in floating point arithmetic.  //bc// is an arbitrary precision calculator, and //scale// is the number of digits to the right of the decimal point.  If scale is not specified, it defaults to zero, which results in integer division.
 
@@ -904,10 +849,6 @@ Functions for computing square root, natural exponent, natural logarithm, sine, 
 
 The trigonometric functions are all in radians. //atan2// takes two arguments which are the x and y co-ordinates of a vector in the Cartesian plane.  It returns
 the angle to the positive x-axis made by the vector.
-
-**zsh:**
-
-There is a zsh module which provides the standard transcendental math functions.  It is not installed by default on Mac OS X, the CentOS distribution of Linux, or Cygwin.  The module can be compiled into the zsh, or it can be in a shared library which is loaded with the command {{zmodload mathfunc}}.
 
 [[# arithmetic-truncation]]
 ++ arithmetic truncation
@@ -932,18 +873,14 @@ The result of taking the square root of -2.
 
 The examples show how to generate a uniform random integer in the range from 0 to 99, inclusive; how to generate a uniform float in the range 0.0 to 1.0; how to generate a float from a standard normal distribution
 
-**bash:**
-
-$RANDOM evaluates to a random integer between 0 and 32767 inclusive.
-
-**zsh:**
+**posix shell:**
 
 $RANDOM evaluates to a random integer between 0 and 32767 inclusive.
 
 [[# seed-random]]
 ++ seed random numbers
 
-**bash:**
+**posix shell:**
 
 Bash 3.2.48  seeds the random number at start up using the current time and the PID:
 
@@ -968,21 +905,6 @@ brand ()
 }
 [[/code]]
 
-**zsh:**
-
-Zsh {{rand}} and {{srand}} from the standard C library to generate random numbers.  It uses the current time at startup to seed the random number generator.  Here is the source code from zsh 4.3.9:
-
-[[code]]
-    gettimeofday(&shtimer, &dummy_tz);	/* init $SECONDS */
-    srand((unsigned int)(shtimer.tv_sec + shtimer.tv_usec)); /* seed $RANDOM */
-[[/code]]
-
-**applescript:**
-
-The initial seed is set to a value that varies each time AppleScript is started up.
-
-If a repeatable sequence of random numbers is desired, the seed can be set to a specific value using the {{with seed}} parameter on the first call to {{random}}.  
-
 **powershell:**
 
 The initial seed is set to a value that varies each time PowerShell is started up.
@@ -992,7 +914,7 @@ If a repeatable sequence of random numbers is desired, the seed can be set to a 
 [[# bit-operators]]
 ++ bit operators
 
-**bash:**
+**posix shell:**
 
 The bit operators are available in $(( )) and (( )).
 
@@ -1021,7 +943,7 @@ Character escape sequences which can be used in string literals.
 
 How to interpolate variables in a string.
 
-**bash:**
+**posix shell:**
 
 A dollar sign {{$}} can be backslash escaped to prevent variable interpolation:
 
@@ -1041,6 +963,26 @@ write-host "the value of @@`@@$a is $a"
 ++ length
 
 How to get the length of a string.
+
+**cmd.exe:**
+
+[[code]]
+:strLen string len -- returns the length of a string
+::                 -- string [in]  - variable name containing the string being measured for length
+::                 -- len    [out] - variable to be used to return the string length
+(   SETLOCAL ENABLEDELAYEDEXPANSION
+    set "str=A!%~1!"&
+    set "len=0"
+    for /L %%A in (12,-1,0) do (
+        set /a "len|=1<<%%A"
+        for %%B in (!len!) do if "!str:~%%B,1!"=="" set /a "len&=~1<<%%A"
+    )
+)
+( ENDLOCAL
+    IF "%~2" NEQ "" SET /a %~2=%len%
+)
+EXIT /b
+[[/code]]
 
 [[# string-comparison]]
 ++ string comparison
@@ -1145,12 +1087,6 @@ echo ${str//mi/ma}
 [[# array-note]]
 + [#arrays Arrays]
 
-
-||~ ||~ bash||~ zsh||~ applescript||~ powershell||
-||[#array-literal array]|| || ||list||array||
-||[#dictionary-literal dictionary]|| || ||record|| ||
-
-
 [[# array-literal]]
 ++ array literal
 
@@ -1231,22 +1167,14 @@ Python has both functions and methods.  Ruby only has methods: functions defined
 [[# function-definition]]
 ++ function definition
 
-**bash:**
+**posix shell:**
 
 A bash function definition can alternately be preceded by the keyword //function//, and when used, the parens following the function name are prohibited.
-
-**zsh:**
-
-A zsh function can be defined with the preceding keyword //function//, the trailing parens, or both.
-
-**applescript:**
-
-Functions are called //handlers// in AppleScript.
 
 [[# function-invocation]]
 ++ function invocation
 
-**bash:**
+**posix shell:**
 
 The syntax for invoking a function is the same as the syntax for invoking a command.  If a function is defined with the same name as a command in the search path, the function will be executed.  
 
@@ -1276,55 +1204,10 @@ How to write a function which accepts a variable number of argument.
 
 How to write a function which uses named parameters.
 
-**applescript:**
-
-Named parameters are called //labeled parameters// in the AppleScript documentation.  The label must be one of the following prepositions:
-
-> about, above, against, apart from, around, aside from, at, below, beneath, beside, between, by, for, from,
-> instead of, into, on, onto, out of, over, since, thru/through, to, under
-
-For readability the definite article {{the}} can be inserted in between the label and the argument in either the function definition or the invocation.  
-
-To use other names for parameters, the {{given}} keyword can be used in conjunction with colon syntax:
-
-[[code]]
-on displayNums given startAt:x, endAt:y
-  set i to x
-  repeat while i <= y
-    display dialog (i as text)
-    set i to i + 1
-  end repeat
-end displayNums
-
-displayNums given startAt:1, endAt:5
-[[/code]]
-
-When a {{given}} parameter takes a boolean value as an argument, the {{with}} or {{without}} keywords can be used when the handler is invoked.  Consider the following handler definition:
-
-[[code]]
-on foo given flagLabel:flag
-  ...
-end foo
-[[/code]]
-
-Here are two ways to invoke {{foo}} with {{flag}} set to true:
-
-[[code]]
-foo given flagLabel:true
-foo with flagLabel
-[[/code]]
-
-Here are two ways to invoke {{foo}} with {{flag}} set to false:
-
-[[code]]
-foo given flagLabel:false
-foo without flagLabel
-[[/code]]
-
 [[# return-value]]
 ++ return value
 
-**bash:**
+**posix shell:**
 
 Bash functions can only return small integers via return.  However, a function can echo to stdout and the caller can invoke it with backticks to get a string value.
 
@@ -1339,7 +1222,7 @@ How to define a lambda function.
 [[# default-scope]]
 ++ default scope
 
-**bash:**
+**posix shell:**
 
 By default, bash and variables inside functions have global scope.
 
@@ -1351,7 +1234,7 @@ By default, bash and variables inside functions have global scope.
 
 Some optional branching constructs:
 
-**bash:**
+**posix shell:**
 
 [[code]]
 case $a in (0) echo "no";; (1) echo "yes";; (2) echo "maybe";; (*) echo "error";; esac
@@ -1361,7 +1244,7 @@ case $a in (0) echo "no";; (1) echo "yes";; (2) echo "maybe";; (*) echo "error";
 [[# while]]
 ++ while
 
-**bash:**
+**posix shell:**
 
 Also has an //until// loop.
 
@@ -1373,22 +1256,12 @@ Also has an //until// loop.
 [[# for]]
 ++ for
 
-**bash:**
+**posix shell:**
 
 A C-style for loop:
 
 [[code]]
 for ((i=0; i<10; i++ )); do echo $i; done
-[[/code]]
-
-**applescript:**
-
-If a block of code needs to be executed a set number of times but no index variable is needed, AppleScript provides this alternate syntax:
-
-[[code]]
-repeat 3 times
-	display dialog ("tut")
-end repeat
 [[/code]]
 
 
@@ -1400,45 +1273,17 @@ end repeat
 
 How to raise an exception.
 
-**applescript:**
-
-It is possible to associate an error code with the error using the {{number}} label:
-
-[[code]]
-error "bam!" number 7
-[[/code]]
-
-If no error number is specified, then the value -2700 is used.
-
 [[# catch-exception]]
 ++ catch exception
 
 How to handle an exception.
-
-**applescript:**
-
-If a variable name is specified after {{on error}} the error message is stored in it.  There can only be one error clause and it catches all errors.  To perform conditional error handling, use the {{number}} label and provide a variable name after it.  The error code will be stored in that variable.
-
-[[code]]
-try
-  error "bam!" number 7
-on error msg number errorCode
-  if errorCode = 7 then
-    display dialog ("error: " & msg)
-  else
-    display dialog ("unknown error")
-  end if
-end try
-[[/code]]
-
-A {{try}} block can be closed by {{end error}} in addition to {{end try}}.
 
 [[# uncaught-exception]]
 ++ uncaught exception behavior
 
 System behavior if an exception goes uncaught.  Most interpreters print the exception message to stderr and exit with a nonzero status.
 
-**bash:**
+**posix shell:**
 
 The bash interpreter writes a message to stderr whenever a command returns a nonzero status.  By default, the interpreter does not exit, but if this behavior is desired, then the following should be put at the top of the script:
 
@@ -1456,7 +1301,7 @@ trap exit ERR
 [[# print-to-stdout]]
 ++ print to standard out
 
-**bash:**
+**posix shell:**
 
 To prevent //echo// from appending a newline to the output, use
 
@@ -1466,24 +1311,6 @@ echo -n "hello"
 
 [[# standard-filehandles]]
 ++ standard filehandles
-
-**applescript:**
-
-AppleScript does not in general run with stdin and stdout filehandles.   When {{osascript}} is invoked as a shebang it is possible to read from stdin and write to stdout, however:
-
-[[code]]
-#!/usr/bin/env osascript 
-set stdin to do shell script "cat" 
-"Received from stdin: " & stdin 
-[[/code]]
-
-Here is how the above script would be invoked:
-
-[[code]]
-$ echo "foo" | ./stdin-example.sh 
-Received from stdin: foo
-[[/code]]
-
 
 [[# read-line]]
 ++ read line
@@ -1507,7 +1334,7 @@ Received from stdin: foo
 [[# external-command]]
 ++ external command
 
-**bash:**
+**posix shell:**
 
 The syntax for calling an external command is the same as the syntax for invoking a function.  If a function is defined with the same name as an external command in the search path, the function is invoked.
 
@@ -1522,7 +1349,7 @@ The syntax for calling an external command is the same as the syntax for invokin
 
 How to make the computer talk.
 
-**bash, zsh:**
+**posix shell:**
 
 On Mac OSX the command {{say}} can also be executed from the bash or zsh prompt:
 
@@ -1544,14 +1371,10 @@ espeak "I'm Unix"
 
 The directory containing a command.  Also indicates if the command is a built-in, alias, or function.  Shows the definition of aliases and functions.
 
-**zsh:**
-
-{{zsh}} has both {{which}} and {{which -a}}.  The latter shows all occurrences of a command in the search path.
-
 [[# exit]]
 ++ exit
 
-**bash:**
+**posix shell:**
 
 The exit status of a bash script is the return status of the last command executed, or the argument of //exit//.
 
@@ -1578,34 +1401,6 @@ What a library looks like.
 [[# namespace-separator]]
 ++ namespace separator
 
-[[# objects-note]]
-+ [#objects Objects]
-
-[[# define-class]]
-++ define class
-
-[[# create-object]]
-++ create object
-
-[[# constructor]]
-++ constructor
-
-[[# define-method]]
-++ define method
-
-[[# invoke-method]]
-++ invoke method
-
-[[# destructor]]
-++ destructor
-
-
-[[# default-method]]
-++ default method
-
-[[# inheritance]]
-++ inheritance
-
 [[# reflection-note]]
 + [#reflection Reflection]
 
@@ -1613,33 +1408,16 @@ What a library looks like.
 ++ class
 
 [[# posix]]
-+ POSIX Shell
++ [#top POSIX Shell]
 
-[http://pubs.opengroup.org/onlinepubs/9699919799/ POSIX 2008]
-[http://linux.die.net/man/1/dash dash man page]
-[http://linux.die.net/man/1/ksh ksh man page]
-[http://linux.die.net/man/1/bash bash man Page]
+[http://pubs.opengroup.org/onlinepubs/9699919799/idx/xcu.html POSIX 2008: Shell & Utilities]
 
-On most modern systems if you invoke /bin/sh you get the bash shell. If your script might get run by the older Bourne shell (1977), here are the [http://www.gnu.org/software/bash/manual/bashref.html#Major-Differences-From-The-Bourne-Shell differences] to think about.
+[[# cmd-prompt]]
++ [#top Command Prompt]
 
-A function and a variable can have the same name. User defined variable identifiers cannot start with a digit. Variables are normally global, but can be made local to a function with the local keyword, which is useful for recursive functions.
-
-The behavior of a shell script is dependent on its environment. All environment variables that existed when the shell process starts become variables in the script’s namespace. If the name of a command does not resolve to a shell built-in command or a function defined by the script, the shell searches the $PATH variable for an external command to run. The shell will expand ?, *, and ~ in words using the local file system.
-
-The shell is good at launching external processes and redirecting their stdin and stdout to files or other processes with >, @@>>@@, ,@@ 2>>@@, or 2>&1.
-
-[[# applescript]]
-+ AppleScript
-
-* [http://developer.apple.com/library/mac/#documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html AppleScript Language Guide]
-
-* AppleScript Editor, osacompile, oascript
-* getting dictionary for application, sending commands to an application
-* I/O (display dialog, say, log)
-* applications, windows, tabs
-* open scripting architecture (OSA)
+[http://technet.microsoft.com/en-us/library/bb490890.aspx Command-line reference A-Z]
 
 [[# powershell]]
-+ PowerShell
++ [#top PowerShell]
 
-* [http://msdn.microsoft.com/en-us/library/dd835506(VS.85).aspx PowerShell: Getting Started]
+[http://technet.microsoft.com/en-us/library/cc196356.aspx Windows PowerShell User's Guide]

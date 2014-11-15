@@ -160,9 +160,11 @@ M-x backward-list||M-]||
 H _
 L||M-r||M-x move-to-window-line-top-bottom|| ||
 ||[[# beginning-doc]][#beginning-doc-note beginning of document] _
-@<&nbsp;>@||:1||M-<||M-x beginning-of-buffer||M-\||
+@<&nbsp;>@||1G _
+:1||M-<||M-x beginning-of-buffer||M-\||
 ||[[# end-doc]][#end-doc-note end of document] _
-@<&nbsp;>@||:$||M->||M-x end-of-buffer||M-/||
+@<&nbsp;>@||G _
+:$||M->||M-x end-of-buffer||M-/||
 ||||||||||~ [[# selecting-deleting]]**[#selecting-deleting-note selecting and deleting]**||
 ||~  ||~ vim||~ emacs||~ emacs||~ nano||
 ||[[# mark]][#mark-note mark]||v _
@@ -582,6 +584,9 @@ RET||M-x compile-goto-error|| ||
 ||save diff|| ||wd|| || ||
 ||||||||||~ [[# git]][#git-note git]||
 ||~  ||~ ||~ emacs||~ emacs||~ ||
+||diff buffer with version control|| ||C-x v =||M-x vc-diff|| ||
+||revert buffer using version control|| ||C-x v u||M-x vc-revert|| ||
+||git blame on buffer|| ||C-x v g||M-x vc-annotate|| ||
 ||git status; use working directory||##gray|//install vim-fugitive//## _
 :Gstatus|| ||##gray|//install magit//## _
 M-x magit-status|| ||

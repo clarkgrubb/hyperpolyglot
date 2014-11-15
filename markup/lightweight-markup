@@ -2,39 +2,39 @@
 
 **output formats:** [#html html] | [#pdf pdf] | [#epub epub] | [#word-doc word document] | [#man-page man page] | [#slide-show slide show]
 
-||~ ||~ [#markdown markdown]||~ [#restructured-text restructured text]||~ [#mediawiki mediawiki]||~ [#wikidot wikidot]||~ [#latex latex]||
+||~ ||~ [#markdown markdown]||~ [#restructured-text restructured text]||~ [#mediawiki mediawiki]||~ [#latex latex]||
 ||sandbox||[http://daringfireball.net/projects/markdown/dingus daringfireball.net/projects/markdown/dingus] _
-[http://johnmacfarlane.net/pandoc/try johnmacfarlane.net/pandoc/try]||[http://rst.ninjs.org/ rst.ninjs.org]||[http://en.wikipedia.org/wiki/Wikipedia:Sandbox en.wikipedia.org/wiki/Wikipedia:Sandbox]||[http://try.wikidot.com/ try.wikidot.com]||[http://johnmacfarlane.net/pandoc/try johnmacfarlane.net/pandoc/try]||
+[http://johnmacfarlane.net/pandoc/try johnmacfarlane.net/pandoc/try]||[http://rst.ninjs.org/ rst.ninjs.org]||[http://en.wikipedia.org/wiki/Wikipedia:Sandbox en.wikipedia.org/wiki/Wikipedia:Sandbox]||[http://johnmacfarlane.net/pandoc/try johnmacfarlane.net/pandoc/try]||
 ||command line tool||$ apt-get install markdown _
 $ markdown foo.txt > foo.html _
  _
 $ apt-get install pandoc _
 $ pandoc foo.txt -o foo.html||$ pip install rst2html5 _
  _
-$ rst2html5 foo.rst > foo.html|| || || ||
-||hello world||Hello world!||Hello world!||Hello world!||Hello world!||\documentclass{article} _
+$ rst2html5 foo.rst > foo.html|| || ||
+||hello world||Hello world!||Hello world!||Hello world!||\documentclass{article} _
 ##gray|% \usepackage statements go here## _
 \begin{document} _
 Hello world! _
 \end{document}||
-||autolinks CamelCase?||##gray|//no//##||##gray|//no//##||##gray|//no//##||##gray|//no//##||##gray|//no//##||
-||autolinks url?||##gray|//no//##||##gray|//yes//##||##gray|//yes//##||##gray|//yes//##||##gray|//no//##||
-||can use [http://duckduckgo.com/?q=html+entities html entities]?||##gray|//yes//##||##gray|//no//##||##gray|//yes//##||##gray|//yes if quoted://## @<@&lt;&amp;amp;&gt;@>@||##gray|//no//##||
+||autolinks CamelCase?||##gray|//no//##||##gray|//no//##||##gray|//no//##||##gray|//no//##||
+||autolinks url?||##gray|//no//##||##gray|//yes//##||##gray|//yes//##||##gray|//no//##||
+||can use [http://duckduckgo.com/?q=html+entities html entities]?||##gray|//yes//##||##gray|//no//##||##gray|//yes//##||##gray|//no//##||
 ||##darkblue|__link offsite__##||[Website](@@http://website.com@@)||Website_ _
  _
 ##gray|//this must exist elsewhere in the document://## _
-.. _Website: @@http://website.com@@||@@[http://website.com Website]@@||@@[http://website.com Website]@@|| ||
-||##darkblue|__link onsite__##||<a href="page">Pipe Trick</a>|| ||@@[[page|Pipe Trick]]@@||@@[[[page|Pipe Trick]]]@@|| ||
+.. _Website: @@http://website.com@@||@@[http://website.com Website]@@|| ||
+||##darkblue|__link onsite__##||<a href="page">Pipe Trick</a>|| ||@@[[page|Pipe Trick]]@@|| ||
 ||define anchor||<a name="foo"/>|| ||##gray|//Headers automatically get anchors.  Also://## _
-<div id="foo"></div>||@@[[# foo]]@@|| ||
+<div id="foo"></div>|| ||
 ||##darkblue|__link to anchor__##||<a href="#foo">Foo</a> _
  _
 ##gray|//pandoc extension://## _
-[Foo](#foo)|| ||@@[[#foo|Foo]]@@||@@[#foo Foo]@@|| ||
+[Foo](#foo)|| ||@@[[#foo|Foo]]@@|| ||
 ||comment||<!@@--@@ comment @@--@@>||.. comment _
 @<&nbsp;&nbsp;&nbsp;>@another comment _
  _
-##gray|//blank line terminates comment//##||<!@@--@@ comment @@--@@>||@@[!-- comment --]@@||% comment||
+##gray|//blank line terminates comment//##||<!@@--@@ comment @@--@@>||% comment||
 ||HTML||##gray|//set off block level html tags with blank lines://## _
  _
 <h1>My Header</h1> _
@@ -43,116 +43,99 @@ Hello world! _
 ##gray|//this must exist elsewhere in document://## _
 .. |my_header| raw:: html _
  _
-@<&nbsp;&nbsp;>@<h1>foo</h1>||[http://en.wikipedia.org/wiki/Help:HTML_in_wikitext some HTML tags are permitted]||[[html]] _
-<h1>My Header</h1> _
-[[/html]] || ||
-||||||||||||~ [[# text-style]]text style||
-||~ ||~ [#markdown markdown]||~ [#restructured-text restructured text]||~ [#mediawiki mediawiki]||~ [#wikidot wikidot]||~ [#latex latex]||
+@<&nbsp;&nbsp;>@<h1>foo</h1>||[http://en.wikipedia.org/wiki/Help:HTML_in_wikitext some HTML tags are permitted]|| ||
+||||||||||~ [[# text-style]]text style||
+||~ ||~ [#markdown markdown]||~ [#restructured-text restructured text]||~ [#mediawiki mediawiki]||~ [#latex latex]||
 ||//italic text//||*italic text* _
 _italic text_||*italic text*||##gray|//two single quotes://## _
-''italic text''||@@//italic text//@@||\emph{italic text} _
+''italic text''||\emph{italic text} _
 \textit{italic text}||
 ||**bold text**||@@**bold text**@@ _
 @@__bold text__@@||@@**bold text**@@||##gray|//three single quotes://## _
-'''bold text'''||@@**bold text**@@||\textbf{bold text}||
+'''bold text'''||\textbf{bold text}||
 ||[[span style="font-variant: small-caps"]]small caps text[[/span]]||<span style="font-variant: small-caps"> _
 small caps text _
-</span>|| ||@@{{smallcaps|small caps text}}@@||@@[[span style="font-variant: small-caps"]]@@ _
-small caps text _
-@@[[/span]]@@||\textsc{small caps text}||
-||{{fixed width text}}||@@`@@fixed width text@@`@@||@@``@@fixed width text@@``@@||<tt>fixed width text</tt>||@@{{fixed width text}}@@||\texttt{fixed width text}||
-||__underlined text__||<span style="text-decoration: underline">underlined text</span>|| ||<u>underlined text</u>||@@__underlined text__@@||\underline{underlined text}||
-||--striketrhough text--||<del>strikethough text</del>|| ||<del>strikethough text</del>||@@--strikethrough text--@@||\usepackage{ulem} _
+</span>|| ||@@{{smallcaps|small caps text}}@@||\textsc{small caps text}||
+||{{fixed width text}}||@@`@@fixed width text@@`@@||@@``@@fixed width text@@``@@||<tt>fixed width text</tt>||\texttt{fixed width text}||
+||__underlined text__||<span style="text-decoration: underline">underlined text</span>|| ||<u>underlined text</u>||\underline{underlined text}||
+||--striketrhough text--||<del>strikethough text</del>|| ||<del>strikethough text</del>||\usepackage{ulem} _
  _
 \sout{strikethrough text}||
 ||literal text||\*not italics\* _
-@@`*not italics*`@@||\*not italics\*||<nowiki>''not italics''</nowiki>||@<@@//not italics//@@>@||textbackslash{}emph\{not italics\} _
+@@`*not italics*`@@||\*not italics\*||<nowiki>''not italics''</nowiki>||textbackslash{}emph\{not italics\} _
  _
 ##gray|//special characters://## _
 # $ % ^ & _ { } ~ \ _
  _
 ##gray|//how to escape://## _
 \# \$ \% \textasciicircum{} \& \_ \{ \} \~{ } \textbackslash{}||
-||superscript^^2^^||superscript<sup>2</sup>|| ||superscript<sup>2</sup>||superscript@@^^2^^@@||superscript\textsuperscript{2}||
-||subscript,,2,,||subscript<sub>2</sub>|| ||subscript<sub>2</sub>||subscript@@,,2,,@@||subscript\textsubscript{2}||
-||##red|font color##||<span style="color: red">font color</span>|| ||<font color="red">font color</font>||@@##red|font color##@@||\usepackage{color} _
+||superscript^^2^^||superscript<sup>2</sup>|| ||superscript<sup>2</sup>||superscript\textsuperscript{2}||
+||subscript,,2,,||subscript<sub>2</sub>|| ||subscript<sub>2</sub>||subscript\textsubscript{2}||
+||##red|font color##||<span style="color: red">font color</span>|| ||<font color="red">font color</font>||\usepackage{color} _
  _
 \textcolor{red}{red text}||
-||font size||<font size=16>foo</font>|| ||<font size="16">foo</font>||@@[[size 16px]]foo[[/size]]@@ _
-@@[[size 120%]]foo[[/size]]@@|| ||
+||font size||<font size=16>foo</font>|| ||<font size="16">foo</font>|| ||
 ||span w/ class||<span class="foo"> _
 ##gray|//text//## _
 </span>|| ||<span class="foo"> _
 ##gray|//text//## _
-</span>||@@[[span class="foo"]]@@ _
-##gray|//text//## _
-@@[[/span]]@@|| ||
-||||||||||||~ [[# punctuation]][#punctuation-note non-ascii punctuation]||
-||~ ||~ [#markdown markdown]||~ [#restructured-text restructured text]||~ [#mediawiki mediawiki]||~ [#wikidot wikidot]||~ [#latex latex]||
-||right and left single quotes: `lorem ipsum'||&lsquo;lorem ipsum&rsquo;|| || ||@@`lorem ipsum'@@||@@`lorem ipsum'@@||
-||right and left double quotes: ``lorem ipsum''||&ldquo;lorem ipsum&rdquo;|| || ||@@``lorem ipsum''@@||@@``lorem ipsum''@@||
-||en dash: @<&ndash;>@||&ndash;|| || ||@@<&zwnj;>@<&ndash;>@<&zwnj;>@@||@@--@@||
-||em dash: @<&mdash;>@||&mdash;|| || ||@@<&zwnj;>@<&mdash;>@<&zwnj;>@@|| ||
-||ellipsis: ...||&hellip;|| || ||@@...@@|| ||
-||||||||||||~ [[# grouping-alignment]]grouping and alignment||
-||~ ||~ [#markdown markdown]||~ [#restructured-text restructured text]||~ [#mediawiki mediawiki]||~ [#wikidot wikidot]||~ [#latex latex]||
-||paragraphs|| || || || || ||
+</span>|| ||
+||||||||||~ [[# punctuation]][#punctuation-note non-ascii punctuation]||
+||~ ||~ [#markdown markdown]||~ [#restructured-text restructured text]||~ [#mediawiki mediawiki]||~ [#latex latex]||
+||right and left single quotes: `lorem ipsum'||&lsquo;lorem ipsum&rsquo;|| || ||@@`lorem ipsum'@@||
+||right and left double quotes: ``lorem ipsum''||&ldquo;lorem ipsum&rdquo;|| || ||@@``lorem ipsum''@@||
+||en dash: @<&ndash;>@||&ndash;|| || ||@@--@@||
+||em dash: @<&mdash;>@||&mdash;|| || || ||
+||ellipsis: ...||&hellip;|| || || ||
+||||||||||~ [[# grouping-alignment]]grouping and alignment||
+||~ ||~ [#markdown markdown]||~ [#restructured-text restructured text]||~ [#mediawiki mediawiki]||~ [#latex latex]||
+||paragraphs|| || || || ||
 ||line break||##gray|//space, space, newline//## _
  _
 ||##gray|//all lines in paragraph with line breaks must start with pipe://## _
  _
 @@|@@ the line breaks _
-@@|@@ here||<br/>||##gray|//space, underscore, newline://## _
-@<&nbsp;>@_|| ||
+@@|@@ here||<br/>|| ||
 ||horizontal rule||##gray|//three or more asterisks, hyphens, or underscores://## _
 @@***@@ _
 @@---@@ _
 @@___@@||##gray|//four or more punctuation characters set off by blank lines:## _
  _
 @@----@@ ||##gray|//four or more hyphens://## _
-@@----@@||##gray|//four or more hyphens://## _
 @@----@@|| ||
-||align left||##gray|//none//##|| ||##gray|//none//##||@@[[<]]@@ _
-Left aligned _
-@@[[/<]]@@||{\flushleft _
+||align left||##gray|//none//##|| ||##gray|//none//##||{\flushleft _
 Left aligned _
 }||
-||align right||##gray|//none//##|| ||##gray|//none//##||@@[[>]]@@ _
-Right aligned _
-@@[[/>]]@@||{\flushright _
+||align right||##gray|//none//##|| ||##gray|//none//##||{\flushright _
 Right aligned _
 }||
-||align center||##gray|//none//##|| ||##gray|//none//##||@@[[=]]@@ _
-Centered _
-@@[[/=]]@@||{\center _
+||align center||##gray|//none//##|| ||##gray|//none//##||{\center _
 Centered _
 }||
-||justify||##gray|//none//##|| ||##gray|//none//##||@@[[==]]@@ _
-Justified _
-@@[[/==]]@@||##gray|//none//##||
+||justify||##gray|//none//##|| ||##gray|//none//##||##gray|//none//##||
 ||document title||##gray|//pandoc extension://## _
 % document title||@@==============@@ _
 document title _
-@@==============@@|| || ||\title{document title}||
+@@==============@@|| ||\title{document title}||
 ||section header||##gray|//pandoc requires blank line before header, markdown doesn't://## _
 # section header _
  _
 section header _
 @@==============@@||##gray|//Other punctuation can be used for title and headers.  Whatever punctuation is used must be used consistently in the document.  An// n+1 //level section must be contained in an// n //level section.//## _
 section header _
-@@==============@@||@@=@@section header=||+ section header||\section{section header}||
+@@==============@@||@@=@@section header=||\section{section header}||
 ||subsection header||@@##@@ subsection header _
  _
 subsection header _
 @@-----------------@@||subsection header _
-@@-----------------@@||==subsection header==||++ subsection header||\subsection{subsection header}||
+@@-----------------@@||==subsection header==||\subsection{subsection header}||
 ||subsubsection header||### subsubsection header||subsubsection header _
-@@~~~~~~~~~~~~~~~~~~~~@@||===subsubsection header===||+++ subsubsection header||\subsubsection{subsubsection header}||
+@@~~~~~~~~~~~~~~~~~~~~@@||===subsubsection header===||\subsubsection{subsubsection header}||
 ||level 4 header||#### level 4 header||level 4 header _
-@@``````````````@@||====level 4 header====||++++ level 4 header||##gray|//none//##||
+@@``````````````@@||====level 4 header====||##gray|//none//##||
 ||headers automatically anchored?||##gray|//markdown no, pandoc yes//## _
  _
-##gray|//[#pandoc-header-identifiers pandoc header identifiers] are the same as the header with (1) all punctuation except hyphens, underscores, periods removed, (2) spaces and newlines replaced by hyphens, (3) lowercase, (4) everything before first letter removed//##||##gray|//yes//##||##gray|//yes//##||##gray|//no//##|| ||
+##gray|//[#pandoc-header-identifiers pandoc header identifiers] are the same as the header with (1) all punctuation except hyphens, underscores, periods removed, (2) spaces and newlines replaced by hyphens, (3) lowercase, (4) everything before first letter removed//##||##gray|//yes//##||##gray|//yes//##|| ||
 ||list item||##gray|//pandoc requires sublists be indented 4 spaces://## _
 * list item _
 @<&nbsp;&nbsp;&nbsp;&nbsp;>@* sublist item _
@@ -164,8 +147,7 @@ subsection header _
 @<&nbsp;&nbsp;>@- sublist item _
  _
 ##gray|//asterisks * or plus signs + may be used in place of hyphens -//##||* list item _
-** sublist item||* list item _
-@<&nbsp;>@* sublist item||\begin{itemize} _
+** sublist item||\begin{itemize} _
 \item list item _
 @<&nbsp;&nbsp;>@\begin{itemize} _
 @<&nbsp;&nbsp;>@\item sublist item _
@@ -177,9 +159,6 @@ subsection header _
 @<&nbsp;&nbsp;&nbsp;&nbsp;>@2nd paragraph _
  _
 @<&nbsp;&nbsp;>@* 2nd list item|| ||* 1st list item<br/><br/>2nd paragraph _
-* 2nd list item||* 1st list item @@_@@ _
-@<&nbsp;>@ @@_@@ _
-@<&nbsp;&nbsp;>@2nd paragraph _
 * 2nd list item|| ||
 ||numbered list item||##gray|//markdown ignores actual numeric values; pandoc uses first value only://## _
 1. numbered one _
@@ -199,7 +178,6 @@ ii. roman numeral two||##gray|//numbers in source are used://## _
  _
 i) roman numeral one _
 ii) roma numberal two||# numbered one _
-# numbered two||# numbered one _
 # numbered two||\begin{enumerate} _
 \item numbered one _
 \item numbered two _
@@ -219,8 +197,7 @@ two _
 @<&nbsp;&nbsp;>@the 1st cardinal _
 two _
 @<&nbsp;&nbsp;>@the 2nd cardinal||; one : the 1st cardinal _
-; two : the 2nd cardinal||: one : the 1st cardinal _
-: two : the 2nd cardinal||\begin{description} _
+; two : the 2nd cardinal||\begin{description} _
 \item[one] the 1st cardinal _
 \item[two] the 2nd cardinal _
 \end{description}||
@@ -240,38 +217,30 @@ years ago... _
 More main body text.||<blockquote> _
 Four score and twenty _
 years ago... _
-</blockquote>||@@>@@ Four score and twenty _
-@@>@@ years ago...||\begin{quote} _
+</blockquote>||\begin{quote} _
 Four score and twenty years ago... _
 \end{quote}||
-||collapsible and expandable section||##gray|//none//##|| ||##gray|//none//##||@@[[collapsible show="+" hide="-"]]@@ _
-text that can be hidden _
-@@[[/collapsible]]@@|| ||
+||collapsible and expandable section||##gray|//none//##|| ||##gray|//none//##|| ||
 ||div w/ class||<div class="foo"> _
 ##gray|//markup//## _
 </div>|| ||<div class="foo"> _
 ##gray|//markup//## _
-</div>||@@[[div class="foo"]]@@ _
-##gray|//markup//## _
-@@[[/div]]@@|| ||
-||||||||||||~ [[# images-video]]images and video||
-||~ ||~ [#markdown markdown]||~ [#restructured-text restructured text]||~ [#mediawiki mediawiki]||~ [#wikidot wikidot]||~ [#latex latex]||
-||image|| ||.. image:: foo.jpg||[[File:foo.jpg]]||@@[[image foo.jpg]]@@|| ||
+</div>|| ||
+||||||||||~ [[# images-video]]images and video||
+||~ ||~ [#markdown markdown]||~ [#restructured-text restructured text]||~ [#mediawiki mediawiki]||~ [#latex latex]||
+||image|| ||.. image:: foo.jpg||[[File:foo.jpg]]|| ||
 ||image link||<a href="@@http://foo.com@@">![](foo.jpg)</a>||.. image:: foo.jpg _
-@<&nbsp;&nbsp;&nbsp;>@:target: @@http://foo\.com@@||[[File:foo.jpg|link=@@http://foo.com@@]]||@@[[image foo.jpg link="http://foo.com"]]@@|| ||
+@<&nbsp;&nbsp;&nbsp;>@:target: @@http://foo\.com@@||[[File:foo.jpg|link=@@http://foo.com@@]]|| ||
 ||image with alt||![Foo](foo.jpg)||.. image:: foo.jpg _
-@<&nbsp;&nbsp;&nbsp;>@:alt: Foo||[[File:foo.jpg|alt=Foo]]||@@[[image foo.jpg alt="Foo"]]@@|| ||
+@<&nbsp;&nbsp;&nbsp;>@:alt: Foo||[[File:foo.jpg|alt=Foo]]|| ||
 ||image size||##gray|//height can also be specified; height proportionate if not://## _
 <img width="300px" src="foo.jpg">||##gray|//height can also be specified; height proportionate if not://## _ _
 .. image:: foo.jpg _
 @<&nbsp;&nbsp;&nbsp;>@:width: 300px||##gray|//specify width; height will be proportionate://## _
-[[File:foo.jpg|300px]]||##gray|//height can also be specified; height proportionate if not://## _
-@@[[image foo.jpg width="300px"]]@@|| ||
-||embedded youtube video||##gray|//copy-and-paste youtube// <object>##|| ||##gray|//none//##||[[html]] _
-##gray|//copy-and-paste youtube// <object>## _
-[[/html]]|| ||
-||||||||||||~ [[# tables-etal]]tables, code, and math||
-||~ ||~ [#markdown markdown]||~ [#restructured-text restructured text]||~ [#mediawiki mediawiki]||~ [#wikidot wikidot]||~ [#latex latex]||
+[[File:foo.jpg|300px]]|| ||
+||embedded youtube video||##gray|//copy-and-paste youtube// <object>##|| ||##gray|//none//##|| ||
+||||||||||~ [[# tables-etal]]tables, code, and math||
+||~ ||~ [#markdown markdown]||~ [#restructured-text restructured text]||~ [#mediawiki mediawiki]||~ [#latex latex]||
 ||table||<table> _
 <tr><th>A<th>B _
 <tr><td>1<td>2 _
@@ -322,9 +291,7 @@ A@<&nbsp;&nbsp;>@B _
 |- _
 |3 _
 |4 _
-|}||@@||~ A||~ B||@@ _
-@@||1||2||@@ _
-@@||3||4||@@||\begin{tabular}{l l} _
+|}||\begin{tabular}{l l} _
 A & B \\ _
 \hline _
 1 & 2 \\ _
@@ -337,8 +304,7 @@ A & B \\ _
 !colspan="2"|title _
 |- _
 @@|1||2@@ _
-|}||@@||||~ title||@@ _
-@@||1||2||@@|| ||
+|}|| ||
 ||cell alignment||<table><tr> _
 <td align="left">left _
 <td align="center">center _
@@ -347,7 +313,7 @@ A & B \\ _
 @@|align="left"|left@@ _
 @@|align="center"|center@@ _
 @@|align="right"|right@@ _
-|}||@@||< left||= center||> right||@@|| ||
+|}|| ||
 ||pre-formatted fixed-width block with no need to escape markup or < and &||##gray|//set off from surrounding blocks with blank lines and indent each line at least 4 spaces://## _
  _
 @<&nbsp;&nbsp;&nbsp;&nbsp;>@int add(int a, int b) { _
@@ -369,11 +335,7 @@ int add(int a, int b) { _
 int add(int a, int b) { _
 @<&nbsp;&nbsp;>@return (a+b); _
 } _
-</pre>||[[code]] _
-int add(int a, int b) { _
-@<&nbsp;&nbsp;>@return (a+b); _
-} _
-[[/code]]|| ||
+</pre>|| ||
 ||highlighted code||##gray|//pandoc extension://## _
 ~~~c _
 int add(int a, int b) { _
@@ -383,29 +345,23 @@ int add(int a, int b) { _
 int add(int a, int b) { _
 @<&nbsp;&nbsp;>@return (a+b); _
 } _
-</source>||[[code lang="cpp"]] _
-int add(int a, int b) { _
-@<&nbsp;&nbsp;>@return (a+b); _
-} _
-[[/code]]|| ||
+</source>|| ||
 ||languages which can be highlighted||##gray|//lists the supported languages://## _
-$ pandoc @@--@@version|| ||[http://www.mediawiki.org/wiki/Extension:SyntaxHighlight_GeSHi 100+ languages]||##gray|//php, html, cpp, css, diff, dtd, java, javascript, perl, python, ruby, xml//##|| ||
+$ pandoc @@--@@version|| ||[http://www.mediawiki.org/wiki/Extension:SyntaxHighlight_GeSHi 100+ languages]|| ||
 ||inline math||##gray|//none//##|| ||<math> _
 \int_0^\infty \frac{1}{x^2} dx _
-<\math>||@@[[$ \int_0^\infty \frac{1}{x^2} dx $]]@@||\( \int_0^\infty \frac{1}{x^2} dx \) _
+<\math>||\( \int_0^\infty \frac{1}{x^2} dx \) _
  _
 \begin{math} _
 \int_0^\infty \frac{1}{x^2} dx _
 \end{math}||
-||block math||##gray|//none//##|| || ||@@[[math]]@@ _
-\int_0^\infty \frac{1}{x^2} dx _
-[[/math]]||\[ \int_0^\infty \frac{1}{x^2} dx \] _
+||block math||##gray|//none//##|| || ||\[ \int_0^\infty \frac{1}{x^2} dx \] _
  _
 \begin{displaymath} _
 \int_0^\infty \frac{1}{x^2} dx _
 \end{displaymath}||
-||numbered equation|| || || || || ||
-||~ ##EFEFEF|@@________________@@##||~ ##EFEFEF|@@_________________________________________@@##||~ ##EFEFEF|@@_________________________________________@@##||~ ##EFEFEF|@@_________________________________________@@##||~ ##EFEFEF|@@_________________________________________@@##||~ ##EFEFEF|@@_________________________________________@@##||
+||numbered equation|| || || || ||
+||~ ##EFEFEF|@@________________@@##||~ ##EFEFEF|@@__________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________@@##||
 
 
 @<&nbsp;>@
@@ -559,15 +515,6 @@ For those who like to experiment, here are sandboxes for [http://c2.com/cgi/wiki
 In Wiki Base the way to prevent a camel case word from becoming a link was to insert six single quotes into the word like this: C''''''amelCase.  The odd markup was not intentional.  The six single quotes actually parse as a bold empty string.
 
 UseModWiki had a feature called "free links" which was attractive to the founders of Wikipedia.  It permitted page titles to have spaces, commas, periods, or hyphens in them.  These pages could be linked with double brackets: e.g. @@[[Los Angeles]]@@. In the URL the spaces are replaced with underscores.  UseModWiki is case insensitive but MediaWiki is case sensitive except for the first letter.
-
-[[# wikidot]]
-+ [#top Wikidot]
-
-[http://www.wikidot.com/doc:wiki-syntax Wikidot Syntax]
-
-A wikifarm with its own markup which is edited directly instead of via a WYSIWYG editor. 
-
-Supports a personal domain and custom CSS.  Free and ad-supported or paid and ad-free.
 
 [[# latex]]
 + [#top LaTeX]

@@ -4,29 +4,26 @@
 [#arrays arrays] | [#dictionaries dictionaries] | [#tables tables] | [#import-export import and export] | [#relational-algebra relational algebra] | [#aggregation aggregation] | [#functions functions] _
 [#execution-control execution control] | [#files files] | [#libraries-namespaces libraries and namespaces] | [#reflection reflection]
 
-||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||
 ||[[# version-used]][#version-used-note version used] _
-@<&nbsp;>@||##gray|//PostgreSQL 9.0//##||##gray|//20070501//##||##gray|//0.9//##|| ||
+@<&nbsp;>@||##gray|//PostgreSQL 9.0//##||##gray|//20070501//##||##gray|//0.9//##||
 ||[[# show-version]][#show-version-note show version] _
-@<&nbsp;>@||$ psql @@--@@version||$ awk @@--@@version||$ pig @@--@@version|| ||
-||||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
-||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
+@<&nbsp;>@||$ psql @@--@@version||$ awk @@--@@version||$ pig @@--@@version||
+||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||
 ||[[# interpreter]][#interpreter-note interpreter] _
-@<&nbsp;>@||$ psql -f foo.sql||$ awk -f foo.awk bar.txt||$ pig -f foo.pig||$ mongo foo.js||
+@<&nbsp;>@||$ psql -f foo.sql||$ awk -f foo.awk bar.txt||$ pig -f foo.pig||
 ||[[# repl]][#repl-note repl] _
-@<&nbsp;>@||$ psql||##gray|//none//##||$ pig -x local||$ mongo _
- _
-$ mongo @@--@@shell startup.js||
-||[[# input-format]][#input-format-note input data format]||##gray|//multiple tables defined by// create table //statements//##||##gray|//single field and record delimited file.  By default fields are delimited by whitespace and records by newlines//##||##gray|//multiple files.  Default loading function is// PigStorage //and default delimiter is tab//##|| ||
-||[[# statement-separator]][#statement-separator-note statement separator]||;||; ##gray|//or newline//##||; ##gray|//and newline when using REPL//##|| ||
-||[[# block-delimiters]][#block-delimiters-note block delimiters]||##gray|//none in SQL; PL/SQL uses keywords to delimit blocks//##||{ }|| ||{ }||
-||[[# eol-comment]][#eol-comment-note end-of-line comment]||@@--@@ ##gray|//comment//##||# ##gray|//comment//##||@@--@@ ##gray|//comment//##||##gray|@@//@@ comment##||
+@<&nbsp;>@||$ psql||##gray|//none//##||$ pig -x local||
+||[[# input-format]][#input-format-note input data format]||##gray|//multiple tables defined by// create table //statements//##||##gray|//single field and record delimited file.  By default fields are delimited by whitespace and records by newlines//##||##gray|//multiple files.  Default loading function is// PigStorage //and default delimiter is tab//##||
+||[[# statement-separator]][#statement-separator-note statement separator]||;||; ##gray|//or newline//##||; ##gray|//and newline when using REPL//##||
+||[[# block-delimiters]][#block-delimiters-note block delimiters]||##gray|//none in SQL; PL/SQL uses keywords to delimit blocks//##||{ }|| ||
+||[[# eol-comment]][#eol-comment-note end-of-line comment]||@@--@@ ##gray|//comment//##||# ##gray|//comment//##||@@--@@ ##gray|//comment//##||
 ||[[# multiple-line-comment]][#multiple-line-comment-note multiple line comment]||##gray|//none//##||##gray|//none//##||##gray|/* comment _
-another comment */##||##gray|/* comment _
 another comment */##||
-||||||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
-||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
-||[[# case-sensitive]][#case-sensitive-note case sensitive?]||##gray|//no//##||##gray|//yes//##||##gray|//functions and aliases are case sensitive; commands and operators are not//##||##gray|//yes//##||
+||||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||
+||[[# case-sensitive]][#case-sensitive-note case sensitive?]||##gray|//no//##||##gray|//yes//##||##gray|//functions and aliases are case sensitive; commands and operators are not//##||
 ||[[# quoted-id]][#quoted-id-note quoted identifier]||CREATE TABLE "select" ( _
 @<&nbsp;&nbsp;>@"foo bar" INT _
 ); _
@@ -34,119 +31,117 @@ another comment */##||
 ##gray|//MySQL://## _
 CREATE TABLE @@`select`@@ ( _
 @<&nbsp;&nbsp;>@ @@`foo bar`@@ INT _
-);||##gray|//none//##||##gray|//none//##|| ||
+);||##gray|//none//##||##gray|//none//##||
 ||[[# null]][#null-note null] _
-@<&nbsp;>@||NULL||""||null|| ||
+@<&nbsp;>@||NULL||""||null||
 ||[[# null-test]][#null-test-note null test] _
 @<&nbsp;>@||foo IS NULL||foo == ""||##gray|//in filter clause://## _
-is null|| ||
+is null||
 ||[[# coalesce]][#coalesce-note coalesce] _
-@<&nbsp;>@||coalesce(foo, 0)|| ||foo is null ? 0 : foo|| ||
-||[[# nullif]][#nullif-note nullif]||nullif(foo, -999)|| || || ||
-||[[# conditional-expr]][#conditional-expr-note conditional expression]||CASE WHEN x > 0 THEN x ELSE -x END||x > 0 ? x : -x||x > 0 ? x : -x|| ||
-||||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
-||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
+@<&nbsp;>@||coalesce(foo, 0)|| ||foo is null ? 0 : foo||
+||[[# nullif]][#nullif-note nullif]||nullif(foo, -999)|| || ||
+||[[# conditional-expr]][#conditional-expr-note conditional expression]||CASE WHEN x > 0 THEN x ELSE -x END||x > 0 ? x : -x||x > 0 ? x : -x||
+||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||
 ||[[# boolean-type]][#boolean-type-note boolean type] _
-@<&nbsp;>@||BOOLEAN||##gray|//values are untyped//##||##gray|//none//##||Boolean||
+@<&nbsp;>@||BOOLEAN||##gray|//values are untyped//##||##gray|//none//##||
 ||[[# true-false]][#true-false-note true and false] _
-@<&nbsp;>@||TRUE FALSE||1 0||##gray|//none//##||true false||
+@<&nbsp;>@||TRUE FALSE||1 0||##gray|//none//##||
 ||[[# falsehoods]][#falsehoods-note falsehoods]||FALSE _
  _
-##gray|//the predicate of a// where //clause evaluates as false if it contains a null//##||0 ""||##gray|//none; the first operand of a conditional expression must be a comparison operator expression//##||false null undefined "" 0 NaN||
+##gray|//the predicate of a// where //clause evaluates as false if it contains a null//##||0 ""||##gray|//none; the first operand of a conditional expression must be a comparison operator expression//##||
 ||[[# logical-op]][#logical-op-note logical operators]||AND OR NOT||&& @@||@@ !||##gray|//in filter clause://## _
-and or not||$and $or $not||
-||[[# logical-expr]][#logical-expr-note logical expression]|| || || ||{$and: [ ]} _
-{$or: [ ]} _
-{$not: {}}||
-||[[# relational-op]][#relational-op-note relational operators]||@@=@@ != > < >= <=||== != > < >= <=||== != > < >= <=|| ||
+and or not||
+||[[# logical-expr]][#logical-expr-note logical expression]|| || || ||
+||[[# relational-op]][#relational-op-note relational operators]||@@=@@ != > < >= <=||== != > < >= <=||== != > < >= <=||
 ||[[# int-type]][#int-type-note integer type]||smallint ##gray|//2 bytes//## _
 int ##gray|//4 bytes//## _
 bigint ##gray|//8 bytes//##||##gray|//variables are untyped//##||int ##gray|//4 bytes//## _
-long ##gray|//8 bytes//##|| ||
+long ##gray|//8 bytes//##||
 ||[[# float-type]][#float-type-note float type]||float ##gray|//4 bytes//## _
 double ##gray|//8 bytes//##||##gray|//variables are untyped//##||float ##gray|//4 bytes//## _
-double ##gray|//8 bytes//##|| ||
+double ##gray|//8 bytes//##||
 ||[[# fixed-type]][#fixed-type-note fixed type] _
-@<&nbsp;>@||numeric(##gray|//precision//##, ##gray|//scale//##)||##gray|//variables are untyped//##||##gray|//none//##|| ||
+@<&nbsp;>@||numeric(##gray|//precision//##, ##gray|//scale//##)||##gray|//variables are untyped//##||##gray|//none//##||
 ||[[# arith-op]][#arith-op-note arithmetic operators] _
-##gray|//addition, subtraction, multiplication, division, remainder//##||+ - * / %||+ - * / %||+ - * / %|| ||
+##gray|//addition, subtraction, multiplication, division, remainder//##||+ - * / %||+ - * / %||+ - * / %||
 ||[[# int-div]][#int-div-note integer division] _
-@<&nbsp;>@||13 / 5||int(13 / 5)||13 / 5|| ||
-||[[# int-div-zero]][#int-div-zero-note integer division by zero]||##gray|//error//##||##gray|//error//##||null|| ||
+@<&nbsp;>@||13 / 5||int(13 / 5)||13 / 5||
+||[[# int-div-zero]][#int-div-zero-note integer division by zero]||##gray|//error//##||##gray|//error//##||null||
 ||[[# float-div]][#float-div-note float division] _
-@<&nbsp;>@||cast(13 as float) / 5||13 / 5||1.0 * 13 / 5|| ||
-||[[# float-div-zero]][#float-div-zero-note float division by zero]||##gray|//error//##||##gray|//error//##||null|| ||
+@<&nbsp;>@||cast(13 as float) / 5||13 / 5||1.0 * 13 / 5||
+||[[# float-div-zero]][#float-div-zero-note float division by zero]||##gray|//error//##||##gray|//error//##||null||
 ||[[# power]][#power-note power]||2 ^ 32||2 ^ 32 _
-2 ** 32||##gray|//none//##|| ||
+2 ** 32||##gray|//none//##||
 ||[[# sqrt]][#sqrt-note sqrt] _
-@<&nbsp;>@||sqrt(2)||sqrt(2)||SQRT(2)|| ||
+@<&nbsp;>@||sqrt(2)||sqrt(2)||SQRT(2)||
 ||[[# sqrt-negative-one]][#sqrt-negative-one-note sqrt -1]||##gray|//error//##||##gray|//generates a warning://## _
-nan||NaN|| ||
-||[[# transcendental-func]][#transcendental-func-note transcendental functions]||exp ln sin cos tan asin acos atan atan2||exp log sin cos ##gray|//none//## ##gray|//none//## ##gray|//none//## ##gray|//none//## atan2||EXP LOG SIN COS TAN ASIN ACOS ATAN ##gray|//none//##|| ||
+nan||NaN||
+||[[# transcendental-func]][#transcendental-func-note transcendental functions]||exp ln sin cos tan asin acos atan atan2||exp log sin cos ##gray|//none//## ##gray|//none//## ##gray|//none//## ##gray|//none//## atan2||EXP LOG SIN COS TAN ASIN ACOS ATAN ##gray|//none//##||
 ||[[# float-trunc]][#float-trunc-note float truncation]||cast(2.7 as int) _
 round(2.7) _
 ceil(2.7) _
 floor(2.7)||int(2.7)||(int)2.7 _
 ROUND(2.7) _
 CEIL(2.7) _
-FLOOR(2.7)|| ||
+FLOOR(2.7)||
 ||[[# absolute-val]][#absolute-val-note absolute value] _
-@<&nbsp;>@||abs(-2.7)||##gray|//none//##||ABS(-2.7)|| ||
+@<&nbsp;>@||abs(-2.7)||##gray|//none//##||ABS(-2.7)||
 ||[[# random-num]][#random-num-note random number] _
-@<&nbsp;>@||random()||rand()||RANDOM()|| ||
+@<&nbsp;>@||random()||rand()||RANDOM()||
 ||[[# bit-op]][#bit-op-note bit operators]||@<<< >>>@ & | # ~||##gray|//gawk://## _
 lshift(##gray|//val//##, ##gray|//cnt//##) _
 rshift(##gray|//val//##, ##gray|//cnt//##) _
 and(##gray|//val1//##, ##gray|//val2//##) _
 or(##gray|//val1//##, ##gray|//val2//##) _
 xor(##gray|//val1//##, ##gray|//val2//##) _
-compl(##gray|//val//##)||##gray|//none//##|| ||
-||||||||||~ [[# strings]][#strings-note strings]||
-||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
+compl(##gray|//val//##)||##gray|//none//##||
+||||||||~ [[# strings]][#strings-note strings]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||
 ||[[# str-types]][#str-types-note types]||text _
 varchar(##gray|//n//##) _
 char(##gray|//n//##)||##gray|//variables are untyped//##||chararray _
-bytearray|| ||
+bytearray||
 ||[[# str-literal]][#str-literal-note literal] _
 @<&nbsp;>@||'don''t say "no"' _
  _
 ##gray|//PostgreSQL escape literal://## _
-E'don\'t say "no"'||"don't say \"no\""||'don\'t say "no"'|| ||
+E'don\'t say "no"'||"don't say \"no\""||'don\'t say "no"'||
 ||[[# str-len]][#str-len-note length] _
-@<&nbsp;>@||length('lorem ipsum')||length("lorem ipsum")||SIZE('lorem ipsum')|| ||
+@<&nbsp;>@||length('lorem ipsum')||length("lorem ipsum")||SIZE('lorem ipsum')||
 ||[[# str-esc]][#str-esc-note escapes]||##gray|//no backslash escapes in SQL standard string literals//## _
  _
 ##gray|//in PostgreSQL escape literals://## _
-\b \f \n \r \t \##gray|//ooo//## \x##gray|//hh//## \u##gray|//hhhh//## \u##gray|//hhhhhhhh//##||\\ \" \a \b \f \n \r \t \v \##gray|//ooo//## \x##gray|//hh//##||\n \t \u##gray|//hhhh//##|| ||
+\b \f \n \r \t \##gray|//ooo//## \x##gray|//hh//## \u##gray|//hhhh//## \u##gray|//hhhhhhhh//##||\\ \" \a \b \f \n \r \t \v \##gray|//ooo//## \x##gray|//hh//##||\n \t \u##gray|//hhhh//##||
 ||[[# str-concat]][#str-concat-note concatenation] _
-@<&nbsp;>@||'Hello' @@||@@ ', ' @@||@@ 'World!'||("Hello" " " "World!")||CONCAT(CONCAT('Hello', ', '), 'World!')|| ||
+@<&nbsp;>@||'Hello' @@||@@ ', ' @@||@@ 'World!'||("Hello" " " "World!")||CONCAT(CONCAT('Hello', ', '), 'World!')||
 ||[[# split]][#split-note split] _
 @<&nbsp;>@||regexp_split_to_array( _
 @<&nbsp;&nbsp;>@'do re mi', ' ' _
-)||split("do re mi", a, " ")||STRSPLIT('do re mi', ' ')|| ||
+)||split("do re mi", a, " ")||STRSPLIT('do re mi', ' ')||
 ||[[# case-manipulation]][#case-manipulation-note case manipulation]||upper('lorem') _
 lower('LOREM') _
 initcap('lorem')||toupper("lorem") _
 tolower("LOREM") _
 ##gray|//none//##||UPPER('lorem') _
 LOWER('LOREM') _
-UCFIRST('lorem')|| ||
+UCFIRST('lorem')||
 ||[[# strip]][#strip-note strip]||trim(' lorem ') _
 ltrim(' lorem') _
-rtrim('lorem ')|| ||TRIM(' lorem ')|| ||
+rtrim('lorem ')|| ||TRIM(' lorem ')||
 ||[[# index-substr]][#index-substr-note index of substring]||##gray|//index starts from 1; returns 0 if not found://## _
 strpos('lorem ipsum', 'ipsum')||##gray|//index starts from 1; returns 0 if not found://## _
 index("lorem ipsum", "ipsum")||##gray|//index starts from 0; returns -1 if not found://## _
-INDEXOF('lorem ipsum', 'ipsum', 0)|| ||
-||[[# substr]][#substr-note extract substring]||substr('lorem ipsum', 7, 5)||substr("lorem ipsum", 7, 5)||SUBSTRING('lorem ipsum', 6, 11)|| ||
+INDEXOF('lorem ipsum', 'ipsum', 0)||
+||[[# substr]][#substr-note extract substring]||substr('lorem ipsum', 7, 5)||substr("lorem ipsum", 7, 5)||SUBSTRING('lorem ipsum', 6, 11)||
 ||[[# sprintf]][#sprintf-note sprintf]||select format('%s %s %s', 'foo', 7, 13.2);||sprintf("%s %d %f", "foo", 7, 13.2)||REGISTER /PATH/TO/piggybank-0.3-amzn.jar; _
 DEFINE FORMAT org.apache.pig.piggybank. _
 evaluation.string.FORMAT(); _
  _
 foo = FOREACH foo GENERATE _
-@<&nbsp;&nbsp;>@FORMAT('%s %d %f', 'foo', 7, 13.2);|| ||
-||||||||||~ [[# regexes]][#regexes-note regular expressions]||
-||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
+@<&nbsp;&nbsp;>@FORMAT('%s %d %f', 'foo', 7, 13.2);||
+||||||||~ [[# regexes]][#regexes-note regular expressions]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||
 ||[[# match]][#match-note match]||select * _
 from pwt _
 where name similar to 'r[a-z]+';||##gray|//matching inside pattern://## _
@@ -154,78 +149,78 @@ $1 ~ /^r[a-z]+/ { print $0 } _
  _
 ##gray|//matching inside action://## _
 { if (match($1, /^r[a-z]+$/)) print $0 }||root_pwf = filter pwf _
-@<&nbsp;&nbsp;>@by SIZE(REGEX_EXTRACT(name, '^(root)$',1)) > 0;|| ||
+@<&nbsp;&nbsp;>@by SIZE(REGEX_EXTRACT(name, '^(root)$',1)) > 0;||
 ||[[# substitute]][#substitute-note substitute] _
 @<&nbsp;>@||select regexp_replace('foo bar', 'bar$', 'baz');||s = "foo bar" _
-sub(/bar$/, "baz", s)|| || ||
-||[[# extract-subgroup]][#extract-subgroup-note extract subgroup]||select (regexp_matches('foobar', '(f..)bar'))[1];|| ||properties = FOREACH urls GENERATE FLATTEN(EXTRACT($0, '^https?:@@//@@([^/]+)')) as host:chararray;|| ||
-||||||||||~ [[# dates-time]][#dates-time-note dates and time]||
-||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
+sub(/bar$/, "baz", s)|| ||
+||[[# extract-subgroup]][#extract-subgroup-note extract subgroup]||select (regexp_matches('foobar', '(f..)bar'))[1];|| ||properties = FOREACH urls GENERATE FLATTEN(EXTRACT($0, '^https?:@@//@@([^/]+)')) as host:chararray;||
+||||||||~ [[# dates-time]][#dates-time-note dates and time]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||
 ||[[# current-date-time]][#current-date-time-note current date and time]||now()||##gray|//gawk://## _
 systime()||REGISTER /PATH/TO/piggybank-0.3-amzn.jar; _
 DEFINE DATE_TIME org.apache.pig.piggybank. _
 evaluation.datetime.DATE_TIME(); _
  _
-bar = FOREACH foo GENERATE DATE_TIME('-00:00');|| ||
+bar = FOREACH foo GENERATE DATE_TIME('-00:00');||
 ||[[# date-time-to-str]][#date-time-to-str-note datetime to string]||to_char(now(), 'YYYY-MM-DD HH24:MI:SS')||##gray|//gawk://## _
 strftime("%Y-%m-%d %H:%M:%S", systime())||REGISTER /PATH/TO/piggybank-0.3-amzn.jar; _
 DEFINE FORMAT_DT org.apache.pig.piggybank. _
 evaluation.datetime.FORMAT_DT(); _
  _
-baz = FOREACH bar GENERATE FORMAT_DT('yyyy-MM-dd HH::mm:ss', $0);|| ||
+baz = FOREACH bar GENERATE FORMAT_DT('yyyy-MM-dd HH::mm:ss', $0);||
 ||[[# str-to-date-time]][#str-to-date-time-note string to datetime]||to_timestamp('2011-09-26 00:00:47', 'YYYY-MM-DD HH24:MI:SS')||##gray|//gawk://## _
-mktime("2011 09 26 00 00 47")|| || ||
-||||||||||~ [[# arrays]][#arrays-note arrays]||
-||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
+mktime("2011 09 26 00 00 47")|| ||
+||||||||~ [[# arrays]][#arrays-note arrays]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||
 ||[[# array-literal]][#array-literal-note literal]||##gray|//PostgreSQL://## _
 create temp table foo ( a int[] ); _
 insert into foo values ( '{1,2,3}' );||##gray|//none//##||one_row = LOAD '/tmp/one_line.txt'; _
-foo = FOREACH one_row GENERATE (1,2,3);|| ||
+foo = FOREACH one_row GENERATE (1,2,3);||
 ||[[# array-size]][#array-size-note size]||##gray|//PostgreSQL://## _
-select array_upper(a, 1) from foo;||##gray|//none, but// split //function returns length//##||bar = FOREACH foo GENERATE SIZE(a);|| ||
+select array_upper(a, 1) from foo;||##gray|//none, but// split //function returns length//##||bar = FOREACH foo GENERATE SIZE(a);||
 ||[[# array-lookup]][#array-lookup-note lookup]||##gray|//PostgreSQL://## _
-select a[1] from foo;||a[0]||bar = FOREACH foo GENERATE a.$0;|| ||
-||[[# array-update]][#array-update-note update]|| || || || ||
-||[[# array-iteration]][#array-iteration-note iteration]|| ||for (i in a) print i, a[i]|| || ||
-||[[# membership]][#membership-note membership]|| || || || ||
-||||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
-||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
-||[[# dictionary-literal]][#dictionary-literal-note literal]|| || ||['t'#1, 'f'#0]|| ||
-||||||||||~ [[# tables]][#tables-note tables]||
-||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
+select a[1] from foo;||a[0]||bar = FOREACH foo GENERATE a.$0;||
+||[[# array-update]][#array-update-note update]|| || || ||
+||[[# array-iteration]][#array-iteration-note iteration]|| ||for (i in a) print i, a[i]|| ||
+||[[# membership]][#membership-note membership]|| || || ||
+||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||
+||[[# dictionary-literal]][#dictionary-literal-note literal]|| || ||['t'#1, 'f'#0]||
+||||||||~ [[# tables]][#tables-note tables]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||
 ||[[# order-by]][#order-by-note order rows by column]||##gray|//ordering depends on type of column//## _
 select name _
 from pwt _
 order by name;||##gray|//ordering is lexical unless// -n //flag is used//## _
 $ sort -k1 -t: /etc/passwd||names = foreach pwf generate name; _
-ordered_names = order names by name;|| ||
+ordered_names = order names by name;||
 ||[[# order-by-multiple]][#order-by-multiple-note order rows by multiple columns]||select group, name _
 from pwt _
-order by group, name;|| || || ||
+order by group, name;|| || ||
 ||order rows in descending order||select name _
 from pwt _
-order by name;||$ sort -k1 -r -t: /etc/passwd|| || ||
-||[[# limit]][#limit-note limit]||select name from pwt order by name limit 10;|| ||first_ten = limit ordered_names 10;|| ||
-||[[# offset]][#offset-note offset]||select name from pwt order by name limit 10 offset 10;|| || || ||
-||||||||||~ [[# import-export]][#import-export-note import and export]||
-||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
-||||||||||~ [[# relational-algebra]][#relational-algebra-note relational algebra]||
-||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
-||[[# poject-column-by-name]][#project-column-by-name-note project columns by name]||select name, pw from pwt;||##gray|//none//##||name_pw = foreach pwf generate name, pw;|| ||
-||[[# project-column-by-position]][#project-column-by-position-note project columns by position]||##gray|//none//##||{ print $1, $2 }||name_pw = foreach pwf generate $0, $1;|| ||
-||[[# project-expr]][#project-expr-note project expression]|| || || || ||
+order by name;||$ sort -k1 -r -t: /etc/passwd|| ||
+||[[# limit]][#limit-note limit]||select name from pwt order by name limit 10;|| ||first_ten = limit ordered_names 10;||
+||[[# offset]][#offset-note offset]||select name from pwt order by name limit 10 offset 10;|| || ||
+||||||||~ [[# import-export]][#import-export-note import and export]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||
+||||||||~ [[# relational-algebra]][#relational-algebra-note relational algebra]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||
+||[[# poject-column-by-name]][#project-column-by-name-note project columns by name]||select name, pw from pwt;||##gray|//none//##||name_pw = foreach pwf generate name, pw;||
+||[[# project-column-by-position]][#project-column-by-position-note project columns by position]||##gray|//none//##||{ print $1, $2 }||name_pw = foreach pwf generate $0, $1;||
+||[[# project-expr]][#project-expr-note project expression]|| || || ||
 ||[[# project-all-columns]][#project-all-columns-note project all columns]||select * from pwt;||##gray|# prints input line:## _
-{ print $0 }||pwf2 = foreach pwf generate *;|| ||
+{ print $0 }||pwf2 = foreach pwf generate *;||
 ||[[# rename-columns]][#rename-columns-note rename columns]||select uid as userid, gid as groupid _
-from pwf;||##gray|//none//##||usergroups = foreach pwf generate uid as userid, gid as groupid;|| ||
-||[[# select-rows]][#select-rows-note select rows]||select * from pwt where name = 'root';||$1 == "root" { print $0 }||pwf3 = filter pwf by name == 'root';|| ||
+from pwf;||##gray|//none//##||usergroups = foreach pwf generate uid as userid, gid as groupid;||
+||[[# select-rows]][#select-rows-note select rows]||select * from pwt where name = 'root';||$1 == "root" { print $0 }||pwf3 = filter pwf by name == 'root';||
 ||[[# select-distinct-rows]][#select-distinct-rows-note select distinct rows]||select distinct gid from pwt;||$ cat > gid.awk _
 BEGIN { FS=":" } _
 !/^#/ { print $4 } _
 $ awk -f gid.awk /etc/passwd > /tmp/x _
 $ sort -u /tmp/x||gids1 = foreach pwf generate gid; _
-gids2 = distinct gids1;|| ||
-||[[# split-rows]][#split-rows-note split rows]|| || ||split pwf into rootpwf if name == 'root', otherpwf if name != 'root';|| ||
+gids2 = distinct gids1;||
+||[[# split-rows]][#split-rows-note split rows]|| || ||split pwf into rootpwf if name == 'root', otherpwf if name != 'root';||
 ||[[# inner-join]][#inner-join-note inner join]||create temp table gt ( _
 @<&nbsp;&nbsp;>@name text, pw text, _
 @<&nbsp;&nbsp;>@gid int, members text _
@@ -243,22 +238,22 @@ $ sort -k3,3 -t: < /tmp/y > /tmp/g _
  _
 $ join -t: -14 -23 /tmp/pw /tmp/g||gf = load '/etc/group' using PigStorage(':') as (name:chararray, pw:chararray, gid:int, members:chararray); _
  _
-pwgf = join pwf by gid, gf by gid;|| ||
-||[[# nulls-as-join-values]][#nulls-as-join-values-note nulls as join values]||##gray|//input tuples with nulls for join values are omitted from inner joins//##||##gray|//no null value; empty strings are joinable values//##||##gray|//input tuples with nulls for join values are omitted from inner joins//##|| ||
+pwgf = join pwf by gid, gf by gid;||
+||[[# nulls-as-join-values]][#nulls-as-join-values-note nulls as join values]||##gray|//input tuples with nulls for join values are omitted from inner joins//##||##gray|//no null value; empty strings are joinable values//##||##gray|//input tuples with nulls for join values are omitted from inner joins//##||
 ||[[# self-join]][#self-join-note self join]||select pwt1.name, pwt2.name _
 from pwt as pwt1, pwt as pwt2 _
 where pwt1.gid = pwt2.gid;||$ join -t: -14 -24 /tmp/pw /tmp/pw||pwf2 = foreach pwf generate *; _
 joined_by_gid = join pwf by gid, pwf2 by gid; _
-name_pairs = foreach by_group generate pwf::name, pwf2::name;|| ||
+name_pairs = foreach by_group generate pwf::name, pwf2::name;||
 ||[[# left-join]][#left-join-note left join]||select * _
 from customers c _
 left join orders o _
-@<&nbsp;&nbsp;>@on c.id = o.customer_id;||$ join -t: -a1 -11 -22 /tmp/c /tmp/o||j = join customers by id left, orders by customer_id;|| ||
+@<&nbsp;&nbsp;>@on c.id = o.customer_id;||$ join -t: -a1 -11 -22 /tmp/c /tmp/o||j = join customers by id left, orders by customer_id;||
 ||[[# outer-join]][#full-join-note full join]||select * _
 from customers c _
 full join orders o _
-@<&nbsp;&nbsp;>@on c.id = o.customer_id;||$ join -t: -a1 -a2 -11 -22 /tmp/c /tmp/o||j = join customers by id full, orders by customer_id;|| ||
-||[[# antijoin]][#antijoin-note antijoin]|| || || || ||
+@<&nbsp;&nbsp;>@on c.id = o.customer_id;||$ join -t: -a1 -a2 -11 -22 /tmp/c /tmp/o||j = join customers by id full, orders by customer_id;||
+||[[# antijoin]][#antijoin-note antijoin]|| || || ||
 ||[[# cross-join]][#cross-join-note cross join]||create table files ( file text ); _
 insert into files values ('a'), ('b'), ('c'), ('d'), ('e'), ('f'), ('g'), ('h'); _
  _
@@ -274,22 +269,22 @@ $ join -12 -22 /tmp/f /tmp/r||files = load '/tmp/files.txt' as (file:chararray);
  _
 ranks = load '/tmp/ranks.txt' as (rank:int); _
  _
-chessboard = cross files, ranks;|| ||
-||||||||||~ [[# aggregation]][#aggregation-note aggregation]||
-||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
+chessboard = cross files, ranks;||
+||||||||~ [[# aggregation]][#aggregation-note aggregation]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||
 ||[[# group-by]][#group-by-note group by]||select gid, count(*) _
 from pwf _
 group by gid;||BEGIN { FS=":" } _
 !/^#/ { cnt[$4]++ } _
 END { for (i in cnt) print i, cnt[i] }||by_group = group pwf by gid; _
-cnts = foreach by_group generate $0, COUNT($1);|| ||
+cnts = foreach by_group generate $0, COUNT($1);||
 ||[[# group-by-multiple]][#group-by-multiple-note group by multiple columns]||select gid, sh, count(*) _
 from pwf _
 group by gid, sh;|| ||by_group = group pwf by (gid, sh); _
-cnts = foreach by_group generate FLATTEN($0), COUNT($1);|| ||
-||[[# aggregation-func]][#aggregation-func-note aggregation functions]||count sum min max avg stddev||##gray|//none//##||COUNT SUM MIN MAX AVG ##gray|//none//##|| ||
-||||||||||~ [[# functions]][#functions-note functions]||
-||~ ||~ [#sql pl/sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
+cnts = foreach by_group generate FLATTEN($0), COUNT($1);||
+||[[# aggregation-func]][#aggregation-func-note aggregation functions]||count sum min max avg stddev||##gray|//none//##||COUNT SUM MIN MAX AVG ##gray|//none//##||
+||||||||~ [[# functions]][#functions-note functions]||
+||~ ||~ [#sql pl/sql]||~ [#awk awk]||~ [#pig pig]||
 ||[[# def-func]][#def-func-note define function]||create or replace function _
 @<&nbsp;&nbsp;>@add ( x int, y int ) _
 @<&nbsp;&nbsp;>@returns int as $$ _
@@ -308,34 +303,33 @@ public class Add extends EvalFunc<Integer> { _
 @<&nbsp;&nbsp;>@@Override public Integer _
 @<&nbsp;&nbsp;>@exec(Tuple input) throws IOException { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Integer x, y; _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@if (input == null @@|| ||
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@if (input == null @@||
 ||[[# invoke-func]][#invoke-func-note invoke function]||select add(x, y) from foo;||{ print add($1, $2) }||REGISTER Add.jar _
 DEFINE ADD org.hpglot.Add(); _
  _
 foo = LOAD 'foo.txt' AS (x:int, y:int); _
-bar = FOREACH foo GENERATE ADD(x, y);|| ||
+bar = FOREACH foo GENERATE ADD(x, y);||
 ||[[# drop-func]][#drop-func-note drop function] _
-@<&nbsp;>@||drop function add(integer, integer);||##gray|//none//##||##gray|//none//##|| ||
-||||||||||~ [[# execution-control]][#execution-control-note execution control]||
-||~ ||~ [#sql pl/sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
-||[[# if]][#if-note if]|| ||if (!0) print "foo"; else print "bar"||##gray|//none//##|| ||
-||[[# while]][#while-note while]|| ||i = 0; while (i<5) print i++||##gray|//none//##|| ||
-||[[# for]][#for-note for]|| ||for (i=0; i<5; i++) print i||##gray|//none//##|| ||
-||||||||||~ [[# files]][#files-note files]||
-||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
+@<&nbsp;>@||drop function add(integer, integer);||##gray|//none//##||##gray|//none//##||
+||||||||~ [[# execution-control]][#execution-control-note execution control]||
+||~ ||~ [#sql pl/sql]||~ [#awk awk]||~ [#pig pig]||
+||[[# if]][#if-note if]|| ||if (!0) print "foo"; else print "bar"||##gray|//none//##||
+||[[# while]][#while-note while]|| ||i = 0; while (i<5) print i++||##gray|//none//##||
+||[[# for]][#for-note for]|| ||for (i=0; i<5; i++) print i||##gray|//none//##||
+||||||||~ [[# files]][#files-note files]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||
 ||[[# field-delimiter]][#field-delimiter-note set field delimiter]||$  grep -v '^#' /etc/passwd > /tmp/pw _
  _
 create table pwt ( name text, pw text, uid int, gid int, gecos text, home text, sh text ); _
  _
-copy pwt from '/tmp/pw' with delimiter ':';||BEGIN { FS=":" }||pwf = LOAD '/etc/passwd' USING PigStorage(':') AS (name:chararray, pw:chararray, uid:int, gid:int, gecos:chararray, home:chararray, sh:chararray);|| ||
-||[[# write-table-file]][#write-table-file-note write table to file]|| || ||STORE foo INTO '/tmp/foo.tab';|| ||
-||||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
-||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
-||||||||||~ [[# reflection]][#reflection-note reflection]||
-||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||~ [#mongo mongo]||
-||[[# table-schema]][#table-schema-note table schema]|| || ||DESCRIBE foo;|| ||
-||~ ||~ ##EFEFEF|@@_________________________________________@@##||~ ##EFEFEF|@@_________________________________________@@##||~ ##EFEFEF|@@_________________________________________@@##||~ ##EFEFEF|@@_________________________________________@@##||
-
+copy pwt from '/tmp/pw' with delimiter ':';||BEGIN { FS=":" }||pwf = LOAD '/etc/passwd' USING PigStorage(':') AS (name:chararray, pw:chararray, uid:int, gid:int, gecos:chararray, home:chararray, sh:chararray);||
+||[[# write-table-file]][#write-table-file-note write table to file]|| || ||STORE foo INTO '/tmp/foo.tab';||
+||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||
+||||||||~ [[# reflection]][#reflection-note reflection]||
+||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||
+||[[# table-schema]][#table-schema-note table schema]|| || ||DESCRIBE foo;||
+||~ ||~ ##EFEFEF|@@_________________________________________@@##||~ ##EFEFEF|@@_________________________________________@@##||~ ##EFEFEF|@@_________________________________________@@##||
 
 
 [[# general-note]]
@@ -1182,7 +1176,3 @@ DEFINE FORMAT org.apache.pig.piggybank.evaluation.string.FORMAT();
 DEFINE FORMAT_DT org.apache.pig.piggybank.evaluation.datetime.FORMAT_DT();
 DEFINE REPLACE org.apache.pig.piggybank.evaluation.string.REPLACE();
 [[/code]]
-
-
-[[# mongo]]
-+ [#top MongoDB Query]

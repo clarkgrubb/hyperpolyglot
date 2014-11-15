@@ -116,7 +116,7 @@ x, y, z = 1, 2||(x, y, z) = [1, 2, 3] _
 <<= >>= &= |= ^=|| || ||
 ||[[# incr-decr]][#incr-decr-note increment and decrement]||my $x = 1; _
 my $y = ++$x; _
-my $z = --$y;|| || || ||
+my $z = @@--@@$y;|| || || ||
 ||[[# null]][#null-note null] _
 @<&nbsp;>@||undef||""||##purple|nil##||null||
 ||[[# null-test]][#null-test-note null test] _

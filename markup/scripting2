@@ -753,11 +753,24 @@ i.value = v + 1||
 @<&nbsp;>@|| ||$##peru|i##->plus(7)||i.plus(7)||i.plus(7)||
 ||[[# def-class-method]][#def-class-method-note define class method]|| || ||##green|@classmethod## _
 ##purple|def## ##mediumblue|get_instances##(cls): _
-@<&nbsp;&nbsp;>@##purple|return## Counter.instances|| ||
+@<&nbsp;&nbsp;>@##purple|return## Counter.instances||class Foo _
+@<&nbsp;&nbsp;>@def Foo.one _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@puts "one" _
+@<&nbsp;&nbsp;>@end _
+end||
 ||[[# invoke-class-method]][#invoke-class-method-note invoke class method] _
-@<&nbsp;>@|| ||##green|Counter##::getInstances()||Counter.get_instances||##green|Counter##.instances||
-||define class variable|| || || || ||
-||get and set class variable|| || || || ||
+@<&nbsp;>@|| ||##green|Counter##::getInstances()||Counter.get_instances()||Foo.one||
+||define class variable|| || ||class Foo: _
+@<&nbsp;&nbsp;>@instances = 0||class Foo _
+@<&nbsp;&nbsp;>@@<@@>@instances = 1 _
+end||
+||get and set class variable|| || ||class Foo: _
+@<&nbsp;&nbsp;>@def __init__(self): _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Foo.instances += 1||class Foo _
+@<&nbsp;&nbsp;>@def initialize _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<@@>@instances += 1 _
+@<&nbsp;&nbsp;>@end _
+end||
 ||[[# method-missing]][#method-missing-note handle undefined method invocation] _
 @<&nbsp;>@|| ||##purple|function## ##0000CD|@@__@@call##($##peru|name##, $##peru|args##) _
 { _
@@ -1072,6 +1085,21 @@ urllib.unquote_plus(##maroon|"lorem+ipsum%3F"##)||require ##maroon|'cgi'## _
  _
 ##green|CGI##::escape(##maroon|"lorem ipsum?"##) _
 ##green|CGI##::unescape(##maroon|"lorem+ipsum%3F"##)||
+||[[# html-escape]][#html-escape-note html escape] _
+##gray|//escape character data, escape attribute value, unescape html entities//##|| ||$s = htmlspecialchars("<>&"); _
+ _
+$s2 = htmlspecialchars("<>&\"'", _
+@<&nbsp;&nbsp;>@ENT_NOQUOTES | ENT_QUOTES); _
+ _
+$s3 = htmlspecialchars_decode($s2);||import cgi _
+from HTMLParser import HTMLParser _
+ _
+s = cgi.escape('<>&') _
+s2 = cgi.escape('<>&"', True) _
+s3 = HTMLParser().unescape(||require 'cgi' _
+ _
+s2 = CGI.escapeHTML('<>&"') _
+s3 = CGI.unescapeHTML(s2)||
 ||[[# base64]][#base64-note base64 encode/decode]|| ||$##peru|s## = file_get_contents(##maroon|"foo.png"##); _
 $##peru|b64## = base64_encode($##peru|s##); _
 $##peru|s2## = base64_decode($##peru|b64##);||##purple|import## base64 _
@@ -1083,6 +1111,7 @@ $##peru|s2## = base64_decode($##peru|b64##);||##purple|import## base64 _
 s = ##green|File##.open(##maroon|"foo.png"##).read _
 b64 = ##green|Base64##.encode64(s) _
 s2 = ##green|Base64##.decode64(b64)||
+||[[# smtp]][#smtp-note smtp]|| || || || ||
 ||||||||||~ [[# unit-tests]][#unit-tests-note unit tests]||
 ||~  ||~ node||~ php||~ python||~ ruby||
 ||[[# test-class]][#test-class-note test class]||##gray|@@//@@ npm install -g nodeunit## _
@@ -2502,6 +2531,21 @@ In Python 3 the functions {{quote_plus}}, {{unquote_plus}}, {{quote}}, and {{unq
 {{urllib.quote}} replaces a space character with {{%20}}.
 
 {{urllib.unquote}} does not replace {{+}} with a space character.
+
+[[# html-escape-note]]
+++ [#html-escape html escape]
+
+How to escape special characters in HTML character data; how to escape special characters in HTML attribute values; how to unescape HTML entities.
+
+In character data, such as what occurs in between a start and end tag, the characters {{<}}, {{>}}, and {{&}} must be replaced by {{&lt;}}, {{&gt;}}, and {{&amp;}}.
+
+Attribute values in HTML tags must be quoted if they contain a space or any of the characters {{"'`=<>}}.  Attribute values can be double quoted or single quoted.  Double quotes and single quotes can be escaped by using the HTMl entities {{&quot;}} and {{&apos;}}.  It is not necessary to escape the characters {{<}}, {{>}}, and {{&}} inside quoted attribute values.
+
+**php:**
+
+The flag {{ENT_NOQUOTES}} to the function {{htmlspecialchars}} causes double quotes {{"}} to be escaped.
+
+The flag {{ENT_QUOTES}} causes single quotes {{'}} to be escaped.
 
 [[# base64-note]]
 ++ [#base64 base64 encode/decode]

@@ -10,11 +10,7 @@
 [[/row]]
 
 [[row]]
-[[cell]]**C++ Style Languages:**[[/cell]][[cell]][[[cpp|C++, Objective-C, Java, C#]]][[/cell]]
-[[/row]]
-
-[[row]]
-[[cell]]**C, Go, and Swift:**[[/cell]][[cell]][[[c|C, Go, Swift]]][[/cell]]
+[[cell]]**C, Go, and Dart:**[[/cell]][[cell]][[[c|C, Go, Dart]]][[/cell]]
 [[/row]]
 
 [[row]]
@@ -22,11 +18,19 @@
 [[/row]]
 
 [[row]]
-[[cell]]**Lisp Dialects:**[[/cell]][[cell]][[[lisp|Common Lisp, Racket, Clojure, Emacs Lisp]]][[/cell]]
+[[cell]]**C++ Style Languages:**[[/cell]][[cell]][[[cpp|C++, Objective-C, Java, C#]]][[/cell]]
 [[/row]]
 
 [[row]]
-[[cell]]**ML Dialects and Friends:**[[/cell]][[cell]][[[ml|OCaml, F#, Scala, Haskell]]][[/cell]]
+[[cell]]**Rust, Swift, Scala:**[[/cell]][[cell]][[[rust|Rust, Swift, Scala]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**ML Dialects and Haskell:**[[/cell]][[cell]][[[ml|SML, OCaml, F#, Haskell]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**Lisp Dialects:**[[/cell]][[cell]][[[lisp|Common Lisp, Racket, Clojure, Emacs Lisp]]][[/cell]]
 [[/row]]
 
 [[row]]
@@ -34,11 +38,16 @@
 [[/row]]
 
 [[row]]
-[[cell]]**Stack-Oriented Languages:**[[/cell]][[cell]][[[stack|Forth, PostScript, Factor]]][[/cell]]
+[[cell]]**Stack-Oriented Languages:**[[/cell]][[cell]][[[stack|Forth, PostScript]]][[/cell]]
 [[/row]]
 
 [[row]]
-[[cell]]**Operating System Automation:**[[/cell]][[cell]][[[shell|POSIX Shell, AppleScript, PowerShell]]][[/cell]]
+[[cell]]**Operating System Automation:**[[/cell]][[cell]][[[shell|POSIX Shell, Cmd.exe, PowerShell]]][[/cell]]
+[[/row]]
+
+
+[[row]]
+[[cell]]**GUI Automation:**[[/cell]][[cell]][[[gui|AutoHotkey, AppleScript]]][[/cell]]
 [[/row]]
 
 [[row]]
@@ -46,7 +55,11 @@
 [[/row]]
 
 [[row]]
-[[cell]]**Numerical Analysis & Statistics:**[[/cell]][[cell]][[[numerical-analysis|MATLAB, R, NumPy]]] and [[[fortran|Fortran]]][[/cell]]
+[[cell]]**Fortran and APL:**[[/cell]][[cell]][[[fortran|Fortran, APL]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**Numerical Analysis & Statistics:**[[/cell]][[cell]][[[numerical-analysis|MATLAB, R, NumPy]]][[/cell]]
 [[/row]]
 
 [[row]]
@@ -71,27 +84,23 @@
 [[/row]]
 
 [[row]]
-[[cell]]**Build Tools:**[[/cell]][[cell]][[[build|Make, Rake, Ant]]][[/cell]]
+[[cell]]**Build Tools:**[[/cell]][[cell]][[[build|Make, Rake, Ant, MSBuild]]][[/cell]]
 [[/row]]
 
 [[row]]
-[[cell]]**Terminal Multiplexers:**[[/cell]][[cell]][[[multiplexers|Screen, Tmux]]][[/cell]]
+[[cell]]**Terminal Multiplexers:**@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@[[/cell]][[cell]][[[multiplexers|Screen, Tmux]]][[/cell]]
 [[/row]]
 
 [[row]]
-[[cell]]**Databases:**[[/cell]][[cell]][[[db|PostgreSQL, MySQL, SQLite, Redis, MongoDB]]][[/cell]]
+[[cell]]**Databases:**[[/cell]][[cell]][[[db|PostgreSQL, MySQL, SQLite, MongoDB]]][[/cell]]
 [[/row]]
 
 [[row]]
-[[cell]]**Markup:**[[/cell]][[cell]][[[lightweight-markup|Markdown, reStructuredText, MediaWiki, Wikidot, LaTeX]]][[/cell]]
+[[cell]]**Markup:**[[/cell]][[cell]][[[lightweight-markup|Markdown, reStructuredText, MediaWiki, LaTeX]]][[/cell]]
 [[/row]]
 
 [[row]]
 [[cell]]**2D Vector Graphics:**[[/cell]][[cell]][[[vector-graphics|PostScript, Processing, SVG]]][[/cell]]
-[[/row]]
-
-[[row]]
-[[cell]]**Mathematical Notation:**@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@[[/cell]][[cell]][[[math-notation|LaTeX, Mathematica, HTML Entities, Unicode]]][[/cell]]
 [[/row]]
 
 [[/table]]

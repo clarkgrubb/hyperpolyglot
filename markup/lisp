@@ -1,6 +1,6 @@
 [[# top]]//a side-by-side reference sheet//
 
-[#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#lists lists] _
+[#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#dates-time dates and time] | [#lists lists] _
 [#arrays arrays] | [#dictionaries dictionaries] | [#functions functions]  | [#execution-control execution control] | [#file-handles file handles] | [#file-buffers file buffers] | [#files files] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#macros macros] | [#reflection reflection] |  [#java-interop java interop]
 ||~ [[# general]]||~ [#common-lisp common lisp]||~ [#racket racket]||~ [#clojure clojure]||~ [#emacs-lisp emacs lisp]||
 ||[[# version-used]][#version-used-note version used] _
@@ -291,6 +291,11 @@ fround fceiling ffloor _
 (re-seq #"(\d\w\s)\1" "8a 8a ")||(string-match _
 @<&nbsp;&nbsp;>@"^[0-9a-f]+$" _
 @<&nbsp;&nbsp;>@"1abf")||
+||||||||||~ [[# dates-time]][#dates-time-note dates and time]||
+||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
+||current date/time|| || || ||(current-time-string)||
+||current unix epoch||##gray|; seconds since Jan 1, 1900:## _
+(get-universal-time)||(current-seconds)||(/ (System/currentTimeMillis) 1000.0)||(float-time)||
 ||||||||||~ [[# lists]][#lists-note lists]||
 ||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
 ||[#list-literal list literal] _
@@ -1658,6 +1663,9 @@ The following code moves the point to next position following the point that mat
 
 [[# regex-special-chars]]
 ++ regex special characters
+
+[[# dates-time-note]]
++ [#dates-time Dates and Time]
 
 [[# lists-note]]
 + [#lists Lists]

@@ -113,7 +113,7 @@ qbeta(y, ##gray|//alpha//##, ##gray|//beta//##) _
 rbeta(1, ##gray|//alpha//##, ##gray|//beta//##)||stats.beta.pdf(x, ##gray|//alpha//##, ##gray|//beta//##) _
 stats.beta.cdf(x, ##gray|//alpha//##, ##gray|//beta//##) _
 stats.beta.ppf(y, ##gray|//alpha//##, ##gray|//beta//##) _
-stats.beta.pvs(##gray|//alpha//##, ##gray|//beta//##)||##gray|//none//##||
+stats.beta.rvs(##gray|//alpha//##, ##gray|//beta//##)||##gray|//none//##||
 ||[[[numerical-analysis#uniform-note|uniform]]]||U(a, b)||[a, b]||[[$ \frac{1}{b-a} $]]||[[$ \frac{a+b}{2} $]]||[[$ \frac{(b-a)^2}{12} $]]||1/(b-a) _
 (x-a)/(b-a) _
 @<&alpha;>@ * (b-a) + a _

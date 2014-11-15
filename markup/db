@@ -1,11 +1,10 @@
-**data models:** [#correspondence correspondence]
-
-**databases:** [#arch architecture] | [#client client] | [#select select] | [#where where] | [#dates dates] | [#join join] | [#aggregate aggregate] | [#sort-limit sort and limit] | [#insert-update-delete insert, update, and delete] | [#schema schema] | [#sequences sequences] | [#indices indices] | [#import-export import and export] | [#script script] | [#func function] | [#query-tuning query tuning] | [#user user] | [#python python] | [#ruby ruby] | [#help help] | [#admin admin]
+**databases:** [#arch architecture] | [#client client] | [#select select] | [#where where] | [#arrays arrays] | [#dates dates] | [#join join] | [#aggregate aggregate] | [#sort-limit sort and limit] | [#insert-update-delete insert, update, and delete] | [#schema schema] | [#sequences sequences] | [#indices indices] | [#import-export import and export] | [#script script] | [#func function] | [#query-tuning query tuning] | [#user user] | [#python python] | [#ruby ruby] | [#help help] | [#admin admin]
 
 **sql:** [#types types] | [#casts casts] | [#literals literals] | [#dates dates] | [#identifiers identifiers] | [#op operators] | [#func functions] | [#distinct distinct] | [#qualified-asterisk qualified *] | [#regex regular expressions] | [#sequences sequences] | [#group-by group by] | [#aggregation-func aggregation functions ] | [#window-func window functions] | [#where-subquery where clause subqueries] | [#join join] | [#from-subquery from clause subquery] | [#as as] | [#limit-offset limit and offset] | [#with with] | [#null null] | [#set-multiset sets and multisets] | [#session-obj session objects] | [#scripts scripts] | [#reflection reflection] | [#sargable-expr sargable expressions] | [#txn transactions] | [#idempotent idempotent sql]
 
-||~ ||~ [#postgresql postgresql]||~ [#mysql mysql]||~ [#sqlite sqlite]||~ [#redis redis]||~ [#mongodb mongodb]||
-||[[# version-used]][#version-used-note version used]||##gray|//9.1//##||##gray|//MariaDB 5.5 with InnoDB//##||##gray|//3.7//##||##gray|//2.6//##||##gray|//2.0//##||
+||~ ||~ [#postgresql postgresql]||~ [#mysql mysql]||~ [#sqlite sqlite]||~ [#mongodb mongodb]||
+||[[# version-used]][#version-used-note version used] _
+@<&nbsp;>@||##gray|//9.1//##||##gray|//MariaDB 5.5 with InnoDB//##||##gray|//3.7//##||##gray|//2.0//##||
 ||[[# show-version]][#show-version-note show version]||##gray|//client://## _
 $ psql @@--@@version _
  _
@@ -15,217 +14,269 @@ $ mysql @@--@@version _
  _
 ##gray|//server://## _
 @@>@@ status;||$ sqlite3 @@--@@version||##gray|//client://## _
-$ redis-cli @@--@@version _
- _
-##gray|//server://## _
-@@>@@ info server||##gray|//client://## _
 $ mongo @@--@@version _
  _
 ##gray|//server://## _
 @@>@@ db.version()||
-||||||||||||~ [[# arch]][#arch-note architecture]||
-||[[# engine-arch]][#engine-arch-note engine]||##gray|//in separate server process which communicates with client via TCP port or Unix domain socket//##||##gray|//in separate server process which communicates with client via TCP port or Unix domain socket//##||##gray|//contained in client library//##||##gray|//in separate server process which communicates with client via TCP port//##||##gray|//in separate server process which communicates with client via TCP port//##||
-||[[# data-arch]][#data-arch-note data]||##gray|//database consists of tables which represent relations//##||##gray|//database consists of tables which represent relations//##||##gray|//database consists of tables which represent relations//##||##gray|//database is a key-value store; keys are strings; values can be strings, lists, sets, or hashes//##||##gray|//database consists of collections of "augmented JSON" documents//##||
-||[[# files-arch]][#files-arch-note files]||##gray|//each table corresponds to one or more files on the file system//##|| ||##gray|//database is stored in a single file//##||##gray|//the entire key-value store must fit into memory//##|| ||
-||[[# persistence-arch]][#persistence-arch-note persistence]||##gray|//a write ahead log is used to ensure durability without flushing tables to disk after each transaction//##||##gray|//depends on storage engine; in InnoDB a redo log is used to ensure durability without flushing tables to disk after each transaction//##||##gray|//database file is updated after each transaction//##||##gray|//can be configured to (1) log every write operation to an AOF file, (2) periodically snapshot the key-value store to an RDB file, (3) not persist data at all//##||##gray|//a journal is used to ensure durability without flushing to disk after each save; the journal is flushed every 100ms//##||
-||[[# indices-arch]][#indices-arch-note indices]||##gray|//tables can have any number of indices//##||##gray|//tables can have any number of indices//##||##gray|//tables can have any number of indices//##||##gray|//hash values can be used as secondary indices//##||##gray|//collections can have any number of indices//##||
-||[[# txn-arch]][#txn-arch-note transactions]||##gray|//transactions can contain DML and DDL; row and table locking is available//##||##gray|//transactions can contain DML; table locking is available; InnoDB storage engine uses row locking to implement transactions//##|| || || ||
-||[[# security-arch]][#security-arch-note security]||##gray|//password protected user accounts with fine grained permissions//##|| || ||##gray|//optional password challenge to connect//##|| ||
-||[[# server-lang-arch]][#server-lang-arch-note server side language]||##gray|//PL/pgSQL; server can be extended to support other languages//##||##gray|//SQL/PSM//##||##gray|//none//##||##gray|//Lua in Redis 2.6//##||##gray|//JavaScript//##||
-||||||||||||~ [[# client]][#client-note client]||
-||~ ||~ postgresql||~ mysql||~ sqlite||~ redis||~ mongodb||
-||[[# invoke-client]][#invoke-client-note invoke client]||$ psql -U $USER -h localhost||$ mysql -u $USER -h localhost -p||$ sqlite3 DB_FILE||$ redis-cli||$ mongo||
+||||||||||~ [[# arch]][#arch-note architecture]||
+||[[# engine-arch]][#engine-arch-note engine]||##gray|//in separate server process which communicates with client via TCP port or Unix domain socket//##||##gray|//in separate server process which communicates with client via TCP port or Unix domain socket//##||##gray|//contained in client library//##||##gray|//in separate server process which communicates with client via TCP port//##||
+||[[# data-arch]][#data-arch-note data]||##gray|//database consists of tables which represent relations//##||##gray|//database consists of tables which represent relations//##||##gray|//database consists of tables which represent relations//##||##gray|//database consists of collections of "augmented JSON" documents//##||
+||[[# files-arch]][#files-arch-note files]||##gray|//each table corresponds to one or more files on the file system//##|| ||##gray|//database is stored in a single file//##|| ||
+||[[# persistence-arch]][#persistence-arch-note persistence]||##gray|//a write ahead log is used to ensure durability without flushing tables to disk after each transaction//##||##gray|//depends on storage engine; in InnoDB a redo log is used to ensure durability without flushing tables to disk after each transaction//##||##gray|//database file is updated after each transaction//##||##gray|//a journal is used to ensure durability without flushing to disk after each save; the journal is flushed every 100ms//##||
+||[[# indices-arch]][#indices-arch-note indices] _
+@<&nbsp;>@||##gray|//tables can have any number of indices//##||##gray|//tables can have any number of indices//##||##gray|//tables can have any number of indices//##||##gray|//collections can have any number of indices//##||
+||[[# txn-arch]][#txn-arch-note transactions]||##gray|//transactions can contain DML and DDL; row and table locking is available//##||##gray|//transactions can contain DML; table locking is available; InnoDB storage engine uses row locking to implement transactions//##|| ||##gray|//writes to documents are atomic//##||
+||[[# security-arch]][#security-arch-note security]||##gray|//password protected user accounts with fine grained permissions//##|| || || ||
+||[[# server-lang-arch]][#server-lang-arch-note server side language]||##gray|//PL/pgSQL; server can be extended to support other languages//##||##gray|//SQL/PSM//##||##gray|//none//##||##gray|//JavaScript//##||
+||||||||||~ [[# client]][#client-note client]||
+||~ ||~ postgresql||~ mysql||~ sqlite||~ mongodb||
+||[[# invoke-client]][#invoke-client-note invoke client] _
+@<&nbsp;>@||$ psql -U $USER -h localhost||$ mysql -u $USER -h localhost -p||$ sqlite3 DB_FILE||$ mongo||
 ||[[# client-help]][#client-help-note client help]||\?||? _
 \? _
 \h _
-help||.help||help||help||
-||[[# default-port]][#default-port-note default port]||##gray|//5432//##||##gray|//3306//##||##gray|//none//##||##gray|//6379//##||##gray|//27017//##||
+help||.help||help||
+||[[# default-port]][#default-port-note default port] _
+@<&nbsp;>@||##gray|//5432//##||##gray|//3306//##||##gray|//none//##||##gray|//27017//##||
 ||[[# show-db]][#show-db-note show databases]||SELECT datname _
 FROM pg_database; _
  _
-\l||SHOW databases;||.databases||##gray|//redis databases are numbered from zero://## _
-config get databases||show dbs||
-||[[# switch-db]][#switch-db-note switch database]||\connect ##gray|//database//##;||use ##gray|//database//##|| ||select ##gray|//database_number//##||use ##gray|//database//##||
-||[[# current-db]][#current-db-note current database]||SELECT current_database();||SELECT database();|| ||  || ||
-||[[# chdir]][#chdir-note chdir]||\cd /tmp|| || || ||##gray|//none//##||
-||[[# shell-cmd]][#shell-cmd-note shell command]||\! ls||system ls|| || ||##gray|//none; but there is a// ls() //function//##||
-||[[# client-startup-file]][#client-startup-file-note client startup file]||~/.psqlrc|| ||~/.sqliterc|| ||~/.mongorc.js||
-||[[# custom-prompt]][#custom-prompt-note custom prompt]||\set PROMPT1 '%n@%/ > '|| || || || ||
-||||||||||||~ [[# select]][#select-note select]||
-||~ ||~ postgresql||~ mysql||~ sqlite||~ redis||~ mongodb||
+\l||SHOW databases;||.databases||show dbs||
+||[[# switch-db]][#switch-db-note switch database] _
+@<&nbsp;>@||\connect ##gray|//database//##;||use ##gray|//database//##|| ||use ##gray|//database//##||
+||[[# current-db]][#current-db-note current database] _
+@<&nbsp;>@||SELECT current_database();||SELECT database();|| || ||
+||[[# chdir]][#chdir-note chdir] _
+@<&nbsp;>@||\cd /tmp|| || ||##gray|//none//##||
+||[[# shell-cmd]][#shell-cmd-note shell command] _
+@<&nbsp;>@||\! ls||system ls|| ||##gray|//none; but there is a// ls() //function//##||
+||[[# client-startup-file]][#client-startup-file-note client startup file] _
+@<&nbsp;>@||~/.psqlrc|| ||~/.sqliterc||~/.mongorc.js||
+||[[# custom-prompt]][#custom-prompt-note custom prompt] _
+@<&nbsp;>@||\set PROMPT1 '%n@%/ > '|| || || ||
+||||||||||~ [[# select]][#select-note select]||
+||~ ||~ postgresql||~ mysql||~ sqlite||~ mongodb||
 ||[[# select-star]][#select-star-note select *]||SELECT * _
 FROM customers;||SELECT * _
 FROM customers;||SELECT * _
-FROM customers;|| ||##gray|//type "it" to page thru results://## _
+FROM customers;||##gray|//type "it" to page thru results://## _
 db.customers.find();||
 ||[[# project-columns]][#project-columns-note project columns]||SELECT name, age _
 FROM customers;||SELECT name, age _
 FROM customers;||SELECT name, age _
-FROM customers;|| ||db.customers.find({}, {name: 1, age: 1})||
-||[[# exclude-column]][#exclude-column-note exclude column]||##gray|//none//##||##gray|//none//##||##gray|//none//##|| ||db.customers.find({}, {age: 0})||
+FROM customers;||db.customers.find({}, {name: 1, age: 1})||
+||[[# exclude-column]][#exclude-column-note exclude column] _
+@<&nbsp;>@||##gray|//none//##||##gray|//none//##||##gray|//none//##||db.customers.find({}, {age: 0})||
 ||[[# project-expr]][#project-expr-note project expression]||SELECT 'Mr. ' @@||@@ name, age + 3 _
 FROM customers;||SELECT concat('Mr. ', name), age + 3 _
 FROM customers;||SELECT 'Mr. ' @@||@@ name, age + 3 _
-FROM customers;|| ||##gray|//none//##||
+FROM customers;||##gray|//none//##||
 ||[[# rename-column]][#rename-column-note rename column]||SELECT name AS moniker _
 FROM customers;||SELECT name AS moniker _
 FROM customers;||SELECT name AS moniker _
-FROM customers;|| || ||
-||||||||||||~ [[# where]][#where-note where]||
-||~ ||~ postgresql||~ mysql||~ sqlite||~ redis||~ mongodb||
-||filter rows||SELECT * _
+FROM customers;|| ||
+||||||||||~ [[# where]][#where-note where]||
+||~ ||~ postgresql||~ mysql||~ sqlite||~ mongodb||
+||[[# filter-rows]][#filter-rows-note filter rows]||SELECT * _
 FROM customers _
-WHERE name = "Ed"; ||SELECT * _
+WHERE name = 'Ed'; ||SELECT * _
 FROM customers _
-WHERE name = "Ed";||SELECT * _
+WHERE name = 'Ed';||SELECT * _
 FROM customers _
-WHERE name = "Ed";||##gray|//database as document://## _
-get bar _
-get baz _
- _
-##gray|//value as document://## _
-hgetall ##gray|//key//##||db.customers.find({name:"Ed"}); _
+WHERE name = 'Ed';||db.customers.find({name: "Ed"}); _
  _
 ##gray|//selects// {"name": {"first": "Ed"}}:## _
 db.customers.find({"name.first": "Ed"})||
-||comparison operators|| || || || ||db.baz.find({"foo": {$gt: 15}}) _
-db.baz.find({"foo": {$lt: 15}}) _
-db.baz.find({"foo": {$gte: 15}}) _
-db.baz.find({"foo": {$lte: 15}}) _
-db.baz.find({"foo": {$ne: 15}})||
-||has key||##gray|//schema guarantees each row has key//##||##gray|//schema guarantees each row has key//##||##gray|//schema guarantees each row has key//##|| ||db.baz.find({"foo": {$exists: true}})||
-||multiple conditions on field|| || || || || ||
-||membership|| || || || ||db.scores.find({a: {'$in': [2, 3, 4]}});||
-||||||||||||~ [[# dates]][#dates-note dates]||
-||~ ||~ postgresql||~ mysql||~ sqlite||~ redis||~ mongodb||
-||current timestamp||select now(); _
-select current_timestamp;||select now(); _
-select current_timestamp;||select current_timestamp;||##gray|//unix timestamp://## _
-time||new Date()||
-||||||||||||~ [[# join]][#join-note join]||
-||~ ||~ postgresql||~ mysql||~ sqlite||~ redis||~ mongodb||
-||||||||||||~ [[# aggregate]][#aggregate-note aggregate]||
-||~ ||~ postgresql||~ mysql||~ sqlite||~ redis||~ mongodb||
-||row count||select count(*) from foo;||select count(*) from foo;||select count(*) from foo;|| ||db.foo.count()||
-||||||||||||~ [[# sort-limit]][#sort-limit-note sort and limit]||
-||~ ||~ postgresql||~ mysql||~ sqlite||~ redis||~ mongodb||
-||ascending order||select * _
+||[[# comparison-op]][#comparison-op-note comparison operators]||SELECT * FROM customers WHERE age > 21; _
+SELECT * FROM customers WHERE age < 21; _
+SELECT * FROM customers WHERE age >= 21; _
+SELECT * FROM customers WHERE age <= 21; _
+SELECT * FROM customers WHERE age <> 21;|| || ||db.customers.find({age: {$gt: 21}}) _
+db.customers.find({age: {$lt: 21}}) _
+db.customers.find({age: {$gte: 21}}) _
+db.customers.find({age: {$lte: 21}}) _
+db.customers.find({age: {$ne: 21}})||
+||[[# has-key]][#has-key-note has key] _
+@<&nbsp;>@||##gray|//schema guarantees each row has key//##||##gray|//schema guarantees each row has key//##||##gray|//schema guarantees each row has key//##||db.baz.find({"foo": {$exists: true}})||
+||[[# multiple-conditions-on-field]][#multiple-conditions-on-field-note multiple conditions on field]||SELECT * _
+FROM customers _
+WHERE age >= 21 _
+@<&nbsp;&nbsp;>@AND age <= 65;|| || ||db.customers.find( _
+@<&nbsp;&nbsp;>@{$and: [ _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@{age: {$gte: 21}}, _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@{age: {$lte: 65}} _
+@<&nbsp;&nbsp;>@]} _
+)||
+||[[# logical-op]][#logical-op-note logical operators] _
+@<&nbsp;>@||AND OR NOT|| || ||$and $or $not $nor||
+||[[# like]][#like-note like]||SELECT * _
+FROM customers _
+WHERE name LIKE 'Ed%';|| || ||db.customers.find({name: /^Ed/}) _
+db.customers.find({name: {$regex: '^Ed'}})||
+||||||||||~ [[# arrays]][#arrays-note arrays]||
+||~ ||~ postgresql||~ mysql||~ sqlite||~ mongodb||
+||lookup|| || || || ||
+||length|| || || ||db.customers.find({scores: {$size: 3}})||
+||membership|| || || ||db.customers.find({scores: {'$in': [2, 3, 4]}});||
+||non-membership|| || || ||$nin||
+||existential test|| || || || ||
+||universal test|| || || || ||
+||||||||||~ [[# dates]][#dates-note dates]||
+||~ ||~ postgresql||~ mysql||~ sqlite||~ mongodb||
+||current timestamp||SELECT now(); _
+SELECT CURRENT_TIMESTAMP;||select now(); _
+select current_timestamp;||select current_timestamp;||new Date()||
+||||||||||~ [[# join]][#join-note join]||
+||~ ||~ postgresql||~ mysql||~ sqlite||~ mongodb||
+||[[# inner-join]][#inner-join-note inner join]||SELECT * _
+FROM customers c _
+JOIN orders o _
+@<&nbsp;&nbsp;>@ON c.id = o.customer_id;|| || || ||
+||[[# left-outer-join]][#left-outer-join-note left outer join]||##gray|//include customers with no orders://## _
+SELECT * _
+FROM customers c _
+LEFT JOIN orders o _
+@<&nbsp;&nbsp;>@ON c.id = o.customer_id;|| || || ||
+||[[# full-outer-join]][#full-outer-join-note full outer join]||##gray|//include customers with no orders and orders with no customers://## _
+SELECT * _
+FROM customers c _
+FULL JOIN orders o _
+@<&nbsp;&nbsp;>@ON c.id = o.customer_id;|| || || ||
+||[[# cartesian-join]][#cartesian-join-note cartesian join]||SELECT * _
+FROM rows, columns;|| || || ||
+||||||||||~ [[# aggregate]][#aggregate-note aggregate]||
+||~ ||~ postgresql||~ mysql||~ sqlite||~ mongodb||
+||[[# row-count]][#row-count-note row count] _
+@<&nbsp;>@||SELECT count(*) FROM customers;||select count(*) from customers;||select count(*) from customers;||db.customers.count()||
+||[[# conditional-row-count]][#conditional-row-count-note count of rows satisfying condition]||SELECT count(*) _
+FROM customers _
+WHERE age > 21;|| || ||db.customers.count({age: {$gt: 21}})||
+||[[# count-distinct]][#count-distinct-note count distinct]||SELECT count(DISTINCT name) _
+FROM customers;|| || || ||
+||[[# group-by]][#group-by-note group by]||SELECT count(*) _
+FROM customers _
+GROUP BY age;|| || ||db.customers.aggregate([ _
+@<&nbsp;&nbsp;>@{$group: {_id: "$age", count: {$sum: 1}}} _
+])||
+||[[# aggregation-op]][#aggregation-op-note aggregation operators]|| || || || ||
+||||||||||~ [[# sort-limit]][#sort-limit-note sort and limit]||
+||~ ||~ postgresql||~ mysql||~ sqlite||~ mongodb||
+||[[# sort-ascending]][#sort-ascending-note sort in ascending order]||SELECT * _
+FROM customers _
+ORDER BY name;||select * _
 from baz _
 order by foo;||select * _
 from baz _
-order by foo;||select * _
-from baz _
-order by foo;|| ||db.baz.find().sort({"foo": 1)}||
-||descending order||select * _
-from baz _
-order by foo desc;||select * _
+order by foo;||db.baz.find().sort({"foo": 1)}||
+||[[# sort-descending]][#sort-descending-note sort in descending order]||SELECT * _
+FROM customers _
+ORDER BY name DESC;||select * _
 from baz _
 order by foo desc;||select * _
 from baz _
-order by foo desc;|| ||db.baz.find().sort({"foo": -1)}||
-||order by multiple columns|| || || || || ||
-||single row||select * _
+order by foo desc;||db.baz.find().sort({"foo": -1)}||
+||[[# sort-multiple-columns]][#sort-multiple-columns-note sort by multiple columns]||SELECT * _
+FROM customers _
+ORDER BY age, name;|| || || ||
+||[[# select-single-row]][#select-single-row-note single row]||SELECT * _
+FROM customers _
+WHERE name = 'Ed' _
+LIMIT 1;||select * _
 from customers _
-where name = "Ed" _
+where name = 'Ed' _
 limit 1;||select * _
 from customers _
-where name = "Ed" _
-limit 1;||select * _
-from customers _
-where name = "Ed" _
-limit 1;|| ||db.customers.findOne({name: "Ed"});||
-||limit||select * _
+where name = 'Ed' _
+limit 1;||db.customers.findOne({name: "Ed"});||
+||[[# limit]][#limit-note limit]||##gray|//first 10 customers://## _
+SELECT * _
+FROM customers _
+ORDER BY name _
+LIMIT 10;||select * _
 from customers _
 limit 10;||select * _
 from customers _
-limit 10;||select * _
-from customers _
-limit 10;|| ||db.customers.find().limit(10);||
-||offset|| || || || || ||
-||||||||||||~ [[# insert-update-delete]][#insert-update-delete-note insert, update, and delete]||
-||~ ||~ postgresql||~ mysql||~ sqlite||~ redis||~ mongodb||
-||[[# insert]][#insert-note insert]||insert into foo (bar, baz) _
+limit 10;||db.customers.find().limit(10);||
+||[[# offset]][#offset-note offset]||##gray|//second 10 customers://## _
+SELECT * _
+FROM customers _
+ORDER BY name _
+LIMIT 10 _
+OFFSET 10;|| || || ||
+||||||||||~ [[# insert-update-delete]][#insert-update-delete-note insert, update, and delete]||
+||~ ||~ postgresql||~ mysql||~ sqlite||~ mongodb||
+||[[# insert]][#insert-note insert]||INSERT INTO customers (name, age) _
+VALUES (34, 'Ed');||insert into foo (bar, baz) _
 values (1, 'one');||insert into foo (bar, baz) _
-values (1, 'one');||insert into foo (bar, baz) _
-values (1, 'one');||##gray|//database as document://## _
-set bar 1 _
-set baz "one" _
- _
-##gray|//value as document://## _
-hset foo bar 1 _
-hset foo baz one||db.foo.save({ _
-@<&nbsp;&nbsp;>@"bar": 1, _
-@<&nbsp;&nbsp;>@"baz": "one" _
+values (1, 'one');||db.customers.save({ _
+@<&nbsp;&nbsp;>@name: "Ed", _
+@<&nbsp;&nbsp;>@age: 34 _
 });||
-||[[# update]][#update-note update]||update foo _
+||[[# update]][#update-note update]||UPDATE customers _
+SET age = 35 _
+WHERE name = 'Ed';||update foo _
 set baz = 'une' _
 where bar = 1;||update foo _
 set baz = 'une' _
-where bar = 1;||update foo _
-set baz = 'une' _
-where bar = 1;||##gray|//database as document://## _
-set baz une _
- _
-##gray|//value as document://## _
-hset foo baz une|| ||
-||[[# merge]][#merge-note merge]|| || || || || ||
-||[[# delete]][#delete-note delete]||delete from foo _
+where bar = 1;||db.customers.update({name: "Ed"}, {age: 35})||
+||[[# merge]][#merge-note merge]|| || || ||db.customers.update( _
+@<&nbsp;&nbsp;>@{name: "Ed"}, _
+@<&nbsp;&nbsp;>@{name: "Ed", age: 35}, _
+@<&nbsp;&nbsp;>@true _
+)||
+||[[# delete]][#delete-note delete]||DELETE FROM customers _
+WHERE name = 'Ed';||delete from foo _
 where bar = 1;||delete from foo _
-where bar = 1;||delete from foo _
-where bar = 1;||##gray|//database as document://## _
-flushdb _
- _
-##gray|//value as document://## _
-del foo||db.foo.remove({"bar": 1})||
-||[[# delete-all-rows]][#delete-all-rows-note delete all rows]||delete from foo; _
+where bar = 1;||db.customers.remove({name: "Ed"})||
+||[[# delete-all-rows]][#delete-all-rows-note delete all rows]||DELETE FROM customers; _
  _
 ##gray|//faster://## _
-truncate foo;||delete from foo; _
+TRUNCATE customers;||delete from foo; _
  _
 ##gray|//faster on 5.0.3 and later://## _
-truncate foo;||delete from foo;||flushdb||db.foo.remove()||
-||||||||||||~ [[# schema]][#schema-note schema]||
-||~ ||~ postgresql||~ mysql||~ sqlite||~ redis||~ mongodb||
-||[[# create-table]][#create-table-note create table]||create table foo ( _
-@<&nbsp;&nbsp;>@bar int, _
-@<&nbsp;&nbsp;>@baz text _
+truncate foo;||delete from foo;||db.customers.remove({})||
+||||||||||~ [[# schema]][#schema-note schema]||
+||~ ||~ postgresql||~ mysql||~ sqlite||~ mongodb||
+||[[# create-table]][#create-table-note create table]||CREATE TABLE customers ( _
+@<&nbsp;&nbsp;>@name TEXT, _
+@<&nbsp;&nbsp;>@age INT _
 );||create table foo ( _
 @<&nbsp;&nbsp;>@bar int, _
 @<&nbsp;&nbsp;>@baz text _
 );||create table foo ( _
 @<&nbsp;&nbsp;>@bar int, _
 @<&nbsp;&nbsp;>@baz text _
-);|| || ||
-||[[# drop-table]][#drop-table-note drop table]||drop table foo;||drop table foo;||drop table foo;|| || ||
-||[[# show-tables]][#show-tables-note show tables]||\d||show tables;||.tables|| ||show collections||
-||[[# describe-table]][#describe-table-note describe table]||\d ##gray|//table//##||desc ##gray|//table//##;||.schema ##gray|//table//##||##gray|//none; database does not enforce a schema//##||##gray|//none; collections do not enforce a schema//##||
-||[[# export-schema]][#export-schema-note export schema]||$ pg_dump -a ##gray|//db//## > ##gray|//db//##.sql||$ mysqldump @@--@@d ##gray|//db//## > ##gray|//db//##.sql|| || || ||
-||[[# describe-doc]][#describe-doc-note describe document]||##gray|//table determines row type//##||##gray|//table determines row type//##|| ||##gray|//database as document://## _
-keys * _
-type bar _
-type baz _
+);||db.createCollection("customers") _
  _
-##gray|//value as document://## _
-hkeys foo||var cur = db.foo.find() _
+##gray|//but// db.customers.save() //creates collection if it does not exist//##||
+||[[# drop-table]][#drop-table-note drop table] _
+@<&nbsp;>@||DROP TABLE customers;||DROP TABLE customers;||DROP TABLE customers;|| ||
+||[[# show-tables]][#show-tables-note show tables] _
+@<&nbsp;>@||\d||show tables;||.tables||show collections||
+||[[# describe-table]][#describe-table-note describe table] _
+@<&nbsp;>@||\d ##gray|//table//##||desc ##gray|//table//##;||.schema ##gray|//table//##||##gray|//none; collections do not enforce a schema//##||
+||[[# export-schema]][#export-schema-note export schema] _
+@<&nbsp;>@||$ pg_dump -a ##gray|//db//## > ##gray|//db//##.sql||$ mysqldump @@--@@d ##gray|//db//## > ##gray|//db//##.sql|| || ||
+||[[# describe-doc]][#describe-doc-note describe document] _
+@<&nbsp;>@||##gray|//table determines row type//##||##gray|//table determines row type//##|| ||var cur = db.foo.find() _
  _
 var doc = cur.next() _
  _
 Object.keys(doc)||
-||||||||||||~ [[# sequences]][#sequences-note sequences]||
-||~ ||~ postgresql||~ mysql||~ sqlite||~ redis||~ mongodb||
-||[[# incr]][#incr-note increment]|| || || ||set foo 0 _
-incr foo|| ||
-||||||||||||~ [[# indices]][#indices-note indices]||
-||~ ||~ postgresql||~ mysql||~ sqlite||~ redis||~ mongodb||
-||show indices||\di||show index from ##gray|//table//##;||.indices|| ||db.foo.getIndexes();||
-||create index||create index foo_bar_idx on foo (bar);||##gray|//InnoDB requires that the max length of a text or varchar column be less than 767 characters//## _
-create index foo_bar_idx on foo (bar);||create index foo_bar_idx on foo ( bar );|| ||db.foo.ensureIndex({"baz": 1})||
-||drop index||drop index foo_bar_idx;||drop index foo_bar_idx on foo;||drop index foo_bar_idx;|| ||db.foo.dropIndex({"baz": 1})||
-||create unique index||create unique index foo_bar_idx on foo (bar);||create unique index foo_bar_idx on foo (bar);||create unique index foo_bar_idx on foo ( bar );|| || ||
-||create compound index||create index foo_bar_baz_idx on foo (bar, baz);||create index foo_bar_baz_idx on foo (bar, baz);||create index foo_bar_baz_idx on foo (bar, baz);|| ||db.foo.ensureIndex({"bar": 1, "baz": 1})||
-||index hint|| || || || ||db.foo.find({"baz": 42}).hint({"baz": 1})||
-||||||||||||~ [[# import-export]][#import-export-note import and export]||
-||~ ||~ postgresql||~ mysql||~ sqlite||~ redis||~ mongodb||
+||||||||||~ [[# sequences]][#sequences-note sequences]||
+||~ ||~ postgresql||~ mysql||~ sqlite||~ mongodb||
+||[[# incr]][#incr-note increment]|| || || || ||
+||||||||||~ [[# indices]][#indices-note indices]||
+||~ ||~ postgresql||~ mysql||~ sqlite||~ mongodb||
+||show indices||\di||show index from ##gray|//table//##;||.indices||db.foo.getIndexes();||
+||create index||CREATE INDEX foo_bar_idx on foo (bar);||##gray|//InnoDB requires that the max length of a text or varchar column be less than 767 characters//## _
+create index foo_bar_idx on foo (bar);||create index foo_bar_idx on foo ( bar );||db.foo.ensureIndex({"baz": 1})||
+||drop index||DROP INDEX foo_bar_idx;||drop index foo_bar_idx on foo;||drop index foo_bar_idx;||db.foo.dropIndex({"baz": 1})||
+||create unique index||CREATE UNIQUE INDEX foo_bar_idx ON foo (bar);||create unique index foo_bar_idx on foo (bar);||create unique index foo_bar_idx on foo ( bar );|| ||
+||create compound index||CREATE INDEX foo_bar_baz_idx ON foo (bar, baz);||create index foo_bar_baz_idx on foo (bar, baz);||create index foo_bar_baz_idx on foo (bar, baz);||db.foo.ensureIndex({"bar": 1, "baz": 1})||
+||index hint|| || || ||db.foo.find({"baz": 42}).hint({"baz": 1})||
+||||||||||~ [[# import-export]][#import-export-note import and export]||
+||~ ||~ postgresql||~ mysql||~ sqlite||~ mongodb||
 ||[[# import-tab]][#import-tab-note import tab delimited]||##gray|//what about header//## _
  _
 $ grep -v '^#' /etc/passwd | tr ':' '\t' > /tmp/passwd.tab _
@@ -240,7 +291,7 @@ $ sqlite3 _
  _
 @@>@@ .separator \t _
  _
-@@>@@ .import /tmp/passwd.tab etc_passwd|| ||$ grep -v '^#' /etc/passwd | tr ':' '\t' > /tmp/passwd.tab  _
+@@>@@ .import /tmp/passwd.tab etc_passwd||$ grep -v '^#' /etc/passwd | tr ':' '\t' > /tmp/passwd.tab  _
  _
 $ mongoimport -d test -c etc_passwd -f name,pw,uid,gid,gecos,home,shell @@--@@type tsv < /tmp/passwd.tab||
 ||[[# import-csv]][#import-csv-note import csv]||$ echo $'1,"one, two, three"\n2,four\n3,"five\nsix\nseven"' > /tmp/test.csv _
@@ -255,10 +306,11 @@ $ sqlite3 _
  _
 @@>@@ .mode csv _
  _
-@@>@@ .import /tmp/test.csv test_csv|| ||$ echo $'1,"one, two, three"\n2,four\n3,"five\nsix\nseven"' > /tmp/test.csv _
+@@>@@ .import /tmp/test.csv test_csv||$ echo $'1,"one, two, three"\n2,four\n3,"five\nsix\nseven"' > /tmp/test.csv _
  _
 $ mongoimport -d test -c test_csv @@--@@type csv -f col1,col2 < /tmp/test.csv||
-||[[# import-json]][#import-json-note import json]||##gray|//none//##|| ||##gray|//none//##|| ||$ mongoimport -d ##gray|//db//## -c ##gray|//collection//## < /tmp/dump.json ||
+||[[# import-json]][#import-json-note import json] _
+@<&nbsp;>@||##gray|//none//##|| ||##gray|//none//##||$ mongoimport -d ##gray|//db//## -c ##gray|//collection//## < /tmp/dump.json ||
 ||[[# export-tab]][#export-tab-note export tab delimited]||##gray|//what about tabs or newlines in data//## _
  _
 echo 'copy foo to stdout;' | psql > /tmp/foo.tab _
@@ -271,190 +323,158 @@ echo 'copy foo to stdout;' | psql > /tmp/foo.tab _
 select * from foo; _
 \o|| ||.mode tabs _
 .output /tmp/foo.tab _
-select * from foo;|| ||##gray|//none//##||
+select * from foo;||##gray|//none//##||
 ||[[# export-csv]][#export-csv-note export csv]||$ echo 'copy foo to stdout with (format csv);' | psql > /tmp/foo.csv|| ||.mode csv _
 .output /tmp/foo.csv _
-select * from foo;|| ||$ mongoexport -d test -c test_csv -f name,pw,uid,gid,gecos,home,shell @@--@@csv||
-||[[# export-json]][#export-json-note export json]||##gray|//none//##|| ||##gray|//none//##|| ||$ mongoexport -d ##gray|//db//## -c ##gray|//collection//## > /tmp/dump.json||
-||||||||||||~ [[# script]][#script-note script]||
-||~ ||~ postgresql||~ mysql||~ sqlite||~ redis||~ mongodb||
+select * from foo;||$ mongoexport -d test -c test_csv -f name,pw,uid,gid,gecos,home,shell @@--@@csv||
+||[[# export-json]][#export-json-note export json] _
+@<&nbsp;>@||##gray|//none//##|| ||##gray|//none//##||$ mongoexport -d ##gray|//db//## -c ##gray|//collection//## > /tmp/dump.json||
+||||||||||~ [[# script]][#script-note script]||
+||~ ||~ postgresql||~ mysql||~ sqlite||~ mongodb||
 ||[[# sql-script]][#sql-script-note run script]||\i foo.sql _
  _
 $ psql -f foo.sql||source foo.sql _
  _
-$  mysql ##gray|//db//## < foo.sql||.read foo.sql|| ||load("foo.js");||
-||||||||||||~ [[# func]][#func-note function]||
-||~ ||~ postgresql||~ mysql||~ sqlite||~ redis||~ mongodb||
+$  mysql ##gray|//db//## < foo.sql||.read foo.sql||load("foo.js");||
+||||||||||~ [[# func]][#func-note function]||
+||~ ||~ postgresql||~ mysql||~ sqlite||~ mongodb||
 ||[[# show-func]][#show-func-note show functions]||\df;||show function status; _
  _
 show procedure status; _
  _
 select routine_name _
-from information_schema.routines;|| || || ||
-||[[# show-func-src]][#show-func-src-note show function source]||\df+ ##gray|//func_name//##;|| || || || ||
+from information_schema.routines;|| || ||
+||[[# show-func-src]][#show-func-src-note show function source]||\df+ ##gray|//func_name//##;|| || || ||
 ||show built-in functions||select proname from pg_proc; _
  _
 select routine_name _
-from information_schema.routines;|| || || || ||
-||define function|| || || || || ||
-||||||||||||~ [[# query-tuning]][#query-tuning-note query tuning]||
-||~ ||~ postgresql||~ mysql||~ sqlite||~ redis||~ mongodb||
-||explain plan||explain select * from foo;|| ||explain select * from foo;|| ||var cur = db.foo.find(); _
+from information_schema.routines;|| || || ||
+||define function|| || || || ||
+||||||||||~ [[# query-tuning]][#query-tuning-note query tuning]||
+||~ ||~ postgresql||~ mysql||~ sqlite||~ mongodb||
+||explain plan||EXPLAIN SELECT * FROM customers;|| ||explain select * from foo;||var cur = db.foo.find(); _
 cur.explain();||
-||query stats||explain analyze select * from foo;|| ||.stats on _
-.stats off|| || ||
+||query stats||EXPLAIN ANALYZE SELECT * FROM customers;|| ||.stats on _
+.stats off|| ||
 ||timer|| || ||.timer on _
-.time off|| || ||
-||stats tables|| || || || || ||
-||||||||||||~ [[# user]][#user-note user]||
-||~ ||~ postgresql||~ mysql||~ sqlite||~ redis||~ mongodb||
-||[[# current-user]][#current-user-note current user]||select current_user;||select user();||##gray|//none//##||##gray|//none//##|| ||
+.time off|| ||
+||stats tables|| || || || ||
+||||||||||~ [[# user]][#user-note user]||
+||~ ||~ postgresql||~ mysql||~ sqlite||~ mongodb||
+||[[# current-user]][#current-user-note current user]||select current_user;||select user();||##gray|//none//##|| ||
 ||[[# list-users]][#list-users-note list users]||select usename _
 from pg_user;||##gray|//table only readable by root://## _
-select user from mysql.user;||##gray|//none//##||##gray|//none//##||show users||
+select user from mysql.user;||##gray|//none//##||show users||
 ||[[# create-user]][#create-user-note create user]||##gray|//at sql prompt://## _
 @@>@@ create role fred with superuser _
 @<&nbsp;&nbsp;>@createdb createrole login; _
  _
 ##gray|//at cmd line; will prompt for privileges://## _
-$ createuser fred||create user 'fred'@'localhost' identified by 'abc123';||##gray|//none//##||##gray|//none//##||##gray|//Mongo 2.0://## _
+$ createuser fred||create user 'fred'@'localhost' identified by 'abc123';||##gray|//none//##||##gray|//Mongo 2.0://## _
 db.addUser("fred", "abc123") _
  _
 ##gray|//Mongo 2.4://## _
 db.addUser({user: "fred", pwd: "abc123", roles: ["readWrite"]})||
-||[[# switch-user]][#switch-user-note switch user]||set role fred;|| || || ||db.auth("fred", "abc123")||
+||[[# switch-user]][#switch-user-note switch user]||set role fred;|| || ||db.auth("fred", "abc123")||
 ||[[# drop-user]][#drop-user-note drop user]||@@>@@ drop role fred; _
  _
-$ dropuser fred||drop user 'fred'@'localhost';||##gray|//none//##||##gray|//none//##||db.removeUser("fred")||
-||[[# set-password]][#set-password-note set password]||alter user fred with password 'xyz789';||set password for 'fred'@'localhost' = password('xyz789');|| || || ||
-||[[# grant]][#grant-note grant]|| ||grant select on test.foo to 'fred'@'localhost';|| || || ||
+$ dropuser fred||drop user 'fred'@'localhost';||##gray|//none//##||db.removeUser("fred")||
+||[[# set-password]][#set-password-note set password]||alter user fred with password 'xyz789';||set password for 'fred'@'localhost' = password('xyz789');|| || ||
+||[[# grant]][#grant-note grant]|| ||grant select on test.foo to 'fred'@'localhost';|| || ||
 ||[[# grant-all]][#grant-all-note grant all]|| ||##gray|//table foo in database test://## _
 grant all on test.foo to 'fred'@'localhost'; _
  _
 ##gray|//all tables in database test://## _
-grant all on test.* to 'fred'@'localhost';|| || || ||
-||[[# revoke]][#revoke-note revoke]|| ||revoke all on test.* from 'fred'@'localhost';|| || || ||
-||||||||||||~ [[# python]][#python-note python]||
-||~ ||~ postgresql||~ mysql||~ sqlite||~ redis||~ mongodb||
+grant all on test.* to 'fred'@'localhost';|| || ||
+||[[# revoke]][#revoke-note revoke]|| ||revoke all on test.* from 'fred'@'localhost';|| || ||
+||||||||||~ [[# python]][#python-note python]||
+||~ ||~ postgresql||~ mysql||~ sqlite||~ mongodb||
 ||install driver||$ sudo pip install psycopg||##gray|//make sure MySQL development files are installed;  download MySQLdb source and run the included setup script://## _
-$ python setup.py install|| || ||$ sudo pip install pymongo||
-||import driver||import psycopg2||import MySQLdb|| || ||import pymongo||
+$ python setup.py install|| ||$ sudo pip install pymongo||
+||import driver||import psycopg2||import MySQLdb|| ||import pymongo||
 ||connect _
 ##gray|//open, close//##||conn = psycopg2.connect(database='foo') _
  _
-conn.close()|| || || ||client = pymongo.Connection('localhost') _
+conn.close()|| || ||client = pymongo.Connection('localhost') _
 db = conn['foo']||
 ||cursor _
 ##gray|//create, close//##||cur = conn.cursor() _
  _
-cur.close()|| || || || ||
-||execute||cur.execute('select * from bar')|| || || || ||
-||bind variable||cur.execute('select * from foo where bar = %s', vars=[1])|| || || || ||
+cur.close()|| || || ||
+||execute||cur.execute('select * from bar')|| || || ||
+||bind variable||cur.execute('select * from foo where bar = %s', vars=[1])|| || || ||
 ||fetch all results||##gray|# returns list of tuples:## _
-rows = cur.fetchall()|| || || || ||
+rows = cur.fetchall()|| || || ||
 ||iterate thru results||for row in cur: _
-@<&nbsp;&nbsp;>@print(row[0])|| || || || ||
+@<&nbsp;&nbsp;>@print(row[0])|| || || ||
 ||fetch one result||##gray|# returns a tuple:## _
-row = cur.fetchone()|| || || || ||
-||transaction|| || || || || ||
-||||||||||||~ [[# ruby]][#ruby-note ruby]||
-||~ ||~ postgresql||~ mysql||~ sqlite||~ redis||~ mongodb||
-||install driver||$ sudo gem install ruby-pg||$ sudo gem install mysql|| || ||$ sudo gem install mongo bson_ext||
-||import driver||require 'pg'||require 'mysql'|| || ||require 'mongo'||
+row = cur.fetchone()|| || || ||
+||transaction|| || || || ||
+||||||||||~ [[# ruby]][#ruby-note ruby]||
+||~ ||~ postgresql||~ mysql||~ sqlite||~ mongodb||
+||install driver||$ sudo gem install ruby-pg||$ sudo gem install mysql|| ||$ sudo gem install mongo bson_ext||
+||import driver||require 'pg'||require 'mysql'|| ||require 'mongo'||
 ||connect _
 ##gray|//open, close//##||conn = PGconn.open(:dbname => 'foo')||conn = Mysql.new _
-conn.select_db("foo")|| || ||conn = Mongo::MongoClient.new('localhost', 27017) _
+conn.select_db("foo")|| ||conn = Mongo::MongoClient.new('localhost', 27017) _
 db = conn["foo"]||
 ||execute||result = conn.exec("select * from foo;")||stmt = con.prepare('select * from foo') _
-stmt.execute|| || ||coll = db["foo"] _
+stmt.execute|| ||coll = db["foo"] _
 coll.find().each {|doc| puts doc}||
 ||bind variable|| ||stmt = con.prepare('select * from foo where bar = ?') _
-stmt.execute(1)|| || || ||
-||number of rows returned||result.cmdtuples||stmt.num_rows|| || || ||
+stmt.execute(1)|| || ||
+||number of rows returned||result.cmdtuples||stmt.num_rows|| || ||
 ||fetch a row||##gray|# hash with column names as keys:## _
 result[0]||##gray|# returns array:## _
-stmt.fetch|| || || ||
+stmt.fetch|| || ||
 ||iterate thru results||result.each do |row| _
 @<&nbsp;&nbsp;>@puts row["bar"] _
 end||stmt.each do |row| _
 @<&nbsp;&nbsp;>@puts row[0] _
-end|| || || ||
-||transaction|| || || || || ||
-||||||||||||~ [[# help]][#help-note help]||
-||~ ||~ postgresql||~ mysql||~ sqlite||~ redis||~ mongodb||
+end|| || ||
+||transaction|| || || || ||
+||||||||||~ [[# help]][#help-note help]||
+||~ ||~ postgresql||~ mysql||~ sqlite||~ mongodb||
 ||man page||$ man 1 psql _
 $ man 7 copy _
-$ man 7 create_table|| || || || ||
-||||||||||||~ [[# admin]][#admin-note admin]||
-||~ ||~ postgresql||~ mysql||~ sqlite||~ redis||~ mongodb||
-||[[# admin-user]][#admin-user-note admin user]||postgres||root||##gray|//none//##||##gray|//none//##|| ||
-||[[# server-proc]][#server-proc-note server process]||postgres||mysqld||##gray|//none//##||redis-server||mongodb||
-||[[# start-server]][#start-server-note start server]|| || || || ||$ mongodb @@--@@config /path/to/mongo.conf||
-||[[# stop-server]][#stop-server-note stop server]|| || || || ||use admin _
+$ man 7 create_table|| || || ||
+||||||||||~ [[# admin]][#admin-note admin]||
+||~ ||~ postgresql||~ mysql||~ sqlite||~ mongodb||
+||[[# admin-user]][#admin-user-note admin user]||postgres||root||##gray|//none//##|| ||
+||[[# server-proc]][#server-proc-note server process]||postgres||mysqld||##gray|//none//##||mongodb||
+||[[# start-server]][#start-server-note start server]|| || || ||$ mongodb @@--@@config /path/to/mongo.conf||
+||[[# stop-server]][#stop-server-note stop server]|| || || ||use admin _
 db.shutdownServer()||
-||[[# config-file]][#config-file-note config file]|| || || || ||##gray|//passed to// mongod //with// -f //or// @@--@@config //option//## _
+||[[# config-file]][#config-file-note config file]|| || || ||##gray|//passed to// mongod //with// -f //or// @@--@@config //option//## _
  _
 /usr/local/etc/mongod.conf||
-||[[# reload-config-file]][#reload-config-file-note reload config file]|| || || || || ||
+||[[# reload-config-file]][#reload-config-file-note reload config file]|| || || || ||
 ||[[# data-dir]][#data-dir-note data directory]||##gray|//data directory is passed to server process using// -D //option://## _
-$ ps aux | grep postgres||/usr/local/var/mysql||##gray|//specified on command line//##||/opt/local/var/db/redis||##gray|//parameter// dbpath //in config file//## _
+$ ps aux | grep postgres||/usr/local/var/mysql||##gray|//specified on command line//##||##gray|//parameter// dbpath //in config file//## _
  _
 /usr/local/var/mongodb||
 ||[[# create-db]][#create-db-note create database]||##gray|//at sql prompt://## _
 @@>@@ create database foo; _
  _
 ##gray|//at command line://## _
-$ createdb foo|| || || ||##gray|//use will take as an argument a database which does not exist; the database will be created when data is saved//## _
+$ createdb foo|| || ||##gray|//use will take as an argument a database which does not exist; the database will be created when data is saved//## _
 use db1 _
 db.collection1.save({"key1": "val1"})||
 ||[[# drop-db]][#drop-db-note drop database]||@@>@@ drop database foo; _
  _
-$ dropdb foo|| || || ||use db1 _
+$ dropdb foo|| || ||use db1 _
 db.dropDatabase()||
 ||[[# backup-db]][#backup-db-note backup database]||$ pg_dump ##gray|//db//## > /tmp/##gray|//db//##.sql _
  _
-$ pg_dump -F=c ##gray|//db//## > /tmp/##gray|//db//##.postgres|| || || ||##gray|//backups are per collection://## _
+$ pg_dump -F=c ##gray|//db//## > /tmp/##gray|//db//##.postgres|| || ||##gray|//backups are per collection://## _
 $ mongoexport -d ##gray|//db//## -c ##gray|//collection//## > /tmp/dump.json||
 ||[[# restore-db]][#restore-db-note restore database]||$ psql -f /tmp/##gray|//db//##.sql _
  _
-$ pg_restore -d ##gray|//db//## /tmp/##gray|//db//##.postgres|| || || ||##gray|//backups are per collection://## _
+$ pg_restore -d ##gray|//db//## /tmp/##gray|//db//##.postgres|| || ||##gray|//backups are per collection://## _
 $ mongoimport -d ##gray|//db//## -c ##gray|//collection//## < /tmp/dump.json||
-||~ ||~ ##EFEFEF|@@_________________________________@@##||~ ##EFEFEF|@@_________________________________@@##||~ ##EFEFEF|@@_________________________________@@##||~ ##EFEFEF|@@_________________________________@@##||~ ##EFEFEF|@@_________________________________@@##||
+||~ ||~ ##EFEFEF|@@_________________________________@@##||~ ##EFEFEF|@@_________________________________@@##||~ ##EFEFEF|@@_________________________________@@##||~ ##EFEFEF|@@_________________________________@@##||
 
-
-[[# correspondence]]
-+ [#top Data Model Correspondence]
-
-||~ relational db||~ key-value store||~ document-oriented db||~ graph db||
-||##gray|//PostgreSQL, MySQL, SQLite//##||##gray|//Redis//##||##gray|//MongoDB//##||##gray|//Neo4j//##||
-||database||database||database||graph||
-||table||key-value pairs with shared key prefix||collection||nodes with shared label ##gray|//or//## relationships with shared type||
-||record (row)||key-value pair||document||node ##gray|//or//## relationship||
-||primary key||key||_id field||a unique property||
-||field (column)||list element ##gray|//or//## hash value||field||property||
-
-++ Key-Value Store
-
-To store a relational database in Redis, one can store each row under the key ##gray|//table//##:##gray|//primary_key//##, where ##gray|//table//## is the name of the table containing the row and ##gray|//primary_key//## is the primary key of the row.  Redis values can be arrays (Redis calls them lists) or dictionaries (Redis calls them hashes) and either can be used to store the remaining fields in the row.
-
-Conversely reading a Redis database into a relational database involves identifying a partitioning scheme for the key-value pairs such that each partition can be stored in a table.  Redis does not enforce a schema, so finding the partitioning scheme could be difficult.  If the partitioning scheme is not perfect, then the code which performs the import must be prepared to handle error conditions.
-
-++ Document-Oriented Database
-
-To store a relational database in MongoDB, each table can be a collection and each row a document.  However, if some of the tables in the relational database occur in a star or snowflake pattern, then it is advantageous to store those tables in a single collection.  For our purposes a star pattern is an independent table and one or more dependent tables which are connected to the independent table by one-to-many joins.  That is, each row in the dependent table joins to a single row in the independent table.  In the snowflake pattern the dependent tables can themselves have tables which are dependent on them.
-
-If a table is dependent on more than one independent table, store the dependent table in the collection of the independent table with which it is joined most often.  That collection should contain _id values of documents in the other collection.
-
-To read a MongoDB database into a relational database, one starts by scanning each collection to get a list of the fields it uses and the type of their values.  If any of the fields has array values, then a dependent table must be introduced.  If the field has an object value, a dependent table with a 1-1 join can be introduced, but one also has the option of flattening the values into the independent table.  If fields have values with a mix of types, then one has encountered a difficult situation.  In any case import code should be prepared to handle error conditions from unexpected data.
-
-++ Graph Database
-
-To store a relational database in Neo4j, most rows should be converted to nodes with a label identifying the table it came from.  An exception is N-N mapping tables whose rows should be converted to relationships.  Additionally when two columns can be joined, a relationship should be created for each pair of rows with a common join value.
-
-When a row is converted to a node, store the fields of the row in the properties of the node.
-
-When reading a Neo4j database into a relational database, one must partition the nodes into sets, each which is appropriate for insertion into a table.  Possibly the labels can be used to identify the sets, but one must also have to consider the properties or the relationships.  To determine the fields for the destination table, one must scan all the nodes in the set to get a complete list of property keys.
-
+[[# version-used-note]]
 ++ [#version-used version used]
 
 The version used to test the examples in this sheet.
@@ -558,6 +578,10 @@ List the available databases on a server.
 
 How to switch between databases when using the command line SQL prompt.
 
+[[# current-db-note]]
+++ [#current-db current database]
+
+
 [[# chdir-note]]
 ++ [#chdir chdir]
 
@@ -583,6 +607,9 @@ The name of the startup file used by the client.
 [[# project-columns-note]]
 ++ [#project-columns project columns]
 
+[[# exclude-column-note]]
+++ [#exclude-column exclude column]
+
 [[# project-expr-note]]
 ++ [#project-expr project expression]
 
@@ -592,14 +619,65 @@ The name of the startup file used by the client.
 [[# where-note]]
 + [#where Where]
 
+[[# filter-rows-note]]
+++ [#filter-rows filter rows]
+
+[[# comparison-op-note]]
+++ [#comparison-op comparison operators]
+
+[[# has-key-note]]
+++ [#has-key has key]
+
+[[# multiple-conditions-on-field-note]]
+++ [#multiple-conditions-on-field multiple conditions on field]
+
+[[# logical-op-note]]
+++ [#logical-op logical operators]
+
+[[# like-note]]
+++ [#like like]
+
+[[# arrays-note]]
++ [#arrays Arrays]
+
 [[# join-note]]
 + [#join Join]
+
+[[# inner-join-note]]
+++ [#inner-join inner join]
+
+[[# left-outer-join-note]]
+++ [#left-outer-join left outer join]
+
+[[# full-outer-join-note]]
+++ [#full-outer-join full outer join]
+
+[[# cartesian-join-note]]
+++ [#cartesian-join cartesian join]
 
 [[# aggregate-note]]
 + [#aggregate Aggregate]
 
 [[# sort-limit-note]]
 + [#sort-limit Sort and Limit]
+
+[[# sort-ascending-note]]
+++ [#sort-ascending sort in ascending order]
+
+[[# sort-descending-note]]
+++ [#sort-descending sort in descending order]
+
+[[# sort-multiple-columns-note]]
+++ [#sort-multiple-columns sort by multiple columns]
+
+[[# select-single-row-note]]
+++ [#select-single-row single row]
+
+[[# limit-note]]
+++ [#limit limit]
+
+[[# offset-note]]
+++ [#offset offset]
 
 [[# insert-update-delete-note]]
 + [#insert-update-delete Insert, Update, and Delete]
@@ -773,6 +851,8 @@ The reader is assumed to have written SELECT queries with FROM, WHERE, GROUP BY,
 When we say that something is //standard//, we mean it conforms to the most recent SQL standard.
 
 When we say that something is //portable//, we mean works on PostgreSQL, MySQL, and SQLite.
+
++ SQL
 
 [[# types]]
 + [#top Types]
@@ -1359,11 +1439,6 @@ Query information_schema.  This requires a language which can branch.
 
 * [http://www.sqlite.org/docs.html SQLite Documentation]
 
-[[# redis]]
-+ [#top Redis]
-
-* [http://redis.io/documentation Redis Documentation]
-* [http://try.redis-db.com/ Try Redis]
 
 [[# mongodb]]
 + [#top MongoDB]

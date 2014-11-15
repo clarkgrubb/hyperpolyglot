@@ -1,7 +1,6 @@
 //a side-by-side reference sheet//
 
-[#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#arrays arrays] _
-[#sequences sequences] | [#multidimensional-arrays multidimensional arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#files files] | [#libraries-namespaces libraries and namespaces] |  [#reflection reflection] _
+[#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#arrays arrays] | [#sequences sequences] | [#multidimensional-arrays multidimensional arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#files files] | [#libraries-namespaces libraries and namespaces] |  [#reflection reflection] _
   _
  [#algebra algebra] | [#calculus calculus] | [#number-theory number theory] | [#vectors vectors] | [#matrices matrices] | [#distributions distributions] | [#univariate-charts univariate charts] | [#bivariate-charts bivariate charts] _
 [#trivariate-charts trivariate charts]
@@ -35,6 +34,8 @@ x, y, z, w = symbols('x y z w')|| ||
 ||~ ||~ mathematica||~ sympy||~ pari/gp||
 ||[[# assignment]][#assignment-note assignment]||a = 3 _
 Set[a, 3]|| ||a = 3||
+||[[# delayed-assignment]][#delayed-assignment-note delayed assignment]||a := x + 3 _
+SetDelayed[a, x + 3]|| || ||
 ||[[# parallel-assignment]][#parallel-assignment-note parallel assignment]||{a, b} = {3, 4} _
 Set[{a, b}, {3, 4}]|| ||##gray|//none//##||
 ||[[# compound-assignment]][#compound-assignment-note compound assignment]||+= -= *= /= _
@@ -122,6 +123,12 @@ RandomReal[]|| ||random(100) _
 ##gray|//set, get//##||SeedRandom[17] _
 ##gray|//??//##|| ||setrand(17) _
 getrand()||
+||[[# bit-op]][#bit-op-note bit operators]||BitAnd[5, 1] _
+BitOr[5, 1] _
+BitXor[5, 1] _
+BitNot[5] _
+BitShiftLeft[5, 1] _
+BitShiftRight[5, 1]|| || ||
 ||[[# binary-octal-hex-literals]][#binary-octal-hex-literals-note binary, octal, and hex literals]||2@@^^@@101010 _
 8@@^^@@52 _
 16@@^^@@2a|| || ||
@@ -178,7 +185,7 @@ List([1, 2, 3])[1]||
 ||[[# array-update]][#array-update-note update] _
 @<&nbsp;>@||a[[1]] = 7|| ||listput(a, 7, 1)||
 ||[[# array-out-of-bounds]][#array-out-of-bounds-note out-of-bounds behavior]||##gray|//left as unevaluated// Part[] //expression//##|| ||##gray|//out of allowed range error//##||
-||[[# array-element-index]][#array-element-index-note element index]||##gray|(* returns list of all positions: *)## _
+||[[# array-element-index]][#array-element-index-note element index]||##gray|(* Position returns list of all positions: *)## _
 First /@ Position[{7, 8, 9, 9}, 9]|| ||##gray|//none//##||
 ||[[# array-slice]][#array-slice-note slice] _
 @<&nbsp;>@||{1, 2, 3}[[1 ;; 2]]|| ||##gray|//none//##||
@@ -259,26 +266,50 @@ Riffle[{1, 2, 3}, {"a", "b", "c"}]|| || ||
 ||[#airthmetic-sequence-float arithmetic sequence of floats with difference 0.1]||Range[1, 100, .1]|| || ||
 ||||||||~ [[# multidimensional-arrays]][#multidimensional-arrays-note multidimensional-arrays]||
 ||~ ||~ mathematica||~ sympy||~ pari/gp||
+||literal—1d||{1, 2, 3}|| ||[1, 2, 3]||
+||literal—2d||##gray|(* used a nested array for each row: *)## _
+@@{{@@1, 2}, {3, 4@@}}@@ _
+ _
+##gray|(* display as grid with aligned columns: *)## _
+MatrixForm[@@{{@@1, 2}, {3, 4@@}}@@]|| ||[1, 2, 3; 4, 5, 6]||
+||construct from sequence—2d||ArrayReshape[{1, 2, 3, 4, 5, 6}, {2, 3}]|| || ||
+||[[# multidimensional-array-size]][#multidimensional-array-size-note size] _
+##gray|//number of elements, number of dimensions, dimension lengths//##||a = {{1, 2, 3}, {4, 5, 6}} _
+ _
+Length[Flatten[a]] _
+Length[Dimensions[a]] _
+Dimensions[a]|| || ||
+||lookup—1d||{1, 2, 3}[[1]]|| || ||
+||lookup—2d||{{1, 2}, {3, 4}}[[1, 1]] _
+ _
+Part[{{1, 2}, {3, 4}}, 1, 1]|| || ||
 ||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
 ||~ ||~ mathematica||~ sympy||~ pari/gp||
 ||[#record-literal record literal]||r = { n -> 10, avg -> 3.7, sd -> 0.4}|| || ||
 ||[#record-access record member access]||n /. r|| || ||
 ||||||||~ [[# functions]][#functions-note functions]||
 ||~ ||~ mathematica||~ sympy||~ pari/gp||
-||[#function-definition definition]||add[a_, b_] := a + b _
+||[#function-definition define function]||Add[a_, b_] := a + b _
  _
 ##gray|(* alternate syntax: *)## _
-add = Function[{a, b}, a + b]|| ||add(x, y) = x + y||
-||[#function-invocation invocation]||add[3, 7] _
+Add = Function[{a, b}, a + b]|| ||add(x, y) = x + y||
+||[#function-invocation invoke function]||Add[3, 7] _
  _
-add @<@@>@ {3, 7}|| ||add(3, 7)||
+Add @<@@>@ {3, 7} _
+ _
+##gray|(* syntax for unary functions: *)## _
+2 @@//@@ Log|| ||add(3, 7)||
+||undefine function||Clear[Add]|| || ||
+||redefine function||Add[a_, b_] := b + a|| || ||
+||overload function|| || || ||
+||missing function behavior||##gray|//The expression is left unevaluated.  The head is the function name as a symbol, and the parts are the arguments.//##|| || ||
+||missing argument behavior||##gray|//The expression is left unevaluated.  The head is the function name as a symbol, and the parts are the arguments.//##|| || ||
+||extra argument behavior|| || || ||
 ||[#return-value return value]|| || || ||
 ||[#function-value function value]|| || || ||
 ||[#anonymous-function anonymous function]||Function[{a, b}, a + b] _
  _
 (#1 + #2) &|| || ||
-||[#missing-argument missing argument]|| || || ||
-||[#extra-argument extra argument]|| || || ||
 ||[#default-argument default argument]|| || || ||
 ||[#variable-number-arguments variable number of arguments]|| || || ||
 ||||||||~ [[# execution-control]][#execution-control-note execution control]||
@@ -599,6 +630,17 @@ The {{Set}} function behaves identically to assignment and can be nested:
 Set[a, Set[b, 3]]
 [[/code]]
 
+[[# delayed-assignment-note]]
+++ [#delayed-assignment delayed assignment]
+
+How to assign an expression to a variable name.  The expression is re-evaluated each time the variable is used.
+
+**mathematica:**
+
+GNU make also supports assignment and delayed assignment, but {{=}} is used for delayed assignment and {{:=}} is used for immediate assignment.  This is the opposite of how Mathematica uses the symbols.
+
+The POSIX standard for make only has {{=}} for delayed assignment.
+
 [[# parallel-assignment-note]]
 ++ [#parallel-assignment parallel assignment]
 
@@ -784,6 +826,10 @@ The seed is set to a fixed value at start up.
 **mathematica:**
 
 The seed is not set to the same value at start up.
+
+[[# bit-op-note]]
+++ [#bit-op bit operators]
+
 
 [[# binary-octal-hex-literals-note]]
 ++ [#binary-octal-hex-literals binary, octal, and hex literals]

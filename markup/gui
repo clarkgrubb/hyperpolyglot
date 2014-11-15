@@ -1,0 +1,1066 @@
+//a side-by-side reference sheet//
+
+[#grammar-invocation grammar and invocation] | [#var-expr variables and expression] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] _
+[#arrays arrays] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#files files] | [#gui gui] | [#directories directories] | [#processes-environment processes and environment] _
+[#libraries-namespaces libraries and namespaces] | [#objects objects] | [#reflection reflection]
+
+||~ [[# general]]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||[[# version-used]][#version-used-note version used] _
+@<&nbsp;>@||##gray|//1.1//##||##gray|//2.1//##||
+||[[# version]][#version-note show version] _
+@<&nbsp;>@||msgbox % a_ahkversion||$ osascript -e \ _
+@<&nbsp;&nbsp;>@"AppleScript's version"||
+||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
+||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||[[# interpreter]][#interpreter-note interpreter] _
+@<&nbsp;>@||@@>@@ autohotkey foo.ahk||$ osascript foo.scpt||
+||[[# cmd-line-program]][#cmd-line-program-note command line program] _
+@<&nbsp;>@||##gray|//none//##||$ osascript -e 'say "hi"'||
+||[[# stmt-separator]][#stmt-separator-note statement separator]||##gray|//sometimes newline//## _
+ _
+##gray|//newline does not terminate statement: _
+ _
+@<&nbsp;&nbsp;>@(1) inside parens _
+@<&nbsp;&nbsp;>@(2) when following line starts with binary operator//##||##gray|//newline _
+ _
+use ⌥l (option lowercase L) to escape newline and continue statement on following line//##||
+||[[# block-delimiters]][#block-delimiters-note block delimiters]||{ }||##gray|//keyword//## ##gray|//...//## end ##gray|//keyword//## _
+on ##gray|//funcName//## ##gray|//...//## end ##gray|//funcName//##||
+||[[# expr-stmt]][#expr-stmt-note are expressions statements] _
+@<&nbsp;&nbsp;>@||##gray|//no//##||##gray|//yes//##||
+||[[# comment]][#comment-note end-of-line comment] _
+@<&nbsp;>@||; ##gray|//comment//##||@@--@@ ##gray|//comment//##||
+||[[# multiline-comment]][#multiline-comment-note multiple line comment]||/* _
+##gray|//comment//## _
+##gray|//another comment//## _
+*/||(* ##gray|//comment//## _
+##gray|//another comment//## *)||
+||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
+||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||[[# identifiers-case-sensitive]][#identifiers-case-sensitive-note are identifiers case sensitive] _
+@<&nbsp;>@||##gray|//no//##||##gray|//no//##||
+||[[# assignment]][#assignment-note assignment]||s1 := PATH _
+s2 := "foo bar" _
+ _
+##gray|; traditional style:## _
+s1 = %PATH% _
+s2 = foo bar||set a to 1 _
+copy 1 to a||
+||[[# parallel-assignment]][#parallel-assignment-note parallel assignment] _
+@<&nbsp;>@||##gray|//none//##||set {a,b} to {1,2}||
+||[[# swap]][#swap-note swap] _
+@<&nbsp;>@||##gray|//none//##||set {a,b} to {b,a}||
+||[[# compound-assignment]][#compound-assignment-note compound assignment] _
+##gray|//arithmetic, string, bit//##||+= -= *= /= @@//@@= _
+.= _
+<<= >>= &= |= ^=||##gray|//none//##||
+||[[# incr-decr]][#incr-decr-note increment and decrement]||##gray|//premodifiers://## _
+++i @@--@@i _
+ _
+##gray|//postmodifiers://## _
+i++ i@@--@@||##gray|//none//##||
+||[[# var-decl]][#var-decl-note variable declaration] _
+@<&nbsp;>@|| ||##gray|//assignment//##, local, global||
+||[[# null]][#null-note null] _
+@<&nbsp;>@||""||null||
+||[[# null-test]][#null-test-note null test] _
+@<&nbsp;>@||v == "" _
+ _
+##gray|; traditional style:## _
+v =||v = null||
+||[[# undef-access]][#undef-access-note undefined variable] _
+@<&nbsp;>@||##gray|//evaluates as empty string//##||##gray|//error to access uninitialized variable//##||
+||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
+||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||[[# true-false]][#true-false-note true and false] _
+@<&nbsp;>@||1 0 _
+ _
+##gray|//synonyms://## _
+true false||true false||
+||[[# falsehoods]][#falsehoods-note falsehoods]||0 ""||##gray|//only integers convert to booleans://## _
+false 0||
+||[[# logical-ops]][#logical-ops-note logical operators] _
+@<&nbsp;>@||and or not _
+ _
+##gray|//synonyms://## _
+@@&& || !@@||and or not||
+||[[# conditional-expr]][#conditional-expr-note conditional expression] _
+@<&nbsp;>@||x > 0 ? x : -x||##gray|//none//##||
+||[#relational-operators relational operators] _
+@<&nbsp;>@||== != > < >= <= _
+ _
+##gray|//case insensitive equality://## _
+@@=@@||@@=@@ /= > < >= <=||
+||[#arithmetic-expr arithmetic expression] _
+@<&nbsp;>@||1 + 3||1 + 3||
+||[#arithmetic-operators arithmetic operators] _
+##gray|//addition, subtraction, multiplication, float division, quotient, remainder//##||+ - * / @@//@@ ##gray|//none//## @@**@@ _
+ _
+##gray|//modulo function://## mod(m, n)||+ - * / div mod ^||
+||[#integer-division integer division] _
+@<&nbsp;>@||7 @@//@@ 3||7 div 3||
+||[[# int-div-zero]][#int-div-zero-note integer division by zero] _
+@<&nbsp;>@||##gray|//evaluates to empty string//##||##gray|//error//##||
+||[#float-division float division] _
+@<&nbsp;>@||7 / 3||7 / 3||
+||[[# float-div-zero]][#float-div-zero-note float division by zero] _
+@<&nbsp;>@||##gray|//evaluates to empty string//##||##gray|//error//##||
+||[[# power]][#power-note power] _
+@<&nbsp;>@||2 ** 32||2 ^ 32||
+||[[# sqrt]][#sqrt-note sqrt] _
+@<&nbsp;>@||sqrt(2)||2 ^ 0.5||
+||[#sqrt-negative-two sqrt -1] _
+@<&nbsp;>@||##gray|//evaluates to empty string//##||##gray|//error//##||
+||[#transcendental-func transcendental functions]||exp ln _
+sin cos tan _
+asin acos atan|| ||
+||[#float-truncation float truncation] _
+##gray|//round towards zero, round to nearest integer, round down, round up//##||##gray|//none//## _
+round(3.14) _
+floor(3.14) _
+ceil(3.14)||3.14 div 1 _
+round 3.14 _
+##gray|//??//## _
+##gray|//??//##||
+||[[# abs-val]][#abs-val-note absolute value] _
+@<&nbsp;>@||abs(-7)||##gray|//none//##||
+||[#integer-overflow integer overflow] _
+@<&nbsp;>@||##gray|//signed modular arithmetic//##||##gray|//converts to float//##||
+||[#float-overflow float overflow] _
+@<&nbsp;>@||##gray|//evaluates to string value such as://## _
+1.#INF00||##gray|//error//##||
+||[#random random integer, uniform float]||##gray|; store results in n and x:## _
+random, n, 0, 99 _
+random, x, 0.0, 1.0||random number from 0 to 99 _
+random number from 0.0 to 1.0||
+||[#seed-random seed random numbers] _
+@<&nbsp;>@||random, , 17||set r to random number with seed 17||
+||[#bit-operators bit operators] _
+@<&nbsp;>@||@<<< >> & | ^ ~>@ ||##gray|//none//##||
+||||||~ [[# strings]][#strings-note strings]||
+||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||[#string-literal string literal]||"don't say ""no"""||"don't say \"no\""||
+||[#string-literal-newline newline in literal]|| ||##gray|//yes//##||
+||[#barewords barewords]|| || ||
+||[#string-escapes escapes]|| ||\\ \" _
+\n \t \r _
+##gray|//other backslash sequences cause syntax error//##||
+||[#variable-interpolation variable interpolation]|| ||##gray|//none//##||
+||[#string-length length]||strlen("hello")||set s to "hello" _
+count s||
+||[#index-substring index of substring]||##gray|; returns 5:## _
+instr("foo bar", "bar")||set s to "foo bar" _
+offset of "bar" in s||
+||[#extract-substring extract substring]||substr("foo bar", 5, 3)||set s to "foo bar" _
+characters 5 thru 7 of s as text||
+||[#string-concatenation string concatenation]||"hello, " . "world"||set c to "hello, " & "world"||
+||[#string-replication string replication]|| || ||
+||[#split split]|| || ||
+||[#join join]|| || ||
+||[#sprintf sprintf]|| || ||
+||[#case case manipulation]||s1 := "Hello" _
+stringupper, s2, s1 _
+stringlower, s3, s2|| ||
+||[#strip strip]|| || ||
+||[#pad pad on right, pad on left]|| || ||
+||[#string-to-number string to number]|| ||set a to "12" _
+7 + a as integer _
+ _
+set b = ".037" _
+73.9 + b as real||
+||[#number-to-string number to string] _
+@<&nbsp;>@|| ||7 as text & " items"||
+||||||~ [[# regexes]][#regex-note regular expressions]||
+||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||[[# regex-match]][#regex-match-note regex match]|| || ||
+||[[# single-subst]][#single-subst-note single substitution]|| || ||
+||[[# global-subst]][#global-subst-note global substitution]|| || ||
+||||||~ [[# dates-time]][#dates-time-note dates and time]||
+||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||sleep|| ||delay 10||
+||||||~ [[# arrays]][#array-note arrays]||
+||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||[#array-literal array literal]|| ||set nums to {1,2,3,4}||
+||[#array-size array size]|| ||count nums _
+length of nums||
+||[#array-lookup array lookup]|| ||item 1 of nums||
+||[#array-modification array modification]|| ||set item 1 of nums to 5||
+||[#array-slice array slice]|| ||items 2 thru 3 of nums||
+||[#array-concatenation concatenation]|| ||{1,2,3} & {4,5,6}||
+||[#array-back manipulate back of array]|| ||set a to {6,7,8} _
+set end of a to 9 _
+##gray|//cannot remove elements from a list//##||
+||[#array-front manipulate front of array]|| ||set a to {6,7,8} _
+set beginning of a to 5 _
+##gray|//cannot remove elements from a list//##||
+||[#array-iteration array iteration]|| ||repeat with i in nums _
+@<&nbsp;&nbsp;>@display dialog(i as text) _
+end repeat||
+||[#array-sort sort]|| ||##gray|//none//##||
+||[#array-reverse reverse]|| ||set a to {1,2,3} _
+set b to reverse of a||
+||||||~ [[# functions]][#functions-note functions]||
+||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||[#function-definition function definition]||add(x, y) { _
+@<&nbsp;&nbsp;>@return x + y _
+}||on add(a, b) _
+@<&nbsp;&nbsp;>@return a + b _
+end add _
+##gray|//or//## _
+to add(a, b) _
+@<&nbsp;&nbsp;>@return a + b _
+end add||
+||[#function-invocation function invocation]||x := add(1, 2)||add(1, 2)||
+||[#missing-argument missing argument value]||##gray|//error//##||##gray|//error//##||
+||[#extra-arguments extra arguments]||##gray|//error//##||##gray|//ignored//##||
+||[#default-argument default argument value]||fapprox(x, y, eps=0.001) { _
+@<&nbsp;&nbsp;>@return abs(x - y) < eps _
+}||##gray|//none//##||
+||[#named-parameters named parameters]||##gray|//none//##||to displayNums from x to y _
+@<&nbsp;&nbsp;>@set i to x _
+@<&nbsp;&nbsp;>@repeat while i <= y _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@display dialog (i as text) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@set i to i + 1 _
+@<&nbsp;&nbsp;>@end repeat _
+end displayNums _
+displayNums to 5 from 1||
+||[#variable-arguments variable number of arguments]||f(args*) { _
+@<&nbsp;&nbsp;>@return args.maxindex() _
+}||##gray|//none//##||
+||[[# pass-by-ref]][#pass-by-ref-note pass by reference]||swap(byref v1, byref v2) { _
+@<&nbsp;&nbsp;>@tmp := v1 _
+@<&nbsp;&nbsp;>@v1 := v2 _
+@<&nbsp;&nbsp;>@v2 := tmp _
+}|| ||
+||[#return-value return value]||##gray|//argument of// return##||##gray|//argument of// return //or value of last statement executed//##||
+||||||~ [[# execution-control]][#execution-control-note execution control]||
+||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||[[# if]][#if-note if]||if (n = 0) { _
+@<&nbsp;&nbsp;>@msgbox % "zero hits" _
+} _
+else if (n = 1) { _
+@<&nbsp;&nbsp;>@msgbox % "one hit" _
+} _
+else { _
+@<&nbsp;&nbsp;>@msgbox % n . " hits" _
+}||if n = 0 then _
+@<&nbsp;&nbsp;>@display dialog ("0 hits") _
+else if n = 1 then _
+@<&nbsp;&nbsp;>@display dialog ("1 hit") _
+else _
+@<&nbsp;&nbsp;>@set s to n as text & " hits" _
+@<&nbsp;&nbsp;>@display dialog (s) _
+end if||
+||[[# while]][#while-note while]|| ||set i to 0 _
+repeat while i < 10 _
+@<&nbsp;&nbsp;>@set i to i + 1 _
+@<&nbsp;&nbsp;>@display dialog (i as text) _
+end repeat||
+||[[# break-continue]][#break-continue-note break/continue]||exit 0||exit ##gray|//none//##||
+||[[# for]][#for-note for]|| ||repeat with i from 1 to 3 _
+@<&nbsp;&nbsp;>@display dialog (i as text) _
+end repeat||
+||||||~ [[# exceptions]][#exceptions-note exceptions]||
+||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||[#raise-exception raise exception]|| ||error "bam!"||
+||[#catch-exception catch exception]|| ||try _
+@<&nbsp;&nbsp;>@error "bam!" _
+on error msg _
+@<&nbsp;&nbsp;>@display dialog ("error: " & msg) _
+end try||
+||[#uncaught-exception uncaught exception behavior]|| ||##gray|//display error and exits//##||
+||||||~ [[# files]][#file-note files]||
+||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||[#print-to-stdout print to standard out]|| || ||
+||[#standard-filehandles standard file handles]|| ||##gray|//none//##||
+||[#read-line read line]|| ||set f to POSIX file "/etc/passwd" _
+set a to read f as text using delimiter linefeed _
+item 1 of a||
+||[#read-file read file]|| ||set f to POSIX file "/tmp/a" _
+set s to f as text||
+||[#write-file write to file]|| ||set f to POSIX file "/tmp/a" _
+open for access f with write permission _
+write "hello" to f _
+close access f||
+||[#append-file append to file]|| ||set f to POSIX file "/tmp/a" _
+open for access f with write permission _
+write "hello" to f starting at eof _
+close access f||
+||||||~ [[# gui]][#gui-note gui]||
+||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||pop-up box||msgbox % "hi world"||display dialog("hi world")||
+||||||~ [[# directories]][#directories-note directories]||
+||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
+||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||[#external-command external command]|| ||do shell script "ls"||
+||[#backticks backticks]|| ||set s to do shell script "ls"||
+||[#command-line-args command line args]|| ||##gray|//must declare run handler://## _
+on run argv _
+@<&nbsp;&nbsp;>@length of argv _
+@<&nbsp;&nbsp;>@item 1 of argv _
+@<&nbsp;&nbsp;>@item 2 of argv _
+@<&nbsp;&nbsp;>@##gray|//...//## _
+end run||
+||[#speech speech]|| ||say "I'm a Mac"||
+||[#environment-variable environment variable]|| ||system attribute "HOME"||
+||[#command-path command path]|| || ||
+||[#exit exit]|| ||##gray|//none//##||
+||[#set-signal-handler set signal handler]|| ||##gray|//none//##||
+||[#start-background-job start job in background]|| ||##gray|//none//##||
+||[#suspend-job suspend current job]|| ||##gray|//none//##||
+||[#list-jobs list jobs]|| ||##gray|//none//##||
+||[#background-suspended-job background suspended job]|| ||##gray|//none//##||
+||[#foreground-background-job bring background job into foreground]|| ||##gray|//none//##||
+||[#disown-job disown job]|| ||##gray|//none//##||
+||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
+||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||[#library library]|| ||$ cat foo.applescript _
+on showText(theText) _
+@<&nbsp;&nbsp;>@display dialog (theText) _
+end showText _
+$ osascript -o foo.scpt foo.applescript||
+||[#import-library import library]|| ||set f to "/path/to/foo.scpt" _
+set foo to (load script POSIX file f) _
+tell foo to showText("bar")||
+||[#library-path library path]|| || ||
+||[#library-path-env library path environment variable]|| || ||
+||[#namespace-declaration namespace declaration]|| || ||
+||[#namespace-separator namespace separator]|| || ||
+||||||~ [[# objects]][#objects-note objects]||
+||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||[#define-class define class]|| ||on makeInt(val) _
+@<&nbsp;&nbsp;>@script theInt _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@property value : val _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@on addOne() _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@set value to value + 1 _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@end addOne _
+@<&nbsp;&nbsp;>@end script _
+@<&nbsp;&nbsp;>@return theInt _
+end makeInt||
+||[#create-object create object]|| ||set anInt to makeInt(7)||
+||[#getter-setter getter and setter]|| ||get value of anInt _
+set value of anInt to 9||
+||[#invoke-method invoke method]|| ||tell anInt to addOne()||
+||||||~ [[# reflection]][#reflection-note reflection]||
+||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||[#class class]|| ||set s to "hello" _
+display dialog class of s||
+||[#list-variables list defined variables]|| || ||
+||~ ||~ ##EFEFEF|@@__________________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________________@@##||
+
+
+[[# general-note]]
++ [#general General]
+
+[[# version-used-note]]
+++ [#version-used version used]
+
+The version of the language used for verifying the examples in the reference sheet.
+
+[[# version-note]]
+++ [#version show version]
+
+How to get the version.
+
+[[# grammar-invocation-note]]
++ [#grammar-invocation Grammar and Invocation]
+
+[[# interpreter-note]]
+++ [#interpreter interpreter]
+
+The customary name of the interpreter and how to invoke it.
+
+[[# cmd-line-program-note]]
+++ [#cmd-line-program command line program]
+
+How to pass a single command to be executed as a command line argument.
+
+[[# stmt-separator-note]]
+++ [#stmt-separator statement separator]
+
+How the parser determines the end of a statement.
+
+[[# block-delimiters-note]]
+++ [#block-delimiters block delimiters]
+
+How blocks are delimited.
+
+[[# expr-stmt-note]]
+++ [#expr-stmt are expressions statements]
+
+Whether an expression can be used where a statement is expected.
+
+[[# comment-note]]
+++ [#comment to end-of-line comment]
+
+How to make the remainder of the line a comment.
+
+[[# multiline-comment-note]]
+++ [#multiline-comment multiline comment]
+
+How to comment out multiple lines.
+
+[[# var-expr-note]]
++ [#var-expr Variables and Expressions]
+
+[[# identifiers-case-sensitive-note]]
+++ [#identifiers-case-sensitive are identifiers case sensitive]
+
+**applescript:**
+
+In AppleScript, identifiers are case insensitive.  This holds for reserved keywords as well as user defined variable names.  The AppleScript Editor converts all keywords and identifiers in the source code to lower case when it is compiled.
+
+[[# assignment-note]]
+++ [#assignment assignment]
+
+How to assign a value to a variable.
+
+**applescript:**
+
+{{set}} and {{copy}} are not synonyms when operating on lists, records, or objects.  The {{set}} command makes the left variable an alias of the right variable: the two variables then refer to the same array, record, or object.  The {{copy}} command will put a copy of the array, record, or object contained in the left variable.
+
+[[# parallel-assignment-note]]
+++ [#parallel-assignment parallel assignment]
+
+How to assign values to variables in parallel.
+
+[[# swap-note]]
+++ [#swap swap]
+
+How to exchange the values held by two variables.
+
+[[# compound-assignment-note]]
+++ [#compound-assignment compound assignment]
+
+The compound assignment operators for arithmetic, string, and bit operations
+
+[[# incr-decr-note]]
+++ [#incr-decr increment and decrement]
+
+The C-style increment and decrement operators which can be used in expressions.
+
+[[# var-decl-note]]
+++ [#var-decl variable declaration]
+
+How to declare a variable.
+
+**applescript:**
+
+Variables can be declared as {{local}} or {{global}}. It is not possible to initialize a variable in a declaration.   Undeclared variables are {{local}}: in the example below, {{c}} and {{e}} are not visible outside the function {{foo}}:
+
+[[code]]
+on foo(a,b)
+  local c
+  global d
+  set c to a+b
+  set d to a+b
+  set e to a+b
+end foo
+[[/code]]
+
+[[# null-note]]
+++ [#null null]
+
+The null literal.
+
+[[# null-test-note]]
+++ [#null-test null test]
+
+How to test if a value is null.
+
+[[# undef-access-note]]
+++ [#undef-access undefined variable]
+
+The value of an undefined variable, or the behavior if there is no such value.
+
+**applescript:**
+
+How to test whether a variable is defined:
+
+[[code]]
+try
+  set t to foo
+  display dialog ("defined")
+on error
+  display dialog ("undefined")
+end try
+[[/code]]
+
+[[# arithmetic-logic-note]]
++ [#arithmetic-logic Arithmetic and Logic]
+
+[[# true-false-note]]
+++ [#true-false true and false]
+
+The literals for true and false.
+
+[[# falsehoods-note]]
+++ [#falsehoods falsehoods]
+
+Values which are false in conditional expressions.
+
+[[# logical-ops-note]]
+++ [#logical-ops logical operators]
+
+Logical and, or, and not.
+
+[[# conditional-expr-note]]
+++ [#conditional-expr conditional expression]
+
+The syntax for a conditional expression.
+
+[[# relational-operators]]
+++ relational operators
+
+**autohotkey:**
+
+{{<>}} is a synonym for {{!=}}.
+
+**applescript:**
+
+Verbal synonyms for the relational operators are provided.  For {{=}} the synonyms are {{equals}}, {{is equal}}, {{equal to}}, and {{is equal to}}.
+
+[[# string-to-number]]
+++ convert from string
+
+[[# number-to-string]]
+++ convert to string
+
+
+[[# arithmetic-expr]]
+++ arithmetic expressions
+
+How to evaluate an arithmetic expression.
+
+[[# arithmetic-operators]]
+++ arithmetic operators
+
+The operators for addition, subtraction, multiplication, float division, integer division, modulus, and exponentiation.  Some languages provide a function //pow// instead of an operator for exponentiation.
+
+[[# integer-division]]
+++ integer division
+
+How to perform integer division.
+
+
+[[# float-division]]
+++ float division
+
+How to perform floating point division, even if the operands might be integers.
+
+[[# arithmetic-functions]]
+++ arithmetic functions
+
+Functions for computing square root, natural exponent, natural logarithm, sine, cosine, tangent,  arcsine, arccosine, arctangent, and //atan2//.
+
+The trigonometric functions are all in radians. //atan2// takes two arguments which are the x and y co-ordinates of a vector in the Cartesian plane.  It returns
+the angle to the positive x-axis made by the vector.
+
+[[# arithmetic-truncation]]
+++ arithmetic truncation
+
+[[# division-zero]]
+++ division by zero
+
+[[# integer-overflow]]
+++ integer overflow
+
+[[# float-overflow]]
+++ float overflow
+
+[[# sqrt-negative-two]]
+++ sqrt -2
+
+The result of taking the square root of -2.
+
+[[# random]]
+++ random integer, uniform float
+
+The examples show how to generate a uniform random integer in the range from 0 to 99, inclusive; how to generate a uniform float in the range 0.0 to 1.0; how to generate a float from a standard normal distribution
+
+[[# seed-random]]
+++ seed random numbers
+
+**applescript:**
+
+The initial seed is set to a value that varies each time AppleScript is started up.
+
+If a repeatable sequence of random numbers is desired, the seed can be set to a specific value using the {{with seed}} parameter on the first call to {{random}}.  
+
+
+[[# bit-operators]]
+++ bit operators
+
+[[# strings-note]]
++ [#strings Strings]
+
+[[# string-literal]]
+++ string literal
+
+The syntax for a string literal and how to escape the delimiter.
+
+[[# string-literal-newline]]
+++ newline in literal
+
+Whether a newline character sequence can be included in a string.
+
+For all the languages described in this reference sheet a string literal is permitted to encompass multiple lines in the source code and the resulting string will contain the same number of lines.  
+
+[[# string-escapes]]
+++ escapes
+
+Character escape sequences which can be used in string literals.
+
+[[# variable-interpolation]]
+++ variable interpolation
+
+How to interpolate variables in a string.
+
+[[# string-length]]
+++ length
+
+How to get the length of a string.
+
+[[# index-substring]]
+++ index substring
+
+How to find the index of the start of a substring in a string.
+
+[[# extract-substring]]
+++ extract substring
+
+[[# string-concatenation]]
+++ string concatenation
+
+The string concatenation operator.
+
+[[# split]]
+++ split
+
+How to split a string into an array of strings.
+
+[[# join]]
+++ join
+
+How to concatenate the elements of an array into a string with a separator.
+
+[[# scan]]
+++ scan
+
+[[# sprintf]]
+++ sprintf
+
+How to create a string using a printf style format.
+
+[[# case]]
+++ case manipulation
+
+[[# strip]]
+++ strip
+
+[[# pad]]
+++ pad on right, pad on left
+
+[[# regex-note]]
++ [#regexes Regular Expressions]
+
+[[# regex-match-note]]
+++ [#regex-match regex match]
+
+How to test whether a regular expression matches a string.
+
+[[# single-subst-note]]
+++ [#single-subst single substitution]
+
+How to replace the first occurrence of a pattern in a string.
+
+[[# global-subst-note]]
+++ [#global-subst global substitution]
+
+How to replace all occurrences of a pattern in a string.
+
+[[# dates-time-note]]
++ [#dates-time Dates and Time]
+
+[[# array-note]]
++ [#arrays Arrays]
+
+[[# array-literal]]
+++ array literal
+
+Array literal syntax.
+
+[[# array-size]]
+++ array size
+
+How to get the number of elements in an array.
+
+[[# array-lookup]]
+++ array lookup
+
+How to access a value in an array by index.
+
+[[# array-slice]]
+++ array slice
+
+How to slice a subarray from an array.
+
+[[# array-iteration]]
+++ array iteration
+
+[[# membership]]
+++ membership
+
+How to test for membership in an array.
+
+[[# intersection]]
+++ intersection
+
+How to compute an intersection.
+
+[[# union]]
+++ union
+
+[[# map]]
+++ map
+
+[[# filter]]
+++ filter
+
+[[# reduce]]
+++ reduce
+
+[[# universal-predicate]]
+++ universal predicate
+
+How to test whether a condition holds for all members of an array.  Always true for an empty array.
+
+[[# existential-predicate]]
+++ existential predicate
+
+How to test whether an item in an array exists for which a condition holds.  Always false for an empty array.
+
+[[# dictionary-literal]]
+++ dictionary literal
+
+[[# dictionary-size]]
+++ dictionary size
+
+[[# dictionary-lookup]]
+++ dictionary lookup
+
+[[# dictionary-iteration]]
+++ dictionary iteration
+
+[[# out-of-bounds]]
+++ out of bounds behavior
+
+[[# functions-note]]
++ [#functions Functions]
+
+Python has both functions and methods.  Ruby only has methods: functions defined at the top level are in fact methods on a special main object.  Perl subroutines can be invoked with a function syntax or a method syntax.
+
+[[# function-definition]]
+++ function definition
+
+**applescript:**
+
+Functions are called //handlers// in AppleScript.
+
+[[# function-invocation]]
+++ function invocation
+
+[[# missing-argument]]
+++ missing argument value
+
+Value of an argument variable if a function is invoked with fewer arguments than are declared.
+
+[[# extra-arguments]]
+++ extra arguments
+
+If a function is invoked with more arguments than are declared, how the function can access them.
+
+[[# default-argument]]
+++ default argument value
+
+How to declare a default value for an argument.
+
+[[# variable-arguments]]
+++ variable number of arguments
+
+How to write a function which accepts a variable number of argument.
+
+[[# named-parameters]]
+++ named parameters
+
+How to write a function which uses named parameters.
+
+**applescript:**
+
+Named parameters are called //labeled parameters// in the AppleScript documentation.  The label must be one of the following prepositions:
+
+> about, above, against, apart from, around, aside from, at, below, beneath, beside, between, by, for, from,
+> instead of, into, on, onto, out of, over, since, thru/through, to, under
+
+For readability the definite article {{the}} can be inserted in between the label and the argument in either the function definition or the invocation.  
+
+To use other names for parameters, the {{given}} keyword can be used in conjunction with colon syntax:
+
+[[code]]
+on displayNums given startAt:x, endAt:y
+  set i to x
+  repeat while i <= y
+    display dialog (i as text)
+    set i to i + 1
+  end repeat
+end displayNums
+
+displayNums given startAt:1, endAt:5
+[[/code]]
+
+When a {{given}} parameter takes a boolean value as an argument, the {{with}} or {{without}} keywords can be used when the handler is invoked.  Consider the following handler definition:
+
+[[code]]
+on foo given flagLabel:flag
+  ...
+end foo
+[[/code]]
+
+Here are two ways to invoke {{foo}} with {{flag}} set to true:
+
+[[code]]
+foo given flagLabel:true
+foo with flagLabel
+[[/code]]
+
+Here are two ways to invoke {{foo}} with {{flag}} set to false:
+
+[[code]]
+foo given flagLabel:false
+foo without flagLabel
+[[/code]]
+
+[[# return-value]]
+++ return value
+
+[[# lambda-declaration]]
+++ lambda declaration
+
+How to define a lambda function.
+
+[[# lambda-invocation]]
+++ lambda invocation
+
+[[# default-scope]]
+++ default scope
+
+[[# execution-control-note]]
++ [#execution-control Execution Control]
+
+[[# if]]
+++ if
+
+**autohotkey:**
+
+The traditional style omits the parens around the conditionals.
+
+[[code]]
+|if n = 0
+{
+  msgbox % "zero hits"
+} _
+else if n = 1
+{
+  msgbox % "one hit"
+}
+else
+{
+  msgbox % n . " hits"
+}
+[[/code]]
+
+[[# while]]
+++ while
+
+[[# break-continue]]
+++ break/continue/redo
+
+//break// exits a //for// or //while// loop immediately.  //continue// goes to the next iteration of the loop.  //redo// goes back to the beginning of the current iteration.
+
+[[# for]]
+++ for
+
+**applescript:**
+
+If a block of code needs to be executed a set number of times but no index variable is needed, AppleScript provides this alternate syntax:
+
+[[code]]
+repeat 3 times
+	display dialog ("tut")
+end repeat
+[[/code]]
+
+
+[[# exceptions-note]]
++ [#exceptions Exceptions]
+
+[[# raise-exception]]
+++ raise exception
+
+How to raise an exception.
+
+**applescript:**
+
+It is possible to associate an error code with the error using the {{number}} label:
+
+[[code]]
+error "bam!" number 7
+[[/code]]
+
+If no error number is specified, then the value -2700 is used.
+
+[[# catch-exception]]
+++ catch exception
+
+How to handle an exception.
+
+**applescript:**
+
+If a variable name is specified after {{on error}} the error message is stored in it.  There can only be one error clause and it catches all errors.  To perform conditional error handling, use the {{number}} label and provide a variable name after it.  The error code will be stored in that variable.
+
+[[code]]
+try
+  error "bam!" number 7
+on error msg number errorCode
+  if errorCode = 7 then
+    display dialog ("error: " & msg)
+  else
+    display dialog ("unknown error")
+  end if
+end try
+[[/code]]
+
+A {{try}} block can be closed by {{end error}} in addition to {{end try}}.
+
+[[# uncaught-exception]]
+++ uncaught exception behavior
+
+System behavior if an exception goes uncaught.  Most interpreters print the exception message to stderr and exit with a nonzero status.
+
+[[# wait-on-thread]]
+++ wait on thread
+
+[[# file-note]]
++ [#files Files]
+
+[[# print-to-stdout]]
+++ print to standard out
+
+[[# standard-filehandles]]
+++ standard filehandles
+
+**applescript:**
+
+AppleScript does not in general run with stdin and stdout filehandles.   When {{osascript}} is invoked as a shebang it is possible to read from stdin and write to stdout, however:
+
+[[code]]
+#!/usr/bin/env osascript 
+set stdin to do shell script "cat" 
+"Received from stdin: " & stdin 
+[[/code]]
+
+Here is how the above script would be invoked:
+
+[[code]]
+$ echo "foo" | ./stdin-example.sh 
+Received from stdin: foo
+[[/code]]
+
+
+[[# read-line]]
+++ read line
+
+[[# read-file]]
+++ read file
+
+[[# write-file]]
+++ write to file
+
+[[# append-file]]
+++ append to file
+
+[[# gui-note]]
++ [#gui GUI]
+
+[[# directories-note]]
++ [#directories Directories]
+
+[[# processes-environment-note]]
++ [#processes-environment Processes and Environment]
+
+[[# external-command]]
+++ external command
+
+[[# backticks]]
+++ backticks
+
+[[# command-line-args]]
+++ command line args
+
+[[# speech]]
+++ speech
+
+How to make the computer talk.
+
+[[# environment-variable]]
+++ environment variable
+
+[[# command-path]]
+++ command path
+
+The directory containing a command.  Also indicates if the command is a built-in, alias, or function.  Shows the definition of aliases and functions.
+
+[[# exit]]
+++ exit
+
+[[# set-signal-handler]]
+++ set signal handler
+
+[[# libraries-namespaces-note]]
++ [#libraries-namespaces Libraries and Namespaces]
+
+[[# library]]
+++ library
+
+What a library looks like.
+
+[[# import-library]]
+++ import library
+
+[[# library-path]]
+++ library path
+
+[[# namespace-declaration]]
+++ namespace declaration
+
+[[# namespace-separator]]
+++ namespace separator
+
+[[# reflection-note]]
++ [#reflection Reflection]
+
+[[# class]]
+++ class
+
+[[# autohotkey]]
++ [#top AutoHotkey]
+
+[http://www.autohotkey.com/docs/ Documentation]
+
+[[# applescript]]
++ [#top AppleScript]
+
+[http://developer.apple.com/library/mac/#documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html AppleScript Language Guide]
+
+The AppleScript Editor is a fast way to experiment with AppleScript.  Type code into the upper pane and click the //Run// button.  The return value of the last statement executed is displayed in the lower pane.

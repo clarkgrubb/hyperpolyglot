@@ -4,7 +4,7 @@
 
 [#tables tables] | [#import-export import and export] | [#relational-algebra relational algebra] | [#aggregation aggregation]
 
-[#vectors vectors] | [#matrices matrices] | [#descriptive-statistics descriptive statistics] | [#distributions distributions] | [#linear-models linear models] | [#statistical-tests statistical tests] | [#time-series time series] | [#curve-fitting curve fitting] | [#univariate-charts univariate charts] | [#bivariate-charts bivariate charts] | [#multivariate-charts multivariate charts]
+[#vectors vectors] | [#matrices matrices] | [#descriptive-statistics descriptive statistics] | [#distributions distributions] | [#linear-models linear models] | [#statistical-tests statistical tests] | [#time-series time series] | [#curve-fitting curve fitting] | [#optimization optimization] | [#univariate-charts univariate charts] | [#bivariate-charts bivariate charts] | [#multivariate-charts multivariate charts]
 
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
 ||[[# version-used]][#version-used-note version used]||##gray|//MATLAB 8.3//## _
@@ -897,17 +897,22 @@ except Exception as e: _
 @<&nbsp;&nbsp;>@print(e)||
 ||||||||~ [[# file-handle]][#file-handle-note file handles]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
-||[[# std-file-handles]][#std-file-handles-note standard file handles]||stdin stdout stderr||stdin() stdout() stderr()||sys.stdin sys.stdout sys.stderr||
+||[[# std-file-handles]][#std-file-handles-note standard file handles]||0 1 2 _
+ _
+##gray|% Octave has predefined variables _
+% containing the above descriptors:## _
+stdin stdout stderr||stdin() stdout() stderr()||sys.stdin sys.stdout sys.stderr||
 ||[[# read-line-stdin]][#read-line-stdin-note read line from stdin]||line = input('', 's')||line = readLines(n=1)||line = sys.stdin.readline()||
-||[[# write-line-stdout]][#write-line-stdout-note write line to stdout]||puts('hello\n')||cat("hello\n") _
+||[[# write-line-stdout]][#write-line-stdout-note write line to stdout]||fprintf(1, 'hello\n')||cat("hello\n") _
  _
 writeLines("hello")||print('hello')||
-||[[# printf]][#printf-note write formatted string to stdout]||printf('%.2f\n', pi)||cat(sprintf("%.2f\n", pi))||import math _
+||[[# printf]][#printf-note write formatted string to stdout]||fprintf(1, '%.2f\n', pi)||cat(sprintf("%.2f\n", pi))||import math _
  _
 print('%.2f' % math.pi)||
-||[[# open-file]][#open-file-note open file for reading]||if ((f = fopen('/etc/hosts')) == -1) _
+||[[# open-file]][#open-file-note open file for reading]||f = fopen('/etc/hosts') _
+if (f == -1) _
 @<&nbsp;&nbsp;>@error('failed to open file') _
-endif||f = file("/etc/hosts", "r")||f = open('/etc/hosts')||
+end||f = file("/etc/hosts", "r")||f = open('/etc/hosts')||
 ||[[# open-file-write]][#open-file-write-note open file for writing]||if ((f = fopen('/tmp/test', 'w') == -1) _
 @<&nbsp;&nbsp;>@error('failed to open file') _
 endif||f = file("/tmp/test", "w")||f = open('/tmp/test', 'w')||
@@ -1102,7 +1107,7 @@ as.list(people[1, ])||people.ix[0]||
 people(1,2)||##gray|# height of 1st person:## _
 people[1,2]||people.get_value(0, 'ht')||
 ||[[# order-rows-by-column]][#order-rows-by-column-note order rows by column]|| ||people[order(people$ht), ]|| ||
-||[[# order-rows-by-multiple-columns]][#order-rows-by-multiple-columns-note order rows by multiple columns]|| ||people[order(sx, ht), ]|| ||
+||[[# order-rows-by-multiple-columns]][#order-rows-by-multiple-columns-note order rows by multiple columns]|| ||people[order(people$sx, people$ht), ]|| ||
 ||[[# order-rows-descending-order]][#order-rows-descending-order-note order rows in descending order]|| ||people[order(-people$ht), ]|| ||
 ||[[# limit-rows]][#limit-rows-note limit rows] _
 @<&nbsp;>@|| ||people[seq(1, 3), ]|| ||
@@ -1126,11 +1131,11 @@ people = edit(people)||##gray|//none//##||
 ||||||||~ [[# import-export]][#import-export-note import and export]||
 ||~ ||~ ||~ [#r r]||~ [#numpy numpy]||
 ||[[# import-tab-delimited]][#import-tab-delimited-note import tab delimited]|| ||##gray|# first row defines variable names:## _
-df = read.delim('/path/to.tab')||##gray|# first row defines column names:## _
+df = read.delim('/path/to.tab', stringsAsFactors=F)||##gray|# first row defines column names:## _
 df = pd.read_table('/path/to.tab')||
 ||[[# import-csv]][#import-csv-note import csv] _
 @<&nbsp;>@|| ||##gray|# first row defines variable names:## _
-df = read.csv('/path/to.csv')||##gray|# first row defines column names:## _
+df = read.csv('/path/to.csv', stringsAsFactors=F)||##gray|# first row defines column names:## _
 df = pd.read_csv('/path/to.csv')||
 ||[[# set-column-separator]][#set-column-separator-note set column separator]|| ||df = read.delim('/etc/passwd', _
 @<&nbsp;&nbsp;>@sep=':', _
@@ -1853,38 +1858,77 @@ y = ts(rnorm(100)) _
 y2 = ts(rnorm(100), start=0) _
  _
 plot(y)||##gray|# first observation time is 0:## _
-y = pd.Series(randn(100))||
-||[[# time-series-frequency]][#time-series-frequency-note multiple observations per time interval]|| ||##gray|# monthly observations 1993-1997:## _
-y = ts(rnorm(60), frequency=12) _
+y = pd.Series(randn(100)) _
+ _
+##gray|# first observation time is 1:## _
+y2 = pd.Series(randn(100), index=range(1,101)) _
+ _
+y.plot()||
+||[[# monthly-time-series]][#monthly-time-series-note monthly time series]|| ||##gray|# monthly observations 1993-1997:## _
+y = ts(rnorm(60), frequency=12, start=1993) _
  _
 ##gray|# monthly observations from Oct 1993:## _
 y2 = ts(rnorm(60), frequency=12, start=c(1993, 10)) _
  _
-plot(y)|| ||
+plot(y)||dt = pd.datetime(2013, 1, 1) _
+idx = pd.date_range(dt, periods=60, freq='M') _
+y = pd.Series(randn(60), index=idx) _
+ _
+dt2 = pd.datetime(2013, 10, 1) _
+idx2 = pd.date_range(dt2, periods=60, freq='M') _
+y2 = pd.Series(randn(60), index=idx2)||
+||[[# time-series-lookup-time]][#time-series-lookup-time-note lookup by time]|| ||start = tsp(y2)[1] _
+end = tsp(y2)[2] _
+freq = tsp(y2)[3] _
+ _
+##gray|# value for Jan 1994:## _
+y2[(1994 - start) * freq + 1]||y2[pd.datetime(2014, 1, 31)]||
+||[[# time-series-lookup-position]][#time-series-lookup-position-note lookup by position in series]|| ||for (i in 1:length(y)) { _
+@<&nbsp;&nbsp;>@print(y[i]) _
+}||for i in range(0, len(y)): _
+@<&nbsp;&nbsp;>@y.ix[i]||
+||[[# aligned-arithmetic]][#aligned-arithmetic-note aligned arithmetic]|| ||y = ts(rnorm(10), start=0) _
+y2 = ts(rnorm(10), start=5) _
+ _
+##gray|# time series with 5 data points:## _
+y3 = y + y2||y = pd.Series(randn(10)) _
+y2 = pd.Series(randn(10), index=range(5, 15)) _
+ _
+##gray|# time series with 15 data points; 10 of _
+# which are NaN:## _
+# y3 = y + y2||
+||[[# lagged-difference]][#lagged-difference-note lagged difference]|| ||delta = diff(y, lag=1)||delta = y.diff(1)||
 ||[[# simple-moving-avg]][#simple-moving-avg-note simple moving average]|| ||install.packages('TTR') _
 library('TTR') _
  _
 ma = SMA(y, n=4) _
  _
 plot(y) _
-lines(ma, col='red')|| ||
+lines(ma, col='red')||y = pd.Series(randn(50)) _
+ma = pd.rolling_mean(y, 4) _
+ _
+plot(y, 'k', ma, 'r')||
 ||[[# weighted-moving-avg]][#weighted-moving-avg-note weighted moving average]|| ||install.packages('TTR') _
 library('TTR') _
  _
-ma = WMA(y, n=7, wts=c(1, 3, 5, 7, 5, 3, 1) _
+ma = WMA(y, n=4, wts=c(1, 2, 3, 4)) _
  _
 plot(y) _
 lines(ma, col='red')|| ||
 ||[[# exponential-smoothing]][#exponential-smoothing-note exponential smoothing]|| ||x = rnorm(100) _
+fit = HoltWinters(x, alpha=0.5, beta=F, gamma=F) _
+ _
+values = fit$fitted _
+plot(fit)||alpha = 0.5 _
+span = (2 / alpha) - 1 _
+fit = pd.ewma(y, span=span, adjust=False) _
+ _
+fit.plot()||
+||[[# least-squares-exponential-smoothing]][#least-squares-exponential-smoothing-note exponential smoothing with best least squares fit]|| ||x = rnorm(100) _
 fit = HoltWinters(x, beta=F, gamma=F) _
  _
-fit$a _
+alpha = fit$a _
 plot(fit)|| ||
-||[[# correlogram]][#correlogram-note correlogram]|| ||x = rnorm(100) _
-x2 = append(x[4:100], a[1:3]) _
- _
-acf(x, lag.max=20) _
-acf(x + x2, lag.max=20)|| ||
 ||[[# decompose-seasonal-trend]][#decompose-seasonal-trend-note decompose into seasonal and trend]|| ||raw = seq(1,100) + rnorm(100) + rep(seq(1,10), 10) _
 y = ts(raw, frequency=10) _
  _
@@ -1898,7 +1942,15 @@ plot(yd) _
  _
 ##gray|# multiplicative model: t * s * r:## _
 yd2 = decompose(y, type="multiplicative")|| ||
+||[[# correlogram]][#correlogram-note correlogram]|| ||x = rnorm(100) _
+x2 = append(x[4:100], x[1:3]) _
+ _
+acf(x, lag.max=20) _
+acf(x + x2, lag.max=20)|| ||
+||test for stationarity|| || || ||
+||[[# arma]][#arma-note arma]|| || || ||
 ||[[# arima]][#arima-note arima]|| || || ||
+||[[# automatic-arima]][#arima-note arima with automatic model selection]|| || || ||
 ||||||||~ [[# curve-fitting]][#curve-fitting-note curve fitting]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
 ||exact polynomial fit||x = [1 2 3 4] _
@@ -1910,11 +1962,24 @@ p = polyfit(x, y, 3) _
 xx = -10:.1:10 _
 yy = polyval(p, xx) _
 plot(xx, yy)|| || ||
-||least square polynomial fit|| || || ||
+||least squares polynomial fit|| || || ||
 ||[[image http://farm6.static.flickr.com/5049/5268229340_0b96b5e223_s.jpg]] _
 [[# cubic-spline]][#cubic-spline-note cubic spline]|| ||f = splinefun(rnorm(20)) _
 x = seq(1, 20, .1) _
 plot(x, f(x), type="l")|| ||
+||||||||~ [[# optimization]][#optimization-note optimization]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+||[[# minimize-linear-prob]][#minimize-linear-prob-note linear minimization]||##gray|% minimize c * x subject to the constraint that A * x <= b## _
+ _
+linprog(c, A, b)|| || ||
+||[[# minimize-linear-prob-decision-var-bounds]][#minimize-linear-prob-decision-var-bounds-note linear minimization with bounds on decision variables]||##gray|% also impose constraints Lb <= x <= Ub## _
+ _
+linprog(c, A, b, [], [], Lb, Ub)|| || ||
+||[[# minimize-linear-prob-equality-constraints]][#minimize-linear-prob-equality-constraints-note linear minimization with equality constraints]||##gray|% also impose constraints Aeq * x == beq## _
+ _
+lingprog(c, A, b, Aeq, beq)|| || ||
+||[[# minimize-quadratic-prob]][#minimize-quadratic-prob-note quadratic minimization]||quadprog()|| || ||
+||[[# minimize-int-linear-prob]][#minimize-int-linear-prob-note integer linear minimization]||intlinprog()|| || ||
 ||||||||~ [[# univariate-charts]][#univariate-chart-note univariate charts]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy matplotlib]||
 ||[[image http://farm5.static.flickr.com/4090/5039793334_f76edece33_m.jpg]] [[# bar-chart]][#bar-chart-note vertical bar chart]||bar([7 3 8 5 5])||cnts = c(7,3,8,5,5) _
@@ -1970,7 +2035,9 @@ for i = 1:4 _
 end||for (i in split.screen(c(2, 2))) { _
 @<&nbsp;&nbsp;>@screen(n=i) _
 @<&nbsp;&nbsp;>@hist(rnorm(100)) _
-}|| ||
+}||for i in [1, 2, 3, 4]: _
+@<&nbsp;&nbsp;>@plt.subplot(2, 2, i) _
+@<&nbsp;&nbsp;>@plt.hist(sp.randn(100), bins=range(-5,5))||
 ||[[# new-plot-window]][#new-plot-window-note open new plot window]||open new plot _
 figure _
 open new plot||hist(rnorm(100)) _
@@ -1980,7 +2047,9 @@ hist(rnorm(100))|| ||
 hist(randn(100)) _
 print(f, '-dpng', 'histogram.png')||png('hist.png') _
 hist(rnorm(100)) _
-dev.off()|| ||
+dev.off()||y = randn(50) _
+plot(y) _
+savefig('line-plot.png')||
 ||||||||~ [[# bivariate-charts]][#bivariate-chart-note bivariate charts]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy matplotlib]||
 ||[[image http://farm5.static.flickr.com/4154/5039126187_e340b3f4aa_m.jpg]] _
@@ -2001,6 +2070,31 @@ barplot(d,names.arg=labels,beside=TRUE)|| ||
 ||[[image http://farm6.static.flickr.com/5044/5267212089_a7749bbe3e_s.jpg]] _
 [[# scatter-plot]][#scatter-plot-note scatter plot]||plot(randn(1,50),randn(1,50),'+')||plot(rnorm(50), rnorm(50))||plt.scatter(sp.randn(50), _
 @<&nbsp;&nbsp;>@sp.randn(50))||
+||[[# point-types]][#point-types-note point types]||##gray|'.': point _
+'o': circle _
+'x': x-mark _
+'+': plus _
+'*': star _
+'s': square _
+'d': diamond _
+'v': triangle (down) _
+'^': triangle (up) _
+'<': triangle (left) _
+'>': traingle (right) _
+'p': pentagram _
+'h': hexagram##||##gray|//Integer values for// pch //parameter: _
+ _
+0: open square _
+1: open circle _
+2: open triangle, points up _
+3: cross _
+4: x _
+5: open diamond _
+6: open triangle, points down _
+15: solid square _
+16: solid circle _
+17: solid triangle, points up _
+18: solid diamond//##|| ||
 ||[[image hexbin.png]] _
 [[# hexbin]][#hexbin-note hexagonal binning]|| ||install.packages('hexbin') _
 library('hexbin') _
@@ -2028,6 +2122,15 @@ plt.scatter(x, y) _
 plt.plot(x, [m*i + c for i in x])||
 ||[[image http://farm6.static.flickr.com/5125/5267434941_f8537c9d26_s.jpg]] _
 [[# polygonal-plot]][#polygonal-plot-note polygonal line plot]||plot(1:20,randn(1,20))||plot(1:20, rnorm(20), type="l")||plot(range(0,20), randn(20))||
+||[[# line-types]][#line-types-note line types]|| ||##gray|//Integer or string values for// lty //parameter: _
+ _
+0: 'blank' _
+1: 'solid' (default) _
+2: 'dashed' _
+3: 'dotted' _
+4: 'dotdash' _
+5: 'longdash' _
+6: 'twodash'//##|| ||
 ||[[image http://farm6.static.flickr.com/5204/5268208606_b745646ea6_s.jpg]] _
 [[# function-plot]][#function-plot-note function plot]||fplot(@sin, [-4 4])||x = seq(-4, 4, .01) _
 plot(sin(x), type="l")|| ||
@@ -2066,7 +2169,25 @@ plot(1:20, randn(1, 20)) _
 hold on _
 plot(1:20, randn(1, 20))||plot(1:20, rnorm(20), type="l") _
 lines(1:20, rnorm(20), col="red")|| ||
-||superimposed plots with different y-axis scales|| || || ||
+||[[# colors]][#colors-note colors]|| ||##gray|# Use the col parameter to specify the color of points _
+# and lines. _
+# _
+# The colors() function returns a list of recognized _
+# names for colors.## _
+ _
+plot(rnorm(10), col='red') _
+plot(rnorm(10), col='#FF0000')|| ||
+||[[# superimposed-plots]][#superimposed-plots-note superimposed plots with different y-axis scales]|| ||x <- 1:10 _
+y <- rnorm(10) _
+z <- rnorm(10) * 1000 _
+par(mar = c(5, 4, 4, 4) + 0.3) _
+plot(x, y, type='l') _
+par(new=T) _
+plot(x, z, col='red', type='l', axes=F, _
+@<&nbsp;&nbsp;>@xlab='', ylab='') _
+axis(side=4, col='red', col.axis='red', _
+@<&nbsp;&nbsp;>@at=pretty(range(z))) _
+mtext('z', side=4, line=3, col='red')|| ||
 ||[[# legend]][[image legend.png]] _
 [#legend-note legend]|| ||x = (1:20) _
 y = x + rnorm(20) _
@@ -2132,7 +2253,7 @@ for (i in 2:100) { _
 } _
  _
 filled.contour(1:100, 1:100, m)|| ||
-||~ ||~ ##EFEFEF|@@_______________________________________________________@@##||~ ##EFEFEF|@@_______________________________________________________@@##||~ ##EFEFEF|@@_______________________________________________________@@##||
+||~ ||~ ##EFEFEF|@@___________________________________________________________@@##||~ ##EFEFEF|@@___________________________________________________________@@##||~ ##EFEFEF|@@___________________________________________________________@@##||
 
 [[# general-note]]
 + [#top General]
@@ -3133,6 +3254,10 @@ How to view and edit the data frame in a spreadsheet.
 ++ [#import-tab-delimited import tab delimited file]
 
 Load a data frame from a tab delimited file.
+
+**r:**
+
+By default strings are converted to factors.  In older versions of R, this could reduce the amount of memory required to load the data frame; this is no longer true in newer versions.
 
 [[# import-csv-note]]
 ++ [#import-csv import comma-separated values file]
@@ -4169,11 +4294,35 @@ A test whether variables are drawn from distributions with the same variance.
 [[# time-series-note]]
 + [#time-series Time Series]
 
+A //time series// is a sequence of data points collected repeatedly on a uniform time interval.
+
+A time series can be represented by a dictionary which maps timestamps to the type of the data points.  A more efficient implementation exploits the fact that the time interval is uniform and stores the data points in an array.  To recover the timestamps of the data points, the timestamp of the first data point and the length of the time interval are also stored.
+
 [[# time-series-construction-note]]
 ++ [#time-series-construction time series]
 
-[[# time-series-frequency-note]]
-++ [#time-series-frequency multiple observations per time interval]
+How to create a time series from an array.
+
+[[# monthly-time-series-note]]
+++ [#monthly-time-series monthly time series]
+
+How to create a time series with one data point per month.
+
+[[# time-series-lookup-time-note]]
+++ [#time-series-lookup-time lookup by time]
+
+How to get to a data point in a time series by when the data point was collected.
+
+[[# time-series-lookup-position-note]]
+++ [#time-series-lookup-position lookup by position in series]
+
+How to get a data point in a time series by its ordinal position.
+
+[[# aligned-arithmetic-note]]
+++ [#aligned-arithmetic aligned arithmetic]
+
+[[# lagged-difference-note]]
+++ [#lagged-difference lagged difference]
 
 [[# simple-moving-avg-note]]
 ++ [#simple-moving-avg simple moving average]
@@ -4184,11 +4333,12 @@ A test whether variables are drawn from distributions with the same variance.
 [[# exponential-smoothing-note]]
 ++ [#exponential-smoothing exponential smoothing]
 
+[[# decompose-seasonal-trend-note]]
+++ [#decompose-seasonal-trend decompose into seasonal and trend]
+
 [[# correlogram-note]]
 ++ [#correlogram correlogram]
 
-[[# decompose-seasonal-trend-note]]
-++ [#decompose-seasonal-trend decompose into seasonal and trend]
 
 [[# arima-note]]
 ++ [#arima arima]
@@ -4204,6 +4354,44 @@ A test whether variables are drawn from distributions with the same variance.
 ++ [#cubic-spline cubic spline]
 
 How to connect the dots of a data set with a line which has a continuous 2nd derivative.
+
+[[# optimization-note]]
++ [#optimization Optimization]
+
+A linear program is an optimization problem in which one tries to minimize or maximize a linear function called the //objective function// subject to linear inequality constraints.
+
+The unknowns in the objective function and the constraints are called the decision variables.
+
+[[# minimize-linear-prob-note]]
+++ [#minimize-linear-prob linear minimization]
+
+How to solve a linear program where the objective function is minimized.
+
+If we have a maximization problem {{c * x}}, then we can find the solution by minimizing {{-c * x}}; that is, replacing {{c}} with {{-c}}.
+
+**matlab:**
+
+{{linprog}} is part of the Optimization toolbox.
+
+The function {{linprog}} minimizes {{c * x}} subject to the constraint that {{A * x <= b}}.  {{A * x}} and {{b}} are vectors, and when we say that {{A * x <= b}}, we mean that each component of {{A * x}} must be less than or equal to the corresponding component of {{b}}.
+
+When formulating constraints in the form {{A * x <= b}}, we may find that we have some greater-than constraints of the form: {{a,,i1,, x,,1,, + ... + a,,in,, x,,n,, >= b,,i,,}}.  We convert each such constraint to a less-than constraint by multiplying it by {{-1}}.  We use the values {{-a,,i1,,}}, ..., {{-a,,in,,}} in {{A}} and {{-b,,i,,}} in {{b}}.
+
+[[# minimize-linear-prob-decision-var-bounds-note]]
+++ [#minimize-linear-prob-decision-var-bounds linear minimization with bounds on decision variables]
+
+How to solve a linear program where the objective function is minimized and with extra constraints on the decision variables of the form {{L,,i,, <= x,,i,, <= U,,i,,}}.
+
+
+
+[[# minimize-linear-prob-equality-constraints-note]]
+++ [#minimize-linear-prob-equality-constraints linear minimization with equality constraints]
+
+[[# minimize-quadratic-prob-note]]
+++ [#minimize-quadratic-prob quadratic minimization]
+
+[[# minimize-int-linear-prob-note]]
+++ [#minimize-int-linear-prob integer linear minimization]
 
 [[# univariate-chart-note]]
 + [#univariate-charts Univariate Charts]
@@ -4339,6 +4527,9 @@ p = p + layer(geom="point")
 p
 [[/code]]
 
+[[# point-types-note]]
+++ [#point-types point types]
+
 [[# hexbin-note]]
 ++ [#hexbin hexagonal binning]
 
@@ -4355,6 +4546,9 @@ How to plot a line determined by linear regression on top of a scatter plot.
 ++ [#polygonal-plot polygonal line plot]
 
 How to connect the dots of a data set with a polygonal line.
+
+[[# line-types-note]]
+++ [#line-types line types]
 
 [[# function-plot-note]]
 ++ [#function-plot function plot]
@@ -4400,6 +4594,20 @@ How to manually set the range of values displayed by an axis.
 
 [[# additional-line-note]]
 ++ [#additional-line additional line set]
+
+How to add another line to a plot.
+
+[[# colors-note]]
+++ [#colors colors]
+
+How to set the color of points and lines.
+
+[[# superimposed-plots-note]]
+++ [#superimposed-plots superimposed plots with different y-axis scales]
+
+How to superimpose two plots with different y-axis scales.
+
+To minimize the risk that the reader will read off an incorrect y-value for a data point, the example uses the same color for the y-axis as it does for the corresponding data set.
 
 [[# legend-note]]
 ++ [#legend legend]
