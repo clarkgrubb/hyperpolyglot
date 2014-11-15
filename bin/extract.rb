@@ -59,9 +59,11 @@ puts <<'EOF'
         </div>
       </div>
       <div id="license-area" class="license-area">
+        <a href="https://github.com/clarkgrubb/hyperpolyglot/issues">issue tracker</a> | 
         content of this page licensed under
         <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">
         creative commons attribution-sharealike 3.0</a>
+        <br>
       </div>
     </div>
   </div>
