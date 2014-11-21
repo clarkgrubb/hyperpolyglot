@@ -140,6 +140,7 @@ a.newpage{
 }
 
 table.wiki-content-table{
+	border: 1px solid #888;
 	border-collapse: collapse;
 	border-spacing: 0;
 	margin: 0.5em auto;
@@ -149,7 +150,7 @@ table.wiki-content-table td{
 	padding: 0.3em 0.7em;
 }
 table.wiki-content-table th{
-	border: 1px solid #888;
+	border: 0px solid #888;
 	padding: 0.3em 0.7em;
 	background-color: #EEE;
 }
@@ -165,8 +166,8 @@ pre{
 }
 
 .code { 
-	border: 1px dashed #DDD;
-	background-color: #F7F7F7;
+	border: 1px dashed #888;
+	background-color: #EEE;
 	font-family: 'Andale Mono', 'Courier New', Courier, monospace;
 	padding: 0 1em;
 	margin: 0.4em 0;
