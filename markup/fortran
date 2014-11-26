@@ -234,11 +234,13 @@ not(##gray|//i//##)|| ||
 ||[#allocate-string allocate string]|| || ||
 ||[#string-comparison comparison]|| || ||
 ||[#string-equal semantics of ==]|| || ||
-||[#string-to-number convert string to numeric]|| || ||
+||[#string-to-number convert string to numeric]|| ||##gray|⍝ execute: ⍎## _
+ _
+⍎ '4'||
 ||[#number-to-string convert numeric to string]|| || ||
 ||[#split split]||##gray|//none//##|| ||
 ||[#join join] _
-@<&nbsp;>@|| || ||
+@<&nbsp;>@|| ||, / 'foo' 'bar' 'baz'||
 ||[#string-concatenate concatenate]||'hello' @@//@@ ' world'||'hello' , ' world'||
 ||[#str-replicate replicate]||character(len=80) :: hbar _
 hbar = repeat('-', 80)|| ||
@@ -274,10 +276,15 @@ call cpu_time(t2) _
 write(*, *) 'elapsed time: ', t2 - t1||##gray|//none//##||
 ||||||~ [[# arrays]][#arrays-note arrays]||
 ||~ ||~ fortran||~ apl||
-||[[# declare-array]][#declare-array-note declare]|| || ||
-||[[# allocate-array-on-stack]][#allocate-array-on-stack-note allocate on stack]|| || ||
-||[[# allocate-array-on-heap]][#allocate-array-on-heap-note allocate on heap]|| || ||
-||[[# free-array-on-heap]][#free-array-on-heap-note free heap]|| || ||
+||[[# allocate-array-on-stack]][#allocate-array-on-stack-note allocate on stack]||##gray|! uninitialized values get zero values:## _
+integer, dimension(3) :: a _
+integer :: a2(3)|| ||
+||[[# allocate-array-on-heap]][#allocate-array-on-heap-note allocate on heap]||##gray|! unitialized values get zero values:## _
+integer, dimension(:), allocatable :: a _
+allocate(a(3))|| ||
+||[[# free-array-on-heap]][#free-array-on-heap-note free heap]||##gray|! usually not necessary, since memory is freed _
+! when the variable goes out of scope.## _
+deallocate(a)|| ||
 ||[[# array-literal]][#array-literal-note literal]||integer::a(3) = (/ 1, 2, 3 /)||a ← 1 2 3||
 ||[[# array-size]][#array-size-note size] _
 @<&nbsp;>@||size((/ 1, 2, 3 /))||##gray|⍝ rho: ⍴## _
@@ -285,13 +292,15 @@ write(*, *) 'elapsed time: ', t2 - t1||##gray|//none//##||
 ⍴ a||
 ||[[# array-lookup]][#array-lookup-note lookup] _
 @<&nbsp;>@||##gray|! indices start at one## _
-integer::a(3) _
+integer :: a(4) _
 a = (/ 7, 8, 9, 10 /) _
 a(2)||a ← 7 8 9 10  _
  _
 1 ↑ 1 ↓ a||
-||[[# array-update]][#array-update-note update]|| || ||
-||[[# array-out-of-bounds]][#array-out-of-bounds-note out-of-bounds behavior]|| || ||
+||[[# array-update]][#array-update-note update]||a(1) = 8|| ||
+||[[# array-out-of-bounds]][#array-out-of-bounds-note out-of-bounds behavior]||##gray|//If the array dimensions are set at compilation time (i.e. the array is stack allocated), then the code fails to compile.  _
+ _
+Out-of-bounds references to arrays with dimensions set at run time (i.e. the array is heap allocated) could segfault or return a memory value outside of the array.//##|| ||
 ||[[# array-element-index]][#array-element-index-note element index]|| ||##gray|⍝ evaluates to 2:## _
 7 8 9 ⍳ 8||
 ||[[# slice-array]][#slice-array-note slice]||##gray|! can't slice literal## _
@@ -377,11 +386,11 @@ read(*, fmt="(a)") line|| ||
 ||[[# write-line-stdout]][#write-line-stdout-note write line to stdout]||write(*, *) 'Hello, World!'|| ||
 ||[[# printf]][#printf-note write formatted string to stdout] _
 @<&nbsp;>@||write(6, fmt="('count: ', i7)") 7|| ||
-||[[# open-file]][#open-file-note open file for reading]|| || ||
-||[[# open-file-write]][#open-file-write-note open file for writing]|| || ||
-||[[# open-file-append]][#open-file-append-note open file for appending]|| || ||
-||[[# close-file]][#close-file-note close file]|| || ||
-||[[# close-file-implicitly]][#close-file-implicitly-note close file implicitly]|| || ||
+||[[# open-file]][#open-file-note open file for reading]||##gray|! the 'unit' integer is the file descriptor.  Use an unused _
+! number.  The standard file handles 0, 5, and 6 are already taken.## _
+open(unit=7, file='/etc/passwd', action='read')|| ||
+||[[# open-file-write]][#open-file-write-note open file for writing]||open(unit=7, file='/tmp/foo.txt', action='write')|| ||
+||[[# close-file]][#close-file-note close file]||close(7)|| ||
 ||[[# io-err]][#io-err-note i/o errors]|| || ||
 ||[[# read-line]][#read-line-note read line]|| || ||
 ||[[# file-line-iterate]][#file-line-iterate-note iterate over file by line]|| || ||

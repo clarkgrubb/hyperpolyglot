@@ -19,7 +19,13 @@
 ||[[# open-file-read-only-cmdline]][#open-file-read-only-cmdline-note open file in read-only mode] _
 @<&nbsp;>@||$ vim -R ##gray|//file//##|||| ||$ nano -v ##gray|//file//##||
 ||[[# open-multiple-files]][#open-multiple-files-note open multiple files] _
-@<&nbsp;>@|| ||||$ emacs ##gray|//file1 file2 ...//##||$ nano ##gray|//file1 file2 ...//##||
+@<&nbsp;>@||$ vim ##gray|//file1 file2 ...//## _
+ _
+##gray|//only first file is displayed; use// :bn //and// :bp //to change buffers;// :ls //to list buffers//##||||$ emacs ##gray|//file1 file2 ...//## _
+ _
+##gray|//window is split into two panes; if more than two files, one of the panes is a buffer list; use// C-x o //to switch panes; use// C-x b //to switch buffers//##||$ nano ##gray|//file1 file2 ...//## _
+ _
+##gray|//only first file is displayed; use// M-> //and// M-< //to change buffers//##||
 ||[[# open-dir-cmdline]][#open-dir-cmdline-note open directory] _
 @<&nbsp;>@||$ vim ##gray|//dir//##||||$ emacs ##gray|//dir//##|| ||
 ||[[# startup-file]][#startup-file-note startup file]||~/.vimrc||||~/.emacs _
@@ -37,8 +43,10 @@
 x||x|| ||x||
 ||[[# insert-unicode-point]][#insert-unicode-point-note insert by unicode point]||##gray|//insert mode://## _
 C-v u 03c0||C-x 8 RET 03c0 RET||M-x ucs-insert 03c0 RET|| ||
-||[[# insert-unicode-name]][#insert-unicode-name-note insert by unicode name]|| ||C-x 8 RET greek small letter pi RET||M-x ucs-insert greek small letter pi RET|| ||
-||[[# get-unicode-point]][#get-unicode-point-note get unicode point]|| || ||M-x describe-char|| ||
+||[[# insert-unicode-name]][#insert-unicode-name-note insert by unicode name] _
+@<&nbsp;>@|| ||C-x 8 RET greek small letter pi RET||M-x ucs-insert greek small letter pi RET|| ||
+||[[# get-unicode-point]][#get-unicode-point-note get unicode point] _
+@<&nbsp;>@|| || ||M-x describe-char|| ||
 ||[[# cancel]][#cancel-note cancel] _
 @<&nbsp;>@||ESC||C-g||M-x keyboard-quit|| ||
 ||[[# insert-control]][#insert-control-note insert control character] _
@@ -217,7 +225,9 @@ M-x ido-find-file||C-r||
 @<&nbsp;>@||:echo bufname("%")|| ||M-: buffer-file-name|| ||
 ||[[# list-buffers]][#list-buffers-note list buffers]||:ls||C-x C-b||M-x list-buffers _
 M-x buffer-menu|| ||
-||[[# switch-buffer]][#switch-buffer-note switch buffer]||:b ##gray|//bufnum//##||C-x b||M-x switch-to-buffer _
+||[[# switch-buffer]][#switch-buffer-note switch buffer]||:b ##gray|//bufnum//## _
+:bprev _
+:bnext||C-x b||M-x switch-to-buffer _
 M-x ido-switch-buffer||M-< _
 M->||
 ||[[# diff-buffer-file]][#diff-buffer-file-note diff buffer and file] _

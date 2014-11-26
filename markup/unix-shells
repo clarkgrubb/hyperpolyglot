@@ -6,9 +6,8 @@
 [#execution-control execution control] _
 [#redirection redirection] | [#echo-read echo and read] | [#file-dir files and directories] _
 [#process-job-control process and job control] _
-[#history-cmd-expansion history commands and expansion] | [#readline-tab-completion readline and tab completion] | [#autosuggestions autosuggestions] _
-[#startup-file startup files] | [#prompt-customization prompt customization] | [#autoloading autoloading] _
-
+[#history-cmd-expansion history commands and expansion] | [#readline-tab-completion readline and tab completion] _
+[#startup-file startup files] | [#prompt-customization prompt customization]  _
 
 [[# grammar]]
 + [#top Grammar]
@@ -22,17 +21,15 @@
 ||[[# sublist-separators]][#sublist-separators-note sublist separators]||&& @@||@@||##gray|//none//##||&& @@||@@||&& @@||@@||&& @@||@@||
 ||[[# list-terminators]][#list-terminators-note list terminators]||; &||; &||; &||; &||; & ||
 ||[[# group-cmd]][#group-cmd-note group command]||{ ls; ls;} | wc||begin; ls; ls; end | wc||{ ls; ls;} | wc||##gray|//none//##||{ ls; ls;} | wc||
-||[[# subshell]][#subshell-note subshell]||(ls; ls) | wc||echo (ls; ls) | wc||(ls; ls) | wc||(ls; ls) | wc||(ls; ls) | wc||
+||[[# subshell]][#subshell-note subshell]||(ls; ls) | wc||fish -c 'ls; ls' | wc||(ls; ls) | wc||(ls; ls) | wc||(ls; ls) | wc||
 
 Shells read input up to an unquoted newline and then execute it.  An unquoted backslash followed by a newline are discarded and cause the shell to wait for more input.  The backslash and newline are discarded before the shell tokenizes the string, so long lines can be split anywhere outside of single quotes, even in the middle of command names and variable names.
 
 In the shell grammar, //lists// contain //sublists//, which contain //pipelines//, which contain //simple commands//.
 
-//Subshells// and //grouping// can be used to put a list in a pipeline.
+//Subshells// and //grouping// can be used to put a list in a pipeline.  Subshells and groups can have newlines, but the shell defers execution until the end of the subshell or group is reached.
 
-The section on [#execution-control execution control] describes structures which do not fit into the simple grammar and execution model outlined here.  The shell will not execute any of the control structures until the end keyword is reached.  As a result, the control structure can contain multiple statements separated by newlines.
-
-//subshells and groups can have newlines in them too but defer execution; other complex commands cannot be put in pipelines;//
+The section on [#execution-control execution control] describes structures which do not fit into the simple grammar and execution model outlined here.  The shell will not execute any of the control structures until the end keyword is reached.  As a result, the control structure can contain multiple statements separated by newlines.  Execution control structures cannot be put into pipelines.
 
 [[# simple-cmd-note]]
 ++ [#simple-cmd simple command]
@@ -64,7 +61,7 @@ Pipelines are a sequence of simple commands in which the standard output of each
 [[# sublist-separators-note]]
 ++ [#sublist-separators sublist separators]
 
-//Sublist// is a term from the {{zsh}} documentation describing one or more pipelines separated by the shortcut operators && and @@||@@.  When && is encountered, the shell stops executing the pipelines if the previous pipeline failed.  When @@||@@ is encountered, the shell stops executing if the previous pipeline succeeded.  A pipeline is successful if the last command returns a zero status.
+//Sublist// is a term from the {{zsh}} documentation describing one or more pipelines separated by the shortcut operators {{&&}} and {{@@||@@}}.  When {{&&}} is encountered, the shell stops executing the pipelines if the previous pipeline failed.  When {{@@||@@}} is encountered, the shell stops executing if the previous pipeline succeeded.  A pipeline is successful if the last command returns a zero status.
 
 **fish:**
 
@@ -78,7 +75,7 @@ $ ls ; or ls
 [[# list-terminators-note]]
 ++ [#list-terminators list terminators]
 
-A list is a sequence of sublists separated by semicolons (;) or ampersands (&) and optionally terminated by a semicolon or ampersand.
+A list is a sequence of sublists separated by semicolons {{;}} or ampersands {{&}} and optionally terminated by a semicolon or ampersand.
 
 If the separator or terminator is an ampersand, the previous sublist is run in the background.  This permits the shell to execute the next sublist or the subsequent statement without waiting for the previous sublist to finish.
 
@@ -96,10 +93,6 @@ If the group has an input stream, it is consumed by the first command to read fr
 
 Like the group command, but the commands are executed in a subshell.  Variable assignments or change of working directory are local to the subshell.
 
-**fish:**
-
-The syntax which the other shells use for subshells is used by {{fish}} for command substitution.  {{fish}} does not have subshells.
-
 [[# quoting]]
 + [#top Quoting]
 
@@ -110,11 +103,12 @@ The syntax which the other shells use for subshells is used by {{fish}} for comm
 "foo is $foo"||set foo 7 _
 "foo is $foo" _
  _
-##gray|//double quotes do not perform command substitution//##||foo=7 _
+##gray|//double quotes do not perform _
+command substitution//##||foo=7 _
 "foo is $foo"||setenv foo 7 _
 "foo is $foo"||foo=7 _
 "foo is $foo"||
-||[[# interpolating-quotes-esc]][#interpolating-quotes-esc-note interpolating quotes escape sequences]||\$ \\ @@\`@@ \" \##gray|//newline//##||\" \$ \\||\$ \\ @@\`@@ \##gray|//newline//##||##gray|//none//##||\$ \\ @@\`@@ \" \##gray|//newline//##||
+||[[# interpolating-quotes-esc]][#interpolating-quotes-esc-note interpolating quotes escape sequences]||\$ \\ @@\`@@ \"||\" \$ \\||\$ \\ @@\`@@||##gray|//none//##||\$ \\ @@\`@@ \"||
 ||[[# c-esc-quotes]][#c-esc-quotes-note quotes with c escapes]||$'foo\n'||##gray|//none//##||$'foo'||##gray|//none//##||$'foo'||
 ||[[# c-esc]][#c-esc-note quoted c escapes]||\a \b \e \E \f \n \r \t \v _
 \\ \' \" \##gray|//ooo//## \x##gray|//hh//## \c##gray|//ctrl//##||##gray|//none//##||\a \b \e \E \f \n \r \t \v _
@@ -539,9 +533,9 @@ $ echo ${foo:1:4}
 ||tilde expansion||echo ~/bin||echo ~/bin||echo ~/bin||echo ~/bin||echo ~/bin||
 ||command expansion: dollar parens||echo $(ls)||echo (ls)||echo $(ls)||##gray|//none//##||echo $(ls)||
 ||command expansion: backticks||echo @@`ls`@@||##gray|//none//##||echo @@`ls`@@||echo @@`ls`@@||echo @@`ls`@@||
-||process substitution||wc <(ls)|| ||wc <(ls)||##gray|//none//##||wc <(ls)||
-||path expansion: string||echo /bin/c*|| ||echo /bin/c*||echo /bin/c*||echo /bin/c*||
-||path expansion: character||echo /bin/c??|| ||echo /bin/c??||echo /bin/c??||echo /bin/c??||
+||process substitution||wc <(ls)||wc (ls | psub)||wc <(ls)||##gray|//none//##||wc <(ls)||
+||path expansion: string||echo /bin/c*||echo /bin/c*||echo /bin/c*||echo /bin/c*||echo /bin/c*||
+||path expansion: character||echo /bin/c??||echo /bin/c??||echo /bin/c??||echo /bin/c??||echo /bin/c??||
 ||path expansion: character set||echo /bin/[cde]*||##gray|//none//##||echo /bin/[cde]*||echo /bin/[cde]*||echo /bin/[cde]*||
 ||path expansion: negated character set||echo /bin/[^cde]*||##gray|//none//##||echo /bin/[^cde]*||echo /bin/[^cde]*||echo /bin/[^cde]*||
 ||path expansion: sequence of characters||echo /bin/[a-f]*||##gray|//none//##||echo /bin/[a-f]*||echo /bin/[a-f]*||echo /bin/[a-f]*||
@@ -1488,21 +1482,20 @@ The remarks above on [#if if] conditions also apply to the while loop condition.
 + [#top Redirection]
 
 ||~ ||~ [#bash bash]||~ [#fish fish]||~ [#ksh ksh]||~ [#tcsh tcsh]||~ [#zsh zsh]||
-||stdin from file||tr a-z A-Z < ##gray|//file//##|| ||tr a-z A-Z < ##gray|//file//##||tr a-z A-Z < ##gray|//file//##||tr a-z A-Z < ##gray|//file//##||
-||stdout to file||ls > ##gray|//file//##|| ||ls > ##gray|//file//##||ls > ##gray|//file//##||ls > ##gray|//file//##||
-||stderr to file||ls 2> ##gray|//file//##|| ||ls 2> ##gray|//file//##||##gray|//none//##||ls 2> ##gray|//file//##||
-||stdout and stderr to file||ls > ##gray|//file//## 2>&1|| ||ls > ##gray|//file//## 2>&1||ls >& ##gray|//file//##||ls > ##gray|//file//## 2>&1||
-||append stdout to file||ls @@>>@@ ##gray|//file//##|| || ||ls @@>>@@ ##gray|//file//##||ls @@>>@@ ##gray|//file//##||
-||append stderr to file||ls 2@@>>@@ ##gray|//file//##|| || || ||ls 2@@>>@@ ##gray|//file//##||
-||append stdout and stderr to file|| || || ||ls @@>>@@& ##gray|//file//##|| ||
-||stdout to pipe|| || || || || ||
-||stderr to pipe|| || || || || ||
-||stdout and stderr to pipe|| || || || || ||
+||stdin from file||tr a-z A-Z < ##gray|//file//##||tr a-z A-Z < ##gray|//file//##||tr a-z A-Z < ##gray|//file//##||tr a-z A-Z < ##gray|//file//##||tr a-z A-Z < ##gray|//file//##||
+||stdout to file||ls > ##gray|//file//##||ls > ##gray|//file//##||ls > ##gray|//file//##||ls > ##gray|//file//##||ls > ##gray|//file//##||
+||stderr to file||ls /not_a_file 2> ##gray|//file//##||s /not_a_file 2> ##gray|//file//##||ls /not_a_file 2> ##gray|//file//##||##gray|//none//##||ls /not_a_file 2> ##gray|//file//##||
+||stdout and stderr to file||ls > ##gray|//file//## 2>&1||ls > ##gray|//file//## 2>&1||ls > ##gray|//file//## 2>&1||ls >& ##gray|//file//##||ls > ##gray|//file//## 2>&1||
+||append stdout to file||ls @@>>@@ ##gray|//file//##||ls @@>>@@ ##gray|//file//##||ls @@>>@@ ##gray|//file//##||ls @@>>@@ ##gray|//file//##||ls @@>>@@ ##gray|//file//##||
+||append stderr to file||ls 2@@>>@@ ##gray|//file//##||ls 2@@>>@@ ##gray|//file//##||ls 2@@>>@@ ##gray|//file//##||##gray|//none//##||ls 2@@>>@@ ##gray|//file//##||
+||append stdout and stderr to file||ls @@>>@@ /tmp/bash.out 2>&1||ls @@>>@@ /tmp/bash.out 2>&1||ls @@>>@@ /tmp/bash.out 2>&1||ls @@>>@@& ##gray|//file//##||ls @@>>@@ /tmp/zsh.out 2>&1||
+||stdout to pipe||ls | wc||ls | wc||ls | wc||ls | wc||ls | wc||
+||sdout and stderr to pipe||ls 2>&1 | wc||ls 2>&1 | wc||ls 2>&1 | wc||ls |& wc||ls 2>&1 | wc||
 ||stdin from here-document||wc @@<<@@ EOF _
 do _
 re _
 mi _
-EOF|| ||wc @@<<@@ EOF _
+EOF||##gray|//none//##||wc @@<<@@ EOF _
 do _
 re _
 mi _
@@ -1515,59 +1508,133 @@ do _
 re _
 mi _
 EOF||
-||stdin from here-string||wc @@<<<@@ "do re mi"|| ||wc @@<<<@@ "do re mi"||##gray|//none//##||wc @@<<<@@ "do re mi"||
-||tee stdout|| || || || ||ls > ##gray|//file//## | wc||
-||stdout to two files||##gray|//none//##|| || || ||ls > ##gray|//file1//## > ##gray|//file2//##||
+||stdin from here-string||wc @@<<<@@ "do re mi"||##gray|//none//##||wc @@<<<@@ "do re mi"||##gray|//none//##||wc @@<<<@@ "do re mi"||
+||tee stdout||||||||= ls | tee ##gray|//file//## | wc||ls > ##gray|//file//## | wc||
+||stdout to two files||||||||= ls | tee ##gray|//file1//## | tee ##gray|//file2//## > /dev/null||ls > ##gray|//file1//## > ##gray|//file2//##||
+||turn on noclobber||set -o noclobber|| ||set -o noclobber||set noclobber||set -o noclobber||
+||clobber file anyways||ls >! /tmp/exists.txt|| ||ls >! /tmp/exists.txt||ls >! /tmp/exists.txt||ls >! /tmp/exists.txt||
+||turn off noclobber||set +o noclobber|| ||set +o noclobber||unset noclobber||set +o noclobber||
+
+A gap in the above chart is how to redirect just stderr to a pipe.  One would guess by analogy with {{2>}} and {{@@2>>@@}} that this might work:
+
+[[code]]
+$ ls 2| wc
+[[/code]]
+
+However, none of the shells support it.  The correct syntax is:
+
+[[code]]
+$ ls 3>&1 1>&2 2>&3 | wc
+[[/code]]
+
+The {{3>&1}} is equivalent to the C system call {{dup2(1, 3)}}.  This makes file descriptor 3 a copy of file descriptor 1.
+
+The {{1>&2}} is equivalent to the C system call {{dup2(2, 1)}}.  This changes what file descriptor 1 writes to, but does not change what file descriptor 3 writes to, even though file descriptor 3 was initially a copy of file descriptor 1.  The shell processes the redirect statements from left to right.  Also note that the {{1}} could be omitted: {{1>&2}} and {{>&2}} are the same.
+
+{{zsh}} only supports file descriptors 0 through 9, but {{bash}} supports higher numbered file descriptors.  The shell always opens file descriptors 0, 1, and 2, commonly called {{stdin}}, {{stdout}}, and {{stderr}}, for each simple command that it invokes.  If additional file descriptors are specified, those are also passed to the command.  For example, if {{foo}} were invoked as:
+
+[[code]]
+$ foo 3> /tmp/bar.txt
+[[/code]]
+
+then it could contain a system call which writes to file descriptor 3 without opening it first, e.g.
+
+[[code]]
+write(3, msg, strlen(msg));
+[[/code]]
+
+Paths in the {{/dev}} directory can be used in place of {{&1}}, {{&2}}, ...
+
+[[code]]
+$ ls 3> /dev/fd/1 1> /dev/fd/2 2> /dev/fd/3 | wc
+
+$ ls 3> /dev/stdout 1> /dev/stderr 2>&3 | wc
+[[/code]]
+
+**tcsh:**
+
+It is possible to redirect stdout and stderr to different files:
+
+[[code]]
+$ ( ls > /tmp/stdout.txt ) >& /tmp/stderr.txt
+[[/code]]
+
 
 
 [[# echo-read]]
 + [#top Echo and Read]
 
 ||~ ||~ [#bash bash]||~ [#fish fish]||~ [#ksh ksh]||~ [#tcsh tcsh]||~ [#zsh zsh]||
-||[[# echo]][#echo-note echo with newline, without newline]||echo ##gray|//arg ...//## _
-echo -n ##gray|//arg ...//##|| ||echo ##gray|//arg ...//## _
+||[[# echo]][#echo-note echo] _
+##gray|//with newline, without newline//##||echo ##gray|//arg ...//## _
+echo -n ##gray|//arg ...//##||echo ##gray|//arg ...//## _
+echo -n ##gray|//arg ...//##||echo ##gray|//arg ...//## _
 echo -n ##gray|//arg ...//##||echo ##gray|//arg ...//## _
 echo -n ##gray|//arg ...//##||echo ##gray|//arg ...//## _
 echo -n ##gray|//arg ...//##||
-||[[# echo-esc]][#echo-esc-note echo with c escapes, without c escapes]||echo -e ##gray|//arg ...//## _
-echo -E ##gray|//arg ...//##|| ||echo -e ##gray|//arg ...//## _
-echo -E ##gray|//arg ...//##||set echo_style=sysv _
-echo ##gray|//arg ...//## _
-set echo_style=bsd _
-echo ##gray|//arg ...//##||echo -e ##gray|//arg ...//## _
-echo -E ##gray|//arg ...//##||
-||[[# printf]][#printf-note printf]||printf ##gray|//fmt arg ...//##|| ||printf ##gray|//fmt arg ...//##||printf ##gray|//fmt arg ...//##||printf ##gray|//fmt arg ...//##||
-||[[# read]][#read-note read:] _
+||[[# printf]][#printf-note printf]||printf ##gray|//fmt arg ...//##||printf ##gray|//fmt arg ...//##||printf ##gray|//fmt arg ...//##||printf ##gray|//fmt arg ...//##||printf ##gray|//fmt arg ...//##||
+||[[# read]][#read-note read] _
  _
 ##gray|//read values separated by// IFS//; with prompt; without backslash escape//##||read ##gray|//var ...//## _
 read -p ##gray|//str//## ##gray|//var//## _
-read -r ##gray|//var ...//##|| ||read ##gray|//var ...//## _
+read -r ##gray|//var ...//##||read ##gray|//var ...//## _
+read -p 'echo ##gray|//str//##' ##gray|//var//##||read ##gray|//var ...//## _
 read ##gray|//var//##?##gray|//str//##  _
 read -r ##gray|//var ...//##||echo -n ##gray|//str//## _
 set ##gray|//var//##=$<||read ##gray|//var ...//## _
 read ##gray|//var//##\?##gray|//str//##  _
 read -r ##gray|//var ...//##||
-||[[# misc-io]][#misc-io-note miscellaneous i/o commands]||readarray _
-mapfile|| ||print||glob||print _
-pushln _
-getlin||
 
 [[# echo-note]]
-++ [#echo echo with newline, without newline]
+++ [#echo echo]
 
 How to echo the arguments separated by spaces and followed by a newline; how to suppress the trailing newline.
 
-[[# echo-esc-note]]
-++ [#echo-esc echo with c escapes, without c escapes]
+The POSIX standard says that {{echo}} should not have any options.  It also says, perhaps contradicting itself, that if the first argument is {{-n}} then the behavior is implementation dependent.
 
-How to make {{echo}} interpret C-style backslash escape sequences; how to make {{echo}} not interpret escape sequences.
+The POSIX standard also says that if any of the arguments contain backslashes, then the behavior is implementation dependent.  Historically implementations have used the {{-E}} and {{-e}} options to enable or disable the interpretation of C-style backslash escape sequences.
 
-The {{-e}} and {{-E}} options are not part of the POSIX standard.  Nor does the standard define a default behavior for {{echo}}.  As a result portable scripts use {{printf}} for output.
+{{fish}} provides an {{-s}} option for printing the arguments without spaces in-between.
+
+Because if the ill-defined behavior of {{echo}}, POSIX-compliant scripts use {{printf}} instead.
 
 [[# printf-note]]
 ++ [#printf printf]
 
+{{printf}} is an external command line tool, though {{zsh}} also has a built-in version.
+
 [http://linux.die.net/man/3/printf man 3 printf]
+
+Like its counterpart from the C standard library, {{printf}} does not write a newline to stdout unless one is specified in the format using a backslash escape sequence.
+
+Unfortunately, the supported backslash ecscapes are system dependent, though some of them are mandated by POSIX:
+
+||~ ||~ posix||~ bsd||~ gnu||
+||backslash escapes||\a \b \c \f \n \r \t \v \\ _
+\##gray|//o//## \##gray|//oo//## \##gray|//ooo//##||\a \b \c \f \n \r \t \v \\ \' _
+\##gray|//o//## \##gray|//oo//## \##gray|//ooo//##||\a \b \c \e \f \n \r \t \v \\ \" _
+\##gray|//o//## \##gray|//oo//## \##gray|//ooo//## \x##gray|//hh//## \u##gray|//hhhh//## \U##gray|//hhhhhhhh//##||
+
+An interesting backslash escape is \c, which causes the rest of the format to be ignored.
+
+In a printf format, format specifiers are of the form {{%d}}, {{%f}} and {{%s}}.
+
+||~ ||~ posix||~ bsd||~ gnu||
+||format specifiers|| ||diouxX _
+fFaAeEgG _
+csb||diouxX _
+feEgG _
+csb||
+
+//format specifiers; many of which are useless in this context because of fewer types//
+
+//how invalid arguments are handled//
+
+//%%//
+
+//extra specifiers with floats//
+
+//extra specifiers with strings//
 
 [[# read-note]]
 ++ [#read read]
@@ -1578,12 +1645,15 @@ When multiple variables are specified the value of {{IFS}} which by default cont
 
 {{bash}} and {{dash}} use the {{-p}} option to set a prompt.  {{ksh}} and {{zsh}} use a ?##gray|//str//## suffix appended to the first variable to set the prompt.
 
+{{fish}} uses the {{-p}} option, but it evaluates the string to produce the prompt.  This makes it possible to set the color of the prompt:
+
+[[code]]
+read -p 'set_color green; echo -n "> "; set_color normal' foo
+[[/code]]
+
 The user can put a backslash in front of a newline to split the input up over multiple lines.  The backslash and newline are stripped from the input.  The user can put backslash into the variable by entering two backslashes.  The {{-r}} option disables this feature, allowing the user to enter literal backslashes with a single keystroke.
 
 {{tcsh}} gets input from the user by reading from the special variable {{$<}}.  Backslashes are always interpreted literally.
-
-[[# misc-io-note]]
-++ [#misc-io miscellaneous i/o commands]
 
 [[# file-dir]]
 + [#top Files and Directories]
@@ -1595,7 +1665,11 @@ The user can put a backslash in front of a newline to split the input up over mu
 cd _
 cd - _
 cd -P ##gray|//dir//## _
-##gray|//none//##|| ||cd ##gray|//dir//## _
+##gray|//none//##||cd ##gray|//dir//## _
+cd _
+cd - _
+##gray|//none//## _
+##gray|//none//##||cd ##gray|//dir//## _
 cd _
 cd - _
 cd -P ##gray|//dir//## _
@@ -1612,19 +1686,28 @@ cd -s ##gray|//dir//##||
  _
 ##gray|//push, pop, list//##||pushd ##gray|//dir//## _
 popd _
-dirs|| || ||pushd ##gray|//dir//## _
+dirs||pushd ##gray|//dir//## _
+popd _
+dirs|| ||pushd ##gray|//dir//## _
 popd _
 dirs||pushd ##gray|//dir//## _
 popd _
 dirs||
-||[[# pwd]][#pwd-note print current directory]||pwd|| ||pwd|| ||pwd||
-||[[# source]][#source-note source]||. ##gray|//file//## ##gray|//arg ...//##|| ||. ##gray|//file//## ##gray|//arg ...//##||source ##gray|//file//## ##gray|//arg ...//##||. ##gray|//file//## ##gray|//arg ...//##||
+||[[# pwd]][#pwd-note print current directory]||pwd||pwd||pwd||pwd||pwd||
+||[[# source]][#source-note source]||source ##gray|//file//## ##gray|//arg ...//## _
+. ##gray|//file//## ##gray|//arg ...//##||source ##gray|//file//##  _
+. ##gray|//file//##||source ##gray|//file//## ##gray|//arg ...//## _
+. ##gray|//file//## ##gray|//arg ...//##||source ##gray|//file//## ##gray|//arg ...//##||source ##gray|//file//## ##gray|//arg ...//## _
+. ##gray|//file//## ##gray|//arg ...//##||
 ||[[# umask]][#umask-note umask] _
  _
 ##gray|//set umask in octal, in symbolic chmod format; show umask in octal, in symbolic chmod format//##||umask 022 _
 umask g-w,o-w _
 umask _
-umask -S|| ||umask 022 _
+umask -S||umask 022 _
+umask g-w,o-w _
+umask _
+umask -S||umask 022 _
 umask g-w,o-w _
 umask _
 umask -S||umask 022 _
@@ -1677,18 +1760,19 @@ echo $PWD
 
 The {{source}} built-in executes the commands in another file using the current shell process and environment.
 
-Some shells will pass arguments to the file being sourced; i.e. the following invocation would set {{$1}}, {{$2}}, and {{$3}} to {{bar}}, {{baz}}, and {{quux}} while executing {{foo.sh}}: 
+Some shells have a non-POSIX feature which allows arguments to be passed to the file being sourced; i.e. the following invocation would set {{$1}}, {{$2}}, and {{$3}} to {{bar}}, {{baz}}, and {{quux}} while executing {{foo.sh}}: 
 
 [[code]]
 source foo.sh bar baz quux
 [[/code]]
 
+The {{.}} syntax is part of the POSIX standard, but the {{source}} syntax is not. 
+
+The file to be sourced may be specified with an absolute path.  Some shells will also search the working directory or {{PATH}} for the file to be sourced:
+
 ||~ ||~ bash||~ fish||~ ksh||~ tcsh||~ zsh||
-||source||yes|| ||yes||yes||yes||
-||.||yes|| ||yes||no||yes||
-||passes arguments to file||yes|| ||yes||yes||yes||
-||searches current directory||yes|| ||no||yes||. no, source yes||
-||searches PATH||yes|| ||no||no||yes||
+||searches working directory||yes||yes||no||yes||. no, source yes||
+||searches PATH||yes||no||no||no||yes||
 
 [[# umask-note]]
 ++ [#umask umask]
@@ -1928,9 +2012,6 @@ If PAT=REP is specified then each occurrence of PAT will be replaced with REP in
 || ||compgen _
 compopt|| || || ||##gray|//see below//##||
 
-[[# autosuggestions]]
-+ [#top Autosuggestions]
-
 [[# startup-file]]
 + [#top Startup Files]
 
@@ -2007,9 +2088,6 @@ end
 ||foreground color|| || || || ||%F{red} %f||
 ||background color|| || || || ||%K{green} %k||
 
-[[# autoloading]]
-+ [#top Autoloading]
-
 [[# bash]]
 + [#top bash] (1989)
 
@@ -2026,7 +2104,7 @@ The C shell was written by Bill Joy and released as part of the second Berkeley 
 
 It introduced features that were widely adopted by other shells: history expansion, aliases, tilde notation, and job control.
 
-The C shell was so named because it looked more like C than the Bourne shell.  It still used keywords to mark off blocks instead of curly braces, but its expressions were delimited by parens instead of square brackets and relational operators such as < and <= could be used instead of -lt and -le.  The Unix community nevertheless eventually chose a derivation of the Bourne shell as the standard scripting language and writing scripts for the C shell [http://www-uxsup.csx.cam.ac.uk/misc/csh.html is not recommended].  If you want a shell with a programming language more similar to C, consider {{rc}}.
+The C shell was so named because it looked more like C than the Bourne shell.  It still used keywords to mark off blocks instead of curly braces, but its expressions were delimited by parens instead of square brackets and relational operators such as < and <= could be used instead of -lt and -le.  The Unix community nevertheless eventually chose a derivation of the Bourne shell as the standard scripting language and writing scripts for the C shell [http://www-uxsup.csx.cam.ac.uk/misc/csh.html is not recommended]. 
 
 The classic Macintosh operating system had a development environment called The Mac Programmer's Workbench.  It included a shell that was derived from the C shell.
 
