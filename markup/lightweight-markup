@@ -228,7 +228,7 @@ Four score and twenty years ago... _
 </div>|| ||
 ||||||||||~ [[# images-video]]images and video||
 ||~ ||~ [#markdown markdown]||~ [#restructured-text restructured text]||~ [#mediawiki mediawiki]||~ [#latex latex]||
-||image|| ||.. image:: foo.jpg||[[File:foo.jpg]]|| ||
+||image||<img src="foo.jpg">||.. image:: foo.jpg||[[File:foo.jpg]]|| ||
 ||image link||<a href="@@http://foo.com@@">![](foo.jpg)</a>||.. image:: foo.jpg _
 @<&nbsp;&nbsp;&nbsp;>@:target: @@http://foo\.com@@||[[File:foo.jpg|link=@@http://foo.com@@]]|| ||
 ||image with alt||![Foo](foo.jpg)||.. image:: foo.jpg _
@@ -488,27 +488,32 @@ Wikipedia was launched in January 2001.  The site initially used wiki software i
 
 UseModWiki had a spare set of markup which did not expand much on the markup used by Wiki Base, the original wiki software used by WikiWikiWeb.
 
-||~ ||~ [http://c2.com/cgi/wiki?TextFormattingRules Wiki Base]  (1995)||~ [http://www.usemod.com/cgi-bin/wiki.pl?TextFormattingRules UseModWiki] (1999)||~ MediaWiki (2002)||
+||~ ||~ [http://c2.com/cgi/wiki?TextFormattingRules Wiki Base]  (1995)||~ [http://www.usemod.com/cgi-bin/wiki.pl?TextFormattingRules UseModWiki] (1999)||~ MediaWiki (2002)||~ Markdown (2004)||
 ||##darkblue|__link__##||CamelCase||CamelCase _
-@@[[Double Bracket]]@@||@@[[Double Bracket]]@@||
-||//italic//||''italic''||''italic''||''italic''||
-||**bold**||'''bold'''||'''bold'''||'''bold'''||
-||horizontal rule||@@----@@||@@----@@||@@----@@||
-||top level header||##gray|//none//##||##gray|//none//##||=top level header=||
-||second level header||##gray|//none//##||##gray|//none//##||==second level header==||
-||bullet list item||* list item||* list item||* list item||
-||numbered list item||##gray|//none//##||# list item||# list item||
+@@[[Double Bracket]]@@||@@[[Double Bracket]]@@||[Single Bracket](url)||
+||//italic//||''italic''||''italic''||''italic''||*italic*||
+||**bold**||'''bold'''||'''bold'''||'''bold'''||@@**bold**@@||
+||horizontal rule||@@----@@||@@----@@||@@----@@||@@---@@||
+||top level header||##gray|//none//##||##gray|//none//##||=top level header=||# top level header||
+||second level header||##gray|//none//##||##gray|//none//##||==second level header==||## second level header||
+||bullet list item||* list item||* list item||* list item||* list item||
+||numbered list item||##gray|//none//##||# list item||# list item||1. list item||
 ||image||##gray|//can be URL://## _
 foo.jpg||##gray|//can be URL://## _
 foo.jpg||@@[[File:foo.jpg]]@@ _
-##gray|//MediaWiki permits raw URL images like its predecessors but the feature is turned off on Wikipedia//##||
+##gray|//MediaWiki permits raw URL images _
+like its predecessors but the feature _
+is turned off on Wikipedia//##||<img src="foo.jpg">||
 ||table||##gray|//none//##||##gray|//added in 2003://## _
 @@||A||B||@@ _
 @@||1||2||@@||{| _
 !A!!B _
 |- _
 |1@@||@@2 _
-|}||
+|}||<table> _
+<tr><td>A<td>B _
+<tr><td>1<td>2 _
+</table>||
 
 For those who like to experiment, here are sandboxes for [http://c2.com/cgi/wiki?WikiWikiSandbox Wiki Base] and [http://www.usemod.com/cgi-bin/wiki.pl?SandBox UseModWiki].  
 

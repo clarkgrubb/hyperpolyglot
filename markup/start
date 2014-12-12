@@ -63,7 +63,11 @@
 [[/row]]
 
 [[row]]
-[[cell]]**Computer Algebra Software:**[[/cell]][[cell]][[[computer-algebra|Mathematica, SymPy, Pari/GP, GAP]]][[/cell]]
+[[cell]]**Computer Algebra Software:**[[/cell]][[cell]][[[computer-algebra|Mathematica, SymPy, GAP, Singular]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**More Mathematics Software:**[[/cell]][[cell]][[[misc-math|Gnuplot, GLPK, Pari/GP, Coq]]][[/cell]]
 [[/row]]
 
 [[/table]]
@@ -92,11 +96,11 @@
 [[/row]]
 
 [[row]]
-[[cell]]**Databases:**[[/cell]][[cell]][[[db|PostgreSQL, MySQL, SQLite, MongoDB]]][[/cell]]
+[[cell]]**Relational Databases:**[[/cell]][[cell]][[[db|PostgreSQL, MySQL, SQLite]]][[/cell]]
 [[/row]]
 
 [[row]]
-[[cell]]**Markup:**[[/cell]][[cell]][[[lightweight-markup|Markdown, reStructuredText, MediaWiki, LaTeX]]][[/cell]]
+[[cell]]**Lightweight Markup and LaTeX:**[[/cell]][[cell]][[[lightweight-markup|Markdown, reStructuredText, MediaWiki, LaTeX]]][[/cell]]
 [[/row]]
 
 [[row]]

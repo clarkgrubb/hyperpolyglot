@@ -1,13 +1,13 @@
-[[# top]] [#grammar grammar] | [#quoting quoting] | [#char characters] _
+[[# top]] [#grammar grammar] | [#quoting quoting and escaping] | [#char characters] _
 [#variables variables] | [#var-expansion variable expansion] | [#brace-tilde-cmd-pathname-expansion brace, tilde, command, and pathname expansion] | [#special-var special variables] _
 [#arith-conditional-expr arithmetic and conditional expressions] _
-[#arrays arrays] _
+[#arrays arrays] | [#associative-arrays associative arrays] _
  [#functions functions] | [#cmd-resolution command resolution] | [#arg-options arguments and options] _
 [#execution-control execution control] _
 [#redirection redirection] | [#echo-read echo and read] | [#file-dir files and directories] _
 [#process-job-control process and job control] _
-[#history-cmd-expansion history commands and expansion] | [#readline-tab-completion readline and tab completion] _
-[#startup-file startup files] | [#prompt-customization prompt customization]  _
+[#history-cmd-expansion history] | [#key-bindings key bindings]
+[#startup-file startup files] | [#prompt-customization prompt customization] | [#autoload autoload] _
 
 [[# grammar]]
 + [#top Grammar]
@@ -94,7 +94,7 @@ If the group has an input stream, it is consumed by the first command to read fr
 Like the group command, but the commands are executed in a subshell.  Variable assignments or change of working directory are local to the subshell.
 
 [[# quoting]]
-+ [#top Quoting]
++ [#top Quoting and Escaping]
 
 ||~ ||~ [#bash bash]||~ [#fish fish]||~ [#ksh ksh]||~ [#tcsh tcsh]||~ [#zsh zsh]||
 ||[[# literal-quotes]][#literal-quotes-note literal quotes]||'foo'||##gray|//allows \' and \\ escapes://## _
@@ -109,15 +109,15 @@ command substitution//##||foo=7 _
 "foo is $foo"||foo=7 _
 "foo is $foo"||
 ||[[# interpolating-quotes-esc]][#interpolating-quotes-esc-note interpolating quotes escape sequences]||\$ \\ @@\`@@ \"||\" \$ \\||\$ \\ @@\`@@||##gray|//none//##||\$ \\ @@\`@@ \"||
-||[[# c-esc-quotes]][#c-esc-quotes-note quotes with c escapes]||$'foo\n'||##gray|//none//##||$'foo'||##gray|//none//##||$'foo'||
-||[[# c-esc]][#c-esc-note quoted c escapes]||\a \b \e \E \f \n \r \t \v _
+||[[# c-esc-quotes]][#c-esc-quotes-note quotes with backslash escapes]||$'foo\n'||##gray|//none//##||$'foo'||##gray|//none//##||$'foo'||
+||[[# c-esc]][#c-esc-note quoted backslash escapes]||\a \b \e \E \f \n \r \t \v _
 \\ \' \" \##gray|//ooo//## \x##gray|//hh//## \c##gray|//ctrl//##||##gray|//none//##||\a \b \e \E \f \n \r \t \v _
 \\ \' \" \##gray|//ooo//## \x##gray|//hh//## \c##gray|//ctrl//##||##gray|//none//##||\a \b \e \E \f \n \r \t \v _
 \\ \' \" \##gray|//ooo//## \x##gray|//hh//## \c##gray|//ctrl//##||
-||[[# bare-c-esc]][#bare-c-esc-note unquoted c escapes]||##gray|//none//##||\a \b \e \f \n \r \t \v \##gray|//space//## _
+||[[# bare-c-esc]][#bare-c-esc-note unquoted backslash escapes]||\##gray|//space//##||\a \b \e \f \n \r \t \v \##gray|//space//## _
 \$ \\ \* \? \~ \% \# \( \) \{ _
 \} \[ \] \< \> \^ \& \; \" \' _
-\x##gray|//hh//## \X##gray|//hh//## \##gray|//ooo//## \u##gray|//hhhh//## \U##gray|//hhhhhhhh//## \c##gray|//ctrl//##||##gray|//none//##||##gray|//none//##||##gray|//none//##||
+\x##gray|//hh//## \X##gray|//hh//## \##gray|//ooo//## \u##gray|//hhhh//## \U##gray|//hhhhhhhh//## \c##gray|//ctrl//##||\##gray|//space//##||\##gray|//space//##||\##gray|//space//##||
 ||[[# cmd-subst]][#cmd-subst-note command substitution]||$(ls) _
 `ls`||(ls)||$(ls) _
 `ls`||`ls`||$(ls) _
@@ -152,17 +152,17 @@ Interpolating quotes (aka double quotes) perform parameter expansion and command
 The escape sequences available in interpolating quotes.
 
 [[# c-esc-quotes-note]]
-++ [#c-esc-quotes quotes with c escapes]
+++ [#c-esc-quotes quotes with backslash escapes]
 
 String literals which support C-style escapes.
 
 [[# c-esc-note]]
-++ [#c-esc quoted c escapes]
+++ [#c-esc quoted backslash escapes]
 
 The C-style string literal escapes.
 
 [[# bare-c-esc-note]]
-++ [#bare-c-esc unquoted c escapes]
+++ [#bare-c-esc unquoted backslash escapes]
 
 {{fish}} permits the use of C escapes outside of quotes.
 
@@ -202,15 +202,20 @@ Escape sequences that can be used inside backtick quotes.
 ##gray|//brace://## { } _
 ##gray|//tilde://## ~ _
 ##gray|//command://## @@`@@ _
-##gray|//pathname://## * ? [ ]|| ||##gray|//variable://## $ _
+##gray|//pathname://## * ? [ ]||##gray|//variable://## $ _
+##gray|//brace://## { } _
+##gray|//tilde://## ~ _
+##gray|//command://## @@`@@ _
+##gray|//pathname://## * ? [ ] _
+##gray|//history://## ! ^||##gray|//variable://## $ _
 ##gray|//brace://## { } _
 ##gray|//tilde://## ~ _
 ##gray|//command://## @@`@@ _
 ##gray|//pathname://## * ? [ ] _
 ##gray|//history://## ! ^||
-||[[# other-special-char]][#other-special-char-note other special]||# =||#||# = .|| ||# =||
-||[[# bareword-char]][#bareword-char-note bareword]||A-Z a-z 0-9 _ - . , : + / @ %|| ||A-Z a-z 0-9 _ - . , : + / @ % ! ^|| ||A-Z a-z 0-9 _ - . , : + / @ %||
-||[[# var-char]][#var-char-note variable name]||A-Z a-z 0-9 _|| ||A-Z a-z 0-9 _|| ||A-Z a-z 0-9 _||
+||[[# other-special-char]][#other-special-char-note other special]||# =||# [ ]||# = .||#||# =||
+||[[# bareword-char]][#bareword-char-note bareword]||A-Z a-z 0-9 _ - . , : + / @ %||A-Z a-z 0-9 _ - . , : + / @ % ! ^ =||A-Z a-z 0-9 _ - , : + / @ % ! ^||A-Z a-z 0-9 _ - . , : + / @ % =||A-Z a-z 0-9 _ - . , : + / @ %||
+||[[# var-char]][#var-char-note variable name]||A-Z a-z 0-9 _||A-Z a-z 0-9 _||A-Z a-z 0-9 _||A-Z a-z 0-9 _||A-Z a-z 0-9 _||
 
 [[# word-separating-char-note]]
 ++ [#word-separating-char word separating]
@@ -240,6 +245,8 @@ In the following example, the word {{*.c}} will be replaced by multiple words if
 grep main *.c
 [[/code]]
 
+Square brackets {{[ ]}} are used for both pathname expansion, where the brackets contain a list of characters, and array notation, where the brackets contain an index.  We believe that in cases of ambiguity, the syntax is always treated as array notation.  {{fish}} does not have this ambiguity because it does not use square brackets in pathname expansion.
+
 **zsh:**
 
 In {{zsh}} variable expansion will expand to a single word, even if the variable contains word separating characters.  This behavior is different from the other shells.  
@@ -265,13 +272,9 @@ $ countem ${=foo}
 
 The number sign {{#}} can be used to start a comment which ends at the end of the line.  The {{#}} must be by itself or the first character in a word.
 
-**tcsh:**
+In {{tcsh}}, comments are not supported when the shell is interactive.
 
-Comments are not supported when the shell is interactive.
-
-**zsh:**
-
-By default comments are not supported when the shell is interactive.  This can be changed by invoking {{zsh}} with the {{-k}} flag or by running:
+In {{zsh}}, comments are not supported by default when the shell is interactive.  This can be changed by invoking {{zsh}} with the {{-k}} flag or by running:
 
 [[code]]
 set -o INTERACTIVE_COMMENTS
@@ -279,7 +282,26 @@ set -o INTERACTIVE_COMMENTS
 
 **variable assignment:**
 
-The equals sign {{=}} is used for variable assignment.  The tokenizer
+The equals sign {{=}} is used for variable assignment in {{bash}}, {{ksh}}, and {{zsh}}.  Given that spaces cannot be placed around the equals sign, it seems likely the tokenizer treats it like other bareword characters.  Note that in a simple command, the command name is the first word which does not contain an equals sign.
+
+**namespaces:**
+
+{{ksh}} has namespaces.  They can be used for variable names and function names:
+
+[[code]]
+$ bar=3
+
+$ namespace foo { bar=4; } 
+
+$ echo $bar
+3
+
+$ namespace foo { echo $bar; }
+4
+
+$ echo ${.foo.bar}
+4
+[[/code]]
 
 [[# bareword-char-note]]
 ++ [#bareword-char bareword characters]
@@ -288,15 +310,16 @@ A bareword is a word which is not quoted and does not contain escapes.  The char
 
 Some of the other characters can appear in barewords under certain circumstances.  For example the tilde {{~}} can appear if it is not the first character. 
 
-[[# var-name-char-note]]
-++ [#var-name-char variable name characters]
+[[# var-char-note]]
+++ [#var-char variable name characters]
 
 Characters which can be used in variable names.
+
+Note that a variable name cannot start with a digit.  Also, {{$_}} is a special variable which contains the previous command.
 
 [[# variables]]
 + [#top Variables]
 
-||||||||||||||~ [[# var]][#var-note variables]||
 ||~ ||~ [#bash bash]||~ [#fish fish]||~ [#ksh ksh]||~ [#tcsh tcsh]||~ [#zsh zsh]||~ external||
 ||[[# global-var]][#global-var-note global variables] _
  _
@@ -351,24 +374,11 @@ export -p _
 ##gray|//none//## _
 printenv _
 ##gray|//none//##||
-||[[# array-var]][#array-var-note arrays] _
- _
-##gray|//list, unset//##||typeset -a _
-unset ##gray|//var//##[@]|| ||##gray|//none//## _
-unset -v ##gray|//var//##||##gray|//none//##||typeset -a _
-unset -v ##gray|//var//##|| ||
-||[[# assoc-array-var]][#assoc-array-var-note associative arrays] _
- _
-##gray|//declare, list, unset//##||typeset -A ##gray|//var//## _
-typeset -A _
-unset "##gray|//var//##[@]"|| ||##gray|//none//##||##gray|//none//##||typeset -A ##gray|//var//## _
-typeset -A _
-unset -v ##gray|//var//##|| ||
 ||[[# option-var]][#option-var-note options] _
  _
 ##gray|//set, list, unset//##||set -o ##gray|//opt//## _
 set -o _
-set +o ##gray|//opt//##|| ||set -o ##gray|//opt//## _
+set +o ##gray|//opt//##||##gray|//none//##||set -o ##gray|//opt//## _
 set -o _
 set +o ##gray|//opt//##||##gray|//none//##||set -o ##gray|//opt//## _
 set -o _
@@ -413,115 +423,85 @@ Exported variables are passed to child processes forked by the shell.  This can 
 
 The {{tcsh}} example for exporting a variable without setting it isn't the same as the corresponding examples from the other shells because in {{tcsh}} an error will result if the variable isn't already set.
 
-[[# array-var-note]]
-++ [#array-var arrays]
-
-[[# assoc-array-var-note]]
-++ [#assoc-array-var associative arrays]
-
 [[# option-var-note]]
 ++ [#option-var options]
+
+Options are variables which are normally set via flags at the command line and affect shell behavior.
 
 [[# var-expansion]]
 + [#top Variable Expansion]
 
-||~ ||~ [#bash bash]||~ [#fish fish]||~ [#ksh ksh]||~ [#tcsh tcsh]||~ [#zsh zsh]||
-||set variable value||##gray|//var//##=##gray|//val//##||set -g ##gray|//var//## ##gray|//val//##||##gray|//var//##=##gray|//val//##||setenv ##gray|//var//## ##gray|//val//##||##gray|//var//##=##gray|//val//##||
-||get variable value||$##gray|//var//##||$##gray|//var//##||$##gray|//var//##||$##gray|//var//##||$##gray|//var//##||
-||concatenate variable and value||${##gray|//var//##}##gray|//val//##||{$##gray|//var//##}##gray|//val//## ||${##gray|//var//##}##gray|//val//##||${##gray|//var//##}##gray|//val//##||${##gray|//var//##}##gray|//val//##||
-||coalesce||${##gray|//var//##:-##gray|//val//##}|| ||${##gray|//var//##:-##gray|//val//##}|| ||${##gray|//var//##:-##gray|//val//##}||
-||coalesce and assign if null||${##gray|//var//##:=##gray|//val//##}|| ||${##gray|//var//##:=##gray|//val//##}|| ||${##gray|//var//##:=##gray|//val//##}||
-||message to stderr and exit if null||${##gray|//var//##:?##gray|//msg//##}|| ||${##gray|//var//##:?##gray|//msg//##}|| ||${##gray|//var//##:?##gray|//msg//##}||
+||~ ||~ [#bash bash]||~ [#fish fish]||~ [#ksh ksh]||~ [#tcsh tcsh]||~ [#zsh zsh]||~ external||
+||set variable value||##gray|//var//##=##gray|//val//##||set -g ##gray|//var//## ##gray|//val//##||##gray|//var//##=##gray|//val//##||setenv ##gray|//var//## ##gray|//val//##||##gray|//var//##=##gray|//val//##|| ||
+||get variable value||$##gray|//var//##||$##gray|//var//##||$##gray|//var//##||$##gray|//var//##||$##gray|//var//##|| ||
+||concatenate variable and value||${##gray|//var//##}##gray|//val//##||{$##gray|//var//##}##gray|//val//## ||${##gray|//var//##}##gray|//val//##||${##gray|//var//##}##gray|//val//##||${##gray|//var//##}##gray|//val//##|| ||
+||coalesce||${##gray|//var//##:-##gray|//val//##}|| ||${##gray|//var//##:-##gray|//val//##}|| ||${##gray|//var//##:-##gray|//val//##}|| ||
+||coalesce and assign if null||${##gray|//var//##:=##gray|//val//##}|| ||${##gray|//var//##:=##gray|//val//##}|| ||${##gray|//var//##:=##gray|//val//##}|| ||
+||message to stderr and exit if null||${##gray|//var//##:?##gray|//msg//##}|| ||${##gray|//var//##:?##gray|//msg//##}|| ||${##gray|//var//##:?##gray|//msg//##}|| ||
 ||substring||##gray|//offset is zero based://## _
 ${##gray|//var//##:##gray|//offset//##} _
 ${##gray|//var//##:##gray|//offset//##:##gray|//len//##}|| ||##gray|//offset is zero based://## _
 ${##gray|//var//##:##gray|//offset//##} _
 ${##gray|//var//##:##gray|//offset//##:##gray|//len//##}|| ||##gray|//offset is zero based://## _
 ${##gray|//var//##:##gray|//offset//##} _
-${##gray|//var//##:##gray|//offset//##:##gray|//len//##}||
-||length||${@<#>@##gray|//var//##}|| ||${@<#>@##gray|//var//##}||${%##gray|//var//##}||${@<#>@##gray|//var//##}||
+${##gray|//var//##:##gray|//offset//##:##gray|//len//##}||##gray|//offset is one based; _
+when input lacks newlines://## _
+awk '{print substr($0, ##gray|//offset//##, ##gray|//len//##)}'||
+||length||${@<#>@##gray|//var//##}|| ||${@<#>@##gray|//var//##}||${%##gray|//var//##}||${@<#>@##gray|//var//##}||wc -m||
 ||remove prefix greedily||foo=do.re.mi _
 ${foo##*.}|| ||foo=do.re.mi _
 ${foo##*.}|| ||foo=do.re.mi _
-${foo##*.}||
+${foo##*.}||sed 's/^.*\.//'||
 ||remove prefix reluctantly||foo=do.re.mi _
 ${foo#*.}|| ||foo=do.re.mi _
 ${foo#*.}|| ||foo=do.re.mi _
-${foo#*.}||
+${foo#*.}||sed 's/^[^\.]*\.//'||
 ||remove suffix greedily||foo=do.re.mi _
 ${foo%%.*}|| ||foo=do.re.mi _
 ${foo%%.*}|| ||foo=do.re.mi _
-${foo%%.*}||
+${foo%%.*}||sed 's/\..*$//'||
 ||remove suffix reluctantly||foo=do.re.mi _
 ${foo%.*}|| ||foo=do.re.mi _
 ${foo%.*}|| ||foo=do.re.mi _
-${foo%.*}||
+${foo%.*}||sed 's/\.[^\.]*$//'||
 ||single substitution||foo='do re mi mi' _
 ${foo/mi/ma}|| ||foo='do re mi mi' _
 ${foo/mi/ma}|| ||foo='do re mi mi' _
-${foo/mi/ma}||
+${foo/mi/ma}||sed 's/mi/ma/'||
 ||global substitution||foo='do re mi mi' _
 ${foo@@//@@mi/ma}|| ||foo='do re mi mi' _
 ${foo@@//@@mi/ma}|| ||foo='do re mi mi' _
-${foo@@//@@mi/ma}||
+${foo@@//@@mi/ma}||sed 's/mi/ma/g'||
 ||prefix substitution||foo=txt.txt _
 ${foo/#txt/text}|| ||foo=txt.txt _
 ${foo/#txt/text}|| ||foo=txt.txt _
-${foo/#txt/text}||
+${foo/#txt/text}||sed 's/^txt/text/'||
 ||suffix substitution||foo=txt.txt _
 ${foo/%txt/html}|| ||foo=txt.txt _
 ${foo/%txt/html}|| ||foo=txt.txt _
-${foo/%txt/html}||
+${foo/%txt/html}||sed 's/txt$/html/'||
 ||upper case||foo=lorem _
 ${foo^^}|| ||##gray|//none//##|| ||foo=lorem _
-${foo:u}||
+${foo:u}||tr '[:lower:]' '[:upper:]'||
 ||upper case first letter||foo=lorem _
-${foo^}|| ||##gray|//none//##|| ||##gray|//none//##||
+${foo^}|| ||##gray|//none//##|| ||##gray|//none//##|| ||
 ||lower case||foo=LOREM _
 ${foo,,}|| ||##gray|//none//##|| ||foo=LOREM _
-${foo:l}||
+${foo:l}||tr '[:upper:]' '[:lower:]'||
 ||lower case first letter||foo=LOREM _
-${foo,}|| ||##gray|//none//##|| ||##gray|//none//##||
+${foo,}|| ||##gray|//none//##|| ||##gray|//none//##|| ||
 ||absolute path|| || || || ||foo=~ _
-${foo:a}||
+${foo:a}|| ||
 ||dirname|| || || || ||foo=/etc/hosts _
-${foo:h}||
+${foo:h}||foo=/etc/hosts _
+dirname $foo||
 ||basename|| || || || ||foo=/etc/hosts _
-${foo:t}}||
+${foo:t}}||foo=/etc/hosts _
+basename $foo||
 ||extension|| || || || ||foo=index.html _
-${foo:e}||
+${foo:e}|| ||
 ||root|| || || || ||foo=index.html _
-${foo:r}||
-
-++ substring
-
-**zsh:**
-
-Substring expansion appears to be partly one based when operating on a positional parameter:
-
-[[code]]
-$ set -- 0123456789
-
-$ echo $1 
-0123456789
-
-$ echo ${1:0:4}
-0123
-
-$ echo ${1:1:4}
-0123
-
-$ echo ${1:2:4}
-1234
-
-$ foo=0123456789
-
-$ echo ${foo:0:4}
-0123
-
-$ echo ${foo:1:4}
-1234
-[[/code]]
+${foo:r}|| ||
 
 [[# brace-tilde-cmd-pathname-expansion]]
 + [#top Brace, Tilde, Command, and Pathname Expansion]
@@ -540,7 +520,6 @@ $ echo ${foo:1:4}
 ||path expansion: negated character set||echo /bin/[^cde]*||##gray|//none//##||echo /bin/[^cde]*||echo /bin/[^cde]*||echo /bin/[^cde]*||
 ||path expansion: sequence of characters||echo /bin/[a-f]*||##gray|//none//##||echo /bin/[a-f]*||echo /bin/[a-f]*||echo /bin/[a-f]*||
 
-
 [[# special-var]]
 + [#top Special Variables]
 
@@ -554,18 +533,18 @@ $argv[1], $argv[2], ...||
 ||number of command line args||$#||(count $argv)||$#||$#||$# _
 $#argv||
 ||arguments $1, $2, ...||$* _
-$@|| ||$* _
+$@||##gray|//none//##||$* _
 $@||$*||$* _
 $@||
-||"$1" "$2" "$3" ...||"$@"|| ||"$@"|| ||"$@"||
-||"$1##gray|//c//##$2##gray|//c//##$3 ..." where ##gray|//c//## is first character of $IFS||"$*"|| ||"$*"|| ||"$*"||
+||"$1" "$2" "$3" ...||"$@"||$argv||"$@"|| ||"$@"||
+||"$1##gray|//c//##$2##gray|//c//##$3 ..." where ##gray|//c//## is first character of $IFS||"$*"||"$argv"||"$*"|| ||"$*"||
 ||process id||$$||%self||$$||$$||$$||
-||process id of last asynchronous command||$!|| ||$!||$!||$!||
+||process id of last asynchronous command||$!||##gray|//none//##||$!||$!||$!||
 ||exit status of last non-asynchronous command||$?||$status||$?||$?||$?||
 ||previous command executed||$_||##gray|//current command executing://## _
 $_||$_||$_||$_||
-||command line options||$-|| ||$-||##gray|//none//##||$-||
-||read input|| || || ||$<|| ||
+||command line options||$-||##gray|//none//##||$-||##gray|//none//##||$-||
+||read input||##gray|//none//##||##gray|//none//##||##gray|//none//##||$<||##gray|//none//##||
 
 ++ $* and $@
 
@@ -672,7 +651,6 @@ end||while true; do _
 done||
 || || || || ||filetest|| ||
 
-
 Expressions are implemented as either command expressions which return an integer status like a command, or variable expressions which evaluate to a string.  Command expressions return a status of 0 for true and a nonzero status for false.  Only commands and command expressions can be used as the conditional in //if//, //while//, and //until// statements.
 
 Expressions which support arithmetic only support integer arithmetic.
@@ -773,10 +751,21 @@ How to evaluate a string as a shell command.
 [[# arrays]]
 + [#top Arrays]
 
-||||||||||||~ ordinary arrays||
 ||~ ||~ [#bash bash]||~ [#fish fish]||~ [#ksh ksh]||~ [#tcsh tcsh]||~ [#zsh zsh]||
-||assign all values||a=(do re mi)||set a do re mi||a=(do re mi)||set a = (do re mi)||a=(do re mi)||
-||assign single value||a[0]=do _
+||declare||typeset -a ##gray|//var//##||##gray|//none//##||##gray|//none//##||##gray|//none//##||typeset -a ##gray|//var//##||
+||list all arrays||typeset -a||##gray|//none//##||##gray|//none//##||##gray|//none//##||typeset -a||
+||literal||a=(do re mi)||set a do re mi||a=(do re mi)||set a = (do re mi)||a=(do re mi)||
+||lookup||${a[0]}||$a[1]||${a[0]}||${a[1]}||${a[1]} _
+$a[1]||
+||negative index lookup||##gray|//returns last element://## _
+${a[-1]}||##gray|//returns last element://## _
+$a[-1]||##gray|//returns last element://## _
+${a[-1]}||##gray|//none//##||##gray|//returns last element://## _
+${a[-1]}||
+||slice||${a[@]:2:3} _
+${a[*]:2:3}||$a[(seq 2 3)]||${a[@]:1:2} _
+${a[*]:1:2}||${a[2-3]}||$a[2,3]||
+||update||a[0]=do _
 a[1]=re _
 a[2]=mi||set a[1] do _
 set a[2] re _
@@ -787,44 +776,89 @@ set a[2] = re _
 set a[3] = mi||a[1]=do _
 a[2]=re _
 a[3]=mi||
-||lookup||${a[0]}||$a[1]||${a[0]}||${a[1]}||${a[1]}||
-||delete value||unset a[0]||set -e a[1] _
+||out-of-bounds behavior||##gray|//lookup returns empty string//## _
+ _
+##gray|//update expands array; array can have gaps//##||##gray|//error message and nonzero exit status//## _
+ _
+##gray|//update expands array; in-between _
+slots get empty strings//##||##gray|//lookup returns empty string//## _
+ _
+##gray|//update expands array; array can have gaps//##||##gray|//lookup and update both produce _
+error message and nonzero exit status//##||##gray|//lookup returns empty string//## _
+ _
+##gray|//update expands array; in-between _
+slots get empty strings//##||
+||size||##gray|//highest index://## _
+${#a[@]} _
+${#a[*]}||count $a||##gray|//highest index://## _
+${#a[@]} _
+${#a[*]}||${#a}||${#a} _
+${#a[@]} _
+${#a[*]}||
+||list indices||##gray|//can contain gaps://## _
+${!a[@]} _
+${!a[*]}||(seq (count $a))||##gray|//can contain gaps://## _
+${!a[@]} _
+${!a[*]}||@@`seq ${#a}`@@||$(seq ${#a})||
+||regular reference||##gray|//return first element//##||##gray|//return all elements joined by space//##||##gray|//return first element//##||##gray|//return all elements joined by space//##||##gray|//return all elements joined by space//##||
+||regular assignment||##gray|//assigns to 0-indexed slot//##||##gray|//convert array to regular variable//##||##gray|//assigns to 0-indexed slot//##||##gray|//convert array to regular variable//##||##gray|//convert array to regular variable//##||
+||delete element||unset a[0]||set -e a[1] _
 ##gray|//re is now at index 1//##|| || ||a[0]=()||
 ||delete array||unset a[@] _
 unset a[*]||set -e a|| || ||unset -v a||
-||number of entries||${#a[@]} _
-${#a[*]}||count $a|| || || ||
-||list indices||${!a[@]} _
-${!a[*]}|| || || || ||
-||highest subscript|| ||count $a||${#a[@]} _
-${#a[*]}|| ||${#a[@]} _
-${#a[*]}||
-||as words||"${a[@]}"|| ||"${a[@]}"|| ||"${a[@]}"||
-||as word||"${a[*]}"|| ||"${a[*]}"||"${a[*]}"||"${a[*]}"||
-||||||||||||~ associative arrays||
-||~ ||~ [#bash bash]||~ [#fish fish]||~ [#ksh ksh]||~ [#tcsh tcsh]||~ [#zsh zsh]||
-||declare||typeset -A foo|| ||##gray|//none//##||##gray|//none//##||typeset -A foo||
-||assign value||foo[bar]=baz|| ||##gray|//none//##||##gray|//none//##||foo[bar]=baz||
-||lookup||${foo[bar]}|| ||##gray|//none//##||##gray|//none//##||${foo[bar]}||
-||list indices||${!foo[@]} _
-${!foo[*]}|| ||##gray|//none//##||##gray|//none//##|| ||
-||delete value||unset "foo[bar]"|| ||##gray|//none//##||##gray|//none//##||unset "foo[bar]"||
-||delete array|| || || || ||unset -v foo||
+||pass each element as argument||##gray|//cmd//## "${a[@]}"||##gray|//cmd//## $a||##gray|//cmd//## "${a[@]}"|| ||##gray|//cmd//## "${a[@]}"||
+||pass as single argument||##gray|//cmd//## "${a[*]}"||##gray|//cmd//## "$a"||##gray|//cmd//## "${a[*]}"|| ||##gray|//cmd//## "${a[*]}"||
 
+Shell arrays are arrays of strings.  In particular arrays cannot be nested.
+
+Arrays with one element are for the most part indistinguishable from a variable containing a nonempty string.  Empty arrays are for the most part indistinguishable from a variable containing an empty string.
+
+In the case of {{bash}} or {{zsh}}, it is possible to tell whether the variable is an array by seeing whether it is listed in the output of {{typeset -a}}.
+
+++ declare
+
+{{bash}} and {{zsh}} allow one to declare an array.  This creates an empty array.  There doesn't appear to be any need to do this, however, 
+
+++ list all arrays
+
+++ literal
+
+{{bash}} and {{zsh}} us parens to delimit an array literal.  Spaces separate the elements.  If the elements themselves contain spaces, quotes or backslash escaping must be used.
 
 ++ lookup
 
-a[17] sometimes works for lookup but should be avoided because if the files a1 or a7 exist in the current directory pathname expansion will be performed.
+++ update
+
+++ out-of-bounds behavior
+
+++ size
+
+++ list indices
+
+++ regular reference
+
+++ regular assignment
 
 ++ delete value
 
 Deleting elements from a {{bash}} array leaves gaps.  Deleting elements from a {{zsh}} arrays causes higher indexed elements to move to lower index positions.
 
-++ declare
+++ delete array
 
-Associative arrays were added to {{bash}} with version 4.0 released in 2009.
+[[# associative-arrays]]
++ [#top Associative Arrays]
 
+||~ ||~ [#bash bash]||~ [#fish fish]||~ [#ksh ksh]||~ [#tcsh tcsh]||~ [#zsh zsh]||
+||declare||typeset -A ##gray|//var//##||##gray|//none//##||##gray|//none//##||##gray|//none//##||typeset -A ##gray|//var//##||
+||list all associative arrays||typeset -A||##gray|//none//##||##gray|//none//##||##gray|//none//##||typeset -A||
+||assign value||foo[bar]=baz||##gray|//none//##||##gray|//none//##||##gray|//none//##||foo[bar]=baz||
+||lookup||${foo[bar]}||##gray|//none//##||##gray|//none//##||##gray|//none//##||${foo[bar]}||
+||list indices||${!foo[@]} _
+${!foo[*]}||##gray|//none//##||##gray|//none//##||##gray|//none//##|| ||
+||delete value||unset "foo[bar]"||##gray|//none//##||##gray|//none//##||##gray|//none//##||unset "foo[bar]"||
+||delete array||unset "##gray|//var//##[@]"||##gray|//none//##||##gray|//none//##||##gray|//none//##||unset -v foo||
 
+Associative arrays were added to {{bash}} with version 4.0.
 
 [[# functions]]
 + [#top Functions]
@@ -880,7 +914,8 @@ end||false() { _
 @<&nbsp;&nbsp;>@set -l bar 7 _
 end _
  _
-##gray|//without the -l flag, the the variable will be global if already defined, otherwise local//##||##gray|//none//##||##gray|//none//##||foo() { _
+##gray|//without the -l flag, the the variable will _
+be global if already defined, otherwise local//##||##gray|//none//##||##gray|//none//##||foo() { _
 @<&nbsp;&nbsp;>@local bar=7 _
 } _
  _
@@ -980,7 +1015,10 @@ How to remove a user defined function.
 ##gray|//define, list, remove, define suffix alias//##||alias ll='ls -l' _
 alias _
 unalias ll _
-##gray|//none//##|| ||alias ll='ls -l' _
+##gray|//none//##||alias ll 'ls -l' _
+functions _
+function -e ll _
+##gray|//none//##||alias ll='ls -l' _
 alias _
 unalias ll _
 ##gray|//none//##||alias ll ls -l _
@@ -1014,7 +1052,7 @@ builtins _
 enable ##gray|//cmd//## _
 disable ##gray|//cmd//##||
 ||[[# cmd]][#command-note run external command]||command ##gray|//cmd//##||command ##gray|//cmd//##||command ##gray|//cmd//##|| ||command ##gray|//cmd//##||
-||[[# env]][#env-note run with explicit environment]|| || || || || ||
+||[[# env]][#env-note run with explicit environment]||||||||||= env -i ##gray|//var//##=##gray|//val//## ... ##gray|//cmd//## ##gray|//args//## ... ||
 ||[[# hash-cmd]][#hash-cmd-note external command hashes:] _
  _
 ##gray|//list, set, delete from, clear, rebuild//##||hash _
@@ -1717,9 +1755,6 @@ umask _
 umask g-w,o-w _
 umask _
 umask -S||
-||[[# basename]][#basename-note basename]|| || || || || ||
-||[[# dirname]][#dirname-note dirname]|| || || || || ||
-
 
 [[# cd-note]]
 ++ [#cd change current directory]
@@ -1803,26 +1838,6 @@ If {{umask}} is given a numeric argument it is always interpreted as octal; a le
 
 {{umask}} also supports the symbolic notation used by [http://linux.die.net/man/1/chmod chmod].  In this case the argument is one or more 3 character sequences of the format {{[agou][-+][rwx]}} separated by commas.
 
-[[# basename-note]]
-++ [#basename basename]
-
-How to extract the basename from a pathname.  The following are equivalent:
-
-[[code]]
-basename $FILENAME
-echo -n ${FILENAME##*/}
-[[/code]]
-
-[[# dirname-note]]
-++ [#dirname dirname]
-
-How to extract the dirname from a pathname.  The following are equivalent:
-
-[[code]]
-dirname $FILENAME
-echo -n ${FILENAME%/*}
-[[/code]]
-
 [[# process-job-control]]
 + [#top Process and Job Control]
 
@@ -1873,7 +1888,7 @@ The -P flag can be used to for parallelization.  The argument is the max number 
 ++ [#exec execute file]
 
 [[# history-cmd-expansion]]
-+ [#top History Commands and Expansion]
++ [#top History]
 
 ||||||||||||~ history commands||
 ||~ ||~ [#bash bash]||~ [#fish fish]||~ [#ksh ksh]||~ [#tcsh tcsh]||~ [#zsh zsh]||
@@ -1922,22 +1937,6 @@ history -a ##gray|//path//## _
 history -r ##gray|//path//##|| || || ||fc -W ##gray|//path//## _
 fc -A ##gray|//path//## _
 fc -R ##gray|//path//##||
-
-
-||||||||||||~ history expansion||
-||~ ||~ [#bash bash]||~ [#fish fish]||~ [#ksh ksh]||~ [#tcsh tcsh]||~ [#zsh zsh]||
-||most recent command||!!||##gray|//none//##||##gray|//none//##||!!||!!||
-||n-th command||!##gray|//n//##||##gray|//none//##||##gray|//none//##||!##gray|//n//##||!##gray|//n//##||
-||most recent command starting with str||!##gray|//str//##||##gray|//none//##||##gray|//none//##||!##gray|//str//##||!##gray|//str//##||
-||most recent command with substitution||^##gray|//pattern//##^##gray|//replacement//##||##gray|//none//##||##gray|//none//##||^##gray|//pattern//##^##gray|//replacement//##||^##gray|//pattern//##^##gray|//replacement//##||
-||nth command with substitution||!##gray|//n//##:s/##gray|//pattern//##/##gray|//replacement//##/||##gray|//none//##||##gray|//none//##||!##gray|//n//##:s/##gray|//pattern//##/##gray|//replacement//##/||!##gray|//n//##:s/##gray|//pattern//##/##gray|//replacement//##/||
-||n-th command with global substitution||!##gray|//n//##:gs/##gray|//pattern//##/##gray|//replacement//##/||##gray|//none//##||##gray|//none//##||!##gray|//n//##:gs/##gray|//pattern//##/##gray|//replacement//##/||!##gray|//n//##:gs/##gray|//pattern//##/##gray|//replacement//##/||
-||most recent arguments||!*||##gray|//none//##||##gray|//none//##|| ||!*||
-||first of most recent arguments||!:1||##gray|//none//##||##gray|//none//##|| ||!:1||
-||range of most recent arguments||!:##gray|//n//##-##gray|//m//##||##gray|//none//##||##gray|//none//##|| ||!:##gray|//n//##-##gray|//m//##||
-||last of most recent arguments||!$||##gray|//none//##||##gray|//none//##|| ||!$||
-||most recent command without arguments||!:0||##gray|//none//##||##gray|//none//##|| ||!:0||
-||m-th argument of n-th command||!##gray|//n//##:##gray|//m//##||##gray|//none//##||##gray|//none//##|| ||!##gray|//n//##:##gray|//m//##||
 
 [[# list-cmd-history-note]]
 ++ [#list-cmd-history command history: listing]
@@ -2001,16 +2000,53 @@ If PAT=REP is specified then each occurrence of PAT will be replaced with REP in
 [[# cmd-history-file-note]]
 ++ [#cmd-history-file command history file]
 
-[[# readline-tab-completion]]
-+ [#top Readline and Tab Completion]
-
-||||||||||||~ [#readline-tab-completion-note readline and tab completion]||
+||||||||||||~ history expansion||
 ||~ ||~ [#bash bash]||~ [#fish fish]||~ [#ksh ksh]||~ [#tcsh tcsh]||~ [#zsh zsh]||
-|| ||bind|| || ||bindkey||bindkey||
-|| ||complete|| || ||complete|| ||
-|| || || || ||uncomplete|| ||
-|| ||compgen _
-compopt|| || || ||##gray|//see below//##||
+||most recent command||!!||##gray|//none//##||##gray|//none//##||!!||!!||
+||n-th command||!##gray|//n//##||##gray|//none//##||##gray|//none//##||!##gray|//n//##||!##gray|//n//##||
+||most recent command starting with str||!##gray|//str//##||##gray|//none//##||##gray|//none//##||!##gray|//str//##||!##gray|//str//##||
+||most recent command with substitution||^##gray|//pattern//##^##gray|//replacement//##||##gray|//none//##||##gray|//none//##||^##gray|//pattern//##^##gray|//replacement//##||^##gray|//pattern//##^##gray|//replacement//##||
+||nth command with substitution||!##gray|//n//##:s/##gray|//pattern//##/##gray|//replacement//##/||##gray|//none//##||##gray|//none//##||!##gray|//n//##:s/##gray|//pattern//##/##gray|//replacement//##/||!##gray|//n//##:s/##gray|//pattern//##/##gray|//replacement//##/||
+||n-th command with global substitution||!##gray|//n//##:gs/##gray|//pattern//##/##gray|//replacement//##/||##gray|//none//##||##gray|//none//##||!##gray|//n//##:gs/##gray|//pattern//##/##gray|//replacement//##/||!##gray|//n//##:gs/##gray|//pattern//##/##gray|//replacement//##/||
+||most recent arguments||!*||##gray|//none//##||##gray|//none//##|| ||!*||
+||first of most recent arguments||!:1||##gray|//none//##||##gray|//none//##|| ||!:1||
+||range of most recent arguments||!:##gray|//n//##-##gray|//m//##||##gray|//none//##||##gray|//none//##|| ||!:##gray|//n//##-##gray|//m//##||
+||last of most recent arguments||!$||##gray|//none//##||##gray|//none//##|| ||!$||
+||most recent command without arguments||!:0||##gray|//none//##||##gray|//none//##|| ||!:0||
+||m-th argument of n-th command||!##gray|//n//##:##gray|//m//##||##gray|//none//##||##gray|//none//##|| ||!##gray|//n//##:##gray|//m//##||
+
+||||||||||||~ history file||
+||~ ||~ [#bash bash]||~ [#fish fish]||~ [#ksh ksh]||~ [#tcsh tcsh]||~ [#zsh zsh]||
+||location||HISTFILE=~/.bash_history||~/.config/fish/fish_history||HISTFILE=~/.ksh_history||set histfile ~/.tcsh_history||HISTFILE=~/.zsh_history||
+||memory size||HISTSIZE=2000|| ||HISTSIZE=2000|| ||HISTSIZE=2000||
+||file size||HISTFILESIZE=2000|| || ||set savehist=2000||SAVEHIST=2000||
+||format||##gray|//lines of input//##|| || || || ||
+||timestamps||HISTTIMEFORMAT=%s|| || || || |
+||update time||##gray|//on exit//##|| || || ||##gray|//on exit//##||
+||update method||##gray|//appends to file; _
+to only keep most recent dupe://## _
+HISTCONTROL=erasedups|| || ||##gray|//appends to file; _
+to sort in memory file and most recent by timestamp and only keep the most recent, use://## _
+set savehist=2000 merge|| ||
+||ignore||HISTIGNORE=history:whoami|| || || || ||
+
+[[# key-bindings]]
++ [#top Key Bindings]
+
+||~ ||~ [#bash bash]||~ [#fish fish]||~ [#ksh ksh]||~ [#tcsh tcsh]||~ [#zsh zsh]||
+||list keybindings||bind -P||bind|| ||bindkey||bindkey||
+||list keymaps||help bind||##gray|//none//##|| ||##gray|//none//##||bindkey -l||
+||current keymap name||bind -V | grep keymap||##gray|//none//##|| ||##gray|//none//##|| ||
+||change keymap||bind 'set keymap emacs'||##gray|//none//##|| ||##gray|//none//##||bindkey -A emacs main||
+||list bindable functions||bind -l||bind -f|| ||bindkey -l|| ||
+||bind key to function||bind C-a:beginning-of-line||bind \ca beginning-of-line|| || || ||
+||restore default binding for key|| || || || || ||
+
+//bash and zsh have keymaps//
+
+//how to create a new keymap with zsh//
+
+//alternate fish syntax referring to keys//
 
 [[# startup-file]]
 + [#top Startup Files]
@@ -2068,25 +2104,77 @@ end
 + [#top Prompt Customization]
 
 ||~ ||~ [#bash bash]||~ [#fish fish]||~ [#ksh ksh]||~ [#tcsh tcsh]||~ [#zsh zsh]||
-||set primary prompt||PS1='$ '|| ||PS1='$ '||set prompt='$ '||PS1='$ '||
-||secondary prompt||PS2='> '|| ||PS2='> '|| ||PS2='> '||
-||select prompt||PS3|| || || || ||
-||current directory||\w|| || || ||%~||
-||current directory||\W|| || || ||%/ _
-%d||
-||history number||\!|| || || || ||
-||current session command number||\#|| || || || ||
+||set primary prompt||PS1='$ '||function fish_prompt _
+@<&nbsp;&nbsp;>@echo -n '$ ' _
+end||PS1='$ '||set prompt='$ '||PS1='$ '||
+||set continued line prompt||PS2='> '||##gray|//none//##||PS2='> '||set prompt2='> '||PS2='> '||
+||set select prompt||PS3='? '||##gray|//none//##||PS='? '||##gray|//none//##||PS3='? '||
+||set right prompt||##gray|//none//##||function fish_right_prompt _
+@<&nbsp;&nbsp;>@date _
+end|| ||set rprompt='%Y-%W-%D %p'||RPS1='%D{%F %T}'||
+||set right continued line prompt||##gray|//none//##||##gray|//none//##|| ||##gray|//none//##||RSP2='@@...@@'||
+||||||||||||~ [#dynamic-prompt-info dynamic information]||
+||working directory||##gray|//none//##||pwd|| ||%/||%d _
+%/||
+||working directory with tilde abbrev||\w||##gray|//abbreviate path components other _
+than basename with single letter://## _
+prompt_pwd|| ||%~||%~||
+||trailing components of working directory|| || || ||%3C||%3d||
+||command number in history||\!|| ||!||! _
+%! _
+%h||%! _
+%h||
+||command number in session||\#|| || || || ||
 ||shell version||\v|| || || || ||
-||host (up to first dot)||\h|| || || ||%m||
-||full host name||\H|| || || ||%M||
-||date||\d|| || || || ||
-||formatted date||\d{##gray|//strftime_format//##}|| || || || ||
-||time||\A \t \@|| || || || ||
-||bold|| || || || ||%B %b||
-||underline|| || || || ||%U %u||
-||standout|| || || || ||%S %s||
+||shell level||$SHLVL|| || || || ||
+||environment variable||$##gray|//var//##||echo -n $##gray|//var//##||$##gray|//var//##||%$##gray|//var//##||$##gray|//var//##||
+||command substitution||$(##gray|//cmd//##)|| ||$(##gray|//cmd//##)|| ||$(##gray|//cmd//##)||
+||host name||\h _
+\H|| || || ||%m _
+%M||
+||user||\u|| || ||%n||%n||
+||number of jobs||\j|| || ||%j||%j||
+||tty|| || || || ||%y||
+||last command exit status|| || || ||%?||%?||
+||conditional expression|| || || || || ||
+||shell privilege indicator|| || || || ||%#||
+||continued line info|| || || || || ||
+||date and time||\D{##gray|//strftime_format//##}|| || || ||%D{##gray|//strftime_format//##}||
+||||||||||||~ [#prompt-text-effect text effects and escapes]||
+||escapes||\\ \[ \]|| || ||%% %{ %}||%% %{ %}||
+||bold|| || || ||%B %b||%B %b||
+||underline|| || || ||%U %u||%U %u||
+||standout|| || || ||%S %s||%S %s||
 ||foreground color|| || || || ||%F{red} %f||
 ||background color|| || || || ||%K{green} %k||
+
+Most shells permit a user to customize the prompt by setting an environment variable.  {{fish}} requires that the user define a callback function.
+
+The //primary prompt// is the prompt the user sees the most often.
+
+The //continued line prompt// is used when the user types an incomplete command.  This can happen when there are open parens, braces, or quote in the command, or the user backslash escaped the newline.
+
+The //select prompt// is used to prompt the user to make a multiple choice selection.  It corresponds to the select [#execution-control execution control statement].
+
+The //right prompt// appears at the far right side of the input line.  If the user types enough input to need the space, the right prompt disappears.
+
+[[# dynamic-prompt-info]]
+++ dynamic information
+
+{{bash}}, {{tcsh}}, and {{zsh}} provide a set of special character sequences for putting dynamic information in the prompt.  In the case of {{bash}} the sequences start with a backslash and in the case of {{tcsh}} and {{zsh}} a percent sign.
+
+{{bash}}, {{ksh}}, {{tcsh}}, and {{zsh}} will also perform variable expansion on anything that starts with a dollar sign and looks like a variable before each display of the prompt.  {{bash}}, {{ksh}}, and {{zsh}} will also perform command substitution before each display of the prompt when they encounter the {{$( )}} syntax in the prompt.
+
+[[# prompt-text-effect]]
+++ text effects and escapes
+
+[[# autoload]]
++ [#top Autoload]
+
+**fish:**
+
+**zsh:**
+
 
 [[# bash]]
 + [#top bash] (1989)
@@ -2129,7 +2217,7 @@ The Debian Almquist shell, {{dash}}, was originally a Linux port of the NetBSD A
 
 The Korn shell added history and job control but otherwise stayed consistent with the Bourne shell.  The POSIX standard for the shell was based on the Korn shell.
 
-{{zsh}} can be used to emulate {{ksh}} and both Mac OS X and Ubuntu do this.  Switching back and forth between the regular and {{ksh}} emulating version of {{zsh}} corrupts the {{.zsh_history}} file, however.  Installing the AT&T version of {{ksh}} will prevent this.
+The Korn shell was proprietary software until 2000, which is why clones such as {{pdksh}} were written.  Also, {{zsh}} can be used to emulate {{ksh}}; both Mac OS X and Ubuntu link {{ksh}} to {{zsh}}.
 
 [[# rc]]
 + [#top rc] (1989)
@@ -2143,7 +2231,7 @@ The {{rc}} shell was released as part of 10th Edition Unix.  It was also the Pla
 
 A succession of shells have been installed at {{/bin/sh}} which are known today by the engineers who implemented them: the Thompson shell, the Mashey shell, and the Bourne shell.
 
-The Bourne shell appeared in 1977.  It introduced the execution control structures that are used in most of the modern Unix shells.  These control structures, with their distinctive reversed words for marking the end of blocks: {{fi}} and {{esac}}, were borrowed from Algol 68.  However, where Algol 68 uses {{od}} the Bourne shell uses {{done}}.  The Bourne shell also introduced arbitrary length variable names; the Mashey shell by contrast was limited to single letter variable names.
+The Bourne shell appeared in 1977.  It introduced the execution control structures that are used in most of the modern Unix shells.  These control structures, with their distinctive reversed words for marking the end of blocks: {{fi}} and {{esac}}, were borrowed from Algol 68.  However, where Algol 68 uses {{od}} the Bourne shell uses {{done}}.  This was because a Unix command named {{od}} already existed.  The Bourne shell also introduced arbitrary length variable names; the Mashey shell by contrast was limited to single letter variable names.
 
 Whatever is installed at {{/bin/sh}} should probably be [http://pubs.opengroup.org/onlinepubs/9699919799/ POSIX compliant].  Mac OS X uses {{bash}}, which changes its behavior somewhat and operates in POSIX mode when invoked as {{sh}}.  One can also get this behavior by invoking {{bash}} with the {{@@--@@posix}} flag.
 

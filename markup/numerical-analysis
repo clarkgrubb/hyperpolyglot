@@ -2028,7 +2028,7 @@ boxplot(rnorm(100), _
 @<&nbsp;&nbsp;>@main="boxplot example", _
 @<&nbsp;&nbsp;>@sub="to illustrate options")||plt.boxplot(sp.randn(100)) _
 plt.title('boxplot example')||
-||[[# subplot-grid]][#subplot-grid-note grid of subplots][[image subplots.png]]||##gray|% 3rd arg refers to the subplot; _
+||[[# subplot-grid]][#subplot-grid-note grid of subplots][[image http://farm8.staticflickr.com/7551/15816199467_a0a0f159d0_t.jpg]]||##gray|% 3rd arg refers to the subplot; _
 % subplots are numbered in row-major order.## _
 for i = 1:4 _
 @<&nbsp;&nbsp;>@subplot(2, 2, i), hist(randn(50)) _
@@ -2095,7 +2095,7 @@ barplot(d,names.arg=labels,beside=TRUE)|| ||
 16: solid circle _
 17: solid triangle, points up _
 18: solid diamond//##|| ||
-||[[image hexbin.png]] _
+||[[image http://farm9.staticflickr.com/8568/16001259452_55e23d1303_t.jpg]] _
 [[# hexbin]][#hexbin-note hexagonal binning]|| ||install.packages('hexbin') _
 library('hexbin') _
  _
@@ -2188,7 +2188,7 @@ plot(x, z, col='red', type='l', axes=F, _
 axis(side=4, col='red', col.axis='red', _
 @<&nbsp;&nbsp;>@at=pretty(range(z))) _
 mtext('z', side=4, line=3, col='red')|| ||
-||[[# legend]][[image legend.png]] _
+||[[# legend]][[image http://farm8.staticflickr.com/7461/15382318933_b4ba583034_t.jpg]] _
 [#legend-note legend]|| ||x = (1:20) _
 y = x + rnorm(20) _
 y2 = x - 2 + rnorm(20) _
@@ -2198,7 +2198,7 @@ lines(x, y2, type="l", col="red") _
 legend('topleft', c('first', 'second'), _
 @<&nbsp;&nbsp;>@lty=c(1,1), lwd=c(2.5, 2.5), _
 @<&nbsp;&nbsp;>@col=c('black', 'red'))|| ||
-||[[# additional-point]][[image additional-point.png]] _
+||[[# additional-point]][[image http://farm9.staticflickr.com/8600/15814685890_69b3f21697_t.jpg]] _
 [#additional-point-note additional point set]|| ||plot(rnorm(20), rnorm(20)) _
 points(rnorm(20), rnorm(20), _
 @<&nbsp;&nbsp;>@col='red')|| ||
@@ -2212,7 +2212,7 @@ p = ggplot(df, aes(x=x, y=y, _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@group=letter, _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@fill=letter)) _
 p + geom_area(position='stack')|| ||
-||[[# overlapping-area-chart]][[image overlapping-area-chart.png]] _
+||[[# overlapping-area-chart]][[image http://farm8.staticflickr.com/7557/15815944099_9b56eb2af4_t.jpg]] _
 [#overlapping-area-chart-note overlapping area chart]|| ||x = rep(0:4, each=3) _
 y = round(5 * runif(15)) _
 letter = rep(LETTERS[1:3], 5) _
@@ -2223,19 +2223,19 @@ p = ggplot(df, aes(x=x, ymin=0, ymax=y, _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@group=letter, fill=letter, _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@alpha=alpha)) _
 p + geom_ribbon()|| ||
-||[[# 3d-scatter-plot]][[image scatterplot3d.png]] _
+||[[# 3d-scatter-plot]][[image http://farm9.staticflickr.com/8611/15814558578_f6b4f8d3b0_t.jpg]] _
 [#3d-scatter-plot-note 3d scatter plot]|| ||install.packages('scatterplot3d') _
 library('scatterplot3d') _
  _
 scatterplot3d(rnorm(50), rnorm(50), _
 @<&nbsp;&nbsp;>@rnorm(50), type="h")|| ||
-||[[# bubble-chart]][[image bubble-chart.png]] _
+||[[# bubble-chart]][[image http://farm9.staticflickr.com/8591/15999976481_b2082d7d5b_t.jpg]] _
 [#bubble-chart-note bubble chart]|| ||df = data.frame(x=rnorm(20), _
 @<&nbsp;&nbsp;>@y=rnorm(20), z=rnorm(20)) _
  _
 p = ggplot(df, aes(x=x, y=y, size=z)) _
 p + geom_point()|| ||
-||[[# scatter-plot-matrix]][[image scatter-plot-matrix.png]] _
+||[[# scatter-plot-matrix]][[image http://farm8.staticflickr.com/7521/15976165976_636a08e4e8_t.jpg]] _
 [#scatter-plot-matrix-note scatter plot matrix]|| ||x = rnorm(20) _
 y = rnorm(20) _
 z = x + 3*y _
@@ -2243,7 +2243,7 @@ w = y + 0.1*rnorm(20) _
 df = data.frame(x, y, z, w) _
  _
 pairs(df)|| ||
-||[[# contour-plot]][[image contour-plot.png]] _
+||[[# contour-plot]][[image http://farm8.staticflickr.com/7496/15814558718_3f63b8e371_t.jpg]] _
 [#contour-plot-note contour plot]|| ||m = matrix(0, 100, 100) _
 for (i in 2:100) { _
 @<&nbsp;&nbsp;>@for (j in 2:100) {  _
