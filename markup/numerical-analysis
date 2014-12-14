@@ -4,7 +4,9 @@
 
 [#tables tables] | [#import-export import and export] | [#relational-algebra relational algebra] | [#aggregation aggregation]
 
-[#vectors vectors] | [#matrices matrices] | [#descriptive-statistics descriptive statistics] | [#distributions distributions] | [#linear-models linear models] | [#statistical-tests statistical tests] | [#time-series time series] | [#curve-fitting curve fitting] | [#optimization optimization] | [#univariate-charts univariate charts] | [#bivariate-charts bivariate charts] | [#multivariate-charts multivariate charts]
+[#vectors vectors] | [#matrices matrices] | [#optimization optimization] |  [#descriptive-statistics descriptive statistics] | [#distributions distributions] | [#regression regression] | [#statistical-tests statistical tests] | [#time-series time series] | [#curve-fitting curve fitting]
+
+[#univariate-charts univariate charts] | [#bivariate-charts bivariate charts] | [#multivariate-charts multivariate charts]
 
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
 ||[[# version-used]][#version-used-note version used]||##gray|//MATLAB 8.3//## _
@@ -1389,6 +1391,19 @@ nzmax(X) _
 ##gray|% number of nonzero entries:## _
 nnz(X)||##gray|# memory allocation in bytes:## _
 object.size(X)|| ||
+||||||||~ [[# optimization]][#optimization-note optimization]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+||[[# minimize-linear-prob]][#minimize-linear-prob-note linear minimization]||##gray|% minimize c * x subject to the constraint that A * x <= b## _
+ _
+linprog(c, A, b)|| || ||
+||[[# minimize-linear-prob-decision-var-bounds]][#minimize-linear-prob-decision-var-bounds-note linear minimization with bounds on decision variables]||##gray|% also impose constraints Lb <= x <= Ub## _
+ _
+linprog(c, A, b, [], [], Lb, Ub)|| || ||
+||[[# minimize-linear-prob-equality-constraints]][#minimize-linear-prob-equality-constraints-note linear minimization with equality constraints]||##gray|% also impose constraints Aeq * x == beq## _
+ _
+lingprog(c, A, b, Aeq, beq)|| || ||
+||[[# minimize-quadratic-prob]][#minimize-quadratic-prob-note quadratic minimization]||quadprog()|| || ||
+||[[# minimize-int-linear-prob]][#minimize-int-linear-prob-note integer linear minimization]||intlinprog()|| || ||
 ||||||||~ [[# descriptive-statistics]][#descriptive-statistics-note descriptive statistics]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
 ||[[# 1st-moment-stats]][#1st-moment-stats-note first moment statistics]||x = [1 2 3 8 12 19] _
@@ -1613,7 +1628,7 @@ dfunc$y|| ||
 F = ecdf(rnorm(100))|| ||
 ||[[# empirical-quantile-func]][#empirical-quantile-func-note empirical quantile function]|| ||F = ecdf(rnorm(100)) _
 Finv = ecdf(F(seq(0, 1, .01)))|| ||
-||||||||~ [[# linear-models]][#linear-models-note linear models]||
+||||||||~ [[# regression]][#regression-note regression]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
 ||[[# simple-linear-regression]][#simple-linear-regression-note simple linear regression] _
 ##gray|//coefficient, intercept, and residuals//##||x = [1 2 3] _
@@ -1967,19 +1982,6 @@ plot(xx, yy)|| || ||
 [[# cubic-spline]][#cubic-spline-note cubic spline]|| ||f = splinefun(rnorm(20)) _
 x = seq(1, 20, .1) _
 plot(x, f(x), type="l")|| ||
-||||||||~ [[# optimization]][#optimization-note optimization]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
-||[[# minimize-linear-prob]][#minimize-linear-prob-note linear minimization]||##gray|% minimize c * x subject to the constraint that A * x <= b## _
- _
-linprog(c, A, b)|| || ||
-||[[# minimize-linear-prob-decision-var-bounds]][#minimize-linear-prob-decision-var-bounds-note linear minimization with bounds on decision variables]||##gray|% also impose constraints Lb <= x <= Ub## _
- _
-linprog(c, A, b, [], [], Lb, Ub)|| || ||
-||[[# minimize-linear-prob-equality-constraints]][#minimize-linear-prob-equality-constraints-note linear minimization with equality constraints]||##gray|% also impose constraints Aeq * x == beq## _
- _
-lingprog(c, A, b, Aeq, beq)|| || ||
-||[[# minimize-quadratic-prob]][#minimize-quadratic-prob-note quadratic minimization]||quadprog()|| || ||
-||[[# minimize-int-linear-prob]][#minimize-int-linear-prob-note integer linear minimization]||intlinprog()|| || ||
 ||||||||~ [[# univariate-charts]][#univariate-chart-note univariate charts]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy matplotlib]||
 ||[[image http://farm5.static.flickr.com/4090/5039793334_f76edece33_m.jpg]] [[# bar-chart]][#bar-chart-note vertical bar chart]||bar([7 3 8 5 5])||cnts = c(7,3,8,5,5) _
@@ -3815,6 +3817,43 @@ Coordinate format specifies a matrix with three arrays: the row indices, the the
 [[# sparse-matrix-storage-note]]
 ++ [#sparse-matrix-storage sparse matrix storage]
 
+[[# optimization-note]]
++ [#optimization Optimization]
+
+A linear program is an optimization problem in which one tries to minimize or maximize a linear function called the //objective function// subject to linear inequality constraints.
+
+The unknowns in the objective function and the constraints are called the decision variables.
+
+[[# minimize-linear-prob-note]]
+++ [#minimize-linear-prob linear minimization]
+
+How to solve a linear program where the objective function is minimized.
+
+If we have a maximization problem {{c * x}}, then we can find the solution by minimizing {{-c * x}}; that is, replacing {{c}} with {{-c}}.
+
+**matlab:**
+
+{{linprog}} is part of the Optimization toolbox.
+
+The function {{linprog}} minimizes {{c * x}} subject to the constraint that {{A * x <= b}}.  {{A * x}} and {{b}} are vectors, and when we say that {{A * x <= b}}, we mean that each component of {{A * x}} must be less than or equal to the corresponding component of {{b}}.
+
+When formulating constraints in the form {{A * x <= b}}, we may find that we have some greater-than constraints of the form: {{a,,i1,, x,,1,, + ... + a,,in,, x,,n,, >= b,,i,,}}.  We convert each such constraint to a less-than constraint by multiplying it by {{-1}}.  We use the values {{-a,,i1,,}}, ..., {{-a,,in,,}} in {{A}} and {{-b,,i,,}} in {{b}}.
+
+[[# minimize-linear-prob-decision-var-bounds-note]]
+++ [#minimize-linear-prob-decision-var-bounds linear minimization with bounds on decision variables]
+
+How to solve a linear program where the objective function is minimized and with extra constraints on the decision variables of the form {{L,,i,, <= x,,i,, <= U,,i,,}}.
+
+
+
+[[# minimize-linear-prob-equality-constraints-note]]
+++ [#minimize-linear-prob-equality-constraints linear minimization with equality constraints]
+
+[[# minimize-quadratic-prob-note]]
+++ [#minimize-quadratic-prob quadratic minimization]
+
+[[# minimize-int-linear-prob-note]]
+++ [#minimize-int-linear-prob integer linear minimization]
 
 [[# descriptive-statistics-note]]
 + [#descriptive-statistics Descriptive Statistics]
@@ -4162,8 +4201,8 @@ How to construct a density function from a sample.
 [[# empirical-quantile-func-note]]
 ++ [#empirical-quantile-func empirical quantile function]
 
-[[# linear-models-note]]
-+ [#linear-models Linear Models]
+[[# regression-note]]
++ [#regression Regression]
 
 [[# simple-linear-regression-note]]
 ++ [#simple-linear-regression simple linear regression]
@@ -4354,44 +4393,6 @@ How to get a data point in a time series by its ordinal position.
 ++ [#cubic-spline cubic spline]
 
 How to connect the dots of a data set with a line which has a continuous 2nd derivative.
-
-[[# optimization-note]]
-+ [#optimization Optimization]
-
-A linear program is an optimization problem in which one tries to minimize or maximize a linear function called the //objective function// subject to linear inequality constraints.
-
-The unknowns in the objective function and the constraints are called the decision variables.
-
-[[# minimize-linear-prob-note]]
-++ [#minimize-linear-prob linear minimization]
-
-How to solve a linear program where the objective function is minimized.
-
-If we have a maximization problem {{c * x}}, then we can find the solution by minimizing {{-c * x}}; that is, replacing {{c}} with {{-c}}.
-
-**matlab:**
-
-{{linprog}} is part of the Optimization toolbox.
-
-The function {{linprog}} minimizes {{c * x}} subject to the constraint that {{A * x <= b}}.  {{A * x}} and {{b}} are vectors, and when we say that {{A * x <= b}}, we mean that each component of {{A * x}} must be less than or equal to the corresponding component of {{b}}.
-
-When formulating constraints in the form {{A * x <= b}}, we may find that we have some greater-than constraints of the form: {{a,,i1,, x,,1,, + ... + a,,in,, x,,n,, >= b,,i,,}}.  We convert each such constraint to a less-than constraint by multiplying it by {{-1}}.  We use the values {{-a,,i1,,}}, ..., {{-a,,in,,}} in {{A}} and {{-b,,i,,}} in {{b}}.
-
-[[# minimize-linear-prob-decision-var-bounds-note]]
-++ [#minimize-linear-prob-decision-var-bounds linear minimization with bounds on decision variables]
-
-How to solve a linear program where the objective function is minimized and with extra constraints on the decision variables of the form {{L,,i,, <= x,,i,, <= U,,i,,}}.
-
-
-
-[[# minimize-linear-prob-equality-constraints-note]]
-++ [#minimize-linear-prob-equality-constraints linear minimization with equality constraints]
-
-[[# minimize-quadratic-prob-note]]
-++ [#minimize-quadratic-prob quadratic minimization]
-
-[[# minimize-int-linear-prob-note]]
-++ [#minimize-int-linear-prob integer linear minimization]
 
 [[# univariate-chart-note]]
 + [#univariate-charts Univariate Charts]
