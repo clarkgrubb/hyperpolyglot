@@ -5,100 +5,7 @@ require 'pp'
 
 CONTINUATION_REGEX = / _$/
 TABLE_LINE_REGEX = /^\s*\|\|/
-
-HPGLOT_PAGE_AND_COLUMN_TO_LANG = {
-
-  'c' => {
-    2 => 'c',
-    3 => 'go',
-    4 => 'fortran',
-  },
-
-  'computer-algebra' => {
-    2 => 'mathematica',
-    3 => 'maxima',
-    4 => 'pari/gp',
-  },
-
-  'cpp' => {
-    2 => 'c++',
-    3 => 'objective-c',
-    4 => 'java',
-    5 => 'c#',
-  },
-
-  'data' => {
-    2 => 'sql',
-    3 => 'awk',
-    4 => 'pig',
-  },
-
-  'embeddable' => {
-    2 => 'tcl',
-    3 => 'lua',
-    4 => 'javascript',
-    5 => 'io',
-  },
-
-  'lisp' => {
-    2 => 'commonlisp',
-    3 => 'scheme',
-    4 => 'clojure',
-    5 => 'emacslisp',
-  },
-
-  'logic' => {
-    2 => 'prolog',
-    3 => 'erlang',
-    4 => 'oz',
-  },
-
-  'ml' => {
-    2 => 'sml',
-    3 => 'ocaml',
-    4 => 'scala',
-    5 => 'haskell',
-  },
-
-  'numerical-analysis' => {
-    2 => 'matlab',
-    3 => 'r',
-    4 => 'numpy',
-  },
-
-  'pascal' => {
-    2 => 'pascal',
-    3 => 'ada',
-    4 => 'pl/pgsql',
-  },
-
-  'scripting' => {
-    2 => 'perl',
-    3 => 'php',
-    4 => 'python',
-    5 => 'ruby',
-  },
-
-  'scripting2' => {
-    2 => 'perl',
-    3 => 'php',
-    4 => 'python',
-    5 => 'ruby',
-  },
-
-  'shell' => {
-    2 => 'posix',
-    3 => 'applescript',
-    4 => 'powershell',
-  },
-
-  'stack' => {
-    2 => 'forth',
-    3 => 'postscript',
-    4 => 'factor',
-  },
-}
-
+END_OF_TABLE_REGEX = /^\s*$/
 
 def bar_split(line)
 
@@ -150,19 +57,27 @@ def table_line?(line)
   TABLE_LINE_REGEX.match(line)
 end
 
-def parse(f, extract_table)
+def end_of_table?(line)
+  END_OF_TABLE_REGEX.match(line)
+end
+
+def parse(f)
 
   table = []
   columns = []
 
   before_table = true
+  after_table = false
   following_continued_line = false
   in_continued_line = false
 
   f.each do |line|
 
-    next if extract_table and before_table and not table_line?(line)
+    next if before_table and not table_line?(line)
     before_table = false
+
+    after_table = true if not before_table and end_of_table?(line)
+    next if after_table
 
     a = bar_split(line)
 
@@ -182,7 +97,7 @@ def parse(f, extract_table)
       in_continued_line = true
     end
 
-    if extract_table and not following_continued_line and not table_line?(line)
+    if not following_continued_line and not table_line?(line)
       break
     end
 
@@ -248,7 +163,7 @@ def column_count(table)
   column_cnt
 end
 
-def print_statistics(table, page)
+def print_statistics(table, output_stream)
 
   column_cnt = nil
   header_row_cnt = 0
@@ -258,12 +173,6 @@ def print_statistics(table, page)
   empty_column_cnts = Hash.new { |h, k| h[k] = 0 }
 
   column_cnt = column_count(table)
-
-  if page
-    column_to_lang = HPGLOT_PAGE_AND_COLUMN_TO_LANG[page]
-  end
-
-  column_to_lang = {} if column_to_lang.nil?
 
   table.each do |row|
 
@@ -285,14 +194,13 @@ def print_statistics(table, page)
     end
   end
 
-  puts "#{page} header rows: #{header_row_cnt} non-header rows: #{non_header_row_cnt}"
+  output_stream.puts "header rows: #{header_row_cnt} non-header rows: #{non_header_row_cnt}"
   nonempty_column_cnts.keys.sort.each do |coli|
     next if coli < 2
     nonempty_cnt = nonempty_column_cnts[coli]
     pct = "%.2f" % (100.0 * nonempty_cnt / (nonempty_cnt + empty_column_cnts[coli]))
-    lang = column_to_lang[coli]
-    lang = "column #{coli}" if lang.nil?
-    puts "cells in #{lang} #{nonempty_column_cnts[coli]} (#{pct}%)"
+      lang = "column #{coli}"
+    output_stream.puts "cells in #{lang}: #{nonempty_column_cnts[coli]} (#{pct}%)"
   end
 
 
@@ -307,46 +215,25 @@ if $0 == __FILE__
 
   opts = GetoptLong.new(
                         [ '--columns', "-c", GetoptLong::REQUIRED_ARGUMENT ],
-                        [ '--sort', "-s", GetoptLong::NO_ARGUMENT ],
-                        [ '--statistics', "-t", GetoptLong::NO_ARGUMENT ],
-                        [ '--extract', "-x", GetoptLong::NO_ARGUMENT ],
-                        [ '--page', "-p", GetoptLong::REQUIRED_ARGUMENT ]
                         )
 
   columns = []
   page = nil
-  sort_table = false
   statistics = false
-  extract_table = false
 
   opts.each do |opt,arg|
     case opt
     when '--columns'
       columns = arg.split(',',-1).map { |s| s.to_i }
-    when '--sort'
-      sort_table = true
-    when '--statistics'
-      statistics = true
-    when '--extract'
-      extract_table = true
-    when '--page'
-      page = arg
     end
   end
 
   usage if not statistics and columns.empty?
   usage if not statistics and columns.any? { |col| col.to_i < 1 }
 
-  table = parse($stdin, extract_table)
+  table = parse($stdin)
 
-  if statistics
-    print_statistics(table, page)
-    exit(0)
-  end
-
-  if sort_table
-    table = sort(table)
-  end
+  print_statistics(table, $stderr)
 
   generate($stdout, reorder(table, columns))
 
