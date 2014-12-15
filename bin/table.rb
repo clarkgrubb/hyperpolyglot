@@ -6,9 +6,11 @@ require 'pp'
 CONTINUATION_REGEX = / _$/
 TABLE_LINE_REGEX = /^\s*\|\|/
 END_OF_TABLE_REGEX = /^\s*$/
+ROW_TITLE_REGEX = /\[\[# ([a-z-]+)\]\]\[#\1-note ([a-z0-9? \/,-]+)\]/
+EMPTY_CELL_REGEX = /^([~\s]*|~ \[\[# [a-z-]+\]\])$/
+
 
 def bar_split(line)
-
   inside_at_quote = false
   a = []
   tokens = line.scan(/\|\||@@|.+?(?=\|\||@@)|.+$/m)
@@ -113,9 +115,28 @@ def parse(f)
   table
 end
 
-def generate(f, table)
+def fix_row_title(current_title)
+  loop do
+    $stderr.puts "current title: #{current_title}"
+    $stderr.write "new anchor: "
+    anchor = $stdin.gets.chomp
+    $stderr.write "new title: "
+    title = $stdin.gets.chomp
+    row_title = "[[# #{anchor}]][##{anchor}-note #{title}]"
+    if ROW_TITLE_REGEX.match(row_title)
+      return row_title
+    else
+      $stderr.puts "ERROR: new row title rejected: #{row_title}"
+    end
+  end
+end
+
+def generate(f, table, footnote)
 
   table.each do |columns|
+    if footnote and not header_row?(columns) and not EMPTY_CELL_REGEX.match(columns[1]) and not ROW_TITLE_REGEX.match(columns[1])
+      columns[1] = fix_row_title(columns[1])
+    end
     f.puts columns.join('||')
   end
 end
@@ -168,6 +189,7 @@ def print_statistics(table, output_stream)
   column_cnt = nil
   header_row_cnt = 0
   non_header_row_cnt = 0
+  row_title_cnt = 0
 
   nonempty_column_cnts = Hash.new { |h, k| h[k] = 0 }
   empty_column_cnts = Hash.new { |h, k| h[k] = 0 }
@@ -184,8 +206,13 @@ def print_statistics(table, output_stream)
       # not a content row so skip
     else
       non_header_row_cnt += 1
+      if ROW_TITLE_REGEX.match(row[1])
+        row_title_cnt += 1
+      else
+        output_stream.puts "INFO: no anchor and footnote link: #{row[1]}"
+      end
       row.each_with_index do |col, coli|
-        if /^\s*$/.match(col)
+        if EMPTY_CELL_REGEX.match(col)
           empty_column_cnts[coli] += 1
         else
           nonempty_column_cnts[coli] += 1
@@ -194,7 +221,8 @@ def print_statistics(table, output_stream)
     end
   end
 
-  output_stream.puts "header rows: #{header_row_cnt} non-header rows: #{non_header_row_cnt}"
+  output_stream.puts "header rows: #{header_row_cnt}  non-header rows: #{non_header_row_cnt}"
+  output_stream.puts "non-header rows with anchor and footnote link: #{row_title_cnt}"
   nonempty_column_cnts.keys.sort.each do |coli|
     next if coli < 2
     nonempty_cnt = nonempty_column_cnts[coli]
@@ -214,27 +242,36 @@ end
 if $0 == __FILE__
 
   opts = GetoptLong.new(
-                        [ '--columns', "-c", GetoptLong::REQUIRED_ARGUMENT ],
-                        )
+    [ '--columns', '-c', GetoptLong::REQUIRED_ARGUMENT ],
+    [ '--file', '-f', GetoptLong::REQUIRED_ARGUMENT ],
+    [ '--note', '-n', GetoptLong::NO_ARGUMENT ],
+  )
 
   columns = []
-  page = nil
-  statistics = false
+  footnote = false
+  input_stream = $stdin
 
   opts.each do |opt,arg|
     case opt
     when '--columns'
       columns = arg.split(',',-1).map { |s| s.to_i }
+    when '--file'
+      input_stream = File.open(arg)
+    when '--note'
+      footnote = true
     end
   end
 
-  usage if not statistics and columns.empty?
-  usage if not statistics and columns.any? { |col| col.to_i < 1 }
+  if footnote and input_stream == $stdin
+    $stderr.puts "ERROR: must use --file flag with --note flag"
+    usage
+  end
+  usage if not columns or columns.any? { |col| col.to_i < 1 }
 
-  table = parse($stdin)
+  table = parse(input_stream)
 
   print_statistics(table, $stderr)
 
-  generate($stdout, reorder(table, columns))
+  generate($stdout, reorder(table, columns), footnote)
 
 end
