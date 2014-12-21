@@ -2,12 +2,102 @@
 
 require 'getoptlong'
 require 'pp'
+require 'sqlite3'
 
 CONTINUATION_REGEX = / _$/
 TABLE_LINE_REGEX = /^\s*\|\|/
 END_OF_TABLE_REGEX = /^\s*$/
-ROW_TITLE_REGEX = /\[\[# ([a-z-]+)\]\]\[#\1-note ([a-z0-9? \/,-]+)\]/
+ROW_TITLE_REGEX = /\[\[# ([a-z][a-z0-9-]*)\]\]\[#\1-note ([A-Za-z0-9? \.\/,-]+)\]/
 EMPTY_CELL_REGEX = /^([~\s]*|~ \[\[# [a-z-]+\]\])$/
+HEADER_CELL_REGEX = /^~ \[\[# ([a-z-]+)\]\]\[#\1-note ([^\]]+)\]$/
+
+class DB
+  def initialize(path)
+    @conn = SQLite3::Database.new path
+  end
+
+  def setup
+    @conn.execute("CREATE TABLE sections (
+                     title text PRIMARY KEY,
+                     anchor text NOT NULL,
+                     position integer NOT NULL,
+                     CONSTRAINT pos UNIQUE (position)
+                   )")
+    @conn.execute("CREATE TABLE examples (
+                     title text NOT NULL,
+                     anchor text NOT NULL,
+                     section text NOT NULL,
+                     position integer NOT NULL,
+                     note text,
+                     CONSTRAINT example_title_section
+                       PRIMARY KEY (title, section)
+                     CONSTRAINT anchor_uniq
+                       UNIQUE (anchor)
+                     CONSTRAINT example_section
+                       FOREIGN KEY (section)
+                       REFERENCES sections (title)
+                     CONSTRAINT section_pos_uniq
+                       UNIQUE (section, position)
+                   )")
+  end
+
+  def add_section(title, anchor, section_num)
+    @conn.execute("INSERT INTO sections VALUES (?, ?, ?)",
+                  [title, anchor, section_num])
+  end
+
+  def add_example(title, anchor, section, example_num, note)
+    begin
+      @conn.execute("INSERT INTO examples VALUES (?, ?, ?, ?, ?)",
+                    [title, anchor, section, example_num, note])
+    rescue
+      $stderr.puts "failed to insert title: #{title} anchor: #{anchor} section: #{section}"
+      raise
+    end
+  end
+
+  def update(table)
+    section = 'general'
+    section_num = 1
+    example_num = 1
+    add_section(section, section, section_num)
+
+    table.each do |columns|
+      if header_row?(columns)
+        header_cell = columns.find { |col| !col.empty? }
+        md = HEADER_CELL_REGEX.match(header_cell)
+        if md
+          anchor, title = md[1..2]
+          section_num += 1
+          example_num = 1
+          add_section(title, anchor, section_num)
+          section = title
+        else
+          $stderr.puts("DB#update: skipping header: #{header_cell}")
+        end
+        next
+      end
+      next if EMPTY_CELL_REGEX.match(columns[1])
+      md = ROW_TITLE_REGEX.match(columns[1])
+      if md
+        anchor, title = md[1..2]
+        note = columns[3]
+        add_example(title, anchor, section, example_num, note)
+        example_num += 1
+      else
+        $stderr.puts("DB#update: skipping column: #{columns.join('||')}")
+      end
+    end
+  end
+
+  def generate
+
+  end
+
+  def close
+    @conn.close
+  end
+end
 
 
 def bar_split(line)
@@ -131,10 +221,15 @@ def fix_row_title(current_title)
   end
 end
 
-def generate(f, table, footnote)
+def generate(f, table)
+
+  footnote = false
 
   table.each do |columns|
-    if footnote and not header_row?(columns) and not EMPTY_CELL_REGEX.match(columns[1]) and not ROW_TITLE_REGEX.match(columns[1])
+    if footnote and
+      not header_row?(columns) and
+      not EMPTY_CELL_REGEX.match(columns[1]) and
+      not ROW_TITLE_REGEX.match(columns[1])
       columns[1] = fix_row_title(columns[1])
     end
     f.puts columns.join('||')
@@ -235,7 +330,7 @@ def print_statistics(table, output_stream)
 end
 
 def usage
-  $stderr.puts "table.rb --sort --columns=COL1,COL2,... < INPUT"
+  $stderr.puts "table.rb --columns=COL1,COL2,... < INPUT"
   exit -1
 end
 
@@ -243,35 +338,51 @@ if $0 == __FILE__
 
   opts = GetoptLong.new(
     [ '--columns', '-c', GetoptLong::REQUIRED_ARGUMENT ],
+    [ '--database', '-d', GetoptLong::REQUIRED_ARGUMENT ],
+    [ '--generate-skeleton', GetoptLong::REQUIRED_ARGUMENT ],
+    [ '--parse-skeleton', GetoptLong::REQUIRED_ARGUMENT ],
     [ '--file', '-f', GetoptLong::REQUIRED_ARGUMENT ],
-    [ '--note', '-n', GetoptLong::NO_ARGUMENT ],
   )
 
   columns = []
-  footnote = false
   input_stream = $stdin
+  db = nil
+  skeleton_input_stream = nil
+  skeleton_output_stream = nil
 
   opts.each do |opt,arg|
     case opt
     when '--columns'
       columns = arg.split(',',-1).map { |s| s.to_i }
+    when '--database'
+      db = DB.new(arg)
+      $stderr.puts "DEBUG: created db"
     when '--file'
       input_stream = File.open(arg)
-    when '--note'
-      footnote = true
+    when '--generate-skeleton'
+      skeleton_output_stream = File.open(arg, 'w')
+    when '--parse-skeleton'
+      skeleton_input_stream = File.open(arg)
     end
   end
 
-  if footnote and input_stream == $stdin
-    $stderr.puts "ERROR: must use --file flag with --note flag"
-    usage
+  # TODO: check for conflicting flags
+
+  if skeleton_input_stream
+    skeleton = parse(skeleton_input_stream)
+    db.setup()
+    db.update(skeleton)
+    exit (0)
   end
+
+  if skeleton_output_stream
+    db.generate(skeleton_output_stream)
+    exit (0)
+  end
+
   usage if not columns or columns.any? { |col| col.to_i < 1 }
 
   table = parse(input_stream)
-
   print_statistics(table, $stderr)
-
-  generate($stdout, reorder(table, columns), footnote)
-
+  generate($stdout, reorder(table, columns))
 end
