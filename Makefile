@@ -102,7 +102,7 @@ all: instructions
 
 .PHONY: rubocop
 rubocop:
-	find . -name '*.rb' | xargs rubocop
+	find . -name '*.rb' | xargs rubocop -D
 
 .PHONY: pep8
 pep8:
