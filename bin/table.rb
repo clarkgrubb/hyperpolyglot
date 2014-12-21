@@ -11,6 +11,7 @@ ROW_TITLE_REGEX =
   /\[\[# ([a-z][a-z0-9-]*)\]\]\[#\1-note ([A-Za-z0-9? \.\/,-]+)\]/
 EMPTY_CELL_REGEX = /^([~\s]*|~ \[\[# [a-z-]+\]\])$/
 HEADER_CELL_REGEX = /^~ \[\[# ([a-z-]+)\]\]\[#\1-note ([^\]]+)\]$/
+SUPERSECTION_CELL_REGEX = /^~ ([A-Z]+)$/
 
 class DB
   def initialize(path)
@@ -22,6 +23,7 @@ class DB
                      title text PRIMARY KEY,
                      anchor text NOT NULL,
                      position integer NOT NULL,
+                     supersection text NOT NULL,
                      CONSTRAINT pos UNIQUE (position)
                    )")
     @conn.execute("CREATE TABLE examples (
@@ -42,9 +44,9 @@ class DB
                    )")
   end
 
-  def add_section(title, anchor, section_num)
-    @conn.execute('INSERT INTO sections VALUES (?, ?, ?)',
-                  [title, anchor, section_num])
+  def add_section(title, anchor, section_num, supersection)
+    @conn.execute('INSERT INTO sections VALUES (?, ?, ?, ?)',
+                  [title, anchor, section_num, supersection])
   end
 
   def add_example(title, anchor, section, example_num, note)
@@ -57,20 +59,26 @@ class DB
   end
 
   def update(table)
+    supersection = nil
     section = 'general'
     section_num = 1
     example_num = 1
-    add_section(section, section, section_num)
+    add_section(section, section, section_num, 'CORE')
 
     table.each do |columns|
       if header_row?(columns)
         header_cell = columns.find { |col| !col.empty? }
+        md = SUPERSECTION_CELL_REGEX.match(header_cell)
+        if md
+          supersection = md[1]
+          next
+        end
         md = HEADER_CELL_REGEX.match(header_cell)
         if md
           anchor, title = md[1..2]
           section_num += 1
           example_num = 1
-          add_section(title, anchor, section_num)
+          add_section(title, anchor, section_num, supersection)
           section = title
         else
           $stderr.puts("DB#update: skipping header: #{header_cell}")
@@ -352,7 +360,6 @@ if $PROGRAM_NAME == __FILE__
       columns = arg.split(',', -1).map(&:to_i)
     when '--database'
       db = DB.new(arg)
-      $stderr.puts 'DEBUG: created db'
     when '--file'
       input_stream = File.open(arg)
     when '--generate-skeleton'
