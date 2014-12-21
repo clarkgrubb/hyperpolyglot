@@ -100,6 +100,10 @@ instructions:
 .PHONY: all
 all: instructions
 
+.PHONY: rubocop
+rubocop:
+	find . -name '*.rb' | xargs rubocop
+
 .PHONY: pep8
 pep8:
 	find . -name '*.py' | xargs pep8
