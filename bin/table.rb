@@ -28,6 +28,8 @@ class DB
                    )")
     @conn.execute("CREATE TABLE examples (
                      title text NOT NULL,
+                     title_prematch text,
+                     title_postmatch text,
                      anchor text NOT NULL,
                      section text NOT NULL,
                      position integer NOT NULL,
@@ -49,9 +51,11 @@ class DB
                   [title, anchor, section_num, supersection])
   end
 
-  def add_example(title, anchor, section, example_num, note)
-    @conn.execute('INSERT INTO examples VALUES (?, ?, ?, ?, ?)',
-                  [title, anchor, section, example_num, note])
+  def add_example(title, anchor, section, example_num, note,
+                  title_prematch, title_postmatch)
+    @conn.execute('INSERT INTO examples VALUES (?, ?, ?, ?, ?, ?, ?)',
+                  [title, title_prematch, title_postmatch, anchor, section,
+                   example_num, note])
   rescue
     $stderr.puts "failed to insert title: #{title} anchor: #{anchor} "\
                  "section: #{section}"
@@ -89,8 +93,11 @@ class DB
       md = ROW_TITLE_REGEX.match(columns[1])
       if md
         anchor, title = md[1..2]
+        title_prematch = md.pre_match
+        title_postmatch = md.post_match
         note = columns[3]
-        add_example(title, anchor, section, example_num, note)
+        add_example(title, anchor, section, example_num, note,
+                    title_prematch, title_postmatch)
         example_num += 1
       else
         $stderr.puts("DB#update: skipping column: #{columns.join('||')}")
