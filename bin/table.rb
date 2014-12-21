@@ -12,6 +12,8 @@ ROW_TITLE_REGEX =
 EMPTY_CELL_REGEX = /^([~\s]*|~ \[\[# [a-z-]+\]\])$/
 HEADER_CELL_REGEX = /^~ \[\[# ([a-z-]+)\]\]\[#\1-note ([^\]]+)\]$/
 SUPERSECTION_CELL_REGEX = /^~ ([A-Z]+)$/
+SUPERSECTIONS =
+  %w( CORE AUXILIARY CONTAINERS TABLES MATHEMATICS STATISTICS CHARTS )
 
 class DB
   def initialize(path)
@@ -62,12 +64,26 @@ class DB
     raise
   end
 
+  def get_sections_for_supersection(supersection)
+    @conn.execute('SELECT title, anchor '\
+                  'FROM sections '\
+                  'WHERE supersection = ? '\
+                  'ORDER BY position', [supersection])
+  end
+
+  def get_examples_for_section(section)
+    @conn.execute('SELECT title, title_prematch, '\
+                  '       title_postmatch, anchor, note '\
+                  'FROM examples '\
+                  'WHERE section = ? '\
+                  'ORDER BY position', [section])
+  end
+
   def update(table)
     supersection = nil
-    section = 'general'
-    section_num = 1
-    example_num = 1
-    add_section(section, section, section_num, 'CORE')
+    section = nil
+    section_num = 0
+    example_num = 0
 
     table.each do |columns|
       if header_row?(columns)
@@ -99,13 +115,52 @@ class DB
         add_example(title, anchor, section, example_num, note,
                     title_prematch, title_postmatch)
         example_num += 1
+      elsif columns[1].start_with?('~ title')
+        next
       else
         $stderr.puts("DB#update: skipping column: #{columns.join('||')}")
       end
     end
   end
 
-  def generate
+  def generate_nav(output_stream)
+    output_stream.write '[[# top]]'
+    SUPERSECTIONS.each do |supersection|
+      output_stream.write "##gray|#{supersection.downcase}:## "
+      sections = []
+      get_sections_for_supersection(supersection).each do |title, anchor|
+        sections << "[##{anchor} #{title}]"
+      end
+      output_stream.puts sections.join(' | ')
+      output_stream.puts
+    end
+  end
+
+  def generate_table(output_stream)
+    SUPERSECTIONS.each do |supersection|
+      output_stream.puts "||||||~ #{supersection}||"
+      get_sections_for_supersection(supersection).each do |section_data|
+        section_title = section_data[0]
+        section_anchor = section_data[1]
+        output_stream.puts "||||||~ [[# #{section_anchor}]]"\
+                           "[##{section_anchor}-note #{section_title}]||"
+        output_stream.puts '||~ title ||~ anchor||~ description||'
+        get_examples_for_section(section_title).each do |data|
+          title, title_prematch, title_postmatch, anchor, note = *data
+          output_stream.write "||#{title_prematch}[[# #{anchor}]]"\
+                              "[##{anchor}-note #{title}]#{title_postmatch}"
+          output_stream.write "||##{anchor}"
+          output_stream.puts "||#{note}||"
+        end
+      end
+    end
+    underscores = '_' * 35
+    output_stream.puts "||~ ||~ ##EFEFEF|@@#{underscores}@@##||~ ||"
+  end
+
+  def generate(output_stream)
+    generate_nav(output_stream)
+    generate_table(output_stream)
   end
 
   def close
