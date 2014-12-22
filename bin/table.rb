@@ -15,6 +15,10 @@ SUPERSECTION_CELL_REGEX = /^~ ([A-Z]+)$/
 SUPERSECTIONS =
   %w( CORE AUXILIARY CONTAINERS TABLES MATHEMATICS STATISTICS CHARTS )
 
+# FIXME: lack of encapsulation: deconstruting the regexes
+# FIXME: lack of encapsulation: rows returned from db
+# FIXME: generate is used for method and function
+
 class DB
   def initialize(path)
     @conn = SQLite3::Database.new path
@@ -79,6 +83,22 @@ class DB
                   'ORDER BY position', [section])
   end
 
+  def get_example_for_title_and_section(title, section)
+    rows = @conn.execute('SELECT title, title_prematch, '\
+                         '       title_postmatch, anchor '\
+                         'FROM examples '\
+                         'WHERE section = ? '\
+                         '  AND title = ?', [section, title])
+    rows.empty? ? nil : rows[0]
+  end
+
+  def get_section_by_title(section_title)
+    rows = @conn.execute('SELECT title, anchor '\
+                         'FROM sections '\
+                         'WHERE title = ?', [section_title])
+    rows.empty? ? nil : rows[0]
+  end
+
   def update(table)
     supersection = nil
     section = nil
@@ -121,6 +141,29 @@ class DB
         $stderr.puts("DB#update: skipping column: #{columns.join('||')}")
       end
     end
+  end
+
+  def check_title(title_cell, section)
+    md = ROW_TITLE_REGEX.match(title_cell)
+    if md
+      # anchor = md[1]
+      title = md[2]
+      # pre_title = md.pre_match
+      # post_title = md.post_match
+      data = get_example_for_title_and_section(title, section)
+      unless data
+        $stderr.puts "INFO: not in skeleton: section: #{section} "\
+                     "title: #{title}"
+      end
+    else
+      $stderr.puts "ERROR: not a title cell: #{title_cell}" unless md
+    end
+    title_cell
+  end
+
+  def check_section(section)
+    data = get_section_by_title(section)
+    $stderr.puts "INFO: not a skeleton section: #{section}" unless data
   end
 
   def generate_nav(output_stream)
@@ -282,15 +325,25 @@ def fix_row_title(current_title)
   end
 end
 
-def generate(f, table)
+def generate(f, table, db)
   footnote = false
-
+  section = 'version'
   table.each do |columns|
+    if header_row?(columns)
+      header_cell = columns.find { |col| !col.empty? }
+      md = HEADER_CELL_REGEX.match(header_cell)
+      section = md[2] if md
+      db.check_section(section) if db
+    end
     if footnote \
       && !header_row?(columns) \
       && !EMPTY_CELL_REGEX.match(columns[1]) \
       && !ROW_TITLE_REGEX.match(columns[1])
       columns[1] = fix_row_title(columns[1])
+    end
+    if !header_row?(columns) \
+      && !EMPTY_CELL_REGEX.match(columns[1])
+      columns[1] = db.check_title(columns[1], section) if db
     end
     f.puts columns.join('||')
   end
@@ -451,5 +504,5 @@ if $PROGRAM_NAME == __FILE__
 
   table = parse(input_stream)
   print_statistics(table, $stderr)
-  generate($stdout, reorder(table, columns))
+  generate($stdout, reorder(table, columns), db)
 end
