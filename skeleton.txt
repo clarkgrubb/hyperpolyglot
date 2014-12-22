@@ -1,0 +1,1177 @@
+[[# top]]##gray|core:## [#version version] | [#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#str strings] | [#regex regular expressions] | [#dates-time dates and time] | [#func functions] | [#exec-control execution control] | [#exceptions exceptions] | [#concurrency concurrency] | [#file-handle file handles] | [#file files] | [#file-fmt file formats] | [#dir directories] | [#env-processes processes and environment] | [#option-parsing option parsing] | [#lib-namespaces libraries and namespaces] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism]
+
+##gray|auxiliary:## [#cpp-macros c preprocessor macros] | [#lisp-macros lisp macros] | [#reflection reflection] | [#net-web net and web] | [#dom dom] | [#gui gui] | [#unit-tests unit tests] | [#debug-profile debugging and profiling] | [#java-interop java interop]
+
+##gray|containers:## [#fixed-length-arrays fixed-length arrays] | [#resizable-arrays resizable arrays] | [#arithmetic-sequences arithmetic sequences] | [#lists lists] | [#tuples tuples] | [#sets sets] | [#multidimensional-arrays multidimensional arrays] | [#dict dictionaries] | [#user-defined-types user-defined types] | [#generic-types generic types]
+
+##gray|tables:## [#tables tables] | [#import-export import and export] | [#relational-algebra relational algebra] | [#aggregation aggregation]
+
+##gray|mathematics:## [#vectors vectors] | [#matrices matrices] | [#symbolic-expressions symbolic expressions] | [#equations-unknowns equations and unknowns] | [#optimization optimization] | [#number-theory number theory] | [#polynomials polynomials] | [#rings rings] | [#permutations permutations] | [#groups groups] | [#propositions propositions]
+
+##gray|statistics:## [#descriptive-statistics descriptive statistics] | [#distributions distributions] | [#regression regression] | [#statistical-tests statistical tests] | [#time-series time series]
+
+##gray|charts:## [#univariate-charts univariate charts] | [#bivariate-charts bivariate charts] | [#multivariate-charts multivariate charts]
+
+||||||~ CORE||
+||||||~ [[# version]][#version-note version]||
+||~ title ||~ anchor||~ description||
+||[[# version-used]][#version-used-note version used] _
+@<&nbsp;>@||#version-used||The versions used for testing code in the reference sheet.||
+||[[# show-version]][#show-version-note show version] _
+@<&nbsp;>@||#show-version||How to get the version.||
+||[[# implicit-prologue]][#implicit-prologue-note implicit prologue]||#implicit-prologue||Code which examples in the sheet assume to have already been executed. _
+ _
+Replace this with convention note?  #include, using import in java sheet, not following expressions with semicolons, lists of function names||
+||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
+||~ title ||~ anchor||~ description||
+||[[# hello-world]][#hello-world-note hello world]||#hello-world|| ||
+||[[# compiler]][#compiler-note compiler]||#compiler||compile file; standalone executable||
+||[[# bytecode-compiler]][#bytecode-compiler-note bytecode compiler]||#bytecode-compiler||also how to execute bytecode||
+||[[# interpreter]][#interpreter-note interpreter] _
+@<&nbsp;>@||#interpreter|| ||
+||[[# shebang]][#shebang-note shebang]||#shebang|| ||
+||[[# repl]][#repl-note repl] _
+@<&nbsp;>@||#repl|| ||
+||[[# cmd-line-program]][#cmd-line-program-note command line program]||#cmd-line-program|| ||
+||[[# file-suffixes]][#file-suffixes-note file suffixes]||#file-suffixes||omit if can be observed from other examples||
+||[[# block-delimiters]][#block-delimiters-note block delimiters]||#block-delimiters||consider omitting if can easily be inferred||
+||[[# stmt-separator]][#stmt-separator-note statement separator] _
+@<&nbsp;>@||#stmt-separator||rename statement terminator||
+||[[# top-level-stmt]][#top-level-stmt-note top level statements]||#top-level-stmt||statements that can occur at the top level of the file; i.e. not inside any block.  Also indicate if certains statements are required or required to appear in a certain order||
+||[[# expr-delimiters]][#expr-delimiters-note expression delimiters]||#expr-delimiters||indicate other uses of delimiters (parens often have multiple uses).  Also list places where expressions must be encased by parens (such as conditional of if).||
+||[[# expr-stmt]][#expr-stmt-note are expressions statements]||#expr-stmt||in vimscript function invocation is an expr, not a stmt (use call to make it a stmt)||
+||[[# word-separator]][#word-separator-note word separator] _
+@<&nbsp;>@||#word-separator||how are function args separated, how is function name separated from args, how are other keywords (if, while) separated from their operands||
+||[[# source-code-encoding]][#source-code-encoding-note source code encoding]||#source-code-encoding|| ||
+||[[# eol-comment]][#eol-comment-note end-of-line comment] _
+@<&nbsp;>@||#eol-comment|| ||
+||[[# multiple-line-comment]][#multiple-line-comment-note multiple line comment] _
+@<&nbsp;>@||#multiple-line-comment||do they nest?||
+||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
+||~ title ||~ anchor||~ description||
+||[[# id]][#id-note identifier]||#id||is it case sensitive?  Sigils?  Restrictions on characters?||
+||[[# quoted-id]][#quoted-id-note quoted identifier]||#quoted-id||how to quote or escape unusual characters||
+||[[# case-sensitive-id]][#case-sensitive-id-note are identifiers case sensitive]||#case-sensitive-id||if some of languages are *not* case sensitive||
+||[[# local-var]][#local-var-note local variable]||#local-var||how to declare||
+||[[# init-var]][#init-var-note initialize variable]||#init-var||if syntax is different than assignment||
+||[[# uninitialized-local-var]][#uninitialized-local-var-note uninitialized local variable]||#uninitialized-local-var|| ||
+||[[# scope-regions]][#scope-regions-note regions which define lexical scope]||#scope-regions|| ||
+||[[# global-var]][#global-var-note global variable]||#global-var||how to declare||
+||[[# uninitialized-global-var]][#uninitialized-global-var-note uninitialized global variable]||#uninitialized-global-var|| ||
+||[[# write-once-var]][#write-once-var-note write-once variable]||#write-once-var||e.g const in C++; how to declare||
+||[[# const]][#const-note constant] _
+@<&nbsp;>@||#const||set at compilation time; how to declare||
+||[[# assignment]][#assignment-note assignment] _
+@<&nbsp;>@||#assignment||does assignment have a value; can they be chained||
+||[[# parallel-assignment]][#parallel-assignment-note parallel assignment] _
+@<&nbsp;>@||#parallel-assignment|| ||
+||[[# swap]][#swap-note swap] _
+@<&nbsp;>@||#swap|| ||
+||[[# compound-assignment]][#compound-assignment-note compound assignment] _
+##gray|//arithmetic, string, logical, bit//##||#compound-assignment|| ||
+||[[# incr-decr]][#incr-decr-note increment and decrement] _
+@<&nbsp;>@||#incr-decr|| ||
+||[[# addr]][#addr-note address]||#addr||& in C, \ in Perl; in typed languages how to declare pointer types||
+||[[# dereference]][#dereference-note dereference]||#dereference|| ||
+||[[# type-size]][#type-size-note type size]||#type-size||i.e. sizeof()||
+||[[# val-size]][#val-size-note value size]||#val-size||sizeof() can be used on expressions||
+||[[# addr-arithm]][#addr-arithm-note address arithmetic]||#addr-arithm|| ||
+||[[# ref-cnt-ptr]][#ref-cnt-ptr-note reference count pointer]||#ref-cnt-ptr|| ||
+||[[# weak-ptr]][#weak-ptr-note weak pointer]||#weak-ptr|| ||
+||[[# allocate-heap]][#allocate-heap-note allocate heap]||#allocate-heap|| ||
+||[[# uninitialized-heap]][#uninitialized-heap-note uninitialized heap]||#uninitialized-heap|| ||
+||[[# free-heap]][#free-heap-note free heap]||#free-heap|| ||
+||[[# id-as-val]][#id-as-val-note identifier as value]||#id-as-val||i.e. quoting a symbol in lisp||
+||[[# var-properties]][#var-properties-note variable properties] _
+##gray|//set, get, remove//##||#var-properties|| ||
+||[[# non-referential-id]][#non-referential-id-note non-referential identifier]||#non-referential-id||called atom in Prolog and Erlang; symbol in Ruby; keyword in Lisp; show how to quote special characters; also mention named parameters of Python and perhaps Objective C?||
+||[[# unit-type-val]][#unit-type-val-note unit type and value]||#unit-type-val|| ||
+||[[# null]][#null-note null] _
+@<&nbsp;>@||#null|| ||
+||[[# null-test]][#null-test-note null test] _
+@<&nbsp;>@||#null-test|| ||
+||[[# coalesce]][#coalesce-note coalesce]||#coalesce|| ||
+||[[# nullif]][#nullif-note nullif]||#nullif|| ||
+||[[# undef-var]][#undef-var-note undefined variable] _
+@<&nbsp;>@||#undef-var||for languages which don't require declaration; notes can have undef test||
+||[[# rm-var]][#rm-var-note remove variable]||#rm-var||interactive environments often have this feature||
+||[[# cond-expr]][#cond-expr-note conditional expression] _
+@<&nbsp;>@||#cond-expr|| ||
+||[[# branch-type-mismatch]][#branch-type-mismatch-note branch type mismatch]||#branch-type-mismatch|| ||
+||[[# decl-expr-type]][#decl-expr-type-note declare expression type]||#decl-expr-type|| ||
+||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
+||~ title ||~ anchor||~ description||
+||[[# boolean-type]][#boolean-type-note boolean type]||#boolean-type|| ||
+||[[# true-false]][#true-false-note true and false] _
+@<&nbsp;>@||#true-false|| ||
+||[[# falsehoods]][#falsehoods-note falsehoods] _
+@<&nbsp;>@||#falsehoods||lists all values which evaluate as false in a conditional or as an operand of a logical operator.  Add a note if there values which cause an error in that context.||
+||[[# logical-op]][#logical-op-note logical operators] _
+@<&nbsp;>@||#logical-op|| ||
+||[[# short-circuit-op]][#short-circuit-op-note short circuit operators]||#short-circuit-op||when logical ops don't short circuit||
+||[[# relational-expr]][#relational-expr-note relational expression]||#relational-expr||for languages with unusual syntax: shells, tcl, prolog||
+||[[# relational-op]][#relational-op-note relational operators] _
+@<&nbsp;>@||#relational-op|| ||
+||[[# min-max]][#min-max-note min and max]||#min-max||Do functions take variable number of arguments?  See also min-max-elem in the arrays section.||
+||[[# three-val-comparison]][#three-val-comparison-note three value comparison]||#three-val-comparison|| ||
+||[[# int-type]][#int-type-note integer type]||#int-type||list types if more than one, notes contain info about literals||
+||[[# int-literal]][#int-literal-note integer literal]||#int-literal||if unusual; SML, Oz uses ~ for negation; Haskell lacks negative literals||
+||[[# unsigned-type]][#unsigned-type-note unsigned type]||#unsigned-type|| ||
+||[[# float-type]][#float-type-note float type]||#float-type||list types if more than one||
+||[[# float-literal]][#float-literal-note float literal]||#float-literal||if unusual, otherwise put in notes to float type||
+||[[# fixed-type]][#fixed-type-note fixed type]||#fixed-type|| ||
+||[[# num-predicates]][#num-predicates-note numeric predicates]||#num-predicates|| ||
+||[[# arith-expr]][#arith-expr-note arithmetic expression]||#arith-expr||for languages with unusual syntax: shells, tcl||
+||[[# arith-op]][#arith-op-note arithmetic operators] _
+@<&nbsp;>@||#arith-op||addition, subtraction, multiplication, division, quotient, remainder||
+||[[# add-int-float]][#add-int-float-note add integer and float]||#add-int-float||how to add integer and float; omit if no explicit conversion is needed||
+||[[# unary-negation]][#unary-negation-note unary negation]||#unary-negation||example should be unary negation and not a negative float literal (i.e. use a variable)||
+||[[# int-div]][#int-div-note integer division] _
+@<&nbsp;>@||#int-div||How to perform integer division (i.e. quotient) on integers.||
+||[[# int-div-zero]][#int-div-zero-note integer division by zero] _
+@<&nbsp;>@||#int-div-zero||test positive, negative, and zero dividend; if there is an infinity value does it have a literal?||
+||[[# divmod]][#divmod-note divmod]||#divmod|| ||
+||[[# float-div]][#float-div-note float division] _
+@<&nbsp;>@||#float-div||How to perform float division on integers.||
+||[[# float-div-zero]][#float-div-zero-note float division by zero] _
+@<&nbsp;>@||#float-div-zero||test positive, negative, and zero dividend; if there is an infinity value does it have a literal?||
+||[[# power]][#power-note power]||#power||Use 2 ** 16 as an example. different for integers and floats?  Zero with negative exponent?  Negative number with fractional exponent?||
+||[[# sqrt]][#sqrt-note sqrt]||#sqrt|| ||
+||[[# sqrt-negative-one]][#sqrt-negative-one-note sqrt -1] _
+@<&nbsp;>@||#sqrt-negative-one|| ||
+||[[# transcendental-func]][#transcendental-func-note transcendental functions] _
+@<&nbsp;>@||#transcendental-func||rename transcendental functions (but rm sqrt).  4 groups: exp and log; trig; inverse trig; atan2||
+||[[# transcendental-const]][#transcendental-const-note transcendental constants]||#transcendental-const||pi and e||
+||[[# float-truncation]][#float-truncation-note float truncation] _
+##gray|//round towards zero, round to nearest integer, round down, round up//##||#float-truncation|| ||
+||[[# absolute-val]][#absolute-val-note absolute value] _
+##gray|//and signum//##||#absolute-val|| ||
+||[[# int-overflow]][#int-overflow-note integer overflow] _
+@<&nbsp;>@||#int-overflow||some possibilities: modular arithmetic, exception, conversion to float, conversion to arbitrary length integer||
+||[[# float-overflow]][#float-overflow-note float overflow] _
+@<&nbsp;>@||#float-overflow|| ||
+||[[# float-limits]][#float-limits-note float limits]||#float-limits|| ||
+||[[# arbitrary-len-int-type]][#arbitrary-len-int-type-note arbitrary length integer type]||#arbitrary-len-int-type|| ||
+||[[# arbitrary-len-int-op]][#arbitrary-len-int-op-note arbitrary length integer operations]||#arbitrary-len-int-op|| ||
+||[[# rational-type]][#rational-type-note rational type]||#rational-type|| ||
+||[[# rational-construction]][#rational-construction-note rational construction]||#rational-construction|| ||
+||[[# rational-decomposition]][#rational-decomposition-note rational decomposition]||#rational-decomposition||numerator, denominator||
+||[[# complex-type]][#complex-type-note complex type]||#complex-type|| ||
+||[[# complex-construction]][#complex-construction-note complex construction]||#complex-construction||also construct from polar coordinates||
+||[[# complex-decomposition]][#complex-decomposition-note complex decomposition]||#complex-decomposition||real and imaginary, argument and absolute value, conjugate||
+||[[# random-num]][#random-num-note random number] _
+##gray|//uniform integer, uniform float, normal float//##||#random-num||put distribution in subtitle||
+||[[# random-seed]][#random-seed-note random seed] _
+##gray|//set, get and restore//##||#random-seed||just show how to set it?||
+||[[# bit-op]][#bit-op-note bit operators] _
+##gray|//left shift, right shift, and, inclusive or, exclusive or, complement//##||#bit-op||for examples use (1, 3) or (5, 1).  Supposing the arguments are nonnegative, (1, 3) is the minimal solution which makes all of the operators distinct.  (5, 1) is the minimal solution where all of the operators are distinct and nonzero.  The minimization function is the sum of the arguments. _
+ _
+Shift can be logical, circular, or arithmetic.  In logical shift the new bits are zero.  In circular the new bits are the bits that were removed from the other end.  Arithmetic left shift is the same as logical left shift.  Arithmetic right shift fills with the value of the high order bit.||
+||[[# binary-octal-hex-literals]][#binary-octal-hex-literals-note binary, octal, and hex literals]||#binary-octal-hex-literals|| ||
+||[[# radix]][#radix-note radix] _
+##gray|//convert integer to and from string with radix//##||#radix|| ||
+||||||~ [[# str]][#str-note strings]||
+||~ title ||~ anchor||~ description||
+||[[# str-type]][#str-type-note string type]||#str-type||is encoding a property?||
+||[[# str-pred]][#str-pred-note string predicate]||#str-pred|| ||
+||[[# allocate-str]][#allocate-str-note allocate string]||#allocate-str|| ||
+||[[# str-literal]][#str-literal-note string literal] _
+@<&nbsp;>@||#str-literal|| ||
+||[[# newline-in-str-literal]][#newline-in-str-literal-note newline in literal] _
+@<&nbsp;>@||#newline-in-str-literal||Ways to put a newline in a string; note if actual newline doesn't render.||
+||[[# str-literal-esc]][#str-literal-esc-note literal escapes] _
+@<&nbsp;>@||#str-literal-esc||explain sequences not found in C||
+||[[# custom-str-literal-delimiters]][#custom-str-literal-delimiters-note custom delimiters]||#custom-str-literal-delimiters|| ||
+||[[# here-doc]][#here-doc-note here document] _
+@<&nbsp;>@||#here-doc|| ||
+||[[# unquoted-str-literal]][#unquoted-str-literal-note unquoted string literal]||#unquoted-str-literal||also called a bareword||
+||[[# var-interpolation]][#var-interpolation-note variable interpolation] _
+@<&nbsp;>@||#var-interpolation|| ||
+||[[# expr-interpolation]][#expr-interpolation-note expression interpolation]||#expr-interpolation|| ||
+||[[# fmt-str]][#fmt-str-note format string] _
+@<&nbsp;>@||#fmt-str||i.e. sprintf; characters for string, integer, float, how to escape conversion specifier character||
+||[[# mutable-str]][#mutable-str-note are strings mutable?]||#mutable-str|| ||
+||[[# copy-str]][#copy-str-note copy string]||#copy-str|| ||
+||[[# compare-str]][#compare-str-note compare strings]||#compare-str||##gray//if relational operators don't work//##||
+||[[# str-concat]][#str-concat-note concatenate] _
+@<&nbsp;>@||#str-concat|| ||
+||[[# str-replicate]][#str-replicate-note replicate] _
+@<&nbsp;>@||#str-replicate||should example replicate a string instead of a single char? hugs and kisses xo.  Also called string multiplication.||
+||[[# translate-case]][#translate-case-note translate case] _
+##gray|//to upper, to lower//##||#translate-case||rename from case manipulation. to upper, to lower||
+||[[# capitalize]][#capitalize-note capitalize]||#capitalize||capitalizes string or words?||
+||[[# trim]][#trim-note trim] _
+##gray|//left, right, both ends//##||#trim||Also called stripping.  But prefer trimming, since stripping can mean removing internal occurrences of a character||
+||[[# pad]][#pad-note pad] _
+##gray|//left, right, both ends//##||#pad|| ||
+||[[# num-to-str]][#num-to-str-note number to string]||#num-to-str||precision and zero padding; explict conversion and operators which perform implicit conversion||
+||[[# str-to-num]][#str-to-num-note string to number]||#str-to-num||notes on whether full string must parse and what happen if conversion fails; explicit conversion and operators which perform implicit conversion||
+||[[# join]][#join-note join] _
+@<&nbsp;>@||#join|| ||
+||[[# split]][#split-note split]||#split||char, string, and regex delimiter||
+||[[# split-in-two]][#split-in-two-note split in two] _
+##gray|//at first delimiter, at last delimiter//##||#split-in-two|| ||
+||[[# split-keep-delimiters]][#split-keep-delimiters-note split and keep delimiters]||#split-keep-delimiters|| ||
+||[[# serialize]][#serialize-note serialize] _
+##gray|//and deserialize//##||#serialize|| ||
+||[[# str-length]][#str-length-note length] _
+@<&nbsp;>@||#str-length||in characters, in bytes||
+||[[# index-substr]][#index-substr-note index of substring] _
+##gray|//first, last//##||#index-substr||is index zero-based or one-based?||
+||[[# extract-substr]][#extract-substr-note extract substring] _
+@<&nbsp;>@||#extract-substr|| ||
+||[[# char-type]][#char-type-note character type]||#char-type|| ||
+||[[# char-pred]][#char-pred-note character predicate]||#char-pred|| ||
+||[[# char-literal]][#char-literal-note character literal]||#char-literal|| ||
+||[[# extract-char]][#extract-char-note extract character] _
+##gray|//and byte//##||#extract-char||is index zero-based or one-based?||
+||[[# chr-ord]][#chr-ord-note chr and ord] _
+@<&nbsp;>@||#chr-ord|| ||
+||[[# str-to-char-array]][#str-to-char-array-note to array of characters]||#str-to-char-array|| ||
+||[[# test-char]][#test-char-note test character]||#test-char||is uppercase? is lowercase?  Other Unicode properties||
+||[[# translate-char]][#translate-char-note translate characters] _
+@<&nbsp;>@||#translate-char|| ||
+||[[# delete-char]][#delete-char-note delete characters]||#delete-char||also how to delete characters "not" in the list||
+||[[# squeeze-char]][#squeeze-char-note squeeze characters]||#squeeze-char||combine with translate to squeeze all whitespace to a single space?||
+||||||~ [[# regex]][#regex-note regular expressions]||
+||~ title ||~ anchor||~ description||
+||[[# regex-literal]][#regex-literal-note literal, custom delimited literal]||#regex-literal|| ||
+||[[# char-class-abbrev]][#char-class-abbrev-note character class abbreviations]||#char-class-abbrev|| ||
+||[[# regex-anchors]][#regex-anchors-note anchors]||#regex-anchors|| ||
+||[[# regex-lookahead]][#regex-lookahead-note lookahead] _
+##gray|//positive, negative//##||#regex-lookahead|| ||
+||[[# regex-test]][#regex-test-note match test] _
+@<&nbsp;>@||#regex-test|| ||
+||[[# case-insensitive-regex]][#case-insensitive-regex-note case insensitive match test]||#case-insensitive-regex|| ||
+||[[# regex-modifiers]][#regex-modifiers-note modifiers] _
+@<&nbsp;>@||#regex-modifiers|| ||
+||[[# subst]][#subst-note substitution] _
+@<&nbsp;>@||#subst|| ||
+||[[# match-prematch-postmatch]][#match-prematch-postmatch-note match, prematch, postmatch] _
+@<&nbsp;>@||#match-prematch-postmatch|| ||
+||[[# group-capture]][#group-capture-note group capture] _
+@<&nbsp;>@||#group-capture|| ||
+||[[# named-group-capture]][#named-group-capture-note named group capture]||#named-group-capture|| ||
+||[[# scan]][#scan-note scan] _
+@<&nbsp;>@||#scan|| ||
+||[[# backreference]][#backreference-note backreference in match and substitution]||#backreference|| ||
+||[[# recursive-regex]][#recursive-regex-note recursive regex]||#recursive-regex|| ||
+||||||~ [[# dates-time]][#dates-time-note dates and time]||
+||~ title ||~ anchor||~ description||
+||[[# broken-down-date-time-type]][#broken-down-date-time-type-note broken-down date and time type]||#broken-down-date-time-type||called broken-down or broken-out in the C standard library||
+||[[# unix-epoch-type]][#unix-epoch-type-note unix epoch type]||#unix-epoch-type||if not an integer or if there are multiple integer types||
+||[[# current-date-time]][#current-date-time-note current date and time]||#current-date-time||local and UTC||
+||[[# unix-epoch]][#unix-epoch-note to unix epoch, from unix epoch]||#unix-epoch||convert broken-down date and time to unix epoch; both local and UTC||
+||[[# date-time-to-str]][#date-time-to-str-note date and time to string]||#date-time-to-str||Using the default format for the locale||
+||[[# format-date]][#format-date-note format date]||#format-date||man page of format specifiers||
+||[[# parse-date]][#parse-date-note parse date]||#parse-date||man page of format specifiers||
+||[[# parse-date-without-format]][#parse-date-without-format-note parse date w/o format]||#parse-date-without-format|| ||
+||[[# date-subtraction]][#date-subtraction-note date subtraction]||#date-subtraction||does the subtraction operator work or is the result nonsensical?  Is there are different way to get the duration length||
+||[[# add-duration]][#add-duration-note add duration]||#add-duration|| ||
+||[[# date-parts]][#date-parts-note date parts]||#date-parts|| ||
+||[[# time-parts]][#time-parts-note time parts]||#time-parts|| ||
+||[[# build-date-time]][#build-date-time-note build broken-down date and time]||#build-date-time|| ||
+||[[# dow-doy]][#dow-doy-note day of week and day of year]||#dow-doy|| ||
+||[[# local-tmz-determination]][#local-tmz-determination-note how local time zone is determined]||#local-tmz-determination||and if it is stored in broken-down date and time values||
+||[[# tmz-info]][#tmz-info-note time zone info] _
+##gray|//name and utc offset//##||#tmz-info|| ||
+||[[# daylight-savings-test]][#daylight-savings-test-note daylight savings test]||#daylight-savings-test|| ||
+||[[# nonlocal-tmz]][#nonlocal-tmz-note nonlocal time zone]||#nonlocal-tmz||convert a UTC date and time to the corresponding date and time for a nonlocal time zone||
+||[[# microseconds]][#microseconds-note microseconds]||#microseconds||get current date and time down to the microsecond||
+||[[# sleep]][#sleep-note sleep]||#sleep|| ||
+||[[# timeout]][#timeout-note timeout]||#timeout|| ||
+||[[# cpu-usage]][#cpu-usage-note cpu usage]||#cpu-usage|| ||
+||||||~ [[# func]][#func-note functions]||
+||~ title ||~ anchor||~ description||
+||[[# decl-func]][#decl-func-note declare function]||#decl-func|| ||
+||[[# def-func]][#def-func-note define function] _
+@<&nbsp;>@||#def-func|| ||
+||[[# invoke-func]][#invoke-func-note invoke function]||#invoke-func|| ||
+||[[# def-static-class-method]][#def-static-class-method-note define static class method]||#def-static-class-method|| ||
+||[[# invoke-static-class-method]][#invoke-static-class-method-note invoke static class method]||#invoke-static-class-method|| ||
+||[[# def-func-with-block-body]][#def-func-with-block-body-note define function with block body]||#def-func-with-block-body||for languages which have functions which expression bodies||
+||[[# undef-func]][#undef-func-note undefine function]||#undef-func|| ||
+||[[# redefine-func]][#redefine-func-note redefine function]||#redefine-func||in particular, can built-ins be redefined||
+||[[# overload-func]][#overload-func-note overload function]||#overload-func|| ||
+||[[# def-func-piecewise]][#def-func-piecewise-note define function piecewise]||#def-func-piecewise|| ||
+||[[# nested-func]][#nested-func-note nested function]||#nested-func||Note visibility of nested function.||
+||[[# missing-arg]][#missing-arg-note missing argument behavior] _
+@<&nbsp;>@||#missing-arg||what about extra arg behavior?||
+||[[# extra-arg]][#extra-arg-note extra argument behavior]||#extra-arg|| ||
+||[[# default-arg]][#default-arg-note default argument] _
+@<&nbsp;>@||#default-arg|| ||
+||[[# named-param]][#named-param-note named parameters] _
+@<&nbsp;>@||#named-param|| ||
+||[[# variadic-func]][#variadic-func-note variadic func]||#variadic-func|| ||
+||[[# expand-array]][#expand-array-note pass array elements as separate arguments]||#expand-array||aka splat operator; should illustrate when not all arguments come from array||
+||[[# param-alias]][#param-alias-note parameter alias] _
+@<&nbsp;>@||#param-alias|| ||
+||[[# retval]][#retval-note return value] _
+@<&nbsp;>@||#retval||how return value||
+||[[# no-retval]][#no-retval-note no return value]||#no-retval||how to declare function with no return value; aka a procedure||
+||[[# multiple-retval]][#multiple-retval-note multiple return values] _
+@<&nbsp;>@||#multiple-retval|| ||
+||[[# named-retval]][#named-retval-note named return values] _
+@<&nbsp;>@||#named-retval|| ||
+||[[# recursive-func]][#recursive-func-note recursive function]||#recursive-func|| ||
+||[[# mutually-recursive-func]][#mutually-recursive-func-note mutually recursive functions]||#mutually-recursive-func|| ||
+||[[# anonymous-func-literal]][#anonymous-func-literal-note anonymous function literal] _
+@<&nbsp;>@||#anonymous-func-literal||aka lambda function||
+||[[# invoke-anonymous-func]][#invoke-anonymous-func-note invoke anonymous function]||#invoke-anonymous-func|| ||
+||[[# closure]][#closure-note closure]||#closure|| ||
+||[[# func-private-state]][#func-private-state-note function with private state]||#func-private-state|| ||
+||[[# func-as-val]][#func-as-val-note function as value]||#func-as-val||i.e. how to pass a function as an argument.||
+||[[# generator]][#generator-note generator]||#generator||a function which can yield to the caller and resume||
+||[[# decorator]][#decorator-note decorator]||#decorator||note on order when there are two decorators||
+||[[# compose-func]][#compose-func-note compose functions]||#compose-func||if a point free operator is provided||
+||[[# partial-application]][#partial-application-note partial application]||#partial-application||cf currying||
+||[[# overload-op]][#overload-op-note overload operator]||#overload-op|| ||
+||[[# invoke-op-like-func]][#invoke-op-like-func-note invoke operator like function]||#invoke-op-like-func|| ||
+||[[# invoke-func-like-op]][#invoke-func-like-op-note invoke function like operator]||#invoke-func-like-op|| ||
+||||||~ [[# exec-control]][#exec-control-note execution control]||
+||~ title ||~ anchor||~ description||
+||[[# if]][#if-note if] _
+@<&nbsp;>@||#if||print "positive", "negative", or "zero" depending upon sign of x||
+||[[# dangling-else]][#dangling-else-note dangling else]||#dangling-else||if dangling else ambiguity, show how resolved||
+||[[# switch]][#switch-note switch]||#switch|| ||
+||[[# while]][#while-note while] _
+@<&nbsp;>@||#while||iterate over i and print the numbers 0 to 9||
+||[[# for]][#for-note for] _
+##gray|//c-style//##||#for||initialization, condition, increment; illustrate comma operator _
+iterate over i and print the numbers 0 to 9||
+||[[# infinite-loop]][#infinite-loop-note loop]||#infinite-loop|| ||
+||[[# break]][#break-note break] _
+@<&nbsp;>@||#break|| ||
+||[[# break-outer-loop]][#break-outer-loop-note break to outer loop]||#break-outer-loop|| ||
+||[[# continue]][#continue-note continue]||#continue||can't find a short example where continue is useful||
+||[[# redo]][#redo-note redo]||#redo|| ||
+||[[# goto]][#goto-note goto]||#goto|| ||
+||[[# longjmp]][#longjmp-note longjmp]||#longjmp|| ||
+||[[# control-keywords]][#control-keywords-note control structure keywords]||#control-keywords|| ||
+||[[# do]][#do-note what do does]||#do|| ||
+||[[# statement-modifiers]][#statement-modifiers-note statement modifiers] _
+@<&nbsp;>@||#statement-modifiers|| ||
+||||||~ [[# exceptions]][#exceptions-note exceptions]||
+||~ title ||~ anchor||~ description||
+||[[# base-exc]][#base-exc-note base exception] _
+##gray|//and base of user defined exceptions//##||#base-exc||what can be thrown; base of all exceptions; of user defined exceptions; base exception methods||
+||[[# predefined-exc]][#predefined-exc-note predefined exceptions]||#predefined-exc||use indentation to show hierarchy||
+||[[# raise-exc]][#raise-exc-note raise exception] _
+@<&nbsp;>@||#raise-exc|| ||
+||[[# handle-exc]][#handle-exc-note handle exception]||#handle-exc|| ||
+||[[# def-exc]][#def-exc-note define exception]||#def-exc|| ||
+||[[# re-raise-exc]][#re-raise-exc-note re-raise exception]||#re-raise-exc|| ||
+||[[# catch-all-handler]][#catch-all-handler-note catch-all handler] _
+@<&nbsp;>@||#catch-all-handler|| ||
+||[[# multiple-handlers]][#multiple-handlers-note multiple handlers]||#multiple-handlers|| ||
+||[[# uncaught-exc]][#uncaught-exc-note uncaught exception behavior]||#uncaught-exc|| ||
+||[[# last-exc-global]][#last-exc-global-note global variable for last exception]||#last-exc-global|| ||
+||[[# error-msg]][#error-msg-note error message]||#error-msg|| ||
+||[[# errno]][#errno-note system call errno]||#errno|| ||
+||[[# stack-trace]][#stack-trace-note stack trace]||#stack-trace|| ||
+||[[# finally-clause]][#finally-clause-note finally clause] _
+@<&nbsp;>@||#finally-clause||aka ensure||
+||[[# exc-specification]][#exc-specification-note exception specification]||#exc-specification||should this be in function section? Are they required, and when.||
+||||||~ [[# concurrency]][#concurrency-note concurrency]||
+||~ title ||~ anchor||~ description||
+||[[# start-thread]][#start-thread-note start thread] _
+@<&nbsp;>@||#start-thread||can threads use multiple processors; limitations such as the Python GIL||
+||[[# terminate-current-thread]][#terminate-current-thread-note terminate current thread]||#terminate-current-thread||what happens when thread function returns; when all threads exit; when an exception makes it to the top of a thread||
+||[[# terminate-other-thread]][#terminate-other-thread-note terminate other thread]||#terminate-other-thread|| ||
+||[[# list-threads]][#list-threads-note list threads]||#list-threads|| ||
+||[[# wait-on-thread]][#wait-on-thread-note wait on thread] _
+@<&nbsp;>@||#wait-on-thread||does join have a return value; how is it set; blocking and non-blocking; order which lock is granted to waiting threads||
+||[[# lock]][#lock-note lock]||#lock||reentrant locks; blocking and non-blocking||
+||[[# create-msg-queue]][#create-msg-queue-note create message queue]||#create-msg-queue||for erlang, each process has an implicit queue; LIFO, FIFO, and priority queue||
+||[[# send-msg]][#send-msg-note send message]||#send-msg|| ||
+||[[# receive-msg]][#receive-msg-note receive message]||#receive-msg||how to receive a msg transactionally||
+||||||~ [[# file-handle]][#file-handle-note file handles]||
+||~ title ||~ anchor||~ description||
+||[[# std-file-handles]][#std-file-handles-note standard file handles]||#std-file-handles|| ||
+||[[# read-line-stdin]][#read-line-stdin-note read line from stdin]||#read-line-stdin|| ||
+||[[# eof]][#eof-note end-of-file behavior]||#eof|| ||
+||[[# chomp]][#chomp-note chomp] _
+@<&nbsp;>@||#chomp|| ||
+||[[# write-line-stdout]][#write-line-stdout-note write line to stdout] _
+@<&nbsp;>@||#write-line-stdout|| ||
+||[[# printf]][#printf-note write formatted string to stdout]||#printf|| ||
+||[[# open-file]][#open-file-note open file for reading] _
+@<&nbsp;>@||#open-file|| ||
+||[[# open-file-write]][#open-file-write-note open file for writing] _
+@<&nbsp;>@||#open-file-write|| ||
+||[[# file-encoding]][#file-encoding-note set file handle encoding] _
+@<&nbsp;>@||#file-encoding|| ||
+||[[# open-file-append]][#open-file-append-note open file for appending]||#open-file-append|| ||
+||[[# close-file]][#close-file-note close file] _
+@<&nbsp;>@||#close-file|| ||
+||[[# close-file-implicitly]][#close-file-implicitly-note close file implicitly]||#close-file-implicitly||rename close file automatically?||
+||[[# io-err]][#io-err-note i/o error]||#io-err|| ||
+||[[# encoding-err]][#encoding-err-note encoding error]||#encoding-err|| ||
+||[[# read-line]][#read-line-note read line] _
+@<&nbsp;>@||#read-line|| ||
+||[[# file-iterate]][#file-iterate-note iterate over file by line] _
+@<&nbsp;>@||#file-iterate|| ||
+||[[# read-file-array]][#read-file-array-note read file into array of strings]||#read-file-array|| ||
+||[[# read-file-str]][#read-file-str-note read file into string]||#read-file-str|| ||
+||[[# write-str]][#write-str-note write string] _
+@<&nbsp;>@||#write-str|| ||
+||[[# write-line]][#write-line-note write line] _
+@<&nbsp;>@||#write-line|| ||
+||[[# flush]][#flush-note flush file handle] _
+@<&nbsp;>@||#flush|| ||
+||[[# eof-test]][#eof-test-note end-of-file test] _
+@<&nbsp;>@||#eof-test|| ||
+||[[# seek]][#seek-note file handle position] _
+##gray|//get, set//##||#seek||from start of file, current position, end of file||
+||[[# tmp-file]][#tmp-file-note open temporary file]||#tmp-file|| ||
+||[[# string-io]][#string-io-note in memory file]||#string-io|| ||
+||||||~ [[# file]][#file-note files]||
+||~ title ||~ anchor||~ description||
+||[[# create-empty-file]][#create-empty-file-note create empty file]||#create-empty-file||not an error if the file already exists; also how to touch a file, which updates the last modified timestamp if the file already exists||
+||[[# file-test]][#file-test-note file exists test, file regular test] _
+@<&nbsp;>@||#file-test|| ||
+||[[# file-size]][#file-size-note file size] _
+@<&nbsp;>@||#file-size|| ||
+||[[# readable-writable-executable]][#readable-writable-executable-note is file readable, writable, executable]||#readable-writable-executable|| ||
+||[[# chmod]][#chmod-note set file permissions]||#chmod|| ||
+||[[# file-cp-rm-mv]][#file-cp-rm-mv-note copy file, remove file, rename file]||#file-cp-rm-mv|| ||
+||[[# symlink]][#symlink-note create symlink, symlink test, readlink]||#symlink|| ||
+||[[# unused-file-name]][#unused-file-name-note generate unused file name]||#unused-file-name|| ||
+||||||~ [[# file-fmt]][#file-fmt-note file formats]||
+||~ title ||~ anchor||~ description||
+||[[# csv]][#csv-note csv]||#csv|| ||
+||[[# json]][#json-note json]||#json|| ||
+||[[# build-xml]][#build-xml-note build xml]||#build-xml|| ||
+||[[# parse-xml]][#parse-xml-note parse xml]||#parse-xml||xpath?||
+||[[# parse-html]][#parse-html-note parse html]||#parse-html||xpath?||
+||||||~ [[# dir]][#dir-note directories]||
+||~ title ||~ anchor||~ description||
+||[[# working-dir]][#working-dir-note working directory] _
+##gray|//get and set//##||#working-dir||aka current directory||
+||[[# build-pathname]][#build-pathname-note build pathname]||#build-pathname||does it remove doubled slashes.||
+||[[# dirname-basename]][#dirname-basename-note dirname and basename]||#dirname-basename|| ||
+||[[# absolute-pathname]][#absolute-pathname-note absolute pathname]||#absolute-pathname||does it understand ~; does it remove ..||
+||[[# iterate-dir]][#iterate-dir-note iterate over directory by file]||#iterate-dir|| ||
+||[[# glob]][#glob-note glob paths]||#glob|| ||
+||[[# mkdir]][#mkdir-note make directory]||#mkdir||both mkdir and mkdir -p (latter not transactional)||
+||[[# recursive-cp]][#recursive-cp-note recursive copy]||#recursive-cp|| ||
+||[[# rmdir]][#rmdir-note remove empty directory]||#rmdir|| ||
+||[[# rm-rf]][#rm-rf-note remove directory and contents]||#rm-rf|| ||
+||[[# dir-test]][#dir-test-note directory test] _
+@<&nbsp;>@||#dir-test|| ||
+||[[# unused-dir]][#unused-dir-note generate unused directory]||#unused-dir|| ||
+||[[# system-tmp-dir]][#system-tmp-dir-note system temporary file directory]||#system-tmp-dir|| ||
+||||||~ [[# env-processes]][#env-processes-note processes and environment]||
+||~ title ||~ anchor||~ description||
+||[[# cmd-line-arg]][#cmd-line-arg-note command line arguments] _
+@<&nbsp;>@||#cmd-line-arg|| ||
+||[[# program-name]][#program-name-note program name]||#program-name|| ||
+||[[# env-var]][#env-var-note environment variable] _
+##gray|//get, set, clear//##||#env-var||not possible to set env variable in a portable way?||
+||[[# user-id-name]][#user-id-name-note user id and name]||#user-id-name|| ||
+||[[# exit]][#exit-note exit] _
+@<&nbsp;>@||#exit||and how to set the status code||
+||[[# exec-test]][#exec-test-note executable test] _
+@<&nbsp;>@||#exec-test|| ||
+||[[# external-cmd]][#external-cmd-note external command] _
+@<&nbsp;>@||#external-cmd|| ||
+||[[# esc-external-cmd]][#esc-external-cmd-note esc external command] _
+@<&nbsp;>@||#esc-external-cmd|| ||
+||[[# cmd-subst]][#cmd-subst-note command substitution] _
+@<&nbsp;>@||#cmd-subst|| ||
+||[[# pid]][#pid-note get pid, parent pid]||#pid|| ||
+||[[# subproc-pid]][#subproc-pid-note subprocess pid]||#subproc-pid|| ||
+||[[# signal-handler]][#signal-handler-note set signal handler] _
+@<&nbsp;>@||#signal-handler|| ||
+||[[# send-signal]][#send-signal-note send signal]||#send-signal|| ||
+||||||~ [[# option-parsing]][#option-parsing-note option parsing]||
+||~ title ||~ anchor||~ description||
+||[[# cmd-line-opt]][#cmd-line-opt-note command line options]||#cmd-line-opt||boolean option, option with argument, and usage||
+||||||~ [[# lib-namespaces]][#lib-namespaces-note libraries and namespaces]||
+||~ title ||~ anchor||~ description||
+||[[# std-lib-name]][#std-lib-name-note standard library name]||#std-lib-name|| ||
+||[[# compile-lib]][#compile-lib-note compile library]||#compile-lib|| ||
+||[[# link-lib]][#link-lib-note link library]||#link-lib|| ||
+||[[# load-lib]][#load-lib-note load library] _
+@<&nbsp;>@||#load-lib|| ||
+||[[# reload-lib]][#reload-lib-note reload library] _
+@<&nbsp;>@||#reload-lib|| ||
+||[[# lib-path]][#lib-path-note library path] _
+@<&nbsp;>@||#lib-path|| ||
+||[[# lib-path-env]][#lib-path-env-note library path environment variable]||#lib-path-env|| ||
+||[[# lib-path-cmd-line]][#lib-path-cmd-line-note library path command line option]||#lib-path-cmd-line|| ||
+||[[# main-in-lib]][#main-in-lib-note main in library]||#main-in-lib|| ||
+||[[# namespace-decl]][#namespace-decl-note namespace declaration] _
+@<&nbsp;>@||#namespace-decl|| ||
+||[[# subnamespace-decl]][#subnamespace-decl-note subnamespace declaration]||#subnamespace-decl|| ||
+||[[# namespace-separator]][#namespace-separator-note namespace separator] _
+@<&nbsp;>@||#namespace-separator|| ||
+||[[# import-namespace]][#import-namespace-note import all definitions in namespace] _
+@<&nbsp;>@||#import-namespace|| ||
+||[[# import-def]][#import-def-note import definitions] _
+@<&nbsp;>@||#import-def|| ||
+||[[# app-env]][#app-env-note application environment] _
+##gray|//create; add pkg//##||#app-env|| ||
+||[[# multiple-installations]][#multiple-installations-note multiple installations]||#multiple-installations|| ||
+||[[# pkg-manager]][#pkg-manager-note package manager] _
+##gray|//search; install; list installed//##||#pkg-manager|| ||
+||[[# pkg-spec]][#pkg-spec-note package specification format]||#pkg-spec|| ||
+||||||~ [[# objects]][#objects-note objects]||
+||~ title ||~ anchor||~ description||
+||[[# def-class]][#def-class-note define class] _
+@<&nbsp;>@||#def-class|| ||
+||[[# create-obj]][#create-obj-note create object] _
+@<&nbsp;>@||#create-obj|| ||
+||[[# getter-setter]][#getter-setter-note get and set attribute] _
+@<&nbsp;>@||#getter-setter|| ||
+||[[# instance-var]][#instance-var-note instance variable accessibility]||#instance-var|| ||
+||[[# def-method]][#def-method-note define method] _
+@<&nbsp;>@||#def-method|| ||
+||[[# invoke-method]][#invoke-method-note invoke method] _
+@<&nbsp;>@||#invoke-method|| ||
+||[[# destructor]][#destructor-note destructor] _
+@<&nbsp;>@||#destructor|| ||
+||[[# method-missing]][#method-missing-note method missing] _
+@<&nbsp;>@||#method-missing|| ||
+||[[# method-alias]][#method-alias-note method alias]||#method-alias|| ||
+||[[# def-class-method]][#def-class-method-note define class method]||#def-class-method|| ||
+||[[# invoke-class-method]][#invoke-class-method-note invoke class method] _
+@<&nbsp;>@||#invoke-class-method|| ||
+||||||~ [[# inheritance-polymorphism]][#inheritance-polymorphism-note inheritance and polymorphism]||
+||~ title ||~ anchor||~ description||
+||[[# universal-base-class]][#universal-base-class-note universal base class]||#universal-base-class|| ||
+||[[# subclass]][#subclass-note subclass]||#subclass|| ||
+||[[# mixin]][#mixin-note mixin]||#mixin|| ||
+||||||~ AUXILIARY||
+||||||~ [[# cpp-macros]][#cpp-macros-note c preprocessor macros]||
+||~ title ||~ anchor||~ description||
+||[[# include-file]][#include-file-note include file]||#include-file|| ||
+||[[# add-system-dir]][#add-system-dir-note add system directory]||#add-system-dir|| ||
+||[[# def-macro]][#def-macro-note define macro]||#def-macro|| ||
+||[[# cmd-line-macro]][#cmd-line-macro-note command line macro]||#cmd-line-macro|| ||
+||[[# undef-macro]][#undef-macro-note undefine macro]||#undef-macro|| ||
+||[[# macro-op]][#macro-op-note macro operators]||#macro-op|| ||
+||||||~ [[# lisp-macros]][#lisp-macros-note lisp macros]||
+||~ title ||~ anchor||~ description||
+||[[# backquote-comma]][#backquote-comma-note backquote and comma]||#backquote-comma|| ||
+||[[# defmacro]][#defmacro-note defmacro]||#defmacro|| ||
+||[[# defmacro-backquote]][#defmacro-backquote-note defmacro w/ backquote]||#defmacro-backquote|| ||
+||[[# macro-predicate]][#macro-predicate-note macro predicate]||#macro-predicate|| ||
+||[[# macroexpand]][#macroexpand-note macroexpand]||#macroexpand|| ||
+||[[# splice-quote]][#splice-quote-note splice quote]||#splice-quote|| ||
+||[[# recursive-macro]][#recursive-macro-note recursive macro]||#recursive-macro|| ||
+||[[# hygienic]][#hygienic-note hygienic]||#hygienic|| ||
+||[[# local-values]][#local-values-note local values]||#local-values|| ||
+||||||~ [[# reflection]][#reflection-note reflection]||
+||~ title ||~ anchor||~ description||
+||[[# object-id]][#object-id-note object id]||#object-id|| ||
+||[[# inspect-type]][#inspect-type-note inspect type] _
+@<&nbsp;>@||#inspect-type|| ||
+||[[# types]][#types-note basic types]||#types|| ||
+||[[# inspect-class]][#inspect-class-note inspect class]||#inspect-class|| ||
+||[[# inspect-class-hierarchy]][#inspect-class-hierarchy-note inspect class hierarchy]||#inspect-class-hierarchy|| ||
+||[[# has-method]][#has-method-note has method?] _
+@<&nbsp;>@||#has-method|| ||
+||[[# msg-passing]][#msg-passing-note message passing] _
+@<&nbsp;>@||#msg-passing|| ||
+||[[# eval]][#eval-note eval] _
+@<&nbsp;>@||#eval|| ||
+||[[# inspect-methods]][#inspect-methods-note inspect methods] _
+@<&nbsp;>@||#inspect-methods|| ||
+||[[# inspect-attr]][#inspect-attr-note inspect attributes] _
+@<&nbsp;>@||#inspect-attr|| ||
+||[[# pretty-print]][#pretty-print-note pretty print] _
+@<&nbsp;>@||#pretty-print|| ||
+||[[# src-line-file]][#src-line-file-note source line number and file name]||#src-line-file|| ||
+||[[# cmd-line-doc]][#cmd-line-doc-note command line documentation]||#cmd-line-doc|| ||
+||||||~ [[# net-web]][#net-web-note net and web]||
+||~ title ||~ anchor||~ description||
+||[[# hostname-ip]][#hostname-ip-note get local hostname, dns lookup, reverse dns lookup]||#hostname-ip|| ||
+||[[# http-get]][#http-get-note http get] _
+@<&nbsp;>@||#http-get|| ||
+||[[# http-post]][#http-post-note http post]||#http-post|| ||
+||[[# abs-url]][#abs-url-note absolute url]||#abs-url|| ||
+||[[# parse-url]][#parse-url-note parse url]||#parse-url|| ||
+||[[# url-encode]][#url-encode-note url encode/decode] _
+@<&nbsp;>@||#url-encode|| ||
+||[[# base64]][#base64-note base64 encode]||#base64|| ||
+||||||~ [[# dom]][#dom-note dom]||
+||~ title ||~ anchor||~ description||
+||[[# get-window]][#get-window-note get window]||#get-window|| ||
+||[[# get-doc-root]][#get-doc-root-note get document root]||#get-doc-root|| ||
+||[[# css-selector]][#css-selector-note css selector]||#css-selector|| ||
+||[[# get-attr]][#get-attr-note get attribute]||#get-attr|| ||
+||[[# set-attr]][#set-attr-note set attribute]||#set-attr|| ||
+||[[# children-node]][#children-node-note children of node]||#children-node|| ||
+||[[# append-node]][#append-node-note append node]||#append-node|| ||
+||[[# rm-node]][#rm-node-note remove node]||#rm-node|| ||
+||[[# get-parent-node]][#get-parent-node-note get parent node]||#get-parent-node|| ||
+||[[# get-set-text]][#get-set-text-note get and set text]||#get-set-text|| ||
+||[[# set-click-handler]][#set-click-handler-note set click handler]||#set-click-handler|| ||
+||[[# rm-click-handler]][#rm-click-handler-note remove click handler]||#rm-click-handler|| ||
+||||||~ [[# gui]][#gui-note gui]||
+||~ title ||~ anchor||~ description||
+||||||~ [[# unit-tests]][#unit-tests-note unit tests]||
+||~ title ||~ anchor||~ description||
+||[[# test-class]][#test-class-note test class]||#test-class|| ||
+||[[# run-all-tests]][#run-all-tests-note run all tests]||#run-all-tests|| ||
+||[[# run-single-test]][#run-single-test-note run single test]||#run-single-test|| ||
+||[[# assert-equal]][#assert-equal-note equality assertion]||#assert-equal|| ||
+||[[# assert-approx]][#assert-approx-note approximate assertion]||#assert-approx|| ||
+||[[# assert-regex]][#assert-regex-note regex assertion]||#assert-regex|| ||
+||[[# assert-exc]][#assert-exc-note exception assertion]||#assert-exc|| ||
+||[[# mock-method]][#mock-method-note mock method]||#mock-method|| ||
+||[[# test-setup]][#test-setup-note setup]||#test-setup|| ||
+||[[# test-teardown]][#test-teardown-note teardown]||#test-teardown|| ||
+||[[# coverage]][#coverage-note coverage]||#coverage|| ||
+||||||~ [[# debug-profile]][#debug-profile-note debugging and profiling]||
+||~ title ||~ anchor||~ description||
+||[[# check-syntax]][#check-syntax-note check syntax] _
+@<&nbsp;>@||#check-syntax|| ||
+||[[# stronger-warnings]][#stronger-warnings-note flag for stronger warnings]||#stronger-warnings|| ||
+||[[# suppress-warnings]][#suppress-warnings-note suppress warnings]||#suppress-warnings|| ||
+||[[# warnings-as-err]][#warnings-as-err-note treat warnings as errors]||#warnings-as-err|| ||
+||[[# lint]][#lint-note lint]||#lint||unused declarations; paths with no return||
+||[[# src-cleanup]][#src-cleanup-note source cleanup]||#src-cleanup|| ||
+||[[# debugger]][#debugger-note run debugger]||#debugger|| ||
+||[[# debugger-cmds]][#debugger-cmds-note debugger commands]||#debugger-cmds|| ||
+||[[# benchmark]][#benchmark-note benchmark code]||#benchmark|| ||
+||[[# profile]][#profile-note profile code]||#profile|| ||
+||[[# memory-tool]][#memory-tool-note memory tool]||#memory-tool||memory leaks; accessing uninitialized memory||
+||||||~ [[# java-interop]][#java-interop-note java interop]||
+||~ title ||~ anchor||~ description||
+||[[# java-version]][#java-version-note version]||#java-version|| ||
+||[[# java-repl]][#java-repl-note repl]||#java-repl|| ||
+||[[# java-interpreter]][#java-interpreter-note interpreter]||#java-interpreter|| ||
+||[[# java-compiler]][#java-compiler-note compiler]||#java-compiler|| ||
+||[[# java-new]][#java-new-note new]||#java-new|| ||
+||[[# java-import]][#java-import-note import]||#java-import|| ||
+||[[# java-non-bundled]][#java-non-bundled-note non-bundled java libraries]||#java-non-bundled|| ||
+||[[# java-shadow]][#java-shadow-note shadowing avoidance]||#java-shadow|| ||
+||[[# java-to-array]][#java-to-array-note convert native array to java array]||#java-to-array|| ||
+||[[# java-subclassable]][#java-subclassable-note are java classes subclassable?]||#java-subclassable|| ||
+||[[# java-open]][#java-open-note are java class open?]||#java-open|| ||
+||||||~ CONTAINERS||
+||||||~ [[# fixed-length-arrays]][#fixed-length-arrays-note fixed-length arrays]||
+||~ title ||~ anchor||~ description||
+||[[# fixed-len-array-stack]][#fixed-len-array-stack-note declare on stack]||#fixed-len-array-stack|| ||
+||[[# fixed-len-array-stack-runtime-size]][#fixed-len-array-stack-runtime-size-note declare on stack with runtime expression for size]||#fixed-len-array-stack-runtime-size||a C99 feature||
+||[[# fixed-len-array-heap]][#fixed-len-array-heap-note declare on heap]||#fixed-len-array-heap|| ||
+||[[# free-fixed-len-array-heap]][#free-fixed-len-array-heap-note free heap]||#free-fixed-len-array-heap|| ||
+||[[# fixed-len-array-init-list]][#fixed-len-array-init-list-note initialization list] _
+@<&nbsp;>@||#fixed-len-array-init-list|| ||
+||[[# fixed-len-array-size]][#fixed-len-array-size-note size] _
+@<&nbsp;>@||#fixed-len-array-size|| ||
+||[[# fixed-len-array-lookup]][#fixed-len-array-lookup-note lookup] _
+@<&nbsp;>@||#fixed-len-array-lookup||negative integers or arrays of integers and indices||
+||[[# fixed-len-array-update]][#fixed-len-array-update-note update] _
+@<&nbsp;>@||#fixed-len-array-update||what happens to size of array||
+||[[# fixed-len-array-out-of-bounds]][#fixed-len-array-out-of-bounds-note out-of-bounds]||#fixed-len-array-out-of-bounds|| ||
+||[[# copy-fixed-len-array]][#copy-fixed-len-array-note copy]||#copy-fixed-len-array|| ||
+||[[# realloc]][#realloc-note realloc]||#realloc|| ||
+||[[# fixed-len-array-as-func-arg]][#fixed-len-array-as-func-arg-note as function argument]||#fixed-len-array-as-func-arg||how to pass with or without making a copy||
+||[[# iterate-over-fixed-len-array]][#iterate-over-fixed-len-array-note iterate] _
+@<&nbsp;>@||#iterate-over-fixed-len-array|| ||
+||[[# sort-fixed-len-array]][#sort-fixed-len-array-note sort]||#sort-fixed-len-array|| ||
+||||||~ [[# resizable-arrays]][#resizable-arrays-note resizable arrays]||
+||~ title ||~ anchor||~ description||
+||[[# decl-resizable-array]][#decl-resizable-array-note declare]||#decl-resizable-array|| ||
+||[[# resizable-array-init-list]][#resizable-array-init-list-note initialization list]||#resizable-array-init-list|| ||
+||[[# resizable-array-literal]][#resizable-array-literal-note literal] _
+@<&nbsp;>@||#resizable-array-literal|| ||
+||[[# quote-words]][#quote-words-note quote words] _
+@<&nbsp;>@||#quote-words|| ||
+||[[# resizable-array-size]][#resizable-array-size-note size] _
+@<&nbsp;>@||#resizable-array-size|| ||
+||[[# resizable-array-capacity]][#resizable-array-capacity-note capacity]||#resizable-array-capacity|| ||
+||[[# empty-resizable-array-test]][#empty-resizable-array-test-note empty test] _
+@<&nbsp;>@||#empty-resizable-array-test||and how to make array empty||
+||[[# resizable-array-lookup]][#resizable-array-lookup-note lookup] _
+@<&nbsp;>@||#resizable-array-lookup||negative integers or arrays of integers and indices||
+||[[# resizable-array-update]][#resizable-array-update-note update] _
+@<&nbsp;>@||#resizable-array-update||what happens to size of array||
+||[[# resizable-array-out-of-bounds]][#resizable-array-out-of-bounds-note out-of-bounds behavior]||#resizable-array-out-of-bounds|| ||
+||[[# array-element-index]][#array-element-index-note element index]||#array-element-index||first and last occurrence; example should have two occurrences; does language return an array of indices||
+||[[# slice-array]][#slice-array-note slice] _
+##gray|//by endpoints, by length//## _
+@<&nbsp;>@||#slice-array||is slice modifiable, and if modified, does the original array change?||
+||[[# slice-array-to-end]][#slice-array-to-end-note slice to end] _
+@<&nbsp;>@||#slice-array-to-end|| ||
+||[[# array-back]][#array-back-note manipulate back] _
+@<&nbsp;>@||#array-back|| ||
+||[[# array-front]][#array-front-note manipulate front] _
+@<&nbsp;>@||#array-front|| ||
+||[[# concatenate-array]][#concatenate-array-note concatenate]||#concatenate-array|| ||
+||[[# replicate-array-elem]][#replicate-array-elem-note replicate element]||#replicate-array-elem|| ||
+||[[# copy-array]][#copy-array-note copy] _
+##gray|//address copy, shallow copy, deep copy//##||#copy-array|| ||
+||[[# array-as-func-arg]][#array-as-func-arg-note array as function argument]||#array-as-func-arg||how to pass with or without making a copy||
+||[[# iterate-over-array]][#iterate-over-array-note iterate] _
+@<&nbsp;>@||#iterate-over-array|| ||
+||[[# indexed-array-iteration]][#indexed-array-iteration-note indexed iteration]||#indexed-array-iteration|| ||
+||[[# range-iteration]][#range-iteration-note iterate over range]||#range-iteration|| ||
+||[[# range-array]][#range-array-note instantiate range as array]||#range-array|| ||
+||[[# reverse-array]][#reverse-array-note reverse]||#reverse-array|| ||
+||[[# sort-array]][#sort-array-note sort]||#sort-array|| ||
+||[[# dedupe-array]][#dedupe-array-note dedupe]||#dedupe-array|| ||
+||[[# membership]][#membership-note membership] _
+@<&nbsp;>@||#membership|| ||
+||[[# intersection]][#intersection-note intersection] _
+@<&nbsp;>@||#intersection|| ||
+||[[# union]][#union-note union] _
+@<&nbsp;>@||#union|| ||
+||[[# set-diff]][#set-diff-note relative complement, symmetric difference]||#set-diff|| ||
+||[[# map]][#map-note map] _
+@<&nbsp;>@||#map|| ||
+||[[# filter]][#filter-note filter] _
+@<&nbsp;>@||#filter|| ||
+||[[# reduce]][#reduce-note reduce] _
+@<&nbsp;>@||#reduce||fold right versus fold left?||
+||[[# min-max-elem]][#min-max-elem-note min and max element] _
+@<&nbsp;>@||#min-max-elem|| ||
+||[[# universal-existential-test]][#universal-existential-test-note universal  and existential tests] _
+@<&nbsp;>@||#universal-existential-test|| ||
+||[[# shuffle-sample]][#shuffle-sample-note shuffle and sample]||#shuffle-sample|| ||
+||[[# zip]][#zip-note zip] _
+@<&nbsp;>@||#zip||what if of different length?||
+||[[# cartesian-product]][#cartesian-product-note cartesian product]||#cartesian-product|| ||
+||||||~ [[# arithmetic-sequences]][#arithmetic-sequences-note arithmetic sequences]||
+||~ title ||~ anchor||~ description||
+||[[# arith-seq-diff-one]][#arith-seq-diff-one-note unit difference]||#arith-seq-diff-one|| ||
+||[[# arith-seq-diff-ten]][#arith-seq-diff-ten-note difference of 10]||#arith-seq-diff-ten|| ||
+||[[# arith-seq-diff-tenth]][#arith-seq-diff-tenth-note difference of 0.1]||#arith-seq-diff-tenth|| ||
+||[[# iter-over-arith-seq]][#iter-over-arith-seq-note iterate over arithmetic sequence]||#iter-over-arith-seq||Is it possible to iterate over the arithmetic sequence w/o instantiating it as an array in memory?||
+||[[# arith-seq-to-array]][#arith-seq-to-array-note convert arithmetic sequence to array]||#arith-seq-to-array|| ||
+||||||~ [[# lists]][#lists-note lists]||
+||~ title ||~ anchor||~ description||
+||[[# list-literal]][#list-literal-note literal]||#list-literal|| ||
+||[[# empty-list]][#empty-list-note empty list]||#empty-list|| ||
+||[[# empty-list-test]][#empty-list-test-note empty list test]||#empty-list-test|| ||
+||[[# cons]][#cons-note cons]||#cons|| ||
+||[[# head]][#head-note head]||#head|| ||
+||[[# tail]][#tail-note tail]||#tail|| ||
+||[[# head-tail-empty-list]][#head-tail-empty-list-note head and tail of empty list]||#head-tail-empty-list|| ||
+||[[# cons-cell]][#cons-cell-note cons cell]||#cons-cell|| ||
+||[[# list-test]][#list-test-note tests] _
+##gray|//atom, cons cell, list//##||#list-test|| ||
+||[[# list-len]][#list-len-note length]||#list-len|| ||
+||[[# nth-elem-of-list]][#nth-elem-of-list-note nth element]||#nth-elem-of-list|| ||
+||[[# list-elem-index]][#list-elem-index-note element index]||#list-elem-index|| ||
+||[[# list-update]][#list-update-note update]||#list-update|| ||
+||[[# list-front]][#list-front-note manipulate front]||#list-front|| ||
+||[[# list-concat]][#list-concat-note concatenate] _
+##gray|//two lists, list of lists//##||#list-concat|| ||
+||[[# list-last]][#list-last-note last] _
+##gray|//and butlast//##||#list-last|| ||
+||[[# list-take]][#list-take-note take]||#list-take|| ||
+||[[# list-drop]][#list-drop-note drop]]||#list-drop|| ||
+||[[# iter-over-list]][#iter-over-list-note iterate]||#iter-over-list|| ||
+||[[# list-reverse]][#list-reverse-note reverse]||#list-reverse|| ||
+||[[# list-sort]][#list-sort-note sort]||#list-sort|| ||
+||[[# list-map]][#list-map-note map]||#list-map|| ||
+||[[# list-filter]][#list-filter-note filter]||#list-filter|| ||
+||[[# list-fold-left]][#list-fold-left-note fold from left]||#list-fold-left|| ||
+||[[# list-fold-right]][#list-fold-right-note fold from right]||#list-fold-right|| ||
+||[[# list-membership]][#list-membership-note membership]||#list-membership|| ||
+||[[# list-universal-test]][#list-universal-test-note universal test]||#list-universal-test|| ||
+||[[# list-existential-test]][#list-existential-test-note existential test]||#list-existential-test|| ||
+||[[# list-zip]][#list-zip-note zip lists]]||#list-zip||what if of different length?||
+||[[# assoc-list-lookup]][#assoc-list-lookup-note association list lookup]||#assoc-list-lookup|| ||
+||[[# prop-list-lookup]][#prop-list-lookup-note property list lookup]||#prop-list-lookup|| ||
+||[[# apply-assoc-list]][#apply-assoc-list-note apply association list]||#apply-assoc-list|| ||
+||||||~ [[# tuples]][#tuples-note tuples]||
+||~ title ||~ anchor||~ description||
+||[[# tuple-type]][#tuple-type-note type]||#tuple-type|| ||
+||[[# tuple-literal]][#tuple-literal-note literal]||#tuple-literal|| ||
+||[[# tuple-access]][#tuple-access-note lookup element]||#tuple-access|| ||
+||[[# tuple-update]][#tuple-update-note update element]||#tuple-update|| ||
+||[[# tuple-len]][#tuple-len-note length]||#tuple-len|| ||
+||||||~ [[# sets]][#sets-note sets]||
+||~ title ||~ anchor||~ description||
+||||||~ [[# multidimensional-arrays]][#multidimensional-arrays-note multidimensional arrays]||
+||~ title ||~ anchor||~ description||
+||[[# elem-type]][#elem-type-note element type]||#elem-type|| ||
+||[[# permitted-elem-types]][#permitted-elem-types-note permitted element types]||#permitted-elem-types|| ||
+||[[# literal-1d-array]][#literal-1d-array-note 1d literal]||#literal-1d-array|| ||
+||[[# literal-2d-array]][#literal-2d-array-note 2d literal]||#literal-2d-array|| ||
+||[[# array-2d-from-seq]][#array-2d-from-seq-note construct 2d array from sequence of elements] _
+##gray|//fill by row, by column//##||#array-2d-from-seq|| ||
+||[[# array-2d-from-rows]][#array-2d-from-rows-note construct 2d array from rows]||#array-2d-from-rows|| ||
+||[[# array-2d-from-cols]][#array-2d-from-cols-note construct 2d array from columns]||#array-2d-from-cols|| ||
+||[[# array-2d-from-2d-arrays]][#array-2d-from-2d-arrays-note construct 2d array from 2d arrays] _
+##gray|//stacked, side-by-side//##||#array-2d-from-2d-arrays|| ||
+||[[# array-3d-from-seq]][#array-3d-from-seq-note construct 3d array from sequence of elements]||#array-3d-from-seq|| ||
+||[[# array-3d-from-2d-arrays]][#array-3d-from-2d-arrays-note construct 3d array from 2d arrays]||#array-3d-from-2d-arrays|| ||
+||[[# array-3d-from-seq-of-seq-of-rows]][#array-3d-from-seq-of-seq-of-rows-note construct 3d array from sequence of sequences of rows]||#array-3d-from-seq-of-seq-of-rows|| ||
+||[[# multidim-array-size]][#multidim-array-size-note size] _
+##gray|//number of elements, _
+number of dimensions, _
+dimension lengths//##||#multidim-array-size|| ||
+||[[# array-1d-lookup]][#array-1d-lookup-note 1d array lookup]||#array-1d-lookup|| ||
+||[[# array-2d-lookup]][#array-2d-lookup-note 2d array lookup]||#array-2d-lookup|| ||
+||[[# multidim-out-of-bounds-behavior]][#multidim-out-of-bounds-behavior-note out-of-bounds behavior]||#multidim-out-of-bounds-behavior|| ||
+||[[# index-1d-lookup-2d-array]][#index-1d-lookup-2d-array-note 1d index lookup of 2d array]||#index-1d-lookup-2d-array|| ||
+||[[# multidim-slice]][#multidim-slice-note slice]||#multidim-slice|| ||
+||[[# multidim-update]][#multidim-update-note update]||#multidim-update|| ||
+||[[# higher-order-update]][#higher-order-update-note higher order update]||#higher-order-update|| ||
+||[[# multidim-transpose]][#multidim-transpose-note transpose]||#multidim-transpose|| ||
+||[[# multidim-swap-axes]][#multidim-swap-axes-note swap axes]||#multidim-swap-axes|| ||
+||[[# multidim-map]][#multidim-map-note map elements]||#multidim-map|| ||
+||[[# higher-order-map]][#higher-order-map-note higher order map]||#higher-order-map|| ||
+||||||~ [[# dict]][#dict-note dictionaries]||
+||~ title ||~ anchor||~ description||
+||[[# declare-dict]][#declare-dict-note declare] _
+@<&nbsp;>@||#declare-dict|| ||
+||[[# dict-literal]][#dict-literal-note literal] _
+@<&nbsp;>@||#dict-literal|| ||
+||[[# dict-size]][#dict-size-note size] _
+@<&nbsp;>@||#dict-size|| ||
+||[[# dict-lookup]][#dict-lookup-note lookup] _
+@<&nbsp;>@||#dict-lookup|| ||
+||[[# dict-update]][#dict-update-note update] _
+@<&nbsp;>@||#dict-update|| ||
+||[[# dict-missing-key]][#dict-missing-key-note missing key behavior] _
+@<&nbsp;>@||#dict-missing-key|| ||
+||[[# dict-is-key-present]][#dict-is-key-present-note is key present] _
+@<&nbsp;>@||#dict-is-key-present|| ||
+||[[# dict-delete]][#dict-delete-note delete]||#dict-delete|| ||
+||[[# dict-associative-array]][#dict-associative-array-note from array of pairs, from even length array]||#dict-associative-array|| ||
+||[[# dict-merge]][#dict-merge-note merge]||#dict-merge||##gray|//How are duplicate keys handled?//##||
+||[[# dict-invert]][#dict-invert-note invert]||#dict-invert||##gray|//How are duplicate values handled?//##||
+||[[# dict-iter]][#dict-iter-note iterate] _
+@<&nbsp;>@||#dict-iter|| ||
+||[[# dict-key-val-arrays]][#dict-key-val-arrays-note keys and values as arrays]||#dict-key-val-arrays|| ||
+||[[# dict-sort-values]][#dict-sort-values-note sort by values]||#dict-sort-values|| ||
+||[[# dict-default-val]][#dict-default-val-note default value, computed value]||#dict-default-val|| ||
+||||||~ [[# user-defined-types]][#user-defined-types-note user-defined types]||
+||~ title ||~ anchor||~ description||
+||[[# type-alias]][#type-alias-note type alias]||#type-alias||new type and old are interchangeable||
+||[[# new-type]][#new-type-note new type]||#new-type||not interchangeable||
+||[[# algebraic-sum-type]][#algebraic-sum-type-note algebraic sum type]||#algebraic-sum-type|| ||
+||[[# enumerated-type]][#enumerated-type-note enumerated type]||#enumerated-type||a sum type||
+||[[# union-type]][#union-type-note union type]||#union-type|| ||
+||[[# algebraic-prod-type]][#algebraic-prod-type-note algebraic product type]||#algebraic-prod-type|| ||
+||[[# algebraic-prod-literal]][#algebraic-prod-literal-note algebraic product type literal]||#algebraic-prod-literal|| ||
+||[[# type-constructor-with-arg]][#type-constructor-with-arg-note type constructor with argument]||#type-constructor-with-arg|| ||
+||[[# type-constructor-with-tuple-arg]][#type-constructor-with-tuple-arg-note type constructor with tuple argument]||#type-constructor-with-tuple-arg|| ||
+||[[# generic-type]][#generic-type-note generic type]||#generic-type|| ||
+||[[# recursive-type]][#recursive-type-note recursive type]||#recursive-type|| ||
+||[[# match]][#match-note match/with case/of]||#match|| ||
+||[[# match-guard]][#match-guard-note match guard]||#match-guard|| ||
+||[[# match-catchall]][#match-catchall-note match catchall]||#match-catchall|| ||
+||[[# option-type]][#option-type-note option type]||#option-type|| ||
+||[[# member-offset]][#member-offset-note member offset]||#member-offset||i.e. offsetof()||
+||||||~ [[# generic-types]][#generic-types-note generic types]||
+||~ title ||~ anchor||~ description||
+||[[# define-generic-type]][#define-generic-type-note define generic type]||#define-generic-type|| ||
+||[[# instantiate-generic-type]][#instantiate-generic-type-note instantiate generic type]||#instantiate-generic-type|| ||
+||[[# generic-array]][#generic-array-note generic array]||#generic-array|| ||
+||[[# val-param]][#val-param-note value parameter]||#val-param|| ||
+||[[# template-param]][#template-param-note template parameter]||#template-param|| ||
+||[[# template-specialization]][#template-specialization-note template specialization]||#template-specialization|| ||
+||[[# multiple-type-params]][#multiple-type-params-note multiple type parameters]||#multiple-type-params|| ||
+||[[# generic-type-params]][#generic-type-params-note generic type parameters]||#generic-type-params|| ||
+||[[# variadic-template]][#variadic-template-note variadic template]||#variadic-template|| ||
+||||||~ TABLES||
+||||||~ [[# tables]][#tables-note tables]||
+||~ title ||~ anchor||~ description||
+||[[# table-from-col-arrays]][#table-from-col-arrays-note construct from column arrays]||#table-from-col-arrays|| ||
+||[[# table-from-row-tuples]][#table-from-row-tuples-note construct from row tuples]||#table-from-row-tuples|| ||
+||[[# categorical-var-col]][#categorical-var-col-note categorical variable column]||#categorical-var-col|| ||
+||[[# col-names-as-array]][#col-names-as-array-note column names as array]||#col-names-as-array|| ||
+||[[# access-col-as-array]][#access-col-as-array-note access column as array]||#access-col-as-array|| ||
+||[[# access-row-as-tuple]][#access-row-as-tuple-note access row as tuple]||#access-row-as-tuple|| ||
+||[[# access-datum]][#access-datum-note access datum]||#access-datum|| ||
+||[[# order-rows]][#order-rows-note order rows by column]||#order-rows|| ||
+||[[# order-rows-multiple-col]][#order-rows-multiple-col-note order rows by multiple columns]||#order-rows-multiple-col|| ||
+||[[# order-rows-desc]][#order-rows-desc-note order rows in descending order]||#order-rows-desc|| ||
+||[[# limit-rows]][#limit-rows-note limit rows]||#limit-rows||i.e slice first n rows||
+||[[# offset-rows]][#offset-rows-note offset rows]||#offset-rows||i.e. slice rows starting from n||
+||[[# attach-col]][#attach-col-note attach columns]||#attach-col|| ||
+||[[# detach-col]][#detach-col-note detach columns]||#detach-col|| ||
+||[[# spreadsheet-editor]][#spreadsheet-editor-note spreadsheet editor]||#spreadsheet-editor|| ||
+||||||~ [[# import-export]][#import-export-note import and export]||
+||~ title ||~ anchor||~ description||
+||[[# import-tab-delimited]][#import-tab-delimited-note import tab delimited]||#import-tab-delimited|| ||
+||[[# import-csv]][#import-csv-note import csv]||#import-csv|| ||
+||[[# set-col-separator]][#set-col-separator-note set column separator]||#set-col-separator||can it be multiple characters or a regex?||
+||[[# set-col-separator-whitesp]][#set-col-separator-whitesp-note set column separator to whitespace]||#set-col-separator-whitesp|| ||
+||[[# set-quote-char]][#set-quote-char-note set quote character]||#set-quote-char|| ||
+||[[# import-file-no-header]][#import-file-no-header-note import file without header]||#import-file-no-header|| ||
+||[[# set-col-names]][#set-col-names-note set column names]||#set-col-names|| ||
+||[[# set-col-types]][#set-col-types-note set column types]||#set-col-types|| ||
+||[[# recognize-null-val]][#recognize-null-val-note recognize null values]||#recognize-null-val||what values are recognized by default||
+||[[# change-decimal-mark]][#change-decimal-mark-note change decimal mark]||#change-decimal-mark|| ||
+||[[# recognize-thousands-separator]][#recognize-thousands-separator-note recognize thousands separator]||#recognize-thousands-separator|| ||
+||[[# unequal-row-len-behavior]][#unequal-row-len-behavior-note unequal row length behavior]||#unequal-row-len-behavior|| ||
+||[[# skip-comment-lines]][#skip-comment-lines-note skip comment lines]||#skip-comment-lines|| ||
+||[[# skip-rows]][#skip-rows-note skip rows]||#skip-rows|| ||
+||[[# max-rows-to-read]][#max-rows-to-read-note max rows to read]||#max-rows-to-read|| ||
+||[[# index-col]][#index-col-note index column]||#index-col||multiple columns for hierarchical index?||
+||[[# export-tab-delimited]][#export-tab-delimited-note export tab delimited]||#export-tab-delimited|| ||
+||[[# export-csv]][#export-csv-note export csv]||#export-csv|| ||
+||||||~ [[# relational-algebra]][#relational-algebra-note relational algebra]||
+||~ title ||~ anchor||~ description||
+||[[# project-col-by-name]][#project-col-by-name-note project columns by name]||#project-col-by-name|| ||
+||[[# project-col-by-position]][#project-col-by-position-note project columns by position]||#project-col-by-position|| ||
+||[[# project-expr]][#project-expr-note project expression]||#project-expr|| ||
+||[[# project-all-col]][#project-all-col-note project all columns]||#project-all-col|| ||
+||[[# rename-col]][#rename-col-note rename columns]||#rename-col|| ||
+||[[# select-rows]][#select-rows-note select rows]||#select-rows|| ||
+||[[# select-distinct-rows]][#select-distinct-rows-note select distinct rows]||#select-distinct-rows|| ||
+||[[# split-rows]][#split-rows-note split rows]||#split-rows|| ||
+||[[# inner-join]][#inner-join-note inner join]||#inner-join|| ||
+||[[# null-join-val]][#null-join-val-note nulls as join values]||#null-join-val|| ||
+||[[# left-join]][#left-join-note left join]||#left-join|| ||
+||[[# full-join]][#full-join-note full join]||#full-join|| ||
+||[[# antijoin]][#antijoin-note antijoin]||#antijoin|| ||
+||[[# cross-join]][#cross-join-note cross join]||#cross-join|| ||
+||||||~ [[# aggregation]][#aggregation-note aggregation]||
+||~ title ||~ anchor||~ description||
+||[[# row-count]][#row-count-note row count]||#row-count|| ||
+||[[# group-by-col]][#group-by-col-note group by column]||#group-by-col|| ||
+||[[# group-by-multiple-col]][#group-by-multiple-col-note group by multiple columns]||#group-by-multiple-col|| ||
+||[[# aggregation-func]][#aggregation-func-note aggregation functions]||#aggregation-func|| ||
+||[[# null-aggregation-func]][#null-aggregation-func-note nulls and aggregation functions]||#null-aggregation-func|| ||
+||[[# rank]][#rank-note rank]||#rank|| ||
+||[[# quantile]][#quantile-note quantile]||#quantile|| ||
+||[[# having]][#having-note having]||#having|| ||
+||||||~ MATHEMATICS||
+||||||~ [[# vectors]][#vectors-note vectors]||
+||~ title ||~ anchor||~ description||
+||[[# vec-literal]][#vec-literal-note vector literal]||#vec-literal|| ||
+||[[# vec-elem-wise-op]][#vec-elem-wise-op-note element-wise arithmetic operators]||#vec-elem-wise-op|| ||
+||[[# vec-len-mismatch]][#vec-len-mismatch-note result of vector length mismatch]||#vec-len-mismatch|| ||
+||[[# vec-scalar-mult]][#vec-scalar-mult-note scalar multiplication]||#vec-scalar-mult|| ||
+||[[# vec-dot]][#vec-dot-note dot product]||#vec-dot|| ||
+||[[# vec-cross]][#vec-cross-note cross product]||#vec-cross|| ||
+||[[# vec-norm]][#vec-norm-note norms]||#vec-norm|| ||
+||||||~ [[# matrices]][#matrices-note matrices]||
+||~ title ||~ anchor||~ description||
+||[[# matrix-literal-constructor]][#matrix-literal-constructor-note literal or constructor]||#matrix-literal-constructor|| ||
+||[[# constant-matrices]][#constant-matrices-note constant matrices] _
+##gray|//all zeros, all ones//##||#constant-matrices|| ||
+||[[# diagonal-matrices]][#diagonal-matrices-note diagonal matrices] _
+##gray|//and identity//##||#diagonal-matrices|| ||
+||[[# matrix-dim]][#matrix-dim-note dimensions]||#matrix-dim|| ||
+||[[# matrix-access]][#matrix-access-note element access]||#matrix-access|| ||
+||[[# matrix-row-access]][#matrix-row-access-note row access]||#matrix-row-access|| ||
+||[[# matrix-col-access]][#matrix-col-access-note column access]||#matrix-col-access|| ||
+||[[# submatrix-access]][#submatrix-access-note submatrix access]||#submatrix-access|| ||
+||[[# matrix-scalar-mult]][#matrix-scalar-mult-note scalar multiplication]||#matrix-scalar-mult|| ||
+||[[# matrix-elem-wise-op]][#matrix-elem-wise-op-note element-wise operators]||#matrix-elem-wise-op|| ||
+||[[# matrix-mult]][#matrix-mult-note multiplication]||#matrix-mult|| ||
+||[[# matrix-power]][#matrix-power-note power]||#matrix-power|| ||
+||[[# kronecker-prod]][#kronecker-prod-note kronecker product]||#kronecker-prod|| ||
+||[[# matrix-comparison]][#matrix-comparison-note comparison]||#matrix-comparison|| ||
+||[[# matrix-norms]][#matrix-norms-note norms]||#matrix-norms|| ||
+||[[# matrix-transpose]][#matrix-transpose-note transpose]||#matrix-transpose|| ||
+||[[# matrix-conjugate-transpose]][#matrix-conjugate-transpose-note conjugate transpose]||#matrix-conjugate-transpose|| ||
+||[[# matrix-inverse]][#matrix-inverse-note inverse]||#matrix-inverse|| ||
+||[[# pseudoinverse]][#pseudoinverse-note pseudoinverse]||#pseudoinverse|| ||
+||[[# determinant]][#determinant-note determinant]||#determinant|| ||
+||[[# trace]][#trace-note trace]||#trace|| ||
+||[[# eigenval]][#eigenval-note eigenvalues]||#eigenval|| ||
+||[[# eigenvec]][#eigenvec-note eigenvectors]||#eigenvec|| ||
+||[[# svd]][#svd-note singular value decomposition]||#svd|| ||
+||[[# matrix-solution]][#matrix-solution-note solve system of equations]||#matrix-solution|| ||
+||[[# sparse-matrix-construction]][#sparse-matrix-construction-note sparse matrix construction]||#sparse-matrix-construction|| ||
+||[[# sparse-matrix-decomposition]][#sparse-matrix-decomposition-note sparse matrix decomposition]||#sparse-matrix-decomposition|| ||
+||[[# sparse-identity-matrix]][#sparse-identity-matrix-note sparse identity matrix]||#sparse-identity-matrix|| ||
+||[[# dense-matrix-to-sparse-matrix]][#dense-matrix-to-sparse-matrix-note dense matrix to sparse matrix] _
+##gray|//and back//##||#dense-matrix-to-sparse-matrix|| ||
+||[[# sparse-matrix-storage]][#sparse-matrix-storage-note sparse matrix storage]||#sparse-matrix-storage|| ||
+||||||~ [[# symbolic-expressions]][#symbolic-expressions-note symbolic expressions]||
+||~ title ||~ anchor||~ description||
+||||||~ [[# equations-unknowns]][#equations-unknowns-note equations and unknowns]||
+||~ title ||~ anchor||~ description||
+||||||~ [[# optimization]][#optimization-note optimization]||
+||~ title ||~ anchor||~ description||
+||||||~ [[# number-theory]][#number-theory-note number theory]||
+||~ title ||~ anchor||~ description||
+||||||~ [[# polynomials]][#polynomials-note polynomials]||
+||~ title ||~ anchor||~ description||
+||||||~ [[# rings]][#rings-note rings]||
+||~ title ||~ anchor||~ description||
+||||||~ [[# permutations]][#permutations-note permutations]||
+||~ title ||~ anchor||~ description||
+||||||~ [[# groups]][#groups-note groups]||
+||~ title ||~ anchor||~ description||
+||||||~ [[# propositions]][#propositions-note propositions]||
+||~ title ||~ anchor||~ description||
+||||||~ STATISTICS||
+||||||~ [[# descriptive-statistics]][#descriptive-statistics-note descriptive statistics]||
+||~ title ||~ anchor||~ description||
+||[[# first-moment-stats]][#first-moment-stats-note first moment statistics]||#first-moment-stats|| ||
+||[[# second-moment-stats]][#second-moment-stats-note second moment statistics]||#second-moment-stats|| ||
+||[[# second-moment-stats-sample]][#second-moment-stats-sample-note second moment statistics for samples]||#second-moment-stats-sample|| ||
+||[[# skewness]][#skewness-note skewness]||#skewness|| ||
+||[[# kurtosis]][#kurtosis-note kurtosis]||#kurtosis|| ||
+||[[# nth-moment]][#nth-moment-note nth moment and nth central moment]||#nth-moment|| ||
+||[[# mode]][#mode-note mode]||#mode|| ||
+||[[# quantile-stats]][#quantile-stats-note quantile statistics]||#quantile-stats|| ||
+||[[# bivariate-stats]][#bivariate-stats-note bivariate statistiscs] _
+##gray|//correlation, covariance//##||#bivariate-stats|| ||
+||[[# correlation-matrix]][#correlation-matrix-note correlation matrix]||#correlation-matrix|| ||
+||[[# freq-table]][#freq-table-note frequency table]||#freq-table|| ||
+||[[# invert-freq-table]][#invert-freq-table-note invert frequency table]||#invert-freq-table|| ||
+||[[# bin]][#bin-note bin]||#bin|| ||
+||||||~ [[# distributions]][#distributions-note distributions]||
+||~ title ||~ anchor||~ description||
+||[[# binomial]][#binomial-note binomial] _
+##gray|//density, cumulative, quantile, _
+sample of 10//##||#binomial|| ||
+||[[# poisson]][#poisson-note poisson] _
+##gray|//density, cumulative, quantile, _
+sample of 10//##||#poisson|| ||
+||[[# normal]][#normal-note normal] _
+##gray|//density, cumulative, quantile, _
+sample of 10//##||#normal|| ||
+||[[# gamma]][#gamma-note gamma] _
+##gray|//density, cumulative, quantile, _
+sample of 10//##||#gamma|| ||
+||[[# exponential]][#exponential-note exponential] _
+##gray|//density, cumulative, quantile, _
+sample of 10//##||#exponential|| ||
+||[[# chi-squared]][#chi-squared-note chi-squared] _
+##gray|//density, cumulative, quantile, _
+sample of 10//##||#chi-squared|| ||
+||[[# beta]][#beta-note beta] _
+##gray|//density, cumulative, quantile, _
+sample of 10//##||#beta|| ||
+||[[# uniform]][#uniform-note uniform] _
+##gray|//density, cumulative, quantile, _
+sample of 10//##||#uniform|| ||
+||[[# students-t]][#students-t-note student t] _
+##gray|//density, cumulative, quantile, _
+sample of 10//##||#students-t|| ||
+||[[# snedecors-f]][#snedecors-f-note snedecor F] _
+##gray|//density, cumulative, quantile, _
+sample of 10//##||#snedecors-f|| ||
+||[[# empirical-density-func]][#empirical-density-func-note empirical density function]||#empirical-density-func|| ||
+||[[# empirical-cumulative-distribution]][#empirical-cumulative-distribution-note empirical cumulative distribution]||#empirical-cumulative-distribution|| ||
+||[[# empirical-quantile-func]][#empirical-quantile-func-note empirical quantile function]||#empirical-quantile-func|| ||
+||||||~ [[# regression]][#regression-note regression]||
+||~ title ||~ anchor||~ description||
+||[[# simple-linear-regression]][#simple-linear-regression-note simple linear regression] _
+##gray|//coefficient, intercept, and residuals//##||#simple-linear-regression|| ||
+||[[# linear-regression-no-intercept]][#linear-regression-no-intercept-note no intercept]||#linear-regression-no-intercept|| ||
+||[[# multiple-linear-regression]][#multiple-linear-regression-note multiple linear regression]||#multiple-linear-regression|| ||
+||[[# polynomial-regression]][#polynomial-regression-note polynomial regression]||#polynomial-regression|| ||
+||[[# logistic-regression]][#logistic-regression-note logistic regression]||#logistic-regression|| ||
+||||||~ [[# statistical-tests]][#statistical-tests-note statistical tests]||
+||~ title ||~ anchor||~ description||
+||[[# wilcoxon]][#wilcoxon-note wilcoxon signed-rank test] _
+##gray|//variable is symmetric around zero//##||#wilcoxon|| ||
+||[[# kruskal]][#kruskal-note kruskal-wallis rank sum test] _
+##gray|//variables have same location parameter//##||#kruskal|| ||
+||[[# kolmogorov-smirnov-test]][#kolmogorov-smirnov-test-note kolmogorov-smirnov test] _
+##gray|//variables have same distribution//##||#kolmogorov-smirnov-test|| ||
+||[[# one-sample-t-test]][#one-sample-t-test-note one-sample t-test] _
+##gray|//mean of normal variable with unknown variance is zero//##||#one-sample-t-test|| ||
+||[[# independent-two-sample-t-test]][#independent-two-sample-t-test-note independent two-sample t-test] _
+##gray|//two normal variables have same mean//##||#independent-two-sample-t-test|| ||
+||[[# one-sample-binomial-test]][#one-sample-binomial-test-note one-sample binomial test] _
+##gray|//binomial variable parameter is as given//##||#one-sample-binomial-test|| ||
+||[[# two-sample-binomial-test]][#two-sample-binomial-test-note two-sample binomial test] _
+##gray|//parameters of two binomial variables are equal//##||#two-sample-binomial-test|| ||
+||[[# chi-squared-test]][#chi-squared-test-note chi-squared test] _
+##gray|//parameters of multinomial variable are all equal//##||#chi-squared-test|| ||
+||[[# poisson-test]][#poisson-test-note poisson test] _
+##gray|//parameter of poisson variable is as given//##||#poisson-test|| ||
+||[[# f-test]][#f-test-note F test] _
+##gray|//ratio of variance of normal variables is as given//##||#f-test|| ||
+||[[# pearson-product-moment-test]][#pearson-product-moment-test-note pearson product moment test] _
+##gray|//normal variables are not correlated//##||#pearson-product-moment-test|| ||
+||[[# shapiro-wilk-test]][#shapiro-wilk-test-note shapiro-wilk test] _
+##gray|//variable has normal distribution//##||#shapiro-wilk-test|| ||
+||[[# bartletts-test]][#bartletts-test-note bartlett test] _
+##gray|//two or more normal variables have same variance//##||#bartletts-test|| ||
+||[[# levene-test]][#levene-test-note levene test] _
+##gray|//two or more variables have same variance//##||#levene-test|| ||
+||[[# one-way-anova]][#one-way-anova-note one-way anova] _
+##gray|//two or more normal variables have same mean//##||#one-way-anova|| ||
+||||||~ [[# time-series]][#time-series-note time series]||
+||~ title ||~ anchor||~ description||
+||[[# time-series-construction]][#time-series-construction-note time series]||#time-series-construction|| ||
+||[[# monthly-time-series]][#monthly-time-series-note monthly time series]||#monthly-time-series|| ||
+||[[# time-series-lookup-time]][#time-series-lookup-time-note lookup by time]||#time-series-lookup-time|| ||
+||[[# time-series-lookup-position]][#time-series-lookup-position-note lookup by position in series]||#time-series-lookup-position|| ||
+||[[# aligned-arithmetic]][#aligned-arithmetic-note aligned arithmetic]||#aligned-arithmetic|| ||
+||[[# lagged-difference]][#lagged-difference-note lagged difference]||#lagged-difference|| ||
+||[[# simple-moving-avg]][#simple-moving-avg-note simple moving average]||#simple-moving-avg|| ||
+||[[# weighted-moving-avg]][#weighted-moving-avg-note weighted moving average]||#weighted-moving-avg|| ||
+||[[# exponential-smoothing]][#exponential-smoothing-note exponential smoothing]||#exponential-smoothing|| ||
+||[[# least-squares-exponential-smoothing]][#least-squares-exponential-smoothing-note exponential smoothing with best least squares fit]||#least-squares-exponential-smoothing|| ||
+||[[# decompose-seasonal-trend]][#decompose-seasonal-trend-note decompose into seasonal and trend]||#decompose-seasonal-trend|| ||
+||[[# correlogram]][#correlogram-note correlogram]||#correlogram|| ||
+||[[# stationarity-test]][#stationarity-test-note test for stationarity]||#stationarity-test|| ||
+||[[# arma]][#arma-note arma]||#arma|| ||
+||[[# arima]][#arima-note arima]||#arima|| ||
+||[[# automatic-arima]][#automatic-arima-note arima with automatic model selection]||#automatic-arima|| ||
+||||||~ CHARTS||
+||||||~ [[# univariate-charts]][#univariate-charts-note univariate charts]||
+||~ title ||~ anchor||~ description||
+||[[image http://farm5.static.flickr.com/4090/5039793334_f76edece33_m.jpg]] _
+[[# bar-chart]][#bar-chart-note vertical bar chart]||#bar-chart|| ||
+||[[image http://farm5.static.flickr.com/4092/5039776078_cc38a4ff5f_m.jpg]] _
+[[# horizontal-bar-chart]][#horizontal-bar-chart-note horizontal bar chart]||#horizontal-bar-chart|| ||
+||[[image http://farm5.static.flickr.com/4145/5037819710_d932767cd5_m.jpg]] _
+[[# pie-chart]][#pie-chart-note pie chart]||#pie-chart|| ||
+||[[image http://farm5.static.flickr.com/4089/5037399669_13c8e585e0_m.jpg]] _
+[[# stem-leaf-plot]][#stem-leaf-plot-note stem-and-leaf plot]||#stem-leaf-plot|| ||
+||[[image http://farm5.static.flickr.com/4106/5037415497_4c6fbfcab2_m.jpg]] _
+[[# histogram]][#histogram-note histogram]||#histogram|| ||
+||[[image http://farm5.static.flickr.com/4106/5037525393_7ac86e81c3_m.jpg]] _
+[[# box-plot]][#box-plot-note box plot]||#box-plot|| ||
+||[[# chart-title]][#chart-title-note chart title]||#chart-title|| ||
+||[[image http://farm8.staticflickr.com/7551/15816199467_a0a0f159d0_t.jpg]] _
+[[# subplot-grid]][#subplot-grid-note grid of subplots]||#subplot-grid|| ||
+||[[# new-plot-window]][#new-plot-window-note open new plot window]||#new-plot-window|| ||
+||[[# save-plot-as-png]][#save-plot-as-png-note save plot as png]||#save-plot-as-png|| ||
+||||||~ [[# bivariate-charts]][#bivariate-charts-note bivariate charts]||
+||~ title ||~ anchor||~ description||
+||[[image http://farm5.static.flickr.com/4154/5039126187_e340b3f4aa_m.jpg]] _
+[[# stacked-bar-chart]][#stacked-bar-chart-note stacked bar chart]||#stacked-bar-chart|| ||
+||[[image http://farm8.staticflickr.com/7490/15814685770_09478e1222_t.jpg]] _
+[[# grouped-bar-chart]][#grouped-bar-chart-note grouped bar chart]||#grouped-bar-chart|| ||
+||[[image http://farm6.static.flickr.com/5044/5267212089_a7749bbe3e_s.jpg]] _
+[[# scatter-plot]][#scatter-plot-note scatter plot]||#scatter-plot|| ||
+||[[# point-types]][#point-types-note point types]||#point-types|| ||
+||[[image http://farm9.staticflickr.com/8568/16001259452_55e23d1303_t.jpg]] _
+[[# hexbin]][#hexbin-note hexagonal binning]||#hexbin|| ||
+||[[image http://farm6.static.flickr.com/5089/5267975488_2216ae147e_s.jpg]] _
+[[# linear-regression-line]][#linear-regression-line-note linear regression line]||#linear-regression-line|| ||
+||[[image http://farm6.static.flickr.com/5125/5267434941_f8537c9d26_s.jpg]] _
+[[# polygonal-plot]][#polygonal-plot-note polygonal line plot]||#polygonal-plot|| ||
+||[[# line-types]][#line-types-note line types]||#line-types|| ||
+||[[image http://farm6.static.flickr.com/5204/5268208606_b745646ea6_s.jpg]] _
+[[# function-plot]][#function-plot-note function plot]||#function-plot|| ||
+||[[image http://farm6.static.flickr.com/5048/5267567389_27a19429e4_s.jpg]] _
+[[# qq-plot]][#qq-plot-note quantile-quantile plot]||#qq-plot|| ||
+||[[# axis-labels]][#axis-labels-note axis labels]||#axis-labels|| ||
+||[[# axis-limits]][#axis-limits-note axis limits]||#axis-limits|| ||
+||[[# logarithmic-y-axis]][#logarithmic-y-axis-note logarithmic y-axis]||#logarithmic-y-axis|| ||
+||||||~ [[# multivariate-charts]][#multivariate-charts-note multivariate charts]||
+||~ title ||~ anchor||~ description||
+||[[image http://farm6.static.flickr.com/5245/5268191292_a75a367c39_s.jpg]] _
+[[# additional-line]][#additional-line-note additional line set]||#additional-line|| ||
+||[[# colors]][#colors-note colors]||#colors|| ||
+||[[# superimposed-plots]][#superimposed-plots-note superimposed plots with different y-axis scales]||#superimposed-plots|| ||
+||[[image http://farm8.staticflickr.com/7461/15382318933_b4ba583034_t.jpg]] _
+[[# legend]][#legend-note legend]||#legend|| ||
+||[[image http://farm9.staticflickr.com/8600/15814685890_69b3f21697_t.jpg]] _
+[[# additional-point]][#additional-point-note additional point set]||#additional-point|| ||
+||[[image http://farm6.static.flickr.com/5041/5268071368_75c3aee42e_t.jpg]] _
+[[# area-chart]][#area-chart-note stacked area chart]||#area-chart|| ||
+||[[image http://farm8.staticflickr.com/7557/15815944099_9b56eb2af4_t.jpg]] _
+[[# overlapping-area-chart]][#overlapping-area-chart-note overlapping area chart]||#overlapping-area-chart|| ||
+||[[image http://farm9.staticflickr.com/8611/15814558578_f6b4f8d3b0_t.jpg]] _
+[[# scatter-plot-3d]][#scatter-plot-3d-note 3d scatter plot]||#scatter-plot-3d|| ||
+||[[image http://farm9.staticflickr.com/8591/15999976481_b2082d7d5b_t.jpg]] _
+[[# bubble-chart]][#bubble-chart-note bubble chart]||#bubble-chart|| ||
+||[[image http://farm8.staticflickr.com/7521/15976165976_636a08e4e8_t.jpg]] _
+[[# scatter-plot-matrix]][#scatter-plot-matrix-note scatter plot matrix]||#scatter-plot-matrix|| ||
+||[[image http://farm8.staticflickr.com/7496/15814558718_3f63b8e371_t.jpg]] _
+[[# contour-plot]][#contour-plot-note contour plot]||#contour-plot|| ||
+||~ ||~ ##EFEFEF|@@___________________________________@@##||~ ||

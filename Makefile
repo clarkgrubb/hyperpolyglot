@@ -69,6 +69,13 @@ markup:
 markup/%: | markup
 	./bin/page_content.py --page=$* --download > $@
 
+skeleton.db: skeleton.txt
+	./bin/table.rb --parse-skeleton $< --database $@
+
+.PHONY: generate_skeleton
+generate_skeleton:
+	./bin/table.rb --generate-skeleton skeleton.txt --database skeleton.db
+
 .PHONY:
 download: $(markup)
 
