@@ -70,6 +70,7 @@ markup/%: | markup
 	./bin/page_content.py --page=$* --download > $@
 
 skeleton.db: skeleton.txt
+	rm -f $@
 	./bin/table.rb --parse-skeleton $< --database $@
 
 .PHONY: generate_skeleton
