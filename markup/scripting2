@@ -449,7 +449,7 @@ process.argv[1] _
 ##gray|@@//@@ process.argv[0] contains "node"##||$##peru|argv## _
 $##teal|_SERVER##[##maroon|"SCRIPT_NAME"##]||sys.argv[1:] _
 sys.argv[0]||##green|ARGV## _
-##peru|$0##||
+##green|$PROGRAM_NAME##||
 ||[[# env-var]][#env-var-note get and set environment variable] _
 @<&nbsp;>@||process.env["HOME"] _
  _
@@ -1246,9 +1246,11 @@ py_compile.compile(##maroon|'foo.py'##)||$ ruby -c foo.rb||
 $ python -3t foo.py||$ ruby -w foo.rb _
 $ ruby -W2 foo.rb||
 ||[[# lint]][#lint-note lint]|| || ||$ sudo pip install pylint _
-$ pylint foo.py|| ||
+$ pylint foo.py||$ sudo gem install rubocop _
+$ rubocop -D foo.rb||
 ||[[# src-cleanup]][#src-cleanup-note source cleanup]|| || ||$ sudo pip install pep8 _
-$ pep8 foo.py|| ||
+$ pep8 foo.py||$ sudo gem install rubocop _
+$ rubocop -D foo.rb||
 ||[[# debugger]][#debugger-note run debugger]|| || ||$ python -m pdb foo.py||$ sudo gem install ruby-debug _
 $ rdebug foo.rb||
 ||[[# debugger-cmds]][#debugger-cmds-note debugger commands]|| || ||h l n s b c w u d p q||h l n s b c w u down p q||

@@ -228,6 +228,8 @@ tip //refers to the most recent revision in the repository.//##||
  _
 ##gray|//commits after COMMIT can be squashed//##|| ||
 ||apply commit to current branch||$ git cherry-pick COMMIT ||$ hg graft -r REV||
+||continue cherry pick||$ git cherry-pick @@--@@continue|| ||
+||abort cherry pick||$ git cherry-pick @@--@@abort|| ||
 ||create detached head from branch and sequence of commits||$ git rebase --onto BRANCH COMMIT1 COMMIT2|| ||
 ||||||~ [[# history]][#history-note history]||
 ||~ ||~ [#git git]||~ [#hg hg]||
@@ -313,8 +315,14 @@ $ hg unbundle||
 ||external repository file format||[submodule "vendor/modules/system"] _
 @<&nbsp;&nbsp;>@path = vendor/modules/system _
 @<&nbsp;&nbsp;>@url = ../dm-kohana-core.git|| ||
-|| ||$ git submodule CMD||$ hg subrepo CMD||
-||clone repository and external repositories||$ git clone --recursive URL|| ||
+||add submodule||$ git submodule add URL PATH _
+ _
+##gray|//Records submodule in// .gitmodules.  //If// PATH //does not exist,// URL //is cloned there.//##|| ||
+||register submodules||$ git submodule init _
+ _
+##gray|//Copies data from// .gitmodules //in index to// .git/config.##|| ||
+|| ||$ git submodule update|| ||
+||clone repository and external repositories||$ git clone @@--@@recursive URL|| ||
 ||||||~ [[# packaging]][#packaging-note packaging]||
 ||~ ||~ [#git git]||~ [#hg hg]||
 ||create tarball||$ git archive @@--@@format=tar [#TREEISH TREEISH] > repo.tar||$ hg archive -t tar ../[#HG-NAME NAME].tar||

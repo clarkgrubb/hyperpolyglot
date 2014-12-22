@@ -564,7 +564,7 @@ Dot[A, B] _
 ##gray|(* or use period: *)## _
 A . B||A = sympy.matrix([[1, 2], [3, 4]]) _
 B = sympy.matrix([[4, 3], [2, 1]]) _
-A * b|| || ||
+A * B|| || ||
 ||power||@@{{1, 2}, {3, 4}}@@ ^ 3||A ** 3|| || ||
 ||kronecker product||A = @@{{1, 2}, {3, 4}}@@ _
 B = @@{{4, 3}, {2, 1}}@@ _
@@ -635,7 +635,8 @@ c > 0 && c < 10, _
 {a, b, c}, Integers]|| || || ||
 ||||||||||~ [[# optimization]][#optimization-note optimization]||
 ||~ ||~ mathematica||~ sympy||~ gap||~ singular||
-||[#minimize find minimal value]||Minimize[Sqrt[a^2 + x^2] + Sqrt[(b - x)^2 + c^2], x]|| || || ||
+||minimize||Minimize[x^2 + 1, x]|| || || ||
+||minimize subject to constraint|| || || || ||
 ||||||||||~ [[# number-theory]][#number-theory-note number theory]||
 ||~ ||~ mathematica||~ sympy||~ gap||~ singular||
 ||[#number-tests number tests]||IntegerQ[7] _
@@ -658,14 +659,25 @@ FactorInteger[84]||factorint(84)|| || ||
 ||specify ordering|| || || || ||
 ||degree|| || || || ||
 ||operations|| || || || ||
-||division and remainder|| || || || ||
-||factor|| || || || ||
-||resultant|| || || || ||
-||symmetric polynomial|| || || || ||
-||cyclotomic polynomial|| || || || ||
+||division and remainder||PolynomialReduce[x^10 - 1, x - 1, {x}]| _
+PolynomialReduce[x^10 - y^10, x - y, {x, y}]| || || ||
+||factor||Factor[x^10 - y^10]|| || || ||
+||greatest common divisor||p1 = -2 - x + 2 x^2 + x^3 _
+p2 = 6 - 7 x + x^3 _
+PolynomialGCD[p1, p2]|| || || ||
+||resultant||Resultant[(x-1)(x-2), (x-3)(x-3), x]|| || || ||
+||groebner basis||p1 = x^2 + y + z - 1 _
+p2 = x + y^2 + z - 1 _
+p3 = x + y + z^2 - 1 _
+ _
+##gray|(* uses lexographic order by default: *)## _
+GroebnerBasis[{p1, p2, p3}, {x, y, z}]|| || || ||
+||symmetric polynomial||SymmetricPolynomial[3, {x1, x2, x3, x4}]|| || || ||
+||cyclotomic polynomial||Cyclotomic[10, x]|| || || ||
 ||hermite polynomial|| || || || ||
 ||bernoulli polynomial|| || || || ||
 ||interpolation polynomial|| || || || ||
+||characteristic polynomail||CharacteristicPolynomial[{{1, 2}, {3, 4}}, x]|| || || ||
 ||rational function|| || || || ||
 ||||||||||~ [[# rings]][#rings-note rings]||
 ||~ ||~ mathematica||~ sympy||~ gap||~ singular||

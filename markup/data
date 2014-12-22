@@ -1,7 +1,7 @@
 [[# top]]//a side-by-side reference sheet//
 
 [#grammar-invocation grammar and invocation] | [#var-expr variables and expression] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] _
-[#arrays arrays] | [#dictionaries dictionaries] | [#tables tables] | [#import-export import and export] | [#relational-algebra relational algebra] | [#aggregation aggregation] | [#functions functions] _
+[#arrays arrays] | [#dictionaries dictionaries] | [#tables tables] | [#relational-algebra relational algebra] | [#aggregation aggregation] | [#functions functions] _
 [#execution-control execution control] | [#files files] | [#libraries-namespaces libraries and namespaces] | [#reflection reflection]
 
 ||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||
@@ -202,8 +202,6 @@ from pwt _
 order by name;||$ sort -k1 -r -t: /etc/passwd|| ||
 ||[[# limit]][#limit-note limit]||select name from pwt order by name limit 10;|| ||first_ten = limit ordered_names 10;||
 ||[[# offset]][#offset-note offset]||select name from pwt order by name limit 10 offset 10;|| || ||
-||||||||~ [[# import-export]][#import-export-note import and export]||
-||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||
 ||||||||~ [[# relational-algebra]][#relational-algebra-note relational algebra]||
 ||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||
 ||[[# poject-column-by-name]][#project-column-by-name-note project columns by name]||select name, pw from pwt;||##gray|//none//##||name_pw = foreach pwf generate name, pw;||
@@ -744,9 +742,6 @@ How to sort the rows in a table using the values in multiple columns.  If the va
 
 [[# offset-note]]
 ++ [#offset offset]
-
-[[# import-export-note]]
-+ [#import-export Import and Export]
 
 [[# relational-algebra-note]]
 + [#relational-algebra Relational Algebra]

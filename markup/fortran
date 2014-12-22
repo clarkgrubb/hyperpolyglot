@@ -1,8 +1,8 @@
 [[# top]]//a side-by-side reference sheet//
 
-[#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#dates-time dates and time] | [#arrays arrays] | [#arith-seq arithmetic sequences] | [#functions functions] | [#execution-control execution control] | [#file-handles file handles] | [#processes-environment processes and environment]
- _
-[#multidimensional-arrays multidimensional arrays] | [#vectors vectors] | [#matrices matrices]
+[#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#dates-time dates and time] | [#arrays arrays] | [#arith-seq arithmetic sequences] | [#multidimensional-arrays multidimensional arrays] | [#functions functions] | [#execution-control execution control] | [#file-handles file handles] | [#processes-environment processes and environment]
+
+[#vectors vectors] | [#matrices matrices]
 
 ||~ [[# general]]||~ [#fortran fortran]||~ [#apl apl]||
 ||[[# version-used]][#version-used-note version used] _
@@ -321,6 +321,13 @@ a2 = a1(1:2)|| ||
 ||unit difference|| ||##gray|⍝ iota: ⍳## _
  _
 ⍳ 100||
+||||||~ [[# multidimensional-arrays]][#multidimensional-arrays-note multidimensional arrays]||
+||~ ||~ fortran||~ apl||
+||construct from sequence—2d||integer::a(2,2) = & _
+@<&nbsp;&nbsp;>@reshape((/ 1, 2, 3, 4 /), & _
+@<&nbsp;&nbsp;>@(/ 2, 2 /))||##gray|⍝ rho: ⍴## _
+ _
+2 2 ⍴ 1 2 3 4||
 ||||||~ [[# functions]][#functions-note functions]||
 ||~ ||~ fortran||~ apl||
 ||[[# def-func]][#def-func-note define function]||integer function add(n, m) _
@@ -437,13 +444,6 @@ endif||##gray|⍝ quad: ⎕## _
  _
 ##gray|! nonzero status:## _
 error stop 1||)OFF||
-||||||~ [[# multidimensional-arrays]][#multidimensional-arrays-note multidimensional arrays]||
-||~ ||~ fortran||~ apl||
-||construct from sequence—2d||integer::a(2,2) = & _
-@<&nbsp;&nbsp;>@reshape((/ 1, 2, 3, 4 /), & _
-@<&nbsp;&nbsp;>@(/ 2, 2 /))||##gray|⍝ rho: ⍴## _
- _
-2 2 ⍴ 1 2 3 4||
 ||||||~ [[# vectors]][#vectors-note vectors]||
 ||~ ||~ fortran||~ apl||
 ||[#vector-literal vector literal]||##gray|//same as array//##|| ||

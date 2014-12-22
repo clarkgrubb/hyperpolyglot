@@ -4,7 +4,7 @@
 
 [#tables tables] | [#import-export import and export] | [#relational-algebra relational algebra] | [#aggregation aggregation]
 
-[#vectors vectors] | [#matrices matrices] | [#optimization optimization] |  [#descriptive-statistics descriptive statistics] | [#distributions distributions] | [#regression regression] | [#statistical-tests statistical tests] | [#time-series time series] | [#curve-fitting curve fitting]
+[#vectors vectors] | [#matrices matrices] | [#optimization optimization] | [#polynomials polynomials] | [#descriptive-statistics descriptive statistics] | [#distributions distributions] | [#regression regression] | [#statistical-tests statistical tests] | [#time-series time series]
 
 [#univariate-charts univariate charts] | [#bivariate-charts bivariate charts] | [#multivariate-charts multivariate charts]
 
@@ -1404,6 +1404,28 @@ linprog(c, A, b, [], [], Lb, Ub)|| || ||
 lingprog(c, A, b, Aeq, beq)|| || ||
 ||[[# minimize-quadratic-prob]][#minimize-quadratic-prob-note quadratic minimization]||quadprog()|| || ||
 ||[[# minimize-int-linear-prob]][#minimize-int-linear-prob-note integer linear minimization]||intlinprog()|| || ||
+||||||||~ [[# polynomials]][#polynomials-note polynomials]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+||exact polynomial fit||x = [1 2 3 4] _
+y = [3 9 2 1] _
+##gray|% polynomial coefficient array:## _
+p = polyfit(x, y, 3) _
+ _
+##gray|% plot polynomial:## _
+xx = -10:.1:10 _
+yy = polyval(p, xx) _
+plot(xx, yy)|| ||
+||exact polynomial fit with derivative values|| || || ||
+||piecewise polynomial fit|| || || ||
+||[[image http://farm6.static.flickr.com/5049/5268229340_0b96b5e223_s.jpg]] _
+[[# cubic-spline]][#cubic-spline-note cubic spline]||f = spline(1:20, normrnd(0, 1, 1, 20)) _
+x = 1:.1:20 _
+plot(x, ppval(f, x))||f = splinefun(rnorm(20)) _
+x = seq(1, 20, .1) _
+plot(x, f(x), type="l")|| ||
+||underdetermined polynomail fit|| || || ||
+||overdetermined polynomial fit|| || || ||
+||multivariate polynomial fit|| || || ||
 ||||||||~ [[# descriptive-statistics]][#descriptive-statistics-note descriptive statistics]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
 ||[[# 1st-moment-stats]][#1st-moment-stats-note first moment statistics]||x = [1 2 3 8 12 19] _
@@ -1966,22 +1988,6 @@ acf(x + x2, lag.max=20)|| ||
 ||[[# arma]][#arma-note arma]|| || || ||
 ||[[# arima]][#arima-note arima]|| || || ||
 ||[[# automatic-arima]][#arima-note arima with automatic model selection]|| || || ||
-||||||||~ [[# curve-fitting]][#curve-fitting-note curve fitting]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
-||exact polynomial fit||x = [1 2 3 4] _
-y = [3 9 2 1] _
-##gray|% polynomial coefficient array:## _
-p = polyfit(x, y, 3) _
- _
-##gray|% plot polynomial:## _
-xx = -10:.1:10 _
-yy = polyval(p, xx) _
-plot(xx, yy)|| || ||
-||least squares polynomial fit|| || || ||
-||[[image http://farm6.static.flickr.com/5049/5268229340_0b96b5e223_s.jpg]] _
-[[# cubic-spline]][#cubic-spline-note cubic spline]|| ||f = splinefun(rnorm(20)) _
-x = seq(1, 20, .1) _
-plot(x, f(x), type="l")|| ||
 ||||||||~ [[# univariate-charts]][#univariate-chart-note univariate charts]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy matplotlib]||
 ||[[image http://farm5.static.flickr.com/4090/5039793334_f76edece33_m.jpg]] [[# bar-chart]][#bar-chart-note vertical bar chart]||bar([7 3 8 5 5])||cnts = c(7,3,8,5,5) _
@@ -2063,7 +2069,7 @@ barplot(d,names.arg=labels)||a1 = [7,3,8,5,5] _
 a2 = [1,2,1,3,1] _
 plt.bar(range(0,5), a1, color='r') _
 plt.bar(range(0,5), a2, color='b')||
-||[[image grouped-bar.png]] _
+||[[image http://farm8.staticflickr.com/7490/15814685770_09478e1222_t.jpg]] _
 [[# grouped-bar-chart]][#grouped-bar-chart-note grouped bar chart]||d = [7 1; 3 2; 8 1; 5 3; 5 1] _
 bar(d)||d = matrix(c(7,1,3,2,8,1,5,3,5,1), _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@nrow=2) _
@@ -3855,6 +3861,16 @@ How to solve a linear program where the objective function is minimized and with
 [[# minimize-int-linear-prob-note]]
 ++ [#minimize-int-linear-prob integer linear minimization]
 
+[[# polynomials-note]]
++ [#polynomials Polynomials]
+
+++ exact polynomial fit
+
+[[# cubic-spline-note]]
+++ [#cubic-spline cubic spline]
+
+How to connect the dots of a data set with a line which has a continuous 2nd derivative.
+
 [[# descriptive-statistics-note]]
 + [#descriptive-statistics Descriptive Statistics]
 
@@ -4381,18 +4397,6 @@ How to get a data point in a time series by its ordinal position.
 
 [[# arima-note]]
 ++ [#arima arima]
-
-[[# curve-fitting-note]]
-+ [#curve-fitting Curve Fitting]
-
-++ exact polynomial fit
-
-++ least squares polynomial fit
-
-[[# cubic-spline-note]]
-++ [#cubic-spline cubic spline]
-
-How to connect the dots of a data set with a line which has a continuous 2nd derivative.
 
 [[# univariate-chart-note]]
 + [#univariate-charts Univariate Charts]

@@ -100,7 +100,7 @@
 [[/row]]
 
 [[row]]
-[[cell]]**Lightweight Markup and LaTeX:**[[/cell]][[cell]][[[lightweight-markup|Markdown, reStructuredText, MediaWiki, LaTeX]]][[/cell]]
+[[cell]]**Lightweight Markup:**[[/cell]][[cell]][[[lightweight-markup|Markdown, reStructuredText, MediaWiki, AsciiDoc, Org-mode]]][[/cell]]
 [[/row]]
 
 [[row]]
