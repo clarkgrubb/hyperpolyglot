@@ -8,7 +8,7 @@ CONTINUATION_REGEX = / _$/
 TABLE_LINE_REGEX = /^\s*\|\|/
 END_OF_TABLE_REGEX = /^\s*$/
 ROW_TITLE_REGEX =
-  /\[\[# ([a-z][a-z0-9-]*)\]\]\[#\1-note ([A-Za-z0-9? \.\/,-]+)\]/
+  /\[\[# ([a-z][a-z0-9-]*)\]\]\[#\1-note ([A-Za-z0-9? \.\/,\?;-]+)\]/
 EMPTY_CELL_REGEX = /^([~\s]*|~ \[\[# [a-z-]+\]\])$/
 HEADER_CELL_REGEX = /^~ \[\[# ([a-z-]+)\]\]\[#\1-note ([^\]]+)\]$/
 SUPERSECTION_CELL_REGEX = /^~ ([A-Z]+)$/
@@ -152,7 +152,7 @@ class DB
       # post_title = md.post_match
       data = get_example_for_title_and_section(title, section)
       unless data
-        $stderr.puts "INFO: not in skeleton: section: #{section} "\
+        $stderr.puts "[ERROR] not in skeleton: section: #{section} "\
                      "title: #{title}"
       end
     else
@@ -425,9 +425,9 @@ def print_statistics(table, output_stream)
     end
   end
 
-  output_stream.puts "header rows: #{header_row_cnt}  "\
+  output_stream.puts "[INFO] header rows: #{header_row_cnt}  "\
                      "non-header rows: #{non_header_row_cnt}"
-  output_stream.puts 'non-header rows with anchor and footnote link: '\
+  output_stream.puts '[INFO] non-header rows with anchor and footnote link: '\
                      "#{row_title_cnt}"
   nonempty_column_cnts.keys.sort.each do |coli|
     next if coli < 2
@@ -435,8 +435,8 @@ def print_statistics(table, output_stream)
     pct = '%.2f' %
           (100.0 * nonempty_cnt / (nonempty_cnt + empty_column_cnts[coli]))
     lang = "column #{coli}"
-    output_stream.puts "cells in #{lang}: #{nonempty_column_cnts[coli]} "\
-                       "(#{pct}%)"
+    output_stream.puts "[INFO] cells in #{lang}: "\
+                       "#{nonempty_column_cnts[coli]} (#{pct}%)"
   end
 end
 
