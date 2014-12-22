@@ -89,6 +89,11 @@ instructions:
 	@echo '    $$ make clobber'
 	@echo '    $$ make refresh'
 	@echo
+	@echo '  To download markup from the wiki:'
+	@echo
+	@echo '    $$ rm -rf markup'
+	@echo '    $$ make download'
+	@echo
 	@echo '  Remember to set the access policy back to  "Private and click "Save changes".'
 	@echo
 	@echo '  To upload edited markup to the wiki, use this command:'
