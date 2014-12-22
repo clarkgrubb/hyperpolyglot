@@ -76,6 +76,10 @@ skeleton.db: skeleton.txt
 generate_skeleton:
 	./bin/table.rb --generate-skeleton skeleton.txt --database skeleton.db
 
+check.%: markup/%
+	@if [ ! -e skeleton.db ]; then echo "run 'make skeleton.db'"; false; fi
+	./bin/table.rb --columns=1,2,3,4,5,6 --file $< --database skeleton.db > /dev/null
+
 .PHONY:
 download: $(markup)
 
