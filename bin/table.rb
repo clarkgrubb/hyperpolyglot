@@ -156,14 +156,14 @@ class DB
                      "title: #{title}"
       end
     else
-      $stderr.puts "ERROR: not a title cell: #{title_cell}" unless md
+      $stderr.puts "[ERROR] not a title cell: #{title_cell}" unless md
     end
     title_cell
   end
 
   def check_section(section)
     data = get_section_by_title(section)
-    $stderr.puts "INFO: not a skeleton section: #{section}" unless data
+    $stderr.puts "[ERROR] not a skeleton section: #{section}" unless data
   end
 
   def generate_nav(output_stream)
@@ -413,7 +413,7 @@ def print_statistics(table, output_stream)
       if ROW_TITLE_REGEX.match(row[1])
         row_title_cnt += 1
       else
-        output_stream.puts "INFO: no anchor and footnote link: #{row[1]}"
+        output_stream.puts "[ERROR] no anchor and footnote link: #{row[1]}"
       end
       row.each_with_index do |col, coli|
         if EMPTY_CELL_REGEX.match(col)
