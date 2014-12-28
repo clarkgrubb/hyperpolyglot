@@ -13,7 +13,7 @@ EMPTY_CELL_REGEX = /^([~\s]*|~ \[\[# [a-z-]+\]\])$/
 HEADER_CELL_REGEX = /^~ \[\[# ([a-z-]+)\]\]\[#\1-note ([^\]]+)\]$/
 SUPERSECTION_CELL_REGEX = /^~ ([A-Z]+)$/
 SUPERSECTIONS =
-  %w( CORE AUXILIARY CONTAINERS TABLES MATHEMATICS STATISTICS CHARTS )
+  %w( CORE CONTAINERS AUXILIARY TABLES MATHEMATICS STATISTICS CHARTS )
 
 # FIXME: lack of encapsulation: deconstruting the regexes
 # FIXME: lack of encapsulation: rows returned from db
