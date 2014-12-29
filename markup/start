@@ -47,7 +47,7 @@
 
 
 [[row]]
-[[cell]]**GUI Automation:**[[/cell]][[cell]][[[gui|AutoHotkey, AppleScript]]][[/cell]]
+[[cell]]**GUI Scripting:**[[/cell]][[cell]][[[gui|Smalltalk, AutoHotkey, AppleScript]]][[/cell]]
 [[/row]]
 
 [[row]]
@@ -63,7 +63,7 @@
 [[/row]]
 
 [[row]]
-[[cell]]**Computer Algebra Software:**[[/cell]][[cell]][[[computer-algebra|Mathematica, SymPy, GAP, Singular]]][[/cell]]
+[[cell]]**Computer Algebra Software:**[[/cell]][[cell]][[[computer-algebra|Mathematica, SymPy, GAP]]][[/cell]]
 [[/row]]
 
 [[row]]

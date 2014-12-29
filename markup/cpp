@@ -3715,6 +3715,44 @@ The Visual Studio 2012 C++ compiler does not completely support C++11, but it ha
 [http://java.sun.com/docs/books/jvms/second_edition/html/VMSpecTOC.doc.html JVM Specification 2nd Ed]
 [http://java.sun.com/docs/books/jls/ The Java Language Specification 3rd Ed]
 
+A Java program is created from source code via an explicit compilation step using {{javac}}.  The executable is then launched using the virtual machine {{java}}.  Both {{javac}} and {{java}} use the Java runtime jar {{rt.jar}}, which contains the Java standard libraries.
+
+[[code]]
+$  ls -l $(which javac) 
+-rwxrwxr-x  1 root  wheel  99296 Oct  8  2013 /Library/JVM/jdk7.0/Contents/Home/bin/javac
+
+$ ls -l $(which java)
+-rwxrwxr-x  1 root  wheel  99216 Oct  8  2013 /Library/JVM/jdk7.0/Contents/Home/bin/java
+
+$ ls -l $JAVA_HOME/jre/lib/rt.jar 
+-rw-rw-r--  1 root  wheel  64181940 Oct  8  2013 /Library/JVM/jdk7.0/Contents/Home/jre/lib/rt.jar
+
+$ cat Main.java 
+public class Main {
+  public static void main(String[] argv) throws Throwable {
+    System.out.println("Hello, World!");
+  }
+}
+
+$ javac Main.java 
+
+$ ls -l Main.class 
+-rw-r--r--  1 hpglot  staff  463 Dec 27 06:12 Main.class
+
+$ java Main
+Hello, World!
+[[/code]]
+
+Using {{dtruss}} on Mac OS X to verify that {{javac}} and {{java}} use {{rt.jar}}:
+
+[[code]]
+$ sudo dtruss javac Main.java 2>&1 | grep -E '^open' | grep rt.jar
+open("/Library/JVM/jdk7.0/Contents/Home/jre/lib/rt.jar\0", 0x0, 0x0)		 = 4 0
+
+$ sudo dtruss java Main 2>&1 | grep -E '^open' | grep rt.jar 
+open("/Library/JVM/jdk7.0/Contents/Home/jre/lib/rt.jar\0", 0x0, 0x0)		 = 4 0
+[[/code]]
+
 [[# c-sharp]]
 + [#top C#]
 

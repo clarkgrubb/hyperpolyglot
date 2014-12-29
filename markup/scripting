@@ -1,11 +1,12 @@
 [[# top]]//a side-by-side reference sheet//
 
-**sheet one:** [#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#arrays arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#concurrency concurrency]
+**sheet one:** [#version version] | [#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#resizable-arrays resizable arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#concurrency concurrency]
 
 **[[[scripting2|sheet two]]]:** [[[scripting2#file-handles|file handles]]] | [[[scripting2#files|files]]] | [[[scripting2#file-fmt|file formats]]] | [[[scripting2#directories|directories]]] | [[[scripting2#processes-environment|processes and environment]]] | [[[scripting2#option-parsing|option parsing]]] | [[[scripting2#libraries-namespaces|libraries and namespaces]]] | [[[scripting2#objects|objects]]] | [[[scripting2#inheritance-polymorphism|inheritance and polymorphism]]] | [[[scripting2#reflection|reflection]]] | [[[scripting2#net-web|net and web]]] | [[[scripting2#unit-tests|unit tests]]] | [[[scripting2#debugging-profiling|debugging and profiling]]] | [[[scripting2#java-interop|java interop]]]
 
-||~ [[# general]]||~ [#javascript javascript]||~ [#php php]||~ [#python python]||~ [#ruby ruby]||
-||[[# version-used]][#version-used-note versions used] _
+||||||||||~ [[# version]][#version-note version]||
+||~ ||~ [#javascript javascript]||~ [#php php]||~ [#python python]||~ [#ruby ruby]||
+||[[# version-used]][#version-used-note version used] _
 @<&nbsp;>@|| ||##gray|//5.4; 5.5//##||##gray|//2.7; 3.3//##||##gray|//1.9; 2.0//##||
 ||[[# version]][#version-note show version] _
 @<&nbsp;>@||$ node @@--@@version||$ php @@--@@version||$ python -V _
@@ -169,7 +170,7 @@ z = y.pred||
 ! isset($##peru|v##)||v == ##teal|None## _
 v ##purple|is## ##teal|None##||v == ##peru|nil## _
 v.nil?||
-||[[# undef-access]][#undef-access-note undefined variable access] _
+||[[# undef-var]][#undef-var-note undefined variable] _
 @<&nbsp;>@||undefined||##teal|NULL##||##gray|//raises// NameError##||##gray|//raises// NameError##||
 ||[[# conditional-expr]][#conditional-expr-note conditional expression] _
 @<&nbsp;>@||x > 0 ? x : -x||$##peru|x## > 0 ? $##peru|x## : -$##peru|x##||x ##purple|if## x > 0 ##purple|else## -x||x > 0 ? x : -x||
@@ -290,7 +291,7 @@ x = ##green|Rational##(22, 7)||
 @<&nbsp;>@|| ||##gray|//none//##||x.numerator _
 x.denominator||x.numerator _
 x.denominator||
-||[[# complex-construction]][#complex-constructionnote complex construction] _
+||[[# complex-construction]][#complex-construction-note complex construction] _
 @<&nbsp;>@|| ||##gray|//none//##||##peru|z## = 1 + 1.414j||require ##maroon|'complex'## _
  _
 z = 1 + 1.414.im||
@@ -415,7 +416,7 @@ $##peru|item## = ##maroon|"ball"##; _
 item = ##maroon|"ball"## _
 puts ##maroon|"####peru|#{count} #{item}####maroon|s"##||
 ||[[# expr-interpolation]][#expr-interpolation-note expression interpolation]||##gray|//none//##||##gray|//none//##||##maroon|'1 + 1 = {}'##.format(1 + 1)||##maroon|"1 + 1 = #{1 + 1}"##||
-||[[# format]][#format-note format] _
+||[[# format-str]][#format-str-note format string] _
 @<&nbsp;>@||##gray|@@//@@ None; use string concatenation. _
 @@//@@ Evaluates to "12.35":## _
 12.3456.toFixed(2)||$##peru|fmt## = ##maroon|"lorem %s %d %f"##; _
@@ -446,7 +447,7 @@ s2 = s + ##maroon|"World!"## _
  _
 ##gray|# juxtaposition can be used to _
 # concatenate literals:## _
-s2  =##maroon|"Hello, " 'World!'##||
+s2  = ##maroon|"Hello, " 'World!'##||
 ||[[# str-replicate]][#str-replicate-note replicate] _
 @<&nbsp;>@||var hbar = Array(80).join("-");||$##peru|hbar## = str_repeat(##maroon|"-"##, 80);||##peru|hbar## = ##maroon|'-'## * 80||hbar = ##maroon|"-"## * 80||
 ||[[# translate-case]][#translate-case-note translate case] _
@@ -608,7 +609,7 @@ list($_, $##peru|yr##, $##peru|mo##, $##peru|dy##) = $##peru|m##;||##peru|rx## =
 ##peru|yr##, ##peru|mo##, ##peru|dy## = m.groups()||rx = ##maroon|/(\d{4})-(\d{2})-(\d{2})/## _
 m = rx.match(##maroon|"2010-06-03"##) _
  yr, mo, dy = m[1..3]||
-||[[# named-grouped-capture]][#named-group-capture-note named group capture]||##gray|//none//##||$##peru|s## = ##maroon|"foo.txt"##; _
+||[[# named-group-capture]][#named-group-capture-note named group capture]||##gray|//none//##||$##peru|s## = ##maroon|"foo.txt"##; _
 $##peru|rx## = ##maroon|'/^(?P<file>.+)\.(?P<suffix>.+)$/'##; _
 preg_match($##peru|rx##, $##peru|s##, $##peru|m##); _
  _
@@ -809,7 +810,7 @@ signal.alarm(0)||require ##maroon|'timeout'## _
 @<&nbsp;&nbsp;>@##purple|end## _
 ##purple|rescue## ##green|Timeout##::##green|Error## _
 ##purple|end##||
-||||||||||~ [[# arrays]][#arrays-note arrays]||
+||||||||||~ [[# resizable-arrays]][#resizable-arrays-note resizable arrays]||
 ||~  ||~ javascript||~ php||~ python||~ ruby||
 ||[[# array-literal]][#array-literal-note literal] _
 @<&nbsp;>@||a = [1, 2, 3, 4]||$##peru|a## = [1, 2, 3, 4]; _
@@ -1074,13 +1075,16 @@ a3 = a.flatten||
 ||||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
 ||~  ||~ javascript||~ php||~ python||~ ruby||
 ||[[# dict-literal]][#dict-literal-note literal] _
-@<&nbsp;>@||d = { "t":1, "f":0 }; _
+@<&nbsp;>@||d = {"t": 1, "f": 0}; _
 ##gray|@@//@@ keys do not need to be quoted if they _
 @@//@@ are a legal JavaScript variable name _
 @@//@@and not a reserved word##||$##peru|d## = [##maroon|"t"## => 1, ##maroon|"f"## => 0]; _
   _
 ##gray|# older syntax:## _
-$##peru|d## = array(##maroon|"t"## => 1, ##maroon|"f"## => 0);||##peru|d## = { ##maroon|'t'##:1, ##maroon|'f'##:0 }||d = { ##maroon|"t"## => 1, ##maroon|"f"## => 0 }||
+$##peru|d## = array(##maroon|"t"## => 1, ##maroon|"f"## => 0);||##peru|d## = {##maroon|'t'##: 1, ##maroon|'f'##: 0}||d = {##maroon|'t'## => 1, ##maroon|'f'## => 0} _
+ _
+##gray|# keys are symbols:## _
+symbol_to_int = {##green|t##: 1, ##green|f##: 0}||
 ||[[# dict-size]][#dict-size-note size] _
 @<&nbsp;>@||var size = 0; _
 for (var k in d) { _
@@ -1089,9 +1093,9 @@ for (var k in d) { _
 d.length ##gray|# same as size##||
 ||[[# dict-lookup]][#dict-lookup-note lookup] _
 @<&nbsp;>@||d.t _
-d["t"]||$##peru|d##[##maroon|"t"##]||d[##maroon|'t'##]||d[##maroon|"t"##]||
+d["t"]||$##peru|d##[##maroon|"t"##]||d[##maroon|'t'##]||d[##maroon|'t'##]||
 ||[[# dict-update]][#dict-update-note update]||d["t"] = 2; _
-d.t = 2;||$##peru|d##[##maroon|"t"##] = 2;||d[##maroon|'t'##] = 2||d[##maroon|"t"##] = 2||
+d.t = 2;||$##peru|d##[##maroon|"t"##] = 2;||d[##maroon|'t'##] = 2||d[##maroon|'t'##] = 2||
 ||[[# dict-out-of-bounds]][#dict-out-of-bounds-note out-of-bounds behavior] _
 @<&nbsp;>@||var d = {}; _
 ##gray|@@//@@ sets s to undefined:## _
@@ -1107,11 +1111,11 @@ $##peru|d##[##maroon|"lorem"##] = ##maroon|"ipsum"##;||##peru|d## = {} _
 ##gray|# adds key/value pair:## _
 d[##maroon|'lorem'##] = ##maroon|'ipsum'##||d = {} _
 ##gray|# sets s to nil:## _
-s = d[##maroon|"lorem"##] _
+s = d[##maroon|'lorem'##] _
 ##gray|# adds key/value pair:## _
-d[##maroon|"lorem"##] = ##maroon|"ipsum"##||
+d[##maroon|'lorem'##] = ##maroon|'ipsum'##||
 ||[[# dict-key-check]][#dict-key-check-note is key present] _
-@<&nbsp;>@||d.hasOwnProperty("t");||array_key_exists(##maroon|"y"##, $##peru|d##);||##maroon|'y'## ##purple|in## d||d.has_key?(##maroon|"y"##)||
+@<&nbsp;>@||d.hasOwnProperty("t");||array_key_exists(##maroon|"y"##, $##peru|d##);||##maroon|'y'## ##purple|in## d||d.key?(##maroon|'y'##)||
 ||[[# dict-delete]][#dict-delete-note delete entry]||delete d["t"]; _
 delete d.t;||$##peru|d## = [1 => ##maroon|"t"##, 0 => ##maroon|"f"##]; _
 unset($##peru|d##[1]);||##peru|d## = {1: ##purple|True##, 0: ##purple|False##} _
@@ -1124,10 +1128,10 @@ var d = _.object(a); _
 ##peru|d## = ##purple|dict##(a) _
  _
 ##peru|a## = [##maroon|'a'##, 1, ##maroon|'b'##, 2, ##maroon|'c'##, 3] _
-##peru|d## =  ##purple|dict##(##purple|zip##(a[::2], a[1::2]))||a = [[##maroon|"a"##, 1], [##maroon|"b"##, 2], [##maroon|"c"##, 3]] _
+##peru|d## =  ##purple|dict##(##purple|zip##(a[::2], a[1::2]))||a = [[##maroon|'a'##, 1], [##maroon|'b'##, 2], [##maroon|'c'##, 3]] _
 d = ##green|Hash##[a] _
  _
-a = [##maroon|"a"##, 1, ##maroon|"b"##, 2, ##maroon|"c"##, 3] _
+a = [##maroon|'a'##, 1, ##maroon|'b'##, 2, ##maroon|'c'##, 3] _
 d = ##green|Hash##[*a]||
 ||[[# dict-merge]][#dict-merge-note merge]||var d1 = {"a": 1, "b": 2}; _
 var d2 = {"c": 3, "d": 4}; _
@@ -1135,15 +1139,15 @@ d1 = _.extend(d1, d2);||$##peru|d1## = [##maroon|"a"## => 1, ##maroon|"b"## => 2
 $##peru|d2## = [##maroon|"b"## => 3, ##maroon|"c"## => 4]; _
 $##peru|d1## = array_merge($##peru|d1##, $##peru|d2##);||##peru|d1## = {##maroon|'a'##: 1, ##maroon|'b'##: 2} _
 ##peru|d2## = {##maroon|'b'##: 3, ##maroon|'c'##: 4} _
-d1.update(d2)||d1 = {##maroon|"a"## => 1, ##maroon|"b"## => 2} _
-d2 = {##maroon|"b"## => 3, ##maroon|"c"## => 4} _
+d1.update(d2)||d1 = {##maroon|'a'## => 1, ##maroon|'b'## => 2} _
+d2 = {##maroon|'b'## => 3, ##maroon|'c'## => 4} _
 d1.merge!(d2)||
 ||[[# dict-invert]][#dict-invert-note invert]||var to_num = {'t': 1, 'f': 0}; _
 var to_let = _.invert(to_num);||$##peru|to_num## = [##maroon|"t"## => 1, ##maroon|"f"## => 0]; _
 $##peru|to_let## = array_flip($##peru|to_num##);||##peru|to_num## = {##maroon|'t##': 1, ##maroon|'f'##: 0} _
 ##gray|# dict comprehensions added in 2.7:## _
 ##peru|to_let## = {v: k ##purple|for## k, v _
-@<&nbsp;&nbsp;>@##purple|in## to_num.items()}||to_num = {##maroon|"t"## => 1, ##maroon|"f"## => 0} _
+@<&nbsp;&nbsp;>@##purple|in## to_num.items()}||to_num = {##maroon|'t'## => 1, ##maroon|'f'## => 0} _
 to_let = to_num.invert||
 ||[[# dict-iter]][#dict-iter-note iteration] _
 @<&nbsp;>@||for (var k in d) { _
@@ -1185,7 +1189,7 @@ for (p in _.pairs(d).sort(cmp2)) { _
 @<&nbsp;&nbsp;>@key=itemgetter(1)) _
  _
 ##purple|for## k, v ##purple|in## pairs: _
-@<&nbsp;&nbsp;>@##purple|print##(##maroon|'{}: {}'##.format(k, v))||d.sort_by {|k, v| v}.each ##purple|do## |k, v| _
+@<&nbsp;&nbsp;>@##purple|print##(##maroon|'{}: {}'##.format(k, v))||d.sort_by { |k, v| v }.each ##purple|do## |k, v| _
 @<&nbsp;&nbsp;>@puts ##maroon|"#{k}: #{v}"## _
 ##purple|end##||
 ||[[# dict-default-val]][#dict-default-val-note default value, computed value]||##gray|//none//##||$##peru|counts## = []; _
@@ -1357,7 +1361,7 @@ impure(a, d)||##purple|def## ##0000CD|impure##(x, y) _
 end _
  _
 a = [1, 2, 3] _
-d = {##maroon|"t"## => 1, ##maroon|"f"## => 0 } _
+d = {##maroon|'t'## => 1, ##maroon|'f'## => 0} _
 impure(a, d)||
 ||[[# retval]][#retval-note return value] _
 @<&nbsp;>@||return ##gray|//arg or//## undefined. ##gray|//If invoked with//## new ##gray|//and return value not an object, returns//## this||##gray|return //arg or// NULL##||##gray|return //arg or// None##||##gray|return //arg or last expression evaluated##//||
@@ -1372,20 +1376,20 @@ list($##peru|x##, $##peru|y##) = _
 @<&nbsp;&nbsp;>@first_and_second($a);||##purple|def## ##0000CD|first_and_second##(a): _
 @<&nbsp;&nbsp;>@##purple|return## a[0], a[1] _
  _
-##peru|x##, ##peru|y## = first_and_second([1,2,3])||##purple|def## ##0000CD|first_and_second##(a) _
+##peru|x##, ##peru|y## = first_and_second([1, 2, 3])||##purple|def## ##0000CD|first_and_second##(a) _
 @<&nbsp;&nbsp;>@##purple|return## a[0], a[1] _
 ##purple|end## _
  _
-x, y = first_and_second([1,2,3])||
+x, y = first_and_second([1, 2, 3])||
 ||[[# lambda]][#lambda-note lambda declaration] _
 @<&nbsp;>@||var sqr = function(x) { return x*x; }||$##peru|sqr## = function ($##peru|x##) { _
 @<&nbsp;&nbsp;>@return $##peru|x## * $##peru|x##; _
 };||##gray|# body must be an expression:## _
 ##peru|sqr## = ##purple|lambda## x: x * x||sqr = lambda { |x| x * x }||
-||[#lambda-note lambda invocation]||sqr(2)||$##peru|sqr##(2)||sqr(2)||sqr.call(2) ##gray|//or//## _
+||[[# lambda]][#lambda-note lambda invocation]||sqr(2)||$##peru|sqr##(2)||sqr(2)||sqr.call(2) ##gray|//or//## _
 sqr[2]||
 ||[[# func-as-val]][#func-as-val-note function as value] _
-@<&nbsp;>@||var func = add;||$##peru|func## = ##maroon|"add"##;||##peru|func## = add||func = lambda {|*args| add(*args)}||
+@<&nbsp;>@||var func = add;||$##peru|func## = ##maroon|"add"##;||##peru|func## = add||func = lambda { |*args| add(*args) }||
 ||[[# private-state-func]][#private-state-func-note function with private state]||function counter() { _
 @<&nbsp;&nbsp;>@counter.i += 1; _
 @<&nbsp;&nbsp;>@return counter.i; _
@@ -1773,11 +1777,11 @@ thr.start()|| thr = ##green|Thread##.new { sleep 10 }||
 
 **[[[scripting2|sheet two]]]:** [[[scripting2#file-handles|file handles]]] | [[[scripting2#file|files]]] | [[[scripting2#directories|directories]]] | [[[scripting2#processes-environment|processes and environment]]] | [[[scripting2#option-parsing|option parsing]]] | [[[scripting2#libraries-namespaces|libraries and namespaces]]] | [[[scripting2#objects|objects]]] | [[[scripting2#inheritance-polymorphism|inheritance and polymorphism]]] | [[[scripting2#reflection|reflection]]] | [[[scripting2#net-web|net and web]]] | [[[scripting2#unit-tests|unit tests]]] | [[[scripting2#debugging-profiling|debugging and profiling]]] | [[[scripting2#deployment|deployment]]]
 
-[[# general-note]]
-+ [#general General]
+[[# version-note]]
++ [#version Version]
 
 [[# version-used-note]]
-++ [#version-used versions used]
+++ [#version-used version used]
 
 The versions used for testing code in the reference sheet.
 
@@ -2244,8 +2248,8 @@ $v = '';
 if ($v == NULL) { echo "sadly true"; }
 [[/code]]
 
-[[# undef-access-note]]
-++ [#undef-access undefined variable access]
+[[# undef-var-note]]
+++ [#undef-var undefined variable]
 
 The result of attempting to access an undefined variable.
 
@@ -2670,8 +2674,8 @@ print('{count} {item}s'.format_map(locals()))
 
 How to interpolate the result of evaluating an expression into a string.
 
-[[# format-note]]
-++ [#format format]
+[[# format-str-note]]
+++ [#format-str format string]
 
 How to create a string using a printf style format.
 
@@ -3340,8 +3344,8 @@ How to cause a process to timeout if it takes too long.
 
 Techniques relying on SIGALRM only work on Unix systems.
 
-[[# arrays-note]]
-+ [#arrays Arrays]
+[[# resizable-arrays-note]]
++ [#resizable-arrays Resizable Arrays]
 
 What the languages call their basic container types:
 

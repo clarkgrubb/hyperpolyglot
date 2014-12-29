@@ -4,7 +4,7 @@
 
 **sheet two:** [#file-handles file handles] | [#files files] | [#file-fmt file formats] | [#directories directories ] | [#processes-environment processes and environment] | [#option-parsing option parsing] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#reflection reflection] | [#net-web net and web] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling] | [#java-interop java interop]
 
-||||||||||~ [[# file-handles]][#file-handles-noate file handles]||
+||||||||||~ [[# file-handles]][#file-handles-note file handles]||
 ||~  ||~ node||~ php||~ python||~ ruby||
 ||[[# std-file-handles]][#std-file-handle-note standard file handles]||process.stdin _
 process.stdout _
@@ -192,11 +192,9 @@ stat.isSymbolicLink(); _
 var path = fs.readlinkSync( _
 @<&nbsp;&nbsp;>@'/tmp/hosts');||symlink(##maroon|"/etc/hosts"##, ##maroon|"/tmp/hosts"##); _
 is_link(##maroon|"/etc/hosts"##) _
-readlink(##maroon|"/tmp/hosts"##)||os.symlink(##maroon|'/etc/hosts'##, _
-@<&nbsp;&nbsp;>@##maroon|'/tmp/hosts'##) _
+readlink(##maroon|"/tmp/hosts"##)||os.symlink(##maroon|'/etc/hosts'##, ##maroon|'/tmp/hosts'##) _
 os.path.islink(##maroon|'/tmp/hosts'##) _
-os.path.realpath(##maroon|'/tmp/hosts'##)||##green|File##.symlink(##maroon|"/etc/hosts"##, _
-@<&nbsp;&nbsp;>@##maroon|"/tmp/hosts"##) _
+os.path.realpath(##maroon|'/tmp/hosts'##)||##green|File##.symlink(##maroon|"/etc/hosts"##, ##maroon|"/tmp/hosts"##) _
 ##green|File##.symlink?(##maroon|"/etc/hosts"##) _
 ##green|File##.realpath(##maroon|"/tmp/hosts"##)||
 ||[[# unused-file-name]][#unused-file-name-note generate unused file name]|| ||$##peru|path## = tempnam(##maroon|"/tmp"##, ##maroon|"foo"##); _
@@ -255,6 +253,15 @@ $##CD853F|d## = json_decode($##CD853F|s##, ##teal|TRUE##);||##purple|import## js
  _
 s = {##maroon|'t'## => 1,##maroon|'f'## => 0}.to_json _
 d = ##green|JSON##.parse(s)||
+||[[# yaml]][#yaml-note yaml generate/parse]|| || ||##gray|# sudo pip install PyYAML## _
+import yaml _
+ _
+s = yaml.safe_dump({'t': 1, 'f': 0}) _
+data = yaml.safe_load(s)||##gray|# sudo gem install safe_yaml## _
+require 'safe_yaml' _
+ _
+s = YAML.dump({'t' => 1, 'f' => 0}) _
+data = YAML.safe_load(s)||
 ||[[# generate-xml]][#generate-xml-note generate xml]||##gray|# npm install xmlbuilder## _
 var builder = require('xmlbuilder'); _
  _
@@ -952,7 +959,7 @@ dir(urlparse)||require 'uri' _
 URI.constants _
 URI.methods _
 URI.class_variables||
-||[[# pretty-print]][#pretty-print-note pretty print] _
+||[[# pretty-print]][#pretty-print-note pretty-print] _
 @<&nbsp;>@|| ||$##peru|d## = array(##maroon|"lorem"##=>1, _
 @<&nbsp;&nbsp;>@##maroon|"ipsum"##=>array(2,3)); _
  _
@@ -962,7 +969,7 @@ print_r($##peru|d##);||##purple|import## pprint _
  _
 pprint.PrettyPrinter().pprint(d)||require ##maroon|'pp'## _
  _
-d = {##maroon|"lorem"##=>1, ##maroon|"ipsum"##=>[2,3]} _
+d = {##maroon|'lorem'## => 1, ##maroon|'ipsum'## => [2, 3]} _
  _
 pp d||
 ||[[# src-line-file]][#src-line-file-note source line number and file name]|| ||##teal|@@__LINE__@@ _

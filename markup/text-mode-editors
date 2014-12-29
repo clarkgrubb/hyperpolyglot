@@ -1,4 +1,4 @@
-[[# top]]**text editing:** [#mode mode] | [#movement movement] | [#selecting-deleting selecting] | [#selecting-deleting deleting] | [#files-buffers files] | [#files-buffers buffers] | [#minibuffer minibuffer] | [#ido ido] | [#history history] | [#searching-replacing searching] | [#searching-replacing replacing] | [#sorting sorting] | [#counting counting] | [#case case] | [#indentation indentation] | [#indentation rectangles] | [#spelling spelling] | [#panes panes] | [#macros macros] | [#ascii-art ascii art] | [#intl input methods] | [#intl encodings] | [#help help]
+[[# top]]**text editing:** [#mode mode] | [#movement movement] | [#selecting-deleting selecting] | [#selecting-deleting deleting] | [#files-buffers files] | [#files-buffers buffers] | [#minibuffer minibuffer] | [#ido ido] | [#history history] | [#searching-replacing searching] | [#searching-replacing replacing] | [#sorting sorting] | [#counting counting] | [#case case] | [#indentation indentation] | [#indentation rectangles] | [#spelling spelling] | [#panes panes] | [#macros macros] | [#ascii-art ascii art] | [#org org] | [#intl input methods] | [#intl encodings] | [#help help]
  
 **dev tools:** [#browse-files browse files] | [#shell shell] | [#grep grep] | [#tags tags] | [#diff diff] | [#git git] | [#compile compile] |  [#debug debug] | [#lisp-interaction lisp interaction] | [#syntax-highlighting syntax highlighting]
 
@@ -448,6 +448,32 @@ C-d||M-x picture-clear-column|| ||
 ||move left and replace with space|| ||DEL||M-x picture-backward-clear-column|| ||
 ||delete char|| ||C-c C-d||M-x picture-delete-char|| ||
 ||delete to end of line|| ||C-k||M-k picture-clear-line|| ||
+||||||||||~ [[# org]]**[#org-note org]**||
+||~  ||~ vim||~ emacs||~ emacs||~ nano||
+|| || ||||~ outlines|| ||
+||cycle list item visibility _
+ _
+##gray|//folded, children, descendants//##|| ||TAB||M-x org-cycle|| ||
+||cycle buffer outline visibility _
+ _
+##gray|//overview, contents, all//##|| ||C-u TAB||M-x org-global-cycle|| ||
+|| || ||||~ tables|| ||
+||create table|| ||C-c @@|@@|| M-x org-table-create-or-convert-from-region|| ||
+||align table columns|| ||C-c C-c||M-x org-table-align|| ||
+||move column at point right|| ||M-→||M-x org-table-move-column-right|| ||
+||move column at point left|| ||M-←||M-x org-table-move-column-left|| ||
+||insert row above point|| || ||M-x org-table-insert-row|| ||
+||insert column left of point|| || ||M-x org-table-insert-column|| ||
+||insert horizontal line under point|| ||C-c -||M-x org-table-insert-hline|| ||
+||delete column at point|| || ||M-x org-table-delete-column|| ||
+||sort table by column at point|| ||C-c ^||M-x org-sort|| ||
+||import tab delimited file|| || ||M-x org-table-import|| ||
+||export tab delimited file|| || ||M-x org-table-export|| ||
+|| || ||||~ hyperlinks|| ||
+||visit link|| ||C-c C-o _
+RET||M-x org-open-at-point|| ||
+|| || ||||~ export|| ||
+||export as html|| ||C-c C-e h h||M-x org-export-dispatch h h|| ||
 ||||||||||~ [[# intl]]**[#intl-note input methods and encodings]**||
 ||~  ||~ vim||~ emacs||~ emacs||~ nano||
 ||[[# insert-unicode]][#insert-unicode-note insert unicode character]||C-v u 221e||C-x 8 RET infinity _
@@ -1484,6 +1510,9 @@ How to count the number of strings in a region which match a regular expression.
 
 [[# ascii-art-note]]
 + [#ascii-art ASCII Art]
+
+[[# org-note]]
++ [#org Org]
 
 [[# intl-note]]
 + [#intl Input Methods and Encodings]

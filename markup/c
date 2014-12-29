@@ -2,7 +2,8 @@
 
 [#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#arrays arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#concurrency concurrency] | [#file-handles file handles] | [#files files] | [#file-fmt file formats] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#user-defined-types user-defined types] | [#objects objects] | [#reflection reflection] | [#macros macros] | [#net-web net and web] | [#dom dom] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling] _
 
-||~ [[# general]]||~ [#c c]||~ [#go go]||~ [#dart dart]||
+||||||||~ [[# version]][#version-note version]||
+||~ ||~ c||~ go||~ dart||
 ||[[# version-used]][#version-used-note version used] _
 @<&nbsp;>@||##gray|//gcc 4.6 in POSIX environment//##||##gray|//1.3//##||##gray|//1.7//##||
 ||[[# show-version]][#show-version-note show version] _
@@ -75,6 +76,8 @@ int j = 3; _
 int *ip = malloc(sizeof(int)); _
 *ip = 7;||##gray|@@//@@ memory allocated on stack:## _
 var i int _
+ _
+##gray|@@//@@ allocated on stack; type inferred from literal:## _
 j := 3 _
  _
 ##gray|@@//@@ memory allocated on heap:## _
@@ -96,15 +99,15 @@ package bar _
 import foo _
  _
 var y = foo.x + 3|| ||
-||[[# uninitialized-var]][#uninitialized-var-note uninitialized variable]||##gray|//stack variables and heap variables allocated with// malloc //have indeterminate values.  Global and static variables and heap variables allocated with// calloc //are zero-initialized.//##||##gray|//every type has a zero value.  For numeric types it is zero and for strings it is the empty string.//##|| ||
+||[[# uninitialized-var]][#uninitialized-var-note uninitialized variable]||##gray|//Stack variables and heap variables allocated with// malloc //have indeterminate values.  Global and static variables and heap variables allocated with// calloc //are zero-initialized.//##||##gray|//Every type has a zero value.  For numeric types it is zero and for strings it is the empty string.//##|| ||
 ||[[# const]][#const-note constant]||##gray|/* usually preprocessor is used: */## _
 #define PI 3.14||const Pi = 3.14|| ||
 ||[[# assignment]][#assignment-note assignment]||i = 3;||##gray|@@//@@ defines variable of appropriate type:## _
 i := 3 _
  _
-##gray|@@//@@variable must already be declared:## _
+##gray|@@//@@ variable must already be declared:## _
 i = 3|| ||
-||[[# parallel-assignment]][#parallel-assignment-note parallel assignment]||##gray|//none//##||##gray|@@//@@define variables of appropriate type:## _
+||[[# parallel-assignment]][#parallel-assignment-note parallel assignment]||##gray|//none//##||##gray|@@//@@ define variables of appropriate type:## _
 m, n := 3, 7 _
  _
 ##gray|@@//@@ x and y must already be declared:## _
@@ -127,7 +130,7 @@ y = tmp;||x, y = y, x|| ||
 ++i @@--@@i _
  _
 ##gray|//postmodifiers://## _
-i++ i@@--@@||##gray|//cannot be used as expressions://## _
+i++ i@@--@@||##gray|//postmodifiers only; cannot be used in expressions://## _
 i++ i@@--@@||##gray|//premodifiers://## _
 ++i @@--@@i _
  _
@@ -362,13 +365,13 @@ var item = "BALL"; _
  _
 ##gray|@@//@@ 3 balls## _
 print('$count ${item.toLowerCase()}s');||
-||[#string-comparison comparison]||##gray|/* == and < compare memory addresses: */## _
+||[[# compare-str]][#compare-str-note compare strings]||##gray|/* == and < compare memory addresses: */## _
  _
 strcmp("hello", "world") == 0 _
 strcmp("hello", "world") < 0||"hello" == "world" _
 "hello" < "world"||"hello" == "world" _
 "hello".compareTo("world") < 0||
-||[#string-to-number convert string to numeric]||strtoimax strtol strtoll _
+||[[# str-to-num]][#str-to-num-note string to number]||strtoimax strtol strtoll _
 strtoumax strtoul strtoull _
 strtof strtod strtold||import "strconv" _
  _
@@ -378,7 +381,7 @@ i, _ := strconv.ParseInt("17", 10, 32) _
 ##gray|@@//@@ 2nd arg is size of float in bits:## _
 x, _ := strconv.ParseFloat("3.14", 32)||var n = int.parse("17"); _
   var x = double.parse("3.14");||
-||[#number-to-string convert numeric to string]|| ||import "strconv" _
+||[[# num-to-str]][#num-to-str-note number to string]|| ||import "strconv" _
  _
 ##gray|@@//@@3rd arg is precision after decimal point; _
 @@//@@ 4th arg is size of float in bits:## _
@@ -1690,9 +1693,8 @@ $ valgrind foo|| || ||
 ||~ ||~ ##EFEFEF|@@_______________________________________________________________@@##||~ ##EFEFEF|@@_______________________________________________________________@@##||~ ##EFEFEF|@@_______________________________________________________________@@##||
 
 
-
-[[# general-note]]
-++ [#general General]
+[[# version-note]]
+++ [#version Version]
 
 [[# version-used-note]]
 ++ [#version-used version used]
@@ -1766,8 +1768,6 @@ strrchr _
 strstr _
 strtok||time _
 time_t||
-
-
 
 [[# grammar-invocation-note]]
 + [#grammar-invocation Grammar and Invocation]

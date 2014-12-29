@@ -1,22 +1,23 @@
 //a side-by-side reference sheet//
 
-[#grammar-invocation grammar and invocation] | [#var-expr variables and expression] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] _
-[#arrays arrays] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#files files] | [#gui gui] | [#directories directories] | [#processes-environment processes and environment] _
-[#libraries-namespaces libraries and namespaces] | [#objects objects] | [#reflection reflection]
+[#grammar-invocation grammar and invocation] | [#var-expr variables and expression] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#resizable-arrays resizable arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#files files] | [#gui gui] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#reflection reflection]
 
-||~ [[# general]]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||~ [[# general]]||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
 ||[[# version-used]][#version-used-note version used] _
-@<&nbsp;>@||##gray|//1.1//##||##gray|//2.1//##||
+@<&nbsp;>@||##gray|//Pharo 3.0//##||##gray|//1.1//##||##gray|//2.1//##||
 ||[[# version]][#version-note show version] _
-@<&nbsp;>@||msgbox % a_ahkversion||$ osascript -e \ _
+@<&nbsp;>@||SmalltalkImage current aboutThisSystem. _
+ _
+##gray|//at command line://## _
+$ ./pharo Pharo.image printVersion||msgbox % a_ahkversion||$ osascript -e \ _
 @<&nbsp;&nbsp;>@"AppleScript's version"||
-||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
-||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
+||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
 ||[[# interpreter]][#interpreter-note interpreter] _
-@<&nbsp;>@||@@>@@ autohotkey foo.ahk||$ osascript foo.scpt||
+@<&nbsp;>@|| ||@@>@@ autohotkey foo.ahk||$ osascript foo.scpt||
 ||[[# cmd-line-program]][#cmd-line-program-note command line program] _
-@<&nbsp;>@||##gray|//none//##||$ osascript -e 'say "hi"'||
-||[[# stmt-separator]][#stmt-separator-note statement separator]||##gray|//sometimes newline//## _
+@<&nbsp;>@||$ Pharo @@--@@headless Pharo.image eval '1 + 1.'||##gray|//none//##||$ osascript -e 'say "hi"'||
+||[[# stmt-separator]][#stmt-separator-note statement separator]||##gray|//period://## .||##gray|//sometimes newline//## _
  _
 ##gray|//newline does not terminate statement: _
  _
@@ -24,22 +25,21 @@
 @<&nbsp;&nbsp;>@(2) when following line starts with binary operator//##||##gray|//newline _
  _
 use ⌥l (option lowercase L) to escape newline and continue statement on following line//##||
-||[[# block-delimiters]][#block-delimiters-note block delimiters]||{ }||##gray|//keyword//## ##gray|//...//## end ##gray|//keyword//## _
+||[[# block-delimiters]][#block-delimiters-note block delimiters]||[ ]||{ }||##gray|//keyword//## ##gray|//...//## end ##gray|//keyword//## _
 on ##gray|//funcName//## ##gray|//...//## end ##gray|//funcName//##||
 ||[[# expr-stmt]][#expr-stmt-note are expressions statements] _
-@<&nbsp;&nbsp;>@||##gray|//no//##||##gray|//yes//##||
+@<&nbsp;&nbsp;>@||##gray|//yes//##||##gray|//no//##||##gray|//yes//##||
 ||[[# comment]][#comment-note end-of-line comment] _
-@<&nbsp;>@||; ##gray|//comment//##||@@--@@ ##gray|//comment//##||
-||[[# multiline-comment]][#multiline-comment-note multiple line comment]||/* _
+@<&nbsp;>@||##gray|//no//##||; ##gray|//comment//##||@@--@@ ##gray|//comment//##||
+||[[# multiline-comment]][#multiline-comment-note multiple line comment]||"##gray|//comment _
+another comment//##"||/* _
 ##gray|//comment//## _
 ##gray|//another comment//## _
 */||(* ##gray|//comment//## _
 ##gray|//another comment//## *)||
-||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
-||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-||[[# identifiers-case-sensitive]][#identifiers-case-sensitive-note are identifiers case sensitive] _
-@<&nbsp;>@||##gray|//no//##||##gray|//no//##||
-||[[# assignment]][#assignment-note assignment]||s1 := PATH _
+||||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
+||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||[[# assignment]][#assignment-note assignment]||a := 1.||s1 := PATH _
 s2 := "foo bar" _
  _
 ##gray|; traditional style:## _
@@ -47,75 +47,89 @@ s1 = %PATH% _
 s2 = foo bar||set a to 1 _
 copy 1 to a||
 ||[[# parallel-assignment]][#parallel-assignment-note parallel assignment] _
-@<&nbsp;>@||##gray|//none//##||set {a,b} to {1,2}||
+@<&nbsp;>@||##gray|//none//##||##gray|//none//##||set {a,b} to {1,2}||
 ||[[# swap]][#swap-note swap] _
-@<&nbsp;>@||##gray|//none//##||set {a,b} to {b,a}||
+@<&nbsp;>@|| ||##gray|//none//##||set {a,b} to {b,a}||
 ||[[# compound-assignment]][#compound-assignment-note compound assignment] _
-##gray|//arithmetic, string, bit//##||+= -= *= /= @@//@@= _
+##gray|//arithmetic, string, bit//##||##gray|//none//##||+= -= *= /= @@//@@= _
 .= _
 <<= >>= &= |= ^=||##gray|//none//##||
-||[[# incr-decr]][#incr-decr-note increment and decrement]||##gray|//premodifiers://## _
+||[[# incr-decr]][#incr-decr-note increment and decrement]|| ||##gray|//premodifiers://## _
 ++i @@--@@i _
  _
 ##gray|//postmodifiers://## _
 i++ i@@--@@||##gray|//none//##||
 ||[[# var-decl]][#var-decl-note variable declaration] _
-@<&nbsp;>@|| ||##gray|//assignment//##, local, global||
+@<&nbsp;>@|| || ||##gray|//assignment//##, local, global||
 ||[[# null]][#null-note null] _
-@<&nbsp;>@||""||null||
+@<&nbsp;>@||nil||""||null||
 ||[[# null-test]][#null-test-note null test] _
-@<&nbsp;>@||v == "" _
+@<&nbsp;>@||v = nil||v == "" _
  _
 ##gray|; traditional style:## _
 v =||v = null||
 ||[[# undef-access]][#undef-access-note undefined variable] _
-@<&nbsp;>@||##gray|//evaluates as empty string//##||##gray|//error to access uninitialized variable//##||
-||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
-||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+@<&nbsp;>@||##gray|//evaluates as// nil##||##gray|//evaluates as empty string//##||##gray|//error to access uninitialized variable//##||
+||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
+||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
 ||[[# true-false]][#true-false-note true and false] _
-@<&nbsp;>@||1 0 _
+@<&nbsp;>@||true false||1 0 _
  _
 ##gray|//synonyms://## _
 true false||true false||
-||[[# falsehoods]][#falsehoods-note falsehoods]||0 ""||##gray|//only integers convert to booleans://## _
+||[[# falsehoods]][#falsehoods-note falsehoods]||false||0 ""||##gray|//only integers convert to booleans://## _
 false 0||
 ||[[# logical-ops]][#logical-ops-note logical operators] _
-@<&nbsp;>@||and or not _
+@<&nbsp;>@||& | not||and or not _
  _
 ##gray|//synonyms://## _
 @@&& || !@@||and or not||
 ||[[# conditional-expr]][#conditional-expr-note conditional expression] _
-@<&nbsp;>@||x > 0 ? x : -x||##gray|//none//##||
+@<&nbsp;>@||x > 0 ifTrue: [x] ifFalse: [0 - x]||x > 0 ? x : -x||##gray|//none//##||
 ||[#relational-operators relational operators] _
-@<&nbsp;>@||== != > < >= <= _
+@<&nbsp;>@||@@=@@ ~= > < >= <=||== != > < >= <= _
  _
 ##gray|//case insensitive equality://## _
 @@=@@||@@=@@ /= > < >= <=||
 ||[#arithmetic-expr arithmetic expression] _
-@<&nbsp;>@||1 + 3||1 + 3||
+@<&nbsp;>@||1 + 3 _
+ _
+##gray|"Binary operators are evaluated left to right. _
+This is 20:"## _
+1 + 3 * 5||1 + 3||1 + 3||
 ||[#arithmetic-operators arithmetic operators] _
-##gray|//addition, subtraction, multiplication, float division, quotient, remainder//##||+ - * / @@//@@ ##gray|//none//## @@**@@ _
+##gray|//addition, subtraction, multiplication, float division, quotient, remainder//##||+ - * / @@//@@ \\||+ - * / @@//@@ ##gray|//none//## @@**@@ _
  _
 ##gray|//modulo function://## mod(m, n)||+ - * / div mod ^||
 ||[#integer-division integer division] _
-@<&nbsp;>@||7 @@//@@ 3||7 div 3||
+@<&nbsp;>@||7 @@//@@ 3||7 @@//@@ 3||7 div 3||
 ||[[# int-div-zero]][#int-div-zero-note integer division by zero] _
-@<&nbsp;>@||##gray|//evaluates to empty string//##||##gray|//error//##||
+@<&nbsp;>@||##gray|ZeroDivide //exception//##||##gray|//evaluates to empty string//##||##gray|//error//##||
 ||[#float-division float division] _
-@<&nbsp;>@||7 / 3||7 / 3||
+@<&nbsp;>@||7 / 3 asFloat. _
+ _
+##gray|"exact rational:"## _
+7 / 3||7 / 3||7 / 3||
 ||[[# float-div-zero]][#float-div-zero-note float division by zero] _
-@<&nbsp;>@||##gray|//evaluates to empty string//##||##gray|//error//##||
+@<&nbsp;>@||##gray|ZeroDivide //exception//##||##gray|//evaluates to empty string//##||##gray|//error//##||
 ||[[# power]][#power-note power] _
-@<&nbsp;>@||2 ** 32||2 ^ 32||
+@<&nbsp;>@||2 raisedTo 32||2 ** 32||2 ^ 32||
 ||[[# sqrt]][#sqrt-note sqrt] _
-@<&nbsp;>@||sqrt(2)||2 ^ 0.5||
+@<&nbsp;>@||2 sqrt||sqrt(2)||2 ^ 0.5||
 ||[#sqrt-negative-two sqrt -1] _
-@<&nbsp;>@||##gray|//evaluates to empty string//##||##gray|//error//##||
+@<&nbsp;>@||##gray|//raises// DomainError##||##gray|//evaluates to empty string//##||##gray|//error//##||
 ||[#transcendental-func transcendental functions]||exp ln _
 sin cos tan _
+arcSin arcCos arcTan||exp ln _
+sin cos tan _
 asin acos atan|| ||
+||transcendental constants||Float pi _
+Float e|| || ||
 ||[#float-truncation float truncation] _
-##gray|//round towards zero, round to nearest integer, round down, round up//##||##gray|//none//## _
+##gray|//round towards zero, round to nearest integer, round down, round up//##||3.14 asInteger _
+3.14 rounded _
+3.14 ceiling _
+31.4 floor||##gray|//none//## _
 round(3.14) _
 floor(3.14) _
 ceil(3.14)||3.14 div 1 _
@@ -123,85 +137,141 @@ round 3.14 _
 ##gray|//??//## _
 ##gray|//??//##||
 ||[[# abs-val]][#abs-val-note absolute value] _
-@<&nbsp;>@||abs(-7)||##gray|//none//##||
+@<&nbsp;>@||-7 abs||abs(-7)||##gray|//none//##||
 ||[#integer-overflow integer overflow] _
-@<&nbsp;>@||##gray|//signed modular arithmetic//##||##gray|//converts to float//##||
+@<&nbsp;>@||##gray|//converted to// LargePositiveInteger //or// LargeNegativeInteger##||##gray|//signed modular arithmetic//##||##gray|//converts to float//##||
 ||[#float-overflow float overflow] _
-@<&nbsp;>@||##gray|//evaluates to string value such as://## _
+@<&nbsp;>@||Float infinity ##gray|//or//## Float infinity negated||##gray|//evaluates to string value such as://## _
 1.#INF00||##gray|//error//##||
-||[#random random integer, uniform float]||##gray|; store results in n and x:## _
+||[#random random integer, uniform float]||rnd := Random new. _
+ _
+rnd next. _
+(rnd nextInt: 100) - 1.||##gray|; store results in n and x:## _
 random, n, 0, 99 _
 random, x, 0.0, 1.0||random number from 0 to 99 _
 random number from 0.0 to 1.0||
 ||[#seed-random seed random numbers] _
-@<&nbsp;>@||random, , 17||set r to random number with seed 17||
+@<&nbsp;>@||rnd := Random new. _
+rnd :seed 17.||random, , 17||set r to random number with seed 17||
 ||[#bit-operators bit operators] _
-@<&nbsp;>@||@<<< >> & | ^ ~>@ ||##gray|//none//##||
-||||||~ [[# strings]][#strings-note strings]||
-||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-||[#string-literal string literal]||"don't say ""no"""||"don't say \"no\""||
-||[#string-literal-newline newline in literal]|| ||##gray|//yes//##||
-||[#barewords barewords]|| || ||
-||[#string-escapes escapes]|| ||\\ \" _
+@<&nbsp;>@||5 bitShift: 1 _
+5 bitShift: -1 _
+5 bitAnd: 1 _
+5 bitOr: 1 _
+5 bitInvert ||@<<< >> & | ^ ~>@ ||##gray|//none//##||
+||||||||~ [[# strings]][#strings-note strings]||
+||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||[#string-literal string literal]||'don''t say "no"'.||"don't say ""no"""||"don't say \"no\""||
+||[#string-literal-newline newline in literal]||##gray|//no//## _
+ _
+##gray|" print newline in Transcript:"## _
+Transcript cr.|| ||##gray|//yes//##||
+||[#string-escapes escapes]||##gray|//none//##|| ||\\ \" _
 \n \t \r _
 ##gray|//other backslash sequences cause syntax error//##||
-||[#variable-interpolation variable interpolation]|| ||##gray|//none//##||
-||[#string-length length]||strlen("hello")||set s to "hello" _
+||[#variable-interpolation variable interpolation]|| || ||##gray|//none//##||
+||[#string-length length]||'hello' byteSize||strlen("hello")||set s to "hello" _
 count s||
-||[#index-substring index of substring]||##gray|; returns 5:## _
+||[#index-substring index of substring]||'foo bar' indexOfAnyOf: 'bar'||##gray|; returns 5:## _
 instr("foo bar", "bar")||set s to "foo bar" _
 offset of "bar" in s||
-||[#extract-substring extract substring]||substr("foo bar", 5, 3)||set s to "foo bar" _
+||[#extract-substring extract substring]||'foo bar' copyFrom: 5 to: 7||substr("foo bar", 5, 3)||set s to "foo bar" _
 characters 5 thru 7 of s as text||
-||[#string-concatenation string concatenation]||"hello, " . "world"||set c to "hello, " & "world"||
-||[#string-replication string replication]|| || ||
-||[#split split]|| || ||
-||[#join join]|| || ||
-||[#sprintf sprintf]|| || ||
-||[#case case manipulation]||s1 := "Hello" _
+||[#string-concatenation string concatenation]||'hello, ', 'world'||"hello, " . "world"||set c to "hello, " & "world"||
+||[#string-replication string replication]|| || || ||
+||[#split split]|| || || ||
+||[#join join]|| || || ||
+||[#sprintf sprintf]|| || || ||
+||[#case case manipulation]||'hello' asUppercase _
+'HELLO' asLowercase||s1 := "Hello" _
 stringupper, s2, s1 _
 stringlower, s3, s2|| ||
-||[#strip strip]|| || ||
-||[#pad pad on right, pad on left]|| || ||
-||[#string-to-number string to number]|| ||set a to "12" _
+||[#strip strip]|| || || ||
+||[#pad pad on right, pad on left]|| || || ||
+||[#string-to-number string to number]||12' asInteger + 7|| ||set a to "12" _
 7 + a as integer _
  _
 set b = ".037" _
 73.9 + b as real||
 ||[#number-to-string number to string] _
-@<&nbsp;>@|| ||7 as text & " items"||
-||||||~ [[# regexes]][#regex-note regular expressions]||
-||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-||[[# regex-match]][#regex-match-note regex match]|| || ||
-||[[# single-subst]][#single-subst-note single substitution]|| || ||
-||[[# global-subst]][#global-subst-note global substitution]|| || ||
-||||||~ [[# dates-time]][#dates-time-note dates and time]||
-||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-||sleep|| ||delay 10||
-||||||~ [[# arrays]][#array-note arrays]||
-||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-||[#array-literal array literal]|| ||set nums to {1,2,3,4}||
-||[#array-size array size]|| ||count nums _
+@<&nbsp;>@||7 printString, ' items'|| ||7 as text & " items"||
+||character literal||$A|| || ||
+||chr and ord||65 asCharacter _
+$A asciiValue|| || ||
+||||||||~ [[# regexes]][#regex-note regular expressions]||
+||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||[[# regex-match]][#regex-match-note regex match]|| || || ||
+||[[# single-subst]][#single-subst-note single substitution]|| || || ||
+||[[# global-subst]][#global-subst-note global substitution]|| || || ||
+||||||||~ [[# dates-time]][#dates-time-note dates and time]||
+||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+|| ||Date today. _
+Time now.|| || ||
+||sleep|| || ||delay 10||
+||||||||~ [[# resizable-arrays]][#resizable-arrays-note resizable arrays]||
+||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||[#array-literal array literal]||nums := OrderedCollection new. _
+nums add: 1; add: 2; add: 3; add: 4. _
+ _
+##gray|"creates immutable array:"## _
+nums := #(1 2 3 4)|| ||set nums to {1,2,3,4}||
+||[#array-size array size]||nums size|| ||count nums _
 length of nums||
-||[#array-lookup array lookup]|| ||item 1 of nums||
-||[#array-modification array modification]|| ||set item 1 of nums to 5||
-||[#array-slice array slice]|| ||items 2 thru 3 of nums||
-||[#array-concatenation concatenation]|| ||{1,2,3} & {4,5,6}||
-||[#array-back manipulate back of array]|| ||set a to {6,7,8} _
+||[#array-lookup array lookup]||nums at: 1|| ||item 1 of nums||
+||[#array-modification array modification]|| || ||set item 1 of nums to 5||
+||[#array-slice array slice]||nums copyFrom: 2 to: 3|| ||items 2 thru 3 of nums||
+||[#array-concatenation concatenation]|| || ||{1,2,3} & {4,5,6}||
+||[#array-back manipulate back of array]||a := OrderedCollection new. _
+a add: 6; add: 7; add: 8. _
+ _
+a add: 9. _
+a removeLast.|| ||set a to {6,7,8} _
 set end of a to 9 _
 ##gray|//cannot remove elements from a list//##||
-||[#array-front manipulate front of array]|| ||set a to {6,7,8} _
+||[#array-front manipulate front of array]||a := OrderedCollection new. _
+a add: 6; add: 7; add: 8. _
+ _
+a addFirst: 5. _
+a removeFirst.|| ||set a to {6,7,8} _
 set beginning of a to 5 _
 ##gray|//cannot remove elements from a list//##||
-||[#array-iteration array iteration]|| ||repeat with i in nums _
+||[#array-iteration array iteration]||nums do: [:o| Transcript show: o printString; cr]|| ||repeat with i in nums _
 @<&nbsp;&nbsp;>@display dialog(i as text) _
 end repeat||
-||[#array-sort sort]|| ||##gray|//none//##||
-||[#array-reverse reverse]|| ||set a to {1,2,3} _
+||[#array-sort sort]|| || ||##gray|//none//##||
+||[#array-reverse reverse]|| || ||set a to {1,2,3} _
 set b to reverse of a||
-||||||~ [[# functions]][#functions-note functions]||
-||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-||[#function-definition function definition]||add(x, y) { _
+||[#membership membership] _
+@<&nbsp;>@||nums includes: 7|| || ||
+||[#map map] _
+@<&nbsp;>@||#(1 2 3) collect: [ :o | o*o ]|| || ||
+||[#filter filter] _
+@<&nbsp;>@||#(1 2 3) select: [:o | o > 1]|| || ||
+||[#reduce reduce] _
+@<&nbsp;>@||#(1 2 3) inject: 0 into: [:m :o| m + o]|| || ||
+||[#universal-test universal test] _
+@<&nbsp;>@||#(1 2 3 4) allSatisfy: [:o | o even]|| || ||
+||[#existential-test existential test] _
+@<&nbsp;>@||#(1 2 3 4) anySatisfy: [:o | o even]|| || ||
+||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
+||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||[#dictionary-literal dictionary literal] _
+@<&nbsp;>@||h := Dictionary new add: ##maroon|'t'##->1; add: ##maroon|'f'##->0; yourself|| || ||
+||[#dictionary-size dictionary size] _
+@<&nbsp;>@||h size|| || ||
+||[#dictionary-lookup dictionary lookup] _
+@<&nbsp;>@|| h at: ##maroon|'t'##|| || ||
+||[#dictionary-key-check is dictionary key present] _
+@<&nbsp;>@|| || || ||
+||[#dictionary-iteration dictionary iteration] _
+@<&nbsp;>@||h keysAndValuesDo: [:k :v|  ##gray|//code//## ]|| || ||
+||[#dictionary-keys-values keys and values of dictionary as arrays]||h keys _
+h values|| || ||
+||[#out-of-bounds out of bounds behavior] _
+@<&nbsp;>@||##gray|//raises exception//##|| || ||
+||||||||~ [[# functions]][#functions-note functions]||
+||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||[#function-definition function definition]||add := [ :a :b | a + b ]||add(x, y) { _
 @<&nbsp;&nbsp;>@return x + y _
 }||on add(a, b) _
 @<&nbsp;&nbsp;>@return a + b _
@@ -210,13 +280,13 @@ end add _
 to add(a, b) _
 @<&nbsp;&nbsp;>@return a + b _
 end add||
-||[#function-invocation function invocation]||x := add(1, 2)||add(1, 2)||
-||[#missing-argument missing argument value]||##gray|//error//##||##gray|//error//##||
-||[#extra-arguments extra arguments]||##gray|//error//##||##gray|//ignored//##||
-||[#default-argument default argument value]||fapprox(x, y, eps=0.001) { _
+||[#function-invocation function invocation]||add value: 1 value: 2||x := add(1, 2)||add(1, 2)||
+||[#missing-argument missing argument value]||##gray|//raises// BlockClosure //exception//##||##gray|//error//##||##gray|//error//##||
+||[#extra-arguments extra arguments]||##gray|//raises// BlockClosure //exception//##||##gray|//error//##||##gray|//ignored//##||
+||[#default-argument default argument value]|| ||fapprox(x, y, eps=0.001) { _
 @<&nbsp;&nbsp;>@return abs(x - y) < eps _
 }||##gray|//none//##||
-||[#named-parameters named parameters]||##gray|//none//##||to displayNums from x to y _
+||[#named-parameters named parameters]|| ||##gray|//none//##||to displayNums from x to y _
 @<&nbsp;&nbsp;>@set i to x _
 @<&nbsp;&nbsp;>@repeat while i <= y _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@display dialog (i as text) _
@@ -224,18 +294,28 @@ end add||
 @<&nbsp;&nbsp;>@end repeat _
 end displayNums _
 displayNums to 5 from 1||
-||[#variable-arguments variable number of arguments]||f(args*) { _
+||[#variable-arguments variable number of arguments]|| ||f(args*) { _
 @<&nbsp;&nbsp;>@return args.maxindex() _
 }||##gray|//none//##||
-||[[# pass-by-ref]][#pass-by-ref-note pass by reference]||swap(byref v1, byref v2) { _
+||[[# pass-by-ref]][#pass-by-ref-note pass by reference]|| ||swap(byref v1, byref v2) { _
 @<&nbsp;&nbsp;>@tmp := v1 _
 @<&nbsp;&nbsp;>@v1 := v2 _
 @<&nbsp;&nbsp;>@v2 := tmp _
 }|| ||
-||[#return-value return value]||##gray|//argument of// return##||##gray|//argument of// return //or value of last statement executed//##||
-||||||~ [[# execution-control]][#execution-control-note execution control]||
-||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-||[[# if]][#if-note if]||if (n = 0) { _
+||[#return-value return value]|| ||##gray|//argument of// return##||##gray|//argument of// return //or value of last statement executed//##||
+||||||||~ [[# execution-control]][#execution-control-note execution control]||
+||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||[[# if]][#if-note if]||msg := [ :s | Transcript show: s. Transcript cr ] _
+ _
+n = 0 _
+ifTrue: [ _
+@<&nbsp;&nbsp;>@msg value: 'no hits' ] _
+ifFalse: [ _
+@<&nbsp;&nbsp;>@n = 1 _
+@<&nbsp;&nbsp;>@ifTrue: [ _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@msg value: '1 hit' ] _
+@<&nbsp;&nbsp;>@fFalse: [ _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@msg value: n printString, ' hits' ]].||if (n = 0) { _
 @<&nbsp;&nbsp;>@msgbox % "zero hits" _
 } _
 else if (n = 1) { _
@@ -251,85 +331,89 @@ else _
 @<&nbsp;&nbsp;>@set s to n as text & " hits" _
 @<&nbsp;&nbsp;>@display dialog (s) _
 end if||
-||[[# while]][#while-note while]|| ||set i to 0 _
+||[[# while]][#while-note while]||[  i < 100 ] _
+whileTrue: [ _
+@<&nbsp;&nbsp;>@i := i + 1 ].|| ||set i to 0 _
 repeat while i < 10 _
 @<&nbsp;&nbsp;>@set i to i + 1 _
 @<&nbsp;&nbsp;>@display dialog (i as text) _
 end repeat||
-||[[# break-continue]][#break-continue-note break/continue]||exit 0||exit ##gray|//none//##||
-||[[# for]][#for-note for]|| ||repeat with i from 1 to 3 _
+||[[# break-continue]][#break-continue-note break/continue]|| ||exit 0||exit ##gray|//none//##||
+||[[# for]][#for-note for]||1 to: 100 do: [ :i | _
+@<&nbsp;&nbsp;>@msg value: i printString ].|| ||repeat with i from 1 to 3 _
 @<&nbsp;&nbsp;>@display dialog (i as text) _
 end repeat||
-||||||~ [[# exceptions]][#exceptions-note exceptions]||
-||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-||[#raise-exception raise exception]|| ||error "bam!"||
-||[#catch-exception catch exception]|| ||try _
+||||||||~ [[# exceptions]][#exceptions-note exceptions]||
+||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||[#raise-exception raise exception]||Exception raiseSignal: 'bam!'.|| ||error "bam!"||
+||[#catch-exception catch exception]||[ o risky ] on: Exception do: [ :ex | _
+@<&nbsp;&nbsp;>@Transcript show: 'risky failed' ]|| ||try _
 @<&nbsp;&nbsp;>@error "bam!" _
 on error msg _
 @<&nbsp;&nbsp;>@display dialog ("error: " & msg) _
 end try||
-||[#uncaught-exception uncaught exception behavior]|| ||##gray|//display error and exits//##||
-||||||~ [[# files]][#file-note files]||
-||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-||[#print-to-stdout print to standard out]|| || ||
-||[#standard-filehandles standard file handles]|| ||##gray|//none//##||
-||[#read-line read line]|| ||set f to POSIX file "/etc/passwd" _
+||[#uncaught-exception uncaught exception behavior]|| || ||##gray|//display error and exits//##||
+||||||||~ [[# files]][#file-note files]||
+||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||[#print-to-stdout print to standard out]|| || || ||
+||[#standard-filehandles standard file handles]|| || ||##gray|//none//##||
+||[#read-line read line]|| || ||set f to POSIX file "/etc/passwd" _
 set a to read f as text using delimiter linefeed _
 item 1 of a||
-||[#read-file read file]|| ||set f to POSIX file "/tmp/a" _
+||[#read-file read file]|| || ||set f to POSIX file "/tmp/a" _
 set s to f as text||
-||[#write-file write to file]|| ||set f to POSIX file "/tmp/a" _
+||[#write-file write to file]|| || ||set f to POSIX file "/tmp/a" _
 open for access f with write permission _
 write "hello" to f _
 close access f||
-||[#append-file append to file]|| ||set f to POSIX file "/tmp/a" _
+||[#append-file append to file]|| || ||set f to POSIX file "/tmp/a" _
 open for access f with write permission _
 write "hello" to f starting at eof _
 close access f||
-||||||~ [[# gui]][#gui-note gui]||
-||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-||pop-up box||msgbox % "hi world"||display dialog("hi world")||
-||||||~ [[# directories]][#directories-note directories]||
-||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
-||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-||[#external-command external command]|| ||do shell script "ls"||
-||[#backticks backticks]|| ||set s to do shell script "ls"||
-||[#command-line-args command line args]|| ||##gray|//must declare run handler://## _
+||||||||~ [[# gui]][#gui-note gui]||
+||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||pop-up box|| ||msgbox % "hi world"||display dialog("hi world")||
+||||||||~ [[# directories]][#directories-note directories]||
+||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
+||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||[#external-command external command]|| || ||do shell script "ls"||
+||[#backticks backticks]|| || ||set s to do shell script "ls"||
+||[#command-line-args command line args]|| || ||##gray|//must declare run handler://## _
 on run argv _
 @<&nbsp;&nbsp;>@length of argv _
 @<&nbsp;&nbsp;>@item 1 of argv _
 @<&nbsp;&nbsp;>@item 2 of argv _
 @<&nbsp;&nbsp;>@##gray|//...//## _
 end run||
-||[#speech speech]|| ||say "I'm a Mac"||
-||[#environment-variable environment variable]|| ||system attribute "HOME"||
-||[#command-path command path]|| || ||
-||[#exit exit]|| ||##gray|//none//##||
-||[#set-signal-handler set signal handler]|| ||##gray|//none//##||
-||[#start-background-job start job in background]|| ||##gray|//none//##||
-||[#suspend-job suspend current job]|| ||##gray|//none//##||
-||[#list-jobs list jobs]|| ||##gray|//none//##||
-||[#background-suspended-job background suspended job]|| ||##gray|//none//##||
-||[#foreground-background-job bring background job into foreground]|| ||##gray|//none//##||
-||[#disown-job disown job]|| ||##gray|//none//##||
-||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
-||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-||[#library library]|| ||$ cat foo.applescript _
+||[#speech speech]|| || ||say "I'm a Mac"||
+||[#environment-variable environment variable]|| || ||system attribute "HOME"||
+||[#command-path command path]|| || || ||
+||[#exit exit]|| || ||##gray|//none//##||
+||[#set-signal-handler set signal handler]|| || ||##gray|//none//##||
+||[#start-background-job start job in background]|| || ||##gray|//none//##||
+||[#suspend-job suspend current job]|| || ||##gray|//none//##||
+||[#list-jobs list jobs]|| || ||##gray|//none//##||
+||[#background-suspended-job background suspended job]|| || ||##gray|//none//##||
+||[#foreground-background-job bring background job into foreground]|| || ||##gray|//none//##||
+||[#disown-job disown job]|| || ||##gray|//none//##||
+||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
+||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||[#library library]|| || ||$ cat foo.applescript _
 on showText(theText) _
 @<&nbsp;&nbsp;>@display dialog (theText) _
 end showText _
 $ osascript -o foo.scpt foo.applescript||
-||[#import-library import library]|| ||set f to "/path/to/foo.scpt" _
+||[#import-library import library]|| || ||set f to "/path/to/foo.scpt" _
 set foo to (load script POSIX file f) _
 tell foo to showText("bar")||
-||[#library-path library path]|| || ||
-||[#library-path-env library path environment variable]|| || ||
-||[#namespace-declaration namespace declaration]|| || ||
-||[#namespace-separator namespace separator]|| || ||
-||||||~ [[# objects]][#objects-note objects]||
-||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-||[#define-class define class]|| ||on makeInt(val) _
+||[#library-path library path]|| || || ||
+||[#library-path-env library path environment variable]|| || || ||
+||[#namespace-declaration namespace declaration]|| || || ||
+||[#namespace-separator namespace separator]|| || || ||
+||||||||~ [[# objects]][#objects-note objects]||
+||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||[#define-class define class]|| || ||on makeInt(val) _
 @<&nbsp;&nbsp;>@script theInt _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@property value : val _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@on addOne() _
@@ -338,16 +422,16 @@ tell foo to showText("bar")||
 @<&nbsp;&nbsp;>@end script _
 @<&nbsp;&nbsp;>@return theInt _
 end makeInt||
-||[#create-object create object]|| ||set anInt to makeInt(7)||
-||[#getter-setter getter and setter]|| ||get value of anInt _
+||[#create-object create object]|| || ||set anInt to makeInt(7)||
+||[#getter-setter getter and setter]|| || ||get value of anInt _
 set value of anInt to 9||
-||[#invoke-method invoke method]|| ||tell anInt to addOne()||
-||||||~ [[# reflection]][#reflection-note reflection]||
-||~ ||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-||[#class class]|| ||set s to "hello" _
+||[#invoke-method invoke method]|| || ||tell anInt to addOne()||
+||||||||~ [[# reflection]][#reflection-note reflection]||
+||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||[#class class]||'hello' class|| ||set s to "hello" _
 display dialog class of s||
-||[#list-variables list defined variables]|| || ||
-||~ ||~ ##EFEFEF|@@__________________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________________@@##||
+||inspect methods||1 class selectors.|| || ||
+||~ ||~ ##EFEFEF|@@_______________________________________________________@@##||~ ##EFEFEF|@@_______________________________________________________@@##||~ ##EFEFEF|@@_______________________________________________________@@##||
 
 
 [[# general-note]]
@@ -683,8 +767,8 @@ How to replace all occurrences of a pattern in a string.
 [[# dates-time-note]]
 + [#dates-time Dates and Time]
 
-[[# array-note]]
-+ [#arrays Arrays]
+[[# resizable-array-note]]
++ [#resizable arrays Resizable Arrays]
 
 [[# array-literal]]
 ++ array literal
@@ -740,6 +824,9 @@ How to test whether a condition holds for all members of an array.  Always true 
 ++ existential predicate
 
 How to test whether an item in an array exists for which a condition holds.  Always false for an empty array.
+
+[[# dictionaries-note]]
++ [#dictionaries Dictionaries]
 
 [[# dictionary-literal]]
 ++ dictionary literal
@@ -897,7 +984,7 @@ If a block of code needs to be executed a set number of times but no index varia
 
 [[code]]
 repeat 3 times
-	display dialog ("tut")
+    display dialog ("tut")
 end repeat
 [[/code]]
 
@@ -965,15 +1052,15 @@ System behavior if an exception goes uncaught.  Most interpreters print the exce
 AppleScript does not in general run with stdin and stdout filehandles.   When {{osascript}} is invoked as a shebang it is possible to read from stdin and write to stdout, however:
 
 [[code]]
-#!/usr/bin/env osascript 
-set stdin to do shell script "cat" 
-"Received from stdin: " & stdin 
+#!/usr/bin/env osascript
+set stdin to do shell script "cat"
+"Received from stdin: " & stdin
 [[/code]]
 
 Here is how the above script would be invoked:
 
 [[code]]
-$ echo "foo" | ./stdin-example.sh 
+$ echo "foo" | ./stdin-example.sh
 Received from stdin: foo
 [[/code]]
 
@@ -1052,6 +1139,69 @@ What a library looks like.
 
 [[# class]]
 ++ class
+
+[[# smalltalk]]
++ [#top Smalltalk]
+
+[#image-vm image and virtual machine] | [#browser-workspace-transcript browser, workspace, and transcript] | [#the-smalltalk-lang the smalltalk language]
+
+[[# image-vm]]
+++ image and virtual machine 
+
+Executable Smalltalk consists of an //image// and a //virtual machine//.  A Smalltalk image is equivalent to a program, except that it also contains the state of a Smalltalk process; a Smalltalk process can save itself as an image at any point in its execution. The Smalltalk image is usually portable, whereas the virtual machine is operating system specific.  
+
+To create a new Smalltalk executable, one copies an existing image, launches it, adds to  or modifies the code while the process is running, and then persists the new code and the process state when the executable is done.
+
+After a fresh installation of Pharo 3.0 on Mac OS X, one has a image named {{Pharo.image}} and a virtual machine named {{Pharo}}.  One can launch the program at the command line by passing the image to the virtual machine as an argument:
+
+[[code]]
+$ ls -l Pharo.image                            
+-rw-rw-r--  1 hpglot  staff  21802780 Dec 12 06:38 Pharo.image
+
+$ ls -l pharo-vm/Pharo.app/Contents/MacOS/Pharo
+-rwxr-xr-x  1 hpglot  staff  867488 May 15  2014 pharo-vm/Pharo.app/Contents/MacOS/Pharo
+
+$ ./pharo-vm/Pharo.app/Contents/MacOS/Pharo Pharo.image
+[[/code]]
+
+It is worth noting that even after a fresh installation, the image is already much larger than the virtual machine.  The standard library and any ofther classes distributed with the implementation are implemented in Smalltalk; they are in the image, not the virtual matchine.
+
+[[# browser-workspace-transcript]]
+++ browser, workspace, and transcript
+
+[[# the-smalltalk-lang]]
+++ the smalltalk language
+
+All values which can be stored in variables are objects.
+
+Every expression and statement is implemented as a message which is sent to an object.
+
+Messages are classified as //unary//, //binary//, or //keyword//.
+
+Examples of unary messages:
+
+[[code]]
+1 class.
+false not.
+Date today.
+[[/code]]
+
+Examples of binary messages:
+
+[[code]]
+2 * 7.
+true & true.
+3 < 10.
+'Hello, ', 'World!'.
+[[/code]]
+
+Examples of keyword messages:
+
+Precedence of messages.
+
+Cascaded messages.
+
+No functions, just methods and blocks.
 
 [[# autohotkey]]
 + [#top AutoHotkey]

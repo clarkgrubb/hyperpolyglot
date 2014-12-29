@@ -1,9 +1,10 @@
-[[# top]]**markup:** [#text-style text style] | [#punctuation non-ascii punctuation] | [#grouping-alignment grouping and alignment] | [#images images] | [#tables-etal tables, code, and math]
+[[# top]]##gray|markup:## [#text-style text style] | [#grouping-alignment grouping and alignment] | [#images images] | [#tables-etal tables, code, and math]
 
-**output formats:** [#html html] | [#pdf pdf] | [#epub epub] | [#word-doc word document] | [#man-page man page] | [#slide-show slide show]
+##gray|tools:## [#pandoc pandoc]
 
 ||~ ||~ [#markdown markdown]||~ [#restructured-text restructured text]||~ [#mediawiki mediawiki]||~ [#asciidoc asciidoc]||~ [#org-mode org-mode]||
 ||sandbox||[http://daringfireball.net/projects/markdown/dingus daringfireball.net/projects/markdown/dingus] _
+ _
 [http://johnmacfarlane.net/pandoc/try johnmacfarlane.net/pandoc/try]||[http://rst.ninjs.org/ rst.ninjs.org]||[http://en.wikipedia.org/wiki/Wikipedia:Sandbox en.wikipedia.org/wiki/Wikipedia:Sandbox]||[http://asciidoc.wikia.com/wiki/Template:Sandbox asciidoc.wiki.com/wiki/Template:Sandbox]|| ||
 ||command line tool||$ apt-get install markdown _
 $ markdown foo.txt > foo.html _
@@ -11,18 +12,32 @@ $ markdown foo.txt > foo.html _
 $ apt-get install pandoc _
 $ pandoc foo.txt -o foo.html||$ pip install rst2html5 _
  _
-$ rst2html5 foo.rst > foo.html|| ||$ apt-get install asciidoc _
+$ rst2html5 foo.rst > foo.html||##gray|//run at root of MediaWiki source tree://## _
+ _
+$ php maintenance/parse.php foo.txt \ _
+@<&nbsp;&nbsp;>@> foo.html||$ apt-get install asciidoc _
 $ asciidoc foo.txt|| ||
 ||autolinks url?||##gray|//no//##||##gray|//yes//##||##gray|//yes//##||##gray|//yes//##||##gray|//yes//##||
-||can use [http://duckduckgo.com/?q=html+entities html entities]?||##gray|//yes//##||##gray|//no//##||##gray|//yes//##||##gray|//yes//##|| ||
-||##darkblue|__link offsite__##||[Website](@@http://website.com@@)||Website_ _
+||can use html entities?||##gray|//yes; they are passed to output html//##||##gray|//no, the ampersand will be html entity escaped//##||##gray|//yes; they are replaced by UTF-8//##||##gray|//yes; they are passed to output html//##|| ||
+||encoding||##gray|markdown //and// pandoc //assume UTF-8 for input and output.//##||##gray|//default output is UTF-8; default input is system dependent//## _
  _
-##gray|//this must exist elsewhere in the document://## _
-.. _Website: @@http://website.com@@||@@[http://website.com Website]@@||@@http://website.com@@[Website]||@@[[http://www.google.com][Google]]@@||
-||##darkblue|__link onsite__##||<a href="page">Pipe Trick</a>|| ||@@[[page|Pipe Trick]]@@||link:page.html[Pipe Trick]|| ||
+$ rst2html5 @@--@@input-encoding=utf-8 \ _
+@<&nbsp;&nbsp;>@@@--@@output-encoding=iso8859-1 \ _
+@<&nbsp;&nbsp;>@< foo.rst > foo.html||##gray|MediaWiki //specifies UTF-8 in the response header and the HTML document.  It handles UTF-8 POST requests, and may handle other encodings correctly.//##||##gray|//assumes UTF-8 for input and output//##|| ||
+||link offsite||[Website](@@http://website.com@@) ||@@`Website <http://website.com>`_@@||@@[http://website.com Website]@@||@@http://website.com@@[Website]||@@[[http://www.google.com][Google]]@@||
+||link with url in footnote||##gray|//link://## _
+[Website][u1] _
+ _
+##gray|//footnote://## _
+[u1]: @@http://website.com@@||##gray|//link://## _
+Website_ _
+ _
+##gray|//footnote://## _
+.. _Website: @@http://website.com@@|| || || ||
+||link onsite||<a href="page">Pipe Trick</a>|| ||@@[[page|Pipe Trick]]@@||link:page.html[Pipe Trick]|| ||
 ||define anchor||<a name="foo"/>|| ||##gray|//Headers automatically get anchors.  Also://## _
 <div id="foo"></div>||anchor:foo[]||#+NAME: foo||
-||##darkblue|__link to anchor__##||<a href="#foo">Foo</a> _
+||link to anchor||<a href="#foo">Foo</a> _
  _
 ##gray|//pandoc extension://## _
 [Foo](#foo)|| ||@@[[#foo|Foo]]@@||@<<<anchor:foo,Foo>>>@||@@[[foo][Foo]]@@||
@@ -67,13 +82,6 @@ small caps text _
 </span>|| ||<span class="foo"> _
 ##gray|//text//## _
 </span>|| || ||
-||||||||||||~ [[# punctuation]][#punctuation-note non-ascii punctuation]||
-||~ ||~ [#markdown markdown]||~ [#restructured-text restructured text]||~ [#mediawiki mediawiki]||~ [#asciidoc asciidoc]||~ [#org-mode org-mode]||
-||right and left single quotes: `lorem ipsum'||&lsquo;lorem ipsum&rsquo;|| || || || ||
-||right and left double quotes: ``lorem ipsum''||&ldquo;lorem ipsum&rdquo;|| || || || ||
-||en dash: @<&ndash;>@||&ndash;|| || || || ||
-||em dash: @<&mdash;>@||&mdash;|| || || || ||
-||ellipsis: ...||&hellip;|| || || || ||
 ||||||||||||~ [[# grouping-alignment]]grouping and alignment||
 ||~ ||~ [#markdown markdown]||~ [#restructured-text restructured text]||~ [#mediawiki mediawiki]||~ [#asciidoc asciidoc]||~ [#org-mode org-mode]||
 ||line break||##gray|//space, space, newline//## _
@@ -102,6 +110,9 @@ document title _
  _
 document title _
 ==============|| ||
+||document subtitle|| || || || || ||
+||document author|| || || || || ||
+||document date|| || || || || ||
 ||section header||##gray|//pandoc requires blank line before header, markdown doesn't://## _
 # section header _
  _
@@ -381,52 +392,12 @@ $ pandoc @@--@@version|| ||[http://www.mediawiki.org/wiki/Extension:SyntaxHighli
 ||numbered equation|| || || || || ||
 ||~ ##EFEFEF|@@________________@@##||~ ##EFEFEF|@@______________________________________________@@##||~ ##EFEFEF|@@___________________________________________@@##||~ ##EFEFEF|@@___________________________________________@@##||~ ##EFEFEF|@@___________________________________________@@##||~ ##EFEFEF|@@___________________________________________@@##||
 
-@<&nbsp;>@
-
-[[# punctuation-note]]
-+ [#punctuation Non-ASCII Punctuation]
-
-||~ unicode name||~ ascii approximation||~ unicode||~ html entity||
-||left single quotation mark _
-right single quotation mark||0027: ' _
-0027: '||2018: ‘ _
-2019: ’||&lsquo; _
-&rsquo;||
-||left double quotation mark _
-right double quotation mark||0022: " _
-0022: "||201C: “ _
-201D: ”||&ldquo; _
-&rdquo;||
-||prime||0027: '||2032: ′||&prime;||
-||double prime||0022: "||2033: ″||&Prime;||
-||en dash||002D 002D: @@--@@||2013: –||&ndash;||
-||em dash||002D 002D 002D: @@---@@||2014: —||&mdash;||
-||horizontal ellipsis||002E 002E 002E: @@...@@||2026: …||&hellip;||
-||minus sign||002D: -||2212: −||&minus;||
-||multiplication sign||002A: *||00D7: ×||&times;||
-||division sign||002F: /||00F7: ÷||&divide;||
-
-The ASCII character set omitted punctuation marks that are necessary to properly typeset English.  It was able to do this because there were already typewriter conventions for representing the missing characters.
-
-Prime and double prime are most often used as abbreviated units of measurement for feet and inches.
-
-Em dash is used to mark an incomplete or interrupted sentence.  It is used to mark off an utterance that is interjected into a sentence as an aside.
-
-En dash is used to indicate a range of values.  It separates the first and the last value and the other values are omitted.
-
-The hyphen is used to join nouns into a compound noun.  In English one must consult a dictionary to determine if the components of a compound noun are separated by spaces, hyphens, or nothing.  The minus sign is the symbol for subtraction.  The name for U+002D is //hyphen-minus//, suggesting that it correct to use the symbol for either.  Unicode has separate character U+2212 called //minus sign//, however.
-
-//combining and non-combining versions of prime and double prime//
-
-If one is not limited to ASCII and wants to produce typographically correct punctuation, consider entering the punctuation explicitly.  Some software will infer typographically correct punctuation from ASCII approximations, but the software tends to be a headache in contexts such as software documentation.
-
-
 [[# markdown]]
 + [#top Markdown]
 
 [http://daringfireball.net/projects/markdown/syntax Markdown]
 
-Markdown was developed in 2004.  The first implementation was in Perl.  It is used by Tumblr, Stackoverflow, and Reddit.  Here is a [http://daringfireball.net/projects/markdown/dingus sandbox].
+Markdown was developed in 2004, initially in Perl.  It is used by Tumblr, Stackoverflow, GitHub, and Reddit.  Here is a [http://daringfireball.net/projects/markdown/dingus sandbox].
 
 On Ubuntu you can install a script which converts Markdown to HTML with the following command:
 
@@ -458,33 +429,93 @@ Pandoc can read Markdown, LaTeX, HTML, and a few other formats.  It can output H
 
 Pandoc's version of Markdown has extensions.  Using the extensions avoids HTML and makes it easier for Pandoc to target other formats.
 
-[[# pandoc-header-identifiers]]
-++ header identifiers
-
-[http://johnmacfarlane.net/pandoc/README.html#header-identifiers-in-html-latex-and-context pandoc header identifiers]
-
-If the rule for generating a header identifier results in all characters being removed, the first unused identifier from the following sequence is used:
-
-* section
-* section-1
-* section-2
-* ...
-
-[[# pandoc-delimited-code-block]]
-++ delimited code block
-
-[http://johnmacfarlane.net/pandoc/README.html#delimited-code-blocks delimited code blocks]
-
-The tildes which terminate the block must be at least as numerous as the tildes which started it.  This provides a mechanism for putting code which contains a line of tildes inside the code block.
-
-The following markup will number the lines starting from 100:
+Converting Markdown to HTML:
 
 [[code]]
-~~~ {.C .numberLines startFrom="100"}
-int add(int a, int b) {
-  return (a+b);
-}
-~~~
+$ pandoc foo.txt -o foo.html
+[[/code]]
+
+Converting HTML to Markdown:
+
+[[code]]
+pandoc -s -r html http://hyperpolyglot.org/lightweight-markup -o lightweight-markup.txt
+[[/code]]
+
+++ pdf from markdown
+
+//A tool such as pdflatex must be in the search path://
+
+[[code]]
+$ pandoc foo.txt -o foo.pdf
+[[/code]]
+
+++ epub from markdown
+
+[[code]]
+$ pandoc foo.txt -o foo.epub
+[[/code]]
+
+++ word document from markdown
+
+[[code]]
+$ pandoc foo.txt -o foo.docx 
+[[/code]]
+
+++ man page from markdown
+
+[http://manpages.ubuntu.com/manpages/precise/man7/groff_man.7.html groff_man(7)] ##gray|(ubuntu.com)##
+
+The markup used for man pages is described in groff_man(7).
+
+[[code]]
+$ cat > foo.1.md
+% FOO(1) Foo User Manual
+% John Smith
+% November 8, 2012
+
+# NAME
+
+foo - a command line tool
+
+# SYNOPSIS
+
+foo [*file*]...
+
+# DESCRIPTION
+
+Foo performs an operation on files specified on the command line.  If no files
+are specified the operation is performed on *stdin*.
+
+# SEE ALSO
+
+`bar` (1).
+
+$ pandoc -s -w man foo.1.md -o foo.1
+[[/code]]
+
+++ slideshow from markdown
+
+[[code]]
+$ cat > gnomes.txt
+# Business Plan
+
+* collect underpants
+* ?
+* profit
+
+# Phase 1: Collect Underpants
+
+3:30 AM is the optimal time.
+
+# Phase 2: ?
+
+Details TBD
+
+# Phase 3: Profit
+
+Financial results will be discussed in the earnings call.
+
+$ pandoc gnomes.txt -s --webtex -i -t slidy -o gnomes.html
 [[/code]]
 
 [[# restructured-text]]
@@ -492,14 +523,18 @@ int add(int a, int b) {
 
 [http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html reStructuredText Markup Specification]
 
+//pydoc// and //rst2html5//
+
+[[code]]
+$ sudo pip install sphinx
+[[/code]]
+
 [[# mediawiki]]
 + [#top MediaWiki]
 
  [http://www.mediawiki.org/wiki/Help:Formatting MediaWiki Syntax]
 
-MediaWiki powers Wikipedia and the wikifarm Wikia.  The source code is freely available.
-
-MediaWiki 1.19 includes a script called maintenance/parse.php which can be used to render MediaWiki markup on the command line.
+MediaWiki powers Wikipedia.  The source code is freely available.
 
 Wikipedia was launched in January 2001.  The site initially used wiki software implemented in Perl called UseModWiki.  In January 2002 the site switched to custom software written in PHP.   The PHP code was rewritten for scalability in July 2002. It was given the name MediaWiki in 2003 and was eventually open sourced.
 
@@ -562,7 +597,7 @@ AsciiDoc documents have a {{.txt}} suffix by default.  The following command wil
 $ asciidoc foo.txt
 [[/code]]
 
-**slideshows**
+++ slideshow
 
 [[code]]
 $ asciidoc -b slidy foo.txt
@@ -572,123 +607,3 @@ $ asciidoc -b slidy foo.txt
 + [#top Org-mode]
 
 [http://orgmode.org/org.html The Org Manual]
-
-[[# html]]
-+ [#top HTML]
-
-++ ... from markdown
-
-Converting Markdown to HTML:
-
-[[code]]
-$ markdown foo.txt > foo.html
-$ pandoc foo.txt -o foo.html
-[[/code]]
-
-Converting HTML to Markdown:
-
-[[code]]
-pandoc -s -r html http://hyperpolyglot.org -o hyperpoylgot.org.txt
-[[/code]]
-
-++ ... from mediawiki markup
-
-As of 1.19 MediaWiki exposes its markup to HTML converter at the command line.  The following must be run from the installation root directory:
-
-[[code]]
-$ php maintenance/parse.php foo.txt > foo.html
-[[/code]]
-
-[[# pdf]]
-+ [#top PDF]
-
-++ ... from markdown
-
-//a tool such as pdflatex must be in the search path://
-
-[[code]]
-$ pandoc foo.txt -o foo.pdf
-[[/code]]
-
-[[# epub]]
-+ [#top ePub]
-
-++ ... from markdown
-
-[[code]]
-$ pandoc foo.txt -o foo.epub
-[[/code]]
-
-[[# word-doc]]
-+ [#top Word Document]
-
-++ ... from markdown
-
-[[code]]
-$ pandoc foo.txt -o foo.docx 
-[[/code]]
-
-[[# man-page]]
-+ [#top Man Page]
-
-[http://manpages.ubuntu.com/manpages/precise/man7/groff_man.7.html groff_man(7)] ##gray|(ubuntu.com)##
-
-The markup used for man pages is described in groff_man(7).
-
-++ ... from markdown
-
-[[code]]
-$ cat > foo.1.md
-% FOO(1) Foo User Manual
-% John Smith
-% November 8, 2012
-
-# NAME
-
-foo - a command line tool
-
-# SYNOPSIS
-
-foo [*file*]...
-
-# DESCRIPTION
-
-Foo performs an operation on files specified on the command line.  If no files
-are specified the operation is performed on *stdin*.
-
-# SEE ALSO
-
-`bar` (1).
-
-
-$ pandoc -s -w man foo.1.md -o foo.1
-[[/code]]
-
-[[# slide-show]]
-+ [#top Slide Show]
-
-++ ... from markdown
-
-[[code]]
-$ cat > gnomes.txt
-# Business Plan
-
-* collect underpants
-* ?
-* profit
-
-# Phase 1: Collect Underpants
-
-3:30 AM is the optimal time.
-
-# Phase 2: ?
-
-Details TBD
-
-# Phase 3: Profit
-
-Financial results will be discussed in the earnings call.
-
-
-$ pandoc gnomes.txt -s --webtex -i -t slidy -o gnomes.html
-[[/code]]
