@@ -616,22 +616,29 @@ String s2 = r2.Replace("hello", "L");||
 ||[[# current-date-time]][#current-date-time-note current date and time]|| || ||import java.util.Date; _
  _
 long millis = System.currentTimeMillis(); _
-Date dt = new Date(millis);||DateTime dt = DateTime.Now();||
+Date dt = new Date(millis);||using System; _
+ _
+DateTime dt = DateTime.Now;||
 ||[[# unix-epoch]][#unix-epoch-note to unix epoch, from unix epoch]|| || ||long epoch = dt.getTime() / 1000; _
  _
-Date dt2 = new Date(epoch * 1000);||long hundredM = 100 * 1000 * 1000; _
-long sec = dt.ToFileTimeUtc() / hundredM; _
-long epoch = sec - 1164444480; _
+Date dt2 = new Date(epoch * 1000);||using System; _
  _
-long ft = (epoch + 1164444480) * hundredM; _
-Date dt2 = DateTime.FromFiltTimeUtc(ft);||
+long tenM = 10 * 1000 * 1000; _
+long sec = dt.ToFileTimeUtc() / tenM; _
+long epoch = sec - 11644473600; _
+ _
+long ft = (epoch + 11644473600) * tenM; _
+DateTime dt2 = DateTime.FromFileTimeUtc(ft);||
 ||[[# date-time-to-str]][#date-time-to-str-note date and time to string]|| || ||dt.toString()|| ||
 ||[[# format-date]][#format-date-note format date]|| || ||String s = "yyyy-MM-dd HH:mm:ss"; _
 DateFormat fmt = new SimpleDateFormat(s); _
 String s2 = fmt.format(dt);||String s = "yyyy-MM-dd HH:mm:ss"); _
 String s2 = dt.ToString(s);||
 ||[[# parse-date]][#parse-date-note parse date]|| || ||String s = "2011-05-03 17:00:00"; _
-Date dt2 = fmt.parse(s);||CultureInfo enUS = _
+Date dt2 = fmt.parse(s);||using System; _
+using System.Globalization; _
+ _
+CultureInfo enUS = _
 @<&nbsp;&nbsp;>@new CultureInfo("en-US"); _
  _
 DateTime dt2 = DateTime.ParseExact( _
@@ -846,7 +853,7 @@ if (find(a.cbegin(), a.cend(), 7) != _
 @<&nbsp;&nbsp;>@cout @@<<@@ "contains 7" @@<<@@ endl; _
 }|| || || ||
 ||intersection|| || || || ||
-||union|| || || || || ||
+||union|| || || || ||
 ||relative complement, symmetric difference|| || || || ||
 ||map|| || || || ||
 ||filter|| || || || ||
@@ -2778,16 +2785,19 @@ The Unix epoch is the number of seconds since 1 January 1970 UTC.
 
 Windows file time is the number of nanoseconds since 1 January 1601 UTC divided by 100.  The concept was introduced when journaling was added to NTFS with Windows 2000.
 
-The magic constant (1164444480) used for the conversion can be calculated with the following code:
+The magic constant (11644473600) used for the conversion can be calculated with the following code:
 
 [[code]]
 using System;
 using System.Globalization;
 
 CultureInfo enUS = new CultureInfo("en-US");
-DateTime startEpoch = DateTime.ParseExact("1970-01-01 00:00:00 -00", "yyyy-MM-dd HH:mm:ss zz", enUS);
+DateTime startEpoch = DateTime.ParseExact(
+  "1970-01-01 00:00:00 -00",
+  "yyyy-MM-dd HH:mm:ss zz",
+  enUS);
 
-Console.WriteLine(startEpoch.ToFileTimeUtc() / (100*1000*1000));
+Console.WriteLine(startEpoch.ToFileTimeUtc() / (10 * 1000 * 1000));
 [[/code]]
 
 

@@ -6,7 +6,7 @@
 
 ||||||||||~ [[# file-handles]][#file-handles-note file handles]||
 ||~  ||~ node||~ php||~ python||~ ruby||
-||[[# std-file-handles]][#std-file-handle-note standard file handles]||process.stdin _
+||[[# std-file-handles]][#std-file-handles-note standard file handles]||process.stdin _
 process.stdout _
 process.stderr||##gray|//only set by CLI; not set when reading script from stdin://## _
 ##teal|STDIN STDOUT STDERR##||sys.stdin sys.stdout sys.stderr||##peru|$stdin $stdout $stderr##||
@@ -66,7 +66,9 @@ var s = fs.readFileSync('/etc/hosts', 'utf8');||$##peru|s## = file_get_contents(
 fflush($##peru|f##);|| f.flush()||f.flush||
 ||[[# eof-test]][#eof-test-note end-of-file test] _
 @<&nbsp;>@|| ||feof($##peru|f##)||##gray|//none//##||f.eof?||
-||[[# seek]][#seek-note get and set file handle position]|| ||ftell($##peru|f##) _
+||[[# seek]][#seek-note file handle position] _
+ _
+##gray|//get, set//##|| ||ftell($##peru|f##) _
 fseek($##peru|f##, 0);||f.tell() _
 f.seek(0)||f.tell _
 f.seek(0) _
@@ -242,56 +244,34 @@ csv().from.array(a).to.string(function (o) { s = o; });|| ||##purple|import## cs
 @<&nbsp;&nbsp;>@csv @@<<@@ [##maroon|"one"##, ##maroon|"une"##, ##maroon|"uno"##] _
 @<&nbsp;&nbsp;>@csv @@<<@@ [##maroon|"two"##, ##maroon|"deux"##, ##maroon|"dos"##] _
 ##purple|end##||
-||[[# json]][#json-note json generate/parse]||var d1 = {'t': 1, 'f': 0}; _
-var s = JSON.stringify(d1); _
-var d2 = JSON.parse(s);||$##CD853F|a## = array(##maroon|"t"## => 1, ##maroon|"f"## => 0); _
-$##CD853F|s## = json_encode($##CD853F|a##); _
-$##CD853F|d## = json_decode($##CD853F|s##, ##teal|TRUE##);||##purple|import## json _
+||[[# parse-json]][#parse-json-note parse json]||var s1 = '{"t":1,"f":0}'; _
+var d1 = JSON.parse(s1);||$##peru|s1## = ##maroon|'{"t":1,"f":0}'##; _
+$##peru|a1## = json_decode($##peru|s1##);||##purple|import## json _
  _
-##CD853F|s## = json.dumps({##maroon|'t'##: 1, ##maroon|'f'##: 0}) _
-##CD853F|d## = json.loads(s)||require ##maroon|'json'## _
+##CD853F|d## = json.loads(##maroon|'{"t":1,"f":0}'##)||require ##maroon|'json'## _
  _
-s = {##maroon|'t'## => 1,##maroon|'f'## => 0}.to_json _
-d = ##green|JSON##.parse(s)||
-||[[# yaml]][#yaml-note yaml generate/parse]|| || ||##gray|# sudo pip install PyYAML## _
-import yaml _
+d = ##green|JSON##.parse(##maroon|'{"t":1,"f":0}'##)||
+||[[# generate-json]][#generate-json-note generate json]||var d2 = {'t': 1, 'f': 0}; _
+var s2 = JSON.stringify(d1);||$##CD853F|a2## = array(##maroon|"t"## => 1, ##maroon|"f"## => 0); _
+$##CD853F|s2## = json_encode($##CD853F|a2##);||##purple|import## json _
  _
-s = yaml.safe_dump({'t': 1, 'f': 0}) _
-data = yaml.safe_load(s)||##gray|# sudo gem install safe_yaml## _
+##CD853F|s## = json.dumps({##maroon|'t'##: 1, ##maroon|'f'##: 0})||require ##maroon|'json'## _
+ _
+s = {##maroon|'t'## => 1,##maroon|'f'## => 0}.to_json||
+||[[# parse-yaml]][#parse-yaml-note parse yaml]|| || ||##gray|# sudo pip install PyYAML## _
+##purple|import## yaml _
+ _
+##peru|data## = yaml.safe_load(##maroon|'{f: 0, t: 1}\n'##)||##gray|# sudo gem install safe_yaml## _
+require ##maroon|'safe_yaml'## _
+ _
+data = ##green|YAML##.safe_load(##maroon|"---\nt: 1\nf: 0\n"##)||
+||[[# generate-yaml]][#generate-yaml-note generate yaml]|| || ||##gray|# sudo pip install PyYAML## _
+##purple|import## yaml _
+ _
+##peru|s## = yaml.safe_dump({##maroon|'t'##: 1, ##maroon|'f'##: 0})||##gray|# sudo gem install safe_yaml## _
 require 'safe_yaml' _
  _
-s = YAML.dump({'t' => 1, 'f' => 0}) _
-data = YAML.safe_load(s)||
-||[[# generate-xml]][#generate-xml-note generate xml]||##gray|# npm install xmlbuilder## _
-var builder = require('xmlbuilder'); _
- _
-var xml = builder.create('a').ele('b', {id: 123}, 'foo').end();||$##CD853F|xml## = ##maroon|"<a></a>"##; _
-$##CD853F|sxe## = ##purple|new## ##green|SimpleXMLElement##($##CD853F|xml##); _
-$b = $##CD853F|sxe##->addChild(##maroon|"b"##, ##maroon|"foo"##); _
-$b->addAttribute("id", "123"); _
- _
-##gray|# <a><b id="123">foo</b></a>:## _
-##purple|echo## $##CD853F|sxe##->asXML();||##purple|import## xml.etree.ElementTree ##purple|as## ET _
- _
-##peru|builder## = ET.TreeBuilder() _
-builder.start(##maroon|'a'##, {}) _
-builder.start(##maroon|'b'##, {'id': '123'}) _
-builder.data(##maroon|'foo'##) _
-builder.end(##maroon|'b'##) _
-builder.end(##maroon|'a'##) _
-##peru|et## = builder.close() _
- _
-##gray|# <a><b id="123">foo</b></a>:## _
-print(ET.tostring(et))||##gray|# gem install builder## _
-require ##maroon|'builder'## _
- _
-builder = ##green|Builder##::##green|XmlMarkup##.new _
-xml = builder.a ##purple|do## |child| _
-@<&nbsp;&nbsp;>@child.b(##maroon|"foo"##, :id=>"123") _
-##purple|end## _
- _
-##gray|# <a><b id="123">foo</b></a>:## _
-##purple|puts## xml||
+s = YAML.dump({'t' => 1, 'f' => 0})||
 ||[[# parse-xml]][#parse-xml-note parse xml] _
 ##gray|//all nodes matching xpath query; first node matching xpath query//##||##gray|# npm install xmldom xpath## _
 var dom = require('xmldom').DOMParser; _
@@ -343,6 +323,36 @@ puts nodes[0].text _
 node = ##green|XPath##.first(doc,##maroon|"/a/b/c"##) _
 puts node.text _
 puts node.attributes[##maroon|"ref"##]||
+||[[# generate-xml]][#generate-xml-note generate xml]||##gray|# npm install xmlbuilder## _
+var builder = require('xmlbuilder'); _
+ _
+var xml = builder.create('a').ele('b', {id: 123}, 'foo').end();||$##CD853F|xml## = ##maroon|"<a></a>"##; _
+$##CD853F|sxe## = ##purple|new## ##green|SimpleXMLElement##($##CD853F|xml##); _
+$b = $##CD853F|sxe##->addChild(##maroon|"b"##, ##maroon|"foo"##); _
+$b->addAttribute("id", "123"); _
+ _
+##gray|# <a><b id="123">foo</b></a>:## _
+##purple|echo## $##CD853F|sxe##->asXML();||##purple|import## xml.etree.ElementTree ##purple|as## ET _
+ _
+##peru|builder## = ET.TreeBuilder() _
+builder.start(##maroon|'a'##, {}) _
+builder.start(##maroon|'b'##, {'id': '123'}) _
+builder.data(##maroon|'foo'##) _
+builder.end(##maroon|'b'##) _
+builder.end(##maroon|'a'##) _
+##peru|et## = builder.close() _
+ _
+##gray|# <a><b id="123">foo</b></a>:## _
+print(ET.tostring(et))||##gray|# gem install builder## _
+require ##maroon|'builder'## _
+ _
+builder = ##green|Builder##::##green|XmlMarkup##.new _
+xml = builder.a ##purple|do## |child| _
+@<&nbsp;&nbsp;>@child.b(##maroon|"foo"##, :id=>"123") _
+##purple|end## _
+ _
+##gray|# <a><b id="123">foo</b></a>:## _
+##purple|puts## xml||
 ||[[# parse-html]][#parse-html-note parse html]|| ||$##peru|html## = file_get_contents(##maroon|"foo.html"##); _
 $##peru|doc## = ##purple|new## ##green|DOMDocument##; _
 $##peru|doc##->loadHTML($##peru|html##); _
@@ -457,8 +467,9 @@ process.argv[1] _
 $##teal|_SERVER##[##maroon|"SCRIPT_NAME"##]||sys.argv[1:] _
 sys.argv[0]||##green|ARGV## _
 ##green|$PROGRAM_NAME##||
-||[[# env-var]][#env-var-note get and set environment variable] _
-@<&nbsp;>@||process.env["HOME"] _
+||[[# env-var]][#env-var-note environment variable] _
+ _
+##gray|//get, set//##||process.env["HOME"] _
  _
 process.env["PATH"] = "/bin";||getenv(##maroon|"HOME"##) _
  _
@@ -472,7 +483,7 @@ os.environ[##maroon|'PATH'##] = ##maroon|'/bin'##||##green|ENV##[##maroon|"HOME"
 posix_getppid()||os.getpid() _
 os.getppid()||##green|Process##.pid _
 ##green|Process##.ppid||
-||[[# user-id-name]][#user-id-name-note get user id and name]|| ||$##peru|uid## = posix_getuid(); _
+||[[# user-id-name]][#user-id-name-note user id and name]|| ||$##peru|uid## = posix_getuid(); _
 $##peru|uinfo## = posix_getpwuid($##peru|uid##); _
 $##peru|username## = $##peru|uinfo##[##maroon|"name"##];||##purple|import## getpass _
  _
@@ -506,7 +517,7 @@ getpass.getuser()||require ##maroon|'etc'## _
 @<&nbsp;&nbsp;>@##purple|raise## ##green|Exception##(##maroon|'ls failed'##)||##purple|unless## system(##maroon|"ls -l /tmp"##) _
 @<&nbsp;&nbsp;>@##purple|raise## ##maroon|"ls failed"## _
 ##purple|end##||
-||[[# escaped-external-cmd]][#escaped-external-cmd-note escaped external command] _
+||[[# shell-esc-external-cmd]][#shell-esc-external-cmd-note shell-escaped external command] _
 @<&nbsp;>@|| ||$##peru|path## = chop(fgets(##teal|STDIN##)); _
 $##peru|safe## = escapeshellarg($##peru|path##); _
 system("ls -l " . $##peru|safe##, $##peru|retval##); _
@@ -521,7 +532,7 @@ path.chomp! _
 ##purple|unless## system(##maroon|"ls"##, ##maroon|"-l"##, path) _
 @<&nbsp;&nbsp;>@##purple|raise## ##maroon|"ls failed"## _
 ##purple|end##||
-||[[# backticks]][#backticks-note backticks] _
+||[[# cmd-subst]][#cmd-subst-note command substitution] _
 @<&nbsp;>@|| ||$##peru|files## = ##maroon|@@`@@ls -l /tmp@@`@@##;||##purple|import## subprocess _
  _
 ##peru|cmd## = [##maroon|'ls'##, ##maroon|'-l'##, ##maroon|'/tmp'##] _
@@ -687,9 +698,9 @@ $ touch foo/bar.py||##purple|module## ##green|Foo##::##green|Bar## _
  _
 include Fu||
 ||[[# import-all-namespace]][#import-all-namespace-note unqualified import of namespace] _
-@<&nbsp;>@|| ||##gray|//none, but a long module name can be shortened//##||##purple|from## foo ##purple|import## *||##gray|# inside class or module:## _
+@<&nbsp;>@|| ||##gray|//none//##||##purple|from## foo ##purple|import## *||##gray|# inside class or module:## _
 ##purple|include## ##green|Foo##||
-||unqualified import of all subnamespaces|| || ||##gray|# subnamespaces in list @@__all__@@ of _
+||[[# import-all-subnamespaces]][#import-all-subnamespaces-note unqualified import of all subnamespaces]|| || ||##gray|# subnamespaces in list @@__all__@@ of _
 # @@foo/__init__.py@@ are imported## _
 ##purple|from## foo ##purple|import## *|| ||
 ||[[# import-def]][#import-def-note unqualified import of definitions] _
@@ -767,11 +778,11 @@ i.value = v + 1||
 end||
 ||[[# invoke-class-method]][#invoke-class-method-note invoke class method] _
 @<&nbsp;>@|| ||##green|Counter##::getInstances()||Counter.get_instances()||Foo.one||
-||define class variable|| || ||class Foo: _
+||[[# def-classs-var]][#def-class-var-note define class variable]|| || ||class Foo: _
 @<&nbsp;&nbsp;>@instances = 0||class Foo _
 @<&nbsp;&nbsp;>@@<@@>@instances = 1 _
 end||
-||get and set class variable|| || ||class Foo: _
+||[[# class-var-getter-setter]][#class-var-getter-setter-note get and set class variable]|| || ||class Foo: _
 @<&nbsp;&nbsp;>@def __init__(self): _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Foo.instances += 1||class Foo _
 @<&nbsp;&nbsp;>@def initialize _
@@ -856,7 +867,7 @@ end||
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##peru|@@instances## _
 @<&nbsp;&nbsp;>@##purple|end## _
 ##purple|end##||
-||mixin|| || || || ||
+||[[# mixin]][#mixin-note mixin]|| || || || ||
 ||[[# op-overload]][#op-overload-note overload operator]|| || || ||##purple|class## ##green|Fixnum## _
 @<&nbsp;&nbsp;>@##purple|def## ##mediumblue|/##(n) _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##peru|self##.fdiv(n) _
@@ -952,7 +963,7 @@ $"||
 ||[[# list-loaded-namespaces]][#list-loaded-namespaces-note list loaded namespaces]|| || ||dir()||Class.constants.select do |c| _
 @<&nbsp;&nbsp;>@Module.const_get(c).class == Class _
 end||
-||[[# inspect-namespace]][#inpsect-namespace-note inspect namespace]|| || ||import urlparse _
+||[[# inspect-namespace]][#inspect-namespace-note inspect namespace]|| || ||import urlparse _
  _
 dir(urlparse)||require 'uri' _
  _
@@ -1320,7 +1331,7 @@ jarray.array([1, 2, 3], ##maroon|'i'##)||[1, 2, 3].to_java(##green|Java##::int)|
 [[# file-handles-note]]
 + [#file-handles File Handles]
 
-[[# std-file-handle-note]]
+[[# std-file-handles-note]]
 ++ [#std-file-handles standard file handles]
 
 The names for standard input, standard output, and standard error.
@@ -1500,7 +1511,7 @@ How to flush a file handle that has been written to.
 How to test whether the seek point of a file handle is at the end of the file.
 
 [[# seek-note]]
-++ [#seek get and set file handle position]
+++ [#seek file handle position]
 
 How to get or set the file handle seek point.
 
@@ -1627,10 +1638,10 @@ How to parse a CSV file and iterate through the rows.
 
 How to generate a CSV file from an array of tuples.
 
-[[# json-note]]
-++ [#json json generate/parse]
+[[# parse-json-note]]
+++ [#parse-json parse json]
 
-How to encode JSON data in a JSON string; how to decode such a string.
+How to decode a string of JSON.
 
 [http://json.org JSON] data consists of objects, arrays, and JSON values.  Objects are dictionaries in which the keys are strings and the values are JSON values.  Arrays contain JSON values.  JSON values can be objects, arrays, strings, numbers, true, false, or null.
 
@@ -1640,12 +1651,22 @@ JSON strings are sequences of Unicode characters.  The following backslash escap
 
 @<&nbsp;&nbsp;>@{{\" \\ \/ \b \f \n \r \t \u}}##gray|//hhhh//##.
 
-[[# generate-xml-note]]
-++ [#generate-xml generate xml]
+[[# generate-json-note]]
+++ [#generate-json generate json]
 
-How to build an XML document.
+How to encode data as a JSON string.
 
-An XML document can be constructed by concatenating strings, but the techniques illustrated here guarantee the result to be well-formed XML.
+[[# parse-yaml-note]]
+++ [#parse-yaml parse yaml]
+
+How to parse a string of YAML.
+
+YAML is sometimes used to serialize objects.  Deserializing such YAML results in the constructor of the object being executed.  The YAML decoding techniques illustrated here are "safe" in that they will not execute code, however.
+
+[[# generate-yaml-note]]
+++ [#generate-yaml generate yaml]
+
+How to generate a string of YAML.
 
 [[# parse-xml-note]]
 ++ [#parse-xml parse xml]
@@ -1661,6 +1682,13 @@ XPath.each(doc,"/a/b/c") do |node|
   puts node.text
 end
 [[/code]]
+
+[[# generate-xml-note]]
+++ [#generate-xml generate xml]
+
+How to build an XML document.
+
+An XML document can be constructed by concatenating strings, but the techniques illustrated here guarantee the result to be well-formed XML.
 
 [[# parse-html-note]]
 ++ [#parse-html parse html]
@@ -1824,7 +1852,7 @@ On Linux the directory is often {{/tmp}}, and the operating system is often conf
 How to access arguments provided at the command line when the script was run; how to get the name of the script.
 
 [[# env-var-note]]
-++ [#env-var get and set environment variable]
+++ [#env-var environment variable]
 
 How to get and set an environment variable.  If an environment variable is set the new value is inherited by child processes.
 
@@ -1842,7 +1870,7 @@ How to get the process id of the interpreter process; how to get the id of the p
 The process pid is also available in the global variable {{$$}}.
 
 [[# user-id-name-note]]
-++ [#user-id-name get user id and name]
+++ [#user-id-name user id and name]
 
 How to get the user id of the interpreter process; how to get the username associated with the user id.
 
@@ -1905,13 +1933,13 @@ How to test whether a file is executable.
 
 How to execute an external command.
 
-[[# escaped-external-cmd-note]]
-++ [#escaped-external-cmd escaped external command]
+[[# shell-esc-external-cmd-note]]
+++ [#shell-esc-external-cmd shell-escaped external command]
 
 How to prevent shell injection.
 
-[[# backticks-note]]
-++ [#backticks backticks]
+[[# cmd-subst-note]]
+++ [#cmd-subst command substitution]
 
 How to invoke an external command and read its output into a variable.
 
@@ -2290,6 +2318,12 @@ Define the method //self.method_missing// to handle calls to undefined class met
 
 How to invoke a class method.
 
+[[# def-class-var-note]]
+++ [#def-class-var define class variable]
+
+[[# class-var-getter-setter-note]]
+++ [#class-var-getter-setter get and set class variable]
+
 [[# method-alias-note]]
 ++ [#method-alias method alias]
 
@@ -2310,6 +2344,9 @@ It is sometimes useful to define superclass which is never instantiated.  Such a
 ++ [#inheritance inheritance]
 
 How to use inheritance.
+
+[[# mixin-note]]
+++ [#mixin mixin]
 
 [[# op-overload-note]]
 ++ [#op-overload operator overloading]

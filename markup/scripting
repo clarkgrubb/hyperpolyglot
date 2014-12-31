@@ -490,7 +490,7 @@ str_pad(##maroon|"lorem"##, 10, ##maroon|" "##, ##teal|STR_PAD_BOTH##)||##maroon
 73.9 + ##maroon|".037"##||7 + ##purple|int##(##maroon|'12'##) _
 73.9 + ##purple|float##(##maroon|'.037'##)||7 + ##maroon|"12"##.to_i _
 73.9 +  ##maroon|".037"##.to_f||
-||[[# join]][#join-note join] _
+||[[# str-join]][#str-join-note string join] _
 @<&nbsp;>@||["do", "re", "mi"].join(" ")||$##peru|a## = [##maroon|"do"##, ##maroon|"re"##, ##maroon|"mi"##, ##maroon|"fa"##]; _
 implode(##maroon|" "##, $##peru|a##)||##maroon|' '##.join([##maroon|'do'##, ##maroon|'re'##, ##maroon|'mi'##, ##maroon|'fa'##]) _
  _
@@ -505,6 +505,10 @@ implode(##maroon|" "##, $##peru|a##)||##maroon|' '##.join([##maroon|'do'##, ##ma
 @<&nbsp;>@||##gray|//none//##||preg_split(##maroon|'/\s+/'##, ##maroon|"do re mi fa"##, 2)||##maroon|'do re mi fa'##.split(##purple|None##, 1)||##maroon|"do re mi fa"##.split(##maroon|/\s+/##, 2)||
 ||[[# split-keep-delimiters]][#split-keep-delimiters-note split and keep delimiters]||##gray|//none//##||preg_split(##maroon|'/(\s+)/'##, ##maroon|"do re mi fa"##, _
 @<&nbsp;&nbsp;>@##teal|NULL##, ##teal|PREG_SPLIT_DELIM_CAPTURE##)||re.split(##maroon|'(\s+)'##, ##maroon|'do re mi fa'##)||##maroon|"do re mi fa"##.split(##maroon|/(\s+)/##)||
+||[[# prefix-suffix-test]][#prefix-suffix-test-note prefix and suffix test]||"foobar".startsWith("foo") _
+"foobar".endsWith("bar")|| ||'foobar'.startswith('foo') _
+'foobar'.endswith('bar')||'foobar'.start_with?('foo') _
+'foobar'.end_with?('bar')||
 ||[[# str-length]][#str-length-note length] _
 @<&nbsp;>@||"lorem".length||strlen(##maroon|"lorem"##)||##purple|len##(##maroon|'lorem'##)||##maroon|"lorem"##.length _
 ##maroon|"lorem"##.size||
@@ -644,33 +648,29 @@ rx.sub(r##maroon|'\2 \1'##, ##maroon|'do re'##)||##maroon|/(\w+) \1/##.match(##m
 @<&nbsp;>@||##gray|//none//##||##maroon|'/\(([^()]*|($R))\)/'##||##gray|//none//##||##maroon|/(?<foo>\(([^()]*|\g<foo>)*\))/##||
 ||||||||||~ [[# dates-time]][#dates-time-note dates and time]||
 ||~  ||~ javascript||~ php||~ python||~ ruby||
-||[[# date-time-type]][#date-time-type-note date/time type] _
-@<&nbsp;>@||Date||##green|DateTime##||datetime.datetime||##green|Time##||
-||[[# current-date-time]][#current-date-time-note current date/time]||var t = new Date();||$##peru|t## = ##purple|new## ##green|DateTime##(##maroon|"now"##); _
+||[[# broken-down-datetime-type]][#broken-down-datetime-type-note broken-down datetime type] _
+@<&nbsp;>@||##green|Date##||##green|DateTime##||datetime.datetime||##green|Time##||
+||[[# current-datetime]][#current-datetime-note current datetime]||##purple|var## ##peru|t## = ##purple|new## ##green|Date##();||$##peru|t## = ##purple|new## ##green|DateTime##(##maroon|"now"##); _
 $##peru|utc_tmz## = ##purple|new## ##green|DateTimeZone##(##maroon|"UTC"##); _
 $##peru|utc## = ##purple|new## ##green|DateTime##(##maroon|"now"##, $##peru|utc_tmz##);||##purple|import## datetime _
  _
 ##peru|t## = datetime.datetime.now() _
 ##peru|utc## = datetime.datetime.utcnow()||t = ##green|Time##.now _
 utc = ##green|Time##.now.utc||
-||[[# unix-epoch]][#unix-epoch-note to unix epoch, from unix epoch]||Math.round(t.getTime() / 1000) _
-var epoch = 1315716177; _
-var t2 = new Date(epoch * 1000);||$##peru|epoch## = $##peru|t##->getTimestamp(); _
-$##peru|t2## = ##purple|new## ##green|DateTime##(); _
-$##peru|t2##->setTimestamp(1304442000);||##purple|from## datetime ##purple|import## datetime ##purple|as## dt _
- _
-##peru|epoch## = ##purple|int##(t.strftime(##maroon|"%s"##)) _
-##peru|t2## = dt.fromtimestamp(1304442000)||epoch = t.to_i _
-t2 = ##green|Time##.at(1304442000)||
-||[[# current-unix-epoch]][#current-unix-epoch-note current unix epoch]||(new Date()).getTime() / 1000||$##peru|epoch## = time();||##purple|import## datetime _
+||[[# current-unix-epoch]][#current-unix-epoch-note current unix epoch]||(##purple|new## ##green|Date##()).getTime() / 1000||$##peru|epoch## = time();||##purple|import## datetime _
  _
 ##peru|t## = datetime.datetime.now() _
 ##peru|epoch## = ##purple|int##(t.strftime(##maroon|"%s"##))||epoch = ##green|Time##.now.to_i||
-||[[# strftime]][#strftime-note strftime]||##gray|//none//##||strftime(##maroon|"%Y-%m-%d %H:%M:%S"##, $##peru|epoch##); _
+||[[# broken-down-datetime-to-unix-epoch]][#broken-down-datetime-to-unix-epoch-note broken-down datetime to unix epoch]||Math.round(t.getTime() / 1000)||$##peru|epoch## = $##peru|t##->getTimestamp();||##purple|from## datetime ##purple|import## datetime ##purple|as## dt _
+ _
+##peru|epoch## = ##purple|int##(t.strftime(##maroon|"%s"##))||epoch = t.to_i||
+||[[# unix-epoch-to-broken-down-datetime]][#unix-epoch-to-broken-down-datetime-note unix epoch to broken-down datetime]||##purple|var## ##peru|epoch## = 1315716177; _
+##purple|var## ##peru|t2## = ##purple|new## ##green|Date##(epoch * 1000);||$##peru|t2## = ##purple|new## ##green|DateTime##(); _
+$##peru|t2##->setTimestamp(1304442000);||##peru|t## = dt.fromtimestamp(1304442000)||t = ##green|Time##.at(1304442000)||
+||[[# fmt-datetime]][#fmt-datetime-note format datetime]||##gray|//none//##||strftime(##maroon|"%Y-%m-%d %H:%M:%S"##, $##peru|epoch##); _
 date(##maroon|"Y-m-d H:i:s"##, $##peru|epoch##); _
 $##peru|t##->format(##maroon|"Y-m-d H:i:s"##);||t.strftime(##maroon|'%Y-%m-%d %H:%M:%S'##)||t.strftime(##maroon|"%Y-%m-%d %H:%M:%S"##)||
-||[[# date-time-str]][#date-time-str-note default format example]||##gray|Tue Apr 01 2014 13:05:36 GMT-0700 (PDT)##||##gray|//no default string representation//##||##gray|2011-08-23 19:35:59.411135##||##gray|2011-08-23 17:44:53 -0700##||
-||[[# strptime]][#strptime-note strptime]||##gray|//none//##||$##peru|fmt## = ##maroon|"Y-m-d H:i:s"##; _
+||[[# parse-datetime]][#parse-datetime-note parse datetime]||##gray|//none//##||$##peru|fmt## = ##maroon|"Y-m-d H:i:s"##; _
 $##peru|s## = ##maroon|"2011-05-03 10:00:00"##; _
 $##peru|t## = ##green|DateTime##::createFromFormat($##peru|fmt##, _
 @<&nbsp;&nbsp;>@$##peru|s##);||##purple|from## datetime ##purple|import## datetime _
@@ -681,8 +681,8 @@ $##peru|t## = ##green|DateTime##::createFromFormat($##peru|fmt##, _
  _
 s = ##maroon|"2011-05-03 10:00:00"## _
 fmt = ##maroon|"%Y-%m-%d %H:%M:%S"## _
-t = ##green|Date##.strptime(s, fmt).to_time||
-||[[# parse-date]][#parse-date-note parse date w/o format]||var t = new Date("July 7, 1999");||$##peru|epoch## = strtotime(##maroon|"July 7, 1999"##);||##gray|# pip install python-dateutil## _
+t = ##green|DateTime##.strptime(s, fmt).to_time||
+||[[# parse-datetime-without-fmt]][#parse-datetime-without-fmt-note parse datetime w/o format]||##purple|var## ##peru|t## = ##purple|new## ##green|Date##(##maroon|"July 7, 1999"##);||$##peru|epoch## = strtotime(##maroon|"July 7, 1999"##);||##gray|# pip install python-dateutil## _
 ##purple|import## dateutil.parser _
  _
 ##peru|s## = ##maroon|'July 7, 1999'## _
@@ -690,46 +690,46 @@ t = ##green|Date##.strptime(s, fmt).to_time||
  _
 s = ##maroon|"July 7, 1999"## _
 t = ##green|Date##.parse(s).to_time||
-||[[# get-date-parts]][#get-date-parts-note get date parts]||t.getFullYear() _
+||[[# date-parts]][#date-parts-note date parts]||t.getFullYear() _
 t.getMonth() + 1 _
-t.getDate() ##gray|# getDay() is day of week##||(int)$t->format("Y") _
-(int)$t->format("m") _
-(int)$t->format("d")||t.year _
+t.getDate() ##gray|# getDay() is day of week##||(##green|int##)$##peru|t##->format(##maroon|"Y"##) _
+(##green|int##)$##peru|t##->format(##maroon|"m"##) _
+(##green|int##)$##peru|t##->format(##maroon|"d"##)||t.year _
 t.month _
 t.day||t.year _
 t.month _
 t.day||
-||[[# get-time-parts]][#get-time-parts-note get time parts]||t.getHours() _
+||[[# time-parts]][#time-parts-note time parts]||t.getHours() _
 t.getMinutes() _
-t.getSeconds()||(int)$t->format("H") _
-(int)$t->format("i") _
-(int)$t->format("s")||t.hour _
+t.getSeconds()||(##green|int##)$##peru|t##->format(##maroon|"H"##) _
+(##green|int##)$##peru|t##->format(##maroon|"i"##) _
+(##green|int##)$##peru|t##->format(##maroon|"s"##)||t.hour _
 t.minute _
 t.second||t.hour _
 t.min _
 t.sec||
-||[[# date-from-parts]][#date-from-parts-note build date/time from parts]||##purple|var## ##peru|yr## = 1999; _
+||[[# build-datetime]][#build-datetime-note build broken-down datetime]||##purple|var## ##peru|yr## = 1999; _
 ##purple|var## ##peru|mo## = 9; _
 ##purple|var## ##peru|dy## = 10; _
 ##purple|var## ##peru|hr## = 23; _
 ##purple|var## ##peru|mi## = 30; _
 ##purple|var## ##peru|ss## = 0; _
-##purple|var## ##peru|t## = ##purple|new## ##green|Date##(yr,mo-1,dy,hr,mi,ss);|| ||import datetime _
+##purple|var## ##peru|t## = ##purple|new## ##green|Date##(yr, mo - 1, dy, hr, mi, ss);|| ||##purple|import## datetime _
  _
-yr = 1999 _
+##peru|yr## = 1999 _
+##peru|mo## = 9 _
+##peru|dy## = 10 _
+##peru|hr## = 23 _
+##peru|mi## = 30 _
+##peru|ss## = 0 _
+##peru|t## = datetime.datetime(yr, mo, dy, hr, mi, ss)||yr = 1999 _
 mo = 9 _
 dy = 10 _
 hr = 23 _
 mi = 30 _
 ss = 0 _
-t = datetime.datetime(yr,mo,dy,hr,mi,ss)||yr = 1999 _
-mo = 9 _
-dy = 10 _
-hr = 23 _
-mi = 30 _
-ss = 0 _
-t = Time.new(yr,mo,dy,hr,mi,ss)||
-||[[# date-subtraction]][#date-subtraction-note result of date subtraction]||##gray|number //containing time difference in milliseconds//##||##gray|DateInterval //object if// diff //method used://## _
+t = ##green|Time##.new(yr, mo, dy, hr, mi, ss)||
+||[[# datetime-subtraction]][#datetime-subtraction-note datetime subtraction]||##gray|number //containing time difference in milliseconds//##||##gray|# DateInterval object if diff method used:## _
 $##peru|fmt## = ##maroon|"Y-m-d H:i:s"##; _
 $##peru|s## = ##maroon|"2011-05-03 10:00:00"##; _
 $##peru|then## = ##green|DateTime##::createFromFormat($##peru|fmt##, $##peru|s##); _
@@ -737,9 +737,9 @@ $##peru|now##  = ##purple|new## ##green|DateTime##(##maroon|"now"##); _
 $##peru|interval## = $##peru|now##->diff($##peru|then##);||##gray|datetime.timedelta //object//## _
  _
 ##gray|//use// total_seconds() //method to convert to float representing difference in seconds//##||##gray|Float //containing time difference in seconds//##||
-||[[# add-time-duration]][#add-time-duration-note add time duration]||var t1 = new Date(); _
-var delta = (10 * 60 + 3) * 1000; _
-var t2 = new Date(t1.getTime() + delta);||$##peru|now## = ##purple|new## ##green|DateTime##(##maroon|"now"##); _
+||[[# add-duration]][#add-duration-note add duration]||##purple|var## ##peru|t1## = ##purple|new## ##green|Date##(); _
+##purple|var## ##peru|delta## = (10 * 60 + 3) * 1000; _
+##purple|var## ##peru|t2## = ##purple|new## ##green|Date##(t1.getTime() + delta);||$##peru|now## = ##purple|new## ##green|DateTime##(##maroon|"now"##); _
 $##peru|now##->add(##purple|new## ##green|DateInterval##(##maroon|"PT10M3S"##);||##purple|import## datetime _
  _
 ##peru|delta## = datetime.timedelta( _
@@ -750,37 +750,42 @@ $##peru|now##->add(##purple|new## ##green|DateInterval##(##maroon|"PT10M3S"##);|
 s = ##maroon|"10 min, 3 s"## _
 delta = ##green|Date##::##green|Delta##.parse(s).in_secs _
 t = ##green|Time##.now + delta||
-||[[# local-tmz]][#local-tmz-note local timezone]|| ||##gray|//DateTime objects can be instantiated without specifying the timezone if a default is set://## _
+||[[# local-tmz-determination]][#local-tmz-determination-note local time zone determination]|| ||##gray|# DateTime objects can be instantiated without _
+# specifying the time zone if a default is set:## _
 $##peru|s## = ##maroon|"America/Los_Angeles"##; _
-date_default_timezone_set($##peru|s##);||##gray|//a// datetime //object has no timezone information unless a// tzinfo //object is provided when it is created//##||##gray|//if no timezone is specified the local timezone is used//##||
-||[[# arbitrary-tmz]][#arbitrary-tmz-note arbitrary timezone]|| || ||# pip install pytz _
-import pytz _
-import datetime _
+date_default_timezone_set($##peru|s##);||##gray|//a// datetime //object has no time zone information unless a// tzinfo //object is provided when it is created//##||##gray|//if no time zone is specified the local time zone is used//##||
+||[[# nonlocal-tmz]][#nonlocal-tmz-note nonlocal time zone]|| || ||##gray|# pip install pytz## _
+##purple|import## pytz _
+##purple|import## datetime _
  _
-tmz = pytz.timezone('Asia/Tokyo') _
-utc = datetime.datetime.utcnow() _
-utc_dt = datetime.datetime( _
+##peru|tmz## = pytz.timezone(##maroon|'Asia/Tokyo'##) _
+##peru|utc## = datetime.datetime.utcnow() _
+##peru|utc_dt## = datetime.datetime( _
 @<&nbsp;&nbsp;>@*utc.timetuple()[0:5], _
 @<&nbsp;&nbsp;>@tzinfo=pytz.utc) _
-jp_dt = utc_dt.astimezone(tmz)||# gem install tzinfo _
-require 'tzinfo' _
+##peru|jp_dt## = utc_dt.astimezone(tmz)||##gray|# gem install tzinfo## _
+require ##maroon|'tzinfo'## _
  _
-tmz = TZInfo::Timezone.get("Asia/Tokyo") _
-jp_time = tmz.utc_to_local(Time.now.utc)||
-||[[# timezone-offset]][#timezone-offset-note timezone name; offset from UTC; is daylight savings?]|| ||$##peru|tmz## = date_timezone_get($##peru|t##); _
+tmz = ##gr4een|TZInfo##::##green|Timezone##.get(##maroon|"Asia/Tokyo"##) _
+jp_time = tmz.utc_to_local(##green|Time##.now.utc)||
+||[[# tmz-info]][#tmz-info-note time zone info] _
+ _
+##gray|//name and UTC offset//##|| ||$##peru|tmz## = date_timezone_get($##peru|t##); _
+ _
 timezone_name_get($##peru|tmz##); _
-date_offset_get($##peru|t##) / 3600; _
-$##peru|t##->format(##maroon|"I"##);||##purple|import## time _
+date_offset_get($##peru|t##) / 3600;||##purple|import## time _
  _
 ##peru|tm## = time.localtime() _
 @<&nbsp;&nbsp;>@ _
 time.tzname[tm.tm_isdst] _
-(time.timezone / -3600) + tm.tm_isdst _
-tm.tm_isdst||t.zone _
-t.utc_offset / 3600 _
-t.dst?||
-||[[# microseconds]][#microseconds-note microseconds]|| ||list($##peru|frac##, $##peru|sec##) = explode(##maroon|" "##, _
-@<&nbsp;&nbsp;>@microtime()); _
+(time.timezone / -3600) + tm.tm_isdst||t.zone _
+t.utc_offset / 3600||
+||[[# daylight-savings-test]][#daylight-savings-test-note daylight savings test]|| ||$##peru|t##->format(##maroon|"I"##);||##purple|import## time _
+ _
+##peru|tm## = time.localtime() _
+@<&nbsp;&nbsp;>@ _
+tm.tm_isdst||t.dst?||
+||[[# microseconds]][#microseconds-note microseconds]|| ||list($##peru|frac##, $##peru|sec##) = explode(##maroon|" "##, microtime()); _
 $##peru|usec## = $##peru|frac## * 1000 * 1000;||t.microsecond||t.usec||
 ||[[# sleep]][#sleep-note sleep]||##gray|//none//##||##gray|# a float argument will be truncated _
 # to an integer:## _
@@ -799,14 +804,14 @@ signal.signal(signal.SIGALRM, _
  _
 ##purple|try##: _
 @<&nbsp;&nbsp;>@signal.alarm(5) _
-@<&nbsp;&nbsp;>@time.sleep(10) _
+@<&nbsp;&nbsp;>@might_take_too_long() _
 ##purple|except## Timeout: _
 @<&nbsp;&nbsp;>@##purple|pass## _
 signal.alarm(0)||require ##maroon|'timeout'## _
  _
 ##purple|begin## _
 @<&nbsp;&nbsp;>@##green|Timeout##.timeout(5) ##purple|do## _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@sleep(10) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@might_take_too_long _
 @<&nbsp;&nbsp;>@##purple|end## _
 ##purple|rescue## ##green|Timeout##::##green|Error## _
 ##purple|end##||
@@ -856,15 +861,28 @@ a[10] = ##maroon|'lorem'##||a = [] _
 a[10] _
 ##gray|# increases array size to 11:## _
 a[10] = ##maroon|"lorem"##||
-||[[# array-element-index]][#array-element-index-note index of element]||[6, 7, 7, 8].indexOf(7) _
-[6, 7, 7, 8].lastIndexOf(7) _
-##gray|@@//@@ returns -1 if not found##||$##peru|a## = [##maroon|"x"##, ##maroon|"y"##, ##maroon|"z"##, ##maroon|"w"##]; _
-$##peru|i## = array_search(##maroon|"y"##, $##peru|a##);||##peru|a## = [##maroon|'x'##, ##maroon|'y'##, ##maroon|'z'##, ##maroon|'w'##] _
-##peru|i## = a.index(##maroon|'y'##)||a = %w(x y z w) _
-i = a.index(##maroon|"y"##)||
+||[[# array-element-index]][#array-element-index-note element index] _
+ _
+##gray|//first and last occurrence//##||##gray|@@//@@ return -1 if not found:## _
+[6, 7, 7, 8].indexOf(7) _
+[6, 7, 7, 8].lastIndexOf(7)||$##peru|a## = [##maroon|"x"##, ##maroon|"y"##, ##maroon|"y"##, ##maroon|"z"##]; _
+ _
+##gray|# returns FALSE if not found:## _
+$##peru|i## = array_search(##maroon|"y"##, $##peru|a##, ##teal|TRUE##); _
+##gray|//none//##||##peru|a## = [##maroon|'x'##, ##maroon|'y'##, ##maroon|'y'##, ##maroon|'z'##] _
+ _
+##gray|# raises ValueError if not found:## _
+a.index(##maroon|'y'##) _
+##gray|//none//##||a = %w(x y y z) _
+ _
+##gray|# return nil if not found:## _
+a.index(##maroon|'y'##) _
+a.rindex(##maroon|'y'##)||
 ||[[# array-slice]][#array-slice-note slice] _
 ##gray|//by endpoints, by length//## _
-@<&nbsp;>@||["a", "b", "c", "d"].slice(1,3)||##gray|# select 3rd and 4th elements:## _
+@<&nbsp;>@||##gray|@@//@@ select 3rd and 4th elements:## _
+["a", "b", "c", "d"].slice(2, 4) _
+##gray|//none//##||##gray|# select 3rd and 4th elements:## _
 ##gray|//none//## _
 array_slice($##peru|a##, 2, 2)||##gray|# select 3rd and 4th elements:## _
 a[2:4] _
@@ -902,7 +920,7 @@ $##peru|a## = array_merge($##peru|a##, [4, 5, 6]);||##peru|a## = [1, 2, 3] _
 a.extend([4, 5, 6])||a = [1, 2, 3] _
 a2 = a + [4, 5, 6] _
 a.concat([4, 5, 6])||
-||[[# array-replication]][#array-replication-note replicate]||##gray|//none//##|| ||a = [##purple|None##] * 10 _
+||[[# replicate-array]][#replicate-array-note replicate]||##gray|//none//##|| ||a = [##purple|None##] * 10 _
 a = [##purple|None for## i ##purple|in range##(0, 10)]||a = [##peru|nil##] * 10 _
 a = ##green|Array##.new(10, ##peru|nil##)||
 ||[[# array-copy]][#array-copy-note copy] _
@@ -921,14 +939,14 @@ $##peru|a4## = $##peru|a##;||##purple|import## copy _
 a2 = a _
 a3 = a.dup _
 a4 = ##green|Marshal##.load(##green|Marshal##.dump(a))||
-||[[# array-arguments]][#array-arguments-note arrays as function arguments]||##gray|//parameter contains address copy//##||##gray|//parameter contains deep copy//##||##gray|//parameter contains address copy//##||##gray|//parameter contains address copy//##||
-||[[# array-iterate]][#array-iterate-note iterate over elements] _
+||[[# array-as-func-arg]][#array-as-func-arg-note array as function argument]||##gray|//parameter contains address copy//##||##gray|//parameter contains deep copy//##||##gray|//parameter contains address copy//##||##gray|//parameter contains address copy//##||
+||[[# iterate-over-array]][#iterate-over-array-note iterate over elements] _
 @<&nbsp;>@||_.each([1, 2, 3], function(n) { _
 @<&nbsp;&nbsp;>@alert(n); _
 })||##purple|foreach## ([1, 2, 3] ##purple|as## $##peru|i##) { _
 @<&nbsp;&nbsp;>@##purple|echo## ##maroon|"$i\n"##; _
-}||##purple|for## i ##purple|in## [1,2,3]: _
-@<&nbsp;&nbsp;>@##purple|print##(i)||[1,2,3].each { |i| puts i }||
+}||##purple|for## i ##purple|in## [1, 2, 3]: _
+@<&nbsp;&nbsp;>@##purple|print##(i)||[1, 2, 3].each { |i| puts i }||
 ||[[# indexed-array-iteration]][#indexed-array-iteration-note iterate over indices and elements]||var len = a.length; _
 for (var i = 0; i < len; i++ ) { _
 @<&nbsp;&nbsp;>@alert(a[i]); _
@@ -1001,35 +1019,35 @@ a.uniq!||
 ||[[# intersection]][#intersection-note intersection] _
 @<&nbsp;>@||_.intersection([1, 2], [2, 3, 4])|| $##peru|a## = [1, 2]; _
 $##peru|b## = [2, 3, 4] _
-array_intersect($##peru|a##, $##peru|b##)||{1,2} & {2,3,4}||[1,2] & [2,3,4]||
+array_intersect($##peru|a##, $##peru|b##)||{1, 2} & {2, 3, 4}||[1, 2] & [2 ,3, 4]||
 ||[[# union]][#union-note union] _
 @<&nbsp;>@||_.union([1, 2], [2, 3, 4])||$##peru|a1## = [1, 2]; _
 $##peru|a2## = [2, 3, 4]; _
-array_unique(array_merge($##peru|a1##, $##peru|a2##))||{1,2} | {2,3,4}||[1,2] | [2,3,4]||
-||[[# set-diff]][#set-diff-note relative complement, symmetric difference]||_.difference([1,2,3], [2]) _
+array_unique(array_merge($##peru|a1##, $##peru|a2##))||{1, 2} | {2, 3, 4}||[1, 2] | [2, 3, 4]||
+||[[# set-diff]][#set-diff-note relative complement, symmetric difference]||_.difference([1, 2, 3], [2]) _
 ##gray|//none//##||$##peru|a1## = [1, 2, 3]; _
 $##peru|a2## = [2]; _
 array_values(array_diff($##peru|a1##, $##peru|a2##)) _
-##gray|//none//##||{1,2,3} - {2} _
-{1,2} ^ {2,3,4}||require ##maroon|'set'## _
+##gray|//none//##||{1, 2, 3} - {2} _
+{1, 2} ^ {2, 3, 4}||require ##maroon|'set'## _
  _
-[1,2,3] - [2] _
-##green|Set##[1,2] ^ ##green|Set##[2,3,4]||
+[1, 2, 3] - [2] _
+##green|Set##[1, 2] ^ ##green|Set##[2 ,3, 4]||
 ||[[# map]][#map-note map] _
 @<&nbsp;>@||##gray|@@//@@ callback gets 3 args: _
 @@//@@ value, index, array## _
 a.map(function(x) { return x * x })||array_map(function ($##peru|x##) { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|return## $##peru|x## * $##peru|x##; _
-@<&nbsp;&nbsp;>@}, [1, 2, 3])||##purple|map##(##purple|lambda## x: x * x, [1,2,3]) _
+@<&nbsp;&nbsp;>@}, [1, 2, 3])||##purple|map##(##purple|lambda## x: x * x, [1, 2, 3]) _
 ##gray|# or use list comprehension:## _
-[x * x for x in [1,2,3]]||[1,2,3].map { |o| o * o }||
+[x * x for x in [1, 2, 3]]||[1, 2, 3].map { |o| o * o }||
 ||[[# filter]][#filter-note filter] _
 @<&nbsp;>@||a.filter(function(x) { return x > 1 }) 	||array_filter([1, 2, 3], _
 @<&nbsp;&nbsp;>@function ($##peru|x##) { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|return## $##peru|x##>1; _
-@<&nbsp;&nbsp;>@})||##purple|filter##(##purple|lambda## x: x > 1, [1,2,3]) _
+@<&nbsp;&nbsp;>@})||##purple|filter##(##purple|lambda## x: x > 1, [1, 2, 3]) _
 ##gray|# or use list comprehension:## _
-[x for x in [1,2,3] if x > 1]||[1,2,3].select { |o| o > 1 }||
+[x for x in [1, 2, 3] if x > 1]||[1, 2, 3].select { |o| o > 1 }||
 ||[[# reduce]][#reduce-note reduce] _
 @<&nbsp;>@||a.reduce(function(m, o) { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return m + o; _
@@ -1047,9 +1065,9 @@ var even = function(x) { _
 }; _
  _
 a.every(even) _
-a.some(even)||##gray|//use array_filter//##||##purple|all##(i % 2 == 0 ##purple|for## i ##purple|in## [1,2,3,4]) _
-##purple|any##(i % 2 == 0 ##purple|for## i ##purple|in## [1,2,3,4])||[1,2,3,4].all? {|i| i.even? } _
-[1,2,3,4].any? {|i| i.even? }||
+a.some(even)||##gray|//use array_filter//##||##purple|all##(i % 2 == 0 ##purple|for## i ##purple|in## [1, 2, 3, 4]) _
+##purple|any##(i % 2 == 0 ##purple|for## i ##purple|in## [1, 2, 3, 4])||[1, 2, 3, 4].all? {|i| i.even? } _
+[1, 2, 3, 4].any? {|i| i.even? }||
 ||[[# shuffle-sample]][#shuffle-sample-note shuffle and sample]||var a = [1, 2, 3, 4]; _
 a = _.shuffle(a); _
 var samp = _.sample([1, 2, 3, 4], 2);||$##peru|a## = [1, 2, 3, 4]; _
@@ -1071,7 +1089,7 @@ a3 = a.flatten||
 @<&nbsp;&nbsp;>@[1, 2, 3], _
 @<&nbsp;&nbsp;>@["a", "b", "c"]);||$##peru|a## = array_map(##teal|NULL##, _
 @<&nbsp;&nbsp;>@[1, 2, 3], _
-@<&nbsp;&nbsp;>@[##maroon|"a"##, ##maroon|"b"##, ##maroon|"c"##]);||##peru|a## = zip([1,2,3], [##maroon|'a'##, ##maroon|'b'##, ##maroon|'c'##])||a = [1,2,3].zip([##maroon|"a"##, ##maroon|"b"##, ##maroon|"c"##])||
+@<&nbsp;&nbsp;>@[##maroon|"a"##, ##maroon|"b"##, ##maroon|"c"##]);||##peru|a## = zip([1, 2, 3], [##maroon|'a'##, ##maroon|'b'##, ##maroon|'c'##])||a = [1, 2, 3].zip([##maroon|"a"##, ##maroon|"b"##, ##maroon|"c"##])||
 ||||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
 ||~  ||~ javascript||~ php||~ python||~ ruby||
 ||[[# dict-literal]][#dict-literal-note literal] _
@@ -1096,7 +1114,7 @@ d.length ##gray|# same as size##||
 d["t"]||$##peru|d##[##maroon|"t"##]||d[##maroon|'t'##]||d[##maroon|'t'##]||
 ||[[# dict-update]][#dict-update-note update]||d["t"] = 2; _
 d.t = 2;||$##peru|d##[##maroon|"t"##] = 2;||d[##maroon|'t'##] = 2||d[##maroon|'t'##] = 2||
-||[[# dict-out-of-bounds]][#dict-out-of-bounds-note out-of-bounds behavior] _
+||[[# dict-missing-key]][#dict-missing-key-note missing key behavior] _
 @<&nbsp;>@||var d = {}; _
 ##gray|@@//@@ sets s to undefined:## _
 var s = d["lorem"]; _
@@ -1116,7 +1134,7 @@ s = d[##maroon|'lorem'##] _
 d[##maroon|'lorem'##] = ##maroon|'ipsum'##||
 ||[[# dict-key-check]][#dict-key-check-note is key present] _
 @<&nbsp;>@||d.hasOwnProperty("t");||array_key_exists(##maroon|"y"##, $##peru|d##);||##maroon|'y'## ##purple|in## d||d.key?(##maroon|'y'##)||
-||[[# dict-delete]][#dict-delete-note delete entry]||delete d["t"]; _
+||[[# dict-delete]][#dict-delete-note delete]||delete d["t"]; _
 delete d.t;||$##peru|d## = [1 => ##maroon|"t"##, 0 => ##maroon|"f"##]; _
 unset($##peru|d##[1]);||##peru|d## = {1: ##purple|True##, 0: ##purple|False##} _
 ##purple|del## d[1]||d = {1 => ##peru|true##, 0 => ##peru|false##} _
@@ -1149,7 +1167,7 @@ $##peru|to_let## = array_flip($##peru|to_num##);||##peru|to_num## = {##maroon|'t
 ##peru|to_let## = {v: k ##purple|for## k, v _
 @<&nbsp;&nbsp;>@##purple|in## to_num.items()}||to_num = {##maroon|'t'## => 1, ##maroon|'f'## => 0} _
 to_let = to_num.invert||
-||[[# dict-iter]][#dict-iter-note iteration] _
+||[[# dict-iter]][#dict-iter-note iterate] _
 @<&nbsp;>@||for (var k in d) { _
 @<&nbsp;&nbsp;>@##gray|//use k or d[k]//## _
 }||##purple|foreach## ($##peru|d## as $##peru|k## => $##peru|v##) { _
@@ -1238,6 +1256,8 @@ ADD3(1, 2, 3);||add3(1, 2, 3)||add3(1, 2, 3) _
 add3 1, 2, 3||
 ||[[# missing-arg]][#missing-arg-note missing argument behavior] _
 @<&nbsp;>@||##gray|//set to// undefined##||##gray|//set to// NULL //with warning//##||##gray|//raises// TypeError //if number of arguments doesn't match function arity//##||##gray|//raises// ArgumentError //if number of arguments doesn't match function arity//##||
+||[[# extra-arg]][#extra-arg-note extra argument behavior] _
+@<&nbsp;>@|| || ||##gray|//raises// TypeError //if number of arguments doesn't match function arity//##||##gray|//raises// ArgumentError //if number of arguments doesn't match function arity//##||
 ||[[# default-arg]][#default-arg-note default argument] _
 @<&nbsp;>@||##gray|//none//##||##purple|function## ##mediumblue|my_log##($##peru|x##, $##peru|base##=10) _
 { _
@@ -1257,7 +1277,7 @@ my_log(42, math.e)||##purple|def## ##mediumblue|my_log##(x, base=10) _
  _
 my_log(42) _
 my_log(42, ##green|Math##::##green|E##)||
-||[[# variable-num-arg]][#variable-num-arg-note variable number of arguments]||##gray|//args in//## arguments[0], arguments[1], ##gray|//… with number of args in//## arguments.length||##purple|function## ##mediumblue|first_and_last##() _
+||[[# variadic-func]][#variadic-func-note variadic function]||##gray|//args in//## arguments[0], arguments[1], ##gray|//… with number of args in//## arguments.length||##purple|function## ##mediumblue|first_and_last##() _
 { _
  _
 @<&nbsp;&nbsp;>@$##peru|arg_cnt## = func_num_args(); _
@@ -1303,6 +1323,10 @@ add3(1, *a) _
 ##gray|# splat operator can be used multiple _
 # times and can appear before regular _
 # arguments##||
+||[[# param-alias]][#param-alias-note parameter alias]||##gray|//none//##||##purple|function## ##0000CD|first_and_second##(&$##peru|a##) _
+{ _
+@<&nbsp;&nbsp;>@##purple|return## [$##peru|a##[0], $##peru|a##[1]]; _
+}||##gray|//none//##||##gray|//none//##||
 ||[[# named-param]][#named-param-note named parameters] _
 @<&nbsp;>@||##gray|//none//##||##gray|//none//##||##purple|def## ##mediumblue|fequal##(x, y, eps=0.01): _
 @<&nbsp;&nbsp;>@##purple|return abs##(x - y) < eps _
@@ -1323,46 +1347,6 @@ end _
  _
 fequals(1.0, 1.001) _
 fequals(1.0, 1.001, ##teal|eps##: 0.1**10)||
-||[[# pass-num-str-by-ref]][#pass-num-str-by-ref-note pass number or string by reference] _
-@<&nbsp;>@||##gray|//not possible//##||##purple|function## ##0000CD|impure##(&$##peru|x##, &$##peru|y##) _
-{ _
-@<&nbsp;&nbsp;>@$##peru|x## += 1; _
-@<&nbsp;&nbsp;>@$##peru|y## .= ##maroon|"ly"##; _
- } _
- _
-$##peru|n## = 7; _
-$##peru|s## = ##maroon|"hard"##; _
-impure($##peru|n##, $##peru|s##);||##gray|//not possible//##||##gray|//not possible//##||
-||[[# pass-array-dict-by-ref]][#pass-array-dict-by-ref-note pass array or dictionary by reference] _
-@<&nbsp;>@||function impure(x, y) { _
-@<&nbsp;&nbsp;>@x[2] = 5; _
-@<&nbsp;&nbsp;>@y["f"] = -1; _
-} _
- _
-var a = [1, 2, 3]; _
-var d = {"t": 1, "f": 0}; _
-impure(a, d);||##purple|function## ##0000CD|impure##(&$##peru|x##, &$##peru|y##) _
-{ _
-@<&nbsp;&nbsp;>@$##peru|x##[2] = 5; _
-@<&nbsp;&nbsp;>@$##peru|y##[##maroon|"f"##] = -1; _
-} _
- _
-$##peru|a## = [1, 2, 3]; _
-$##peru|d## = [##maroon|"t"## => 1, ##maroon|"f"## => 0]; _
-impure($##peru|a##, $##peru|d##);||##purple|def## ##0000CD|impure##(x, y): _
-@<&nbsp;&nbsp;>@x[2] = 5 _
-@<&nbsp;&nbsp;>@y[##maroon|'f'##] = -1 _
- _
-##peru|a## = [1, 2, 3] _
-##peru|d## = {##maroon|'t'##:1, ##maroon|'f'##:0} _
-impure(a, d)||##purple|def## ##0000CD|impure##(x, y) _
-@<&nbsp;&nbsp;>@x[2] = 5 _
-@<&nbsp;&nbsp;>@y[##maroon|"f"##] = -1 _
-end _
- _
-a = [1, 2, 3] _
-d = {##maroon|'t'## => 1, ##maroon|'f'## => 0} _
-impure(a, d)||
 ||[[# retval]][#retval-note return value] _
 @<&nbsp;>@||return ##gray|//arg or//## undefined. ##gray|//If invoked with//## new ##gray|//and return value not an object, returns//## this||##gray|return //arg or// NULL##||##gray|return //arg or// None##||##gray|return //arg or last expression evaluated##//||
 ||[[# multiple-retval]][#multiple-retval-note multiple return values] _
@@ -1381,12 +1365,12 @@ list($##peru|x##, $##peru|y##) = _
 ##purple|end## _
  _
 x, y = first_and_second([1, 2, 3])||
-||[[# lambda]][#lambda-note lambda declaration] _
+||[[# anonymous-func-literal]][#anonymous-func-literal-note anonymous function literal] _
 @<&nbsp;>@||var sqr = function(x) { return x*x; }||$##peru|sqr## = function ($##peru|x##) { _
 @<&nbsp;&nbsp;>@return $##peru|x## * $##peru|x##; _
 };||##gray|# body must be an expression:## _
 ##peru|sqr## = ##purple|lambda## x: x * x||sqr = lambda { |x| x * x }||
-||[[# lambda]][#lambda-note lambda invocation]||sqr(2)||$##peru|sqr##(2)||sqr(2)||sqr.call(2) ##gray|//or//## _
+||[[# invoke-anonymous-func]][#invoke-anonymous-func-note invoke anonymous function]||sqr(2)||$##peru|sqr##(2)||sqr(2)||sqr.call(2) ##gray|//or//## _
 sqr[2]||
 ||[[# func-as-val]][#func-as-val-note function as value] _
 @<&nbsp;>@||var func = add;||$##peru|func## = ##maroon|"add"##;||##peru|func## = add||func = lambda { |*args| add(*args) }||
@@ -1487,7 +1471,7 @@ puts nays.resume||
 ##green|@logcall## _
 ##purple|def## ##mediumblue|square##(x): _
 @<&nbsp;&nbsp;>@##purple|return## x * x|| ||
-||[[# op-as-func]][#op-as-func-note operator as function]|| || ||##purple|import## operator _
+||[[# invoke-op-like-func]][#invoke-op-like-func-note invoke operator like function]|| || ||##purple|import## operator _
  _
 operator.mul(3, 7) _
  _
@@ -1531,7 +1515,7 @@ case 1: _
 @<&nbsp;&nbsp;>@alert("one hit\n"); _
 @<&nbsp;&nbsp;>@break; _
 default: _
-@<&nbsp;&nbsp;>@alert(3 + " hits\n"); _
+@<&nbsp;&nbsp;>@alert(n + " hits\n"); _
 }||##purple|switch## ($##peru|n##) { _
 ##purple|case## ##green|0##: _
 @<&nbsp;&nbsp;>@##purple|echo## ##maroon|"no hits\n"##; _
@@ -1556,16 +1540,16 @@ default: _
 @<&nbsp;&nbsp;>@i += 1||##purple|while## i < 100 ##purple|do## _
 @<&nbsp;&nbsp;>@i += 1 _
 ##purple|end##||
-||[[# for]][#for-note c-style for] _
+||[[# for]][#for-note for] _
 @<&nbsp;>@||for (var i = 0; i < 10; i++) { _
 @<&nbsp;&nbsp;>@alert(i); _
 }||##purple|for## ($##peru|i## = 1; $##peru|i## <= 10; $##peru|i##++) { _
 @<&nbsp;&nbsp;>@##purple|echo## ##maroon|"$i\n"##; _
 }||##gray|//none//##||##gray|//none//##||
-||[[# break-continue]][#break-continue-note break, continue, redo] _
-@<&nbsp;>@||break continue ##gray|//none//##||##purple|break continue## ##gray|//none//##||##purple|break continue## ##gray|//none//##||##purple|break next redo##||
-||[[# control-keywords]][#control-keywords-note control structure keywords]||case catch debugger default do else finally for if switch throw try while||##purple|case default do else elseif for foreach goto if switch while##||##purple|elif else for if while##||##purple|case do else elsif end for loop when while unless until##||
-||[[# do]][#do-note what do does]||##gray|//starts body of a// do-while //loop, a loop which checks the condition after the body is executed//##||##gray|//starts body of a// do-while //loop, a loop which checks the condition after the body is executed//##||##gray|//raises// NameError //unless a value was assigned to it//##||##gray|//starts an anonymous block.  Also starts the body of a// loop, while, //or// until //loop//##||
+||[[# break]][#break-note break] _
+@<&nbsp;>@||break||##purple|break##||##purple|break##||##purple|break##||
+||[[# continue]][#continue-note continue] _
+@<&nbsp;>@||continue||##purple|continue##||##purple|continue##||##purple|next##||
 ||[[# statement-modifiers]][#statement-modifiers-note statement modifiers] _
 @<&nbsp;>@||##gray|//none//##||##gray|//none//##||##gray|//none//##||puts ##maroon|"positive"## ##purple|if## i > 0 _
 puts ##maroon|"nonzero"## ##purple|unless## i == 0||
@@ -1658,7 +1642,7 @@ puts ##maroon|"nonzero"## ##purple|unless## i == 0||
 ||[[# raise-exc]][#raise-exc-note raise exception] _
 @<&nbsp;>@||throw new Error("bad arg");||##purple|throw new## ##green|Exception##(##maroon|"bad arg"##);||##purple|raise## ##green|Exception##(##maroon|'bad arg'##)||##gray|# raises RuntimeError## _
 ##purple|raise## ##maroon|"bad arg"##||
-||[[# catch-exc]][#catch-exc-note catch exception] _
+||[[# catch-all-handler]][#catch-all-handler-note catch-all handler] _
 @<&nbsp;>@||try { _
 @<&nbsp;&nbsp;>@risky(); _
 } _
@@ -1715,7 +1699,7 @@ Bam.prototype = new Error;||##purple|class## ##green|Bam## ##purple|extends## ##
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|super##(##maroon|"bam!"##) _
 @<&nbsp;&nbsp;>@##purple|end## _
 ##purple|end##||
-||[[# name-exc]][#name-exc-note catch exception by type]||try { _
+||[[# handle-exc]][#handle-exc-note handle exception]||try { _
 @<&nbsp;&nbsp;>@throw new Bam("bam!"); _
 } _
 catch (e) { _
@@ -1737,7 +1721,7 @@ catch (e) { _
 ##purple|rescue## ##green|Bam## => e _
 @<&nbsp;&nbsp;>@puts e.message _
 ##purple|end##||
-||[[# finally-ensure]][#finally-ensure-note finally/ensure] _
+||[[# finally-block]][#finally-block-note finally block] _
 @<&nbsp;>@||acquire_resource(); _
 try { _
 @<&nbsp;&nbsp;>@risky(); _
@@ -2119,10 +2103,10 @@ How to assign values to variables in parallel.
 The r-value can be a list or tuple:
 
 [[code]]
-nums = [1,2,3]
-a,b,c = nums
-more_nums = (6,7,8)
-d,e,f = more_nums
+nums = [1, 2, 3]
+a, b, c = nums
+more_nums = (6, 7, 8)
+d, e, f = more_nums
 [[/code]]
 
 Nested sequences of expression can be assigned to a nested sequences of l-values, provided the nesting matches.  This assignment will set a to 1, b to 2, and c to 3:
@@ -2151,7 +2135,7 @@ x, y, *z = 1, 2, 3, 4  # assigns [3, 4] to z
 The r-value can be an array:
 
 [[code]]
-nums = [1,2,3]
+nums = [1, 2, 3]
 a,b,c = nums
 [[/code]]
 
@@ -2763,8 +2747,8 @@ float and int raise an error if called on a string and any part of the string is
 
 to_i and to_f always succeed on a string, returning the numeric value of the digits at the start of the string, or zero if there are no initial digits.
 
-[[# join-note]]
-++ [#join join]
+[[# str-join-note]]
+++ [#str-join string join]
 
 How to concatenate the elements of an array into a string with a separator.
 
@@ -2820,6 +2804,11 @@ Methods for splitting a string into three parts using the first or last occurren
 ++ [#split-keep-delimiters split and keep delimiters]
 
 How to split a string with the delimiters preserved as separate elements.
+
+[[# prefix-suffix-test-note]]
+++ [#prefix-suffix-test prefix and suffix test]
+
+How to test whether a string begins or ends with a substring.
 
 [[# str-length-note]]
 ++ [#str-length length]
@@ -3160,13 +3149,17 @@ The examples match substrings containing balanced parens.
 [[# dates-time-note]]
 + [#dates-time Date and Time]
 
-In ISO 8601 terminology, a //date// specifies a day in the Gregorian calendar and a //time// does not contain date information; it merely specifies a time of day.  A data type which combines both date and time information is probably more useful than one which contains just date information or just time information; it is unfortunate that ISO 8601 doesn't provide a name for this entity.  The word //timestamp// often gets used to denote a combined date and time.  PHP and Python use the compound noun //datetime// for combined date and time values.
+In ISO 8601 terminology, a //date// specifies a day in the Gregorian calendar and a //time// does not contain date information; it merely specifies a time of day.  A data type which combines both date and time information is convenient, but ISO 8601 doesn't provide a name for such an entity.  PHP, Python, and C# use the compound noun //datetime// for combined date and time values and we adopt it here as a generic term.
 
-An useful property of [http://en.wikipedia.org/wiki/ISO_8601 ISO 8601 dates, times, and date/time combinations] is that they are correctly ordered by a lexical sort on their string representations.  This is because they are big-endian (the year is the leftmost element) and they used fixed-length fields for each term in the string representation.
+An useful property of [http://en.wikipedia.org/wiki/ISO_8601 ISO 8601 dates, times, and datetimes] is that they are correctly ordered by a lexical sort on their string representations.  This is because they are big-endian (the year is the leftmost element) and they used fixed-length, zero-padded fields with numerical values for each term in the string representation.
 
-The C standard library provides two methods for representing dates.  The first is the UNIX epoch, which is the seconds since January 1, 1970 in UTC.  If such a time were stored in a 32-bit signed integer, the rollover would happen on January 18, 2038.
+The C standard library provides two methods for representing dates.  The first is the //Unix epoch//, which is the seconds since the beginning of January 1, 1970 in UTC.  If such a time were stored in a 32-bit signed integer, the rollover would happen on January 18, 2038.  The Unix epoch is an example of a //serial datetime//, in which the value is stored as a single numeric value representing the difference in time in some unit from a specially designated datetime called the epoch.
 
-The other method of representing dates is the {{tm}} struct, a definition of which can be found on Unix systems in {{/usr/include/time.h}}:
+Another serial datetime is the //Windows file time//, which is the number of 100 nanosecond intervals since the beginning of January 1, 1601 UTC.  It was introduced when journaling was added to NTFS as part of the Windows 2000 launch.
+
+Some serial datetimes use days as the unit.  The Excel //serial number// is the number of days since December 31, 1899.  The //Julian day number//, used in astronomy, is the number of days since November 24, 4714 BCE in the proleptic Gregorian calendar.  Julian days start at noon GMT.
+
+A //broken-down datetime// uses multiple numeric values to represent the components of a calendar date and time.  An example from the C standard library is the {{tm}} struct, a definition of which can be found on Unix systems in {{/usr/include/time.h}}:
 
 [[code]]
 struct tm {
@@ -3184,7 +3177,26 @@ struct tm {
 };
 [[/code]]
 
-Python uses and exposes the {{tm}} struct of the standard library.  Python has a module called {{time}} which is a thin wrapper to the standard library functions which operate on this struct.  Here is how get a {{tm}} struct in Python:
+The Linux man pages call the {{tm}} struct a "broken-down" date and time, whereas the BSD man pages call it a "broken-out"	 date and time.
+
+The first day in the Gregorian calendar was 15 October 1582.  The //proleptic Gregorian calendar// is an extension of the Gregorian calendar to earlier dates.  When such dates are used, they should be called out to be precise.  The epoch in the proleptic Gregorian calendar is the year 0001, also written 1 AD or 1 CE.  The previous year is the year 0000, also written 1 BC or 1 BCE.  The year before that is the year -0001, also written 2 BC or 2 BCE.  The ISO 8601 standard recommends that years before 0000 or after 9999 be written with a plus or minus sign prefix.
+
+An //ordinal date// is a broken-down date consisting of a year, followed by the day of the year.  The ISO 8601 standard recommends that it be written in {{YYYY-DDD}} or {{YYYYDDD}} format.  The corresponding {{strftime}} formats are {{%Y-%j}} and {{%Y%j}}.
+
+A //week date// is a type of calendar which uses the year, week of the year, and day of the week to refer to to dates.  In the ISO 8601 week date, the first week of the year is the week starting from Monday which contains January 4th. An ISO 8601 week date can thus have a different year number than the corresponding Gregorian date.  The first week of the year is numbered {{01}}, and the first day of the week, Monday, is numbered {{1}}.  Weeks are written in {{YYYY-Www-D}} or {{YYYYWwwD}} format, where the upper case W is literal.  The corresponding {{strftime}} literals are {{%G-W%V-%u}} and {{%GW%V%u}}.
+
+Common years have 365 days and leap years have 366 days.  The extra day in February 29th.  Leap years are years divisible by 4 but not 100, or years divisible by 400.
+
+In 1967, the definition of a second was changed from 1/86,400 of a solar day to a value expressed in terms of radiation produced by ^^133^^Cs.  Because the length of a solar day is irregular, leap seconds are occasionally used to keep things in sync.  This is accomplished by occasionally adding a leap second to the end of June 30th or December 31st.  The system also allows for removing the last second of June 30th or December 31st, though as of 2014 this hasn't been done.
+
+[[# broken-down-datetime-type-note]]
+++ [#broken-down-datetime-type broken-down datetime type]
+
+The data type used to hold a combined date and time.
+
+**python:**
+
+Python uses and exposes the {{tm}} struct of the C standard library.  Python has a module called {{time}} which is a thin wrapper to the standard library functions which operate on this struct.  Here is how get a {{tm}} struct in Python:
 
 [[code]]
 import time
@@ -3193,26 +3205,24 @@ utc = time.gmtime(time.time())
 t = time.localtime(time.time())
 [[/code]]
 
-The {{tm}} struct is a low level entity, and interacting with it directly should be avoided.  In the case of Python it is usually sufficient to use the {{datetime}} module instead.
-
-[[# date-time-type-note]]
-++ [#date-time-type date/time type]
-
-The data type used to hold a combined date and time.
-
-[[# current-date-time-note]]
-++ [#current-date-time current date/time]
+[[# current-datetime-note]]
+++ [#current-datetime current datetime]
 
 How to get the combined date and time for the present moment in both local time and UTC.
 
-[[# unix-epoch-note]]
-++ [#unix-epoch to unix epoch, from unix epoch]
+[[# current-unix-epoch-note]]
+++ [#current-unix-epoch current unix epoch]
 
-How to convert the native date/time type to the Unix epoch which is the number of seconds since the start of January 1, 1970 UTC. 
+How to get the current time as a Unix epoch timestamp.
+
+[[# broken-down-datetime-to-unix-epoch-note]]
+++ [#broken-down-datetime-to-unix-epoch broken-down datetime to unix epoch]
+
+How to convert a datetime type to the Unix epoch which is the number of seconds since the start of January 1, 1970 UTC. 
 
 **python:**
 
-The Python datetime object created by {{now()}} and {{utcnow()}} has no timezone information associated with it.  The {{strftime()}} method assumes a receiver with no timezone information represents a local time.  Thus it is an error to call {{strftime()}} on the return value of {{utcnow()}}.
+The Python datetime object created by {{now()}} and {{utcnow()}} has no timezone information associated with it.  The {{strftime()}} method assumes a receiver with no time zone information represents a local time.  Thus it is an error to call {{strftime()}} on the return value of {{utcnow()}}.
 
 Here are two different ways to get the current Unix epoch.  The second way is faster:
 
@@ -3226,69 +3236,112 @@ calendar.timegm(datetime.datetime.utcnow().utctimetuple())
 
 Replacing {{now()}} with {{utcnow()}} in the first way, or {{utcnow()}} with {{now()}} in the second way produces an incorrect value.
 
-[[# current-unix-epoch-note]]
-++ [#current-unix-epoch current unix epoch]
+[[# unix-epoch-to-broken-down-datetime-note]]
+++ [#unix-epoch-to-broken-down-datetime unix epoch to broken-down datetime]
 
-How to get the current time as a Unix epoch timestamp.
+How to convert the Unix epoch to a broken-down datetime.
 
-[[# strftime-note]]
-++ [#strftime strftime]
+[[# fmt-datetime-note]]
+++ [#fmt-datetime format datetime]
 
-How to format a date/time as a string using the format notation of the //strftime// function from the standard C library.  This same format notation is used by the Unix //date// command.
+How to format a datetime as a string using using a string of format specifiers.
+
+The format specifiers used by the {{strftime}} function from the standard C library and the Unix {{date}} command:
+
+||~ ||~ numeric||~ alphanumeric||~ notes||
+||**year**||%Y %C%y|| ||%C and %y are the first two and last two digits of a 4 digit year||
+||**month**||%m||%B %b %h||%m is zero padded in {01, ..., 12} _
+%h is blank padded in {1, ..., 12}||
+||**day of month**||%d %e|| ||%d is zero padded in {01, ..., 31} _
+%e is blank padded in {1, ..., 31}||
+||**hour**||%H %k||%I%p %l%p||%H and %k are in zero and blank padded||
+||**minute**||%M|| ||%M is zero padded in the range {00, ..., 59}||
+||**second**||%S|| ||%S is zero padded, due to leap seconds it is in the range {00, ..., 60}||
+||**day of year**||%j|| ||%j is zero padded in the range {000, ..., 366}||
+||**week date year**||%G %g|| ||the ISO 8601 week date year.  Used with %V and %u.||
+||**week of year**||%V %U %W|| ||%V is the ISO 8601 week of year.  In {01, 53}.  Used with %G _
+%U is the week number when Sunday starts the week.  In {00, 53}.  Used with %Y and %C%y. _
+%W is the week number when Monday starts the week.  In {00, 53}.  Used with %Y and %C%y.||
+||**day of week**||%u %w||%A %a||%u is in {{1, ..., 7} starting at Monday _
+%w is in {0, ..., 6} starting at Sunday||
+||**unix epoch**||%s|| || ||
+||**date**||%D %F %x||%v||%D is %m/%d/%y _
+%F is %Y-%m-%d _
+%x locale dependent; same as %D in US||
+||**time**||%T %R %X||%r||%T is %H:%M:%S _
+%R is %H:%M _
+%X is locale dependent; same as %T in US _
+%r is %I:%M:%S %p||
+||**date and time**|| ||%c||locale dependent||
+||**date, time, and tmz**|| ||%+||locale dependent||
+||**time zone name**|| ||%Z||the ambiguous 3 letter abbrevation; e.g. "PST"||
+||**time zone offset**||%z|| ||"-0800" for Pacific Standard Time||
+||**percent sign**|| ||%%|| ||
+||**newline**|| ||%n|| ||
+||**tab**|| ||%t|| ||
 
 **php:**
 
 PHP supports strftime but it also has its own time formatting system used by {{date}}, {{DateTime::format}}, and {{DateTime::createFromFormat}}.  The letters used in the PHP time formatting system are [http://www.php.net/manual/en/datetime.createfromformat.php described here].
 
-[[# date-time-str-note]]
-++ [#date-time-str default format example]
+[[# parse-datetime-note]]
+++ [#parse-datetime parse datetime]
 
-Examples of how a date/time object appears when treated as a string such as when it is printed to standard out.
+How to parse a datetime using the format notation of the {{strptime}} function from the standard C library.
 
-The formats are in all likelihood locale dependent.  The provided examples come from a machine running Mac OS X in the Pacific time zone of the USA.
-
-**php:**
-
-It is a fatal error to treat a DateTime object as a string.
-
-[[# strptime-note]]
-++ [#strptime strptime]
-
-How to parse a date/time using the format notation of the {{strptime}} function from the standard C library.
-
-[[# parse-date-note]]
-++ [#parse-date parse date w/o format]
+[[# parse-datetime-without-fmt-note]]
+++ [#parse-datetime-without-fmt parse datetime w/o format]
 
 How to parse a date without providing a format string.
 
-[[# date-subtraction-note]]
-++ [#date-subtraction result date subtraction]
+[[# date-parts-note]]
+++ [#date-parts date parts]
+
+How to get the year, month, and day of month from a datetime.
+
+[[# time-parts-note]]
+++ [#time-parts time parts]
+
+How to the hour, minute, and second from a datetime.
+
+[[# build-datetime-note]]
+++ [#build-datetime build broken-down datetime]
+
+How to build a broken-down datetime from the date parts and the time parts.
+
+[[# datetime-subtraction-note]]
+++ [#datetime-subtraction datetime subtraction]
 
 The data type that results when subtraction is performed on two combined date and time values.
 
-[[# add-time-duration-note]]
-++ [#add-time-duration add time duration]
+[[# add-duration-note]]
+++ [#add-duration add duration]
 
-How to add a time duration to a date/time.
+How to add a duration to a datetime.
 
-A time duration can easily be added to a date/time value when the value is a Unix epoch value. 
+A duration can easily be added to a datetime value when the value is a Unix epoch value. 
 
-ISO 8601 distinguishes between a time interval, which is defined by two date/time endpoints, and a duration, which is the length of a time interval and can be defined by a unit of time such as '10 minutes'.  A time interval can also be defined by date and time representing the start of the interval and a duration.
+ISO 8601 distinguishes between a time interval, which is defined by two datetime endpoints, and a duration, which is the length of a time interval and can be defined by a unit of time such as '10 minutes'.  A time interval can also be defined by date and time representing the start of the interval and a duration.
 
 ISO 8601 defines [http://en.wikipedia.org/wiki/ISO_8601#Durations notation for durations].  This notation starts with a 'P' and uses a 'T' to separate the day and larger units from the hour and smaller units.  Observing the location relative to the 'T' is important for interpreting the letter 'M', which is used for both months and minutes.
 
-[[# local-tmz-note]]
-++ [#local-tmz local timezone]
+[[# local-tmz-determination-note]]
+++ [#local-tmz-determination local time zone determination]
 
-Do date/time values include timezone information.  When a date/time value for the local time is created, how the local timezone is determined.
+Do datetime values include time zone information.  When a datetime value for the local time is created, how the local time zone is determined.
 
-A date/time value can represent a local time but not have any timezone information associated with it.
+On Unix systems processes determine the local time zone by inspecting the binary file {{/etc/localtime}}.  To examine it from the command line use {{zdump}}:
 
-On Unix systems processes determine the local timezone by inspecting the file {{/etc/localtime}}.
+[[code]]
+$ zdump /etc/localtime
+/etc/localtime  Tue Dec 30 10:03:27 2014 PST
+[[/code]]
+
+On Windows the time zone name is stored in the registry at {{HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation\TimeZoneKeyName}}.
 
 **php:**
 
-The default timezone can also be set in the {{php.ini}} file.
+The default time zone can also be set in the {{php.ini}} file.
 
 [[code]]
 date.timezone = "America/Los_Angeles"
@@ -3296,21 +3349,26 @@ date.timezone = "America/Los_Angeles"
 
 Here is the list of [http://php.net/timezones timezones supported by PHP]. 
 
-[[# arbitrary-tmz-note]]
-++ [#arbitrary-tmz arbitrary timezone]
+[[# nonlocal-tmz-note]]
+++ [#nonlocal-tmz nonlocal time zone]
 
-How to convert a timestamp to the equivalent timestamp in an arbitrary timezone.
+How to convert a datetime to the equivalent datetime in an arbitrary time zone.
 
-[[# timezone-offset-note]]
-++ [#timezone-offset timezone name, offset from UTC, is daylight savings?]
+[[# tmz-info-note]]
+++ [#tmz-info time zone info]
 
-How to get time zone information: the name of the timezone, the offset in hours from UTC, and whether the timezone is currently in daylight savings.
+How to get the name of the time zone and  the offset in hours from UTC.
 
-Timezones are often identified by [http://en.wikipedia.org/wiki/List_of_time_zone_abbreviations three or four letter abbreviations].  As can be seen from the list, many of the abbreviations do not uniquely identify a timezone.  Furthermore many of the timezones have been altered in the past.  The [http://en.wikipedia.org/wiki/Tz_database Olson database] (aka Tz database) decomposes the world into zones in which the local clocks have all been set to the same time since 1970 and it gives these zones unique names.
+Timezones are often identified by [http://en.wikipedia.org/wiki/List_of_time_zone_abbreviations three or four letter abbreviations].  Many of the abbreviations do not uniquely identify a time zone.  Furthermore many of the time zones have been altered in the past.  The [http://en.wikipedia.org/wiki/Tz_database Olson database] (aka Tz database) decomposes the world into zones in which the local clocks have all been set to the same time since 1970; it gives these zones unique names.
 
 **ruby:**
 
-The {{Time}} class has a {{zone}} method which returns the time zone abbreviation for the object.  There is a {{tzinfo}} gem which can be used to create timezone objects using the Olson database name.  This can in turn be used to convert between UTC times and local times which are daylight saving aware.
+The {{Time}} class has a {{zone}} method which returns the time zone abbreviation for the object.  There is a {{tzinfo}} gem which can be used to create time zone objects using the Olson database name.  This can in turn be used to convert between UTC times and local times which are daylight saving aware.
+
+[[# daylight-savings-test-note]]
+++ [#daylight-savings-test daylight savings test]
+
+Is a datetime in daylight savings time?
 
 [[# microseconds-note]]
 ++ [#microseconds microseconds]
@@ -3403,7 +3461,7 @@ How to access a value in an array by index.
 A negative index refers to the //length - index// element.
 
 [[code]]
->>> a = [1,2,3]
+>>> a = [1, 2, 3]
 >>> a[-1]
 3
 [[/code]]
@@ -3423,7 +3481,13 @@ How to update the value at an index.
 What happens when the value at an out-of-bounds index is referenced.
 
 [[# array-element-index-note]]
-++ [#array-element-index index of element]
+++ [#array-element-index element index]
+
+How to get the index of an element in an array.
+
+**php:**
+
+Setting the 3rd argument of {{array_search}} to true makes the search use {{===}} for an equality test.  Otherwise the {{==}} test is performed, which makes use of implicit type conversions.
 
 [[# array-slice-note]]
 ++ [#array-slice slice]
@@ -3435,7 +3499,7 @@ How to slice a subarray from an array by specifying a start index and an end ind
 Slices can leave the first or last index unspecified, in which case the first or last index of the sequence is used:
 
 [[code]]
->>> a=[1,2,3,4,5]
+>>> a=[1, 2, 3, 4, 5]
 >>> a[:3]
 [1, 2, 3]
 [[/code]]
@@ -3443,7 +3507,7 @@ Slices can leave the first or last index unspecified, in which case the first or
 Python has notation for taking every nth element:
 
 [[code]]
->>> a=[1,2,3,4,5]
+>>> a=[1, 2, 3, 4, 5]
 >>> a[::2] 
 [1, 3, 5]
 [[/code]]
@@ -3451,7 +3515,7 @@ Python has notation for taking every nth element:
 The third argument in the colon-delimited slice argument can be negative, which reverses the order of the result:
 
 [[code]]
->>> a = [1,2,3,4]
+>>> a = [1, 2, 3, 4]
 >>> a[::-1]
 [4, 3, 2, 1]
 [[/code]]
@@ -3482,8 +3546,8 @@ These operations can be used to use the array as a stack.  They can be used with
 
 How to create an array by concatenating two arrays; how to modify an array by concatenating another array to the end of it.
 
-[[# array-replication-note]]
-++ [#array-replication replicate]
+[[# replicate-array-note]]
+++ [#replicate-array replicate]
 
 How to create an array containing the same value replicated //n// times.
 
@@ -3510,20 +3574,20 @@ a2 = a[:]
 
 {{copy.copy}} can be used to make a shallow copy on types that don't support the slice operator such as a dictionary.  Like the slice operator {{copy.copy}} returns a value with the same type as the argument.
 
-[[# array-arguments-note]]
-++ [#array-arguments arrays as function arguments]
+[[# array-as-func-arg-note]]
+++ [#array-as-func-arg array as function argument]
 
-How arrays are passed as arguments.
+How an array is passed to a function when provided as an argument.
 
-[[# array-iterate-note]]
-++ [#array-iterate iterate over elements]
+[[# iterate-over-array-note]]
+++ [#iterate-over-array iterate over elements]
 
-How to iterate through the elements of an array.
+How to iterate over the elements of an array.
 
 [[# indexed-array-iteration-note]]
 ++ [#indexed-array-iteration iterate over indices and elements]
 
-How to iterate through the elements of an array while keeping track of the index of each element.
+How to iterate over the element-index pairs.
 
 [[# range-iteration-note]]
 ++ [#range-iteration iterate over range]
@@ -3558,14 +3622,14 @@ How to create a reversed copy of an array, and how to reverse an array in place.
 
 [[code]]
 print("counting down:")
-for i in reversed([1,2,3]):
+for i in reversed([1, 2, 3]):
   print(i)
 [[/code]]
 
 {{reversed}} can be used to create a reversed list:
 
 [[code]]
-a = list(reversed([1,2,3]))
+a = list(reversed([1, 2, 3]))
 [[/code]]
 
 [[# array-sort-note]]
@@ -3630,14 +3694,14 @@ How to compute an intersection.
 Python has literal notation for sets:
 
 [[code]]
-{1,2,3}
+{1, 2, 3}
 [[/code]] 
 
 Use {{set}} and {{list}} to convert lists to sets and vice versa:
 
 [[code]]
-a = list({1,2,3})
-ensemble = set([1,2,3])
+a = list({1, 2, 3})
+ensemble = set([1, 2, 3])
 [[/code]]
 
 **ruby:**
@@ -3699,7 +3763,7 @@ Return the result of applying a binary operator to all the elements of the array
 {{reduce}} is not needed to sum a list of numbers:
 
 [[code]]
-sum([1,2,3])
+sum([1, 2, 3])
 [[/code]]
 
 **ruby:**
@@ -3707,13 +3771,13 @@ sum([1,2,3])
 The code for the reduction step can be provided by name.  The name can be a symbol or a string:
 
 [[code]]
-[1,2,3].inject(:+)
+[1, 2, 3].inject(:+)
 
-[1,2,3].inject("+")
+[1, 2, 3].inject("+")
 
-[1,2,3].inject(0, :+)
+[1, 2, 3].inject(0, :+)
 
-[1,2,3].inject(0, "+")
+[1, 2, 3].inject(0, "+")
 [[/code]]
 
 [[# universal-existential-test-note]]
@@ -3778,8 +3842,8 @@ How to get the number of dictionary keys in a dictionary.
 
 How to lookup a dictionary value using a dictionary key.
 
-[[# dict-out-of-bounds-note]]
-++ [#dict-out-of-bounds out-of-bounds behavior]
+[[# dict-missing-key-note]]
+++ [#dict-missing-key missing key behavior]
 
 What happens when a lookup is performed on a key that is not in a dictionary.
 
@@ -3799,7 +3863,7 @@ d.get('lorem', '')  # returns ''
 How to check for the presence of a key in a dictionary without raising an exception.  Distinguishes from the case where the key is present but mapped to null or a value which evaluates to false.
 
 [[# dict-delete-note]]
-++ [#dict-delete delete entry]
+++ [#dict-delete delete]
 
 How to remove a key/value pair from a dictionary.
 
@@ -3944,15 +4008,20 @@ When hashes are used as arguments, each key and value becomes its own argument.
 [[# missing-arg-note]]
 ++ [#missing-arg missing argument behavior]
 
-How incorrect number of arguments upon invocation are handled.
+What happens when a function is invoked with too few arguments.
+
+[[# extra-arg-note]]
+++ [#extra-arg extra argument behavior]
+
+What happens when a function is invoked with too many arguments.
 
 [[# default-arg-note]]
 ++ [#default-arg default argument]
 
 How to declare a default value for an argument.
 
-[[# variable-num-arg-note]]
-++ [#variable-num-arg variable number of arguments]
+[[# variadic-func-note]]
+++ [#variadic-func variadic function]
 
 How to write a function which accepts a variable number of argument.
 
@@ -3974,6 +4043,11 @@ def poker(dealer, *players)
   ...
 end
 [[/code]]
+
+[[# param-alias-note]]
+++ [#param-alias parameter alias]
+
+How to make a parameter an alias of a variable in the caller.
 
 [[# named-param-note]]
 ++ [#named-param named parameters]
@@ -4007,22 +4081,6 @@ fequal(1.0, 1.001, eps=0.01)  # True
 fequal(1.0, 1.001)                 # raises TypeError
 [[/code]]
 
-[[# pass-num-str-by-ref-note]]
-++ [#pass-num-str-by-ref pass number or string by reference]
-
-How to pass numbers or strings by reference.
-
-The three common methods of parameter passing are //pass by value//, //pass by reference//, and //pass by address//.  Pass by value is the default in most languages.
-
-When a parameter is passed by reference, the callee can changed the value in the variable that was provided as a parameter, and the caller will see the new value when the callee returns.  When the parameter is passed by value the callee cannot do this.
-
-When a language has mutable data types it can be unclear whether the language is using pass by value or pass by reference. 
-
-[[# pass-array-dict-by-ref-note]]
-++ [#pass-array-dict-by-ref pass array or dictionary by reference]
-
-How to pass an array or dictionary without making a copy of it.
-
 [[# retval-note]]
 ++ [#retval return value]
 
@@ -4033,10 +4091,10 @@ How the return value of a function is determined.
 
 How to return multiple values from a function.
 
-[[# lambda-note]]
-++ [#lambda lambda declaration and invocation]
+[[# anonymous-func-literal-note]]
+++ [#anonymous-func-literal anonymous function literal]
 
-How to define and invoke a lambda function.
+The syntax for an anonymous function literal; i.e. a lambda function.
 
 **python:**
 
@@ -4080,6 +4138,11 @@ sqr = ->(x) {x*x}
 
 sqr.(2)
 [[/code]]
+
+[[# invoke-anonymous-func-note]]
+++ [#invoke-anonymous-func invoke anonymous function]
+
+The syntax for invoking an anonymous function.
 
 [[# func-as-val-note]]
 ++ [#func-as-val function as value]
@@ -4172,12 +4235,12 @@ A decorator replaces an invocation of one function with another in a way that th
 
 Normally a decorator will add a small amount of functionality to the original function which it invokes.  A decorator can modify the arguments before passing them to the original function or modify the return value before returning it to the client.  Or it can leave the arguments and return value unmodified but perform a side effect such as logging the call.
 
-[[# op-as-func-note]]
-++ [#op-as-func operator as function]
+[[# invoke-op-like-func-note]]
+++ [#invoke-op-like-func invoke operator like function]
 
 How to call an operator using the function invocation syntax.
 
-This can be useful when dealing with an API which accepts a function as an argument.
+This is useful when dealing with an API which accepts a function as an argument.
 
 **python:**
 
@@ -4193,7 +4256,7 @@ All operators can be invoked with method invocation syntax.  The binary operator
 [[# if-note]]
 ++ [#if if]
 
-The {{if}} statement.
+The conditional branch statement.
 
 **php:**
 
@@ -4226,10 +4289,12 @@ end
 [[# switch-note]]
 ++ [#switch switch]
 
-The {{switch}} statement.
+A statement which branches based on the value of an expression.
 
 [[# while-note]]
 ++ [#while while]
+
+How to loop over a block while a condition is true.
 
 **php:**
 
@@ -4259,27 +4324,23 @@ Ruby also provides the {{until}} loop.
 Ruby loops can be used in expression contexts but they always evaluate to {{nil}}.
 
 [[# for-note]]
-++ [#for c-style for]
+++ [#for for]
 
 How to write a C-style for loop.
 
-[[# break-continue-note]]
-++ [#break-continue break, continue, redo]
+[[# break-note]]
+++ [#break break]
 
-//break// exits a //for// or //while// loop immediately.  //continue// goes to the next iteration of the loop.  //redo// goes back to the beginning of the current iteration.
+A {{break}} statement exits a {{while}} or {{for}} loop immediately. 
 
-[[# control-keywords-note]]
-++ [#control-keywords control structure keywords]
+[[# continue-note]]
+++ [#continue continue]
 
-A list of control structure keywords.  The loop control keywords from the previous line are excluded.
+A {{continue}} statement skips ahead to the next iteration of a {{while}} or {{for}} loop.
 
-The list summarizes the available control structures.  It excludes the keywords for exception handling, loading libraries, and returning from functions.
+**ruby:**
 
-[[# do-note]]
-++ [#do what do does]
-
-How the {{do}} keyword is used.
-
+There is also a {{redo}} statement, which restarts the current iteration of a loop.
 
 [[# statement-modifiers-note]]
 ++ [#statement-modifiers statement modifiers]
@@ -4318,8 +4379,8 @@ How to raise exceptions.
 
 Ruby has a //throw// keyword in addition to //raise//.  //throw// can have a symbol as an argument, and will not convert a string to a RuntimeError exception.
 
-[[# catch-exc-note]]
-++ [#catch-exc catch exception]
+[[# catch-all-handler-note]]
+++ [#catch-all-handler catch-all handler]
 
 How to catch exceptions.
 
@@ -4377,8 +4438,8 @@ The global variable name for the last exception raised.
 
 How to define a new variable class.
 
-[[# name-exc-note]]
-++ [#name-exc catch exception by type]
+[[# handle-exc-note]]
+++ [#handle-exc handle exception]
 
 How to catch exceptions of a specific type and assign the exception a name.
 
@@ -4386,10 +4447,10 @@ How to catch exceptions of a specific type and assign the exception a name.
 
 PHP exceptions when caught must always be assigned a variable name.
 
-[[# finally-ensure-note]]
-++ [#finally-ensure finally/ensure]
+[[# finally-block-note]]
+++ [#finally-block finally block]
 
-Clauses that are guaranteed to be executed even if an exception is thrown or caught.
+A block of statements that is guaranteed to be executed even if an exception is thrown or caught.
 
 [[# concurrency-note]]
 + [#concurrency Concurrency]
@@ -4520,9 +4581,9 @@ from sys import path
 from re import *
 [[/code]]
 
-There are two basic sequence types: the mutable list and the immutable tuple. The literal syntax for lists uses square brackets and commas [1,2,3] and the literal syntax for tuples uses parens and commas (1,2,3).
+There are two basic sequence types: the mutable list and the immutable tuple. The literal syntax for lists uses square brackets and commas [1, 2, 3] and the literal syntax for tuples uses parens and commas (1 ,2, 3).
 
-The dictionary data type literal syntax uses curly brackets, colons, and commas { “hello”:5, “goodbye”:7 }.  Python 3 adds a literal syntax for sets which uses curly brackets and commas: {1,2,3}.  This notation is also available in Python 2.7.  Dictionaries and sets are implemented using hash tables and as a result dictionary keys and set elements must be hashable.
+The dictionary data type literal syntax uses curly brackets, colons, and commas { “hello”:5, “goodbye”:7 }.  Python 3 adds a literal syntax for sets which uses curly brackets and commas: {1, 2, 3}.  This notation is also available in Python 2.7.  Dictionaries and sets are implemented using hash tables and as a result dictionary keys and set elements must be hashable.
 
 All values that can be stored in a variable and passed to functions as arguments are objects in the sense that they have methods which can be invoked using the method syntax.
 
