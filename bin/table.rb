@@ -361,8 +361,12 @@ end
 
 def make_anchor_to_splice_columns(splice_table, db)
   return Hash.new { |h, k| h[k] = [''] } unless splice_table
-  max_columns = splice_table.inject(0) {|m, o| o.size > m ? o.size : m }
-  anchor_to_splice_columns = Hash.new { |h, k| h[k] = [' '] * (max_columns - 2) }
+  max_columns = splice_table.inject(0) { |m, o| o.size > m ? o.size : m }
+  anchor_to_splice_columns = Hash.new do |h, k|
+    a = [' '] * (max_columns - 2)
+    a[-1] = ''
+    h[k] = a
+  end
   section = 'version'
   splice_table.each do |columns|
     section = generate_check_header(columns, db, section)
