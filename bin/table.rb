@@ -12,12 +12,12 @@ ROW_TITLE_REGEX =
 EMPTY_CELL_REGEX = /^([~\s]*|~ \[\[# [a-z-]+\]\])$/
 HEADER_CELL_REGEX = /^~ \[\[# ([a-z-]+)\]\]\[#\1-note ([^\]]+)\]$/
 SUPERSECTION_CELL_REGEX = /^~ ([A-Z]+)$/
-SUPERSECTIONS =
-  %w( CORE CONTAINERS AUXILIARY TABLES MATHEMATICS STATISTICS CHARTS )
+SUPERSECTIONS = ['CORE', 'DATA STRUCTURES', 'AUXILIARY', 'TABLES',
+                 'MATHEMATICS', 'STATISTICS', 'CHARTS']
 
 # FIXME: lack of encapsulation: deconstruting the regexes
 # FIXME: lack of encapsulation: rows returned from db
-# FIXME: generate is used for method and function
+# FIXME: generate is used for method and function name
 
 class DB
   def initialize(path)
@@ -325,27 +325,68 @@ def fix_row_title(current_title)
   end
 end
 
-def generate(f, table, db)
+def generate_check_header(columns, db, section)
+  if header_row?(columns)
+    header_cell = columns.find { |col| !col.empty? }
+    md = HEADER_CELL_REGEX.match(header_cell)
+    section = md[2] if md
+    db.check_section(section) if db
+  end
+  section
+end
+
+def generate_check_row(columns, db, section)
+  anchor = ''
+  if !header_row?(columns) \
+     && !EMPTY_CELL_REGEX.match(columns[1])
+    columns[1] = db.check_title(columns[1], section) if db
+    md = ROW_TITLE_REGEX.match(columns[1])
+    if md
+      anchor = md[1]
+    else
+      $stderr.puts "ERROR: no anchor in title #{columns[1]}"
+    end
+  end
+  anchor
+end
+
+def generate_fix_row_title(columns)
   footnote = false
+  return unless footnote \
+                && !header_row?(columns) \
+                && !EMPTY_CELL_REGEX.match(columns[1]) \
+                && !ROW_TITLE_REGEX.match(columns[1])
+  columns[1] = fix_row_title(columns[1])
+end
+
+def make_anchor_to_splice_columns(splice_table, db)
+  anchor_to_splice_columns = Hash.new { |h, k| h[k] = [''] }
+  return anchor_to_splice_columns unless splice_table
+  section = 'version'
+  splice_table.each do |columns|
+    section = generate_check_header(columns, db, section)
+    anchor = generate_check_row(columns, db, section)
+    next if anchor.empty?
+    if anchor_to_splice_columns.key?(anchor)
+      $stderr.puts "ERROR: anchor multiple times in splice table: #{anchor}"
+    else
+      anchor_to_splice_columns[anchor] = columns[2..-1]
+    end
+  end
+  anchor_to_splice_columns
+end
+
+def generate(f, table, db, splice_table)
+  # FIXME: keep track of and output splice columns that don't get used
+  anchor_to_splice_columns = make_anchor_to_splice_columns(splice_table, db)
   section = 'version'
   table.each do |columns|
-    if header_row?(columns)
-      header_cell = columns.find { |col| !col.empty? }
-      md = HEADER_CELL_REGEX.match(header_cell)
-      section = md[2] if md
-      db.check_section(section) if db
-    end
-    if footnote \
-      && !header_row?(columns) \
-      && !EMPTY_CELL_REGEX.match(columns[1]) \
-      && !ROW_TITLE_REGEX.match(columns[1])
-      columns[1] = fix_row_title(columns[1])
-    end
-    if !header_row?(columns) \
-      && !EMPTY_CELL_REGEX.match(columns[1])
-      columns[1] = db.check_title(columns[1], section) if db
-    end
-    f.puts columns.join('||')
+    section = generate_check_header(columns, db, section)
+    generate_fix_row_title(columns)
+    anchor = generate_check_row(columns, db, section)
+    output_columns = columns + anchor_to_splice_columns[anchor]
+    # FIXME: what about header rows?
+    f.puts output_columns.join('||')
   end
 end
 
@@ -445,6 +486,7 @@ def usage
 USAGE:
   table.rb --columns=COL1,COL2,...
            --file=PATH
+           [--splice-columns=COL1,COL2,... --splice-file=PATH]
            > OUTPUT
   table.rb --parse-skeleton=PATH
            --database=PATH
@@ -460,7 +502,9 @@ if $PROGRAM_NAME == __FILE__
     ['--generate-skeleton', GetoptLong::REQUIRED_ARGUMENT],
     ['--help', '-h', GetoptLong::NO_ARGUMENT],
     ['--parse-skeleton', GetoptLong::REQUIRED_ARGUMENT],
-    ['--file', '-f', GetoptLong::REQUIRED_ARGUMENT]
+    ['--file', '-f', GetoptLong::REQUIRED_ARGUMENT],
+    ['--splice-file', GetoptLong::REQUIRED_ARGUMENT],
+    ['--splice-columns', GetoptLong::REQUIRED_ARGUMENT]
   )
 
   columns = []
@@ -468,6 +512,8 @@ if $PROGRAM_NAME == __FILE__
   db = nil
   skeleton_input_stream = nil
   skeleton_output_stream = nil
+  splice_columns = []
+  splice_input_stream = nil
 
   opts.each do |opt, arg|
     case opt
@@ -483,6 +529,11 @@ if $PROGRAM_NAME == __FILE__
       usage
     when '--parse-skeleton'
       skeleton_input_stream = File.open(arg)
+    when '--splice-columns'
+      splice_columns = arg.split(',', -1).map(&:to_i)
+      # FIXME: check if 1 is first column?
+    when '--splice-file'
+      splice_input_stream = File.open(arg)
     end
   end
 
@@ -502,7 +553,19 @@ if $PROGRAM_NAME == __FILE__
 
   usage if !columns || columns.any? { |col| col.to_i < 1 }
 
+  if !splice_columns.empty? && splice_input_stream
+    splice_table = parse(splice_input_stream)
+    # FIXME: indicate which table in print_statistics?
+    print_statistics(splice_table, $stderr)
+  elsif !splice_columns.empty? || splice_input_stream
+    $stderr.puts 'ERROR: use --splice-columns and --splice-file together'
+    usage
+  end
+
   table = parse(input_stream)
   print_statistics(table, $stderr)
-  generate($stdout, reorder(table, columns), db)
+  generate($stdout,
+           reorder(table, columns),
+           db,
+           splice_table ? reorder(splice_table, splice_columns) : nil)
 end
