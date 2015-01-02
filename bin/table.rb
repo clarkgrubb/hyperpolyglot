@@ -360,8 +360,9 @@ def generate_fix_row_title(columns)
 end
 
 def make_anchor_to_splice_columns(splice_table, db)
-  anchor_to_splice_columns = Hash.new { |h, k| h[k] = [''] }
-  return anchor_to_splice_columns unless splice_table
+  return Hash.new { |h, k| h[k] = [''] } unless splice_table
+  max_columns = splice_table.inject(0) {|m, o| o.size > m ? o.size : m }
+  anchor_to_splice_columns = Hash.new { |h, k| h[k] = [' '] * (max_columns - 2) }
   section = 'version'
   splice_table.each do |columns|
     section = generate_check_header(columns, db, section)
@@ -387,7 +388,7 @@ def generate(f, table, db, splice_table)
     section = generate_check_header(columns, db, section)
     generate_fix_row_title(columns)
     anchor = generate_check_row(columns, db, section)
-    output_columns = columns + anchor_to_splice_columns[anchor]
+    output_columns = columns[0..-2] + anchor_to_splice_columns[anchor]
     # FIXME: what about header rows?
     f.puts output_columns.join('||')
     anchors[anchor] = true unless anchor.empty?
@@ -398,7 +399,7 @@ def generate(f, table, db, splice_table)
   splice_table.each do |columns|
     section = generate_check_header(columns, db, section)
     anchor = generate_check_row(columns, db, section)
-    output_columns = [''] * max_columns + columns[2..-1]
+    output_columns = [''] + [' '] * (max_columns - 2) + columns[2..-1]
     output_columns[1] = columns[1]
     f.puts output_columns.join('||') unless anchors[anchor]
   end
