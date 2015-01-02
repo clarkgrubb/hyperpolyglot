@@ -379,14 +379,28 @@ end
 def generate(f, table, db, splice_table)
   # FIXME: keep track of and output splice columns that don't get used
   anchor_to_splice_columns = make_anchor_to_splice_columns(splice_table, db)
+  anchors = {}
   section = 'version'
+  max_columns = 0
   table.each do |columns|
+    max_columns = columns.size if columns.size > max_columns
     section = generate_check_header(columns, db, section)
     generate_fix_row_title(columns)
     anchor = generate_check_row(columns, db, section)
     output_columns = columns + anchor_to_splice_columns[anchor]
     # FIXME: what about header rows?
     f.puts output_columns.join('||')
+    anchors[anchor] = true unless anchor.empty?
+  end
+
+  return unless splice_table
+  section = 'version'
+  splice_table.each do |columns|
+    section = generate_check_header(columns, db, section)
+    anchor = generate_check_row(columns, db, section)
+    output_columns = [''] * max_columns + columns[2..-1]
+    output_columns[1] = columns[1]
+    f.puts output_columns.join('||') unless anchors[anchor]
   end
 end
 
