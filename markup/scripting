@@ -486,10 +486,30 @@ str_pad(##maroon|"lorem"##, 10, ##maroon|" "##, ##teal|STR_PAD_BOTH##)||##maroon
 @<&nbsp;>@||"value: " + 8||##maroon|"value: "## . 8||##maroon|'value: '## + ##purple|str##(8)||##maroon|"value: "## + 8.to_s||
 ||[[# str-to-num]][#str-to-num-note string to number] _
 @<&nbsp;>@||7 + parseInt("12", 10) _
-73.9 + parseFloat(".037")||7 + ##maroon|"12"## _
-73.9 + ##maroon|".037"##||7 + ##purple|int##(##maroon|'12'##) _
-73.9 + ##purple|float##(##maroon|'.037'##)||7 + ##maroon|"12"##.to_i _
-73.9 +  ##maroon|".037"##.to_f||
+73.9 + parseFloat(".037") _
+ _
+##gray|@@//@@ 12:## _
+parseInt("12A") _
+##gray|@@//@@ NaN:## _
+parseInt("A")||7 + ##maroon|"12"## _
+73.9 + ##maroon|".037"## _
+ _
+##gray|# 12:## _
+0 + ##maroon|"12A"## _
+##gray|# 0:## _
+0 + ##maroon|"A"##||7 + ##purple|int##(##maroon|'12'##) _
+73.9 + ##purple|float##(##maroon|'.037'##) _
+ _
+##gray|# raises ValueError:## _
+##purple|int##(##maroon|'12A'##) _
+##gray|# raises ValueError:## _
+##purple|int##(##maroon|'A'##)||7 + ##maroon|"12"##.to_i _
+73.9 +  ##maroon|".037"##.to_f _
+ _
+##gray|# 12:## _
+##maroon|"12A"##.to_i _
+##gray|# 0:## _
+##maroon|"A"##.to_i||
 ||[[# str-join]][#str-join-note string join] _
 @<&nbsp;>@||["do", "re", "mi"].join(" ")||$##peru|a## = [##maroon|"do"##, ##maroon|"re"##, ##maroon|"mi"##, ##maroon|"fa"##]; _
 implode(##maroon|" "##, $##peru|a##)||##maroon|' '##.join([##maroon|'do'##, ##maroon|'re'##, ##maroon|'mi'##, ##maroon|'fa'##]) _
@@ -509,11 +529,12 @@ implode(##maroon|" "##, $##peru|a##)||##maroon|' '##.join([##maroon|'do'##, ##ma
 "foobar".endsWith("bar")|| ||'foobar'.startswith('foo') _
 'foobar'.endswith('bar')||'foobar'.start_with?('foo') _
 'foobar'.end_with?('bar')||
-||[[# str-length]][#str-length-note length] _
+||[[# str-len]][#str-len-note length] _
 @<&nbsp;>@||"lorem".length||strlen(##maroon|"lorem"##)||##purple|len##(##maroon|'lorem'##)||##maroon|"lorem"##.length _
 ##maroon|"lorem"##.size||
 ||[[# index-substr]][#index-substr-note index of substring] _
-##gray|//first, last//##||"lorem ipsum".indexOf("ipsum")||##gray|# returns FALSE if not found:## _
+##gray|//first, last//##||##gray|@@//@@ returns -1 if not found:## _
+"lorem ipsum".indexOf("ipsum")||##gray|# returns FALSE if not found:## _
 strpos(##maroon|"do re re"##, ##maroon|"re"##) _
 strrpos(##maroon|"do re re"##, ##maroon|"re"##)||##gray|# raises ValueError if not found:## _
 ##maroon|'do re re'##.index(##maroon|'re'##) _
@@ -533,7 +554,7 @@ strrpos(##maroon|"do re re"##, ##maroon|"re"##)||##gray|# raises ValueError if n
 ##maroon|'lorem ipsum'##[6:11]||##maroon|"lorem ipsum"##[6, 5] _
 ##maroon|"lorem ipsum"##[6@@..@@10] _
 ##maroon|"lorem ipsum"##[6@@...@@11]||
-||[[# extract-char]][#extract-char-note extract character]||"lorem ipsum"[6]||##gray|# syntax error to use index notation _
+||[[# lookup-char]][#lookup-char-note character lookup]||"lorem ipsum"[6]||##gray|# syntax error to use index notation _
 # directly on string literal:## _
 $##peru|s## = ##maroon|"lorem ipsum"##; _
 $##peru|s##[6];||##maroon|'lorem ipsum'##[6]||##maroon|"lorem ipsum"##[6]||
@@ -2810,8 +2831,8 @@ How to split a string with the delimiters preserved as separate elements.
 
 How to test whether a string begins or ends with a substring.
 
-[[# str-length-note]]
-++ [#str-length length]
+[[# str-len-note]]
+++ [#str-len length]
 
 How to get the length in characters of a string.
 
@@ -2825,10 +2846,10 @@ How to find the index of the leftmost occurrence of a substring in a string; how
 
 How to extract a substring from a string by index.
 
-[[# extract-char-note]]
-++ [#extract-char extract character]
+[[# lookup-char-note]]
+++ [#lookup-char character lookup]
 
-How to extract a character from a string by its index.
+How to look up the character in a string at an index.
 
 [[# chr-ord-note]]
 ++ [#chr-ord chr and ord]

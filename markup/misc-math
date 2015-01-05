@@ -1,14 +1,14 @@
 [[# top]][#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#dates-time dates and time] | [#arrays arrays] | [#multidimensional-arrays multidimensional arrays] | [#sets sets] | [#functions functions] | [#execution-control execution control] | [#file-handles file handles] | [#libraries-namespaces libraries and namespaces] | [#processes-environment processes and environment] | [#reflection reflection] _
   _
-[#vectors vectors] | [#matrices matrices] | [#optimization optimization] | [#number-theory number theory] | [#propositions propositions] | [#univariate-charts univariate charts] | [#bivariate-charts bivariate charts] | [#trivariate-charts trivariate charts]
+[#optimization optimization] | [#propositions propositions] | [#univariate-charts univariate charts] | [#bivariate-charts bivariate charts] | [#trivariate-charts trivariate charts]
 
-||~ ||~ [#gnuplot gnuplot]||~ [#glpk glpk]||~ [#pari-gp pari/gp]||~ [#coq coq]||
+||~ ||~ [#gnuplot gnuplot]||~ [#glpk glpk]||~ [#coq coq]||
 ||[[# version-used]][#version-used-note version used] _
-@<&nbsp;>@||##gray|//4.6//##||##gray|//4.52//##||##gray|//2.7//##||##gray|//8.4//##||
+@<&nbsp;>@||##gray|//4.6//##||##gray|//4.52//##||##gray|//8.4//##||
 ||[[# show-version]][#show-version-note show version] _
-@<&nbsp;>@||$ gnupot @@--@@version||$ glpsol @@--@@version||$ gp @@--@@version||$ coqtop @@--@@version||
-||||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
-||~ ||~ gnuplot||~ glpk||~ pari/gp||~ coq||
+@<&nbsp;>@||$ gnupot @@--@@version||$ glpsol @@--@@version||$ coqtop @@--@@version||
+||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
+||~ ||~ gnuplot||~ glpk||~ coq||
 ||[[# interpreter]][#interpreter-note interpreter] _
 @<&nbsp;>@||$ cat hello.gnuplot _
 print "Hello, World!" _
@@ -19,10 +19,10 @@ printf "Hello, World!\n"; _
 end; _
  _
 $ glpsol -m hello.model _
-Hello, World!||$ gp -q ##gray|//foo//##.gp||##gray|//none//##||
+Hello, World!||##gray|//none//##||
 ||[[# repl]][#repl-note repl] _
-@<&nbsp;>@||$ gnuplot||##gray|//none//##||$ g ||$ coqtop||
-||[[# compiler]][#compiler-note compiler]||##gray|//none//##||##gray|//none//##|| ||$ cat hello.v _
+@<&nbsp;>@||$ gnuplot||##gray|//none//##||$ coqtop||
+||[[# compiler]][#compiler-note compiler]||##gray|//none//##||##gray|//none//##||$ cat hello.v _
 Require Import String. _
 Open Scope string_scope. _
  _
@@ -33,90 +33,83 @@ $ coqc hello.v _
 HelloWorld _
 @<&nbsp;&nbsp;>@: string||
 ||[[# cmd-line-program]][#cmd-line-program-note command line program] _
-@<&nbsp;>@||$ gnuplot -e 'print 1 + 1;'||##gray|//none//##|| ||##gray|//none//##||
+@<&nbsp;>@||$ gnuplot -e 'print 1 + 1;'||##gray|//none//##||##gray|//none//##||
 ||[[# block-delimiters]][#block-delimiters-note block delimiters] _
 @<&nbsp;>@||{ }||{ } _
  _
 ##gray|//Curly braces are used to delimit the block of statements in the body of a// for //statement.//## _
  _
-##gray|//Curly braces are also used in indexing expressions and set literals.//##||{ ##gray|//...//## }|| ||
+##gray|//Curly braces are also used in indexing expressions and set literals.//##|| ||
 ||[[# stmt-separator]][#stmt-separator-note statement separator]||##gray|//newline or//## ; _
  _
-##gray|//A newline preceded by a backslash is ignored.//##||;||##gray|//newline or//## ; _
- _
-##gray|//A trailing semicolon suppresses output.//##|| ||
+##gray|//A newline preceded by a backslash is ignored.//##||;|| ||
 ||[[# eol-comment]][#eol-comment-note end-of-line comment] _
-@<&nbsp;>@||# ##gray|//comment//##||# ##gray|//comment//##||1 + 1 ##gray|\\ addition##||##gray|//none//##||
+@<&nbsp;>@||# ##gray|//comment//##||# ##gray|//comment//##||##gray|//none//##||
 ||[[# multiple-line-comment]][#multiple-line-comment-note multiple line comment] _
 @<&nbsp;>@||##gray|//none//##||/* ##gray|//comment line//## _
-##gray|//another comment//## */||1 + ##gray|/* addition */## 1||(* ##gray|//comment line//## _
+##gray|//another comment//## */||(* ##gray|//comment line//## _
 ##gray|//another comment//## *)||
-||||||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
-||~ ||~ gnuplot||~ glpk||~ pari/gp||~ coq||
+||||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
+||~ ||~ gnuplot||~ glpk||~ coq||
 ||[[# assignment]][#assignment-note assignment]||x = 3.14||##gray|# parameters are write once:## _
-param x, := 3.14||x = 3.14|| ||
-||compound assignment|| || ||+= -= *= /= %=|| ||
-||increment and decrement|| || ||##gray|//return value after increment or decrement://## _
-@@x++ x--@@|| ||
+param x, := 3.14|| ||
+||compound assignment|| || || ||
+||increment and decrement|| || || ||
 ||[[# null]][#null-note null] _
-@<&nbsp;>@||##gray|//none//##||##gray|//none//##|| || ||
+@<&nbsp;>@||##gray|//none//##||##gray|//none//##|| ||
 ||[[# null-test]][#null-test-note null test] _
-@<&nbsp;>@||##gray|//none//##||##gray|//none//##|| || ||
+@<&nbsp;>@||##gray|//none//##||##gray|//none//##|| ||
 ||[[# undef-var]][#undef-var-note undefined variable access] _
-@<&nbsp;>@||##gray|//causes error//##||##gray|//causes error//##||##gray|//treated as an unknown number//##|| ||
-||[[# undef-var-test]][#undef-var-test-note undefined variable test]||exists("x")||##gray|//none//##|| || ||
-||[[# rm-var-binding]][#rm-var-binding-note remove variable binding]||undefine x||##gray|//none//##||kill(x)|| ||
+@<&nbsp;>@||##gray|//causes error//##||##gray|//causes error//##|| ||
+||[[# undef-var-test]][#undef-var-test-note undefined variable test]||exists("x")||##gray|//none//##|| ||
+||[[# rm-var-binding]][#rm-var-binding-note remove variable binding]||undefine x||##gray|//none//##|| ||
 ||[[# cond-expr]][#cond-expr-note conditional expression] _
-@<&nbsp;>@||x > 0 : x : -x||if x > 0 then x else -x||if(x > 0, x, -x)|| ||
-||||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
-||~ ||~ gnuplot||~ glpk||~ pari/gp||~ coq||
+@<&nbsp;>@||x > 0 : x : -x||if x > 0 then x else -x|| ||
+||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
+||~ ||~ gnuplot||~ glpk||~ coq||
 ||[[# true-false]][#true-false-note true and false] _
 @<&nbsp;>@||1 0||1 0 _
  _
-##gray|//The boolean values are distinct from the integers 1 and 0.  When displayed by// printf '%s' //they render as// T //and// F.  //There are no boolean literals, however.//##||1 0|| ||
+##gray|//The boolean values are distinct from the integers 1 and 0.  When displayed by// printf '%s' //they render as// T //and// F.  //There are no boolean literals, however.//##|| ||
 ||[[# falsehoods]][#falsehoods-note falsehoods] _
 @<&nbsp;>@||0 _
  _
-##gray|0.0 //is true//##||0 0.0||0|| ||
+##gray|0.0 //is true//##||0 0.0|| ||
 ||[[# logical-op]][#logical-op-note logical operators]||@@&& || !@@||and or not _
  _
-@@&& || !@@||@@&& || !@@|| ||
+@@&& || !@@|| ||
 ||[[# relational-op]][#relational-op-note relational operators]||== != < > <= >= _
  _
 ##gray|# string comparision:## _
 eq ne||@@=@@ <> < > <= >= _
  _
-== ##gray|//and//## != ##gray|//are synonyms of//## = ##gray|//and//## <> ||== != > < >= <=|| ||
+== ##gray|//and//## != ##gray|//are synonyms of//## = ##gray|//and//## <> || ||
 ||[[# arith-op]][#arith-op-note arithmetic operators]  _
  _
-##gray|//addition, subtraction, multiplication, division, modulus//##||+ - * / %||+ - * / mod||+ - * / %|| ||
+##gray|//addition, subtraction, multiplication, division, modulus//##||+ - * / %||+ - * / mod|| ||
 ||[[# int-div]][#int-div-note integer division] _
-@<&nbsp;>@||int(x) / int(y)||x div y||a \ b _
-divrem(a, b)[1]|| ||
-||[[# int-div-zero]][#int-div-zero-note integer division by zero]||##gray|//error//##||##gray|//error//##||##gray|//error//##|| ||
-||[[# float-div]][#float-div-note float division]||(1.0 * x) / y||7 / 3||7 /3|| ||
-||[[# float-div-zero]][#float-div-zero-note float division by zero]||##gray|//error//##||##gray|//error//##||##gray|//error//##|| ||
+@<&nbsp;>@||int(x) / int(y)||x div y|| ||
+||[[# int-div-zero]][#int-div-zero-note integer division by zero]||##gray|//error//##||##gray|//error//##|| ||
+||[[# float-div]][#float-div-note float division]||(1.0 * x) / y||7 / 3|| ||
+||[[# float-div-zero]][#float-div-zero-note float division by zero]||##gray|//error//##||##gray|//error//##|| ||
 ||[[# power]][#power-note power]||2 ** 32||2 ^ 32 _
-2 ** 32|| 	2 ^ 32|| ||
-||[[# sqrt]][#sqrt-note sqrt]||sqrt(2)||sqrt(2)||sqrt(2)|| ||
+2 ** 32|| ||
+||[[# sqrt]][#sqrt-note sqrt]||sqrt(2)||sqrt(2)|| ||
 ||[[# sqrt-negative-one]][#sqrt-negative-one-note sqrt -1] _
 @<&nbsp;>@||##gray|# evaluates to {0.0, 1.0}:## _
 sqrt(-1) ||##gray|# error:## _
-sqrt(-1)||1.000 * I|| ||
+sqrt(-1)|| ||
 ||[[# transcendental-func]][#transcendental-func-note transcendental functions]||exp() log log10() _
 sin() cos() tan() _
 asin() acos() atan() _
 atan2()||exp() log() log10() _
 sin() cos() ##gray|//none//## _
 ##gray|//none//## ##gray|//none//## atan() _
-atan(##gray|//y//##, ##gray|//x//##)||exp log ##gray|//none//## _
-sin cos tan _
-asin acos atan _
-##gray|//none//##|| ||
+atan(##gray|//y//##, ##gray|//x//##)|| ||
 ||[[# transcendental-const]][#transcendental-const-note transcendental constants] _
 ##gray|//e and pi//##||exp(1) _
 pi||exp(1) _
-4 * atan(1)||Pi exp(1)|| ||
+4 * atan(1)|| ||
 ||[[# float-truncation]][#float-truncation-note float truncation] _
 ##gray|//round towards zero, round to nearest integer, round down, round up//##||int(x) _
 ##gray|//??//## _
@@ -128,136 +121,110 @@ ceil(x) _
  _
 ##gray|# truncate/round to 2 decimal places:## _
 trunc(x, 2) _
-round(x, 2)||truncate(x) _
-round(x) _
-floor(x) _
-ceil(x)|| ||
+round(x, 2)|| ||
 ||[[# absolute-val]][#absolute-val-note absolute value] _
 ##gray|//and signum//##||abs(x) _
 sgn(x)||abs(x) _
-##gray|//none//##||abs(x) _
-sign(x)|| ||
+##gray|//none//##|| ||
 ||[[# int-overflow]][#int-overflow-note integer overflow] _
-@<&nbsp;>@||##gray|//32 bit signed integers are used.  Operations which overflow return a float.//## ||##gray|//conversion to float//##||##gray|//none, has arbitrary length integer type//##|| ||
+@<&nbsp;>@||##gray|//32 bit signed integers are used.  Operations which overflow return a float.//## ||##gray|//conversion to float//##|| ||
 ||[[# float-overflow]][#float-overflow-note float overflow] _
-@<&nbsp;>@||##gray|//64 bit double precision floats are used.  Operations which overflow raise an error.//##||##gray|//error//##||##gray|//error//##|| ||
-||rational construction|| || ||2 / 7|| ||
-||rational decomposition|| || ||numerator _
-denominator|| ||
+@<&nbsp;>@||##gray|//64 bit double precision floats are used.  Operations which overflow raise an error.//##||##gray|//error//##|| ||
+||rational construction|| || || ||
+||rational decomposition|| || || ||
 ||[[# complex-construction]][#complex-construction-note complex construction] _
-@<&nbsp;>@||z = {1.0, 2.0}||##gray|//none//##||1 + 3 * I|| ||
+@<&nbsp;>@||z = {1.0, 2.0}||##gray|//none//##|| ||
 ||[[# complex-decomposition]][#complex-decomposition-note complex decomposition] _
 ##gray|//real and imaginary part, argument and modulus, conjugate//##||real(z) _
 imag(z) _
 arg(z) _
 abs(z) _
-##gray|//??//##||##gray|//none//##||real(z) imag(z) _
-arg(z) abs(z) _
-conj(z)|| ||
+##gray|//??//##||##gray|//none//##|| ||
 ||[[# random-num]][#random-num-note random number] _
 ##gray|//uniform integer, uniform float, standard normal//##||floor(rand(0) * 100) _
 rand(0) _
 ##gray|//none//##||##gray|# Irand224() generates integer in [0, 2^24):## _
 Irand224() mod 100 _
 Uniform01() _
-Normal01()||random(100) _
-##gray|//??//## _
-##gray|//??//##|| ||
-||[[# random-seed]][#random-seed-note random seed]||_ = rand(17)||$ glpsol @@--@@seed 17 -m foo.model|| || ||
+Normal01()|| ||
+||[[# random-seed]][#random-seed-note random seed]||_ = rand(17)||$ glpsol @@--@@seed 17 -m foo.model|| ||
 ||[[# bit-op]][#bit-op-note bit operators] _
-##gray|//and, or, xor, complement//##||@@& | ^ ~@@||##gray|//none//##||setrand(17) _
-getrand()|| ||
+##gray|//and, or, xor, complement//##||@@& | ^ ~@@||##gray|//none//##|| ||
 ||[[# binary-octal-hex-literals]][#binary-octal-hex-literals-note binary, octal, and hex literals]||##gray|//none//## _
 052 _
-0x2a||##gray|//none//##|| || ||
-||radix|| || ||##gray|\\ 42 as powers of 7 up to 9th power:## _
-42 + O(7^10)|| ||
-||||||||||~ [[# strings]][#strings-note strings]||
-||~ ||~ gnuplot||~ glpk||~ pari/gp||~ coq||
+0x2a||##gray|//none//##|| ||
+||radix|| || || ||
+||||||||~ [[# strings]][#strings-note strings]||
+||~ ||~ gnuplot||~ glpk||~ coq||
 ||[#string-literals string literals]||"don't say \"no\"" _
 'don''t say "no"'||"don't say ""no""" _
 'don''t say "no"' _
  _
-##gray|//Quotes can be omitted in the data section when the contents of the string are alphanumeric or match the character class// [-+_.]##||"don't say \"no\""|| ||
-||[#string-newline newline in literal]||##gray|//no//##||##gray|//no//##||##gray|//no; use \n escape//##|| ||
+##gray|//Quotes can be omitted in the data section when the contents of the string are alphanumeric or match the character class// [-+_.]##|| ||
+||[#string-newline newline in literal]||##gray|//no//##||##gray|//no//##|| ||
 ||[#string-escapes string literal escapes]||##gray|# in double quotes:## _
 \n \r \t \##gray|//o//## \##gray|//oo//## \##gray|//ooo//##||##gray|# in printf format:## _
-\n \t||\n \t \" \\|| ||
-||[#string-length length]||strlen("lorem ipsum")||length("lorem ipsum")||length("hello")|| ||
-||[#string-concatenate concatenate]||"lorem " . "ipsum"||"lorem " & "ipsum"||Str("loreum ", "ipsum")|| ||
+\n \t|| ||
+||[#string-length length]||strlen("lorem ipsum")||length("lorem ipsum")|| ||
+||[#string-concatenate concatenate]||"lorem " . "ipsum"||"lorem " & "ipsum"|| ||
 ||[#index-substring index of substring]||##gray|# indices start at 1; _
 # returns 0 if not found:## _
-# strstrt("foo bar", "bar", ||##gray|//none//##|| || ||
-||[#extract-substring extract substring]||substr("foo bar", 5, 8)||substr("foo bar", 5, 3)|| || ||
-||[[# fmt-str]][#fmt-str-note format string]||sprintf("%d %.2f %s", 7, 3.1415, "foo")||##gray|//none//##|| || ||
-||[[# num-to-str]][#num-to-str-note number to string]||"foo" . 4||##gray|//none//##|| || ||
+# strstrt("foo bar", "bar", ||##gray|//none//##|| ||
+||[#extract-substring extract substring]||substr("foo bar", 5, 8)||substr("foo bar", 5, 3)|| ||
+||[[# fmt-str]][#fmt-str-note format string]||sprintf("%d %.2f %s", 7, 3.1415, "foo")||##gray|//none//##|| ||
+||[[# num-to-str]][#num-to-str-note number to string]||"foo" . 4||##gray|//none//##|| ||
 ||[[# str-to-num]][#str-to-num-note string to number]||"4" + 7 _
  _
 ##gray|# causes error:## _
-"foo" + 7||##gray|//none//##|| || ||
-||||||||||~ [[# dates-time]][#dates-time-note dates and time]||
-||~ ||~ gnuplot||~ glpk||~ pari/gp||~ coq||
+"foo" + 7||##gray|//none//##|| ||
+||||||||~ [[# dates-time]][#dates-time-note dates and time]||
+||~ ||~ gnuplot||~ glpk||~ coq||
 ||[[# current-time-unix-epoch]][#current-time-unix-epoch-note current time as unix epoch]||##gray|# seconds since Jan 1, 2000## _
 ##gray|# add  946684800.0 to get unix epoch:## _
 now = time(0) _
  _
 ##gray|# as float:## _
-real_now = time(0.0)||gmtime()|| || ||
-||[[# fmt-time]][#fmt-time-note format time]||strftime('%Y-%m-%d %H:%M:%S', now)||time2str(gmtime(), '%Y-%m-%d %H:%M:%S')|| || ||
+real_now = time(0.0)||gmtime()|| ||
+||[[# fmt-time]][#fmt-time-note format time]||strftime('%Y-%m-%d %H:%M:%S', now)||time2str(gmtime(), '%Y-%m-%d %H:%M:%S')|| ||
 ||[[# parse-time]][#parse-time-note parse time]||s = "2014-11-30 03:53:59" _
-t = strptime('%Y-%m-%d %H:%M:%S', s)||str2time("2014-12-01 19:38:09", "%Y-%m-%d %H:%M:%S")|| || ||
+t = strptime('%Y-%m-%d %H:%M:%S', s)||str2time("2014-12-01 19:38:09", "%Y-%m-%d %H:%M:%S")|| ||
 ||[[# sleep]][#sleep-note sleep]||pause 10 _
  _
 ##gray|# with message:## _
-pause 10 'sleeping 10s@@...@@'||##gray|//none//##|| || ||
-||||||||||~ [[# arrays]][#arrays-note arrays]||
-||~ ||~ gnuplot||~ glpk||~ pari/gp||~ coq||
-||[[# array-literal]][#array-literal-note literal]|| || ||##gray|\\ [1, 2, 3] is a vector literal:## _
-List([1, 2, 3])|| ||
+pause 10 'sleeping 10s@@...@@'||##gray|//none//##|| ||
+||||||||~ [[# arrays]][#arrays-note arrays]||
+||~ ||~ gnuplot||~ glpk||~ coq||
+||[[# array-literal]][#array-literal-note literal]|| || || ||
 ||[[# array-size]][#array-size-note size] _
-@<&nbsp;>@|| || ||length(List([1, 2, 3]))|| ||
-||[[# array-lookup]][#array-lookup-note lookup]|| || ||##gray|\\ access time is O(1).## _
-##gray|\\ indices start at one:## _
-List([1, 2, 3])[1]|| ||
+@<&nbsp;>@|| || || ||
+||[[# array-lookup]][#array-lookup-note lookup]|| || || ||
 ||[[# array-update]][#array-update-note update] _
-@<&nbsp;>@|| || ||listput(a, 7, 1)|| ||
-||[[# array-out-of-bounds]][#array-out-of-bounds-note out-of-bounds behavior]|| || ||##gray|//out of allowed range error//##|| ||
-||[[# array-element-index]][#array-element-index-note element index]|| || ||##gray|//none//##|| ||
+@<&nbsp;>@|| || || ||
+||[[# array-out-of-bounds]][#array-out-of-bounds-note out-of-bounds behavior]|| || || ||
+||[[# array-element-index]][#array-element-index-note element index]|| || || ||
 ||[[# array-slice]][#array-slice-note slice] _
-@<&nbsp;>@|| || ||##gray|//none//##|| ||
-||[[# array-of-integers-as-index]][#array-of-integers-as-index-note array of integers as index]|| || ||##gray|//none//##|| ||
-||[[# array-back]][#array-back-note manipulate back]|| || ||a = List([6, 7, 8]) _
-listput(a, 9) _
-elem = listpop(a)|| ||
-||[[# array-front]][#array-front-note manipulate front]|| || ||a = List([6, 7, 8]); _
-listinsert(a, 5, 1); _
-elem = a[1]; _
-listpop(a, 1);|| ||
+@<&nbsp;>@|| || || ||
+||[[# array-of-integers-as-index]][#array-of-integers-as-index-note array of integers as index]|| || || ||
+||[[# array-back]][#array-back-note manipulate back]|| || || ||
+||[[# array-front]][#array-front-note manipulate front]|| || || ||
 ||[[# array-head]][#array-head-note head] _
-@<&nbsp;>@|| || ||List([1, 2, 3])[1]|| ||
+@<&nbsp;>@|| || || ||
 ||[[# array-tail]][#array-tail-note tail] _
-@<&nbsp;>@|| || ||##gray|//none//##|| ||
-||[[# array-cons]][#array-cons-note cons]|| || ||a = List([1, 2, 3]); _
-listinsert(a, 1, 1);|| ||
+@<&nbsp;>@|| || || ||
+||[[# array-cons]][#array-cons-note cons]|| || || ||
 ||[[# array-concatenate]][#array-concatenate-note concatenate] _
-@<&nbsp;>@|| || ||concat(List([1, 2, 3]), List([4, 5, 6]))|| ||
+@<&nbsp;>@|| || || ||
 ||[[# array-replicate]][#array-replicate-note replicate] _
-@<&nbsp;>@|| || || || ||
+@<&nbsp;>@|| || || ||
 ||[[# copy-array]][#copy-array-note copy] _
-@<&nbsp;>@|| || ||a2 = a|| ||
+@<&nbsp;>@|| || || ||
 ||[[# iterate-over-array]][#iterate-over-array-note iterate] _
-@<&nbsp;>@|| || ||a = List([1, 2, 3]) _
- _
-for(i=1, length(a), print(a[i]))|| ||
+@<&nbsp;>@|| || || ||
 ||[[# reverse-array]][#reverse-array-note reverse] _
-@<&nbsp;>@|| || ||a = List([1, 2, 3]) _
-a2 = listcreate() _
-while(i > 0, listput(a2, a[i]); i--)|| ||
-||[[# sort-array]][#sort-array-note sort]|| || ||a = List([3,1,4,2]) _
-listsort(a) _
-a|| ||
-||||||||||~ [[# multidimensional-arrays]][#multidimensional-arrays-note multidimensional arrays]||
-||~ ||~ gnuplot||~ glpk||~ pari/gp||~ coq||
+@<&nbsp;>@|| || || ||
+||[[# sort-array]][#sort-array-note sort]|| || || ||
+||||||||~ [[# multidimensional-arrays]][#multidimensional-arrays-note multidimensional arrays]||
+||~ ||~ gnuplot||~ glpk||~ coq||
 ||2d literal||##gray|//in separate file; one line for each data point; whitespace delimited://## _
  _
 $ cat data.txt _
@@ -269,7 +236,7 @@ param a {1..2, 1..2}; _
 ##gray|# define in data section:## _
 param a: 1@<&nbsp;&nbsp;>@2 := _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@1@<&nbsp;&nbsp;>@7@<&nbsp;&nbsp;>@8 _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@2@<&nbsp;&nbsp;>@9 10;|| || ||
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@2@<&nbsp;&nbsp;>@9 10;|| ||
 ||3d literal||##gray|//in separate file; one line for each data point://## _
  _
 $ cat data.txt _
@@ -278,29 +245,28 @@ $ cat data.txt _
 "New York" 8 4 _
 "San Francisco" 12 1 _
  _
-##gray|//comment lines are ignored; data which contains whitespace must be quoted//##|| || || ||
-||||||||||~ [[# sets]][#sets-note sets]||
-||~ ||~ gnuplot||~ glpk||~ pari/gp||~ coq||
-||literal|| ||set digits := {1, 2, 3, 4, 5};||Set([1, 2, 3, 4, 5])|| ||
+##gray|//comment lines are ignored; data which contains whitespace must be quoted//##|| || ||
+||||||||~ [[# sets]][#sets-note sets]||
+||~ ||~ gnuplot||~ glpk||~ coq||
+||literal|| ||set digits := {1, 2, 3, 4, 5};|| ||
 ||set from arithmetic sequence _
  _
 ##gray|//unit difference, non-unit difference//##|| ||set digits := {1 .. 5}; _
  _
-set leap_years := {2000 .. 2096 by 4};|| || ||
+set leap_years := {2000 .. 2096 by 4};|| ||
 ||membership|| ||set s := {1, 2, 3}; _
-set str := if 4 in s then 'yes' else 'no';||setsearch(Set([1, 2, 3]), 2)|| ||
+set str := if 4 in s then 'yes' else 'no';|| ||
 ||intersection|| ||set s1 := {1, 2, 3}; _
 set s2 := {2, 3, 4, 5}; _
  _
-set s3 := s1 inter s2;||setintersect(Set([1, 2]), Set([2, 3, 4]))|| ||
-||union|| ||set s3 := s1 union s2;||setunion(Set([1, 2]), Set([2, 3, 4]))|| ||
+set s3 := s1 inter s2;|| ||
+||union|| ||set s3 := s1 union s2;|| ||
 ||relative complement, symmetric difference|| ||set s3 := s1 diff s2; _
-set s4 := s1 symdiff s2;||setminus(Set([1, 2, 3]), Set([2])) _
-##gray|//??//##|| ||
+set s4 := s1 symdiff s2;|| ||
 ||cartesian product|| ||##gray|# 12 pairs:## _
-set s3 := s1 cross s2;|| || ||
+set s3 := s1 cross s2;|| ||
 ||map|| ||set s := 1 .. 10; _
-set squares := setof {i in s} i * i;|| || ||
+set squares := setof {i in s} i * i;|| ||
 ||reduce|| ||set s := 1 .. 10; _
  _
 param n1 := min {i in s} i;@<&nbsp;&nbsp;>@##gray|# 1## _
@@ -309,20 +275,20 @@ param n3 := sum {i in s} i;@<&nbsp;&nbsp;>@##gray|# 55## _
 param n4 := prod {i in s} i;@<&nbsp;&nbsp;>@##gray|# 10!## _
  _
 ##gray|# sum of squares:## _
-param n5 := sum {i in s} i * i;|| || ||
+param n5 := sum {i in s} i * i;|| ||
 ||universal and existential tests|| ||set str1 :=  if (forall {i in s} i > 5) then 'yes' else 'no'; _
-set str2 =  if (exists {i in s} i > 5) then 'yes' else 'no';|| || ||
-||||||||||~ [[# functions]][#functions-note functions]||
-||~ ||~ gnuplot||~ glpk||~ pari/gp||~ coq||
+set str2 =  if (exists {i in s} i > 5) then 'yes' else 'no';|| ||
+||||||||~ [[# functions]][#functions-note functions]||
+||~ ||~ gnuplot||~ glpk||~ coq||
 ||[#function-definition define function]||##gray|# body of function must be an expression:## _
-add(x, y) = x + y||##gray|//none//##||add(x, y) = x + y|| ||
-||[#function-invocation invoke function]||add(3, 7)||##gray|//none//##||add(3, 7)|| ||
-||[#list-functions list functions]||show functions||##gray|//none//##|| || ||
-||[[# missing-arg]][#missing-arg-note missing argument behavior]||##gray|//error//##||##gray|//none//##|| || ||
-||[[# extra-arg]][#extra-arg-note extra argument behavior]||##gray|//error//##||##gray|//none//##|| || ||
-||[#return-value return value]||##gray|//value of the expression which is the function body//##||##gray|//none//##|| || ||
-||||||||||~ [[# execution-control]][#execution-control-note execution control]||
-||~ ||~ gnuplot||~ glpk||~ pari/gp||~ coq||
+add(x, y) = x + y||##gray|//none//##|| ||
+||[#function-invocation invoke function]||add(3, 7)||##gray|//none//##|| ||
+||[#list-functions list functions]||show functions||##gray|//none//##|| ||
+||[[# missing-arg]][#missing-arg-note missing argument behavior]||##gray|//error//##||##gray|//none//##|| ||
+||[[# extra-arg]][#extra-arg-note extra argument behavior]||##gray|//error//##||##gray|//none//##|| ||
+||[#return-value return value]||##gray|//value of the expression which is the function body//##||##gray|//none//##|| ||
+||||||||~ [[# execution-control]][#execution-control-note execution control]||
+||~ ||~ gnuplot||~ glpk||~ coq||
 ||[#if if]||if (x > 0) { _
 @<&nbsp;&nbsp;>@print "positive" _
 } _
@@ -333,42 +299,37 @@ else { _
 @<&nbsp;&nbsp;>@else { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print "zero" _
 @<&nbsp;&nbsp;>@} _
-}||##gray|//none//##||if(x > 0, \ _
-@<&nbsp;&nbsp;>@print("positive"), \ _
-@<&nbsp;&nbsp;>@if(x < 0, \ _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print("negative"), \ _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print("zero")))|| ||
+}||##gray|//none//##|| ||
 ||[#while while]||i = 0 _
  _
 while (i < 10) { _
 @<&nbsp;&nbsp;>@print i _
 @<&nbsp;&nbsp;>@i = i + 1 _
-}||##gray|//none//##||i = 0 _
-while(i < 10, print(i); i++)|| ||
+}||##gray|//none//##|| ||
 ||[#for for]||do for [i = 1:10] { _
 @<&nbsp;&nbsp;>@print i _
 }||for {i in {1..10}} _
 { _
 @<&nbsp;&nbsp;>@printf "%d\n", i; _
-}||for(i=0, 9, print(i))|| ||
-||break continue|| || ||break continue|| ||
-||raise exception|| || ||error("failed")|| ||
-||||||||||~ [[# file-handles]][#file-handles-note file handles]||
-||~ ||~ gnuplot||~ glpk||~ pari/gp||~ coq||
-||write line to stdout|| ||printf "Hello, World!\n";||print("Hello, World!")|| ||
-||write formatted string to stdout|| ||printf "%d %.2f %s", 7, 3.1415, 'foo';|| || ||
+}|| ||
+||break continue|| || || ||
+||raise exception|| || || ||
+||||||||~ [[# file-handles]][#file-handles-note file handles]||
+||~ ||~ gnuplot||~ glpk||~ coq||
+||write line to stdout|| ||printf "Hello, World!\n";|| ||
+||write formatted string to stdout|| ||printf "%d %.2f %s", 7, 3.1415, 'foo';|| ||
 ||write to file|| ||##gray|# overwrites contents of /tmp/foo.txt:## _
-printf "lorem ispum" > "/tmp/foo.txt";|| || ||
-||append to file|| ||printf "dolor sit amet" @@>>@@ "/tmp/foo.txt";|| || ||
+printf "lorem ispum" > "/tmp/foo.txt";|| ||
+||append to file|| ||printf "dolor sit amet" @@>>@@ "/tmp/foo.txt";|| ||
 ||pretty print|| ||set s := {1, 2, 3, 4, 5}; _
 param x := 3; _
 param str symbolic := 'lorem ispum'; _
  _
 display "set: ", s, _
 @<&nbsp;&nbsp;>@"param: ", x, _
-@<&nbsp;&nbsp;>@"string: ", str;|| || ||
-||||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
-||~ ||~ gnuplot||~ glpk||~ pari/gp||~ coq||
+@<&nbsp;&nbsp;>@"string: ", str;|| ||
+||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
+||~ ||~ gnuplot||~ glpk||~ coq||
 ||[#load load]||$ cat foo.gnuplot _
 print "loaded!" _
  _
@@ -376,103 +337,42 @@ $ cat main.gnuplot _
 load 'foo.gnuplot' _
  _
 $ gnuplog main.gnuplot _
-loaded!||##gray|//none//##|| ||Require Import Arith.||
-||unqualified import of namespace||##gray|//none//##||##gray|//none//##|| ||Open Scope nat_scope.||
-||specify namespace for expression||##gray|//none//##||##gray|//none//##|| ||(1 + 1)%nat||
-||||||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
-||~ ||~ gnuplot||~ glpk||~ pari/gp||~ coq||
+loaded!||##gray|//none//##||Require Import Arith.||
+||unqualified import of namespace||##gray|//none//##||##gray|//none//##||Open Scope nat_scope.||
+||specify namespace for expression||##gray|//none//##||##gray|//none//##||(1 + 1)%nat||
+||||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
+||~ ||~ gnuplot||~ glpk||~ coq||
 ||[[# cmd-line-arg]][#cmd-line-arg-note command line arguments]||$ cat test.gnuplot _
 print foo _
 print bar _
  _
-$ gnuplot -e 'foo=3; bar=4' test.gnuplot||##gray|//none//##|| || ||
+$ gnuplot -e 'foo=3; bar=4' test.gnuplot||##gray|//none//##|| ||
 ||[[# exit]][#exit-note exit]||##gray|# no way to set exit status:## _
 exit _
  _
 ##gray|# or:## _
-quit||##gray|//none//##|| || ||
-||[[# cmd-subst]][#cmd-subst-note command substitution]||ls_output = system("ls")||##gray|//none//##|| || ||
-||||||||||~ [[# reflection]][#reflection-note reflection]||
-||~ ||~ gnuplot||~ glpk||~ pari/gp||~ coq||
-||[#list-function-documentation list function documentation]|| || ||?|| ||
-||[#function-documentation get function documentation]|| || ||? tan|| ||
-||[#grep-documentation grep documentation]|| || || || ||
-||[#data-type query data type]|| || ||type(x)|| ||
-||[#list-variables list variables in scope]|| || || || ||
-||remove declarations and definitions|| || || ||Reset Initial.||
-||show interpretation of binary operator|| || || ||List "_ * _".||
-||show what is in a scope|| || || ||Print Scope type_scope.||
-||||||||||~ [[# vectors]][#vectors-note vectors]||
-||~ ||~ gnuplot||~ glpk||~ pari/gp||~ coq||
-||[[# vec-literal]][#vec-literal-note vector literal]|| || ||[1, 2, 3]|| ||
-||[[# vec-coordinate]][#vec-coordinate-note vector coordinate]|| || ||##gray|//indices start at one://## _
-[1, 2, 3][1]|| ||
-||[[# vec-dim]][#vec-dim-note vector dimension] _
-@<&nbsp;>@|| || ||length([1, 2, 3])|| ||
-||[[# vec-element-wise]][#vec-element-wise-note element-wise arithmetic operators]|| || ||+ -|| ||
-||[[# vec-length-mismatch]][#vec-length-mismatch-note vector length mismatch] _
-@<&nbsp;>@|| || ||##gray|//error//##|| ||
-||[[# vec-scalar]][#vec-scalar-note scalar multiplication]|| || ||3 * [1, 2, 3] _
-[1, 2, 3] * 3|| ||
-||[[# vec-dot]][#vec-dot-note dot product]|| || || || ||
-||[[# vec-cross]][#vec-cross-note cross product]|| || || || ||
-||[[# vec-norms]][#vec-norms-note norms]|| || || || ||
-||||||||||~ [[# matrices]][#matrices-note matrices]||
-||~ ||~ gnuplot||~ glpk||~ pari/gp||~ coq||
-||literal—2d|| || ||[1, 2, 3; 4, 5, 6]|| ||
-||construct from sequence—2d|| || || || ||
-||[[# multidimensional-array-size]][#multidimensional-array-size-note size] _
-##gray|//number of elements, number of dimensions, dimension lengths//##|| || || || ||
-||lookup—1d|| || || || ||
-||lookup—2d|| || || || ||
-||[#matrix-literal-constructor literal or constructor]|| || ||A = [1, 2; 3, 4] _
-B = [4, 3; 2, 1]|| ||
-||[#common-matrices zero, identity, ones, diagonal matrix]|| || || || ||
-||[#matrix-dimensions dimensions] _
-##gray|//rows, columns//##|| || || || ||
-||[#matrix-access element access]|| || ||A[1, 1]|| ||
-||[#matrix-row-access row access]|| || || || ||
-||[#matrix-column-access column access]|| || || || ||
-||[#submatrix-access submatrix access]|| || || || ||
-||[#matrix-scalar-multiplication scalar multiplication]|| || || || ||
-||[#matrix-element-wise-operators element-wise operators]|| || || || ||
-||[#matrix-multiplication multiplication]|| || || || ||
-||[#kronecker-product kronecker product]|| || || || ||
-||[#matrix-comparison comparison]|| || || || ||
-||[#matrix-norms norms]|| || || || ||
-||[#matrix-transpose transpose]|| || || || ||
-||[#matrix-conjugate-transpose conjugate transpose]|| || || || ||
-||[#matrix-inverse inverse]|| || || || ||
-||[#matrix-determinant determinant]|| || ||matdet(A)|| ||
-||[#matrix-trace trace]|| || ||trace(A)|| ||
-||[#matrix-eigenvalues eigenvalues]|| || || || ||
-||[#matrix-eigenvectors eigenvectors]|| || || || ||
-||[#matrix-solution system of equations]|| || || || ||
-||||||||||~ [[# optimization]][#optimization-note optimization]||
-||~ ||~ gnuplot||~ glpk||~ pari/gp||~ coq||
-||objective function|| || || || ||
-||constraints|| || || || ||
-||solve|| || || || ||
-||||||||||~ [[# number-theory]][#number-theory-note number theory]||
-||~ ||~ gnuplot||~ glpk||~ pari/gp||~ coq||
-||[#numerical-approximation numerical approximation]|| || ||1/7 + 0.|| ||
-||[#differentiation differentiation]|| || ||P = x^3 + x + 3 _
-P' _
-sin(x)'|| ||
-||[#number-tests number tests]|| || || || ||
-||is prime|| || || || ||
-||is pseudoprime|| || || || ||
-||[#factorial factorial]|| || ||10!|| ||
-||[#binomial-coefficient binomial coefficient]|| || || || ||
-||[#gcd greatest common divisor]|| || ||gcd(14, 21)|| ||
-||[#prime-factors prime factors]|| || ||##gray|//returns// [2,2; 3,1; 7,1]## _
-factor(84)|| ||
-||[#euler-totient Euler totient]|| || || || ||
-||||||||||~ [[# propositions]][#propositions-note propositions]||
-||~ ||~ gnuplot||~ glpk||~ pari/gp||~ coq||
-||check type of expression|| || || ||Check 1 + 1.||
-||||||||||~ [[# univariate-charts]][#univariate-chart-note univariate charts]||
-||~ ||~ gnuplot||~ glpk||~ pari/gp||~ coq||
+quit||##gray|//none//##|| ||
+||[[# cmd-subst]][#cmd-subst-note command substitution]||ls_output = system("ls")||##gray|//none//##|| ||
+||||||||~ [[# reflection]][#reflection-note reflection]||
+||~ ||~ gnuplot||~ glpk||~ coq||
+||[#list-function-documentation list function documentation]|| || || ||
+||[#function-documentation get function documentation]|| || || ||
+||[#grep-documentation grep documentation]|| || || ||
+||[#data-type query data type]|| || || ||
+||[#list-variables list variables in scope]|| || || ||
+||remove declarations and definitions|| || ||Reset Initial.||
+||show interpretation of binary operator|| || ||List "_ * _".||
+||show what is in a scope|| || ||Print Scope type_scope.||
+||||||||~ [[# optimization]][#optimization-note optimization]||
+||~ ||~ gnuplot||~ glpk||~ coq||
+||objective function|| || || ||
+||constraints|| || || ||
+||solve|| || || ||
+||||||||~ [[# propositions]][#propositions-note propositions]||
+||~ ||~ gnuplot||~ glpk||~ coq||
+||check type of expression|| || ||Check 1 + 1.||
+||||||||~ [[# univariate-charts]][#univariate-chart-note univariate charts]||
+||~ ||~ gnuplot||~ glpk||~ coq||
 ||[[image http://farm5.static.flickr.com/4090/5039793334_f76edece33_m.jpg]] [#bar-chart vertical bar chart]||##gray|# echo $'1 7\n2 3\n3 8\n4 5\n5 5' > data.txt## _
  _
 set terminal png size 400,300 _
@@ -480,11 +380,11 @@ set output "barchart.png" _
 set boxwidth 0.9 _
 set style fill solid 1.0 _
 plot [0:6] [0:9] "data.txt" \ _
-@<&nbsp;&nbsp;>@using 1:2 nontitle with boxes notitle|| || || ||
+@<&nbsp;&nbsp;>@using 1:2 nontitle with boxes notitle|| || ||
 ||[[image http://farm5.static.flickr.com/4092/5039776078_cc38a4ff5f_m.jpg]] _
-[#horizontal-bar-chart horizontal bar chart]|| || || || ||
+[#horizontal-bar-chart horizontal bar chart]|| || || ||
 ||[[image http://farm5.static.flickr.com/4145/5037819710_d932767cd5_m.jpg]] _
-[[# pie-chart]][#pie-chart-note pie chart]||##gray|//see note//##|| || || ||
+[[# pie-chart]][#pie-chart-note pie chart]||##gray|//see note//##|| || ||
 ||[[image http://farm5.static.flickr.com/4106/5037415497_4c6fbfcab2_m.jpg]] _
 [[# histogram]][#histogram-note histogram]||##gray|# awk '{ print length($0)}' \ _
 #@<&nbsp;&nbsp;&nbsp;>@/usr/share/dict/words > hist.txt## _
@@ -495,7 +395,7 @@ binwidth=1 _
 bin(x,width)=width*floor(x/width) _
 plot "hist.txt" \ _
 @<&nbsp;&nbsp;>@using (bin($1,binwidth)):(1.0) \ _
-@<&nbsp;&nbsp;>@smooth freq with boxes|| || || ||
+@<&nbsp;&nbsp;>@smooth freq with boxes|| || ||
 ||[[image http://farm5.static.flickr.com/4106/5037525393_7ac86e81c3_m.jpg]] [#box-and-whisker-plot box-and-whisker plot]||##gray|# seq 100 | awk '{print rand() ** 3}' > data.tx## _
  _
 set terminal png size 400,300 _
@@ -504,44 +404,44 @@ set style boxplot outliers pointtype 7 _
 set style data boxplot _
 set boxwidth 0.2 _
 plot [0.5:1.5] [0.0:1.1] "data.txt" \ _
-@<&nbsp;&nbsp;>@using (1.0):1:(0.3) notitle|| || || ||
+@<&nbsp;&nbsp;>@using (1.0):1:(0.3) notitle|| || ||
 ||[#univariate-title set chart title]||set title "a plot" _
-plot "data.txt"|| || || ||
-||||||||||~ [[# bivariate-charts]][#bivariate-chart-note bivariate charts]||
-||~ ||~ gnuplot||~ glpk||~ pari/gp||~ coq||
+plot "data.txt"|| || ||
+||||||||~ [[# bivariate-charts]][#bivariate-chart-note bivariate charts]||
+||~ ||~ gnuplot||~ glpk||~ coq||
 ||[[image http://farm5.static.flickr.com/4154/5039126187_e340b3f4aa_m.jpg]] _
-[#stacked-bar-chart stacked bar chart]|| || || || ||
+[#stacked-bar-chart stacked bar chart]|| || || ||
 ||[[image http://farm8.staticflickr.com/7490/15814685770_09478e1222_t.jpg]] _
-[[# grouped-bar-chart]][#grouped-bar-chart-note grouped bar chart]|| || || || ||
+[[# grouped-bar-chart]][#grouped-bar-chart-note grouped bar chart]|| || || ||
 ||[[image http://farm6.static.flickr.com/5044/5267212089_a7749bbe3e_s.jpg]] [#scatterplot scatter plot]||##gray|# seq 50 | awk '{x=rand(); print x,x+rand()}' \ _
 #@<&nbsp;&nbsp;&nbsp;>@> data.txt## _
  _
 set terminal png size 400,300 _
 set output "scatter.png" _
-plot "data.txt"|| || || ||
-||[[image http://farm6.static.flickr.com/5089/5267975488_2216ae147e_s.jpg]][#linear-regression-line linear regression line]|| || || || ||
-||[[image http://farm6.static.flickr.com/5125/5267434941_f8537c9d26_s.jpg]] [#polygonal-plot polygonal line plot]|| || || || ||
-||[[image http://farm6.static.flickr.com/5041/5268071368_75c3aee42e_t.jpg]] [#area-chart area chart]|| || || || ||
-||[[image http://farm6.static.flickr.com/5049/5268229340_0b96b5e223_s.jpg]] [#cubic-spline cubic spline]|| || || || ||
+plot "data.txt"|| || ||
+||[[image http://farm6.static.flickr.com/5089/5267975488_2216ae147e_s.jpg]][#linear-regression-line linear regression line]|| || || ||
+||[[image http://farm6.static.flickr.com/5125/5267434941_f8537c9d26_s.jpg]] [#polygonal-plot polygonal line plot]|| || || ||
+||[[image http://farm6.static.flickr.com/5041/5268071368_75c3aee42e_t.jpg]] [#area-chart area chart]|| || || ||
+||[[image http://farm6.static.flickr.com/5049/5268229340_0b96b5e223_s.jpg]] [#cubic-spline cubic spline]|| || || ||
 ||[[image http://farm6.static.flickr.com/5204/5268208606_b745646ea6_s.jpg]] [#function-plot function plot]||set terminal png size 400,300 _
 set output 'sin.png' _
-plot [-4:4] sin(x)|| || ||ploth(x=-4, 4, sin(x))||
-||[[image http://farm6.static.flickr.com/5048/5267567389_27a19429e4_s.jpg]] [#qq-plot quantile-quantile plot]|| || || || ||
-||[#axis-label axis label]|| || || || ||
-||[#logarithmic-y-axis logarithmic y-axis]|| || || || ||
-||||||||||~ [[# trivariate-charts]][#trivariate-chart-note trivariate charts]||
-||~ ||~ gnuplot||~ glpk||~ pari/gp||~ coq||
-||[#3d-scatter-plot 3d scatter plot]|| || || || ||
-||[[image http://farm6.static.flickr.com/5245/5268191292_a75a367c39_s.jpg]] [#additional-data additional data set]|| || || || ||
+plot [-4:4] sin(x)|| ||ploth(x=-4, 4, sin(x))||
+||[[image http://farm6.static.flickr.com/5048/5267567389_27a19429e4_s.jpg]] [#qq-plot quantile-quantile plot]|| || || ||
+||[#axis-label axis label]|| || || ||
+||[#logarithmic-y-axis logarithmic y-axis]|| || || ||
+||||||||~ [[# trivariate-charts]][#trivariate-chart-note trivariate charts]||
+||~ ||~ gnuplot||~ glpk||~ coq||
+||[#3d-scatter-plot 3d scatter plot]|| || || ||
+||[[image http://farm6.static.flickr.com/5245/5268191292_a75a367c39_s.jpg]] [#additional-data additional data set]|| || || ||
 ||colors||##gray|# use a string to specify a color:## _
 set terminal png background "black" _
 set terminal png background "#000000" _
  _
 ##gray|# list recognized color names:## _
-show colors||| || || ||
-||[#bubble-chart bubble chart]|| || || || ||
-||[#surface-plot surface plot]|| || || || ||
-||~ ||~ ##EFEFEF|@@_______________________________________________________@@##||~ ##EFEFEF|@@_______________________________________________________@@##||~ ##EFEFEF|@@_______________________________________________________@@##||~ ##EFEFEF|@@_______________________________________________________@@##||
+show colors||| || ||
+||[#bubble-chart bubble chart]|| || || ||
+||[#surface-plot surface plot]|| || || ||
+||~ ||~ ##EFEFEF|@@___________________________________________________________________@@##||~ ##EFEFEF|@@___________________________________________________________________@@##||~ ##EFEFEF|@@___________________________________________________________________@@##||
 
 
 [[# interpreter-note]]
@@ -621,13 +521,6 @@ Input data is declared with the {{param}} statement, and values to be found by t
 //constraints and objective functions//
 
 //data section; can everything be defined in model?  data section or -d flag; what happens when data section misses parameters; data section limitations: parameters and sets, with just literals for values//
-
-[[# pari-gp]]
-+ [#top Pari/GP]
-
-[http://pari.math.u-bordeaux.fr/pub/pari/manuals/2.5.0/tutorial.pdf A Tutorial for Pari/GP (pdf)]
-[http://pari.math.u-bordeaux.fr/dochtml/html.stable/ Pari/GP Functions by Category]
-[http://www.staff.science.uu.nl/~beuke106/boek/refcard.pdf Pari/GP Reference Card (pdf)]
 
 [[# coq]]
 + [#top Coq]

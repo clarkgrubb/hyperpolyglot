@@ -3,7 +3,7 @@
 [#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#arrays arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#concurrency concurrency] | [#file-handles file handles] | [#files files] | [#file-fmt file formats] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#user-defined-types user-defined types] | [#objects objects] | [#reflection reflection] | [#macros macros] | [#net-web net and web] | [#dom dom] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling] _
 
 ||||||||~ [[# version]][#version-note version]||
-||~ ||~ c||~ go||~ dart||
+||~ ||~ [#c c]||~ [#go go]||~ [#dart dart]||
 ||[[# version-used]][#version-used-note version used] _
 @<&nbsp;>@||##gray|//gcc 4.6 in POSIX environment//##||##gray|//1.3//##||##gray|//1.7//##||
 ||[[# show-version]][#show-version-note show version] _
@@ -15,7 +15,7 @@
 #include <time.h>|| || ||
 ||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
 ||~ ||~ c||~ go||~ dart||
-||[[# hello-world]][#hello-world-note hello word]||$ cat hello.c _
+||[[# hello-world]][#hello-world-note hello world]||$ cat hello.c _
 #include <stdio.h> _
  _
 int main(int argc, char @@**@@argv) { _
@@ -52,7 +52,7 @@ Hello, World!||
 ##gray|//source, header, object file//##||.c .h .o|| ||.dart ##gray|//none//## .js||
 ||[[# block-delimiters]][#block-delimiters-note block delimiters] _
 @<&nbsp;>@||{ ##gray|//...//## }||{ ##gray|//...//## }||{ ##gray|//...//## }||
-||[[# stmt-terminator]][#stmt-terminator-note statement terminator]||;||; ##gray|//or sometimes newline//## _
+||[[# stmt-separator]][#stmt-separator-note statement separator]||;||; ##gray|//or sometimes newline//## _
  _
 ##gray|//a new line terminates a statement when the last token on the line is _
 @<&nbsp;&nbsp;>@(1) an identifier, _
@@ -390,51 +390,51 @@ strconv.FormatFloat(3.14, 'f', 4, 32) _
 ##gray|@@//@@ 2nd arg is base:## _
 strconv.FormatInt(7, 10)||3.14.toString() _
 7.toString()||
-||[#split split]||##gray|//none//##||import "strings" _
+||[[# split]][#split-note split]||##gray|//none//##||import "strings" _
  _
 s := "foo bar baz" _
 parts := strings.Split(s, " ")||var a = "foo bar bar".split(' ');||
-||[#join join] _
+||[[# str-join]][#str-join-note join] _
 @<&nbsp;>@||##gray|//none//##||import "strings" _
  _
 parts := []string{"foo", "bar", "baz"} _
 s := strings.Join(parts, " ")||['foo', 'bar', 'baz'].join(' ')||
-||[#string-concatenate concatenate]||char *s1 = "hello"; _
+||[[# str-concat]][#str-concat-note concatenate]||char *s1 = "hello"; _
 char *s2 = " world"; _
 char *s3 = (char *)calloc(strlen(s1) + strlen(s2) + 1,sizeof(char)); _
 strcpy(s3, s1); _
 strcat(s3, s2);||"hello" + " world"||"hello" + " world"||
-||[#str-replicate replicate]||##gray|//none//##||import "strings" _
+||[[# str-replicate]][#str-replicate-note replicate]||##gray|//none//##||import "strings" _
  _
 hbar := strings.Repeat("-", 80)||var hbar = "-" * 80;||
-||[#substring substring]||char target[3]; _
+||[[# extract-substr]][#extract-substr-note extract substring]||char target[3]; _
  char *source = "hello"; _
 strncpy(target, source + 2, 2);||"hello"[2:4]||"hello".substring(2, 4)||
-||[#index index of substring]||const char *s = "hello"; _
+||[[# index-subst]][#index-substr-note index of substring]||const char *s = "hello"; _
 const char *p = strstr("hello", "ll"); _
 p ? p - s : -1;||import "strings" _
  _
 ##gray|@@//@@ zero-based index; -1 if not found:## _
 strings.Index("hello", "ll")||"hello".indexOf("ll")||
-||[#sprintf sprintf]||char buf[100]; _
+||[[# fmt-str]][#fmt-str-note format string]||char buf[100]; _
 snprintf(buf, 100, "%s: %d", "Spain", 7);|| || ||
-||[#uppercase uppercase]||char *s = strdup("hello"); _
+||[[# translate-case]][#translate-case-note translate case] _
+ _
+##gray|//to upper, to lower//##||char *s = strdup("hello"); _
 int i; _
  _
 for (i=0; i < strlen(s); ++i) { _
 @<&nbsp;&nbsp;>@s[i] = toupper(s[i]); _
-}||import "strings" _
- _
-strings.ToUpper("hello")||"hello".toUpperCase()||
-||[#lowercase lowercase]||char *s = strdup("HELLO"); _
-int i; _
+} _
  _
 for (i=0; i < strlen(s); i++) { _
 @<&nbsp;&nbsp;>@s[i] = tolower(s[i]); _
 }||import "strings" _
  _
-strings.ToLower("HELLO")||"HELLO".toLowerCase()||
-||[#trim trim] _
+strings.ToUpper("hello") _
+strings.ToLower("HELLO")||"hello".toUpperCase() _
+"HELLO".toLowerCase()||
+||[[# trim]][#trim-note trim] _
 ##gray|//both sides, on left, on right//##|| ||import "strings" _
  _
 s := " lorem " _
@@ -443,17 +443,17 @@ strings.TrimLeft(s, " ") _
 strings.TrimRight(s, " ")||" lorem ".trim() _
 " lorem ".trimLeft() _
 " lorem ".trimRight()||
-||[#pad pad]||char buf[100]; _
+||[[# pad]][#pad-note pad]||char buf[100]; _
 snprintf(buf, 100, "%-10s", "hello");|| ||"lorem".padRight(10, " ") _
 "lorem".padLeft(10, " ")||
-||[#string-length length] _
+||[[# str-len]][#str-len-note length] _
 @<&nbsp;>@||strlen("hello")||len("hello")||##gray|@@//@@ number of 16 bit runes:## _
 "hello".length||
 ||[[# char-type]][#char-type-note character type]||char||rune||##gray|@@//@@ 16 bits:## _
 rune||
 ||[[# char-literal]][#char-literal-note character literal]|| || ||##gray|//none//##||
-||[#char-access character access]|| || || ||
-||[#chr-ord chr and ord]|| || ||new String.fromCharCodes([65]) _
+||[[# char-lookup]][#char-lookup-note character lookup]|| || || ||
+||[[# chr-ord]][#chr-ord-note chr and ord]|| || ||new String.fromCharCodes([65]) _
 "A".codeUnitAt(0) _
  _
 ##gray|@@//@@ for Unicode points above U+FFFF codeUnitAt will _
@@ -607,31 +607,33 @@ if (md != null) { _
 ||||||||~ [[# dates-time]][#dates-time-note dates and time]||
 ||~ ||~ c||~ go||~ dart||
 ||[[# unix-epoch-type]][#unix-epoch-type-note unix epoch type]||time_t|| || ||
-||[[# broken-down-date-time-type]][#broken-down-date-time-type-note broken down type]||struct tm||Time|| ||
+||[[# broken-down-datetime-type]][#broken-down-datetime-type-note broken-down datetime type]||struct tm||Time|| ||
 ||[[# current-unix-epoch]][#current-unix-epoch-note current unix epoch]||time_t now; _
  _
 if (time(&now) == -1) { _
 @<&nbsp;&nbsp;>@perror("time failed"); _
 }|| || ||
-||current broken-down date/time|| ||import "time" _
+||[[# current-datetime]][#current-datetime-note current datetime]|| ||import "time" _
  _
 t := time.Now()|| ||
-||[[# date-time-to-str]][#date-time-to-str-note date and time to string]|| || || ||
-||[[# format-date]][#format-date-note format date]|| || || ||
-||[[# parse-date]][#parse-date-note parse date]|| || || ||
-||[[# date-to-str]][#date-to-str-note convert to string] _
+||[[# broken-down-datetime-to-unix-epoch]][#broken-down-datetime-to-unix-epoch-note broken-down datetime to unix epoch]|| || || ||
+||[[# unix-epoch-to-broken-down-datetime]][#unix-epoch-to-broken-down-datetime-note unix epoch to broken-down datetime]|| || || ||
+||[[# datetime-to-str]][#datetime-to-str-note datetime to string]|| || || ||
+||[[# unix-epoch-to-str]][#unix-epoch-to-str-note unix epoch to string] _
 @<&nbsp;>@||char *s; _
  _
 ##gray|/* ctime returns pointer to statically allocated memory */## _
 if ((s = ctime(&now)) == NULL) { _
 @<&nbsp;&nbsp;>@fputs("ctime failed."); _
 }|| || ||
+||[[# fmt-datetime]][#fmt-datetime-note format datetime]|| || || ||
+||[[# parse-datetime]][#parse-date-note parse datetime]|| || || ||
 ||[[# date-subtraction]][#date-subtraction-note date subtraction]|| || || ||
 ||[[# add-duration]][#add-duration-note add duration]|| || || ||
 ||[[# date-parts]][#date-parts-note date parts]|| || || ||
 ||[[# time-parts]][#time-parts-note time parts]|| || || ||
-||[[# build-date-time]][#build-date-time-note build broken-down date and time]|| || || ||
-||[[# local-tmz-determination]][#local-tmz-determination-note how localtime is determined]|| || || ||
+||[[# build-datetime]][#build-datetime-note build broken-down datetime]|| || || ||
+||[[# local-tmz-determination]][#local-tmz-determination-note local time zone determination]|| || || ||
 ||[[# tmz-info]][#tmz-info-note time zone info] _
 ##gray|//name and utc offset in hours//##|| || || ||
 ||[[# daylight-savings-test]][#daylight-savings-test-note daylight savings test]|| || || ||
@@ -1787,8 +1789,8 @@ The suffixes used for source files, header files, and compiled object files.
 
 How a block of statements is delimited.
 
-[[# stmt-terminator-note]]
-++ [#stmt-terminator statement terminator]
+[[# stmt-separator-note]]
+++ [#stmt-separator statement separator]
 
 How statements are terminated.
 
@@ -2145,8 +2147,8 @@ Escape sequences in string literals.
 [[# expr-interpolation-note]]
 ++ [#expr-interpolation expression interpolation]
 
-[[# string-length]]
-++ string length
+[[# str-len-note]]
+++ [#str-len string length]
 
 [[# string-comparison]]
 ++ string comparison
@@ -2180,37 +2182,35 @@ double
 strtod(const char *str, char **endp);
 [[/code]]
 
-[[# split]]
-++ split
+[[# split-note]]
+++ [#split split]
 
-[[# join]]
-++ join
+[[# str-join-note]]
+++ [#str-join string join]
 
-[[# string-concatenate]]
-++ concatenate
+[[# str-concat-note]]
+++ [#str-concat concatenate]
 
-[[# substring]]
-++ substring
+[[# str-replicate-note]]
+++ [#str-replicate replicate]
 
-[[# index]]
-++ index
+[[# extract-substr-note]]
+++ [#extract-substr extract substring]
 
-[[# sprintf]]
-++ sprintf
+[[# index-substr-note]]
+++ [#index-substr index of substring]
 
+[[# fmt-str-note]]
+++ [#fmt-str format string]
 
+[[# translate-case-note]]
+++ [#translate-case translate case]
 
-[[# uppercase]]
-++ uppercase
+[[# trim-note]]
+++ [#trim trim]
 
-[[# lowercase]]
-++ lowercase
-
-[[# trim]]
-++ trim
-
-[[# pad]]
-++ pad
+[[# pad-note]]
+++ [#pad pad]
 
 [[# regexes-note]]
 + [#regexes Regular Expressions]

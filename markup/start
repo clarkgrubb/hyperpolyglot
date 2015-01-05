@@ -63,11 +63,11 @@
 [[/row]]
 
 [[row]]
-[[cell]]**Computer Algebra Software:**[[/cell]][[cell]][[[computer-algebra|Mathematica, SymPy, GAP]]][[/cell]]
+[[cell]]**Computer Algebra Software:**[[/cell]][[cell]][[[computer-algebra|Mathematica, SymPy, GAP, Pari/GP]]][[/cell]]
 [[/row]]
 
 [[row]]
-[[cell]]**More Mathematics Software:**[[/cell]][[cell]][[[misc-math|Gnuplot, GLPK, Pari/GP, Coq]]][[/cell]]
+[[cell]]**More Mathematics Software:**[[/cell]][[cell]][[[misc-math|Gnuplot, GLPK, Coq]]][[/cell]]
 [[/row]]
 
 [[/table]]
