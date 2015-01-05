@@ -1,12 +1,12 @@
 [[# top]]##gray|core:## [#version version] | [#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#str strings] | [#regex regular expressions] | [#dates-time dates and time] | [#func functions] | [#exec-control execution control] | [#exceptions exceptions] | [#concurrency concurrency] | [#file-handle file handles] | [#file files] | [#file-fmt file formats] | [#dir directories] | [#env-processes processes and environment] | [#option-parsing option parsing] | [#lib-namespaces libraries and namespaces] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#reflection reflection] | [#net-web net and web] | [#dom dom] | [#gui gui] | [#unit-tests unit tests] | [#debug-profile debugging and profiling]
 
-##gray|containers:## [#fixed-length-arrays fixed-length arrays] | [#resizable-arrays resizable arrays] | [#arithmetic-sequences arithmetic sequences] | [#lists lists] | [#tuples tuples] | [#stacks stacks] | [#queues queues] | [#sets sets] | [#dict dictionaries] | [#multidimensional-arrays multidimensional arrays] | [#user-defined-types user-defined types] | [#generic-types generic types] | [#dependent-types dependent types]
+##gray|data structures:## [#fixed-length-arrays fixed-length arrays] | [#resizable-arrays resizable arrays] | [#arithmetic-sequences arithmetic sequences] | [#lists lists] | [#tuples tuples] | [#stacks stacks] | [#queues queues] | [#sets sets] | [#dict dictionaries] | [#multidimensional-arrays multidimensional arrays] | [#user-defined-types user-defined types] | [#generic-types generic types] | [#dependent-types dependent types]
 
 ##gray|auxiliary:## [#cpp-macros c preprocessor macros] | [#lisp-macros lisp macros] | [#java-interop java interop]
 
 ##gray|tables:## [#tables tables] | [#import-export import and export] | [#relational-algebra relational algebra] | [#aggregation aggregation]
 
-##gray|mathematics:## [#vectors vectors] | [#matrices matrices] | [#symbolic-expressions symbolic expressions] | [#equations-unknowns equations and unknowns] | [#optimization optimization] | [#number-theory number theory] | [#polynomials polynomials] | [#rings rings] | [#permutations permutations] | [#groups groups] | [#propositions propositions]
+##gray|mathematics:## [#vectors vectors] | [#matrices matrices] | [#symbolic-expressions symbolic expressions] | [#calculus calculus] | [#equations-unknowns equations and unknowns] | [#optimization optimization] | [#combinatorics combinatorics] | [#number-theory number theory]  | [#elliptic-curves elliptic curves] | [#algebraic-numbers algebraic numbers] | [#polynomials polynomials] | [#power-series power series] | [#special-functions special functions] | [#permutations permutations] | [#groups groups] | [#subgroups subgroups] | [#group-homomorphisms group homomorphisms] | [#actions actions] | [#propositions propositions]
 
 ##gray|statistics:## [#descriptive-statistics descriptive statistics] | [#distributions distributions] | [#regression regression] | [#statistical-tests statistical tests] | [#time-series time series]
 
@@ -136,6 +136,9 @@ Replace this with convention note?  #include, using import in java sheet, not fo
 ||[[# float-div-zero]][#float-div-zero-note float division by zero] _
 @<&nbsp;>@||#float-div-zero||test positive, negative, and zero dividend; if there is an infinity value does it have a literal?||
 ||[[# power]][#power-note power]||#power||Use 2 ** 16 as an example. different for integers and floats?  Zero with negative exponent?  Negative number with fractional exponent?||
+||[[# factorial]][#factorial-note factorial] _
+ _
+##gray|//and binomial coefficient//##||#factorial|| ||
 ||[[# sqrt]][#sqrt-note sqrt]||#sqrt|| ||
 ||[[# sqrt-negative-one]][#sqrt-negative-one-note sqrt -1] _
 @<&nbsp;>@||#sqrt-negative-one|| ||
@@ -156,6 +159,7 @@ Replace this with convention note?  #include, using import in java sheet, not fo
 ||[[# rational-type]][#rational-type-note rational type]||#rational-type|| ||
 ||[[# rational-construction]][#rational-construction-note rational construction]||#rational-construction|| ||
 ||[[# rational-decomposition]][#rational-decomposition-note rational decomposition]||#rational-decomposition||numerator, denominator||
+||[[# decimal-approx]][#decimal-approx-note decimal approximation]||#decimal-approx||and how to control the number of digits||
 ||[[# complex-type]][#complex-type-note complex type]||#complex-type|| ||
 ||[[# complex-construction]][#complex-construction-note complex construction]||#complex-construction||also construct from polar coordinates||
 ||[[# complex-decomposition]][#complex-decomposition-note complex decomposition]||#complex-decomposition||real and imaginary, argument and absolute value, conjugate||
@@ -215,19 +219,19 @@ Shift can be logical, circular, or arithmetic.  In logical shift the new bits ar
 ||[[# prefix-suffix-test]][#prefix-suffix-test-note prefix and suffix test]||#prefix-suffix-test|| ||
 ||[[# serialize]][#serialize-note serialize] _
 ##gray|//and deserialize//##||#serialize|| ||
-||[[# str-length]][#str-length-note length] _
-@<&nbsp;>@||#str-length||in characters, in bytes||
+||[[# str-len]][#str-len-note length] _
+@<&nbsp;>@||#str-len||in characters, in bytes||
 ||[[# index-substr]][#index-substr-note index of substring] _
 ##gray|//first, last//##||#index-substr||is index zero-based or one-based?  What if not found?||
 ||[[# extract-substr]][#extract-substr-note extract substring] _
-@<&nbsp;>@||#extract-substr||what about out-of-bounds condition||
+@<&nbsp;>@||#extract-substr||zero-based or one-based index?  by endpoints, by start and length; what about out-of-bounds condition||
 ||[[# char-type]][#char-type-note character type]||#char-type|| ||
 ||[[# char-pred]][#char-pred-note character predicate]||#char-pred|| ||
 ||[[# char-literal]][#char-literal-note character literal]||#char-literal|| ||
-||[[# extract-char]][#extract-char-note extract character] _
-##gray|//and byte//##||#extract-char||is index zero-based or one-based?||
+||[[# lookup-char]][#lookup-char-note character lookup] _
+##gray|//and byte//##||#lookup-char||is index zero-based or one-based? out-of-bounds?||
 ||[[# chr-ord]][#chr-ord-note chr and ord] _
-@<&nbsp;>@||#chr-ord|| ||
+@<&nbsp;>@||#chr-ord||"chr" converts an integer representing a code point to the corresponding character.  In language which represent characters by integers no such operation is necessary, but in other languages "chr" might return a string with one character.  "ord" is the inverse operation.  There must be a character encoding, whether implicit or explicit, and "chr" can fail if not given a code point that is in range.||
 ||[[# str-to-char-array]][#str-to-char-array-note to array of characters]||#str-to-char-array|| ||
 ||[[# test-char]][#test-char-note test character]||#test-char||is uppercase? is lowercase?  Other Unicode properties||
 ||[[# translate-char]][#translate-char-note translate characters] _
@@ -624,7 +628,7 @@ iterate over i and print the numbers 0 to 9||
 ||[[# benchmark]][#benchmark-note benchmark code]||#benchmark|| ||
 ||[[# profile]][#profile-note profile code]||#profile|| ||
 ||[[# memory-tool]][#memory-tool-note memory tool]||#memory-tool||memory leaks; accessing uninitialized memory||
-||||||~ CONTAINERS||
+||||||~ DATA STRUCTURES||
 ||||||~ [[# fixed-length-arrays]][#fixed-length-arrays-note fixed-length arrays]||
 ||~ title ||~ anchor||~ description||
 ||[[# fixed-len-array-stack]][#fixed-len-array-stack-note declare on stack]||#fixed-len-array-stack|| ||
@@ -757,7 +761,7 @@ iterate over i and print the numbers 0 to 9||
 ||~ title ||~ anchor||~ description||
 ||[[# tuple-type]][#tuple-type-note type]||#tuple-type|| ||
 ||[[# tuple-literal]][#tuple-literal-note literal]||#tuple-literal|| ||
-||[[# tuple-access]][#tuple-access-note lookup element]||#tuple-access|| ||
+||[[# tuple-lookup]][#tuple-lookup-note lookup element]||#tuple-lookup|| ||
 ||[[# tuple-update]][#tuple-update-note update element]||#tuple-update|| ||
 ||[[# tuple-len]][#tuple-len-note length]||#tuple-len|| ||
 ||||||~ [[# stacks]][#stacks-note stacks]||
@@ -777,9 +781,9 @@ iterate over i and print the numbers 0 to 9||
 ||[[# dict-lookup]][#dict-lookup-note lookup] _
 @<&nbsp;>@||#dict-lookup|| ||
 ||[[# dict-update]][#dict-update-note update] _
-@<&nbsp;>@||#dict-update|| ||
+@<&nbsp;>@||#dict-update||distinguish between insert and update?||
 ||[[# dict-missing-key]][#dict-missing-key-note missing key behavior] _
-@<&nbsp;>@||#dict-missing-key|| ||
+@<&nbsp;>@||#dict-missing-key||on lookup||
 ||[[# dict-is-key-present]][#dict-is-key-present-note is key present] _
 @<&nbsp;>@||#dict-is-key-present|| ||
 ||[[# dict-delete]][#dict-delete-note delete]||#dict-delete|| ||
@@ -892,9 +896,9 @@ dimension lengths//##||#multidim-array-size|| ||
 ||[[# table-from-row-tuples]][#table-from-row-tuples-note construct from row tuples]||#table-from-row-tuples|| ||
 ||[[# categorical-var-col]][#categorical-var-col-note categorical variable column]||#categorical-var-col|| ||
 ||[[# col-names-as-array]][#col-names-as-array-note column names as array]||#col-names-as-array|| ||
-||[[# access-col-as-array]][#access-col-as-array-note access column as array]||#access-col-as-array|| ||
-||[[# access-row-as-tuple]][#access-row-as-tuple-note access row as tuple]||#access-row-as-tuple|| ||
-||[[# access-datum]][#access-datum-note access datum]||#access-datum|| ||
+||[[# extract-col-as-array]][#extract-col-as-array-note extract column as array]||#extract-col-as-array|| ||
+||[[# extract-row-as-tuple]][#extract-row-as-tuple-note extract row as tuple]||#extract-row-as-tuple|| ||
+||[[# lookup-datum]][#lookup-datum-note lookup datum]||#lookup-datum|| ||
 ||[[# order-rows]][#order-rows-note order rows by column]||#order-rows|| ||
 ||[[# order-rows-multiple-col]][#order-rows-multiple-col-note order rows by multiple columns]||#order-rows-multiple-col|| ||
 ||[[# order-rows-desc]][#order-rows-desc-note order rows in descending order]||#order-rows-desc|| ||
@@ -967,10 +971,10 @@ dimension lengths//##||#multidim-array-size|| ||
 ||[[# diagonal-matrices]][#diagonal-matrices-note diagonal matrices] _
 ##gray|//and identity//##||#diagonal-matrices|| ||
 ||[[# matrix-dim]][#matrix-dim-note dimensions]||#matrix-dim|| ||
-||[[# matrix-access]][#matrix-access-note element access]||#matrix-access|| ||
-||[[# matrix-row-access]][#matrix-row-access-note row access]||#matrix-row-access|| ||
-||[[# matrix-col-access]][#matrix-col-access-note column access]||#matrix-col-access|| ||
-||[[# submatrix-access]][#submatrix-access-note submatrix access]||#submatrix-access|| ||
+||[[# matrix-lookup]][#matrix-lookup-note element lookup]||#matrix-lookup|| ||
+||[[# extract-matrix-row]][#extract-matrix-row-note extract row]||#extract-matrix-row|| ||
+||[[# extract-matrix-col]][#extract-matrix-col-note extract column]||#extract-matrix-col|| ||
+||[[# extract-submatrix]][#extract-submatrix-note extract submatrix]||#extract-submatrix|| ||
 ||[[# matrix-scalar-mult]][#matrix-scalar-mult-note scalar multiplication]||#matrix-scalar-mult|| ||
 ||[[# matrix-elem-wise-op]][#matrix-elem-wise-op-note element-wise operators]||#matrix-elem-wise-op|| ||
 ||[[# matrix-mult]][#matrix-mult-note multiplication]||#matrix-mult|| ||
@@ -996,19 +1000,33 @@ dimension lengths//##||#multidim-array-size|| ||
 ||[[# sparse-matrix-storage]][#sparse-matrix-storage-note sparse matrix storage]||#sparse-matrix-storage|| ||
 ||||||~ [[# symbolic-expressions]][#symbolic-expressions-note symbolic expressions]||
 ||~ title ||~ anchor||~ description||
+||||||~ [[# calculus]][#calculus-note calculus]||
+||~ title ||~ anchor||~ description||
 ||||||~ [[# equations-unknowns]][#equations-unknowns-note equations and unknowns]||
 ||~ title ||~ anchor||~ description||
 ||||||~ [[# optimization]][#optimization-note optimization]||
 ||~ title ||~ anchor||~ description||
 ||||||~ [[# number-theory]][#number-theory-note number theory]||
 ||~ title ||~ anchor||~ description||
+||||||~ [[# elliptic-curves]][#elliptic-curves-note elliptic curves]||
+||~ title ||~ anchor||~ description||
+||||||~ [[# algebraic-numbers]][#algebraic-numbers-note algebraic numbers]||
+||~ title ||~ anchor||~ description||
 ||||||~ [[# polynomials]][#polynomials-note polynomials]||
 ||~ title ||~ anchor||~ description||
-||||||~ [[# rings]][#rings-note rings]||
+||||||~ [[# power-series]][#power-series-note power series]||
+||~ title ||~ anchor||~ description||
+||||||~ [[# special-functions]][#special-functions-note special functions]||
 ||~ title ||~ anchor||~ description||
 ||||||~ [[# permutations]][#permutations-note permutations]||
 ||~ title ||~ anchor||~ description||
 ||||||~ [[# groups]][#groups-note groups]||
+||~ title ||~ anchor||~ description||
+||||||~ [[# subgroups]][#subgroups-note subgroups]||
+||~ title ||~ anchor||~ description||
+||||||~ [[# group-homomorphisms]][#group-homomorphisms-note group homomorphisms]||
+||~ title ||~ anchor||~ description||
+||||||~ [[# actions]][#actions-note actions]||
 ||~ title ||~ anchor||~ description||
 ||||||~ [[# propositions]][#propositions-note propositions]||
 ||~ title ||~ anchor||~ description||
@@ -1026,8 +1044,8 @@ dimension lengths//##||#multidim-array-size|| ||
 ||[[# bivariate-stats]][#bivariate-stats-note bivariate statistiscs] _
 ##gray|//correlation, covariance//##||#bivariate-stats|| ||
 ||[[# correlation-matrix]][#correlation-matrix-note correlation matrix]||#correlation-matrix|| ||
-||[[# freq-table]][#freq-table-note frequency table]||#freq-table|| ||
-||[[# invert-freq-table]][#invert-freq-table-note invert frequency table]||#invert-freq-table|| ||
+||[[# freq-table]][#freq-table-note data set to frequency table]||#freq-table|| ||
+||[[# invert-freq-table]][#invert-freq-table-note frequency table to data set]||#invert-freq-table|| ||
 ||[[# bin]][#bin-note bin]||#bin|| ||
 ||||||~ [[# distributions]][#distributions-note distributions]||
 ||~ title ||~ anchor||~ description||
