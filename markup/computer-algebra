@@ -10,7 +10,7 @@
 ||[[# version-used]][#version-used-note version used] _
 @<&nbsp;>@||##gray|//10.0//##||##gray|//Python 2.7; SymPy 0.7//##||##gray|//4.7//##||##gray|//2.7//##||
 ||[[# show-version]][#show-version-note show version] _
-@<&nbsp;>@||##gray|//select// About Mathematica //in// Mathematica //menu//##||@@sympy.__version__@@||$ gap -h||$ gp @@--@@version||
+@<&nbsp;>@||##gray|//select// About Mathematica //in// Mathematica //menu//##||@@sympy.__version__@@||$ gap.sh -h||$ gp @@--@@version||
 ||[[# implicit-prologue]][#implicit-prologue-note implicit prologue]|| ||import sympy _
  _
 sympy.init_printing()|| || ||
@@ -18,25 +18,33 @@ sympy.init_printing()|| || ||
 ||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
 ||[[# interpreter]][#interpreter-note interpreter] _
 @<&nbsp;>@|| ||##gray|//if// foo.py //imports sympy://## _
-$ python ##gray|//foo//##.py|| ||$ gp -q ##gray|//foo//##.gp||
+$ python ##gray|//foo//##.py|| ||$ cat hello.gp _
+print("Hello, World!") _
+quit _
+ _
+$ gp -q hello.gp _
+Hello, World!||
 ||[[# repl]][#repl-note repl] _
 @<&nbsp;>@||$ MathKernel||$ python _
-@@>>>@@ import sympy||$ gap||$ gp||
+@@>>>@@ import sympy||$ gap.sh||$ gp||
 ||[[# block-delimiters]][#block-delimiters-note block delimiters] _
 @<&nbsp;>@||( ##gray|//stmt//##; ##gray|//...//##)||: ##gray|//and offside rule//##||function( ) ##gray|//...//## end _
 if then ##gray|//...//## elif then ##gray|//...//##  else ##gray|//...//## fi _
 while do ##gray|//...//## od _
-for do ##gray|//...//## od||{ ##gray|//...//## }||
+for do ##gray|//...//## od||{ ##gray|//...//## } _
+ _
+##gray|//braces cannot be nested//##||
 ||[[# stmt-separator]][#stmt-separator-note statement separator]||; ##gray|//or sometimes newline//## _
  _
-; ##gray|//before a newline suppresses output//##||##gray|//newline or//## ; _
+##gray|//A semicolon suppresses echoing value of previous expression.//##||##gray|//newline or//## ; _
  _
 ##gray|//newlines not separators inside (), [], {}, triple quote literals, or after backslash: @@\@@//##||; _
  _
-##gray|//use two semicolons to suppress output://## _
-;;||##gray|//newline or//## ; _
+##gray|//Two trailing semicolons// ;;  //suppress echoing value of previous expression.//##||##gray|//newline or//## ; _
  _
-##gray|//A trailing semicolon suppresses output.//##||
+##gray|//Newlines don't separate statements inside braces.//## _
+ _
+##gray|//A semicolon suppresses echoing value of previous expression.//##||
 ||[[# eol-comment]][#eol-comment-note end-of-line comment] _
 @<&nbsp;>@||##gray|//none//##||1 + 1 ##gray|# addition##||1 + 1; ##gray|# addition##||1 + 1 ##gray|\\ addition##||
 ||[[# multiple-line-comment]][#multiple-line-comment-note multiple line comment] _
@@ -59,20 +67,29 @@ PreIncrement[x] PreDecrement[x] _
 x++ x@@--@@ _
 Increment[x] Decrement[x]||##gray|//none//##||##gray|//none//##||##gray|//postmodifiers://## _
 x++ x@@--@@||
-||non-referential identifier||##gray|//any unassigned identifier is non-referential//##||x, y, z, w = sympy.symbols('x y z w')||##gray|//none//##|| ||
-||global variable||##gray|//variables are global by default//##||g1, g2 = 7, 8 _
+||[[# non-referential-id]][#non-referential-id-note non-referential identifier]||##gray|//any unassigned identifier is non-referential//##||x, y, z, w = sympy.symbols('x y z w')||##gray|//none//##||##gray|//any unassigned identifier is non-referential//##||
+||[[# id-as-val]][#id-as-val-note identifier as value]||x = 3 _
+x // HoldForm|| || ||x = 3 _
+'x||
+||[[# global-var]][#global-var-note global variable]||##gray|//variables are global by default//##||g1, g2 = 7, 8 _
  _
 def swap_globals(): _
 @<&nbsp;&nbsp;>@global g1, g2 _
-@<&nbsp;&nbsp;>@g1, g2 = g2, g1|| || ||
-||local variable||Module[{x = 3, y = 4}, Print[x + y]] _
+@<&nbsp;&nbsp;>@g1, g2 = g2, g1|| ||##gray|//variables are global by default//##||
+||[[# local-var]][#local-var-note local variable]||Module[{x = 3, y = 4}, Print[x + y]] _
  _
 ##gray|(* makes x and y read-only: *)## _
-With[{x = 3, y = 4}, Print[x + y]]||##gray|//assignments inside functions are to local variables by default//##|| || ||
+With[{x = 3, y = 4}, Print[x + y]]||##gray|//assignments inside functions are to local variables by default//##|| ||tmp = 19 _
+ _
+add(x, y, z) = { _
+@<&nbsp;&nbsp;>@##gray|@@\\@@ don't overwrite global tmp:## _
+@<&nbsp;&nbsp;>@my(tmp = x + y); _
+@<&nbsp;&nbsp;>@tmp + z _
+}||
 ||[[# null]][#null-note null] _
-@<&nbsp;>@||Null||None|| || ||
+@<&nbsp;>@||Null||None|| ||##gray|//none//##||
 ||[[# null-test]][#null-test-note null test] _
-@<&nbsp;>@||x == Null||x is None|| || ||
+@<&nbsp;>@||x == Null||x is None|| ||##gray|//none//##||
 ||[[# undef-var]][#undef-var-note undefined variable access] _
 @<&nbsp;>@||##gray|//treated as an unknown number//##||##gray|//raises// NameError##||##gray|//error//##||##gray|//treated as an unknown number//##||
 ||[[# rm-var-binding]][#rm-var-binding-note remove variable binding]||Clear[x] _
@@ -170,7 +187,8 @@ NumeratorRat(x); _
 DenominatorRat(x);||x = 2 / 7 _
 numerator(x) _
 denominator(x)||
-||[[# decimal-approx]][#decimal-approximation-note decimal approxiation]||N[2 / 7] _
+||[[# decimal-approx]][#decimal-approx-note decimal approximation]||N[2 / 7] _
+2 / 7 + 0. _
 2 / 7 @@//@@ N _
 N[2 / 7, 100]||sympy.N(sympy.Rational(2, 7)) _
 sympy.N(sympy.Rational(2, 7), 100)|| ||2 / 7 + 0. _
@@ -188,16 +206,11 @@ sympy.Abs sympy.arg _
 sympy.conjugate||##gray|//none//##||real(z) imag(z) _
 arg(z) abs(z) _
 conj(z)||
-||[#numerical-approximation numerical approximation]||N[Exp[1]] _
-Exp[1] + 0. _
-N[Exp[1], 10]||sympy.N(sympy.E) _
-sympy.N(sympy.E, 100)|| || ||
 ||[[# random-num]][#random-num-note random number] _
 ##gray|//uniform integer, uniform float//##||RandomInteger[{0, 99}] _
 RandomReal[]|| ||rs := RandomSource(IsMersenneTwister); _
 Random(rs, 0, 99); _
 ##gray|//??//##||random(100) _
-##gray|//??//## _
 ##gray|//??//##||
 ||[[# random-seed]][#random-seed-note random seed] _
 ##gray|//set, get//##||SeedRandom[17] _
@@ -246,18 +259,18 @@ StringReplace[s, re -> "ma", 1] _
 StringReplace[s, re -> "ma"]|| ||##gray|# replace all occurrences:## _
 ReplacedString("do re mi mi", "mi", "ma");|| ||
 ||[#trim trim]||StringTrim[" foo "]|| ||##gray|//none//##|| ||
-||number to string||"value: " <> ToString[8]|| ||Concatenation("value: ", String(8));|| ||
-||string to number||7 + ToExpression["12"] _
+||[[# num-to-str]][#num-to-str-note number to string]||"value: " <> ToString[8]|| ||Concatenation("value: ", String(8));|| ||
+||[[# str-to-num]][#str-to-num-note string to number]||7 + ToExpression["12"] _
 73.9 + ToExpression[".037"]|| ||7 + Int("12"); _
 73.9 + Float(".037");|| ||
 ||[#case-manipulation case manipulation]||ToUpperCase["foo"] _
 ToLowerCase["FOO"]|| ||UppercaseString("foo"); _
 LowercaseString("FOO");|| ||
-||character literals|| || ||'h'|| ||
+||[[# char-literal]][#char-literal-note character literal]|| || ||'h'|| ||
 ||[#chr-ord chr and ord]||FromCharacterCode[{65}] _
 ToCharacterCode["A"][[1]]|| ||CharInt(65) _
 IntChar('A')|| ||
-||delete characters|| || ||s := "disemvowel me"; _
+||[[# delete-chars]][#delete-chars-note delete characters]|| || ||s := "disemvowel me"; _
 ##gray|# no retval; modifies s in place:## _
 RemoveCharacters(s, "aeiou"); || ||
 ||||||||||~ [[# resizable-arrays]][#resizable-arrays-note resizable arrays]||
@@ -270,10 +283,6 @@ List[1, 2, 3]||##gray|//use//## [[[scripting#arrays|Python lists]]]||[1, 2, 3]; 
 # reading a[4] causes an error:## _
 a := [1, 2, 3, , 5];||##gray|\\ [1, 2, 3] is a vector literal:## _
 List([1, 2, 3])||
-||constant vector _
- _
-##gray|//all zeros, all ones//##|| || ||vector(3, i, 0) _
-vector(3, i, 1)||
 ||[[# array-size]][#array-size-note size] _
 @<&nbsp;>@||Length[{1, 2, 3}]|| ||Length([1, 2, 3]);||length(List([1, 2, 3])) _
 #List([1, 2, 3])||
@@ -378,7 +387,7 @@ Maximum([1, 2, 3])|| ||
  _
 RandomSample[x] _
 RandomSample[x, 3]|| ||Shuffle([1, 2, 3, 4])|| ||
-||flatten _
+||[[# flatten]][#flatten-note flatten] _
 ##gray|//one level, completely//##||Flatten[{1, {2, {3, 4}}}, 1] _
 Flatten[{1, {2, {3, 4}}}]|| ||##gray|# completely:## _
 Flat([1, [2, [3, 4]]])|| ||
@@ -433,24 +442,34 @@ Values[d]|| || || ||
 ##gray|(* alternate syntax: *)## _
 Add = Function[{a, b}, a + b]|| ||add := function(x, y) _
 @<&nbsp;&nbsp;>@return x + y; _
-end;||add(x, y) = x + y||
+end;||add(x, y) = x + y _
+ _
+##gray|@@\\@@ function body w/ sequence of statements:## _
+say(s1, s2, s3) = print(s1); print(s2); print(s3) _
+ _
+##gray|@@\\@@ function body w/ newlines:## _
+dire(s1, s2, s3) = { _
+@<&nbsp;&nbsp;>@print(s1); _
+@<&nbsp;&nbsp;>@print(s2); _
+@<&nbsp;&nbsp;>@print(s3); _
+}||
 ||[#function-invocation invoke function]||Add[3, 7] _
  _
 Add @<@@>@ {3, 7} _
  _
 ##gray|(* syntax for unary functions: *)## _
 2 @@//@@ Log|| ||add(3, 7);||add(3, 7)||
-||attributes _
+||[[# boolean-func-attr]][#boolean-func-attr-note boolean function attributes] _
 ##gray|//list, set, clear//##||Attributes[add] _
 SetAttributes[add, {Orderless, Flat, Listable}] _
 ClearAtttibutes[add, Listable]|| || || ||
-||undefine function||Clear[Add]|| || || ||
-||redefine function||Add[a_, b_] := b + a|| || || ||
-||overload function|| || || || ||
-||missing function behavior||##gray|//The expression is left unevaluated.  The head is the function name as a symbol, and the parts are the arguments.//##|| || ||##gray|//"not a function" error//##||
-||missing argument behavior||##gray|//The expression is left unevaluated.  The head is the function name as a symbol, and the parts are the arguments.//##|| || ||##gray|//set to zero//##||
-||extra argument behavior||##gray|//The expression is left unevaluated.  The head is the function name as a symbol, and the parts are the arguments.//##|| || ||##gray|//"too many parameters" error//##||
-||default argument||Options[myLog] = {base -> 10} _
+||[[# undef-func]][#undef-func-note undefine function]||Clear[Add]|| || ||kill(add)||
+||[[# redefine-func]][#redefine-func-note redefine function]||Add[a_, b_] := b + a|| || ||add(x, y, z) = x + y + z||
+||[[# overload-func]][#overload-func-note overload function]|| || || ||##gray|//none//##||
+||[[# missing-func]][#missing-func-note missing function behavior]||##gray|//The expression is left unevaluated.  The head is the function name as a symbol, and the parts are the arguments.//##|| || ||##gray|//"not a function" error//##||
+||[[# missing-arg]][#missing-arg-note missing argument behavior]||##gray|//The expression is left unevaluated.  The head is the function name as a symbol, and the parts are the arguments.//##|| || ||##gray|//set to zero//##||
+||[[# extra-arg]][#extra-arg-note extra argument behavior]||##gray|//The expression is left unevaluated.  The head is the function name as a symbol, and the parts are the arguments.//##|| || ||##gray|//"too many parameters" error//##||
+||[[# default-arg]][#default-arg-note default argument]||Options[myLog] = {base -> 10} _
 myLog[x_, OptionsPattern[]] := _
 @<&nbsp;&nbsp;>@N[Log[x]/Log[OptionValue[base]]] _
  _
@@ -458,8 +477,18 @@ myLog[x_, OptionsPattern[]] := _
 myLog[100] _
  _
 ##gray|(* override default: *)## _
-myLog[100, base -> E]|| || || ||
-||[#return-value return value]||##gray|//last expression evaluated, or argument of// Return[]##|| || || ||
+myLog[100, base -> E]|| || ||mylog(x = 1, base = 10) = log(x) / log(base) _
+ _
+##gray|@@\\@@ log10(3):## _
+mylog(3) _
+##gray|@@\\@@ ln(3):## _
+mylog(3, exp(1)) _
+##gray|@@\\@@ ln(1):## _
+mylog(, exp(1)) _
+ _
+##gray|@@\\@@ If neither caller nor function definition _
+@@\\@@ provide a value, zero is used.##||
+||[[# retval]][#retval-note return value]||##gray|//last expression evaluated, or argument of// Return[]##|| || || ||
 ||[#anonymous-function anonymous function]||Function[{a, b}, a + b] _
  _
 (#1 + #2) &|| ||##gray|# unary functions only?## _
@@ -508,13 +537,14 @@ od;||for(i = 0, 9, print(i))||
 ||[#continue continue]||Continue[]|| ||continue||next||
 ||||||||||~ [[# exceptions]][#exceptions-note exceptions]||
 ||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
-||[#raise-exception raise exception]||Throw["failed"]||##gray|//use//## [http://hyperpolyglot.org/scripting#exceptions Python exceptions]||Error("failed");||error("failed")||
-||[#handle-exception handle exception]||Print[Catch[Throw["failed"]]]|| ||##gray|Error() //invokes the GAP debugger.  Type// _
+||[[# raise-exc]][#raise-exc-note raise exception]||Throw["failed"]||##gray|//use//## [http://hyperpolyglot.org/scripting#exceptions Python exceptions]||Error("failed");||error("failed")||
+||[[# handle-exc]][#handle-exc-note handle exception]||Print[Catch[Throw["failed"]]]|| || ||iferr(error("failed"), E, \ _
+@<&nbsp;&nbsp;>@print(errname(E), ": ", component(E, 1)))||
+||[[# uncaught-exc]][#uncaught-exc-note uncaught exception behavior]|| || ||##gray|Error() //invokes the GAP debugger.  Type// _
  _
 @<&nbsp;&nbsp;>@Quit; _
  _
-//to return to REPL.//##||iferr(error("failed"), E, \ _
-@<&nbsp;&nbsp;>@print(errname(E), ": ", component(E, 1)))||
+//to return to REPL.//##|| ||
 ||||||||||~ [[# file-handles]][#file-handles-note file handles]||
 ||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
 ||[#write-stdout write to stdout]||Print["hello"]|| ||Print("hello");||print("hello")||
@@ -537,7 +567,10 @@ help(sympy.solve)|| ||? tan||
 ||list function options||Options[Solve] _
 Options[Plot]|| || || ||
 ||[#data-type query data type]||Head[x]|| || ||type(x)||
-||[#list-variables list variables in scope]|| || || || ||
+||list types|| || || ||\t||
+||[#list-variables list variables in scope]|| || || ||variable()||
+||list built-in functions|| || || ||?*||
+||list metacommands|| || || ||?\||
 ||search documentation|| || ||??DirectProduct|| ||
 ||||||||||~ [[# vectors]][#vectors-note vectors]||
 ||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
@@ -545,6 +578,11 @@ Options[Plot]|| || || ||
 {1, 2, 3}||##gray|# column vector:## _
 sympy.Matrix([1, 2, 3])||##gray|# row vector is same as array:## _
 [1, 2, 3]||[1, 2, 3]||
+||constant vector _
+ _
+##gray|//all zeros, all ones//##||Table[0, {i, 1, 3}] _
+Table[1, {i, 1, 3}]|| ||vector(3, i, 0) _
+vector(3, i, 1)||
 ||[[# vec-coordinate]][#vec-coordinate-note vector coordinate]||##gray|(* indices start at one: *)## _
 {1,v2, 3}[[1]]|| ||vec := [1, 2, 3]; _
 ##gray|# indices start at one:## _
@@ -837,7 +875,7 @@ e0 = ellinit([0,0,1,-7,6]) _
 e1 = ellinit([-1, 0])||
 ||discriminant|| || || ||e0.disc||
 ||conductor|| || || ||ellglobalred(e0)[1]||
-||singular test|| || || ||e0.disc == 0||
+||singularity test|| || || ||e0.disc == 0||
 ||convert to minimal model|| || || ||e0 = ellinit([6, -3, 9, -16, -14]) _
 e = ellminimalmodel(e0)||
 ||coordinate transformation on point|| || || ||e0 = ellinit([6, -3, 9, -16, -14]) _
@@ -1320,6 +1358,8 @@ QuantilePlot[d1, d2]|| || || ||
 ||[#axis-label axis label]||d = Table[{i, i^2}, {i, 1, 20}] _
 ListLinePlot[d, _
 @<&nbsp;&nbsp;>@AxesLabel -> {x, x^2}]|| || || ||
+||[[# axis-limits]][#axis-limits-note axis limits]||Plot[x^2, {x, 0, 20}, _
+@<&nbsp;&nbsp;>@PlotRange -> @@{{0, 20}, {-200, 500}}@@]|| || ||
 ||[#logarithmic-y-axis logarithmic y-axis]||LogPlot[{x^2, x^3, x^4, x^5}, _
 @<&nbsp;&nbsp;>@{x, 0, 20}]|| || || ||
 ||||||||||~ [[# trivariate-charts]][#trivariate-chart-note trivariate charts]||
@@ -1442,6 +1482,22 @@ The compound assignment operators.
 
 [[# incr-decr-note]]
 ++ [#incr-decr increment and decrement]
+
+[[# global-var-note]]
+++ [#global-var global variable]
+
+How to declare a global variable.
+
+[[# local-var-note]]
+++ [#local-var local variable]
+
+How to declare a local variable.
+
+**pari/gp:**
+
+There is {{my}} for declaring a local variable with lexical scope and {{local}} for declaring a variable with dynamic scope.
+
+{{local}} can be used to change the value of a global as seen by any functions which are called while the local scope is in effect.
 
 [[# null-note]]
 ++ [#null null]
@@ -1885,15 +1941,18 @@ How to break out of a loop.  How to jump to the next iteration of a loop.
 [[# exceptions-note]]
 + [#exceptions Exceptions]
 
-[[# raise-exception]]
-++ raise exception
+[[# raise-exc-note]]
+++ [#raise-exc raise exception]
 
 How to raise an exception.
 
-[[# handle-exception]]
-++ handle exception
+[[# handle-exc-note]]
+++ [#handle-exc handle exception]
 
 How to handle an exception.
+
+[[# uncaught-exc-note]]
+++ [#uncaught-exc uncaught exception behavior]
 
 **gap:**
 

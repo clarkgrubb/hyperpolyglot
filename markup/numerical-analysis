@@ -18,7 +18,7 @@
 ##gray|//Matplotlib 1.3//##||
 ||[[# show-version]][#show-version-note show version]||$ matlab -nojvm -nodisplay -r 'exit' _
  _
-$ octave @@--version@@||$ r @@--version@@||sys.version _
+$ octave @@--version@@||$ R @@--version@@||sys.version _
 np.@@__version__@@ _
 sp.@@__version__@@ _
 mpl.@@__version__@@||
@@ -44,14 +44,14 @@ $ octave foo.m||$ cat @@>>@@foo.r _
  _
 $ Rscript foo.r _
  _
-$ r -f foo.r||$ cat @@>>@@foo.py _
+$ R -f foo.r||$ cat @@>>@@foo.py _
 print(1 + 1) _
  _
 $ python foo.py||
 ||[[# repl]][#repl-note repl] _
 @<&nbsp;>@||$ matlab -nojvm -nodisplay _
  _
-$ octave||$ r||$ python||
+$ octave||$ R||$ python||
 ||[[# cmd-line-program]][#cmd-line-program-note command line program]||$ matlab -nojvm -nodisplay -r 'disp(1 + 1); exit' _
  _
 $ octave @@--@@silent @@--@@eval '1 + 1'||$ Rscript -e 'print("hi")'||python -c 'print("hi")'||
@@ -356,6 +356,9 @@ fmt = '%Y-%m-%d %H:%M:%S' _
 t = datetime.datetime.strptime(s, fmt)||
 ||[[# strftime]][#strftime-note strftime] _
 @<&nbsp;>@||datestr(t, 'yyyy-mm-dd HH:MM:SS')||format(t, format='%Y-%m-%d %H:%M:%S')||t.strftime('%Y-%m-%d %H:%M:%S')||
+||[[# sleep]][#sleep-note sleep]||pause(0.5)||Sys.sleep(0.5)||import time _
+ _
+time.sleep(0.5)||
 ||||||||~ [[# tuples]][#tuples-note tuples]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
 ||[[# tuple-type]][#tuple-type-note type] _
@@ -2131,7 +2134,12 @@ plt.scatter(x, y) _
 plt.plot(x, [m*i + c for i in x])||
 ||[[image http://farm6.static.flickr.com/5125/5267434941_f8537c9d26_s.jpg]] _
 [[# polygonal-plot]][#polygonal-plot-note polygonal line plot]||plot(1:20,randn(1,20))||plot(1:20, rnorm(20), type="l")||plot(range(0,20), randn(20))||
-||[[# line-types]][#line-types-note line types]|| ||##gray|//Integer or string values for// lty //parameter: _
+||[[# line-types]][#line-types-note line types]||##gray|//Optional 3rd argument to plot:// _
+ _
+'-': solid _
+':': dotted _
+'-.': dashdot _
+'--': dashed##||##gray|//Integer or string values for// lty //parameter: _
  _
 0: 'blank' _
 1: 'solid' (default) _
@@ -2151,6 +2159,7 @@ xlabel('x') _
 ylabel('x squared')||plot(1:20, (1:20)^2, _
 @<&nbsp;&nbsp;>@xlab="x", ylab="x squared")|| ||
 ||[[# axis-limits]][#axis-limits-note axis limits]||plot( 1:20, (1:20) .** 2) _
+##gray|% [xmin, xmax, ymin, ymax]:## _
 axis([1 20 -200 500])||plot(1:20, (1:20)^2, _
 @<&nbsp;&nbsp;>@xlim=c(0, 20), ylim=c(-200,500))|| ||
 ||[[# logarithmic-y-axis]][#logarithmic-y-axis-note logarithmic y-axis]||semilogy(x, x .** 2, _
@@ -2178,7 +2187,16 @@ plot(1:20, randn(1, 20)) _
 hold on _
 plot(1:20, randn(1, 20))||plot(1:20, rnorm(20), type="l") _
 lines(1:20, rnorm(20), col="red")|| ||
-||[[# colors]][#colors-note colors]|| ||##gray|# Use the col parameter to specify the color of points _
+||[[# colors]][#colors-note colors]||##gray|//Use color letters by themselves for colored lines.  Use '.r' for red dots.// _
+ _
+'b': blue _
+'g': green _
+'r': red _
+'c': cyan _
+'m': magenta _
+'y': yellow _
+'k': black _
+'w': white##||##gray|# Use the col parameter to specify the color of points _
 # and lines. _
 # _
 # The colors() function returns a list of recognized _
@@ -2208,7 +2226,7 @@ legend('topleft', c('first', 'second'), _
 @<&nbsp;&nbsp;>@lty=c(1,1), lwd=c(2.5, 2.5), _
 @<&nbsp;&nbsp;>@col=c('black', 'red'))|| ||
 ||[[# additional-point]][[image http://farm9.staticflickr.com/8600/15814685890_69b3f21697_t.jpg]] _
-[#additional-point-note additional point set]|| ||plot(rnorm(20), rnorm(20)) _
+[#additional-point-note additional point set]||plot(randn(20), randn(20), '.k', randn(20), randn(20), '.r')||plot(rnorm(20), rnorm(20)) _
 points(rnorm(20), rnorm(20), _
 @<&nbsp;&nbsp;>@col='red')|| ||
 ||[[# area-chart]][[image http://farm6.static.flickr.com/5041/5268071368_75c3aee42e_t.jpg]] _

@@ -1,12 +1,41 @@
 //commonly used features in a side-by-side format//
 
 [[table style="align:left;"]]
+
 [[row]]
 [[cell]]**Interpreted Languages:**[[/cell]][[cell]][[[scripting|JavaScript, PHP, Python, Ruby]]][[/cell]]
 [[/row]]
 
 [[row]]
 [[cell]]**More Interpreted Languages:**[[/cell]][[cell]][[[more|Perl, Tcl, Lua, Groovy]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**Operating System Automation:**[[/cell]][[cell]][[[shell|POSIX Shell, Cmd.exe, PowerShell]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**GUI Scripting:**[[/cell]][[cell]][[[gui|Smalltalk, AutoHotkey, AppleScript]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**Stack-Oriented Languages:**[[/cell]][[cell]][[[stack|Forth, PostScript]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**Prolog and Erlang:@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@**[[/cell]][[cell]][[[logic|Prolog, Erlang]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**Lisp Dialects:**[[/cell]][[cell]][[[lisp|Common Lisp, Racket, Clojure, Emacs Lisp]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]@<&nbsp;>@[[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**C++ Style Languages:**[[/cell]][[cell]][[[cpp|C++, Objective-C, Java, C#]]][[/cell]]
 [[/row]]
 
 [[row]]
@@ -18,10 +47,6 @@
 [[/row]]
 
 [[row]]
-[[cell]]**C++ Style Languages:**[[/cell]][[cell]][[[cpp|C++, Objective-C, Java, C#]]][[/cell]]
-[[/row]]
-
-[[row]]
 [[cell]]**Rust, Swift, Scala:**[[/cell]][[cell]][[[rust|Rust, Swift, Scala]]][[/cell]]
 [[/row]]
 
@@ -30,24 +55,11 @@
 [[/row]]
 
 [[row]]
-[[cell]]**Lisp Dialects:**[[/cell]][[cell]][[[lisp|Common Lisp, Racket, Clojure, Emacs Lisp]]][[/cell]]
+[[cell]]@<&nbsp;>@[[/cell]]
 [[/row]]
 
 [[row]]
-[[cell]]**Prolog and Erlang:@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@**[[/cell]][[cell]][[[logic|Prolog, Erlang]]][[/cell]]
-[[/row]]
-
-[[row]]
-[[cell]]**Stack-Oriented Languages:**[[/cell]][[cell]][[[stack|Forth, PostScript]]][[/cell]]
-[[/row]]
-
-[[row]]
-[[cell]]**Operating System Automation:**[[/cell]][[cell]][[[shell|POSIX Shell, Cmd.exe, PowerShell]]][[/cell]]
-[[/row]]
-
-
-[[row]]
-[[cell]]**GUI Scripting:**[[/cell]][[cell]][[[gui|Smalltalk, AutoHotkey, AppleScript]]][[/cell]]
+[[cell]]**Numerical Analysis & Statistics:**[[/cell]][[cell]][[[numerical-analysis|MATLAB, R, NumPy]]][[/cell]]
 [[/row]]
 
 [[row]]
@@ -59,15 +71,11 @@
 [[/row]]
 
 [[row]]
-[[cell]]**Numerical Analysis & Statistics:**[[/cell]][[cell]][[[numerical-analysis|MATLAB, R, NumPy]]][[/cell]]
+[[cell]]**Gnuplot, GLPK, Coq:**[[/cell]][[cell]][[[misc-math|Gnuplot, GLPK, Coq]]][[/cell]]
 [[/row]]
 
 [[row]]
 [[cell]]**Computer Algebra Software:**[[/cell]][[cell]][[[computer-algebra|Mathematica, SymPy, GAP, Pari/GP]]][[/cell]]
-[[/row]]
-
-[[row]]
-[[cell]]**More Mathematics Software:**[[/cell]][[cell]][[[misc-math|Gnuplot, GLPK, Coq]]][[/cell]]
 [[/row]]
 
 [[/table]]

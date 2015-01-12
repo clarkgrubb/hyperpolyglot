@@ -167,6 +167,11 @@ tip //refers to the most recent revision in the repository.//##||
 //when a commit has multiple parents (i.e. the commit is a merge), use a circumflex followed by a number:// _
  _
 @<&nbsp;&nbsp;>@bbf3837d6^2##|| ||
+||resolve commit notation||$ git rev-parse [#COMMIT COMMIT] _
+ _
+##gray|//e.g. to get commit id of parent of tip:// _
+ _
+@<&nbsp;&nbsp;>@git rev-parse HEAD^|| ||
 ||create a commit which reverts another commit||$ git revert [-n] [#COMMIT COMMIT] _
  _
 ##gray|-n: //no commit, just change working directory//##||$ hg backout -r [#HG-REV REV]||
@@ -182,6 +187,7 @@ tip //refers to the most recent revision in the repository.//##||
 ||list tags||$ git tag||$ hg tags||
 ||||||~ [[# branch-merge]][#branch-merge-note branch and merge]||
 ||~ ||~ [#git git]||~ [#hg hg]||
+||current branch||$ git rev-parse --abbrev-ref HEAD|| ||
 ||list branches||$ git branch [-r|-a] _
  _
 ##gray|-r: list remote tracking branches _
@@ -241,11 +247,11 @@ tip //refers to the most recent revision in the repository.//##||
 -d: //date// _
 -l: //line number// _
 -n: //local revision number//##||
-||commits which are ancestors of head/tip||$ git log||$ hg log||
-||show parents||$ git log @@--@@parents|| ||
+||commits which are ancestors of head/tip||$ git log [@@--@@parents] _
+ _
+##gray|@@--@@parents: //after commit identifier show parent commit identifiers//##||$ hg log||
 ||commits as graph||$ git log @@--@@graph||$ hg log -G||
 ||first parent history||$ git @@--@@first-parent|| ||
-||path from commit to descendent|| || ||
 ||chronological order||$ git log @@--@@reverse|| ||
 ||all commits in repository||$ git [@@--@@source] @@--@@all _
  _
@@ -261,15 +267,44 @@ tip //refers to the most recent revision in the repository.//##||
 ##gray|-f: //follow copied and renamed files//##||
 ||commits which touched lines||$ git log -L NUM,NUM:PATH|| ||
 ||one line commits||$ git log @@--@@oneline|| ||
-||format string for commit|| || ||
+||format string for commit||$ git log --pretty=format:FORMAT _
+ _
+##gray|//format string specifiers:// _
+ _
+%H commit hash _
+%h abbrev. commit hash _
+%T tree hash _
+%t abbrev. tree hash _
+%P parent hash(es) _
+%p abbrev. parent hash(es) _
+%s subject _
+%b body _
+%an author name _
+%ae author email _
+%ad author date _
+%cn committer name _
+%ce committer email _
+%cd committer date _
+%n newline _
+%% percent sign##|| ||
 ||show commit diffs||$ git log -p|| ||
 ||pickaxe||$ git log -S STR|| ||
-||grep commit messages|| || ||
+||grep commit messages||$ git log @@--@@grep=REGEX||$ hg log @@--@@keyword STR _
+ _
+##gray|//case insensitive search; also searches source//##||
 ||reflog||$ git reflog|| ||
 ||difference between commit and its parent||$ git diff @@[--@@name-only@@]@@ [#COMMIT COMMIT]^ [#COMMIT COMMIT] [@@--@@] [PATH ...]||$ hg diff -c [#HG-REV REV] @@[@@[#HG-PATH PATH] ...]||
 ||difference between two comits||$ git diff @@[--@@name-only@@]@@ [#COMMIT COMMIT1] [#COMMIT COMMIT2] [@@--@@] [PATH ...]||$ hg diff -r [#HG-REV REV1] -r [#HG-REV REV2] @@[@@[#HG-PATH PATH] ...]||
-||grep commit||$ git grep] [-i] [-v] [-E|F|P] [-h|H] [-l|L] [-n] \ _
+||grep commit||$ git grep [-i] [-v] [-E|F|P] [-h|H] [-l|L] [-n] \ _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@-e [#STR STR] [#TREEISH TREEISH] @@[--]@@ [#PATHSPEC PATHSPEC]|| ||
+||start bisection||$ git bisect [#COMMIT BAD_COMMIT] [#COMMIT GOOD_COMMIT]|| ||
+||mark bisection commit as good||$ git bisect good|| ||
+||mark bisection commit as bad||$ git bisect bad|| ||
+||mark bisection commits automatically||$ git bisect run SCRIPT [ARG]... _
+ _
+##gray|//Exit status of 0 indicates a good commit. Exit status of 125 indicates an untestable commit.  Any other status in the range 1...127 indicates a bad commit.//##|| ||
+||show bisection decisions||$ git bisect log|| ||
+||terminate bisection||$ git bisect reset|| ||
 ||||||~ [[# pull-push]][#pull-push-note push and pull]||
 ||~ ||~ [#git git]||~ [#hg hg]||
 ||pull commits from remote||$ git fetch [-f] [-t] [-p] [REPO] _
@@ -327,7 +362,7 @@ $ hg unbundle||
 ||~ ||~ [#git git]||~ [#hg hg]||
 ||create tarball||$ git archive @@--@@format=tar [#TREEISH TREEISH] > repo.tar||$ hg archive -t tar ../[#HG-NAME NAME].tar||
 ||create gzipped tarball||$ git archive @@--@@format=tgz [#TREEISH TREEISH] > repo.tgz|| ||
-||create zip archive|| || ||
+||create zip archive||$ git archive @@--@@format=zip [#TREEISH TREEISH] > repo.zip|| ||
 ||create a patch||$ git format-patch ???||$ hg export ???||
 ||apply patch||$ git apply ???||$ hg import ???||
 ||||||~ [[# integrity-check-garbage-collection]][#integrity-check-garbage-collection-note integrity check and garbage collection]||
@@ -341,7 +376,7 @@ $ hg unbundle||
 ||||~ git||
 ||[[# BRANCH]]BRANCH||the name of a branch.||
 ||[[# CMD]]CMD||the name of a version control command: the first argument of the base command.||
-||[[# COMMIT]]COMMIT||the [#HASH HASH] for a commit.   A commit can be referenced indirectly via a branch or tag name or via [#git-identifiers-notation commit notation].  The symbolic references HEAD or FETCH_HEAD can also be used to reference commits.||
+||[[# COMMIT]]COMMIT||the [#HASH HASH] for a commit.   A commit can be referenced indirectly via a branch or tag name or via commit notation.  The symbolic references HEAD or FETCH_HEAD can also be used to reference commits.||
 ||[[# DIR]]DIR||a directory on the file system.  In some cases it must exist; in others it will be created.||
 ||[[# FILE]]FILE||a regular file on the file system.  In some cases it must exist; in others it will be created.||
 ||[[# HASH]]HASH||a 40 digit hex string used as an identifier for something in the object database.||
