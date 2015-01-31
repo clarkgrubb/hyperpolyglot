@@ -11,7 +11,7 @@ ROW_TITLE_REGEX =
   /\[\[# ([a-z][a-z0-9-]*)\]\]\[#\1-note ([A-Za-z0-9? \.\/,\?;-]+)\]/
 EMPTY_CELL_REGEX = /^([~\s]*|~ \[\[# [a-z-]+\]\])$/
 HEADER_CELL_REGEX = /^~ \[\[# ([a-z-]+)\]\]\[#\1-note ([^\]]+)\]$/
-SUPERSECTION_CELL_REGEX = /^~ ([A-Z]+)$/
+SUPERSECTION_CELL_REGEX = /^~ ([A-Z ]+)$/
 SUPERSECTIONS = ['CORE', 'DATA STRUCTURES', 'AUXILIARY', 'TABLES',
                  'MATHEMATICS', 'STATISTICS', 'CHARTS']
 

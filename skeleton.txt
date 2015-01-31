@@ -1,4 +1,4 @@
-[[# top]]##gray|core:## [#version version] | [#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#str strings] | [#regex regular expressions] | [#dates-time dates and time] | [#func functions] | [#exec-control execution control] | [#exceptions exceptions] | [#concurrency concurrency] | [#file-handle file handles] | [#file files] | [#file-fmt file formats] | [#dir directories] | [#env-processes processes and environment] | [#option-parsing option parsing] | [#lib-namespaces libraries and namespaces] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#reflection reflection] | [#net-web net and web] | [#dom dom] | [#gui gui] | [#unit-tests unit tests] | [#debug-profile debugging and profiling]
+[[# top]]##gray|core:## [#version version] | [#grammar-execution grammar and execution] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#str strings] | [#regex regular expressions] | [#dates-time dates and time] | [#func functions] | [#exec-control execution control] | [#exceptions exceptions] | [#concurrency concurrency] | [#file-handle file handles] | [#file files] | [#file-fmt file formats] | [#dir directories] | [#env-processes processes and environment] | [#option-parsing option parsing] | [#lib-namespaces libraries and namespaces] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#reflection reflection] | [#net-web net and web] | [#dom dom] | [#gui gui] | [#unit-tests unit tests] | [#debug-profile debugging and profiling]
 
 ##gray|data structures:## [#fixed-length-arrays fixed-length arrays] | [#resizable-arrays resizable arrays] | [#arithmetic-sequences arithmetic sequences] | [#lists lists] | [#tuples tuples] | [#stacks stacks] | [#queues queues] | [#sets sets] | [#dict dictionaries] | [#multidimensional-arrays multidimensional arrays] | [#user-defined-types user-defined types] | [#generic-types generic types] | [#dependent-types dependent types]
 
@@ -6,7 +6,7 @@
 
 ##gray|tables:## [#tables tables] | [#import-export import and export] | [#relational-algebra relational algebra] | [#aggregation aggregation]
 
-##gray|mathematics:## [#vectors vectors] | [#matrices matrices] | [#symbolic-expressions symbolic expressions] | [#calculus calculus] | [#equations-unknowns equations and unknowns] | [#optimization optimization] | [#combinatorics combinatorics] | [#number-theory number theory]  | [#elliptic-curves elliptic curves] | [#algebraic-numbers algebraic numbers] | [#polynomials polynomials] | [#power-series power series] | [#special-functions special functions] | [#permutations permutations] | [#groups groups] | [#subgroups subgroups] | [#group-homomorphisms group homomorphisms] | [#actions actions] | [#propositions propositions]
+##gray|mathematics:## [#vectors vectors] | [#matrices matrices] | [#symbolic-expressions symbolic expressions] | [#calculus calculus] | [#equations-unknowns equations and unknowns] | [#optimization optimization] | [#combinatorics combinatorics] | [#number-theory number theory]  | [#elliptic-curves elliptic curves] | [#algebraic-numbers algebraic numbers] | [#polynomials polynomials] | [#rings rings] | [#power-series power series] | [#special-functions special functions] | [#permutations permutations] | [#groups groups] | [#subgroups subgroups] | [#group-homomorphisms group homomorphisms] | [#actions actions] | [#propositions propositions]
 
 ##gray|statistics:## [#descriptive-statistics descriptive statistics] | [#distributions distributions] | [#regression regression] | [#statistical-tests statistical tests] | [#time-series time series]
 
@@ -22,7 +22,7 @@
 ||[[# implicit-prologue]][#implicit-prologue-note implicit prologue]||#implicit-prologue||Code which examples in the sheet assume to have already been executed. _
  _
 Replace this with convention note?  #include, using import in java sheet, not following expressions with semicolons, lists of function names||
-||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
+||||||~ [[# grammar-execution]][#grammar-execution-note grammar and execution]||
 ||~ title ||~ anchor||~ description||
 ||[[# hello-world]][#hello-world-note hello world]||#hello-world|| ||
 ||[[# compiler]][#compiler-note compiler]||#compiler||compile file; standalone executable||
@@ -58,9 +58,9 @@ Replace this with convention note?  #include, using import in java sheet, not fo
 ||[[# scope-regions]][#scope-regions-note regions which define lexical scope]||#scope-regions|| ||
 ||[[# global-var]][#global-var-note global variable]||#global-var||how to declare||
 ||[[# uninitialized-global-var]][#uninitialized-global-var-note uninitialized global variable]||#uninitialized-global-var|| ||
-||[[# write-once-var]][#write-once-var-note write-once variable]||#write-once-var||e.g const in C++; how to declare||
-||[[# const]][#const-note constant] _
-@<&nbsp;>@||#const||set at compilation time; how to declare||
+||[[# immutable-var]][#immutable-var-note immutable variable]||#immutable-var||e.g const in C++; how to declare||
+||[[# compile-time-const]][#compile-time-const-note compile time constant] _
+@<&nbsp;>@||#compile-time-const||how to declare||
 ||[[# assignment]][#assignment-note assignment] _
 @<&nbsp;>@||#assignment||does assignment have a value; can they be chained||
 ||[[# parallel-assignment]][#parallel-assignment-note parallel assignment] _
@@ -82,15 +82,15 @@ Replace this with convention note?  #include, using import in java sheet, not fo
 ||[[# uninitialized-heap]][#uninitialized-heap-note uninitialized heap]||#uninitialized-heap|| ||
 ||[[# free-heap]][#free-heap-note free heap]||#free-heap|| ||
 ||[[# id-as-val]][#id-as-val-note identifier as value]||#id-as-val||i.e. quoting a symbol in lisp||
-||[[# var-properties]][#var-properties-note variable properties] _
-##gray|//set, get, remove//##||#var-properties|| ||
+||[[# var-attr]][#var-attr-note variable attributes] _
+##gray|//set, get, remove//##||#var-attr||called properties in lisp||
 ||[[# non-referential-id]][#non-referential-id-note non-referential identifier]||#non-referential-id||called atom in Prolog and Erlang; symbol in Ruby; keyword in Lisp; show how to quote special characters; also mention named parameters of Python and perhaps Objective C?||
 ||[[# unit-type-val]][#unit-type-val-note unit type and value]||#unit-type-val|| ||
 ||[[# null]][#null-note null] _
 @<&nbsp;>@||#null|| ||
 ||[[# null-test]][#null-test-note null test] _
 @<&nbsp;>@||#null-test|| ||
-||[[# coalesce]][#coalesce-note coalesce]||#coalesce|| ||
+||[[# coalesce]][#coalesce-note coalesce]||#coalesce||aka null coalescing operator||
 ||[[# nullif]][#nullif-note nullif]||#nullif|| ||
 ||[[# undef-var]][#undef-var-note undefined variable] _
 @<&nbsp;>@||#undef-var||for languages which don't require declaration; notes can have undef test||
@@ -212,7 +212,11 @@ Shift can be logical, circular, or arithmetic.  In logical shift the new bits ar
 ||[[# str-to-num]][#str-to-num-note string to number]||#str-to-num||notes on whether full string must parse and what happen if conversion fails; explicit conversion and operators which perform implicit conversion||
 ||[[# str-join]][#str-join-note string join] _
 @<&nbsp;>@||#str-join|| ||
-||[[# split]][#split-note split]||#split||char, string, and regex delimiter||
+||[[# split]][#split-note split]||#split||char, string, and regex delimiter _
+ _
+splitting on one occurrence of a delimiter vs one or more occurrences _
+ _
+how boundary delimiters are handled||
 ||[[# split-in-two]][#split-in-two-note split in two] _
 ##gray|//at first delimiter, at last delimiter//##||#split-in-two|| ||
 ||[[# split-keep-delimiters]][#split-keep-delimiters-note split and keep delimiters]||#split-keep-delimiters|| ||
@@ -275,7 +279,7 @@ Shift can be logical, circular, or arithmetic.  In logical shift the new bits ar
 ||[[# parse-datetime-without-format]][#parse-datetime-without-format-note parse datetime w/o format]||#parse-datetime-without-format|| ||
 ||[[# date-parts]][#date-parts-note date parts]||#date-parts|| ||
 ||[[# time-parts]][#time-parts-note time parts]||#time-parts|| ||
-||[[# build-datetime]][#build-datetime-note build broken-down datetime]||#build-datetime|| ||
+||[[# build-datetime]][#build-datetime-note build broken-down datetime]||#build-datetime||rollover: does May 32 == Jun 1; what about Jun 0?||
 ||[[# dow-doy]][#dow-doy-note day of week and day of year]||#dow-doy|| ||
 ||[[# datetime-subtraction]][#datetime-subtraction-note datetime subtraction]||#datetime-subtraction||does the subtraction operator work or is the result nonsensical?  Is there are different way to get the duration length||
 ||[[# add-duration]][#add-duration-note add duration]||#add-duration|| ||
@@ -285,23 +289,20 @@ Shift can be logical, circular, or arithmetic.  In logical shift the new bits ar
 ||[[# daylight-savings-test]][#daylight-savings-test-note daylight savings test]||#daylight-savings-test|| ||
 ||[[# nonlocal-tmz]][#nonlocal-tmz-note nonlocal time zone]||#nonlocal-tmz||convert a UTC date and time to the corresponding date and time for a nonlocal time zone||
 ||[[# microseconds]][#microseconds-note microseconds]||#microseconds||get current date and time down to the microsecond||
-||[[# sleep]][#sleep-note sleep]||#sleep|| ||
-||[[# timeout]][#timeout-note timeout]||#timeout|| ||
-||[[# cpu-usage]][#cpu-usage-note cpu usage]||#cpu-usage|| ||
 ||||||~ [[# func]][#func-note functions]||
 ||~ title ||~ anchor||~ description||
-||[[# decl-func]][#decl-func-note declare function]||#decl-func|| ||
-||[[# def-func]][#def-func-note define function] _
+||[[# decl-func]][#decl-func-note declare]||#decl-func|| ||
+||[[# def-func]][#def-func-note define] _
 @<&nbsp;>@||#def-func|| ||
-||[[# invoke-func]][#invoke-func-note invoke function]||#invoke-func|| ||
+||[[# call-func]][#call-func-note call]||#call-func|| ||
 ||[[# def-static-class-method]][#def-static-class-method-note define static class method]||#def-static-class-method|| ||
-||[[# invoke-static-class-method]][#invoke-static-class-method-note invoke static class method]||#invoke-static-class-method|| ||
-||[[# def-func-with-block-body]][#def-func-with-block-body-note define function with block body]||#def-func-with-block-body||for languages which have functions which expression bodies||
-||[[# undef-func]][#undef-func-note undefine function]||#undef-func|| ||
-||[[# redefine-func]][#redefine-func-note redefine function]||#redefine-func||in particular, can built-ins be redefined||
-||[[# overload-func]][#overload-func-note overload function]||#overload-func|| ||
-||[[# def-func-piecewise]][#def-func-piecewise-note define function piecewise]||#def-func-piecewise|| ||
-||[[# nested-func]][#nested-func-note nested function]||#nested-func||Note visibility of nested function.||
+||[[# call-static-class-method]][#call-static-class-method-note call static class method]||#call-static-class-method|| ||
+||[[# def-func-with-block-body]][#def-func-with-block-body-note define with block body]||#def-func-with-block-body||for languages which have functions which expression bodies||
+||[[# undef-func]][#undef-func-note undefine]||#undef-func|| ||
+||[[# redefine-func]][#redefine-func-note redefine]||#redefine-func||in particular, can built-ins be redefined||
+||[[# overload-func]][#overload-func-note overload]||#overload-func|| ||
+||[[# def-func-piecewise]][#def-func-piecewise-note define piecewise]||#def-func-piecewise|| ||
+||[[# nest-func]][#nest-func-note nest]||#nest-func||Note visibility of nested function.||
 ||[[# missing-arg]][#missing-arg-note missing argument behavior] _
 @<&nbsp;>@||#missing-arg||what about extra arg behavior?||
 ||[[# extra-arg]][#extra-arg-note extra argument behavior]||#extra-arg|| ||
@@ -320,11 +321,13 @@ Shift can be logical, circular, or arithmetic.  In logical shift the new bits ar
 @<&nbsp;>@||#multiple-retval|| ||
 ||[[# named-retval]][#named-retval-note named return values] _
 @<&nbsp;>@||#named-retval|| ||
+||[[# exec-on-return]][#exec-on-return-note execute on return] _
+@<&nbsp;&nbsp;>@||#exec-on-return||e.g.. the defer statement in Go||
 ||[[# recursive-func]][#recursive-func-note recursive function]||#recursive-func|| ||
 ||[[# mutually-recursive-func]][#mutually-recursive-func-note mutually recursive functions]||#mutually-recursive-func|| ||
-||[[# anonymous-func-literal]][#anonymous-func-literal-note anonymous function literal] _
-@<&nbsp;>@||#anonymous-func-literal||aka lambda function||
-||[[# invoke-anonymous-func]][#invoke-anonymous-func-note invoke anonymous function]||#invoke-anonymous-func|| ||
+||[[# anon-func-literal]][#anon-func-literal-note anonymous function literal] _
+@<&nbsp;>@||#anon-func-literal||aka lambda function||
+||[[# call-anon-func]][#call-anon-func-note call anonymous function]||#call-anon-func|| ||
 ||[[# closure]][#closure-note closure]||#closure|| ||
 ||[[# func-private-state]][#func-private-state-note function with private state]||#func-private-state|| ||
 ||[[# func-as-val]][#func-as-val-note function as value]||#func-as-val||i.e. how to pass a function as an argument.||
@@ -333,29 +336,37 @@ Shift can be logical, circular, or arithmetic.  In logical shift the new bits ar
 ||[[# compose-func]][#compose-func-note compose functions]||#compose-func||if a point free operator is provided||
 ||[[# partial-application]][#partial-application-note partial application]||#partial-application||cf currying||
 ||[[# overload-op]][#overload-op-note overload operator]||#overload-op|| ||
-||[[# invoke-op-like-func]][#invoke-op-like-func-note invoke operator like function]||#invoke-op-like-func|| ||
-||[[# invoke-func-like-op]][#invoke-func-like-op-note invoke function like operator]||#invoke-func-like-op|| ||
+||[[# call-op-like-func]][#call-op-like-func-note call operator like function]||#call-op-like-func|| ||
+||[[# call-func-like-op]][#call-func-like-op-note call function like operator]||#call-func-like-op|| ||
 ||[[# lazy-eval]][#lazy-eval-note lazy evaluation]||#lazy-eval||when not the default behavior||
 ||[[# strict-eval]][#strict-eval-note strict evaluation]||#strict-eval||when not the default behavior||
 ||||||~ [[# exec-control]][#exec-control-note execution control]||
 ||~ title ||~ anchor||~ description||
 ||[[# if]][#if-note if] _
 @<&nbsp;>@||#if||print "positive", "negative", or "zero" depending upon sign of x||
-||[[# dangling-else]][#dangling-else-note dangling else]||#dangling-else||if dangling else ambiguity, show how resolved||
-||[[# switch]][#switch-note switch]||#switch|| ||
+||[[# switch]][#switch-note switch]||#switch||does execution fall thru to the next case? _
+ _
+permitted type of expression in switch: integer, any _
+ _
+type of comparision in case: equality test, regex match||
 ||[[# while]][#while-note while] _
-@<&nbsp;>@||#while||iterate over i and print the numbers 0 to 9||
-||[[# for]][#for-note for]||#for||initialization, condition, increment; illustrate comma operator _
+@<&nbsp;>@||#while||iterate over i and print the numbers 0 to 9 _
+ _
+if do-while loop exists, mention in footnote||
+||[[# for]][#for-note for]||#for||initialization, condition, afterthought; illustrate comma operator _
 iterate over i and print the numbers 0 to 9||
+||[[# for-local-scope]][#for-local-scope-note for with local scope]||#for-local-scope|| ||
 ||[[# infinite-loop]][#infinite-loop-note infinite loop]||#infinite-loop|| ||
 ||[[# break]][#break-note break] _
 @<&nbsp;>@||#break|| ||
-||[[# break-outer-loop]][#break-outer-loop-note break to outer loop]||#break-outer-loop|| ||
+||[[# break-from-nested-loops]][#break-from-nested-loops-note break from nested loops]||#break-from-nested-loops|| ||
 ||[[# continue]][#continue-note continue]||#continue||can't find a short example where continue is useful||
-||[[# goto]][#goto-note goto]||#goto|| ||
-||[[# longjmp]][#longjmp-note longjmp]||#longjmp|| ||
 ||[[# statement-modifiers]][#statement-modifiers-note statement modifiers] _
 @<&nbsp;>@||#statement-modifiers|| ||
+||[[# single-stmt-branch-loop]][#single-stmt-branch-loop-note single statement branches and loops]||#single-stmt-branch-loop|| ||
+||[[# dangling-else]][#dangling-else-note dangling else]||#dangling-else||if dangling else ambiguity, show how resolved||
+||[[# goto]][#goto-note goto]||#goto|| ||
+||[[# longjmp]][#longjmp-note longjmp]||#longjmp|| ||
 ||||||~ [[# exceptions]][#exceptions-note exceptions]||
 ||~ title ||~ anchor||~ description||
 ||[[# base-exc]][#base-exc-note base exception] _
@@ -379,6 +390,8 @@ iterate over i and print the numbers 0 to 9||
 ||[[# exc-specification]][#exc-specification-note exception specification]||#exc-specification||should this be in function section? Are they required, and when.||
 ||||||~ [[# concurrency]][#concurrency-note concurrency]||
 ||~ title ||~ anchor||~ description||
+||[[# sleep]][#sleep-note sleep]||#sleep|| ||
+||[[# timeout]][#timeout-note timeout]||#timeout|| ||
 ||[[# start-thread]][#start-thread-note start thread] _
 @<&nbsp;>@||#start-thread||can threads use multiple processors; limitations such as the Python GIL||
 ||[[# terminate-current-thread]][#terminate-current-thread-note terminate current thread]||#terminate-current-thread||what happens when thread function returns; when all threads exit; when an exception makes it to the top of a thread||
@@ -626,6 +639,7 @@ iterate over i and print the numbers 0 to 9||
 ||[[# debugger]][#debugger-note run debugger]||#debugger|| ||
 ||[[# debugger-cmds]][#debugger-cmds-note debugger commands]||#debugger-cmds|| ||
 ||[[# benchmark]][#benchmark-note benchmark code]||#benchmark|| ||
+||[[# cpu-usage]][#cpu-usage-note cpu usage]||#cpu-usage|| ||
 ||[[# profile]][#profile-note profile code]||#profile|| ||
 ||[[# memory-tool]][#memory-tool-note memory tool]||#memory-tool||memory leaks; accessing uninitialized memory||
 ||||||~ DATA STRUCTURES||
@@ -761,9 +775,15 @@ iterate over i and print the numbers 0 to 9||
 ||~ title ||~ anchor||~ description||
 ||[[# tuple-type]][#tuple-type-note type]||#tuple-type|| ||
 ||[[# tuple-literal]][#tuple-literal-note literal]||#tuple-literal|| ||
-||[[# tuple-lookup]][#tuple-lookup-note lookup element]||#tuple-lookup|| ||
-||[[# tuple-update]][#tuple-update-note update element]||#tuple-update|| ||
+||[[# tuple-ctor]][#tuple-ctor-note constructor]||#tuple-ctor|| ||
+||[[# tuple-lookup]][#tuple-lookup-note lookup]||#tuple-lookup|| ||
+||[[# tuple-decompose]][#tuple-decompose-note decompose]||#tuple-decompose|| ||
+||[[# tuple-update]][#tuple-update-note update]||#tuple-update|| ||
 ||[[# tuple-len]][#tuple-len-note length]||#tuple-len|| ||
+||[[# pair-literal]][#pair-literal-note pair literal]||#pair-literal|| ||
+||[[# pair-ctor]][#pair-ctor-note pair constructor]||#pair-ctor|| ||
+||[[# pair-lookup]][#pair-lookup-note pair lookup]||#pair-lookup|| ||
+||[[# pair-update]][#pair-update-note pair update]||#pair-update|| ||
 ||||||~ [[# stacks]][#stacks-note stacks]||
 ||~ title ||~ anchor||~ description||
 ||||||~ [[# queues]][#queues-note queues]||
@@ -776,6 +796,8 @@ iterate over i and print the numbers 0 to 9||
 @<&nbsp;>@||#declare-dict|| ||
 ||[[# dict-literal]][#dict-literal-note literal] _
 @<&nbsp;>@||#dict-literal|| ||
+||[[# dict-ctor]][#dict-ctor-note constructor] _
+@<&nbsp;>@||#dict-ctor|| ||
 ||[[# dict-size]][#dict-size-note size] _
 @<&nbsp;>@||#dict-size|| ||
 ||[[# dict-lookup]][#dict-lookup-note lookup] _
@@ -790,6 +812,8 @@ iterate over i and print the numbers 0 to 9||
 ||[[# dict-associative-array]][#dict-associative-array-note from array of pairs, from even length array]||#dict-associative-array|| ||
 ||[[# dict-merge]][#dict-merge-note merge]||#dict-merge||##gray|//How are duplicate keys handled?//##||
 ||[[# dict-invert]][#dict-invert-note invert]||#dict-invert||##gray|//How are duplicate values handled?//##||
+||[[# dict-intersection]][#dict-intersection-note intersection]||#dict-intersection||a dictionary of key-value pairs in both dictionaries||
+||[[# dict-diff]][#dict-diff-note relative complement]||#dict-diff||a dictionary of key-value pairs in the 2nd dictionary and not the 1st||
 ||[[# dict-iter]][#dict-iter-note iterate] _
 @<&nbsp;>@||#dict-iter|| ||
 ||[[# dict-key-val-arrays]][#dict-key-val-arrays-note keys and values as arrays]||#dict-key-val-arrays|| ||
@@ -834,8 +858,8 @@ dimension lengths//##||#multidim-array-size|| ||
 ||[[# union-type]][#union-type-note union type]||#union-type|| ||
 ||[[# algebraic-prod-type]][#algebraic-prod-type-note algebraic product type]||#algebraic-prod-type|| ||
 ||[[# algebraic-prod-literal]][#algebraic-prod-literal-note algebraic product type literal]||#algebraic-prod-literal|| ||
-||[[# type-constructor-with-arg]][#type-constructor-with-arg-note type constructor with argument]||#type-constructor-with-arg|| ||
-||[[# type-constructor-with-tuple-arg]][#type-constructor-with-tuple-arg-note type constructor with tuple argument]||#type-constructor-with-tuple-arg|| ||
+||[[# type-ctor-with-arg]][#type-ctor-with-arg-note type constructor with argument]||#type-ctor-with-arg|| ||
+||[[# type-ctor-with-tuple-arg]][#type-ctor-with-tuple-arg-note type constructor with tuple argument]||#type-ctor-with-tuple-arg|| ||
 ||[[# generic-type]][#generic-type-note generic type]||#generic-type|| ||
 ||[[# recursive-type]][#recursive-type-note recursive type]||#recursive-type|| ||
 ||[[# match]][#match-note match/with case/of]||#match|| ||
@@ -1013,6 +1037,8 @@ dimension lengths//##||#multidim-array-size|| ||
 ||||||~ [[# algebraic-numbers]][#algebraic-numbers-note algebraic numbers]||
 ||~ title ||~ anchor||~ description||
 ||||||~ [[# polynomials]][#polynomials-note polynomials]||
+||~ title ||~ anchor||~ description||
+||||||~ [[# rings]][#rings-note rings]||
 ||~ title ||~ anchor||~ description||
 ||||||~ [[# power-series]][#power-series-note power series]||
 ||~ title ||~ anchor||~ description||
