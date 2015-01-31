@@ -1,9 +1,10 @@
-**[#dvcs distributed version control]:** [#repository local and remote repository] | [#working-directory working directory] | [#track-commit track and commit] | [#branch-merge branch and merge] | [#history history] | [#pull-push push and pulll] | [#configuration-files configuration files] | [#external-repositories external repositories] | [#packaging packaging] | [#integrity-check-garbage-collection integrity check and garbage collection]
+**[#dvcs distributed version control]:** [#version-help version and help] | [#repository local and remote repository] | [#working-directory working directory] | [#track-commit track and commit] | [#branch-merge branch and merge] | [#history history] | [#pull-push push and pulll] | [#configuration-files configuration files] | [#external-repositories external repositories] | [#packaging packaging] | [#integrity-check-garbage-collection integrity check and garbage collection]
 
 **[#vcs version control]:**  [#vcs svn] | [#vcs cvs] | [#vcs rcs]
 
 **[#archive-patch-tools archive and patch tools]:** [#diff diff] | [#cpio cpio] | [#diff3 diff3] | [#ar ar] | [#tar tar] | [#patch patch] | [#zip zip] | [#diffstat diffstat] | [#jar jar] | [#rsync rsync] | [#colordiff colordiff]
 
+||||||~ [[# version-help]][#version-help-note version and help]||
 ||~ ||~ [#git git]||~ [#hg hg]||
 ||[[# show-version]][#show-version-note show version]||$ git version||$ hg version||
 ||[[# list-subcommands]][#list-subcommands-note list subcommands]||$ git help -a _
@@ -124,12 +125,37 @@ $ git remote set-branches [#REMOTE REMOTE] [@@--@@add] \
  _
 ##gray|-A: //if file already copied// _
 -f: //if target is tracked//##||
+||show difference between staging area and head||$ git diff @@--@@cached @@[@@[#PATHSPEC PATHSPEC] ...]||$ hg diff [PATH …]||
 ||show difference between working directory and staging area||$ git diff @@[@@[#PATHSPEC PATHSPEC] ...]||##gray|//working directory and staging area are the same//##||
-||show difference between staging area and head||$ git diff @@--@@cached @@[@@[#COMMIT COMMIT]] @@[@@[#PATHSPEC PATHSPEC] ...] _
- _
-##gray|//if no COMMIT specified, compares stagilng area to head//##||$ hg diff [-r REV] [PATH …]||
+||diff options||##gray|@@--@@name-only: list modified file names _
+@@--@@name-status: status (M, A, D, R, ..) and modified file names _
+@@--@@stat: histogram of changes by file _
+@@--@@dirstat: histogram of changes by directory _
+@@--@@word-diff: show changes to line inline _
+@@--@@word-diff-regex=REGEX: set regex used by @@--@@word-diff _
+-W: show entire modified function in context _
+@<&nbsp;>@ _
+-R: reverse direction of diff _
+-w: ignore whitespace differences _
+@@--@@ignore-blank-lines: ignore blank lines _
+@<&nbsp;>@ _
+@@--@@quiet: no output; exit status 1 if changes, otherwise 0 _
+@<&nbsp;>@##||##gray|@<&nbsp;>@ _
+@<&nbsp;>@ _
+@@--@@stat: histogram of changes by file _
+@<&nbsp;>@ _
+@<&nbsp;>@ _
+@<&nbsp;>@ _
+-p: show entire modified function in context _
+-U NUM: show NUM lines of context _
+@@--@@reverse: reverse direction of diff _
+ -w: ignore whitespace differences _
+-b: ignore blank lines _
+-X PATTERN: exclude files matching fileglob _
+@<&nbsp;>@ _
+-S: recurse into subrepos##||
 ||grep staging area||$ git grep @@--cached@@ [-i] [-v] [-E|F|P] [-h|H] [-l|L] [-n] \ _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@-e STR TREEISH [--] PATHSPEC|| ||
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@-e STR TREEISH [@@--@@] PATHSPEC|| ||
 ||[[# commit-changes]][#commit-changes-note commit changes in staging area]||$ git commit [-a] [-m [#STR STR]] _
  _
 ##gray|-a: //add all modified files with version history to staging area before commit.//##||$ hg commit  [-m [#HG-STR STR]]||
@@ -171,10 +197,13 @@ tip //refers to the most recent revision in the repository.//##||
  _
 ##gray|//e.g. to get commit id of parent of tip:// _
  _
-@<&nbsp;&nbsp;>@git rev-parse HEAD^|| ||
-||create a commit which reverts another commit||$ git revert [-n] [#COMMIT COMMIT] _
+@<&nbsp;&nbsp;>@git rev-parse HEAD^##|| ||
+||create commit which reverts another commit||$ git revert [-n] [#COMMIT COMMIT] _
  _
 ##gray|-n: //no commit, just change working directory//##||$ hg backout -r [#HG-REV REV]||
+||create commit which reverts a merge commit||$ git revert [-n] -m NUM [#COMMIT COMMIT] _
+ _
+##gray|NUM //is the number of the parent (e.g. 1, 2, ...) to restore//##|| ||
 ||create commits which revert a sequence of commits||$ git revert [-n] [#COMMIT COMMIT1]..[#COMMIT COMMIT2] _
  _
 ##gray|//reverts commits from// COMMIT1 //up to but not including// COMMIT2.  //Use triple dots// @@...@@ //to include// COMMIT2.##|| ||
@@ -220,7 +249,7 @@ tip //refers to the most recent revision in the repository.//##||
 ||close branch tip|| ||$ hg commit @@--@@close-branch||
 ||merge||$ git merge [@@--@@squash] COMMIT ... _
  _
-##gray|@@--@@squash: make changes to index and working directory only; do not create a commit##||$ merge [[-r] REV] _
+##gray|@@--@@squash: make changes to index and working directory only; do not create a commit##||$ hg merge [[-r] REV] _
  _
 ##gray|//Only modifies working directory; must be following by// hg commit //to create a new changeset.//##||
 ||show conflicts||$ git status||$ hg resolve -l||
@@ -240,7 +269,11 @@ tip //refers to the most recent revision in the repository.//##||
 ||||||~ [[# history]][#history-note history]||
 ||~ ||~ [#git git]||~ [#hg hg]||
 ||write version of file to standard out||$ git show COMMIT:FILE||$ hg cat -r REV FILE||
-||annotate lines of file with commit info||$ git blame [#PATH PATH] [[#COMMIT COMMIT]]||$ hg annotate -cudln [-r [#HG-REV REV]] @@[@@[#HG-PATH PATH]] _
+||annotate lines of file with commit info||$ git blame [-l] [-s] [-s] [#PATH PATH] [[#COMMIT COMMIT]] _
+ _
+##gray|-l: //show full commit id (default is 8 chars)// _
+-s: //suppress author name and timestamp// _
+-w: //ignore whitespace differences//##||$ hg annotate -cudln [-r [#HG-REV REV]] @@[@@[#HG-PATH PATH]] _
  _
 ##gray|-c: //changeset// _
 -u: //author// _
@@ -288,13 +321,50 @@ tip //refers to the most recent revision in the repository.//##||
 %n newline _
 %% percent sign##|| ||
 ||show commit diffs||$ git log -p|| ||
-||pickaxe||$ git log -S STR|| ||
+||show commits touching lines matching regular expression||$ git log -p [@@--@@pickaxe-all] -G REGEX||$ hg grep PATTERN||
 ||grep commit messages||$ git log @@--@@grep=REGEX||$ hg log @@--@@keyword STR _
  _
 ##gray|//case insensitive search; also searches source//##||
-||reflog||$ git reflog|| ||
+||show changes to head||$ git reflog _
+ _
+##gray|The output format is: _
+ _
+@<&nbsp;&nbsp;>@<commit> HEAD@{<num>} <description> _
+ _
+<num> is the number of changes since HEAD was at <commit>.  HEAD@{<num>} can be used as an alias for <commit>.## _
+ _
+##gray|This outputs reflog info in log style:## _
+ _
+$ git log -g|| ||
 ||difference between commit and its parent||$ git diff @@[--@@name-only@@]@@ [#COMMIT COMMIT]^ [#COMMIT COMMIT] [@@--@@] [PATH ...]||$ hg diff -c [#HG-REV REV] @@[@@[#HG-PATH PATH] ...]||
 ||difference between two comits||$ git diff @@[--@@name-only@@]@@ [#COMMIT COMMIT1] [#COMMIT COMMIT2] [@@--@@] [PATH ...]||$ hg diff -r [#HG-REV REV1] -r [#HG-REV REV2] @@[@@[#HG-PATH PATH] ...]||
+||diff options||##gray|@@--@@name-only: list modified file names _
+@@--@@name-status: status (M, A, D, R, ..) and modified file names _
+@@--@@stat: histogram of changes by file _
+@@--@@dirstat: histogram of changes by directory _
+@@--@@word-diff: show changes to line inline _
+@@--@@word-diff-regex=REGEX: set regex used by @@--@@word-diff _
+-W: show entire modified function in context _
+@<&nbsp;>@ _
+-R: reverse direction of diff _
+-w: ignore whitespace differences _
+@@--@@ignore-blank-lines: ignore blank lines _
+@<&nbsp;>@ _
+@@--@@quiet: no output; exit status 1 if changes, otherwise 0 _
+@<&nbsp;>@##||##gray|@<&nbsp;>@ _
+@<&nbsp;>@ _
+@@--@@stat: histogram of changes by file _
+@<&nbsp;>@ _
+@<&nbsp;>@ _
+@<&nbsp;>@ _
+-p: show entire modified function in context _
+-U NUM: show NUM lines of context _
+@@--@@reverse: reverse direction of diff _
+ -w: ignore whitespace differences _
+-b: ignore blank lines _
+-X PATTERN: exclude files matching fileglob _
+@<&nbsp;>@ _
+-S: recurse into subrepos##||
 ||grep commit||$ git grep [-i] [-v] [-E|F|P] [-h|H] [-l|L] [-n] \ _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@-e [#STR STR] [#TREEISH TREEISH] @@[--]@@ [#PATHSPEC PATHSPEC]|| ||
 ||start bisection||$ git bisect [#COMMIT BAD_COMMIT] [#COMMIT GOOD_COMMIT]|| ||

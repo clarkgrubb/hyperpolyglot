@@ -1,18 +1,19 @@
 [[# top]]//a side-by-side reference sheet//
 
-[#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#arrays arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#concurrency concurrency] | [#file-handles file handles] | [#files files] | [#file-fmt file formats] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#user-defined-types user-defined types] | [#objects objects] | [#reflection reflection] | [#macros macros] | [#net-web net and web] | [#dom dom] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling] _
+[#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#fixed-length-arrays fixed-length-arrays] | [#resizable-arrays resizable arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#concurrency concurrency] | [#file-handles file handles] | [#files files] | [#file-fmt file formats] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#user-defined-types user-defined types] | [#objects objects] | [#reflection reflection] | [#macros macros] | [#net-web net and web] | [#dom dom] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling]
 
 ||||||||~ [[# version]][#version-note version]||
 ||~ ||~ [#c c]||~ [#go go]||~ [#dart dart]||
 ||[[# version-used]][#version-used-note version used] _
-@<&nbsp;>@||##gray|//gcc 4.6 in POSIX environment//##||##gray|//1.3//##||##gray|//1.7//##||
+@<&nbsp;>@||##gray|//C11//, //gcc 4.8//, //clang 3.5//##||##gray|//1.4//##||##gray|//1.7//##||
 ||[[# show-version]][#show-version-note show version] _
 @<&nbsp;>@||$ gcc @@--@@version||$ go version||$ dart @@--@@version||
 ||[[# implicit-prologue]][#implicit-prologue-note implicit prologue]||#include <errno.h> _
 #include <stdlib.h> _
 #include <stdio.h> _
 #include <string.h> _
-#include <time.h>|| || ||
+#include <time.h> _
+#include <wchar.h>||import "fmt"|| ||
 ||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
 ||~ ||~ c||~ go||~ dart||
 ||[[# hello-world]][#hello-world-note hello world]||$ cat hello.c _
@@ -50,8 +51,6 @@ $ node out.js _
 Hello, World!||
 ||[[# file-suffixes]][#file-suffixes-note file suffixes] _
 ##gray|//source, header, object file//##||.c .h .o|| ||.dart ##gray|//none//## .js||
-||[[# block-delimiters]][#block-delimiters-note block delimiters] _
-@<&nbsp;>@||{ ##gray|//...//## }||{ ##gray|//...//## }||{ ##gray|//...//## }||
 ||[[# stmt-separator]][#stmt-separator-note statement separator]||;||; ##gray|//or sometimes newline//## _
  _
 ##gray|//a new line terminates a statement when the last token on the line is _
@@ -60,6 +59,8 @@ Hello, World!||
 @<&nbsp;&nbsp;>@(3) one of the keywords// break, continue, _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@fallthrough, //or// return, // _
 @<&nbsp;&nbsp;>@(4) one of// ++, @@--@@, ), ], //or// }##||;||
+||[[# block-delimiters]][#block-delimiters-note block delimiters] _
+@<&nbsp;>@||{ ##gray|//...//## }||{ ##gray|//...//## }||{ ##gray|//...//## }||
 ||[[# eol-comment]][#eol-comment-note end-of-line comment] _
 @<&nbsp;>@||@@//@@ ##gray|//comment//##||@@//@@ ##gray|//comment//##||@@//@@ ##gray|//comment//##||
 ||[[# multiple-line-comment]][#multiple-line-comment-note multiple line comment]||/* ##gray|//comment line//## _
@@ -73,18 +74,19 @@ int i; _
 int j = 3; _
  _
  ##gray|/* memory allocated on heap: */## _
-int *ip = malloc(sizeof(int)); _
-*ip = 7;||##gray|@@//@@ memory allocated on stack:## _
+int *ptr = malloc(sizeof(int)); _
+*ptr = 7;||##gray|@@//@@ memory allocated on stack:## _
 var i int _
  _
 ##gray|@@//@@ allocated on stack; type inferred from literal:## _
 j := 3 _
  _
 ##gray|@@//@@ memory allocated on heap:## _
-ip := new(int) _
-*ip = 7|| ||
+ptr := new(int) _
+*ptr = 7||int i; _
+int j = 3;||
 ||[[# free-heap]][#free-heap-note free heap] _
-@<&nbsp;>@||free(ip);||##gray|//none; uses garbage collection//##||##gray|//none; uses garbage collection//##|||
+@<&nbsp;>@||free(ptr);||##gray|//none; uses garbage collection//##||##gray|//none; uses garbage collection//##|||
 ||[[# global-var]][#global-var-note global variable]||##gray|/* in foo.cpp, outside of any function: */## _
 int x = 7; _
  _
@@ -92,31 +94,47 @@ int x = 7; _
 extern int x;||##gray|@@//@@ foo.go:## _
 package foo _
  _
-var x = 7 _
+##gray|@@//@@ capitalized top-level identifiers are global:## _
+var X = 7 _
  _
 ##gray|@@//@@ bar.go:## _
 package bar _
 import foo _
  _
-var y = foo.x + 3|| ||
-||[[# uninitialized-var]][#uninitialized-var-note uninitialized variable]||##gray|//Stack variables and heap variables allocated with// malloc //have indeterminate values.  Global and static variables and heap variables allocated with// calloc //are zero-initialized.//##||##gray|//Every type has a zero value.  For numeric types it is zero and for strings it is the empty string.//##|| ||
-||[[# const]][#const-note constant]||##gray|/* usually preprocessor is used: */## _
-#define PI 3.14||const Pi = 3.14|| ||
+##gray|@@//@@ file scope:## _
+var y = 3 _
+ _
+func baz() { _
+@<&nbsp;&nbsp;>@##gray|@@//@@ local scope:## _
+@<&nbsp;&nbsp;>@var z = 5 _
+ _
+@<&nbsp;&nbsp;>@fmt.Println(foo.X + y + z) _
+}|| ||
+||[[# uninitialized-var]][#uninitialized-var-note uninitialized variable]||##gray|//Stack variables and heap variables allocated with// malloc //have indeterminate values.  Global and static variables and heap variables allocated with// calloc //are zero-initialized.//##||##gray|//Every type has a zero value.  For numeric types it is zero and for strings it is the empty string.//##||##gray|//set to// null##||
+||[[# compile-time-const]][#compile-time-const-note compile time constant]||##gray|/* usually preprocessor is used: */## _
+#define PI 3.14||const Pi = 3.14||const double pi = 3.14;||
+||[[# immutable-var]][#immutable-var-note immutable variable]||const int i = rand();||##gray|//none//##||import 'dart:math'; _
+ _
+final x = (new Random()).nextDouble();||
 ||[[# assignment]][#assignment-note assignment]||i = 3;||##gray|@@//@@ defines variable of appropriate type:## _
 i := 3 _
  _
 ##gray|@@//@@ variable must already be declared:## _
-i = 3|| ||
+i = 3||i = 3;||
 ||[[# parallel-assignment]][#parallel-assignment-note parallel assignment]||##gray|//none//##||##gray|@@//@@ define variables of appropriate type:## _
 m, n := 3, 7 _
  _
 ##gray|@@//@@ x and y must already be declared:## _
-x, y = 2, 8|| ||
+x, y = 2, 8||##gray|//none//##||
 ||[[# swap]][#swap-note swap]||int x = 1, y = 2, tmp; _
  _
 tmp = x; _
 x = y; _
-y = tmp;||x, y = y, x|| ||
+y = tmp;||x, y = y, x||int x = 1, y = 2, tmp; _
+ _
+tmp = x; _
+x = y; _
+y = tmp;||
 ||[[# compound-assignment]][#compound-assignment-note compound assignment]||##gray|//arithmetic://## _
 += -= *= /= %= _
  _
@@ -125,7 +143,14 @@ y = tmp;||x, y = y, x|| ||
 += -= *= /= %= _
  _
 ##gray|//bit://## _
-@@<<= >>= &= |= ^=@@|| ||
+@@<<= >>= &= |= ^=@@||##gray|//arithmetic://## _
++= -= *= /= ~/= %= _
+ _
+##gray|//string://## _
++= *= _
+ _
+##gray|//bit://## _
+@@<<= >>= &= ^= |=@@||
 ||[[# incr-decr]][#incr-decr-note increment and decrement]||##gray|//premodifiers://## _
 ++i @@--@@i _
  _
@@ -136,23 +161,53 @@ i++ i@@--@@||##gray|//premodifiers://## _
  _
 ##gray|//postmodifiers://## _
 i++ i@@--@@||
+||[[# addr]][#addr-note address]||int i = 3; _
+int* ptr = &i;||i := 3 _
+ _
+var ptr *int _
+ptr = &i _
+ptr2 := &i||##gray|//none//##||
+||[[# dereference]][#dereference-note dereference] _
+@<&nbsp;>@||int i2 = *ptr;||i2 := *ptr||##gray|//none//##||
+||[[# type-size]][#type-size-note type size]||sizeof(int) _
+ _
+##gray|/* also expressions and values: */## _
+sizeof(1 + 1)||import "unsafe" _
+ _
+##gray|@@//@@ use expression or name of variable with type:## _
+unsafe.Sizeof(i) _
+unsafe.Sizeof(1 + 1)|| ||
+||[[# addr-arith]][#addr-arith-note address arithmetic]||int a[] = {3, 2, 1, 0}; _
+ _
+for (int *p = a; *p; ++p) { _
+@<&nbsp;&nbsp;>@printf("%d\n", *p); _
+}||##gray|//none//##||##gray|//none//##||
 ||[[# null]][#null-note null] _
 @<&nbsp;>@||##gray|/* pointer types only: */## _
-NULL||nil||null||
+NULL||##gray|@@//@@ cannot be stored in numeric or string variable:## _
+nil||null||
 ||[[# null-test]][#null-test-note null test] _
-@<&nbsp;>@||ip == NULL|| || ||
-||[[# coalesce]][#coalesce-note coalesce] _
-@<&nbsp;>@||char *s1 = s2 @@||@@ "was null";|| || ||
+@<&nbsp;>@||ptr == NULL||ptr == nil||x == null||
 ||[[# conditional-expr]][#conditional-expr-note conditional expression] _
 @<&nbsp;>@||x > 0 ? x : -x||##gray|//none//##||x > 0 ? x : -x||
 ||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
 ||~ ||~ c||~ go||~ dart||
 ||[[# boolean-type]][#boolean-type-note boolean type] _
-@<&nbsp;>@||int||bool||bool||
+@<&nbsp;>@||int _
+ _
+##gray|/* includes macros for consistency with C++: */## _
+#include <stdbool.h> _
+ _
+bool||bool||bool||
 ||[[# true-false]][#true-false-note true and false] _
-@<&nbsp;>@||1 0||true false||true false||
+@<&nbsp;>@||1 0 _
+ _
+##gray|/* includes macros for consistency with C++: */## _
+#include <stdbool.h> _
+ _
+true false||true false||true false||
 ||[[# falsehoods]][#falsehoods-note falsehoods] _
-@<&nbsp;>@||0 0.0 NULL||false||##gray|//everything except for the boolean//## true||
+@<&nbsp;>@||0 0.0 NULL false||false||##gray|//everything except for the boolean//## true||
 ||[[# logical-op]][#logical-op-note logical operators] _
 @<&nbsp;>@||&& @@||@@ !||&& @@||@@ !||&& @@||@@ !||
 ||[[# relational-op]][#relational-op-note relational operators] _
@@ -284,7 +339,10 @@ complex128||##gray|//none//##||
 ||[[# complex-construction]][#complex-construction-note complex construction]||#include <complex.h> _
  _
 double complex z; _
-z = 1.0 + 2.0 * I;||var z complex128 = 1.0 + 2.0i||##gray|//none//##||
+z = 1.0 + 2.0 * I; _
+ _
+##gray|/* C11: */## _
+double complex z = CMPLX(1.0, 2.0);||var z complex128 = 1.0 + 2.0i||##gray|//none//##||
 ||[[# complex-decomposition]][#complex-decomposition-note complex decomposition] _
 ##gray|//real and imaginary component, argument, absolute value, conjugate//##||#include <complex.h> _
  _
@@ -328,13 +386,21 @@ var rnd = new Random(17);||
 ||||||||~ [[# strings]][#strings-note strings]||
 ||~ ||~ c||~ go||~ dart||
 ||[[# str-type]][#str-type-note string type] _
-@<&nbsp;>@||char *||string||String||
+@<&nbsp;>@||char * _
+wchar_t * _
+ _
+##gray|//The size of// wchar_t //is compiler dependent; gcc and clang use 32 bits; msvc uses 16 bits.//##||string||String||
 ||[[# str-literal]][#str-literal-note string literal] _
 @<&nbsp;>@||##gray|/* string in initialized data segment: */## _
 char *s = "hello"; _
+wchar_t *ws = L"hello"; _
  _
 ##gray|/* string in heap: */## _
-char *s2 = strdup(s);||"hello" _
+char *s2 = strdup(s); _
+wchar_t *ws2 = wcsdup(ws); _
+ _
+##gray|/* if strdup cannot allocate memory, it returns NULL and sets _
+@<&nbsp;&nbsp;&nbsp;>@errno to ENOMEM. */##||"hello" _
  _
 ##gray|@@//@@ raw string literal:## _
 @@`hello`@@||var s = 'don\'t say "no"'; _
@@ -368,12 +434,33 @@ print('$count ${item.toLowerCase()}s');||
 ||[[# compare-str]][#compare-str-note compare strings]||##gray|/* == and < compare memory addresses: */## _
  _
 strcmp("hello", "world") == 0 _
-strcmp("hello", "world") < 0||"hello" == "world" _
+strcmp("hello", "world") < 0 _
+ _
+wcscmp(L"hello", L"world") == 0 _
+wcscmp(L"hello", L"world") < 0||"hello" == "world" _
 "hello" < "world"||"hello" == "world" _
 "hello".compareTo("world") < 0||
-||[[# str-to-num]][#str-to-num-note string to number]||strtoimax strtol strtoll _
-strtoumax strtoul strtoull _
-strtof strtod strtold||import "strconv" _
+||[[# str-to-num]][#str-to-num-note string to number]||##gray|/* conversion functions: _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@strtol strtoll  _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@strtoul strtoull  _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@strtof strtod strtold */## _
+#include <limits.h> _
+ _
+char *s = "101 dalmations"; _
+char *rest; _
+long n = strtol(s, &rest, 10); _
+ _
+if (n == 0 && errno == EINVAL) _
+@<&nbsp;&nbsp;>@printf("invalid input\n"); _
+else if ((n == LONG_MAX @@||@@ n == LONG_MIN) && errno == ERANGE) _
+@<&nbsp;&nbsp;>@printf("overflow\n"); _
+else _
+@<&nbsp;&nbsp;>@printf("%ld %s\n", n, rest); _
+ _
+##gray|/* wide string conversion functions: _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@wcstol wcstoll  _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@wcstoul wcstoull  _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@wcstof wcstod wcstold */##||import "strconv" _
  _
 ##gray|@@//@@2nd arg is base, 3rd arg is size of int in bits:## _
 i, _ := strconv.ParseInt("17", 10, 32) _
@@ -381,7 +468,18 @@ i, _ := strconv.ParseInt("17", 10, 32) _
 ##gray|@@//@@ 2nd arg is size of float in bits:## _
 x, _ := strconv.ParseFloat("3.14", 32)||var n = int.parse("17"); _
   var x = double.parse("3.14");||
-||[[# num-to-str]][#num-to-str-note number to string]|| ||import "strconv" _
+||[[# num-to-str]][#num-to-str-note number to string]||long n = 1234; _
+ _
+char buf[100]; _
+snprintf(buf, 100, "%ld", n); _
+ _
+wchar_t buf2[100]; _
+swprintf(buf2, 100, L"%ld", n); _
+ _
+##gray|/* some format specifiers: _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@%d %ld %lld _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@%u %lu %llu _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@%.3f %.3e */##||import "strconv" _
  _
 ##gray|@@//@@3rd arg is precision after decimal point; _
 @@//@@ 4th arg is size of float in bits:## _
@@ -401,41 +499,67 @@ parts := []string{"foo", "bar", "baz"} _
 s := strings.Join(parts, " ")||['foo', 'bar', 'baz'].join(' ')||
 ||[[# str-concat]][#str-concat-note concatenate]||char *s1 = "hello"; _
 char *s2 = " world"; _
-char *s3 = (char *)calloc(strlen(s1) + strlen(s2) + 1,sizeof(char)); _
+size_t len = strlen(s1) + strlen(s2) + 1; _
+char *s3 = (char *)calloc(len, sizeof(char)); _
+ _
 strcpy(s3, s1); _
-strcat(s3, s2);||"hello" + " world"||"hello" + " world"||
+strcat(s3, s2); _
+ _
+##gray|/* also wcscpy and wcscat */##||"hello" + " world"||"hello" + " world"||
 ||[[# str-replicate]][#str-replicate-note replicate]||##gray|//none//##||import "strings" _
  _
 hbar := strings.Repeat("-", 80)||var hbar = "-" * 80;||
 ||[[# extract-substr]][#extract-substr-note extract substring]||char target[3]; _
  char *source = "hello"; _
-strncpy(target, source + 2, 2);||"hello"[2:4]||"hello".substring(2, 4)||
-||[[# index-subst]][#index-substr-note index of substring]||const char *s = "hello"; _
+ _
+strncpy(target, source + 2, 2); _
+target[2] = '\0'; _
+ _
+##gray|/* also wcsncpy */##||"hello"[2:4]||"hello".substring(2, 4)||
+||[[# index-substr]][#index-substr-note index of substring]||const char *s = "hello"; _
 const char *p = strstr("hello", "ll"); _
-p ? p - s : -1;||import "strings" _
+size_t idx = p ? p - s : -1; _
+ _
+##gray|/* also wcsstr */##||import "strings" _
  _
 ##gray|@@//@@ zero-based index; -1 if not found:## _
 strings.Index("hello", "ll")||"hello".indexOf("ll")||
 ||[[# fmt-str]][#fmt-str-note format string]||char buf[100]; _
-snprintf(buf, 100, "%s: %d", "Spain", 7);|| || ||
+snprintf(buf, 100, "%s: %d", "Spain", 7); _
+ _
+wchar_t buf2[100]; _
+swprintf(buf2, 100, L"%S: %d", L"Spain", 7);|| || ||
 ||[[# translate-case]][#translate-case-note translate case] _
  _
 ##gray|//to upper, to lower//##||char *s = strdup("hello"); _
 int i; _
  _
-for (i=0; i < strlen(s); ++i) { _
+for (i=0; i < strlen(s); ++i) _
 @<&nbsp;&nbsp;>@s[i] = toupper(s[i]); _
-} _
  _
-for (i=0; i < strlen(s); i++) { _
+for (i=0; i < strlen(s); i++) _
 @<&nbsp;&nbsp;>@s[i] = tolower(s[i]); _
-}||import "strings" _
+ _
+##gray|/* also towupper and towlower */##||import "strings" _
  _
 strings.ToUpper("hello") _
 strings.ToLower("HELLO")||"hello".toUpperCase() _
 "HELLO".toLowerCase()||
 ||[[# trim]][#trim-note trim] _
-##gray|//both sides, on left, on right//##|| ||import "strings" _
+##gray|//both sides, on left, on right//##||char *s = strdup(" lorem "); _
+size_t i, j; _
+ _
+##gray|/* trim left */## _
+for (i = 0; s[i] && isspace(s[i]); ++i); _
+if (i) _
+@<&nbsp;&nbsp;>@for (size_t j = 0; j < strlen(s) - i + 1; ++j) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@s[j] = s[j + i]; _
+ _
+##gray|/* trim right */## _
+for (i = strlen(s) - 1; s[i] && isspace(s[i]); --i); _
+s[i + 1] = '\0'; _
+ _
+##gray|/* also iswspace */##||import "strings" _
  _
 s := " lorem " _
 strings.Trim(s, " ") _
@@ -444,16 +568,33 @@ strings.TrimRight(s, " ")||" lorem ".trim() _
 " lorem ".trimLeft() _
 " lorem ".trimRight()||
 ||[[# pad]][#pad-note pad]||char buf[100]; _
-snprintf(buf, 100, "%-10s", "hello");|| ||"lorem".padRight(10, " ") _
+ _
+##gray|/* pad right: */## _
+snprintf(buf, 100, "%-10s", "hello"); _
+##gray|/* pad left: */## _
+snprintf(buf, 100, "%10s", "hello"); _
+ _
+##gray|/* also swprintf */##|| ||"lorem".padRight(10, " ") _
 "lorem".padLeft(10, " ")||
 ||[[# str-len]][#str-len-note length] _
-@<&nbsp;>@||strlen("hello")||len("hello")||##gray|@@//@@ number of 16 bit runes:## _
+@<&nbsp;>@||strlen("hello") _
+wcslen(L"hello")||len("hello")||##gray|@@//@@ number of 16 bit runes:## _
 "hello".length||
-||[[# char-type]][#char-type-note character type]||char||rune||##gray|@@//@@ 16 bits:## _
+||[[# char-type]][#char-type-note character type]||char _
+wchar_t||rune||##gray|@@//@@ 16 bits:## _
 rune||
-||[[# char-literal]][#char-literal-note character literal]|| || ||##gray|//none//##||
-||[[# char-lookup]][#char-lookup-note character lookup]|| || || ||
-||[[# chr-ord]][#chr-ord-note chr and ord]|| || ||new String.fromCharCodes([65]) _
+||[[# char-literal]][#char-literal-note character literal]||'A' _
+L'A'|| ||##gray|//none//##||
+||[[# char-lookup]][#char-lookup-note character lookup]||"lorem ipsum"[6] _
+L"lorem ipsum"[6]|| || ||
+||[[# chr-ord]][#chr-ord-note chr and ord]||##gray|/* Character types are integer types so no conversion is necessary.  Use %c and %C to print a character like a string of length one. */## _
+char ch = 'A'; _
+wchar_t ch2 = L'A'; _
+ _
+int i = ch + 7; _
+int i2 = ch2 + 7; _
+ _
+wprintf(L"%c %d %C %d\n", ch, ch, ch2, ch2);|| ||new String.fromCharCodes([65]) _
 "A".codeUnitAt(0) _
  _
 ##gray|@@//@@ for Unicode points above U+FFFF codeUnitAt will _
@@ -486,21 +627,14 @@ char *s = "It's 1999"; _
  _
 ##gray|/* Use REG_NOSUB if 4th arg to regexec() is NULL */## _
 if (retval = regcomp(&rx, pat, REG_EXTENDED | REG_NOSUB)) { _
- _
 @<&nbsp;&nbsp;>@char buf[200]; _
- _
 @<&nbsp;&nbsp;>@regerror(retval, &rx, buf, 200); _
 @<&nbsp;&nbsp;>@fprintf(stderr, "regex error: %s\n", buf); _
-} _
-else { _
- _
-@<&nbsp;&nbsp;>@if (regexec(&rx, "s, 0, NULL, 0) == 0) { _
+} else { _
+@<&nbsp;&nbsp;>@if (regexec(&rx, s, 0, NULL, 0) == 0) _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@printf("Party!\n"); _
-@<&nbsp;&nbsp;>@} _
- _
 @<&nbsp;&nbsp;>@regfree(&rx); _
-}||import "fmt" _
-import "regexp" _
+}||import "regexp" _
  _
 var rx = regexp.MustCompile("1999") _
 if (rx.MatchString("It's 1999.")) { _
@@ -519,21 +653,14 @@ char *pat = "lorem"; _
 char *s = "Lorem"; _
  _
 if (retval = regcomp(&rx, pat, REG_EXTENDED | REG_ICASE)) { _
- _
 @<&nbsp;&nbsp;>@char buf[200]; _
- _
 @<&nbsp;&nbsp;>@regerror(retval, &rx, buf, 200); _
 @<&nbsp;&nbsp;>@fprintf(stderr, "Regex error: %s\n", buf); _
-} _
-else { _
- _
-@<&nbsp;&nbsp;>@if (regexec(&rx, s, 0, NULL, 0) == 0) { _
+} else { _
+@<&nbsp;&nbsp;>@if (regexec(&rx, s, 0, NULL, 0) == 0) _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@printf("case insensitive match\n"); _
-@<&nbsp;&nbsp;>@} _
- _
 @<&nbsp;&nbsp;>@regfree(&rx); _
-}||import "fmt" _
-import "regexp" _
+}||import "regexp" _
  _
 var rx = regexp.MustCompile("(?i)lorem") _
 if (rx.MatchString("Lorem Ipsum")) { _
@@ -554,8 +681,7 @@ i m s U||##gray|RegExp //constructor takes two optional boolean named parameters
  _
 multiLine _
 caseSensitive||
-||[[# subst]][#subst-note substitution]|| ||import "fmt" _
-import "regexp" _
+||[[# subst]][#subst-note substitution]|| ||import "regexp" _
  _
 s := "do re mi mi mi" _
 var rx = regexp.MustCompile("mi") _
@@ -565,35 +691,25 @@ print("do re mi mi mi".replaceAll(re, "ma"));||
  _
 regex_t rx; _
 int retval; _
- _
 char *pat = "([0-9]{4})-([0-9]{2})-([0-9]{2})"; _
 char *s = "2010-06-03"; _
  _
 if (retval = regcomp(&rx, pat, REG_EXTENDED)) { _
- _
 @<&nbsp;&nbsp;>@char buf[200]; _
- _
 @<&nbsp;&nbsp;>@regerror(retval, &rx, buf, 200); _
 @<&nbsp;&nbsp;>@fprintf(stderr, "Regex error: %s\n", buf); _
-} _
-else { _
- _
+} else { _
 @<&nbsp;&nbsp;>@##gray|/* first match is entire pattern */## _
 @<&nbsp;&nbsp;>@regmatch_t matches[4]; _
- _
 @<&nbsp;&nbsp;>@if (regexec(&rx, s, 4, matches, 0) == 0) { _
- _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@char yr[5]; _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@regmatch_t rm = matches[1]; _
- _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|/* rm_so and rm_eo contain index of start and end of _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;&nbsp;>@match; they are set to -1 if unused */## _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@strncpy(yr, s + rm.rm_so, rm.rm_eo - rm.rm_so); _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@yr[5] = '\0'; _
- _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@printf("year is %s\n", yr); _
 @<&nbsp;&nbsp;>@} _
- _
 @<&nbsp;&nbsp;>@regfree(&rx); _
 }|| ||RegExp rx = new RegExp(r'(\d{4})-(\d{2})-(\d{2})'); _
 var md = rx.firstMatch("2010-06-03"); _
@@ -606,96 +722,128 @@ if (md != null) { _
 }||
 ||||||||~ [[# dates-time]][#dates-time-note dates and time]||
 ||~ ||~ c||~ go||~ dart||
-||[[# unix-epoch-type]][#unix-epoch-type-note unix epoch type]||time_t|| || ||
-||[[# broken-down-datetime-type]][#broken-down-datetime-type-note broken-down datetime type]||struct tm||Time|| ||
+||[[# unix-epoch-type]][#unix-epoch-type-note unix epoch type] _
+@<&nbsp;>@||time_t||int64|| ||
+||[[# broken-down-datetime-type]][#broken-down-datetime-type-note broken-down datetime type]||struct tm||Time||DateTime||
 ||[[# current-unix-epoch]][#current-unix-epoch-note current unix epoch]||time_t now; _
  _
-if (time(&now) == -1) { _
-@<&nbsp;&nbsp;>@perror("time failed"); _
-}|| || ||
+if (time(&now) == -1) _
+@<&nbsp;&nbsp;>@perror("time failed");||import "time" _
+ _
+t := time.Now().Unix()|| ||
 ||[[# current-datetime]][#current-datetime-note current datetime]|| ||import "time" _
  _
-t := time.Now()|| ||
-||[[# broken-down-datetime-to-unix-epoch]][#broken-down-datetime-to-unix-epoch-note broken-down datetime to unix epoch]|| || || ||
-||[[# unix-epoch-to-broken-down-datetime]][#unix-epoch-to-broken-down-datetime-note unix epoch to broken-down datetime]|| || || ||
-||[[# datetime-to-str]][#datetime-to-str-note datetime to string]|| || || ||
-||[[# unix-epoch-to-str]][#unix-epoch-to-str-note unix epoch to string] _
-@<&nbsp;>@||char *s; _
+dt := time.Now()||var dt = new DateTime.now();||
+||[[# broken-down-datetime-to-unix-epoch]][#broken-down-datetime-to-unix-epoch-note broken-down datetime to unix epoch]||##gray|/* use host local time as tz: */## _
+time_t t = mktime(&dt); _
  _
-##gray|/* ctime returns pointer to statically allocated memory */## _
-if ((s = ctime(&now)) == NULL) { _
-@<&nbsp;&nbsp;>@fputs("ctime failed."); _
-}|| || ||
-||[[# fmt-datetime]][#fmt-datetime-note format datetime]|| || || ||
-||[[# parse-datetime]][#parse-date-note parse datetime]|| || || ||
-||[[# date-subtraction]][#date-subtraction-note date subtraction]|| || || ||
-||[[# add-duration]][#add-duration-note add duration]|| || || ||
-||[[# date-parts]][#date-parts-note date parts]|| || || ||
-||[[# time-parts]][#time-parts-note time parts]|| || || ||
-||[[# build-datetime]][#build-datetime-note build broken-down datetime]|| || || ||
-||[[# local-tmz-determination]][#local-tmz-determination-note local time zone determination]|| || || ||
+##gray|/* use UTC as tz: */## _
+time_t t2 = timegm(&dt2);||t := dt.Unix()||dt.millisecondsSinceEpoch ~/ 1000||
+||[[# unix-epoch-to-broken-down-datetime]][#unix-epoch-to-broken-down-datetime-note unix epoch to broken-down datetime]||struct tm dt, dt2; _
+ _
+if (!localtime_r(&now, &dt)) _
+@<&nbsp;&nbsp;>@perror("localtime_r failed"); _
+ _
+##gray|/* UTC: */## _
+if (!gmtime_r(&now, &dt2)) _
+@<&nbsp;&nbsp;>@perror("gmtime_r failed");||var t int64 = 1421929926 _
+var ns int64 = 0 _
+dt := time.Unix(t, ns)||int t = 1422021432; _
+ _
+ var dt =  new DateTime.fromMillisecondsSinceEpoch(t * 1000);||
+||[[# fmt-datetime]][#fmt-datetime-note format datetime]||char buf[100]; _
+char *fmt = "%Y-%m-%d %H:%M:%S"; _
+ _
+if (!strftime(buf, 100, fmt, &dt)) _
+@<&nbsp;&nbsp;>@fputs("strftime failed\n", stderr);||layout := "2006-01-02 15:04:05" _
+ _
+fmt.Println(dt.Format(layout))|| ||
+||[[# parse-datetime]][#parse-datetime-note parse datetime]||char *s = "1999-09-10 23:30:00"; _
+char *fmt = "%Y-%m-%d %H:%M:%S"; _
+char *p = strptime(s, fmt, &dt3); _
+if (!p) _
+@<&nbsp;&nbsp;>@fputs("strptime failed\n", stderr);||layout := "2006-01-02:15:04:05" _
+ _
+dt, err := time.Parse(layout, "1999-09-10 23:30:00")|| ||
+||[[# date-subtraction]][#date-subtraction-note date subtraction]||##gray|/* use mktime for local; timegm for utc: */## _
+double delta_sec = difftime(mktime(&dt), mktime(&dt2));||var delta time.Duration _
+ _
+delta = dt.Sub(dt2)||Duration delta = dt.difference(dt2);||
+||[[# add-duration]][#add-duration-note add duration]||dt.tm_sec += 1000; _
+mktime(&dt); _
+ _
+dt.tm_hour += 1000; _
+mktime(&dt); _
+ _
+dt.tm_mday += 1000; _
+mktime(&dt);||dt2 := dt + 1000 * time.Second _
+dt3 := dt + 1000 * time.Hour||Duration delta1 = const Duration(seconds: 1000); _
+Duration delta2 = const Duration(hours: 1000); _
+Duration delta3 = const Duration(days: 1000); _
+ _
+var dt2 = dt.add(delta1); _
+var dt3 = dt.subtract(delta3);||
+||[[# date-parts]][#date-parts-note date parts]||int yr = dt.tm_year + 1900; _
+int mo = dt.tm_mon + 1; _
+int dy = dt.tm_mday;||yr := dt.Year() _
+var mo time.Month = dt2.Month() _
+dy := dt.Day()||int yr = dt.year; _
+int mo = dt.month; _
+int dy = dt.day;||
+||[[# time-parts]][#time-parts-note time parts]||int hr = dt.tm_hour; _
+int mi = dt.tm_min; _
+int ss = dt.tm_sec;||hr := dt.Hour() _
+mi := dt.Minute() _
+ss := dt.Second()||int hr = dt.hour; _
+int mi = dt.minute; _
+int ss = dt.second;||
+||[[# build-datetime]][#build-datetime-note build broken-down datetime]||dt.tm_year = 1999 - 1900; _
+dt.tm_mon = 9 - 1; _
+dt.tm_mday = 10; _
+dt.tm_hour = 23; _
+dt.tm_min = 30; _
+dt.tm_sec = 0; _
+dt.tm_isdst = 1; _
+dt.tm_gmtoff = -7 * 60 * 60; _
+ _
+if (mktime(&dt) == -1) _
+@<&nbsp;&nbsp;>@fputs("mktime failed\n", stderr);||import "time" _
+ _
+yr := 1999 _
+var mo time.Month = 9 _
+dy, hr, mi, ss, ns := 10, 23, 30, 0, 0 _
+loc, _ := time.LoadLocation("Local") _
+ _
+dt := time.Date(yr, mo, dy, hr, mi, ss, ns, loc)||var dt = new DateTime(1999, 9, 10, 23, 30, 0); _
+ _
+var dt_utc = new DateTime.utc(1999, 9, 10, 23, 30, 0);||
+||[[# local-tmz-determination]][#local-tmz-determination-note local time zone determination]||##gray|//On a Unix system, the local time zone is stored in /etc/localtime.  A process can have a different local time zone by setting the TZ environment variable.//##|| || ||
 ||[[# tmz-info]][#tmz-info-note time zone info] _
-##gray|//name and utc offset in hours//##|| || || ||
-||[[# daylight-savings-test]][#daylight-savings-test-note daylight savings test]|| || || ||
-||[[# nonlocal-tmz]][#nonlocal-tmz-note nonlocal time zone]|| || || ||
-||[[# microseconds]][#microseconds-note microseconds]|| || || ||
-||[[# sleep]][#sleep-note sleep]||#include <unistd.h> _
+##gray|//name and utc offset in hours//##||##gray|//offset abbreviation://## _
+dt.tm_zone _
  _
-##gray|/* seconds */## _
-int retval = sleep(10); _
-if (retval != 0) { _
-@<&nbsp;&nbsp;>@printf("interupted with %d s to go", retval); _
-} _
+##gray|//UTC offset in hours://## _
+dt.tm_gmtoff / 3600.0||name, offset_sec := dt.Zone() _
  _
-##gray|/* microseconds */## _
-if (usleep(10000)) { _
-@<&nbsp;&nbsp;>@perror("usleep failed"); _
-}||dur := time.Duration(10 * time.Second) _
-time.Sleep(dur) _
+##gray|//offset abbreviation://## _
+name _
  _
-dur2 := time.Duration(10000 * time.Microsecond) _
-time.Sleep(dur2)|| ||
-||[[# timeout]][#timeout-note timeout]|| || || ||
-||[[# cpu-usage]][#cpu-usage-note cpu usage]||#include <sys/times.h> _
-#include <unistd.h>@<&nbsp;&nbsp;>@##gray|/* sysconf */## _
+##gray|//UTC offset in hours://## _
+offset_sec / 3600.0|| ||
+||[[# daylight-savings-test]][#daylight-savings-test-note daylight savings test] _
+@<&nbsp;>@||dt.tm_isdst|| || ||
+||[[# microseconds]][#microseconds-note microseconds]||#include <sys/time.h> _
  _
-struct tms start, end; _
+struct timeval t; _
  _
-double ticks_per_s = (double)sysconf(_SC_CLK_TCK); _
- _
-clock_t start_wall = times(&start); _
- _
-if (start_wall < 0) { _
-@<&nbsp;&nbsp;>@fputs("times failed", stderr); _
-@<&nbsp;&nbsp;>@return (1); _
-} _
- _
-int i; _
-for (i = 0; i < 1000 * 1000 * 1000; ++i) { _
-@<&nbsp;&nbsp;>@##gray|/* empty loop */## _
-} _
- _
-clock_t end_wall = times(&end); _
- _
-if (end_wall < 0) { _
-@<&nbsp;&nbsp;>@fputs("times failed", stderr); _
-@<&nbsp;&nbsp;>@return (1); _
-} _
- _
-clock_t wall = end_wall - start_wall; _
-clock_t user = end.tms_utime - start.tms_utime; _
-clock_t system = end.tms_stime - start.tms_stime; _
- _
-printf("wall: %f s\n", wall / ticks_per_s); _
-printf("user: %f s\n", user / ticks_per_s); _
-printf("system: %f s\n", system / ticks_per_s);|| || ||
-||||||||~ [[# arrays]][#arrays-note arrays]||
+if (gettimeofday(&t, NULL) == -1) _
+@<&nbsp;&nbsp;>@perror("gettimeofday failed"); _
+else _
+@<&nbsp;&nbsp;>@printf("epoch: %lu usec: %u\n", t.tv_sec, t.tv_usec);||dt.Nanosecond() / 1000|| ||
+||||||||~ [[# fixed-length-arrays]][#fixed-length-arrays-note fixed-length arrays]||
 ||~ ||~ c||~ go||~ dart||
 ||[[# declare-array]][#declare-array-note declare]||int a[10];||##gray|@@//@@ values are zero-initialized:## _
-var a [10]int _
- _
-##gray|@@//@@ slice of length 5; capacity 10:## _
-a2 := make([]int, 5, 10)|| ||
+var a [10]int|| ||
 ||[[# allocate-array-on-stack]][#allocate-array-on-stack-note allocate on stack]||##gray|/* contents of memory undefined: */## _
 int a[10];||##gray|//compiler decides location in memory//##|| ||
 ||[[# allocate-array-on-heap]][#allocate-array-on-heap-note allocate on heap]||#include <stdlib.h> _
@@ -704,20 +852,17 @@ int a[10];||##gray|//compiler decides location in memory//##|| ||
 int *a = calloc(10, sizeof(int));||##gray|//compiler decides location in memory//##|| ||
 ||[[# free-array-on-heap]][#free-array-on-heap-note free heap] _
 @<&nbsp;>@||free(a);||##gray|//none; garbage collected//##|| ||
-||[[# array-literal]][#array-literal-note literal]||int a[] = {1, 2, 3};||a := []int{1, 2, 3}||var a = [1, 2, 3];||
+||[[# array-literal]][#array-literal-note literal] _
+@<&nbsp;>@||int a[] = {1, 2, 3};||a := []int{1, 2, 3}|| ||
 ||[[# array-size]][#array-size-note size] _
-@<&nbsp;>@||##gray|//none//##||##gray|@@//@@ number of elements in array or slice:## _
-len(a) _
- _
-##gray|@@//@@ number of elements that can be stored in allocated memory; runtime reallocates when needed:## _
-cap(a)||a.length||
+@<&nbsp;>@|| ||len(a)|| ||
 ||[[# array-lookup]][#array-lookup-note lookup] _
-@<&nbsp;>@||a[0]||a[0]||a[0]||
+@<&nbsp;>@||a[0]||a[0]|| ||
 ||[[# array-update]][#array-update-note update] _
-@<&nbsp;>@||a[0] = 4;||a[0] = 4||a[0] = 4;||
+@<&nbsp;>@||a[0] = 4;||a[0] = 4|| ||
 ||[[# array-out-of-bounds]][#array-out-of-bounds-note out-of-bounds behavior]||##gray|//undefined, possible SIGSEGV//##||##gray|panic: index out of range## _
  _
-##gray|//if compiler detects a problem the code won't compile//##||RangeError||
+##gray|//if compiler detects a problem the code won't compile//##|| ||
 ||[[# array-element-index]][#array-element-index-note element index]||char *a[3] = {"foo", "bar", "baz"}; _
 int loc = -1, i; _
  _
@@ -733,11 +878,85 @@ for i, val := range a { _
 @<&nbsp;&nbsp;>@if val == "bar" { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@loc = i _
 @<&nbsp;&nbsp;>@} _
-}||var a = ["a", "b", "c"]; _
-print(a.indexOf("b"));||
+}|| ||
 ||[[# slice-array]][#slice-array-note slice]||int *a2; _
  _
 a2 = a[2];||a := []string{"a", "b", "c", "d", "e"} _
+ _
+##gray|@@//@@ {"c", "d"}:## _
+a2 := a[2:4]|| ||
+||[[# slice-array-to-end]][#slice-array-to-end-note slice to end]|| ||a := []string{"a", "b", "c", "d", "e"} _
+ _
+##gray|@@//@@ {"c", "d", "e"}:## _
+a2 := a[2:]|| ||
+||[[# concatenate-array]][#concatenate-array-note concatenate]|| ||a := []int{1, 2, 3} _
+a2 := []int{4, 5, 6} _
+a3 := append(a, a2@@...@@)|| ||
+||[[# copy-array]][#copy-array-note copy]|| ||a := []int{1, 2, 3} _
+ _
+a2 := a _
+##gray|@@//@@ also sets a[0] to 4:## _
+a2[0] = 4 _
+ _
+a3 := make([]int, len(a)) _
+copy(a3, a) _
+##gray|@@//@@ a[0] is unchanged:## _
+a3[0] = 5|| ||
+||[[# iterate-over-array]][#iterate-over-array-note iterate over elements]||int a[10]; _
+ _
+for (i = 0; i < 10; ++i ) { _
+@<&nbsp;&nbsp;>@a[i] = i * i; _
+}|| || ||
+||[[# iterate-indices-elem]][#iterate-indices-elem-note iterate over indices and elements]|| || || ||
+||[[# reverse-array]][#reverse-array-note reverse]|| ||import "sort" _
+ _
+a := []int{1, 2, 3} _
+sort.Sort(sort.Reverse(sort.IntSlice(a)))|| ||
+||[[# sort-array]][#sort-array-note sort]||int _
+compare(const void *a, const void *b) { _
+@<&nbsp;&nbsp;>@if (*(int *)a < *(int *)b) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return -1; _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@else if (*(int *)a == *(int *)b) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return 0; _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@else { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return 1; _
+@<&nbsp;&nbsp;>@} _
+} _
+ _
+int a[5] = {6, 8, 10, 9, 7}; _
+ _
+##gray|/* 2nd arg is array length; 3rd arg is element size */## _
+qsort(a, 5, sizeof(int), &compare);|| || ||
+||||||||~ [[# resizable-arrays]][#resizable-arrays-note resizable arrays]||
+||~ ||~ c||~ go||~ dart||
+||[[# declare-array]][#declare-array-note declare]|| ||##gray|@@//@@ slice of length 5; capacity 10:## _
+a := make([]int, 5, 10)|| ||
+||[[# array-literal]][#array-literal-note literal]|| ||a := []int{1, 2, 3}||var a = [1, 2, 3];||
+||[[# array-size]][#array-size-note size] _
+@<&nbsp;>@|| ||len(a) _
+ _
+##gray|@@//@@ number of elements that can be stored in allocated memory; _
+@@//@@ runtime reallocates when needed:## _
+cap(a)||a.length||
+||[[# array-lookup]][#array-lookup-note lookup] _
+@<&nbsp;>@|| ||a[0]||a[0]||
+||[[# array-update]][#array-update-note update] _
+@<&nbsp;>@|| ||a[0] = 4||a[0] = 4;||
+||[[# array-out-of-bounds]][#array-out-of-bounds-note out-of-bounds behavior]|| ||##gray|panic: index out of range## _
+ _
+##gray|//if compiler detects a problem the code won't compile//##||RangeError||
+||[[# array-element-index]][#array-element-index-note element index]|| ||a := []string{"foo", "bar", "baz"} _
+loc := -1 _
+ _
+for i, val := range a { _
+@<&nbsp;&nbsp;>@if val == "bar" { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@loc = i _
+@<&nbsp;&nbsp;>@} _
+}||var a = ["a", "b", "c"]; _
+print(a.indexOf("b"));||
+||[[# slice-array]][#slice-array-note slice]|| ||a := []string{"a", "b", "c", "d", "e"} _
  _
 ##gray|@@//@@ {"c", "d"}:## _
 a2 := a[2:4]||var a = ["a", "b", "c", "d", "e"]; _
@@ -770,11 +989,7 @@ copy(a3, a) _
 a3[0] = 5||var a = ["a", "b"]; _
  _
 List a2 = new List<String>.from(a);||
-||[[# iterate-over-array]][#iterate-over-array-note iterate over elements]||int a[10]; _
- _
-for (i = 0; i < 10; ++i ) { _
-@<&nbsp;&nbsp;>@a[i] = i * i; _
-}|| || ||
+||[[# iterate-over-array]][#iterate-over-array-note iterate over elements]|| || || ||
 ||[[# iterate-indices-elem]][#iterate-indices-elem-note iterate over indices and elements]|| || || ||
 ||[[# reverse-array]][#reverse-array-note reverse]|| ||import "sort" _
  _
@@ -782,56 +997,43 @@ a := []int{1, 2, 3} _
 sort.Sort(sort.Reverse(sort.IntSlice(a)))||var a = ["a", "b", "c"]; _
  _
 List a2 = new List<String>.from(a.reversed);||
-||[[# sort-array]][#sort-array-note sort]||int _
-compare(const void *a, const void *b) { _
- _
-@<&nbsp;&nbsp;>@if (*(int *)a < *(int *)b) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return -1; _
-@<&nbsp;&nbsp;>@} _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@else if (*(int *)a == *(int *)b) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return 0; _
-@<&nbsp;&nbsp;>@} _
-@<&nbsp;&nbsp;>@else { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return 1; _
-@<&nbsp;&nbsp;>@} _
-} _
- _
-int a[5] = {6, 8, 10, 9, 7}; _
- _
-##gray|/* 2nd arg is array length; 3rd arg is element size */## _
-qsort(a, 5, sizeof(int), &compare);|| ||var a = [3, 1, 4, 2]; _
+||[[# sort-array]][#sort-array-note sort]|| || ||var a = [3, 1, 4, 2]; _
 a.sort();||
-||[[# map]][#map-note map]||##gray|//none//##||##gray|//none//##||var a = [1, 2, 3]; _
+||[[# map]][#map-note map]|| ||##gray|//none//##||var a = [1, 2, 3]; _
  _
 var a2 = new List.from(a.map((n) => n * n));||
-||[[# filter]][#filter-note filter]||##gray|//none//##||##gray|//none//##||var a = [1, 2, 3]; _
+||[[# filter]][#filter-note filter]|| ||##gray|//none//##||var a = [1, 2, 3]; _
  _
 var a2 = new List.from(a.where((n) => n > 1));||
-||[[# reduce]][#reduce-note reduce]||##gray|//none//##||##gray|//none//##||var a = [1, 2, 3]; _
+||[[# reduce]][#reduce-note reduce]|| ||##gray|//none//##||var a = [1, 2, 3]; _
  _
 var sum = a.reduce((v, e) => v + e);||
 ||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
 ||~ ||~ c||~ go||~ dart||
-||[[# declare-dict]][#declare-dict-note declare]|| ||gold := make(map[string]int)|| ||
-||[[# dict-literal]][#dict-literal-note literal]|| ||gold := map[string]int{ _
-@<&nbsp;&nbsp;>@"France": 7, _
-@<&nbsp;&nbsp;>@"Spain": 3, _
-}||var d = {"t": 1, "f": 0};||
-||[[# dict-size]][#dict-size-note size]|| || ||d.length||
-||[[# dict-lookup]][#dict-lookup-note lookup]|| ||import "fmt" _
- _
-gold["France"] = 7 _
-fmt.Printf("France: %d\n", gold["France"])||d["t"]||
-||[[# dict-update]][#dict-update-note update]|| || ||d["t"] = 2;||
-||[[# dict-out-of-bounds]][#dict-out-of-bounds-note out-of-bounds behavior]|| || ||##gray|//accessing nonexistent key returns// null##||
-||[[# dict-is-key-present]][#dict-is-key-present-note is key present]|| ||##gray|//if key not present,// val //will contain zero value for type and// ok //will contain false://## _
-val, ok = gold["Norway"]||d.containsKey("y")||
-||[[# dict-delete]][#dict-delete-note delete]|| ||delete(gold, "France")||d.remove("f");||
-||[[# dict-iterate]][#dict-iterate-note iterate]|| || ||d.forEach((k, v) { _
+||[[# declare-dict]][#declare-dict-note declare] _
+@<&nbsp;>@|| ||d := make(map[string]int)|| ||
+||[[# dict-literal]][#dict-literal-note literal] _
+@<&nbsp;>@|| ||d := map[string]int {"t": 1, "f": 0}||var d = {"t": 1, "f": 0};||
+||[[# dict-size]][#dict-size-note size] _
+@<&nbsp;>@|| ||len(d)||d.length||
+||[[# dict-lookup]][#dict-lookup-note lookup] _
+@<&nbsp;>@|| ||d["t"]||d["t"]||
+||[[# dict-update]][#dict-update-note update] _
+@<&nbsp;>@|| ||d["t"] = 2||d["t"] = 2;||
+||[[# dict-missing-key]][#dict-missing-key-note missing key behavior] _
+@<&nbsp;>@|| ||##gray|//returns zero value for value type//##||##gray|//returns//## null||
+||[[# dict-is-key-present]][#dict-is-key-present-note is key present]|| ||##gray|@@//@@ If key not present, val will contain _
+@@//@@ zero value for type and ok will contain false:## _
+val, ok = d["y"]]||d.containsKey("y")||
+||[[# dict-delete]][#dict-delete-note delete] _
+@<&nbsp;>@|| ||delete(d, "f")||d.remove("f");||
+||[[# dict-iter]][#dict-iter-note iterate]|| ||for k, v := range d { _
+@<&nbsp;&nbsp;>@fmt.Printf("%s: %d\n", k, v) _
+}||d.forEach((k, v) { _
 @<&nbsp;&nbsp;>@print(k); _
 @<&nbsp;&nbsp;>@print(v); _
 });||
-||[[# dict-key-val]][#dict-key-val-note keys and values as arrays]|| || ||List keys = d.keys; _
+||[[# dict-key-val-arrays]][#dict-key-val-arrays-note keys and values as arrays]|| || ||List keys = d.keys; _
 List vals = d.values;||
 ||||||||~ [[# functions]][#functions-note functions]||
 ||~ ||~ c||~ go||~ dart||
@@ -863,9 +1065,7 @@ printf("%f\n", add(2.2, 3.5)); _
  _
 float add(float x, float y) { _
 @<&nbsp;&nbsp;>@return x + y; _
-}||import "fmt" _
- _
-##gray|@@//@@ function can be invoked before definition## _
+}||##gray|@@//@@ function can be invoked before definition## _
 fmt.Printf("%f\n", add(2.2, 3.5)) _
  _
 func add(n float32, m float32) float32 { _
@@ -942,6 +1142,15 @@ q, r := divmod(7, 3)|| ||
 } _
  _
 q, r := divmod(7, 3)|| ||
+||[[# exec-on-return]][#exec-on-return-note execute on return]|| ||import "os" _
+ _
+##gray|@@//@@ prints "x is 7"## _
+func x_is_7() { _
+@<&nbsp;&nbsp;>@x := 7 _
+@<&nbsp;&nbsp;>@defer fmt.Println(x) _
+@<&nbsp;&nbsp;>@x = 8 _
+@<&nbsp;&nbsp;>@defer os.Stdout.WriteString("x is ") _
+}|| ||
 ||[[# anonymous-func-literal]][#anonymous-func-literal-note anonymous function literal]||##gray|//none//##||  || ||
 ||[[# invoke-anonymous-func]][#invoke-anonymous-func-note invoke anonymous function]|| || || ||
 ||[[# func-private-state]][#func-private-state-note function with private state]||int _
@@ -962,19 +1171,6 @@ int (* fp)(int, int) = &add; _
 printf("1 + 2: %d\n", (*fp)(1, 2));|| || ||
 ||||||||~ [[# execution-control]][#execution-control-note execution control]||
 ||~ ||~ c||~ go||~ dart||
-||[[# for]][#for-note for]||int i, n; _
- _
-for (i = 1, n = 1; i <= 10; ++i) { _
-@<&nbsp;&nbsp;>@n *= i; _
-}||n := 1 _
- _
-for i := 1; i <= 10; i++ { _
-@<&nbsp;&nbsp;>@n *= i; _
-}||int n = 1; _
- _
-for (int i = 1; i <= 10; ++i) { _
-@<&nbsp;&nbsp;>@n *= i; _
-}||
 ||[[# if]][#if-note if]||int signum; _
  _
 if (i > 0) { _
@@ -983,7 +1179,9 @@ if (i > 0) { _
 @<&nbsp;&nbsp;>@signum = 0; _
 } else { _
 @<&nbsp;&nbsp;>@signum = -1; _
-}||if x > 0 { _
+}||var signum int _
+ _
+if x > 0 { _
 @<&nbsp;&nbsp;>@signum = 1 _
 } else if x == 0 { _
 @<&nbsp;&nbsp;>@signum = 0 _
@@ -998,14 +1196,40 @@ if (i > 0) { _
 } else { _
 @<&nbsp;&nbsp;>@signum = -1; _
 }||
-||single statement branch||if (n < 0) _
-@<&nbsp;&nbsp;>@printf("negative\n");||import "fmt" _
+||[[# switch]][#switch-note switch]||##gray|/* switch expression must be an integer */## _
  _
-##gray|@@//@@ braces are mandatory:## _
-if n < 0 { _
-@<&nbsp;&nbsp;>@fmt.Println("negative") _
-}||if (n < 0) _
-@<&nbsp;&nbsp;>@print("negative");||
+switch (i) { _
+case 0: _
+case 1: _
+@<&nbsp;&nbsp;>@printf("i is boolean\n"); _
+@<&nbsp;&nbsp;>@break; _
+default: _
+@<&nbsp;&nbsp;>@printf("i is not a boolean\n"); _
+@<&nbsp;&nbsp;>@break; _
+} _
+ _
+##gray|/* use "break" to prevent falling through */##||##gray|@@//@@ switch expression can have any type## _
+ _
+switch i { _
+case 0, 1: _
+@<&nbsp;&nbsp;>@fmt.Println("i is boolean") _
+default: _
+@<&nbsp;&nbsp;>@fmt.Println("i is not a boolean") _
+} _
+ _
+##gray|@@//@@ use "fallthrough" to fall through##||##gray|@@//@@ switch expression can be integer or string## _
+ _
+switch (i) { _
+@<&nbsp;&nbsp;>@case 0: _
+@<&nbsp;&nbsp;>@case 1: _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print("i is boolean"); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@break; _
+@<&nbsp;&nbsp;>@default: _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print("i is not boolean"); _
+} _
+ _
+##gray|@@//@@ Falling through not permitted; exception if last _
+@@//@@ statement not break, continue, throw, or return.##||
 ||[[# while]][#while-note while]||int i = 0; _
  _
 while (i < 10) { _
@@ -1019,21 +1243,162 @@ for  i < 10 { _
 while (i < 10) { _
 @<&nbsp;&nbsp;>@++i; _
 }||
-||[[# switch]][#switch-note switch]||switch (i) { _
-case 0: _
-@<&nbsp;&nbsp;>@0; _
-@<&nbsp;&nbsp;>@break; _
-case 1: _
-@<&nbsp;&nbsp;>@1; _
-@<&nbsp;&nbsp;>@break; _
-default: _
-@<&nbsp;&nbsp;>@-1; _
-@<&nbsp;&nbsp;>@break; _
-}|| || ||
-||[[# break-continue]][#break-continue-note break/continue] _
-@<&nbsp;>@||break continue||break continue||break continue||
+||[[# for]][#for-note for]||int i, n; _
+ _
+for (i = 1, n = 1; i <= 10; ++i) { _
+@<&nbsp;&nbsp;>@n *= i; _
+}||var i, n int _
+ _
+##gray|@@//@@ Initialization and afterthought must be single _
+@@//@@ statements; there is no comma operator.## _
+n = 1 _
+for i = 1; i <= 10; i++ { _
+@<&nbsp;&nbsp;>@n *= i; _
+}||int n, i; _
+ _
+##gray|@@//@@ Initialization and afterthought must be single _
+@@//@@ statements; there is no comma operator.## _
+n = 1; _
+for (i = 1; i <= 10; ++i) { _
+@<&nbsp;&nbsp;>@n *= i; _
+}||
+||[[# for-local-scope]][#for-local-scope-note for with local scope]||##gray|//none//##||n := 1 _
+ _
+for i := 1; i <= 10; i++ { _
+@<&nbsp;&nbsp;>@n *= i; _
+} _
+ _
+##gray|@@//@@ i is no longer in scope##||int n = 1; _
+ _
+for (int i = 1; i <= 10; ++i) { _
+@<&nbsp;&nbsp;>@n *= i; _
+} _
+ _
+##gray|@@//@@ is no longer in scope##||
+||[[# infinite-loop]][#infinite-loop-note infinite loop]||for (;;) { _
+@<&nbsp;&nbsp;>@##gray|@@/*@@ code */## _
+} _
+ _
+while (1) { _
+@<&nbsp;&nbsp;>@##gray|@@/*@@ code */## _
+}||for { _
+@<&nbsp;&nbsp;>@##gray|@@//@@ code## _
+}||for (;;) { _
+@<&nbsp;&nbsp;>@##gray|@@//@@ code## _
+} _
+ _
+while (1) { _
+@<&nbsp;&nbsp;>@##gray|@@//@@ code## _
+}||
+||[[# break]][#break-note break] _
+@<&nbsp;>@||break||break||break||
+||[[# break-from-nested-loops]][#break-from-nested-loops-note break from nested loops]||##gray|//use goto or flag variable//##||@<&nbsp;&nbsp;>@var a, b int _
+ _
+Outer: _
+@<&nbsp;&nbsp;>@for a = 1; ; a++ { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@for b = 1; b < a; b++ { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@c := int(math.Sqrt(float64(a * a + b * b))) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@if  c * c == a * a + b * b { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@break Outer _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@}||int a, b, c; _
+ _
+outer: _
+for (a = 1; ; ++a) { _
+@<&nbsp;&nbsp;>@for (b = 1; b < a; ++b) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@c = (math.sqrt(a * a + b * b)).truncate(); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@if (c * c == a * a + b * b) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@break outer; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@} _
+}||
+||[[# continue]][#continue-note continue] _
+@<&nbsp;>@||continue||continue||continue||
+||[[# single-stmt-branch-loop]][#single-stmt-branch-loop-note single statement branches and loops]||while (n % 17 != 0) _
+@<&nbsp;&nbsp;>@++n; _
+ _
+if (n < 0) _
+@<&nbsp;&nbsp;>@printf("negative\n");||##gray|@@//@@ braces are mandatory:## _
+if n < 0 { _
+@<&nbsp;&nbsp;>@fmt.Println("negative") _
+}||while (n % 17 == 0) _
+@<&nbsp;&nbsp;>@++n; _
+ _
+if (n < 0) _
+@<&nbsp;&nbsp;>@print("negative");||
+||[[# dangling-else]][#dangling-else-note dangling else]||int a = 1, b = -3, c; _
+ _
+##gray|/* indentation shows how ambiguity is resolved */## _
+if (a > 0) _
+@<&nbsp;&nbsp;>@if (b > 0) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@c = 1; _
+@<&nbsp;&nbsp;>@else _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@c = 2; _
+ _
+##gray|/* gcc warns about dangling else; -Werror turns warnings into errors */##||##gray|//no ambiguity//##||int a = 1, b = -3, c; _
+ _
+##gray|@@//@@ indentation shows how ambiguity is resolved## _
+if (a > 0) _
+@<&nbsp;&nbsp;>@if (b > 0) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@c = 1; _
+@<&nbsp;&nbsp;>@else _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@c = 2;||
+||[[# goto]][#goto-note goto]||@<&nbsp;&nbsp;>@if (err) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@goto cleanup; _
+@<&nbsp;&nbsp;>@} _
+ _
+@<&nbsp;&nbsp;>@##gray|/* code */## _
+ _
+cleanup: _
+@<&nbsp;&nbsp;>@printf("cleaning up@@...@@\n");||@<&nbsp;&nbsp;>@if err { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@goto Cleanup _
+@<&nbsp;&nbsp;>@} _
+ _
+@<&nbsp;&nbsp;>@##gray|@@//@@ code## _
+ _
+Cleanup: _
+@<&nbsp;&nbsp;>@fmt.Println("cleaning up@@...@@")||##gray|//none//##||
+||[[# longjmp]][#longjmp-note longjmp]||void _
+callee(jmp_buf env) { _
+@<&nbsp;&nbsp;>@longjmp(env, 3); _
+@<&nbsp;&nbsp;>@##gray|/* unreachable */## _
+} _
+ _
+void _
+caller() { _
+@<&nbsp;&nbsp;>@jmp_buf env; _
+@<&nbsp;&nbsp;>@int rv; _
+ _
+@<&nbsp;&nbsp;>@if ((rv = setjmp(env)) == 0) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|/* rv is 0 */## _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@callee(env); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|/* unreachable */## _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@##gray|/* rv is 3 */## _
+}||##gray|//none//##||##gray|//none//##||
+||||||||~ [[# exceptions]][#exceptions-note exceptions]||
+||~ ||~ c||~ go||~ dart||
+||finally block|| || || ||
 ||||||||~ [[# concurrency]][#concurrency-note concurrency]||
 ||~ ||~ c||~ go||~ dart||
+||[[# sleep]][#sleep-note sleep]||#include <unistd.h> _
+ _
+##gray|/* seconds */## _
+int retval = sleep(10); _
+if (retval != 0) { _
+@<&nbsp;&nbsp;>@printf("interupted with %d s to go", retval); _
+} _
+ _
+##gray|/* microseconds */## _
+if (usleep(10000)) { _
+@<&nbsp;&nbsp;>@perror("usleep failed"); _
+}||dur := time.Duration(10 * time.Second) _
+time.Sleep(dur) _
+ _
+dur2 := time.Duration(10000 * time.Microsecond) _
+time.Sleep(dur2)|| ||
+||[[# timeout]][#timeout-note timeout]|| || || ||
 ||start thread||#include <pthread.h> _
  _
 typedef struct { _
@@ -1126,9 +1491,8 @@ int retval = puts("Hello, World!");||import "os" _
  _
 os.Stdout.WriteString("Hello, World!\n")||print('Hello, World!');||
 ||[[# printf]][#printf-note write formatted string to stdout] _
-@<&nbsp;>@||printf("count: %d\n", 7);||import "fmt" _
- _
-fmt.Printf("count: %d\n", 7)|| ||
+@<&nbsp;>@||printf("count: %d\n", 7); _
+wprintf(L"count: %d\n", 7);||fmt.Printf("count: %d\n", 7)|| ||
 ||[[# open-file]][#open-file-note open file for reading]||##gray|/* returns NULL on error */## _
 FILE *f = fopen("/etc/hosts", "r");||raw, err := os.Open("/etc/hosts") _
 if err == nil { _
@@ -1490,8 +1854,15 @@ if (kill(getppid(), SIGUSR1) == -1) { _
 #include "foo.h"||import "foo" _
  _
 ##gray|@@//@@ Only capitalized identifiers are visible:## _
-var bar = foo.GetBar()|| ||
-||[[# load-lib-subdir]][#load-lib-subdir-note load library in subdirectory]||#include "lib/foo.h"||import "lib/foo"|| ||
+var bar = foo.GetBar()||##gray|@@//@@ load ./foo.dart:## _
+import 'foo.dart' as foo; _
+ _
+##gray|@@//@@ load built-in library:## _
+import 'dart:io' as io; _
+ _
+##gray|@@//@@ library installed by package manager:## _
+import 'package:foo/foo.dart' as foo;||
+||[[# load-lib-subdir]][#load-lib-subdir-note load library in subdirectory]||#include "lib/foo.h"||import "lib/foo"||import 'lib/foo.dart' as foo;||
 ||[[# lib-path]][#lib-path-note library path]||##gray|//Add directory to path searched by// #include //directive://## _
 $ gcc -I/home/fred/include foo.c _
  _
@@ -1501,10 +1872,14 @@ $ gcc -L/home/fred/lib -lbar foo.c||##gray|//The installation libraries are in t
 Each directory contains a// src //subdirectory containing source code and a// pkg/ARCH //subdirectory containing compiled libraries.//##|| ||
 ||[[# declare-namespace]][#declare-namespace-note declare namespace]||##gray|//none//##||##gray|@@//@@ A package declaration must be first statement _
 @@//@@ in every source file..## _
-package foo|| ||
+package foo||##gray|@@//@@ not required in file containing main():## _
+library foo;||
 ||[[# alias-namespace]][#alias-namespace-note alias namespace] _
-@<&nbsp;>@||##gray|//none//##||import fu "foo"|| ||
-||[[# unqualified-import]][#unqualified-import-note unqualified import of namespace]||##gray|//none//##||import . "foo"|| ||
+@<&nbsp;>@||##gray|//none//##||import fu "foo"||import 'foo' as fu;||
+||[[# unqualified-import]][#unqualified-import-note unqualified import of namespace]||##gray|//none//##||import . "foo"||import 'foo';||
+||unqualified import of definitions|| || ||import 'foo' show bar, baz;||
+||[[# pkg-manager]][#pkg-manager-note package manager] _
+##gray|//search, install, list installed//##|| || || ||
 ||||||||~ [[# user-defined-types]][#user-defined-types-note user-defined types]||
 ||~ ||~ c||~ go||~ dart||
 ||[[# typedef]][#typedef-note typedef]||typedef int customer_id; _
@@ -1577,7 +1952,7 @@ num||
 ||[[# cmd-line-macro]][#cmd-line-macro-note command line macro]||$ gcc -DPI=3.14 foo.c|| || ||
 ||[[# undef-macro]][#undef-macro-note undefine macro]||#undef PI|| || ||
 ||macro with arguments||#define MIN(X, Y)  ((X) < (Y) ? (X) : (Y))|| || ||
-||strinfigy macro argument|| || || ||
+||stringify macro argument|| || || ||
 ||concatenate tokens|| || || ||
 ||conditional compilation||#if defined(__WIN32) _
 @<&nbsp;&nbsp;>@win32_prinft("%f\n", x); _
@@ -1596,8 +1971,7 @@ num||
 ##gray|#ifdef FOO //is a shortcut for// #if defined(FOO)##|| || ||
 ||||||||~ [[# net-web]][#net-web-note net and web]||
 ||~ ||~ c||~ go||~ dart||
-||[[# http-get]][#http-get-note http get]|| ||import "fmt" _
-import "io/ioutil" _
+||[[# http-get]][#http-get-note http get]|| ||import "io/ioutil" _
 import "net/http" _
  _
 resp, err := http.Get(@@"http://www.google.com"@@) _
@@ -1685,6 +2059,39 @@ $ gdb foo|| || ||
 @@>@@ p ##gray|EXPR## _
 @@>@@ r ##gray|[ARG1[, [ARG2 @@...@@]]## _
 @@>@@ q|| || ||
+||[[# cpu-usage]][#cpu-usage-note cpu usage]||#include <sys/times.h> _
+#include <unistd.h>@<&nbsp;&nbsp;>@##gray|/* sysconf */## _
+ _
+struct tms start, end; _
+ _
+double ticks_per_s = (double)sysconf(_SC_CLK_TCK); _
+ _
+clock_t start_wall = times(&start); _
+ _
+if (start_wall < 0) { _
+@<&nbsp;&nbsp;>@fputs("times failed", stderr); _
+@<&nbsp;&nbsp;>@return (1); _
+} _
+ _
+int i; _
+for (i = 0; i < 1000 * 1000 * 1000; ++i) { _
+@<&nbsp;&nbsp;>@##gray|/* empty loop */## _
+} _
+ _
+clock_t end_wall = times(&end); _
+ _
+if (end_wall < 0) { _
+@<&nbsp;&nbsp;>@fputs("times failed", stderr); _
+@<&nbsp;&nbsp;>@return (1); _
+} _
+ _
+clock_t wall = end_wall - start_wall; _
+clock_t user = end.tms_utime - start.tms_utime; _
+clock_t system = end.tms_stime - start.tms_stime; _
+ _
+printf("wall: %f s\n", wall / ticks_per_s); _
+printf("user: %f s\n", user / ticks_per_s); _
+printf("system: %f s\n", system / ticks_per_s);|| || ||
 ||[[# profile]][#profile-note profile code]||##gray|//does not work on Mac OS X//## _
 $ gcc -pg -o foo foo.c _
 $ ./foo _
@@ -1692,7 +2099,7 @@ $ gprof foo|| || ||
 ||[[# memory-tool]][#memory-tool-note memory tool]||$ sudo apt-get install valgrind _
 $ gcc -o foo foo.c _
 $ valgrind foo|| || ||
-||~ ||~ ##EFEFEF|@@_______________________________________________________________@@##||~ ##EFEFEF|@@_______________________________________________________________@@##||~ ##EFEFEF|@@_______________________________________________________________@@##||
+||~ ||~ ##EFEFEF|@@_________________________________________________________________@@##||~ ##EFEFEF|@@_________________________________________________________________@@##||~ ##EFEFEF|@@_________________________________________________________________@@##||
 
 
 [[# version-note]]
@@ -1717,7 +2124,7 @@ Code which the examples in this sheet assume to have been executed.
 
 A selection of commonly used symbols and macros from the standard C library and the headers in which they are defined according to POSIX:
 
-||~ [http://pubs.opengroup.org/onlinepubs/9699919799/functions/errno.html errno.h]||~ [http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/stdlib.h.html stdlib.h]||~ [http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/stdio.h.html stdio.h]||~ [http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/string.h.html string.h]||~ [http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/time.h.html time.h]||
+||~ [http://pubs.opengroup.org/onlinepubs/9699919799/functions/errno.html errno.h]||~ [http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/stdlib.h.html stdlib.h]||~ [http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/stdio.h.html stdio.h]||~ [http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/string.h.html string.h]||~ [http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/time.h.html time.h]||~ [http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/wchar.h.html wchar.h]||
 ||errno _
  _
 ENOENT _
@@ -1769,7 +2176,11 @@ strndup _
 strrchr _
 strstr _
 strtok||time _
-time_t||
+time_t||swprintf _
+wcscmp _
+wcsdup _
+wcslen _
+wprintf||
 
 [[# grammar-invocation-note]]
 + [#grammar-invocation Grammar and Invocation]
@@ -1784,15 +2195,15 @@ How to write, compile, and run a "Hello, World!" program.
 
 The suffixes used for source files, header files, and compiled object files.
 
-[[# block-delimiters-note]]
-++ [#block-delimiters block delimiters]
-
-How a block of statements is delimited.
-
 [[# stmt-separator-note]]
 ++ [#stmt-separator statement separator]
 
 How statements are terminated.
+
+[[# block-delimiters-note]]
+++ [#block-delimiters block delimiters]
+
+How a block of statements is delimited.
 
 [[# eol-comment-note]]
 ++ [#eol-comment end-of-line comment]
@@ -1833,8 +2244,8 @@ How to declare a global variable.
 
 What happens when reading from an uninitialized variable.
 
-[[# const-note]]
-++ [#const constant]
+[[# compile-time-const-note]]
+++ [#compile-time-const compile time constant]
 
 How to define a constant.
 
@@ -1848,6 +2259,11 @@ const (
   E = 2.718
 )
 [[/code]]
+
+[[# immutable-var-note]]
+++ [#immutable-var immutable variable]
+
+How to declare a variable which cannot change after initialization.
 
 [[# assignment-note]]
 ++ [#assignment assignment]
@@ -1891,15 +2307,6 @@ A typical definition:
 ++ [#null-test null test]
 
 How to test whether a value is null.
-
-[[# coalesce-note]]
-++ [#coalesce coalesce]
-
-The equivalent of the {{COALESCE}} function from SQL.
-
-**c:**
-
-The short circuit or operator @@||@@ can be used as a coalesce operator. However, in C, C++, and Objective C, NULL is identical to zero, whereas in databases they are two distinct values.
 
 [[# conditional-expr-note]]
 ++ [#conditional-expr conditional expression]
@@ -2108,12 +2515,11 @@ Note that ^ is bit-not and not exclusive-or like in C.
 [[# str-type-note]]
 ++ [#str-type string type]
 
-The type for a string
+The type for a string.
 
-[[# char-type-note]]
-++ [#char-type character type]
+**c:**
 
-The type for a character.
+The C11 standard introduces {{char16_t}} and {{char32_t}}, but no literal syntax or functions which take them as arguments.
 
 [[# str-literal-note]]
 ++ [#str-literal string literal]
@@ -2122,7 +2528,7 @@ The syntax for a string literal.
 
 **go:**
 
-The backquote literal is also called the raw string literal.  It has no escape sequences, and in particular there is no way for it to contain a backquote character.
+The backquote literal is also called the raw string literal.  It has no escape sequences; it cannot contain a backquote character.
 
 [[# newline-in-str-literal-note]]
 ++ [#newline-in-str-literal newline in string literal]
@@ -2212,6 +2618,11 @@ strtod(const char *str, char **endp);
 [[# pad-note]]
 ++ [#pad pad]
 
+[[# char-type-note]]
+++ [#char-type character type]
+
+The type for a character.
+
 [[# regexes-note]]
 + [#regexes Regular Expressions]
 
@@ -2291,24 +2702,36 @@ How to use a regular expression to parse a string.
 [[# dates-time-note]]
 + [#dates-time Dates and Time]
 
-[[# date-time-type-note]]
-++ [#date-time-type date/time type]
+[[# unix-epoch-type-note]]
+++ [#unix-epoch-type unix epoch type]
 
-[[# date-time-diff-type-note]]
-++ [#date-time-diff-type date/time difference type]
+[[# broken-down-datetime-type-note]]
+++ [#broken-down-datetime-type broken-down datetime type]
 
-[[# current-date-time-note]]
-++ [#current-date-time current date/time]
+[[# current-unix-epoch-note]]
+++ [#current-unix-epoch current unix epoch]
 
 
-[[# unix-epoch-note]]
-++ [#unix-epoch unix epoch]
+[[# current-datetime-note]]
+++ [#current-datetime current datetime]
 
-[[# date-to-str-note]]
-++ [#date-to-str convert to string]
+[[# broken-down-datetime-to-unix-epoch-note]]
+++ [#broken-down-datetime-to-unix-epoch broken-down datetime to unix epoch]
 
-[[# strftime-note]]
-++ [#strftime strftime]
+[[# unix-epoch-to-broken-down-datetime-note]]
+++ [#unix-epoch-to-broken-down-datetime unix epoch to broken-down datetime]
+
+[[# fmt-datetime-note]]
+++ [#fmt-datetime format datetime]
+
+[[# parse-datetime-note]]
+++ [#parse-datetime parse datetime]
+
+[[# date-subtraction-note]]
+++ [#date-subtraction date subtraction]
+
+[[# add-duration-note]]
+++ [#add-duration add duration]
 
 [[# date-parts-note]]
 ++ [#date-parts date parts]
@@ -2317,13 +2740,142 @@ How to use a regular expression to parse a string.
 ++ [#time-parts time parts]
 
 
-[[# build-date-time-note]]
-++ [#build-date-time build date/time from parts]
+[[# build-datetime-note]]
+++ [#build-datetime build broken-down datetime]
+
+[[# local-tmz-determination-note]]
+++ [#local-tmz-determination local time zone determination]
+
+[[# tmz-info-note]]
+++ [#tmz-info time zone info]
+
+[[# daylight-savings-test-note]]
+++ [#daylight-savings-test daylight savings test]
+
+[[# microseconds-note]]
+++ [#microseconds microseconds]
 
 
+[[# fixed-length-arrays-note]]
++ [#fixed-length-arrays Fixed-Length Arrays]
 
-[[# arrays-note]]
-+ [#arrays Arrays]
+[[# declare-array-note]]
+++ [#declare-array declare]
+
+How to declare an array variable.
+
+[[# allocate-array-on-stack-note]]
+++ [#allocate-array-on-stack allocate on stack]
+
+How to allocate an array on the stack.
+
+[[# allocate-array-on-heap-note]]
+++ [#allocate-array-on-heap allocate on heap]
+
+How to allocate an array on the heap.
+
+[[# free-array-on-heap-note]]
+++ [#free-array-on-heap free heap]
+
+How to free an array that was allocated on the heap.
+
+[[# array-literal-note]]
+++ [#array-literal literal]
+
+Syntax for an array literal.
+
+[[# array-size-note]]
+++ [#array-size size]
+
+How many elements are stored in an array.
+
+[[# array-lookup-note]]
+++ [#array-lookup lookup]
+
+How to get an element by index.
+
+**c:**
+
+Arrays can be manipulated with pointer syntax.  The following sets //x// and //y// to the same value:
+
+[[code]]
+int a[] = {3,7,4,8,5,9,6,10};
+int x = a[4];
+int y = *(a+4);
+[[/code]]
+
+[[# array-update-note]]
+++ [#array-update update]
+
+How to set or change the element stored at an index.
+
+[[# array-out-of-bounds-note]]
+++ [#array-out-of-bounds out-of-bounds behavior]
+
+What happens when an attempt is made to access an element at an invalid index.
+
+[[# array-element-index-note]]
+++ [#array-element-index element index]
+
+[[# slice-array-note]]
+++ [#slice-array slice]
+
+[[# slice-array-to-end-note]]
+++ [#slice-array-to-end slice to end]
+
+[[# array-back-note]]
+++ [#array-back manipulate back]
+
+[[# array-front-note]]
+++ [#array-front manipulate front]
+
+[[# concatenate-array-note]]
+++ [#concatenate-array concatenate]
+
+[[# copy-array-note]]
+++ [#copy-array copy]
+
+[[# iterate-over-array-note]]
+++ [#iterate-over-array iterate over elements]
+
+How to iterate over the elements of an array.
+
+**c:**
+
+C arrays do not store their size; if needed the information can be stored in a separate variable.  Another option is to use a special value to mark the end of the array:
+
+[[code]]
+char *a[] = { "Bob", "Ned", "Amy", NULL };
+int i;
+for (i=0; a[i]; i++) {
+  printf("%s\n", a[i]);
+}
+[[/code]]
+
+[[# iterate-indices-elem-note]]
+++ [#iterate-indices-elem iterate over indices and elements]
+
+[[# reverse-array-note]]
+++ [#reverse-array reverse]
+
+How to reverse the elements of an array.
+
+[[# sort-array-note]]
+++ [#sort-array sort]
+
+How to sort the elements of an array.
+
+[[# map-note]]
+++ [#map map]
+
+[[# filter-note]]
+++ [#filter filter]
+
+[[# reduce-note]]
+++ [#reduce reduce]
+
+[[# resizable-arrays-note]]
++ [#resizable-arrays Resizable Arrays]
 
 [[# declare-array-note]]
 ++ [#declare-array declare]
@@ -2443,28 +2995,35 @@ How to sort the elements of an array.
 [[# dictionaries-note]]
 + [#dictionaries Dictionaries]
 
-[[# map]]
-++ map declaration
+[[# declare-dict-note]]
+++ [#declare-dict declare]
 
-**c:**
+[[# dict-literal-note]]
+++ [#dict-literal literal]
 
-For those interested in an industrial strength hashtable implementation for C, here is the [http://svn.ruby-lang.org/cgi-bin/viewvc.cgi/trunk/include/ruby/st.h?revision=26401&view=markup header file] and the [http://svn.ruby-lang.org/cgi-bin/viewvc.cgi/trunk/st.c?revision=26672&view=markup source file] for the hashtable used by Ruby.
-For those interested in a "Computer Science 101" implementation of a hashtable, here is a simpler [http://gist.github.com/400762 source file] and [http://gist.github.com/400764 header file].
+[[# dict-size-note]]
+++ [#dict-size size]
 
-[[# map-access]]
-++ map access
+[[# dict-lookup-note]]
+++ [#dict-lookup lookup]
 
-[[# map-size]]
-++ map size
+[[# dict-update-note]]
+++ [#dict-update update]
 
-[[# map-remove]]
-++ map remove
+[[# dict-missing-key-note]]
+++ [#dict-missing-key missing key behavior]
 
-[[# map-element-not-found]]
-++ map element not found result
+[[# dict-is-key-present-note]]
+++ [#dict-is-key-present is key present]
 
-[[# map-iterator]]
-++ map iterator
+[[# dict-delete-note]]
+++ [#dict-delete delete]
+
+[[# dict-iter-note]]
+++ [#dict-iter iterate]
+
+[[# dict-key-val-arrays]]
+++ [#dict-key-val-arrays keys and values as arrays]
 
 [[# functions-note]]
 + [#functions Functions]
@@ -2595,6 +3154,17 @@ How to return multiple values.
 
 How to return values by assigning values to variables.
 
+[[# exec-on-return-note]]
+++ [#exec-on-return execute on return]
+
+How to register a function to be executed on return of the calling function.
+
+**go:**
+
+Arguments of the on-return function are evaluated at the time the function is registered and not when the caller returns.
+
+Multiple on-return functions are evaluated in LIFO order.
+
 [[# anonymous-func-literal-note]]
 ++ [#anonymous-func-literal anonymous function literal]
 
@@ -2610,31 +3180,59 @@ How to return values by assigning values to variables.
 [[# execution-control-note]]
 + [#execution-control Execution Control]
 
-[[# for-note]]
-++ [#for for]
-
 [[# if-note]]
 ++ [#if if]
 
-**c:**
+The if statement.
 
-The curly braces surrounding an //if// or //else// clause are optional if the clause contains a single statement.  The resulting [http://en.wikipedia.org/wiki/Dangling_else dangling else] ambiguity is resolved by setting the value of //c// to 2 in the following code:
+An if statement is a series of blocks, each guarded by a conditional expression.  The first conditional expression statement which evaluates to true determines the block which executes.  An optional else block executes if none of the of the conditional expressions are true.
+
+[[# switch-note]]
+++ [#switch switch]
+
+The switch statement.
+
+The switch statement has a switch expression which is evaluated against one or more case values.  The first case value which is equal to the switch expression determines the block which executes.  An optional default block executes if none of the case values are equal.
+
+Note that in some languages, execution "falls through" to the next block in a switch unless prevented by a break statement.
+
+**go:**
+
+Case values can be expressions.
+
+The switch statement can lack a switch expression, in which case the first case value which evaluates to true determines the block to execute.  Such a switch statement differs little from an if statement, but note that {{fallthrough}} cannot be used in an if statement.
+
+It is possible to switch on type of an expression, in which case the case values are types:
 
 [[code]]
-int a = 1;
-int b = -1;
-int c = 0;
-if (a > 0)
-if (b > 0)
-  c=1;
-else
-  c= 2;
+switch x.(type) {
+case nil:
+  printString("x is nil")
+case int:
+  printString("x is int")
+case float64:
+  printFloat64("x is float64")
+default:
+  printString("unknown type")
+}
 [[/code]]
 
 [[# while-note]]
 ++ [#while while]
 
+A while loop is a conditional expression and a block.  The conditional expression is evaluated before each execution of the block.  The block is executed iteratively as long as the conditional expression is true.
+
 **c:**
+
+C has a do-while statement.  The block is always executed at least once.  The conditional expression is evaluated before the second and subsequent iterations to determine if the block is executed again.
+
+[[code]]
+int i = 0;
+
+do {
+  print("%d\n", ++i);
+} while (i < 10);
+[[/code]]
 
 If the body of a while loop consists of a single statement the curly braces are optional:
 
@@ -2644,13 +3242,50 @@ while (i<10)
   printf("%d\n", ++i);
 [[/code]]
 
-[[# switch-note]]
-++ [#switch switch]
+[[# for-note]]
+++ [#for for]
 
-A switch statement branches based on the value of an integer or an integer expression.  Each clause must be terminated by a //break// statement or execution will continue into the following clause.
+A for loop has four parts: the //initialization// which executes at the outset, the //condition// which is evaluated before each iteration, the //body// which is executed if the condition is true, and the //afterthought// which is executed after each execution of the body.
 
-[[# break-continue-note]]
-++ [#break-continue break/continue]
+[[# for-local-scope-note]]
+++ [#for-local-scope for with local scope]
+
+Whether variables declared in the initialization are local to the body.
+
+[[# infinite-loop-note]]
+++ [#infinite-loop infinite loop]
+
+The syntax for an infinite loop.
+
+[[# break-note]]
+++ [#break break]
+
+A break statement is used to exit a loop.
+
+[[# break-from-nested-loops-note]]
+++ [#break-from-nested-loops break from nested loops]
+
+How to break out of nested loops.
+
+[[# continue-note]]
+++ [#continue continue]
+
+A continue statement is used to terminate the current iteration of a loop.
+
+[[# single-stmt-branch-loop-note]]
+++ [#single-stmt-branch-loop single statement branches and loops]
+
+[[# dangling-else-note]]
+++ [#dangling-else dangling else]
+
+[[# goto-note]]
+++ [#goto goto]
+
+[[# longjmp-note]]
+++ [#longjmp longjmp]
+
+[[# exceptions-note]]
++ [#exceptions Exceptions]
 
 [[# concurrency-note]]
 + [#concurrency Concurrency]

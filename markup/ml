@@ -526,9 +526,9 @@ sort [1, 3, 2, 4]||
 zip [1, 2, 3] ['a', 'b', 'c']||
 ||||||||||~ [[# tuples]][#tuples-note tuples]||
 ||~ ||~ sml||~ ocaml||~ f#||~ haskell||
-||[#tuple tuple]||(1, "hello", true)||(1, "hello", true)||(1, "hello", true)||(1, "hello", True)||
-||[#tuple-element tuple element access]||#1 (1, "hello", true)||match (1, "hello", true) with _, x, _ -> x||match (1, "hello", true) with _, x, _ -> x||(\(a, _, _) -> a) (1, "hello", True)||
-||[#pair-element pair element access]||#1 (12,"December") _
+||[[# tuple-literal]][#tuple-literal-note literal]||(1, "hello", true)||(1, "hello", true)||(1, "hello", true)||(1, "hello", True)||
+||[[# tuple-lookup]][#tuple-lookup-note lookup]||#1 (1, "hello", true)||match (1, "hello", true) with _, x, _ -> x||match (1, "hello", true) with _, x, _ -> x||(\(a, _, _) -> a) (1, "hello", True)||
+||[[# pair-lookup]][#pair-lookup-note pair lookup]||#1 (12,"December") _
 #2 (12,"December")||fst (12, "December") _
 snd (12, "December")||fst (12, "December") _
 snd (12, "December")||fst (12, "December") _

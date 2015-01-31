@@ -1,17 +1,20 @@
 [[# top]]//a side-by-side reference sheet//
 
-[#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#fixed-length-arrays fixed-length arrays] | [#resizable-arrays resizable arrays] | [#tuples tuples] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#concurrency concurrency] | [#file-handles file handles] | [#files files] | [#file-fmt file formats] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#user-defined-types user-defined types] | [#generic-types generic types] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#reflection reflection] | [#net-web net and web] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling]
+[#grammar-execution grammar and execution] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#fixed-length-arrays fixed-length arrays] | [#resizable-arrays resizable arrays] | [#tuples tuples] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#concurrency concurrency] | [#file-handles file handles] | [#files files] | [#file-fmt file formats] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#user-defined-types user-defined types] | [#generic-types generic types] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#reflection reflection] | [#net-web net and web] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling]
 
-||~ [[# general]]||~ [#cpp c++]||~ [#objective-c objective c]||~ [#java java]||~ [#c-sharp c#]||
+||||||||||~ [[# version]][#version-note version]||
+||~ ||~ [#cpp c++]||~ [#objective-c objective c]||~ [#java java]||~ [#c-sharp c#]||
 ||[[# version-used]][#version-used-note version used] _
-@<&nbsp;>@||##gray|//g++ 4.6 with -std=c++0x flag//##||##gray|//gcc 4.2//##||##gray|//java 1.7//##||##gray|//mono 2.10 (C# 4.0)//##||
+@<&nbsp;>@||##gray|//C11// _
+//gcc 4.8// _
+//clang 3.5//##||##gray|//gcc 4.2//##||##gray|//java 1.7//##||##gray|//mono 2.10 (C# 4.0)//##||
 ||[[# show-version]][#show-version-note show version] _
 @<&nbsp;>@||$ g++ @@--@@version||$ gcc @@--@@version||$ javac -version||$ mcs @@--@@version||
-||[[# implicit-prologue]][#implicit-prologue-note implicit prologue]||##darkslateblue|#include## ##maroon|<iostream>## _
-##darkslateblue|#include## ##maroon|<string>## _
+||[[# implicit-prologue]][#implicit-prologue-note implicit prologue]||#include <iostream> _
+#include <string> _
  _
-##purple|using namespace## ##teal|std##;|| || || ||
-||||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
+using namespace std;|| || || ||
+||||||||||~ [[# grammar-execution]][#grammar-execution-note grammar and execution]||
 ||~ ||~ c++||~ objective c||~ java||~ c#||
 ||[[# hello-world]][#hello-world-note hello world]||$ cat hello.cpp _
 #include <iostream> _
@@ -68,8 +71,10 @@ Foo.class _
 Foo.exe ##gray|//or//## Foo.dll _
  _
 ##gray|//although files are often named after a class they contain, this is not required//##||
-||[[# block-delimiters]][#block-delimiters-note block delimiters]||{ }||{ }||{ }||{ }||
-||[[# stmt-terminator]][#stmt-terminator-note statement terminator]||;||;||;||;||
+||[[# block-delimiters]][#block-delimiters-note block delimiters] _
+@<&nbsp;>@||{ }||{ }||{ }||{ }||
+||[[# stmt-terminator]][#stmt-terminator-note statement terminator] _
+@<&nbsp;>@||;||;||;||;||
 ||[[# top-level-stmt]][#top-level-stmt-note top level statements]||##gray|//A source file will normally have// #include //directives at the top, followed by declarations, definitions, and namespaces containing declarations and definitions. _
  _
 After the preprocessor has finished processing a source file, the compilation unit will only contain declarations, definitions, and namespaces at the top level.//##|| ||##gray|//each file contains the following elements in order: _
@@ -77,7 +82,8 @@ After the preprocessor has finished processing a source file, the compilation un
 (1) optional package directive _
 (2) zero or more import directives _
 (3) one public class definition and zero or more private class definitions//##|| ||
-||[[# eol-comment]][#eol-comment-note end-of-line comment]||##gray|@@//@@ comment##||##gray|@@//@@ comment##||##gray|@@//@@ comment##||##gray|@@//@@ comment##||
+||[[# eol-comment]][#eol-comment-note end-of-line comment] _
+@<&nbsp;>@||##gray|@@//@@ comment##||##gray|@@//@@ comment##||##gray|@@//@@ comment##||##gray|@@//@@ comment##||
 ||[[# multiple-line-comment]][#multiple-line-comment-note multiple line comment]||##gray|/* comment _
 another comment */##||##gray|/* comment _
 another comment */##||##gray|/* comment _
@@ -85,11 +91,11 @@ another comment */##||##gray|/* comment _
 another comment */##||
 ||||||||||~ [[# variables-expressions]][#variables-expressions-note variables and expressions]||
 ||~ ||~ c++||~ objective c||~ java||~ c#||
-||[[# local-var]][#local-var-note local variable]||##green|int## ##peru|i##; _
-##green|int## ##peru|j## = 3; _
-##green|int## ##peru|k##(7);||int i; _
-int j = 3;||##green|int## ##peru|i##; _
-##green|int## ##peru|j## = 3;||int i; _
+||[[# local-var]][#local-var-note local variable]||int i; _
+int j = 3; _
+int k(7);||int i; _
+int j = 3;||int i; _
+int j = 3;||int i; _
 int j = 3;||
 ||[[# uninitialized-local-var]][#uninitialized-local-var-note uninitialized local variable]||##gray|//The behavior is undefined. _
  _
@@ -98,35 +104,35 @@ Most implementations do not zero-initialize stack variables, so the value will b
 Most implementations do not zero-initialize stack variables, so the value will be whatever happened to be in memory.//##||##gray|//zero initialized//##||##gray|//compiler prevents use of uninitialized local variable//##||
 ||[[# global-var]][#global-var-note global variable]||##gray|@@//@@ in foo.cpp and outside of any function _
 @@//@@ or class definition:## _
-##green|int## ##peru|foo## = 7; _
+int foo = 7; _
  _
 ##gray|@@//@@ in bar.cpp and outside of any function _
 @@//@@ or class definition:## _
-##purple|extern## ##green|int## ##peru|foo##;||##gray|//in// foo.cpp //outside of any function or class definition://## _
+extern int foo;||##gray|//in// foo.cpp //outside of any function or class definition://## _
 int foo = 7; _
  _
 ##gray|//in// bar.cpp //outside of any function or class definition://## _
 extern int foo;||##gray|//foo/Foo.java://## _
-##purple|package## ##teal|foo##; _
+package foo; _
  _
 ##gray|@@//@@ globals must be declared inside a _
 @@//@@ class:## _
-##purple|public class## ##green|Foo## { _
-@<&nbsp;&nbsp;>@##purple|public static## ##green|int## ##peru|bar##; _
+public class Foo { _
+@<&nbsp;&nbsp;>@public static int bar; _
 } _
  _
 ##gray|//UseFoo.java://## _
-##purple|import## ##teal|foo##.##green|Foo##; _
+import foo.Foo; _
  _
-##purple|public class## ##green|UseFoo## { _
-@<&nbsp;&nbsp;>@##purple|public static## ##green|void## ##mediumblue|main##(##green|String##[] ##peru|args##) { _
+public class UseFoo { _
+@<&nbsp;&nbsp;>@public static void main(String[] args) { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@System.out.println(Foo.bar); _
 @<&nbsp;&nbsp;>@} _
 }|| ||
 ||[[# uninitialized-global-var]][#uninitialized-global-var-note uninitialized global variable]||##gray|//Zero initialized: numeric types and pointers are set to zero.  Classes, structs, and arrays have all of their members or elements zero-initialized recursively.//##|| ||##gray|//Zero initialized.//##|| ||
-||[[# write-once-var]][#write-once-var-note write-once variable]||##purple|const## ##type|int## ##peru|i## = 7;||const int i = 7;||##purple|final## ##green|int## ##peru|i## = 7;||const int i = 7;||
-||[[# assignment]][#assignment-note assignment]||##green|int## ##peru|n##; _
-n = 3;|| ||##green|int## ##peru|n##; _
+||[[# write-once-var]][#write-once-var-note write-once variable]||const int i = 7;||const int i = 7;||final int i = 7;||const int i = 7;||
+||[[# assignment]][#assignment-note assignment]||int n; _
+n = 3;|| ||int n; _
 n = 3;|| ||
 ||[[# compound-assignment]][#compound-assignment-note compound assignment] _
 ##gray|//arithmetic, bit//##||+= -= *= /= %= _
@@ -134,82 +140,82 @@ n = 3;|| ||
 @@<<= >>= @@&= ^= |= _
  _
 ##gray|@@>>=@@ //is arithmetic right shift,// @@>>>=@@ //is logical right shift//##|| ||
-||[[# incr-decr]][#incr-decr-note increment and decrement]||##green|int## ##peru|n## = 1; _
-##green|int## ##peru|one## = n++; _
-##green|int## ##peru|three## = ++n; _
-##green|int## ##peru|two## = @@--@@n;|| ||##green|int## ##peru|n## = 1; _
-##green|int## ##peru|one## = n++; _
-##green|int## ##peru|three## = ++n; _
-##green|int## ##peru|two## = @@--@@n;|| ||
-||[[# addr]][#addr-note address]||##green|int## ##peru|i##(3); _
-##green|int##* ##peru|ip## = &i;|| ||##gray|//none//##|| ||
-||[[# dereference]][#dereference-note dereference]||##green|int## ##peru|i##(3); _
-##green|int##* ##peru|ip## = &i; _
-##green|int## ##peru|i2## = *ip + 1;|| ||##gray|//none//##|| ||
-||[[# type-size]][#type-size-note type size]||cout @@<<@@ ##purple|sizeof##(##green|int##) @@<<@@ endl; _
-cout @@<<@@ ##purple|sizeof##(##green|int##*) @@<<@@ endl;|| ||##gray|//none//##|| ||
+||[[# incr-decr]][#incr-decr-note increment and decrement]||int n = 1; _
+int one = n++; _
+int three = ++n; _
+int two = @@--@@n;|| ||int n = 1; _
+int one = n++; _
+int three = ++n; _
+int two = @@--@@n;|| ||
+||[[# addr]][#addr-note address]||int i(3); _
+int* ip = &i;|| ||##gray|//none//##|| ||
+||[[# dereference]][#dereference-note dereference]||int i(3); _
+int* ip = &i; _
+int i2 = *ip + 1;|| ||##gray|//none//##|| ||
+||[[# type-size]][#type-size-note type size]||cout @@<<@@ sizeof(int) @@<<@@ endl; _
+cout @@<<@@ sizeof(int*) @@<<@@ endl;|| ||##gray|//none//##|| ||
 ||[[# addr-arith]][#addr-arith-note address arithmetic]|| || ||##gray|//none//##|| ||
 ||[[# unique-ptr]][#unique-ptr-note unique pointer]|| || ||##gray|//none//##|| ||
 ||[[# ref-cnt-ptr]][#ref-cnt-ptr-note reference count pointer]|| || ||##gray|//none//##|| ||
 ||[[# weak-ptr]][#weak-ptr-note weak pointer]|| || ||##gray|//none//##|| ||
-||[[# allocate-heap]][#allocate-heap-note allocate heap]||##green|int##* ##peru|ip## = ##purple|new## ##green|int##;||#include <stdlib.h> _
+||[[# allocate-heap]][#allocate-heap-note allocate heap]||int* ip = new int;||#include <stdlib.h> _
  _
 int *ip = malloc(sizeof(int));||##gray|@@//@@ Primitive types are stack allocated. _
 @@//@@ Use a wrapper class to store on the _
 @@//@@ heap:## _
-##green|Integer## ##peru|i## = ##purple|new## ##green|Integer##(0);||object i = 0;||
+Integer i = new Integer(0);||object i = 0;||
 ||[[# uninitialized-heap]][#uninitialized-heap-note uninitialized heap]||##gray|//Memory allocated by the// new //operator is zero-initialized.//##|| ||##gray|//zero-initialized//##|| ||
-||[[# free-heap]][#free-heap-note free heap]||##purple|delete## i;||#include <stdlib.h> _
+||[[# free-heap]][#free-heap-note free heap]||delete i;||#include <stdlib.h> _
  _
 free(ip);||##gray|//garbage collected//##||##gray|//garbage collected//##||
 ||[[# null]][#null-note null] _
-@<&nbsp;>@||##teal|NULL##||NULL||##teal|null##||null||
+@<&nbsp;>@||NULL||NULL||null||null||
 ||[[# coalesce]][#coalesce-note coalesce] _
-@<&nbsp;>@||##green|string## ##peru|s1## = s2 @@||@@ ##maroon|"was null"##;||NSString *s1 = s2 @@||@@ @"was null";||##green|String## ##peru|s1## = s2 == ##teal|null## ? ##maroon|"was null"## : s2;||string s1  = s2 ?? "was null";||
+@<&nbsp;>@||string s1 = s2 @@||@@ "was null";||NSString *s1 = s2 @@||@@ @"was null";||String s1 = s2 == null ? "was null" : s2;||string s1  = s2 ?? "was null";||
 ||||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
 ||~ ||~ c++||~ objective c||~ java||~ c#||
 ||[[# boolean-type]][#boolean-type-note boolean type] _
-@<&nbsp;>@||##green|bool##||BOOL||##green|boolean##||bool||
+@<&nbsp;>@||bool||BOOL||boolean||bool||
 ||[[# true-false]][#true-false-note true and false] _
-@<&nbsp;>@||##teal|true false##||YES NO||##teal|true false##||true false||
+@<&nbsp;>@||true false||YES NO||true false||true false||
 ||[[# falsehoods]][#falsehoods-note falsehoods] _
-@<&nbsp;>@||##teal|false## 0 0.0 ##teal|NULL##||0 0.0 NULL||##teal|false##||false||
+@<&nbsp;>@||false 0 0.0 NULL||0 0.0 NULL||false||false||
 ||[[# logical-op]][#logical-op-note logical operators]||&& @@||@@ ! _
-##purple|and or not##||&& @@||@@ !||&& @@||@@ !||&& @@||@@ !||
+and or not||&& @@||@@ !||&& @@||@@ !||&& @@||@@ !||
 ||[[# relational-op]][#relational-op-note relational operators]||== != < > <= >=||== != < > <= >=||== != < > <= >=||== != < > <= >=||
-||[[# int-type]][#int-type-note integer type]||##green|signed char## ##peru|n1##;@<&nbsp;&nbsp;>@@<&nbsp;>@##gray|@@//@@ 1+ bytes## _
-##green|short int## ##peru|n2##;@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@##gray|@@//@@ 2+ bytes## _
-##green|int## ##peru|n3##;@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@##gray|@@//@@ 2+ bytes## _
-##green|long int## ##peru|n4##;@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|@@//@@ 4+ bytes## _
-##green|long long int## ##peru|n5##;@<&nbsp;>@##gray|@@//@@ 4+ bytes##||signed char ##gray|//1+ byte//## _
+||[[# int-type]][#int-type-note integer type]||signed char n1;@<&nbsp;&nbsp;>@@<&nbsp;>@##gray|@@//@@ 1+ bytes## _
+short int n2;@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@##gray|@@//@@ 2+ bytes## _
+int n3;@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@##gray|@@//@@ 2+ bytes## _
+long int n4;@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|@@//@@ 4+ bytes## _
+long long int n5;@<&nbsp;>@##gray|@@//@@ 4+ bytes##||signed char ##gray|//1+ byte//### _
 short int ##gray|//2+ bytes//## _
 int ##gray|//2+ bytes//## _
 long int ##gray|//4+ bytes//## _
-long long int ##gray|//4+ bytes//##||##green|byte## ##peru|n1##;@<&nbsp;&nbsp;>@##gray|@@//@@ 1 byte## _
-##green|short## ##peru|n2##; ##gray|@@//@@ 2 bytes## _
-##green|int## ##peru|n3##;@<&nbsp;&nbsp;&nbsp;>@##gray|@@//@@ 4 bytes## _
-##green|long## ##peru|n4##;@<&nbsp;&nbsp;>@##gray|@@//@@ 8 bytes##||sbyte ##gray|//1 byte//## _
+long long int ##gray|//4+ bytes//##||byte n1;@<&nbsp;&nbsp;>@##gray|@@//@@ 1 byte## _
+short n2; ##gray|@@//@@ 2 bytes## _
+int n3;@<&nbsp;&nbsp;&nbsp;>@##gray|@@//@@ 4 bytes## _
+long n4;@<&nbsp;&nbsp;>@##gray|@@//@@ 8 bytes##||sbyte ##gray|//1 byte//## _
 short ##gray|//2 bytes//## _
 int ##gray|//4 bytes//## _
 long ##gray|//8 bytes//##||
-||[[# unsigned-type]][#unsigned-type-note unsigned type]||##green|unsigned char## ##peru|n1##;@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|@@//@@ 1+ bytes## _
-##green|unsigned short int## ##peru|n2##;@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@##gray|@@//@@ 2+ bytes## _
-##green|unsigned int## ##peru|n3##;@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@##gray|@@//@@ 2+ bytes## _
-##green|unsigned long int## ##peru|n4##;@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|@@//@@ 4+ bytes## _
-##green|unsigned long long int## ##peru|n5##; ##gray|@@//@@ 4+ bytes##||unsigned char: 8+ _
+||[[# unsigned-type]][#unsigned-type-note unsigned type]||unsigned char n1;@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|@@//@@ 1+ bytes## _
+unsigned short int n2;@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@##gray|@@//@@ 2+ bytes## _
+unsigned int n3;@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@##gray|@@//@@ 2+ bytes## _
+unsigned long int n4;@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|@@//@@ 4+ bytes## _
+unsigned long long int n5; ##gray|@@//@@ 4+ bytes##||unsigned char: 8+ _
 unsigned short int ##gray|//2 bytes+//## _
 unsigned int ##gray|//2 bytes+//## _
 unsigned long int ##gray|//4+ bytes//## _
-unsigned long long int ##gray|//4+ bytes//##||##green|char## ##peru|n1##;@<&nbsp;&nbsp;>@##gray|@@//@@2 bytes##||byte ##gray|//1 byte//## _
+unsigned long long int ##gray|//4+ bytes//##||char n1;@<&nbsp;&nbsp;>@##gray|@@//@@2 bytes##||byte ##gray|//1 byte//## _
 ushort ##gray|//2 bytes//## _
 uint ##gray|//4 bytes//## _
 ulong ##gray|//8 bytes//##||
-||[[# float-type]][#float-type-note float type]||##green|float## ##peru|x1##;@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@##gray|@@//@@ 4 bytes## _
-##green|double## ##peru|x2##;@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|@@//@@ 8 bytes## _
-##green|long double## ##peru|x3##; ##gray|@@//@@ 16 bytes##||float _
+||[[# float-type]][#float-type-note float type]||float x1;@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@##gray|@@//@@ 4 bytes## _
+double x2;@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|@@//@@ 8 bytes## _
+long double x3; ##gray|@@//@@ 16 bytes##||float _
 double _
-long double||##green|float## ##peru|x1##;@<&nbsp;&nbsp;>@##gray|@@//@@ 4 bytes## _
-##green|double## ##peru|x2##; ##gray|@@//@@ 8 bytes##||float ##gray|//4 bytes//## _
+long double||float x1;@<&nbsp;&nbsp;>@##gray|@@//@@ 4 bytes## _
+double x2; ##gray|@@//@@ 8 bytes##||float ##gray|//4 bytes//## _
 double ##gray|//8 bytes//##||
 ||[[# fixed-type]][#fixed-type-note fixed type] _
 @<&nbsp;>@||##gray|//none//##||##gray|//none//##||##gray|//none//##||decimal ##gray|//12 bytes//##||
@@ -221,7 +227,7 @@ double ##gray|//8 bytes//##||
 7 / 3||
 ||[[# int-div-zero]][#int-div-zero-note integer division by zero]||##gray|//process sent a//## SIGFPE ##gray|//signal//##||##gray|//process sent a//## SIGFPE ##gray|//signal//##||##gray|//throws//## java.lang.ArithmeticException||##gray|//Syntax error if divisor is a constant.  Otherwise throws//## System.DivideByZeroException||
 ||[[# float-div]][#float-div-note float division] _
-@<&nbsp;>@||7 / ##purple|static_cast##<##green|float##>(3)||7 / (float)3||7 / (##green|float##)3||7 / (float)3||
+@<&nbsp;>@||7 / static_cast<float>(3)||7 / (float)3||7 / (float)3||7 / (float)3||
 ||[[# float-div-zero]][#float-div-zero-note float division by zero] _
 ##gray|//dividend is positive, zero, negative//##||inf _
 nan _
@@ -231,27 +237,27 @@ nan _
 nan _
 -inf _
  _
-##gray|//there are no portably defined literals or constants for the above values.//##||##teal|Float##.POSITIVE_INFINITY _
-##teal|Float##.NaN _
-##teal|Float##.NEGATIVE_INFINITY _
+##gray|//there are no portably defined literals or constants for the above values.//##||Float.POSITIVE_INFINITY _
+Float.NaN _
+Float.NEGATIVE_INFINITY _
  _
-##gray|//constants with same names defined in//## ##teal|Double##||float.PositiveInfinity _
+##gray|//constants with same names defined in//## Double||float.PositiveInfinity _
 float.NaN _
 float.NegativeInfinity _
  _
 ##gray|//constants with same names defined in//## double||
-||[[# power]][#power-note power]||##darkslateblue|#include## ##maroon|<cmath>##  _
+||[[# power]][#power-note power]||#include <cmath>  _
  _
-##green|double## ##peru|x## = pow(2.0, 32.0);||#include <math.h>  _
+double x = pow(2.0, 32.0);||#include <math.h>  _
  _
 pow(2.0, 32.0);||Math.pow(2.0, 32.0);||System.Math.Pow(2.0, 32.0);||
-||[[# sqrt]][#sqrt-note sqrt]||##darkslateblue|#include## ##maroon|<cmath>## _
+||[[# sqrt]][#sqrt-note sqrt]||#include <cmath> _
  _
-##green|double## ##peru|x## = sqrt(2);||#include <math.h> _
+double x = sqrt(2);||#include <math.h> _
  _
 sqrt(2)||Math.sqrt(2)||Math.Sqrt(2)||
-||[[# sqrt-negative-one]][#sqrt-negative-one-note sqrt -1]||nan||nan||##teal|Double##.NaN||double.NaN||
-||[[# transcendental-func]][#transcendental-func-note transcendental functions]||##darkslateblue|#include## ##maroon|<cmath>## _
+||[[# sqrt-negative-one]][#sqrt-negative-one-note sqrt -1]||nan||nan||Double.NaN||double.NaN||
+||[[# transcendental-func]][#transcendental-func-note transcendental functions]||#include <cmath> _
  _
 exp log log2 log10 _
 sin cos tan _
@@ -270,47 +276,47 @@ Math.Exp Math.Log ##gray|//none//## Math.Log10 _
 Math.Sin Math.Cos Math.Tan _
 Math.Asin Math.Acos Math.Atan _
 Math.Atan2||
-||[[# transcendental-const]][#transcendental-const-note transcendental constants]||##darkslateblue|#include## ##maroon|<cmath>## _
+||[[# transcendental-const]][#transcendental-const-note transcendental constants]||#include <cmath> _
  _
-##green|double## ##peru|e## = M_E; _
-##green|double ## ##peru|pi## = M_PI;||#include <math.h> _
+double e = M_E; _
+double pi = M_PI;||#include <math.h> _
  _
 M_E _
-M_PI||##teal|Math##.E _
-##teal|Math##.PI||System.Math.E _
+M_PI||Math.E _
+Math.PI||System.Math.E _
 System.Math.PI||
 ||[[# float-truncation]][#float-truncation-note float truncation] _
-##gray|//towards zero, to nearest integer, towards -∞, towards ∞//##||##darkslateblue|#include## ##maroon|<cmath>## _
+##gray|//towards zero, to nearest integer, towards -∞, towards ∞//##||#include <cmath> _
 @<&nbsp;>@ _
-##green|double## ##peru|x## = 3.7; _
+double x = 3.7; _
 @<&nbsp;>@ _
-##green|long## ##peru|trnc## = ##purple|static_cast##<##green|long##>(x); _
-##green|long## ##peru|rnd## = round(x); _
-##green|long## ##peru|flr## = floorl(x); _
-##green|long## ##peru|cl## = ceill(x);||#include <math.h> _
+long trnc = static_cast<long>(x); _
+long rnd = round(x); _
+long flr = floorl(x); _
+long cl = ceill(x);||#include <math.h> _
 @<&nbsp;>@ _
 double d = 3.77; _
 @<&nbsp;>@ _
 long trnc = (long)d; _
 long rnd = round(d); _
 long flr = floorl(d); _
-long cl = ceill(d);||(##green|long##)3.77 _
+long cl = ceill(d);||(long)3.77 _
 Math.round(3.77) _
-(##green|long##)Math.floor(3.77) _
-(##green|long##)Math.ceil(3.77)||using System; _
+(long)Math.floor(3.77) _
+(long)Math.ceil(3.77)||using System; _
 @<&nbsp;>@ _
 (long)3.77 _
 Math.Round(3.77) _
 Math.Floor(3.77) _
 Math.Ceiling(3.77)||
-||[[# absolute-val]][#absolute-val-note absolute value]||##darkslateblue|#include## ##maroon|<cmath>##@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|@@//@@ fabs()## _
-##darkslateblue|#include## ##maroon|<cstdlib>##@<&nbsp;&nbsp;>@##gray|@@//@@ abs()## _
+||[[# absolute-val]][#absolute-val-note absolute value]||#include <cmath>@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|@@//@@ fabs()## _
+#include <cstdlib>@<&nbsp;&nbsp;>@##gray|@@//@@ abs()## _
  _
-##green|int## ##peru|n## = -7; _
-##green|int## ##peru|absn## = abs(n); _
+int n = -7; _
+int absn = abs(n); _
  _
-##green|double## ##peru|x## = -7.77; _
-##green|double## ##peru|absx## = fabs(x);||#include <stdlib.h>@<&nbsp;&nbsp;>@##gray|@@//@@ abs()## _
+double x = -7.77; _
+double absx = fabs(x);||#include <stdlib.h>@<&nbsp;&nbsp;>@##gray|@@//@@ abs()## _
 #include <math.h>@<&nbsp;&nbsp;>@##gray|@@//@@ fabs()## _
  _
 int i = -7; _
@@ -325,25 +331,25 @@ System.Math.Abs(-7.77)||
 The C standard does not define behavior for signed integers, however.//##||##gray|//modular arithmetic _
  _
 The C standard does not define behavior for signed integers, however.//##||##gray|//modular arithmetic//##||##gray|//modular arithmetic//##||
-||[[# float-overflow]][#float-overflow-note float overflow]||##gray|//no behavior defined by standard; many implementations return// inf##||##gray|//no behavior defined by standard; many implementations return// inf##||##teal|Float##.POSITIVE_INFINITY||float.PositiveInfinity||
+||[[# float-overflow]][#float-overflow-note float overflow]||##gray|//no behavior defined by standard; many implementations return// inf##||##gray|//no behavior defined by standard; many implementations return// inf##||Float.POSITIVE_INFINITY||float.PositiveInfinity||
 ||[[# float-limits]][#float-limits-note float limits] _
-##gray|//largest finite float, smallest positive float//##||##darkslateblue|#include## ##maroon|<cfloat>## _
+##gray|//largest finite float, smallest positive float//##||#include <cfloat> _
  _
 FLT_MAX _
 FLT_MIN _
 DBL_MAX _
 DBL_MIN _
 LDBL_MAX _
-LDBL_MIN|| ||##teal|Float##.MAX_VALUE _
-##teal|Float##.MIN_VALUE _
-##teal|Double##.MAX_VALUE _
-##teal|Double##.MIN_VALUE||float.MaxValue _
+LDBL_MIN|| ||Float.MAX_VALUE _
+Float.MIN_VALUE _
+Double.MAX_VALUE _
+Double.MIN_VALUE||float.MaxValue _
 float.Epsilon _
 double.MaxValue _
 double.Epsilon||
-||[[# complex-construction]][#complex-construction-note complex construction]||##darkslateblue|#include## ##maroon|<complex>## _
+||[[# complex-construction]][#complex-construction-note complex construction]||#include <complex> _
  _
-##green|complex##<##green|double##> ##peru|z##(1.0, 2.0);|| || || ||
+complex<double> z(1.0, 2.0);|| || || ||
 ||[[# complex-decomposition]][#complex-decomposition-note complex decomposition] _
 ##gray|//real and imaginary component, argument, absolute value, conjugate//##||z.real() _
 z.imag() _
@@ -351,44 +357,44 @@ arg(z) _
 abs(z) _
 conj(z)|| || || ||
 ||[[# random-num]][#random-num-note random number] _
-##gray|//uniform integer, uniform float, normal float//##||##darkslateblue|#include## ##maroon|<random>## _
+##gray|//uniform integer, uniform float, normal float//##||#include <random> _
  _
-##green|default_random_engine## ##peru|dre##; _
+default_random_engine dre; _
  _
-##green|uniform_int_distribution##<##green|int##> ##peru|uid##(0, 99); _
-##green|uniform_real_distribution##<##green|double##> _
-@<&nbsp;&nbsp;>@##peru|urd##(0.0, 1.0); _
-##green|normal_distribution##<##green|double##> ##peru|nd##(0.0, 1.0); _
+uniform_int_distribution<int> uid(0, 99); _
+uniform_real_distribution<double> _
+@<&nbsp;&nbsp;>@urd(0.0, 1.0); _
+normal_distribution<double> nd(0.0, 1.0); _
  _
-##green|int## ##peru|i## = uid(dre); _
-##green|double## ##peru|x## = urd(dre); _
-##green|double## ##peru|y## = nd(dre);||#include <stdlib.h> _
+int i = uid(dre); _
+double x = urd(dre); _
+double y = nd(dre);||#include <stdlib.h> _
  _
 ##gray|@@//@@ assuming 100 much smaller than RAND_MAX:## _
 int i = rand() % 100; _
 double x = drand48(); _
-##gray|//none//##||##purple|import## ##teal|java##.##teal|util##.##green|Random##; _
+##gray|//none//##||import java.util.Random; _
  _
-##green|Random## ##peru|rnd## = ##purple|new## ##green|Random##(); _
+Random rnd = new Random(); _
  _
-##green|int## ##peru|i## = rnd.nextInt(100); _
-##green|double## ##peru|x## = rnd.nextDouble(); _
-##green|double## ##peru|y## = rnd.nextGaussian();||using System; _
+int i = rnd.nextInt(100); _
+double x = rnd.nextDouble(); _
+double y = rnd.nextGaussian();||using System; _
  _
 Random rnd = new Random(); _
  _
 int i = rnd.Next(); _
 double x = rnd.NextDouble(); _
 ##gray|//none//##||
-||[[# random-seed]][#random-seed-note random seed]||##darkslateblue|#include## ##maroon|<random>## _
+||[[# random-seed]][#random-seed-note random seed]||#include <random> _
  _
 ##gray|@@//@@ set seed in constructor:## _
-##green|default_random_engine## ##peru|dre##(17); _
+default_random_engine dre(17); _
  _
 ##gray|@@//@@ set seed of existing engine:## _
-dre.seed(17);|| ||##purple|import## ##teal|java##.##teal|util##.##green|Random##; _
+dre.seed(17);|| ||import java.util.Random; _
  _
-##green|Random## ##peru|rnd## = ##purple|new## ##green|Random##(); _
+Random rnd = new Random(); _
  _
 rnd.setSeed(17); _
  _
@@ -396,7 +402,7 @@ rnd.setSeed(17); _
  _
 Random rnd = new Random(17);||
 ||[[# bit-op]][#bit-op-note bit operators]||@@ << >> & | ^ ~ @@ _
-@<&nbsp;>@##purple|bitand bitor compl## _
+@<&nbsp;>@bitand bitor compl _
  _
 ##gray|@@>>@@ //is arithmetic right shift on signed integers and logical right shift on unsigned integers//##||@@ << >> & | ^ ~ @@||@@ << >> & | ^ ~ @@ _
  _
@@ -410,20 +416,20 @@ Random rnd = new Random(17);||
 0x2a||
 ||[[# radix]][#radix-note radix] _
 ##gray|//convert integer to and from string with radix//##|| || ||Integer.toString(42, 7) _
-Integer.parseInt(##maroon|"60"##, 7)|| ||
+Integer.parseInt("60", 7)|| ||
 ||||||||||~ [[# strings]][#strings-note strings]||
 ||~ ||~ c++||~ objective c||~ java||~ c#||
 ||[[# str-type]][#str-type-note string type] _
-@<&nbsp;>@||##green|string## ##peru|s##(##maroon|"lorem ipsum"##); _
+@<&nbsp;>@||string s("lorem ipsum"); _
  _
 ##gray|@@//@@ convert to C string:## _
-##purple|const## ##green|char##* ##peru|s2## = s.c_str();||NSString* s = @"lorem ipsum"; _
+const char* s2 = s.c_str();||NSString* s = @"lorem ipsum"; _
  _
 ##gray|@@//@@ convert to C string:## _
 const char* s2 = [s UTF8String];||java.lang.String||string||
 ||[[# str-literal]][#str-literal-note string literal] _
 @<&nbsp;>@||##gray|@@//@@ const char*:## _
-##maroon|"don't say \"no\""##||@"don't say \"no""||"don't say\"no\""||"don't say \"no\""||
+"don't say \"no\""||@"don't say \"no""||"don't say\"no\""||"don't say \"no\""||
 ||[[# newline-literal]][#newline-literal-note newline in literal]||##gray|//Newlines in string literals are ignored.//##||##gray|//string literals can extend over multiple lines, but the newlines do not appear in the resulting string//##||##gray|//no//##||##gray|//string literals can extend over multiple lines, but the newlines do not appear in the resulting string//##||
 ||[[# str-literal-escape]][#str-literal-escape-note literal escapes] _
 @<&nbsp;>@||\a \b \f \n \r \t \v _
@@ -435,54 +441,54 @@ const char* s2 = [s UTF8String];||java.lang.String||string||
 \u##gray|//hhhh//## \##gray|//o//## \##gray|//oo//## \##gray|//ooo//##||\a \b \f \n \r \t \v _
 \\ \" \' _
 \x##gray|//hh//## \x##gray|//hhhh//## \##gray|//o//## \##gray|//oo//## \##gray|//ooo//##||
-||[[# allocate-str]][#allocate-str-note allocate string]||##green|string##* ##peru|s## = ##purple|new## ##green|string##(##maroon|"hello"##);||NSString *s = @"hello";||String s = "hello"; _
+||[[# allocate-str]][#allocate-str-note allocate string]||string* s = new string("hello");||NSString *s = @"hello";||String s = "hello"; _
 String t = new String(s);||string s = "hello"; _
 string t = string.Copy(s);||
-||[[# mutable-str]][#mutable-str-note are strings mutable?]||##green|string## ##peru|s##(##maroon|"bar"##); _
-s[2] = ##maroon|'z'##;|| ||##gray|String //objects are immutable.//## _
+||[[# mutable-str]][#mutable-str-note are strings mutable?]||string s("bar"); _
+s[2] = 'z';|| ||##gray|String //objects are immutable.//## _
  _
 ##gray|StringBuffer //has// append(), delete(), deleteCharAt(), insert(), replace(), setCharAt().##|| ||
-||[[# copy-str]][#copy-str-note copy string]||##green|string## ##peru|s##(##maroon|"bar"##); _
+||[[# copy-str]][#copy-str-note copy string]||string s("bar"); _
  _
 ##gray|@@//@@ use assignment or copy constructor:## _
-##green|string## ##peru|s2## = s; _
-##green|string## ##peru|s3##(s); _
+string s2 = s; _
+string s3(s); _
  _
 ##gray|@@//@@ s contains "baz";## _
 ##gray|@@//@@  s2 and s3 contain "bar":## _
-s[2] = ##maroon|'z'##;|| ||String s = "bar"; _
+s[2] = 'z';|| ||String s = "bar"; _
 StringBuffer sb = new StringBuffer(s); _
 sb.setCharAt(2, 'z'); _
 ##gray|@@//@@ s contains "bar"; s2 contains "baz":## _
 String s2 = sb.toString();|| ||
-||[[# fmt-str]][#fmt-str-note format string]||##darkslateblue|#include## ##maroon|<sstream>## _
+||[[# fmt-str]][#fmt-str-note format string]||#include <sstream> _
  _
-##green|ostringstream## ##peru|oss##; _
-oss @@<<@@ ##maroon|"Spain: "## @@<<@@ 7; _
-##green|string## ##peru|s##(oss.str());||[NSString stringWithFormat:@"%@: %d", @"Spain", 7]||String.format("%s: %d", "Spain", 7)||string.Format("{0}: {1}", "Spain", 7)||
-||[[# compare-str]][#compare-str-note compare strings]||##green|string## ##peru|s1##(##maroon|"hello"##); _
-##green|string## ##peru|s2##(##maroon|"world"##); _
+ostringstream oss; _
+oss @@<<@@ "Spain: " @@<<@@ 7; _
+string s(oss.str());||[NSString stringWithFormat:@"%@: %d", @"Spain", 7]||String.format("%s: %d", "Spain", 7)||string.Format("{0}: {1}", "Spain", 7)||
+||[[# compare-str]][#compare-str-note compare strings]||string s1("hello"); _
+string s2("world"); _
  _
 ##gray|@@//@@ negative if s1 lexically before s2; _
 @@//@@ zero if s1 and s2 are equal:## _
-##green|int## ##peru|result1## = s1.compare(s2); _
+int result1 = s1.compare(s2); _
  _
-##green|bool## ##peru|result2## = s1 == s2;||[@"hello" compare:@"hello"]||"hello".compareTo("world")||"hello".CompareTo("world")||
+bool result2 = s1 == s2;||[@"hello" compare:@"hello"]||"hello".compareTo("world")||"hello".CompareTo("world")||
 ||[[# str-concat]][#str-concat-note concatenate] _
-##gray|//and append//##||##green|string## ##peru|s##(##maroon|"hello"##); _
-##green|string## ##peru|s2## = s + ##maroon|" world"##; _
-s += ##maroon|" world"##;||NSString *s1 = @"hello"; _
+##gray|//and append//##||string s("hello"); _
+string s2 = s + " world"; _
+s += " world";||NSString *s1 = @"hello"; _
 NSString *s2 = @" world"; _
 NSString *s3 = [s1 stringByAppendingString:s2];||"hello" + " world"||"hello" + " world"||
 ||[[# str-replicate]][#str-replicate-note replicate] _
-@<&nbsp;>@||##green|string## ##peru|hbar##(80, ##maroon|'-'##);|| ||import java.util.Arrays; _
+@<&nbsp;>@||string hbar(80, '-');|| ||import java.util.Arrays; _
  _
 char[] a = new char[80]; _
 Arrays.fill(a, '-'); _
 String s = new String(a);|| ||
-||[[# translate-case]][#translate-case-note translate case]||##darkslateblue|#include## ##maroon|<algorithm>## _
+||[[# translate-case]][#translate-case-note translate case]||#include <algorithm> _
  _
-##green|string## ##peru|s##(##maroon|"foo"##); _
+string s("foo"); _
  _
 ##gray|@@//@@ in place:## _
 transform(s.begin(), s.end(), _
@@ -491,22 +497,22 @@ transform(s.begin(), s.end(), _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@s.begin(), ::tolower); _
  _
 ##gray|@@//@@ non-destructive:## _
-##green|string## ##peru|s2##; _
+string s2; _
 s2.resize(s.size(); _
 transform(s.begin(), s.end(), _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@s2.begin(), ::toupper);||[@"HELLO" lowercaseString]||"hello".toUpperCase() _
 "HELLO".toLowerCase()||"hello".ToUpper() _
 HELLO".ToLower()||
-||[[# trim]][#trim-note trim]||##darkslateblue|#include## ##maroon|<algorithm>## _
+||[[# trim]][#trim-note trim]||#include <algorithm> _
  _
-##green|string## ##peru|s##(##maroon|" hello "##); _
+string s(" hello "); _
 ##gray|@@//@@ trim in place on left:## _
 s.erase( _
 @<&nbsp;&nbsp;>@s.begin(), _
 @<&nbsp;&nbsp;>@find_if( _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@s.begin(), _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@s.end(), _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@not1(ptr_fun<##green|int##, ##green|int##>(isspace)) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@not1(ptr_fun<int, int>(isspace)) _
 @<&nbsp;&nbsp;>@) _
 ); _
  _
@@ -515,31 +521,36 @@ s.erase( _
 @<&nbsp;&nbsp;>@find_if( _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@s.rbegin(), _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@s.rend(), _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@not1(ptr_fun<##green|int##, ##green|int##>(isspace)) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@not1(ptr_fun<int, int>(isspace)) _
 @<&nbsp;&nbsp;>@).base(), _
 @<&nbsp;&nbsp;>@s.end() _
 );||[@" hello " stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]]||" hello ".trim()||"  hello ".Trim()||
 ||[[# pad]][#pad-note pad] _
-##gray|//on right, on left//##||##darkslateblue|#include## ##maroon|<iomanip>## _
-##darkslateblue|#include## ##maroon|<sstream>## _
+##gray|//on right, on left//##||#include <iomanip> _
+#include <sstream> _
  _
-##green|string## ##peru|s##(##maroon|"hello"##); _
-##green|string## ##peru|rpad##(s); _
-rpad += string(10 - s.length(), ##maroon|' '##); _
+string s("hello"); _
+string rpad(s); _
+rpad += string(10 - s.length(), ' '); _
  _
-##green|ostringstream## ##peru|oss##; _
+ostringstream oss; _
 oss @@<<@@ setw(10) @@<<@@ s; _
-##green|string## ##peru|lpad##(oss.str());||[@"hello" stringByPaddingToLength:10 withString:@" " startingAtIndex:0]|| || ||
-||[[# num-to-str]][#num-to-str-note number to string]|| || ||Integer.toString(14) _
+string lpad(oss.str());||[@"hello" stringByPaddingToLength:10 withString:@" " startingAtIndex:0]|| || ||
+||[[# num-to-str]][#num-to-str-note number to string]||char buf[100]; _
+long n = 123; _
+ _
+sprintf(buf, "%ld", n); _
+##gray|/* prevent buffer overflow: */## _
+snprintf(buf, 100, "%ld", n);|| ||Integer.toString(14) _
 Long.toString(14) _
 Double.toString(14.7)||14.ToString() _
 14.7.ToString()||
-||[[# str-to-num]][#str-to-num-note string to number]||##darkslateblue|#include## ##maroon|<sstream>## _
+||[[# str-to-num]][#str-to-num-note string to number]||#include <sstream> _
  _
-##green|stringstream## ##peru|ss##(##maroon|"7 14.3 12"##); _
-##green|int## ##peru|n1##; _
-##green|double## ##peru|x##; _
-##green|long## ##peru|n2##; _
+stringstream ss("7 14.3 12"); _
+int n1; _
+double x; _
+long n2; _
  _
 ss @@>>@@ n1 @@>>@@ x @@>>@@ n2;||[@"14" integerValue] _
 [@"14" longLongvalue] _
@@ -561,15 +572,15 @@ decimal.Parse("14")||
 ||[[# split]][#split-note split]|| ||[@"Bob Ned Amy" componentsSeparatedByString:@" "]||"Bob Ned Amy".split(" ")||string[] names = "Bob Ned Amy".Split(' ');||
 ||[[# serialize]][#serialize-note serialize]|| || || || ||
 ||[[# str-length]][#str-length-note string length] _
-@<&nbsp;>@||##green|string## ##peru|s##(##maroon|"hello"##); _
-##green|size_t## ##peru|len## = s.length();||[s length]||s.length()||s.Length||
+@<&nbsp;>@||string s("hello"); _
+size_t len = s.length();||[s length]||s.length()||s.Length||
 ||[[# index-substr]][#index-substr-note index of substring] _
-@<&nbsp;>@||string(##maroon|"hello"##).find(##maroon|"ll"##)||[@"hello" rangeOfString:@"ll"].location||"hello".indexOf("ll")||"hello".IndexOf("ll")||
-||[[# extract-substr]][#extract-substr-note extract substring]||string(##maroon|"hello"##).substr(2, 2)||[@"hello" substringWithRange:NSMakeRange(2, 2)]||"hello".substring(2,4)||"hello".Substring(2, 2)||
-||[[# char-type]][#char-type-note character type]||##green|char## _
-##green|wchar_t##|| ||##green|char## _
-##green|Character##|| ||
-||[[# char-literal]][#char-literal-note character literal]||##green|char## ##peru|n## = ##maroon|'X'##;|| ||char n = 'X';|| ||
+@<&nbsp;>@||string("hello").find("ll")||[@"hello" rangeOfString:@"ll"].location||"hello".indexOf("ll")||"hello".IndexOf("ll")||
+||[[# extract-substr]][#extract-substr-note extract substring]||string("hello").substr(2, 2)||[@"hello" substringWithRange:NSMakeRange(2, 2)]||"hello".substring(2,4)||"hello".Substring(2, 2)||
+||[[# char-type]][#char-type-note character type]||char _
+wchar_t|| ||char _
+Character|| ||
+||[[# char-literal]][#char-literal-note character literal]||char n = 'X';|| ||char n = 'X';|| ||
 ||[[# test-char]][#test-char-note test character] _
 ##gray|//letter, digit, whitespace, uppercase letter, lowercase letter//##||##gray|@@//@@ functions have this signature: _
 @@//@@ _
@@ -582,8 +593,8 @@ isupper _
 islower|| || || ||
 ||||||||||~ [[# regexes]][#regexes-note regular expressions]||
 ||~ ||~ c++||~ objective c||~ java||~ c#||
-||[[# regex-type]][#regex-type-note regex type]||##green|regex## _
-##green|wregex##|| || || ||
+||[[# regex-type]][#regex-type-note regex type]||regex _
+wregex|| || || ||
 ||[[# char-class-abbrev]][#char-class-abbrev-note character class abbreviations]||. \d \D \s \S \w \W|| || || ||
 ||[[# regex-anchors]][#regex-anchors-note anchors]||^ $ \b \B|| || || ||
 ||[[# regex-lookahead]][#regex-lookahead-note lookahead] _
@@ -601,7 +612,7 @@ bool isMatch = regex.IsMatch("hello");||
 regex rx("lorem", icase); _
 bool match = regex_match("Lorem", rx);|| || || ||
 ||[[# regex-modifiers]][#regex-modifiers-note modifiers]|| || || || ||
-||[#regex-substitute substitution]|| || ||String s1 = "hello".replace("ll","LL"); _
+||[[# subst]][#subst-note substitution]|| || ||String s1 = "hello".replace("ll","LL"); _
 String s2 = "hello".replaceAll("l","L");||using System.Text.RegularExpressions; _
 Regex r1 = new Regex("ll"); _
 String s1 = r1.Replace("hello", "LL", 1); _
@@ -653,160 +664,160 @@ Date dt = new Date(dt.getTime() + day_ms));|| ||
 ||[[# time-parts]][#time-parts-note time parts]|| || || || ||
 ||||||||||~ [[# fixed-length-arrays]][#fixed-length-arrays-note fixed-length arrays]||
 ||~ ||~ c++||~ objective c||~ java||~ c#||
-||[[# fixed-len-array-stack]][#fixed-len-array-stack-note declare on stack]||##green|int## ##peru|a##[10];||int a[10];||##gray|//arrays must be allocated on heap//##||##gray|//arrays must be allocated on heap//##||
-||[[# fixed-len-array-heap]][#fixed-len-array-heap-note declare on heap]||##green|int##* ##peru|a## = ##purple|new## ##green|int##[10];||#include <stdlib.h> _
+||[[# fixed-len-array-stack]][#fixed-len-array-stack-note declare on stack]||int a[10];||int a[10];||##gray|//arrays must be allocated on heap//##||##gray|//arrays must be allocated on heap//##||
+||[[# fixed-len-array-heap]][#fixed-len-array-heap-note declare on heap]||int* a = new int[10];||#include <stdlib.h> _
 int *a = calloc(10, sizeof(int));||int[] a = new int[10];||int[] a = new int[10];||
-||[[# free-fixed-len-array-heap]][#free-fixed-len-array-heap-note free heap]||##purple|delete##[] a;||#include <stdlib.h> _
+||[[# free-fixed-len-array-heap]][#free-fixed-len-array-heap-note free heap]||delete[] a;||#include <stdlib.h> _
 free(a);||##gray|//garbage collected//##||##gray|//garbage collected//##||
-||[[# fixed-len-array-init-list]][#fixed-len-array-init-list-note initialization list]||##green|int## ##peru|a##[] = {1, 2, 3};|| NSArray *a = [NSArray arrayWithObjects:@"hello", @"goodbye", nil];||int[] a = {1,2,3};||int[] a = {1,2,3};||
-||[[# fixed-len-array-size]][#fixed-len-array-size-note size]||##green|int## ##peru|a##[10]; _
+||[[# fixed-len-array-init-list]][#fixed-len-array-init-list-note initialization list]||int a[] = {1, 2, 3};|| NSArray *a = [NSArray arrayWithObjects:@"hello", @"goodbye", nil];||int[] a = {1,2,3};||int[] a = {1,2,3};||
+||[[# fixed-len-array-size]][#fixed-len-array-size-note size]||int a[10]; _
  _
 ##gray|@@//@@ stack arrays only:## _
-##green|size_t## ##peru|len## = ##purple|sizeof##(a) / ##purple|sizeof##(a[0]);||[a count]||a.length||a.Length||
+size_t len = sizeof(a) / sizeof(a[0]);||[a count]||a.length||a.Length||
 ||[[# fixed-len-array-lookup]][#fixed-len-array-lookup-note lookup] _
-@<&nbsp;>@||##green|int## ##peru|first## = a[0];||[a objectAtIndex:0]||a[0]||a[0]||
+@<&nbsp;>@||int first = a[0];||[a objectAtIndex:0]||a[0]||a[0]||
 ||[[# fixed-len-array-update]][#fixed-len-array-update-note update] _
 @<&nbsp;>@||a[0] = 7;|| || || ||
 ||[[# fixed-len-array-out-of-bounds]][#fixed-len-array-out-of-bounds-note out-of-bounds]||##gray|//No defined behavior//## _
  _
 ##gray|//An out-of-bounds lookup may return the value the memory location contains; an out-of-bounds update may cause memory corruption.  The system may detect an invalid address and send the process a// SIGSEGV.##||##gray|//raises//## NSRangeException exception||ArrayIndexOutOfBoundsException||IndexOutOfRangeException||
-||[[# copy-fixed-len-array]][#copy-fixed-len-array-note copy]||##purple|const## ##green|size_t## ##peru|LEN##(4); _
-##green|int## ##peru|src##[LEN] = {3, 2, 4, 1}; _
-##green|int## ##peru|dest##[LEN]; _
+||[[# copy-fixed-len-array]][#copy-fixed-len-array-note copy]||const size_t LEN(4); _
+int src[LEN] = {3, 2, 4, 1}; _
+int dest[LEN]; _
  _
 ##gray|@@//@@ 3rd arg is number of bytes to copy:## _
-memcpy(dest, src, LEN * ##purple|sizeof##(src[0]));|| || || ||
-||[[# fixed-len-array-as-func-arg]][#fixed-len-array-as-func-arg-note as function argument]||##green|void## _
-##mediumblue|reverse##(##green|int##* ##peru|a##, ##green|size_t## ##peru|len##) { _
-@<&nbsp;&nbsp;>@##purple|for## (##green|int## ##peru|i## = 0; i < len / 2; ++i) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##green|int## ##peru|tmp## = a[len - i - 1]; _
+memcpy(dest, src, LEN * sizeof(src[0]));|| || || ||
+||[[# fixed-len-array-as-func-arg]][#fixed-len-array-as-func-arg-note as function argument]||void _
+reverse(int* a, size_t len) { _
+@<&nbsp;&nbsp;>@for (int i = 0; i < len / 2; ++i) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@int tmp = a[len - i - 1]; _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@a[len - i - 1] = a[i]; _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@a[i] = tmp; _
 @<&nbsp;&nbsp;>@} _
 } _
  _
-##purple|const## ##green|size_t## ##peru|LEN##(4); _
-##green|int## ##peru|a##[LEN] = {3, 2, 4, 1}; _
+const size_t LEN(4); _
+int a[LEN] = {3, 2, 4, 1}; _
 reverse(a, LEN);|| || || ||
-||[[# iterate-over-fixed-len-array]][#iterate-over-fixed-len-array-note iterate]||##purple|const## ##green|size_t## ##peru|LEN##(4); _
-##green|int## ##peru|a##[LEN] = {3, 2, 4, 1}; _
+||[[# iterate-over-fixed-len-array]][#iterate-over-fixed-len-array-note iterate]||const size_t LEN(4); _
+int a[LEN] = {3, 2, 4, 1}; _
  _
-##purple|for## (##green|int## ##peru|i## = 0; i < LEN; ++i) { _
-@<&nbsp;&nbsp;>@cout @@<<@@ ##maroon|"value at "## @@<<@@ i @@<<@@ ##maroon|" is "## _
+for (int i = 0; i < LEN; ++i) { _
+@<&nbsp;&nbsp;>@cout @@<<@@ "value at " @@<<@@ i @@<<@@ " is " _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@@@<<@@ a[i] @@<<@@ endl; _
 }||NSEnumerator *i = [a objectEnumerator]; _
 id o; _
 while (o = [i nextObject]) { _
 @<&nbsp;&nbsp;>@##gray|//do something with o//## _
 }||for (String name : names) {||foreach (string name in names) {||
-||[[# sort-fixed-len-array]][#sort-fixed-len-array-note sort]||##darkslateblue|#include## ##maroon|<cstdlib>## _
+||[[# sort-fixed-len-array]][#sort-fixed-len-array-note sort]||#include <cstdlib> _
  _
-##green|int## _
-##mediumblue|comp##(##purple|const## ##green|void##* ##peruap##, ##purple|const## ##green|void##* ##peru|bp##) { _
-@<&nbsp;&nbsp;>@##green|int## ##peru|a## = *(##green|int##*)ap; _
-@<&nbsp;&nbsp;>@##green|int## ##peru|b## = *(##green|int##*)bp; _
-@<&nbsp;&nbsp;>@##purple|return## a < b ? -1 : (a == b ? 0 : 1); _
+int _
+comp(const void* ap, const void* bp) { _
+@<&nbsp;&nbsp;>@int a = *(int*)ap; _
+@<&nbsp;&nbsp;>@int b = *(int*)bp; _
+@<&nbsp;&nbsp;>@return a < b ? -1 : (a == b ? 0 : 1); _
 } _
   _
-##purple|const## ##green|size_t## ##peru|LEN##(4); _
-##green|int## ##peru|a##[LEN] = {3, 2, 1, 4}; _
+const size_t LEN(4); _
+int a[LEN] = {3, 2, 1, 4}; _
  _
-qsort(a, LEN, ##purple|sizeof##(a[0]), &comp);|| || || ||
+qsort(a, LEN, sizeof(a[0]), &comp);|| || || ||
 ||||||||||~ [[# resizable-arrays]][#resizable-arrays-note resizable arrays]||
 ||~ ||~ c++||~ objective c||~ java||~ c#||
-||[[# decl-resizable-array]][#decl-resizable-array-note declare]||##darkslateblue|#include## ##maroon|<vector>## _
+||[[# decl-resizable-array]][#decl-resizable-array-note declare]||#include <vector> _
  _
-##green|vector## <##green|int##> ##peru|a##;||NSMutableArray *a = [NSMutableArray arrayWithCapacity:10];||java.util.Vector<String> vec = new java.util.Vector<String>();||using System.Collections.Generic; _
+vector <int> a;||NSMutableArray *a = [NSMutableArray arrayWithCapacity:10];||java.util.Vector<String> vec = new java.util.Vector<String>();||using System.Collections.Generic; _
 List<string> l = new List<string>();||
-||[[# resizable-array-init-list]][#resizable-array-init-list-note initialization list]||##darkslateblue|#include## ##maroon|<vector>## _
+||[[# resizable-array-init-list]][#resizable-array-init-list-note initialization list]||#include <vector> _
  _
-##green|vector##<##green|int##> ##peru|a## = {1, 2, 3}; _
-##green|vector##<##green|int##> ##peru|a2##({7, 8, 9});|| || || ||
+vector<int> a = {1, 2, 3}; _
+vector<int> a2({7, 8, 9});|| || || ||
 ||[[# resizable-array-size]][#resizable-array-size-note size] _
-@<&nbsp;>@||##green|size_t## ##peru|len## = a.size();||[a count]||vec.size()||l.Count||
+@<&nbsp;>@||size_t len = a.size();||[a count]||vec.size()||l.Count||
 ||[[# resizable-array-capacity]][#resizable-array-capacity-note capacity] _
-##gray|//get, increase//##||##green|size_t## ##peru|cap## = a.capacity(); _
+##gray|//get, increase//##||size_t cap = a.capacity(); _
  _
 ##gray|@@//@@ will not decrease capacity:## _
 a.reserve(10);|| || || ||
 ||[[# resizable-array-empty-test]][#resizable-array-empty-test-note empty test] _
-##gray|//and clear//##||##green|bool## ##peru|is_empty## = a.empty(); _
+##gray|//and clear//##||bool is_empty = a.empty(); _
 a.clear();|| || || ||
-||[[# resizable-array-lookup]][#resizable-array-lookup-note lookup]||##green|int## ##peru|n## = a[0]; _
+||[[# resizable-array-lookup]][#resizable-array-lookup-note lookup]||int n = a[0]; _
  _
 ##gray|@@//@@ can raise out_of_range:## _
-##green|int## ##peru|n2## = a.at(0);||[a objectAtIndex:0]||vec.elementAt(0)||l[0]||
+int n2 = a.at(0);||[a objectAtIndex:0]||vec.elementAt(0)||l[0]||
 ||[[# resizable-array-update]][#resizable-array-update-note update] _
 @<&nbsp;>@||a[2] = 4;|| || || ||
 ||[[# resizable-array-out-of-bounds]][#resizable-array-out-of-bounds-note out-of-bounds behavior]||##gray|//using [] with out-of-bounds index has undefined behavior//##||##gray|//raises//## NSRangeException||##gray|//throws//## ArrayIndexOutOfBoundsException||##gray|//throws//## System.ArgumentOutOfRangeException||
-||[[# resizable-array-elem-index]][#resizable-array-elem-index-note element index]||##darkslateblue|#include## ##maroon|<vector>## _
+||[[# resizable-array-elem-index]][#resizable-array-elem-index-note element index]||#include <vector> _
  _
-##green|vector##<##green|int##> ##peru|a##({6, 7, 8, 9}); _
+vector<int> a({6, 7, 8, 9}); _
  _
-##purple|auto## ##peru|iter## = find(a.cbegin(), a.cend(), 8); _
-##purple|if## (iter != a.cend()) { _
-@<&nbsp;&nbsp;>@##green|size_t## ##peru|pos## = *iter; _
+auto iter = find(a.cbegin(), a.cend(), 8); _
+if (iter != a.cend()) { _
+@<&nbsp;&nbsp;>@size_t pos = *iter; _
 }|| || || ||
-||[[# slice-resizable-array]][#slice-resizable-array-note slice]||##darkslateblue|#include## ##maroon|<vector>## _
+||[[# slice-resizable-array]][#slice-resizable-array-note slice]||#include <vector> _
  _
-##green|vector##<##green|int##> ##peru|a##({6, 7, 8, 9}); _
+vector<int> a({6, 7, 8, 9}); _
  _
 ##gray|@@//@@ a2 contains {7, 8}:## _
-##green|vector##<##green|int##> ##peru|a2##(a.cbegin() + 1, _
+vector<int> a2(a.cbegin() + 1, _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@a.cbegin() + 3);|| || || ||
-||[[# slice-resizable-array-to-end]][#slice-resizable-array-to-end-note slice to end]||##darkslateblue|#include## ##maroon|<vector>## _
+||[[# slice-resizable-array-to-end]][#slice-resizable-array-to-end-note slice to end]||#include <vector> _
  _
-##green|vector##<##green|int##> ##peru|a##({6, 7, 8, 9}); _
+vector<int> a({6, 7, 8, 9}); _
  _
 ##gray|@@//@@ a2 contains {7, 8, 9}:## _
-##green|vector##<##green|int##> ##peru|a2##(a.cbegin() + 1, a.cend());|| || || ||
-||[[# resizable-array-back]][#resizable-array-back-note manipulate back]||##darkslateblue|#include## ##maroon|<vector>## _
+vector<int> a2(a.cbegin() + 1, a.cend());|| || || ||
+||[[# resizable-array-back]][#resizable-array-back-note manipulate back]||#include <vector> _
  _
-##green|vector##<##green|int##> ##peru|a##({6, 7, 8}); _
+vector<int> a({6, 7, 8}); _
  _
 a.push_back(9); _
-##green|int## ##peru|elem## = a.pop_back();||[a addObject:@"hello"]; _
+int elem = a.pop_back();||[a addObject:@"hello"]; _
 [a removeLastObject];||vec.add("hello"); _
 ##gray|//or//## _
 vec.add(vec.size(), "hello"); _
 vec.removeElementAt(vec.size()-1);||l.Add("hello"); _
 l.RemoveAt(l.Count - 1);||
-||[[# resizable-array-front]][#resizable-array-front-note manipulate front]||##darkslateblue|#include## ##maroon|<vector>## _
+||[[# resizable-array-front]][#resizable-array-front-note manipulate front]||#include <vector> _
  _
-##green|vector##<##green|int##> ##peru|a##({6, 7, 8}); _
+vector<int> a({6, 7, 8}); _
  _
 ##gray|@@//@@ slower than manipulating back:## _
 a.insert(a.cbegin(), 5); _
-##green|int## ##peru|elem## = a[0]; _
+int elem = a[0]; _
 a.erase(a.cbegin());|| || || ||
-||[[# concat-resizable-array]][#concat-resizable-array-note concatenate]||##darkslateblue|#include## ##maroon|<vector>## _
+||[[# concat-resizable-array]][#concat-resizable-array-note concatenate]||#include <vector> _
  _
-##green|vector##<##green|int##> ##peru|a1##({1, 2, 3}); _
-##green|vector##<##green|int##> ##peru|a2##({4, 5, 6}); _
+vector<int> a1({1, 2, 3}); _
+vector<int> a2({4, 5, 6}); _
  _
  a1.insert(a1.cend(), _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@a2.cbegin(), _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@a2.cend());|| || || ||
-||[[# replicate-resizable-array-elem]][#replicate-resizable-array-elem-note replicate element]||##darkslateblue|#include## ##maroon|<vector>## _
+||[[# replicate-resizable-array-elem]][#replicate-resizable-array-elem-note replicate element]||#include <vector> _
  _
 ##gray|@@//@@ array of 10 zeros:## _
-##green|vector##<##green|int##> ##peru|a##(10, 0);|| || || ||
-||[[# copy-resizable-array]][#copy-resizable-array-note copy]||##darkslateblue|#include## ##maroon|<vector>## _
+vector<int> a(10, 0);|| || || ||
+||[[# copy-resizable-array]][#copy-resizable-array-note copy]||#include <vector> _
  _
-##green|vector##<##green|int##> ##peru|a##({1, 2, 3}); _
+vector<int> a({1, 2, 3}); _
 ##gray|@@//@@ copy constructor:## _
-##green|vector##<##green|int##> ##peru|a2##(a); _
-##green|vector##<##green|int##> ##peru|a3##; _
+vector<int> a2(a); _
+vector<int> a3; _
  _
 ##gray|@@//@@ assignment performs copy:## _
 a3 = a;|| || || ||
 ||[[# resizable-array-as-func-arg]][#resizable-array-as-func-arg-note array as function argument]||##gray|//use reference or pointer to avoid copying array//##|| || || ||
-||[[# iterate-over-resizable-array]][#iterate-over-resizable-array-note iterate]||##darkslateblue|#include## ##maroon|<vector>## _
+||[[# iterate-over-resizable-array]][#iterate-over-resizable-array-note iterate]||#include <vector> _
  _
-##green|int## ##peru|sum##(0); _
-##green|vector##<##green|int##> ##peru|a##({1, 2, 3}); _
+int sum(0); _
+vector<int> a({1, 2, 3}); _
  _
-##purple|for## (##purple|const auto##& ##peru|n##: a) { _
+for (const auto& n: a) { _
 @<&nbsp;&nbsp;>@sum += n; _
 }||NSEnumerator *i = [a objectEnumerator]; _
 id o; _
@@ -817,7 +828,7 @@ while (o = [i nextObject]) { _
 }||foreach ( string s in l ) { _
 @<&nbsp;&nbsp;>@##gray|//do something with s//## _
 }||
-||indexed iteration||#include <vector> _
+||[[# indexed-array-iteration]][#indexed-array-iteration-note iterate over elements and indices]||#include <vector> _
  _
 vector<int> a({6, 7, 8}); _
  _
@@ -828,15 +839,15 @@ for (auto iter = a.cbegin(); _
 @<&nbsp;&nbsp;>@cout @@<<@@ "value at " @@<<@@ iter - a.cbegin() _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@@@<<@@ " is " @@<<@@ *iter @@<<@@ endl; _
 }|| || || ||
-||reverse||#include <vector> _
+||[[# reverse-array]][#reverse-array-note reverse]||#include <vector> _
  _
 vector<int> a({1, 2, 3}); _
 vector<int> a2(a.crbegin(), a.crend());|| || || ||
-||sort||#include <vector> _
+||[[# sort-array]][#sort-array-note sort]||#include <vector> _
  _
 vector<int> a({3, 2, 4, 1}); _
 sort(a.begin(), a.end());|| || || ||
-||dedupe||#include <set> _
+||[[# dedupe-array]][#dedupe-array-note dedupe]||#include <set> _
 #include <vector> _
  _
 vector<int> a({1, 1, 2, 2, 3}); _
@@ -844,7 +855,7 @@ set<int> tmp(a.cbegin(), a.cend()); _
 ##gray|@@//@@ often unnecessary since sets provide _
 @@//@@ many of the same methods  as vectors:## _
 vector<int> a2(tmp.cbegin(), tmp.cend());|| || || ||
-||membership||#include <vector> _
+||[[# membership]][#membership-note membership]||#include <vector> _
  _
 vector<int> a({1, 2, 3}); _
 if (find(a.cbegin(), a.cend(), 7) != _
@@ -852,52 +863,62 @@ if (find(a.cbegin(), a.cend(), 7) != _
  _
 @<&nbsp;&nbsp;>@cout @@<<@@ "contains 7" @@<<@@ endl; _
 }|| || || ||
-||intersection|| || || || ||
-||union|| || || || ||
-||relative complement, symmetric difference|| || || || ||
-||map|| || || || ||
-||filter|| || || || ||
-||reduce|| || || || ||
-||min and max element|| || || || ||
-||universal and existential tests|| || || || ||
-||shuffle and sample|| || || || ||
-||zip|| || || || ||
 ||||||||||~ [[# tuples]][#tuples-note tuples]||
 ||~ ||~ c++||~ objective c||~ java||~ c#||
-||declare pair||pair <string, int> p1; _
-pair <string, int> p2("foo", 7); _
+||[[# tuple-ctor]][#tuple-ctor-note constructor]||tuple<string, int, float> tup("foo", 1, 3.7); _
+ _
+##gray|@@//@@ invokes default constructors for elements:## _
+tuple<string, int, float> tup2; _
+ _
+##gray|@@//@@ element types are inferred:## _
+auto tup3 = make_tuple("foo", 1, 3.7);|| || || ||
+||[[# tuple-lookup]][#tuple-lookup-note lookup]||tuple<string, int, float> tup("foo", 1, 3.7); _
+ _
+string s = get<0>(tup); _
+int i = get<1>(tup); _
+float x = get<2>(tup);|| || || ||
+||[[# tuple-decompose]][#tuple-decompose-note decompose]||tuple<string, int, float> tup("foo", 1, 3.7); _
+string s; _
+float x; _
+ _
+tie(s, ignore, x) = tup;|| || || ||
+||[[# tuple-update]][#tuple-update-note update] _
+@<&nbsp;>@||get<0>(tup) = "bar";|| || || ||
+||[[# tuple-len]][#tuple-len-note length] _
+@<&nbsp;>@||tuple_size<decltype(tup)>::value|| || || ||
+||[[# pair-ctor]][#pair-ctor-note pair constructor]||pair <string, int> p2("foo", 7); _
+ _
+##gray|@@//@@ invokes default constructors for elements:## _
+pair <string, int> p1; _
+ _
+##gray|@@//@@ element types are inferred:## _
 auto p3 = make_pair("foo", 7);|| || ||using System.Collections.Generic; _
 KeyValuePair<string,int> pr = new KeyValuePair<string,int>("hello",5); _
 System.Console.WriteLine("{0} {1}", pr.Key, pr.Value);||
-||lookup pair elements||auto p = make_pair("foo", 7); _
-cout @@<<@@ "first: " @@<<@@ p.first @@<<@@ endl; _
-cout @@<<@@ "second: " @@<<@@ p.second @@<<@@ endl;|| || || ||
-||update pair elements||p.first = "bar"; _
+||[[# pair-lookup]][#pair-lookup-note pair lookup]||auto p = make_pair("foo", 7); _
+ _
+string s = p.first; _
+int i = p.second;|| || || ||
+||[[# pair-update]][#pair-update-note pair update]||p.first = "bar"; _
 p.second = 8;|| || || ||
-||declare tuple||tuple<string, int, float> tup1; _
-tuple<string, int, float> tup2( _
-@<&nbsp;&nbsp;>@"foo", 1, 3.7); _
-auto tup3 = make_tuple("foo", 1, 3.7);|| || || ||
-||lookup tuple elements|| || || || ||
-||update tuple elements|| || || || ||
-||tuple size|| || || || ||
-||create references for tuple elements|| || || || ||
 ||||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
 ||~ ||~ c++||~ objective c||~ java||~ c#||
-||[#map map declaration]||#include <map> _
+||[[# dict-ctor]][#dict-ctor-note constructor]||#include <map> _
+ _
 map<string, int> m;||NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:10];||java.util.TreeMap<String, Integer> m = new java.util.TreeMap<String, Integer>();||using System.Collections.Generic; _
 Dictionary<string, int> dict = new Dictionary<string, int>();||
-||[#map-access map access]||m["hello"] = 5; _
+||[[# dict-lookup]][#dict-lookup-note lookup]||m["hello"] = 5; _
 cout @@<<@@ m["hello"] @@<<@@ endl;||[dict setObject:@"5" forKey:@"hello"]; _
 [dict objectForKey:@"hello"]||m.put("hello", 5); _
 m.get("hello")||dict.Add("hello", 5); _
 dict["hello"]||
-||[#map-size map size] _
+||[[# dict-size]][#dict-size-note size] _
 @<&nbsp;>@||m.size()||[dict count]||m.size()||dict.Count||
-||[#map-remove map remove element]||m.erase(m.find("hello"));||[dict removeObjectForKey:@"hello"];||m.remove("hello");||dict.Remove("hello");||
-||[#map-element-not-found map element not found result]||##gray|//returns element created by default constructor of value type//##||NULL||null||##gray|//throws//## KeyNotFoundException _
+||[[# dict-delete]][#dict-delete-note delete] _
+@<&nbsp;>@||m.erase(m.find("hello"));||[dict removeObjectForKey:@"hello"];||m.remove("hello");||dict.Remove("hello");||
+||[[# dict-missing-key]][#dict-missing-key-note missing key behavior]||##gray|//returns element created by default constructor of value type//##||NULL||null||##gray|//throws//## KeyNotFoundException _
 ##gray|//in//  System.Collections.Generic##||
-||[#map-iterator map iterate]||map<string,int>::iterator mi; _
+||[[# dict-iter]][#dict-iter-note iterate]||map<string,int>::iterator mi; _
 for (mi = m.begin(); mi != m.end(); ++mi) { _
 @<&nbsp;&nbsp;>@printf("%s %d", mi->first, mi->second) _
 }||NSEnumerator *i = [dict keyEnumerator]; _
@@ -911,42 +932,42 @@ while ((key = [i nextObject])) { _
 }||
 ||||||||||~ [[# functions]][#functions-note functions]||
 ||~ ||~ c++||~ objective c||~ java||~ c#||
-||[[# decl-func]][#decl-func-note declare function]||##gray|@@//@@ parameter names are optional:## _
-##green|int## _
-##mediumblue|add##(##green|int## ##peru|m##, ##green|int## ##peru|n##);|| || || ||
-||[[# def-func]][#def-func-note define function]||##green|int## _
-##mediumblue|add##(##green|int## ##peru|m##, ##green|int## ##peru|n##) { _
-@<&nbsp;&nbsp;>@##purple|return## m + n; _
+||[[# decl-func]][#decl-func-note declare]||##gray|@@//@@ parameter names are optional:## _
+int _
+add(int m, int n);|| || || ||
+||[[# def-func]][#def-func-note define]||int _
+add(int m, int n) { _
+@<&nbsp;&nbsp;>@return m + n; _
 }|| || || ||
-||[[# invoke-func]][#invoke-func-note invoke function] _
-@<&nbsp;>@||##green|int## ##peru|sum## = add(3, 7);|| || || ||
+||[[# call-func]][#call-func-note call] _
+@<&nbsp;>@||int sum = add(3, 7);|| || || ||
 ||[[# def-static-class-method]][#def-static-class-method-note define static class method]||##gray|@@//@@ Ops.h:## _
-##purple|class## ##green|Ops## { _
-##purple|public##: _
-@<&nbsp;&nbsp;>@##purple|static## ##green|int## ##mediumblue|add##(##green|int## ##peru|m##, ##green|int## ##peru|n##); _
+class Ops { _
+public: _
+@<&nbsp;&nbsp;>@static int add(int m, int n); _
 }; _
  _
 ##gray|@@//@@ Ops.cpp:## _
-##green|int## ##teal|Ops##::##mediumblue|add##(##green|int## ##peru|m##, ##green|int## ##peru|n##) { _
-@<&nbsp;&nbsp;>@##purple|return## m + n; _
+int Ops::add(int m, int n) { _
+@<&nbsp;&nbsp;>@return m + n; _
 }|| || || ||
-||[[# invoke-static-class-method]][#invoke-static-class-method-note invoke static class method]||##green|int## ##peru|sum## = ##teal|Ops##::add(3, 7); _
+||[[# invoke-static-class-method]][#invoke-static-class-method-note invoke static class method]||int sum = Ops::add(3, 7); _
  _
 ##gray|@@//@@ class name not needed _
 @@//@@ inside class namespace:## _
-##green|int## ##peru|sum## = add(3, 7);|| || || ||
-||[[# overload-func]][#overload-func-note overload function]||##green|int## ##mediumblue|add##(##green|int## ##peru|m##, ##green|int## ##peru|n##) { _
-@<&nbsp;&nbsp;>@##purple|return## m + n; _
+int sum = add(3, 7);|| || || ||
+||[[# overload-func]][#overload-func-note overload]||int add(int m, int n) { _
+@<&nbsp;&nbsp;>@return m + n; _
 } _
  _
-##green|float## ##mediumblue|add##(##green|float## ##peru|x##, ##green|float## ##peru|y##) { _
-@<&nbsp;&nbsp;>@##purple|return## x + y; _
+float add(float x, float y) { _
+@<&nbsp;&nbsp;>@return x + y; _
 }||##gray|//method overloading only//##||##gray|//yes//##||##gray|//yes//##||
-||[[# default-arg]][#default-arg-note default argument]||##darkslateblue|#include## ##maroon|<cmath>## _
+||[[# default-arg]][#default-arg-note default argument]||#include <cmath> _
  _
-##green|float## _
-##mediumblue|logarithm##(##green|float## ##peru|x##, ##green|float## ##peru|base## = 10.0) { _
-@<&nbsp;&nbsp;>@##purple|return## log(x) / log(base); _
+float _
+logarithm(float x, float base = 10.0) { _
+@<&nbsp;&nbsp;>@return log(x) / log(base); _
 }||##gray|//none//##||##gray|//use method overloading//##||##gray|//use method overloading//##||
 ||[[# variable-num-arg]][#variable-num-arg-note variable number of arguments]|| ||##gray|//use C; use method overloading for finite arities//##||public static String concat(String first, String... rest) { _
 @<&nbsp;&nbsp;>@StringBuilder sb = new StringBuilder(first); _
@@ -972,68 +993,68 @@ static int BMI(int weight, int height) { _
 } _
 BMI(weight: 123, height: 64); _
 BMI(height: 64, weight: 123);||
-||[[# pass-by-val]][#pass-by-val-note pass by value]||##green|int## ##mediumblue|add1##(##green|int## ##peru|n##) { _
-@<&nbsp;&nbsp;>@##purple|return## ++n; _
+||[[# pass-by-val]][#pass-by-val-note pass by value]||int add1(int n) { _
+@<&nbsp;&nbsp;>@return ++n; _
 } _
  _
-##green|int## ##peru|i##(7); _
+int i(7); _
  _
 ##gray|@@//@@ set i2 to 8 w/o modifying i:## _
-##green|int## ##peru|i2## = ##mediumblue|add1##(i);||void use_integer(int i) { _
+int i2 = add1(i);||void use_integer(int i) { _
 @<&nbsp;&nbsp;>@##gray|//function body//## _
 } _
 int i = 7; _
 use_integer(i);||##gray|//primitive types are always passed by value//##||##gray|//primitive types are always passed by value//##||
-||[[# pass-by-ref]][#pass-by-ref-note pass by reference]||##green|int## ##mediumblue|add1##(##peru|int##& ##peru|n##) { _
-@<&nbsp;&nbsp;>@##purple|return## ++n; _
+||[[# pass-by-ref]][#pass-by-ref-note pass by reference]||int add1(int& n) { _
+@<&nbsp;&nbsp;>@return ++n; _
 } _
  _
-##green|int## ##peru|i##(7); _
+int i(7); _
  _
 ##gray|@@//@@ set i and i2 to 8:## _
-##green|int## ##peru|i2## = add1(i);||##gray|//none//##||##gray|//objects and arrays are always passed by reference//##||##gray|//objects and arrays are always passed by reference//## _
+int i2 = add1(i);||##gray|//none//##||##gray|//objects and arrays are always passed by reference//##||##gray|//objects and arrays are always passed by reference//## _
  _
 ##gray|//also out parameter//##||
-||[[# pass-by-addr]][#pass-by-addr-note pass by address]||##green|int## ##mediumblue|add1##(##green|int##* ##peru|n##) { _
-@<&nbsp;&nbsp;>@##purple|return## ++*n; _
+||[[# pass-by-addr]][#pass-by-addr-note pass by address]||int add1(int* n) { _
+@<&nbsp;&nbsp;>@return ++*n; _
 } _
  _
-##green|int## ##peru|i##(7); _
+int i(7); _
  _
 ##gray|@@//@@ set i and i2 to 8:## _
-##green|int## ##peru|i2## = add1(&i);||void use_iptr(int *i) { _
+int i2 = add1(&i);||void use_iptr(int *i) { _
 @<&nbsp;&nbsp;>@##gray|//function body//## _
 } _
 int i = 7; _
 use_iptr(&i);||##gray|//none//##||##gray|//none//##||
 ||[[# retval]][#retval-note return value] _
 @<&nbsp;>@||##gray|//argument of// return; //type must be declared//##|| || || ||
-||[[# no-retval]][#no-retval-note no return value]||##green|void## _
-##mediumblue|message##(##purple|const## ##green|string##& ##peru|msg##) { _
+||[[# no-retval]][#no-retval-note no return value]||void _
+message(const string& msg) { _
 @<&nbsp;&nbsp;>@cout @@<<@@ msg @@<<@@ endl; _
 }|| || || ||
-||[[# recursive-func]][#recursive-func-note recursive function]||##green|int## _
-##mediumblue|factorial##(##green|int## ##peru|n##) { _
-@<&nbsp;&nbsp;>@##purple|if## (n <= 1) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|return## 1; _
+||[[# recursive-func]][#recursive-func-note recursive function]||int _
+factorial(int n) { _
+@<&nbsp;&nbsp;>@if (n <= 1) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return 1; _
 @<&nbsp;&nbsp;>@} _
-@<&nbsp;&nbsp;>@##purple|return## n * factorial(n - 1); _
+@<&nbsp;&nbsp;>@return n * factorial(n - 1); _
 }|| || || ||
-||[[# anonymous-func]][#anonymous-func-note anonymous function]||##purple|auto## ##peru|add## = [](##green|int## ##peru|n##, ##green|int## ##peru|m##) { _
-@<&nbsp;&nbsp;>@##purple|return## n + m; _
+||[[# anon-func-literal]][#anon-func-literal-note anonymous function]||auto add = [](int n, int m) { _
+@<&nbsp;&nbsp;>@return n + m; _
 };|| || || ||
 ||[[# invoke-anonymous-func]][#invoke-anonymous-func-note invoke anonymous function]||##gray|@@//@@on variable holding anon. function:## _
-##green|int## ##peru|sum## = add(3, 7); _
+int sum = add(3, 7); _
  _
 ##gray|@@//@@ on lambda expression:## _
-##green|int## ##peru|sum2## = [](##green|int## ##peru|n##, ##green|int## ##peru|m##) { _
-@<&nbsp;&nbsp;>@##purple|return## n + m; _
+int sum2 = [](int n, int m) { _
+@<&nbsp;&nbsp;>@return n + m; _
 }(3, 7);|| || || ||
 ||[[# closure]][#closure-note closure]|| || || || ||
-||[[# func-private-state]][#func-private-state-note function with private state]||##green|int## _
-##mediumblue|counter##() { _
-@<&nbsp;&nbsp;>@##purple|static## ##green|int## ##peru|i## = 0; _
-@<&nbsp;&nbsp;>@##purple|return## ++i; _
+||[[# func-private-state]][#func-private-state-note function with private state]||int _
+counter() { _
+@<&nbsp;&nbsp;>@static int i = 0; _
+@<&nbsp;&nbsp;>@return ++i; _
 }|| || || ||
 ||[[# func-as-val]][#func-as-val-note function as value]|| || || || ||
 ||[[# overload-op]][#overload-op-note overload operator]||Rational Rational::operator+(Rational& o) { _
@@ -1043,15 +1064,15 @@ use_iptr(&i);||##gray|//none//##||##gray|//none//##||
 }||
 ||||||||||~ [[# execution-control]][#execution-control-note execution control]||
 ||~ ||~ c++||~ objective c||~ java||~ c#||
-||[[# if]][#if-note if]||##green|int## ##peru|signum##; _
+||[[# if]][#if-note if]||int signum; _
  _
-##purple|if## (n > 0) { _
+if (n > 0) { _
 @<&nbsp;&nbsp;>@signum = 1; _
 } _
-##purple|else if## (n == 0) { _
+else if (n == 0) { _
 @<&nbsp;&nbsp;>@signum = 0; _
 } _
-##purple|else## { _
+else { _
 @<&nbsp;&nbsp;>@signum = -1; _
 }||if (i>0) { _
 @<&nbsp;&nbsp;>@signum = 1; _
@@ -1072,22 +1093,22 @@ use_iptr(&i);||##gray|//none//##||##gray|//none//##||
 } else { _
 @<&nbsp;&nbsp;>@signum = -1; _
 }||
-||[[# dangling-else]][#dangling-else-note dangling else]||##purple|if## (n == 0) _
-@<&nbsp;&nbsp;>@##purple|if## (m == 0) _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@cout @@<<@@ ##maroon|"n and m are zero"## @@<<@@ endl; _
-@<&nbsp;&nbsp;>@##purple|else## _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@cout @@<<@@ ##maroon|"n is zero; m isn't"## @@<<@@ endl;|| || || ||
-||[[# switch]][#switch-note switch]||##purple|const## ##green|int## ##peru|INVALID_BINARY_DIGIT##(-1); _
-##green|int## ##peru|bin_digit##; _
+||[[# dangling-else]][#dangling-else-note dangling else]||if (n == 0) _
+@<&nbsp;&nbsp;>@if (m == 0) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@cout @@<<@@ "n and m are zero" @@<<@@ endl; _
+@<&nbsp;&nbsp;>@else _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@cout @@<<@@ "n is zero; m isn't" @@<<@@ endl;|| || || ||
+||[[# switch]][#switch-note switch]||const int INVALID_BINARY_DIGIT(-1); _
+int bin_digit; _
  _
-##purple|switch##(n) { _
-##purple|case## 0: _
-##purple|case## 1: _
+switch(n) { _
+case 0: _
+case 1: _
 @<&nbsp;&nbsp;>@bin_digit = n; _
-@<&nbsp;&nbsp;>@##purple|break##; _
-##purple|default##: _
+@<&nbsp;&nbsp;>@break; _
+default: _
 @<&nbsp;&nbsp;>@bin_digit = INVALID_BINARY_DIGIT; _
-@<&nbsp;&nbsp;>@##purple|break##; _
+@<&nbsp;&nbsp;>@break; _
 }||switch(i) { _
 case 0: _
 @<&nbsp;&nbsp;>@0; _
@@ -1119,9 +1140,9 @@ default: _
 @<&nbsp;&nbsp;>@-1; _
 @<&nbsp;&nbsp;>@break; _
 }||
-||[[# while]][#while-note while]||##green|int## ##peru|i##(1), ##peru|fact##(1), ##peru|n##(10); _
+||[[# while]][#while-note while]||int i(1), fact(1), n(10); _
  _
-##purple|while## (i < n) { _
+while (i < n) { _
 @<&nbsp;&nbsp;>@fact *= i; _
 @<&nbsp;&nbsp;>@++i; _
 }||int i = 0; _
@@ -1137,9 +1158,9 @@ while (i<10) { _
 ##gray|...## _
 @<&nbsp;&nbsp;>@i++; _
 }||
-||[[# for]][#for-note for]||##green|int## ##peru|fact##, ##peru|n##(10); _
+||[[# for]][#for-note for]||int fact, n(10); _
  _
-##purple|for## (##green|int## ##peru|i## = 1, fact = 1; i <= n; ++i) { _
+for (int i = 1, fact = 1; i <= n; ++i) { _
 @<&nbsp;&nbsp;>@fact *= i; _
 }||int i, n; _
 for (i=1,n=1; i<=10; i++) { _
@@ -1151,34 +1172,34 @@ for (int i=1; i<=10; i++) { _
 for (i=1,n=1; i<=10; i++) { _
 @<&nbsp;&nbsp;>@n *= i; _
 }||
-||[[# break]][#break-note break]||##green|int## ##peru|data##[4] = {3, 2, 0, 1}; _
-##green|int## ##peru|i##; _
-##green|bool## ##peru|has_zero##(##teal|false##); _
+||[[# break]][#break-note break]||int data[4] = {3, 2, 0, 1}; _
+int i; _
+bool has_zero(false); _
  _
-##purple|for## (i = 0; i < 4; ++i) { _
-@<&nbsp;&nbsp;>@##purple|if## (data[i] == 0) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@has_zero = ##teal|true##; _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|break##; _
+for (i = 0; i < 4; ++i) { _
+@<&nbsp;&nbsp;>@if (data[i] == 0) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@has_zero = true; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@break; _
 @<&nbsp;&nbsp;>@} _
 }|| || || ||
-||[[# break-nested-loops]][#break-nested-loops-note break out of nested loops]||##green|int## ##peru|data##[2][2] = @@{{@@3, 2}, {0, 1@@}}@@; _
-##green|int## ##peru|i##, ##peru|j##; _
-##green|bool## ##peru|has_zero##(##teal|false##); _
+||[[# break-nested-loops]][#break-nested-loops-note break out of nested loops]||int data[2][2] = @@{{@@3, 2}, {0, 1@@}}@@; _
+int i, j; _
+bool has_zero(false); _
  _
-##purple|for## (i = 0; i < 2; ++i) { _
-@<&nbsp;&nbsp;>@##purple|for## (j = 0; j < 2; ++j) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|if## (data[i][j] == 0) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@has_zero = ##teal|true##; _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|goto## ##teal|end_of_loops##; _
+for (i = 0; i < 2; ++i) { _
+@<&nbsp;&nbsp;>@for (j = 0; j < 2; ++j) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@if (data[i][j] == 0) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@has_zero = true; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@goto end_of_loops; _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@} _
 @<&nbsp;&nbsp;>@} _
 } _
 :end_of_loops|| || || ||
-||[[# continue]][#continue-note continue]||##green|int## ##peru|a##[4] = {3, 2, 0, 1}; _
+||[[# continue]][#continue-note continue]||int a[4] = {3, 2, 0, 1}; _
  _
-##purple|for## (##green|int## ##peru|i## = 0; i < 4; ++i) { _
-@<&nbsp;&nbsp;>@##purple|if## (a[i] == 0) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|continue##; _
+for (int i = 0; i < 4; ++i) { _
+@<&nbsp;&nbsp;>@if (a[i] == 0) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@continue; _
 @<&nbsp;&nbsp;>@} _
 @<&nbsp;&nbsp;>@cout @@<<@@ 1.0 / a[i] @@<<@@ endl; _
 }|| || || ||
@@ -1190,10 +1211,10 @@ for (i=1,n=1; i<=10; i++) { _
 All exceptions thrown by the language or the standard library derive from// exception, //defined in// <exception>.##|| ||##gray|//Any type which implements the interface// java.lang.Throwable //can be thrown. _
  _
 Exceptions thrown by the language and the standard libraries derive from// java.lang.Errror //or// java.lang.Exception.##|| ||
-||[[# predefined-exc]][#predefined-exc-note predefined exceptions]||##darkslateblue|#include## ##maroon|<exception>## _
-##darkslateblue|#include## ##maroon|<stdexcept>## _
-##darkslateblue|#include## ##maroon|<system_error>## _
-##darkslateblue|#include## ##maroon|<typeinfo>## _
+||[[# predefined-exc]][#predefined-exc-note predefined exceptions]||#include <exception> _
+#include <stdexcept> _
+#include <system_error> _
+#include <typeinfo> _
  _
 exception _
 @<&nbsp;&nbsp;>@logic_error _
@@ -1215,21 +1236,21 @@ exception _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@java.lang.IllegalArgumentException _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@java.lang.IndexOutOfBoundsException _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@java.lang.NullPointerException|| ||
-||[[# raise-exc]][#raise-exc-note raise exception]||##darkslateblue|#include## ##maroon|<cstdlib>## _
-##darkslateblue|#include## ##maroon|<stdexcept>## _
+||[[# raise-exc]][#raise-exc-note raise exception]||#include <cstdlib> _
+#include <stdexcept> _
  _
-##green|void## ##mediumblue|risky##() { _
-@<&nbsp;&nbsp;>@##purple|if## (rand() < 10) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|throw## runtime_error(##maroon|"bam!"##); _
+void risky() { _
+@<&nbsp;&nbsp;>@if (rand() < 10) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@throw runtime_error("bam!"); _
 @<&nbsp;&nbsp;>@} _
 }||NSException *exc = [NSException exceptionWithName:@"error" reason:@"failed" userInfo:nil]; _
 @throw exc;||throw new Exception("failed");||throw new System.Exception("failed");||
-||[[# handle-exc]][#handle-exc-note handle exception]||##darkslateblue|#include## ##maroon|<stdexcept>## _
+||[[# handle-exc]][#handle-exc-note handle exception]||#include <stdexcept> _
  _
-##purple|try## { _
+try { _
 @<&nbsp;&nbsp;>@risky(); _
 } _
-##purple|catch## (##purple|const## ##green|exception## &##peru|e##) { _
+catch (const exception &e) { _
 @<&nbsp;&nbsp;>@cout @@<<@@ e.what() @@<<@@ endl; _
 }||@try { _
 @<&nbsp;&nbsp;>@[NSException raise:@"error" format:@"failed"]; _
@@ -1245,64 +1266,64 @@ catch (Exception e) { _
 } catch (System.Exception e) { _
 @<&nbsp;&nbsp;>@System.Console.WriteLine(e.Message); _
 }||
-||[[# def-exc]][#def-exc-note define exception]||##darkslateblue|#include## ##maroon|<stdexcept>## _
+||[[# def-exc]][#def-exc-note define exception]||#include <stdexcept> _
  _
-##purple|class## ##green|Bam## : ##purple|public## ##green|runtime_error## { _
-##purple|public##: _
-@<&nbsp;&nbsp;>@Bam() : runtime_error(##maroon|"bam!"##) {} _
+class Bam : public runtime_error { _
+public: _
+@<&nbsp;&nbsp;>@Bam() : runtime_error("bam!") {} _
 }; _
  _
-##purple|throw## ##green|Bam##();|| || || ||
-||[[# re-raise-exc]][#re-raise-exc-note re-raise exception]||##darkslateblue|#include## ##maroon|<stdexcept>## _
+throw Bam();|| || || ||
+||[[# re-raise-exc]][#re-raise-exc-note re-raise exception]||#include <stdexcept> _
  _
-##purple|try## { _
+try { _
 @<&nbsp;&nbsp;>@risky(); _
 } _
-##purple|catch## (##purple|const## ##green|exception##& ##peru|e##) { _
-@<&nbsp;&nbsp;>@cout @@<<@@ ##maroon|"an error occurred@@...@@"## @@<<@@ endl; _
-@<&nbsp;&nbsp;>@##purple|throw##; _
+catch (const exception& e) { _
+@<&nbsp;&nbsp;>@cout @@<<@@ "an error occurred@@...@@" @@<<@@ endl; _
+@<&nbsp;&nbsp;>@throw; _
 }|| || || ||
-||[[# catch-all-handler]][#catch-all-handler-note  catch-all handler]||##darkslateblue|#include## ##maroon|<stdexcept>## _
+||[[# catch-all-handler]][#catch-all-handler-note  catch-all handler]||#include <stdexcept> _
  _
-##purple|try## { _
+try { _
 @<&nbsp;&nbsp;>@risky(); _
 } _
-##purple|catch## (@@...@@) { _
-@<&nbsp;&nbsp;>@cout @@<<@@ ##maroon|"an error was ignored"## _
+catch (@@...@@) { _
+@<&nbsp;&nbsp;>@cout @@<<@@ "an error was ignored" _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@@@<<@@ endl; _
 }|| || || ||
-||[[# multiple-handlers]][#multiple-handlers-note multiple handlers]||##darkslateblue|#include## ##maroon|<stdexcept>## _
+||[[# multiple-handlers]][#multiple-handlers-note multiple handlers]||#include <stdexcept> _
  _
-##purple|try## { _
+try { _
 @<&nbsp;&nbsp;>@risky(); _
 } _
-##purple|catch## (##purple|const## ##green|system_error## &##peru|e##) { _
-@<&nbsp;&nbsp;>@cout @@<<@@ ##maroon|"system error: "## @@<<@@ e.name() _
+catch (const system_error &e) { _
+@<&nbsp;&nbsp;>@cout @@<<@@ "system error: " @@<<@@ e.name() _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@@@<<@@ endl; _
 } _
-##purple|catch## (##purple|const## ##green|exception## &##peru|e##) { _
-@<&nbsp;&nbsp;>@cout @@<@@< ##maroon|"exception: "## @@<<@@ e.what() _
+catch (const exception &e) { _
+@<&nbsp;&nbsp;>@cout @@<@@< "exception: " @@<<@@ e.what() _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@@@<<@@ endl; _
 } _
-##purple|catch## (@@...@@) { _
-@<&nbsp;&nbsp;>@cout @@<<@@ ##maroon|"unknown error"## @@<<@@ endl; _
+catch (@@...@@) { _
+@<&nbsp;&nbsp;>@cout @@<<@@ "unknown error" @@<<@@ endl; _
 }|| || || ||
 ||[[# uncaught-exc]][#uncaught-exc-note uncaught exception behavior]||##gray|//calls// terminate() //which by default calls// abort()##|| || || ||
-||[[# error-msg]][#error-msg-note error message]||##darkslateblue|#include## ##maroon|<exception>## _
+||[[# error-msg]][#error-msg-note error message]||#include <exception> _
  _
-##purple|try## { _
+try { _
 @<&nbsp;&nbsp;>@risky(); _
 } _
-##purple|catch## (##purple|const## ##green|exception## &##peru|e##) { _
-@<&nbsp;&nbsp;>@##purple|const## ##green|char## *##peru|msg## = e.what(); _
+catch (const exception &e) { _
+@<&nbsp;&nbsp;>@const chae *msg = e.what(); _
 }|| || || ||
-||[[# errno]][#errno-note system call errno]||##darkslateblue|#include## ##maroon|<system_error>## _
+||[[# errno]][#errno-note system call errno]||#include <system_error> _
  _
-##purple|try## { _
+try { _
 @<&nbsp;&nbsp;>@risky(); _
 } _
-##purple|catch## (##purple|const## ##green|system_error## &##peru|e##) { _
-@<&nbsp;&nbsp;>@##green|int## ##peru|err_code_val## = e.code().value(); _
+catch (const system_error &e { _
+@<&nbsp;&nbsp;>@int err_code_val = e.code().value(); _
 }|| || || ||
 ||[[# finally-clause]][#finally-clause-note finally clause]||##gray|//none//##||@try { _
 @<&nbsp;&nbsp;>@##gray|//risky code//## _
@@ -1321,9 +1342,9 @@ catch (Exception e) { _
 @@//@@ does not raise exceptions; _
 @@//@@ declaring which exceptions a function _
 @@//@@ raises is deprecated in C++11.## _
-##green|int## _
-##mediumblue|add##(##green|int## ##peru|a##, ##green|int## ##peru|b##) noexcept { _
-@<&nbsp;&nbsp;>@##purple|return## a + b; _
+int _
+add(int a, int b) noexcept { _
+@<&nbsp;&nbsp;>@return a + b; _
 }||##gray|//no//##||##gray|//yes//##||##gray|//no//##||
 ||||||||||~ [[# concurrency]][#concurrency-note concurrency]||
 ||~ ||~ c++||~ objective c||~ java||~ c#||
@@ -1340,72 +1361,89 @@ catch (Exception e) { _
 ||[[# receive-msg]][#receive-msg-note receive message]|| || || || ||
 ||||||||||~ [[# file-handles]][#file-handles-note file handles]||
 ||~ ||~ c++||~ objective c||~ java||~ c#||
-||standard file handles||cin _
+||[[# std-file-handles]][#std-file-handles-note standard file handles]||cin _
 cout _
 cerr _
-clog|| ||System.in _
+clog ##gray|@@//@@ buffered cerr by default##|| ||System.in _
 System.out _
 System.err|| ||
-||[[# printf]][#printf-note printf] _
+||[[# read-line-stdin]][#read-line-stdin-note read line from stdin]||string s; _
+ _
+cin @@>>@@ s;|| || || ||
+||[[# printf]][#printf-note write formatted string to stdout] _
 @<&nbsp;>@||cout @@<<@@ "count: " @@<<@@ 7 @@<<@@ endl;||printf("count: %d\n", 7);||System.out.printf("count: %d", 7);||System.Console.WriteLine("count: {0}", 7);||
 ||[#read-file read from file]||#include <fstream> _
+ _
 string line; _
 ifstream f("/etc/passwd"); _
+ _
 if (f.is_open()) { _
 @<&nbsp;&nbsp;>@while (!f.eof()) { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@getline(f, line); _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|//process line//## _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|@@//@@ process line## _
 @<&nbsp;&nbsp;>@} _
 @<&nbsp;&nbsp;>@f.close(); _
 @<&nbsp;&nbsp;>@if ( 0 != f.fail() ) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|//handle error//## _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|@@//@@ handle error## _
 @<&nbsp;&nbsp;>@} _
 } _
 else { _
-@<&nbsp;&nbsp;>@##gray|//handle error//## _
+@<&nbsp;&nbsp;>@##gray|@@//@@ handle error## _
 }||NSError *error = nil; _
 NSString *s = [NSString stringWithContentsOfFile: @"/etc/passwd" encoding:NSUTF8StringEncoding error:&error]; _
+ _
 if ( error != nil ) { _
-@<&nbsp;&nbsp;>@##gray|//handle error//## _
+@<&nbsp;&nbsp;>@##gray|@@//@@ handle error## _
 } _
+ _
 NSArray *a = [s componentsSeparatedByString:@"\n"]; _
 id line; _
+ _
 while (line = [i nextObject]) { _
-@<&nbsp;&nbsp;>@##gray|//process line//## _
+@<&nbsp;&nbsp;>@##gray|@@//@@ process line## _
 }||import java.io.BufferedReader; _
 import java.io.FileReader; _
  _
 BufferedReader in = new BufferedReader(new FileReader("/etc/passwd")); _
 String line; _
+ _
 while ((line = in.readLine()) != null) { _
-@<&nbsp;&nbsp;>@##gray|//process line//## _
+@<&nbsp;&nbsp;>@##gray|@@//@@ process line## _
 }||using System.IO; _
+ _
 StreamReader sr = new StreamReader("/etc/passwd"); _
 string line; _
+ _
 while ((line = sr.ReadLine()) != null) { _
-@<&nbsp;&nbsp;>@##gray|//use line//## _
+@<&nbsp;&nbsp;>@##gray|@@//@@ process line## _
 }||
 ||[#write-file write to file]||#include <fstream> _
+ _
 ofstream f("/tmp/test4"); _
 int i; _
+ _
 for (i = 0; i < 10; ++i) { _
 @<&nbsp;&nbsp;>@f @@<<@@ i @@<<@@ endl; _
 } _
 f.close(); _
 if (0 != f.fail()) { _
-@<&nbsp;&nbsp;>@##gray|//handle error//## _
+@<&nbsp;&nbsp;>@##gray|@@//@@ handle error## _
 }|| ||import java.io.BufferedWriter; _
 import java.io.FileWriter; _
+ _
 BufferedWriter fout = new BufferedWriter(new FileWriter("/tmp/test2")); _
 int i; _
-for (i=0; i<10; i++) { _
+ _
+for (i = 0; i < 10; i++) { _
 @<&nbsp;&nbsp;>@fout.write(String.format("%d", i)); _
 @<&nbsp;&nbsp;>@fout.newLine(); _
 } _
 fout.close();||using System.IO; _
+ _
 StreamWriter fout = new StreamWriter("/tmp/test3"); _
 int i; _
-for (i=0; i<10; i++) { _
+ _
+for (i = 0; i < 10; i++) { _
 @<&nbsp;&nbsp;>@fout.WriteLine(i.ToString()); _
 } _
 fout.Close();||
@@ -1466,19 +1504,19 @@ File root = File.listRoots()[0]; _
 File etc = new File(root, "etc"); _
 File hosts = newFile(etc, "hosts"); _
 String path = hosts.getPath();|| ||
-||[[# dirname-basename]][#dirname-basename-note dirname and basename]||##darkslateblue|#include## ##maroon|<libgen.h>## _
+||[[# dirname-basename]][#dirname-basename-note dirname and basename]||#include <libgen.h> _
  _
-##green|string## ##peru|s1## = dirname(##maroon|"/etc/hosts"##); _
-##green|string## ##peru|s2## = basename(##maroon|"/etc/hosts"##);|| ||import java.io.File; _
+string s1 = dirname("/etc/hosts"); _
+string s2 = basename("/etc/hosts");|| ||import java.io.File; _
  _
 File f = new File("/etc/hosts"); _
 String dirname = f.getParent(); _
 String basename = f.getName();|| ||
-||[[# absolute-pathname]][#absolute-pathname-note absolute pathname]||##darkslateblue|#include## ##maroon|<climits>## _
-##darkslateblue|#include## ##maroon|<cstdlib>## _
+||[[# absolute-pathname]][#absolute-pathname-note absolute pathname]||#include <climits> _
+#include <cstdlib> _
  _
-##green|char## ##peru|buf##[PATH_MAX]; _
-if (realpath(##maroon|".."##, buf) == NULL) { _
+char buf[PATH_MAX]; _
+if (realpath("..", buf) == NULL) { _
 @<&nbsp;&nbsp;>@throw exception(); _
 } _
 else { _
@@ -1529,6 +1567,7 @@ f.isDirectory()|| ||
 ||[#first-argument first argument] _
 @<&nbsp;>@||##gray|//pathname of executable//##||##gray|//pathname of executable//##||##gray|//first command line argument//##||##gray|//first command line argument//##||
 ||[#environment-variable environment variable]||#include <stdlib.h> _
+ _
 char* home = getenv("HOME"); _
 setenv("EDITOR", "emacs", 1); _
 unsetenv("EDITOR");||NSString *home =  [[[NSProcessInfo processInfo] environment] objectForKey:@"HOME"];||String home = System.getenv("HOME");||using System.Environment; _
@@ -1571,10 +1610,12 @@ public class Baz { _
 ||[#namespaces-per-file multiple namespaces per file]||##gray|//yes//##|| ||##gray|//no//##||##gray|//yes//##||
 ||[#namespace-directory-mapping namespaces map to directories]||##gray|//no//##|| ||##gray|//yes//##||##gray|//no//##||
 ||[#import-namespace import namespace]||using namespace foo::bar; _
+ _
 cout @@<<@@ Baz::ANSWER @@<<@@ endl;|| ||import foo.bar.*; _
 System.out.println(Baz.ANSWER);||using foo.bar; _
 System.Console.WriteLine(Baz.ANSWER);||
 ||[#import-part-namespace import part of namespace]||using namespace foo; _
+ _
 cout @@<<@@ bar::Baz::ANSWER @@<<@@ endl;|| ||##gray|//none//##||##gray|//none//##||
 ||[#import-symbol import symbol]||using foo::bar::Baz; _
 cout @@<<@@ Baz::ANSWER @@<<@@ endl;|| ||import foo.bar.Baz; _
@@ -2056,10 +2097,8 @@ $ g++ -o foo foo.cpp _
 $ valgrind ./foo|| || || ||
 ||~ ||~ ##EFEFEF|@@_______________________________________________@@##||~ ##EFEFEF|@@_______________________________________________@@##||~ ##EFEFEF|@@_______________________________________________@@##||~ ##EFEFEF|@@_______________________________________________@@##||
 
-
-
-[[# general-note]]
-++ [#general General]
+[[# version-note]]
++ [#version Version]
 
 [[# version-used-note]]
 ++ [#version-used version used]
@@ -2076,8 +2115,8 @@ How to get the compiler version.
 
 Code which examples in the sheet assume to have already been executed.
 
-[[# grammar-invocation-note]]
-+ [#grammar-invocation Grammar and Invocation]
+[[# grammar-execution-note]]
++ [#grammar-execution Grammar and Execution]
 
 [[# hello-world-note]]
 ++ [#hello-world hello world]

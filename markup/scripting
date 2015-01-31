@@ -1,6 +1,6 @@
 [[# top]]//a side-by-side reference sheet//
 
-**sheet one:** [#version version] | [#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#resizable-arrays resizable arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#concurrency concurrency]
+**sheet one:** [#version version] | [#grammar-execution grammar and execution] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#resizable-arrays resizable arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#concurrency concurrency]
 
 **[[[scripting2|sheet two]]]:** [[[scripting2#file-handles|file handles]]] | [[[scripting2#files|files]]] | [[[scripting2#file-fmt|file formats]]] | [[[scripting2#directories|directories]]] | [[[scripting2#processes-environment|processes and environment]]] | [[[scripting2#option-parsing|option parsing]]] | [[[scripting2#libraries-namespaces|libraries and namespaces]]] | [[[scripting2#objects|objects]]] | [[[scripting2#inheritance-polymorphism|inheritance and polymorphism]]] | [[[scripting2#reflection|reflection]]] | [[[scripting2#net-web|net and web]]] | [[[scripting2#unit-tests|unit tests]]] | [[[scripting2#debugging-profiling|debugging and profiling]]] | [[[scripting2#java-interop|java interop]]]
 
@@ -14,7 +14,7 @@ $ python @@--@@version||$ ruby @@--@@version||
 ||[[# implicit-prologue]][#implicit-prologue-note implicit prologue] _
 @<&nbsp;>@||<script src="underscore.js"> _
 </script>||##gray|//none//##||##purple|import## os, re, sys||##gray|//none//##||
-||||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
+||||||||||~ [[# grammar-execution]][#grammar-execution-note grammar and execution]||
 ||~  ||~ javascript||~ php||~ python||~ ruby||
 ||[[# interpreter]][#interpreter-note interpreter] _
 @<&nbsp;>@||$ node foo.js||$ php -f foo.php||$ python foo.py||$ ruby foo.rb||
@@ -520,7 +520,23 @@ implode(##maroon|" "##, $##peru|a##)||##maroon|' '##.join([##maroon|'do'##, ##ma
 ##gray|# implicitly converted to strings:## _
 [1, 2, 3].join(##maroon|' '##)||
 ||[[# split]][#split-note split] _
-@<&nbsp;>@||"do re mi".split(" ")||explode(##maroon|" "##, ##maroon|"do re mi fa"##)||##maroon|'do re mi fa'##.split()||##maroon|"do re mi fa"##.split||
+@<&nbsp;>@||##gray|@@//@@ [ "do", "re", "", "mi", "" ]:## _
+"do re@<&nbsp;&nbsp;>@mi ".split(" ") _
+ _
+##gray|@@//@@ [ "do", "re", "mi", "" ]:## _
+"do re@<&nbsp;&nbsp;>@mi ".split(/\s+/)||##gray|# [ "do", "re", "", "mi", "" ]:## _
+explode(##maroon|" "##, ##maroon|"do re@<&nbsp;&nbsp;>@mi "##) _
+ _
+##gray|# [ "do", "re", "mi", "" ]:## _
+preg_split('/\s+/', "do re@<&nbsp;&nbsp;>@mi ")||##gray|# ['do', 're', '', 'mi', '']:## _
+##maroon|'do re@<&nbsp;&nbsp;>@mi '##.split(##maroon|' '##) _
+ _
+##gray|# ['do', 're', 'mi']:## _
+##maroon|'do re@<&nbsp;&nbsp;>@mi '##.split()||##gray|# ["do", "re", "", "mi"]:## _
+##maroon|"do re@<&nbsp;&nbsp;>@mi "##.split(##maroon|/ /##) _
+ _
+##gray|# ["do", "re", "mi"]:## _
+##maroon|"do re@<&nbsp;&nbsp;>@mi "##.split||
 ||[[# split-in-two]][#split-in-two-note split in two] _
 @<&nbsp;>@||##gray|//none//##||preg_split(##maroon|'/\s+/'##, ##maroon|"do re mi fa"##, 2)||##maroon|'do re mi fa'##.split(##purple|None##, 1)||##maroon|"do re mi fa"##.split(##maroon|/\s+/##, 2)||
 ||[[# split-keep-delimiters]][#split-keep-delimiters-note split and keep delimiters]||##gray|//none//##||preg_split(##maroon|'/(\s+)/'##, ##maroon|"do re mi fa"##, _
@@ -1254,7 +1270,7 @@ factorial = ##green|Hash##.new ##purple|do## |h,k| _
 ##purple|end##||
 ||||||||||~ [[# functions]][#functions-note functions]||
 ||~  ||~ javascript||~ php||~ python||~ ruby||
-||[[# def-func]][#def-func-note define function] _
+||[[# def-func]][#def-func-note define] _
 @<&nbsp;>@||function add(x, y) { _
 @<&nbsp;&nbsp;>@return x+y; _
 }||##purple|function## ##0000CD|add3##($##peru|x1##, $##peru|x2##, $##peru|x3##) _
@@ -1268,7 +1284,7 @@ factorial = ##green|Hash##.new ##purple|do## |h,k| _
 ##gray|# parens are optional and customarily _
 # omitted when defining functions _
 # with no parameters##||
-||[[# invoke-func]][#invoke-func-note invoke function]||add(1, 2)||add3(1, 2, 3); _
+||[[# invoke-func]][#invoke-func-note invoke]||add(1, 2)||add3(1, 2, 3); _
  _
 ##gray|# function names are case insensitive:## _
 ADD3(1, 2, 3);||add3(1, 2, 3)||add3(1, 2, 3) _
@@ -1846,8 +1862,8 @@ $ node
 
 We assume that {{os}}, {{re}}, and {{sys}} are always imported.
 
-[[# grammar-invocation-note]]
-+ [#grammar-invocation Grammar and Invocation]
+[[# grammar-execution-note]]
++ [#grammar-execution Grammar and Execution]
 
 [[# interpreter-note]]
 ++ [#interpreter interpreter]
@@ -3981,12 +3997,12 @@ $factorial = new Factorial();
 Python has both functions and methods.  Ruby only has methods: functions defined at the top level are in fact methods on a special main object.  Perl subroutines can be invoked with a function syntax or a method syntax.
 
 [[# def-func-note]]
-++ [#def-func define function]
+++ [#def-func define]
 
 How to define a function.
 
 [[# invoke-func-note]]
-++ [#invoke-func invoke function]
+++ [#invoke-func invoke]
 
 How to invoke a function.
 

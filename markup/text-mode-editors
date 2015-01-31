@@ -372,6 +372,7 @@ gu||C-x C-l||M-x downcase-region|| ||
 ||indent region|| || ||M-x indent-region|| ||
 ||replace tabs in region with spaces|| || ||M-x untabify|| ||
 ||fill paragraph|| ||M-q||M-x fill-paragraph|| ||
+||justify paragraph|| ||C-u M-q|| ||
 ||fill region|| || ||M-x fill-region|| ||
 ||remove all whitespace on left of region|| || ||M-x delete-whitespace-rectangle|| ||
 ||vertically align parts in region matching regexp|| || ||M-x align-regexp|| ||

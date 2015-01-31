@@ -647,7 +647,7 @@ require ##maroon|'foo/bar'##||
 @<&nbsp;>@|| ||##purple|require##(##maroon|"foo.php"##);||##purple|reload##(foo)||load ##maroon|'foo.rb'##||
 ||[[# load-err]][#load-err-note load error]|| ||##gray|require //and// require_once //raise fatal error if library not found;// include //and// include_once emit warnings##||##gray|//raises// ImportError //if library not found; exceptions generated when parsing library propagate to client//##||##gray|//raises// LoadError //if library not found; exceptions generated when parsing library propagate to client//##||
 ||[[# main-in-lib]][#main-in-lib-note main routine in library]|| ||##gray|//none//##||##purple|if @@__name__@@## == ##maroon|'@@__main__@@'##: _
-@<&nbsp;&nbsp;>@##gray|//code//##||##purple|if## ##peru|$0## == @@__FILE__@@ _
+@<&nbsp;&nbsp;>@##gray|//code//##||##purple|if## ##peru|$PROGRAM_NAME## == @@__FILE__@@ _
 @<&nbsp;&nbsp;>@##gray|//code//## _
 ##purple|end##||
 ||[[# lib-path]][#lib-path-note library path]|| ||$##peru|libpath## = ini_get(##maroon|"include_path"##); _

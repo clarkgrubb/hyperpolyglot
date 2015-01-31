@@ -252,15 +252,7 @@ $ grep -v '^#' /etc/passwd | tr ':' '\t' > /tmp/passwd.tab _
  _
 $ echo 'create table etc_passwd ( name text, pw text, uid int, gid int, gecos text, home text, shell text );' | psql _
  _
-$ ( echo 'copy etc_passwd from stdin;' ; cat /tmp/passwd.tab ) | psql|| ||$ grep -v '^#' /etc/passwd | tr ':' '\t' > /tmp/passwd.tab  _
- _
-$ sqlite3 _
- _
-@@>@@ create table etc_passwd ( name text, pw text, uid int, gid int, gecos text, home text, shell text ); _
- _
-@@>@@ .separator \t _
- _
-@@>@@ .import /tmp/passwd.tab etc_passwd||
+$ ( echo 'copy etc_passwd from stdin;' ; cat /tmp/passwd.tab ) | psql|| || ||
 ||[[# import-csv]][#import-csv-note import csv]||$ echo $'1,"one, two, three"\n2,four\n3,"five\nsix\nseven"' > /tmp/test.csv _
  _
 $ echo 'create table test_csv ( col1 int, col2 text );' | psql _

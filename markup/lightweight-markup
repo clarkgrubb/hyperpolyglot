@@ -236,7 +236,10 @@ years ago... _
 </blockquote>||@@****@@ _
 Four score and twenty _
 years ago... _
-@@****@@|| ||
+@@****@@||#+BEGIN_QUOTE _
+Four score and twenty _
+years ago... _
+#+END_QUOTE||
 ||div w/ class||<div class="foo"> _
 ##gray|//markup//## _
 </div>|| ||<div class="foo"> _

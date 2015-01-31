@@ -1111,13 +1111,13 @@ as.list(people[1, ])||people.ix[0]||
 ||[[# access-datum]][#access-datum-note access datum]||##gray|% height of 1st person:## _
 people(1,2)||##gray|# height of 1st person:## _
 people[1,2]||people.get_value(0, 'ht')||
-||[[# order-rows-by-column]][#order-rows-by-column-note order rows by column]|| ||people[order(people$ht), ]|| ||
-||[[# order-rows-by-multiple-columns]][#order-rows-by-multiple-columns-note order rows by multiple columns]|| ||people[order(people$sx, people$ht), ]|| ||
-||[[# order-rows-descending-order]][#order-rows-descending-order-note order rows in descending order]|| ||people[order(-people$ht), ]|| ||
+||[[# order-rows-by-column]][#order-rows-by-column-note order rows by column]||sortrows(people, 'ht')||people[order(people$ht), ]|| ||
+||[[# order-rows-by-multiple-columns]][#order-rows-by-multiple-columns-note order rows by multiple columns]||sortrows(people, {'sx', 'ht'})||people[order(people$sx, people$ht), ]|| ||
+||[[# order-rows-descending-order]][#order-rows-descending-order-note order rows in descending order]||sortrows(people, 'ht', 'descend')||people[order(-people$ht), ]|| ||
 ||[[# limit-rows]][#limit-rows-note limit rows] _
-@<&nbsp;>@|| ||people[seq(1, 3), ]|| ||
+@<&nbsp;>@||people(1:3, :)||people[seq(1, 3), ]|| ||
 ||[[# offset-rows]][#offset-rows-note offset rows] _
-@<&nbsp;>@|| ||people[seq(4, 6), ]|| ||
+@<&nbsp;>@||people(4:6, :)||people[seq(4, 6), ]|| ||
 ||reshape|| ||people$couple = c(1, 2, 3, 1, 2, 3) _
 reshape(people, idvar="couple", direction="wide", _
 @<&nbsp;&nbsp;>@timevar="sx", v.names=c("ht", "wt"))|| ||
@@ -1135,21 +1135,29 @@ with(people, sum(ht))||##gray|//none//##||
 people = edit(people)||##gray|//none//##||
 ||||||||~ [[# import-export]][#import-export-note import and export]||
 ||~ ||~ ||~ [#r r]||~ [#numpy numpy]||
-||[[# import-tab-delimited]][#import-tab-delimited-note import tab delimited]|| ||##gray|# first row defines variable names:## _
+||[[# import-tab-delimited]][#import-tab-delimited-note import tab delimited]||##gray|# first row defines variable names:## _
+readtable('/tmp/password.txt', 'Delimiter', '\t') _
+ _
+##gray|# file suffix must be .txt, .dat, or .csv##||##gray|# first row defines variable names:## _
 df = read.delim('/path/to.tab', stringsAsFactors=F)||##gray|# first row defines column names:## _
 df = pd.read_table('/path/to.tab')||
 ||[[# import-csv]][#import-csv-note import csv] _
-@<&nbsp;>@|| ||##gray|# first row defines variable names:## _
+@<&nbsp;>@||##gray|% first row defines variable names:## _
+df = readtable('/path/to.csv')||##gray|# first row defines variable names:## _
 df = read.csv('/path/to.csv', stringsAsFactors=F)||##gray|# first row defines column names:## _
 df = pd.read_csv('/path/to.csv')||
-||[[# set-column-separator]][#set-column-separator-note set column separator]|| ||df = read.delim('/etc/passwd', _
+||[[# set-column-separator]][#set-column-separator-note set column separator]||df = readtable('/etc/passwd', _
+@<&nbsp;&nbsp;>@'Delimiter', ':', _
+@<&nbsp;&nbsp;>@'ReadVariableNames', 0, _
+@<&nbsp;&nbsp;>@'HeaderLines', 10)||df = read.delim('/etc/passwd', _
 @<&nbsp;&nbsp;>@sep=':', _
 @<&nbsp;&nbsp;>@header=FALSE, _
 @<&nbsp;&nbsp;>@comment.char='#')||##gray|# $ grep -v '^#' /etc/passwd > /tmp/passwd## _
  _
 df = pd.read_table('/tmp/passwd', sep=':', header=None)||
 ||[[# set-column-separator-whitesp]][#set-column-separator-whitesp-note set column separator to whitespace]|| ||df = read.delim('/path/to.txt', sep='')||df = read_table('/path/to.txt', sep='\s+')||
-||[[# set-quote-char]][#set-quote-char-note set quote character]|| ||##gray|//default quote character for both// read.csv //and// read.delim //is double quotes.  The quote character is escaped by doubling it.//## _
+||[[# set-quote-char]][#set-quote-char-note set quote character]|| ||##gray|# default quote character for both read.csv and read.delim _
+# is double quotes.  The quote character is escaped by doubling it.## _
  _
 ##gray|# use single quote as quote character:## _
 df = read.csv('/path/to/single-quote.csv', quote="'") _
@@ -1164,7 +1172,10 @@ read.delim('/etc/passwd', _
 ##gray|# ## _
 ##gray|# column names are X0, X1, ...## _
 df = pd.read_table('/tmp/passwd', sep=':', header=None)||
-||[[# set-column-names]][#set-column-names-note set column names]|| ||df = read.csv('/path/to/no-header.csv', _
+||[[# set-column-names]][#set-column-names-note set column names]||df = readtable('/path/to/no-header.csv', _
+@<&nbsp;&nbsp;>@'ReadVariableNames', 0) _
+ _
+df.Properties.VariableNames = {'ht', 'wt', 'age'}||df = read.csv('/path/to/no-header.csv', _
 @<&nbsp;&nbsp;>@header=FALSE, _
 @<&nbsp;&nbsp;>@col.names=c('ht', 'wt', 'age'))||df = pd.read_csv('/path/to/no-header.csv', _
 @<&nbsp;&nbsp;>@names=['ht', 'wt', 'age'])||
@@ -1190,7 +1201,8 @@ If there are extra fields they will be parsed as an extra row unless// flush //i
 @<&nbsp;&nbsp;>@sep=':', _
 @<&nbsp;&nbsp;>@header=FALSE, _
 @<&nbsp;&nbsp;>@comment.char='#')||##gray|//none//##||
-||[[# skip-rows]][#skip-rows-note skip rows]|| ||df = read.csv('/path/to/data.csv', skip=4)||df = read_csv('/path/to/data.csv', skiprows=4) _
+||[[# skip-rows]][#skip-rows-note skip rows]||def = readtable('/path/to/data.csv', _
+@<&nbsp;&nbsp;>@'HeaderLines', 4)||df = read.csv('/path/to/data.csv', skip=4)||df = read_csv('/path/to/data.csv', skiprows=4) _
  _
 ##gray|# rows to skip can be specified individually:## _
 df = read_csv('/path/to/data.csv', skiprows=range(0, 4))||
@@ -1206,22 +1218,22 @@ df = pd.read_csv('/path/to.csv', index_col=['col1', 'col2'])||
 write.csv(df, '/path/to.csv', row.names=F)|| ||
 ||||||||~ [[# relational-algebra]][#relational-algebra-note relational algebra]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
-||project columns by name|| ||people[c('sx', 'ht')]||people[['sx', 'ht']]||
-||project columns by position|| ||people[c(1, 2)]|| ||
-||project expression|| ||##gray|//convert to cm and kg://## _
+||project columns by name||people(:, {'sx', 'ht'})||people[c('sx', 'ht')]||people[['sx', 'ht']]||
+||project columns by position||people(:, [1 2])||people[c(1, 2)]|| ||
+||project expression|| ||##gray|# convert to cm and kg:## _
 transform(people, ht=2.54*ht, wt=wt/2.2)|| ||
-||project all columns|| ||people[people$ht > 66, ]|| ||
+||project all columns||people(people.ht > 66, :)||people[people$ht > 66, ]|| ||
 ||rename columns|| ||colnames(people) = c('gender', 'height', 'weight')|| ||
-||[[# access-sub-data-set]][#access-sub-data-set-note access sub data frame]|| ||##gray|//data frame of first 3 rows with// _
-ht //and// wt //columns reversed//## _
-people[1:3,c(1,3,2)]|| ||
-||[[# data-set-filter]][#data-set-filter-note select rows]|| ||subset(people, ht > 66) _
+||[[# access-sub-data-set]][#access-sub-data-set-note access sub data frame]|| ||##gray|# data frame of first 3 rows with _
+# ht and wt columns reversed:## _
+people[1:3, c(1, 3, 2)]|| ||
+||[[# data-set-filter]][#data-set-filter-note select rows]||people(people.ht > 66, :)||subset(people, ht > 66) _
 people[people$ht > 66, ]||people[people['ht'] > 66]||
-||select distinct rows|| ||unique(people$sx)|| ||
-||split rows|| ||##gray|class(x) is list:## _
+||select distinct rows||unique(people(:,{'sx'}))||unique(people[c('sx')])|| ||
+||split rows|| ||##gray|# class(x) is list:## _
 x = split(people, people$sx == 'F') _
  _
-##gray|data.frame only containing females:## _
+##gray|# data.frame only containing females:## _
 x$T|| ||
 ||inner join|| ||pw = read.delim('/etc/passwd', _
 @<&nbsp;&nbsp;>@sep=':', _
@@ -2280,7 +2292,7 @@ for (i in 2:100) { _
 } _
  _
 filled.contour(1:100, 1:100, m)|| ||
-||~ ||~ ##EFEFEF|@@___________________________________________________________@@##||~ ##EFEFEF|@@___________________________________________________________@@##||~ ##EFEFEF|@@___________________________________________________________@@##||
+||~ ||~ ##EFEFEF|@@________________________________________________________________@@##||~ ##EFEFEF|@@________________________________________________________________@@##||~ ##EFEFEF|@@________________________________________________________________@@##||
 
 [[# general-note]]
 + [#top General]
