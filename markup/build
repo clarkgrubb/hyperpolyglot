@@ -433,7 +433,11 @@ end _
 task :echo_date => :get_date do _
 @<&nbsp;&nbsp;>@puts date _
 end|| || ||
-||prompt user||##gray|//none//##|| ||<target name="foo"> _
+||prompt user||##gray|//none//##||task :fooput do _
+@<&nbsp;&nbsp;>STDOUT.print "Enter foo: " _
+@<&nbsp;&nbsp;>input = STDIN.gets.strip _
+@<&nbsp;&nbsp;>STDOUT.puts "foo: #{input}" _
+end||<target name="foo"> _
 @<&nbsp;&nbsp;>@<input message="Enter foo:" addproperty="foo"/> _
 @<&nbsp;&nbsp;>@<echo>foo: ${foo}</echo> _
 </target>|| ||
@@ -909,7 +913,7 @@ hello :
         @echo $(hello)
 [[/code]]
 
-There is target with the same name as the variable.  Targets and variables live in separate namespaces so there is no conflict.  
+There is target with the same name as the variable.  Targets and variables live in separate namespaces so there is no conflict.
 
 Here is an example of how to define a suffix rule.  In the recipe {{$@}} refers to the target and {{$<}} refers to the dependency.
 
