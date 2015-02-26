@@ -45,7 +45,7 @@
 ||[#quote quote] _
 @<&nbsp;>@||quote||quote||quote||quote||
 ||[#undefine undefine] _
-@<&nbsp;>@||(makunbound 'foo)||||(ns-unmap *ns* 'foo)||(makunbound 'foo||
+@<&nbsp;>@||(makunbound 'foo)||(namespace-undefine-variable! 'foo)||(ns-unmap *ns* 'foo)||(makunbound 'foo||
 ||[#cell-types cell types] _
 @<&nbsp;>@||##gray|//value, function, struct, class, ...//##||##gray|//value//##||##gray|//value//##||##gray|//value, function, struct, ...//##||
 ||[[# null]][#null-note null]||nil||null||nil||nil||
