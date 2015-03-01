@@ -1,8 +1,6 @@
 [[# top]]//a side-by-side reference sheet//
 
-[#grammar-invocation grammar and invocation] | [#var-expr variables and expression] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] _
-[#arrays arrays] | [#dictionaries dictionaries] | [#tables tables] | [#relational-algebra relational algebra] | [#aggregation aggregation] | [#functions functions] _
-[#execution-control execution control] | [#files files] | [#libraries-namespaces libraries and namespaces] | [#reflection reflection]
+[#grammar-invocation grammar and invocation] | [#var-expr variables and expression] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#arrays arrays] | [#dictionaries dictionaries] | [#tables tables] | [#relational-algebra relational algebra] | [#aggregation aggregation] | [#functions functions] | [#execution-control execution control] | [#files files] | [#libraries-namespaces libraries and namespaces] | [#reflection reflection]
 
 ||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||
 ||[[# version-used]][#version-used-note version used] _

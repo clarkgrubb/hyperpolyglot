@@ -1,6 +1,6 @@
 [[# top]]//a side-by-side reference sheet//
 
-[#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#fixed-length-arrays fixed-length-arrays] | [#resizable-arrays resizable arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#concurrency concurrency] | [#file-handles file handles] | [#files files] | [#file-fmt file formats] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#user-defined-types user-defined types] | [#objects objects] | [#reflection reflection] | [#macros macros] | [#net-web net and web] | [#dom dom] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling]
+[#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#fixed-length-arrays fixed-length-arrays] | [#resizable-arrays resizable arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#concurrency concurrency] | [#file-handles file handles] | [#files files] | [#directories directories] | [#processes-environment processes and environment] | [#option-parsing option parsing] | [#libraries-namespaces libraries and namespaces] | [#user-defined-types user-defined types] | [#objects objects] | [#reflection reflection] | [#macros macros] | [#net-web net and web] | [#dom dom] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling]
 
 ||||||||~ [[# version]][#version-note version]||
 ||~ ||~ [#c c]||~ [#go go]||~ [#dart dart]||
@@ -488,7 +488,18 @@ strconv.FormatFloat(3.14, 'f', 4, 32) _
 ##gray|@@//@@ 2nd arg is base:## _
 strconv.FormatInt(7, 10)||3.14.toString() _
 7.toString()||
-||[[# split]][#split-note split]||##gray|//none//##||import "strings" _
+||[[# split]][#split-note split]||##gray|/* strtok_r modifies 1st arg */## _
+char *s = strdup("foo,bar baz"); _
+char *sep = " ,"; _
+char *tok, *last; _
+ _
+##gray|/* tok is never an empty string: */## _
+for (tok = strtok_r(s, sep, &last); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@tok; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@tok = strtok_r(NULL, sep, &last)) _
+@<&nbsp;&nbsp;>@printf("token: %s\n", tok); _
+ _
+##gray|/* also wcstok */##||import "strings" _
  _
 s := "foo bar baz" _
 parts := strings.Split(s, " ")||var a = "foo bar bar".split(' ');||
@@ -587,6 +598,40 @@ rune||
 L'A'|| ||##gray|//none//##||
 ||[[# char-lookup]][#char-lookup-note character lookup]||"lorem ipsum"[6] _
 L"lorem ipsum"[6]|| || ||
+||[[# char-index]][#char-index-note character index]||char *s = "aaa bbb ccc"; _
+char *p; _
+size_t n; _
+ _
+p = strchr(s, ' '); _
+if (p) _
+@<&nbsp;&nbsp;>@printf("first space at %ld\n", p - s); _
+p = strrchr(s, ' '); _
+if (p) _
+@<&nbsp;&nbsp;>@printf("last space at %ld\n", p - s); _
+ _
+n = strspn(s, "abc"); _
+printf("first %ld chars in set\n", n); _
+p = strpbrk(s, " ,:."); _
+printf("first %ld chars not in set\n", n); _
+ _
+##gray|/* also: wcschr wcsrchr wcsspn wcspbrk */##|| || ||
+||[[# char-tests]][#char-tests-note character tests]||#include <ctype.h> _
+#include <wctype.h> _
+ _
+isascii _
+isrune _
+iscntrl _
+isgraph _
+isalpha _
+isspace _
+isupper _
+islower _
+isalnum _
+isdigit _
+isxdigit _
+ispunct _
+ _
+##gray|/* also: iswascii, iswrune, @@...@@ */##|| || ||
 ||[[# chr-ord]][#chr-ord-note chr and ord]||##gray|/* Character types are integer types so no conversion is necessary.  Use %c and %C to print a character like a string of length one. */## _
 char ch = 'A'; _
 wchar_t ch2 = L'A'; _
@@ -989,8 +1034,14 @@ copy(a3, a) _
 a3[0] = 5||var a = ["a", "b"]; _
  _
 List a2 = new List<String>.from(a);||
-||[[# iterate-over-array]][#iterate-over-array-note iterate over elements]|| || || ||
-||[[# iterate-indices-elem]][#iterate-indices-elem-note iterate over indices and elements]|| || || ||
+||[[# iterate-over-array]][#iterate-over-array-note iterate over elements]|| ||a := []string{"do", "re", "mi"} _
+for _, s := range(a) { _
+@<&nbsp;&nbsp;>@fmt.Printf("value: %s\n", s) _
+}|| ||
+||[[# iterate-indices-elem]][#iterate-indices-elem-note iterate over indices and elements]|| ||	a := []string{"do", "re", "mi"} _
+for i, s := range(a) { _
+@<&nbsp;&nbsp;>@fmt.Printf("value at %d: %s\n", i, s) _
+}|| ||
 ||[[# reverse-array]][#reverse-array-note reverse]|| ||import "sort" _
  _
 a := []int{1, 2, 3} _
@@ -1379,7 +1430,7 @@ caller() { _
 }||##gray|//none//##||##gray|//none//##||
 ||||||||~ [[# exceptions]][#exceptions-note exceptions]||
 ||~ ||~ c||~ go||~ dart||
-||finally block|| || || ||
+||[[# finally-block]][#finally-block-note finally block]|| || || ||
 ||||||||~ [[# concurrency]][#concurrency-note concurrency]||
 ||~ ||~ c||~ go||~ dart||
 ||[[# sleep]][#sleep-note sleep]||#include <unistd.h> _
@@ -1399,7 +1450,7 @@ time.Sleep(dur) _
 dur2 := time.Duration(10000 * time.Microsecond) _
 time.Sleep(dur2)|| ||
 ||[[# timeout]][#timeout-note timeout]|| || || ||
-||start thread||#include <pthread.h> _
+||[[# start-thread]][#start-thread-note start thread]||#include <pthread.h> _
  _
 typedef struct { _
 @<&nbsp;&nbsp;>@int id; _
@@ -1418,12 +1469,12 @@ if (pthread_create(&thr, NULL, &thread, (void*)&pl)) { _
 @<&nbsp;&nbsp;>@printf("failed to create thead\n"); _
 @<&nbsp;&nbsp;>@exit(1); _
 }|| || ||
-||terminate current thread||#include <pthread.h> _
+||[[# terminate-current-thread]][#terminate-current-thread-note terminate current thread]||#include <pthread.h> _
  _
 payload pl = {7}; _
  _
 pthread_exit((void*)&pl);|| || ||
-||terminate other thread||#include <pthread> _
+||[[# terminate-other-thread]][#terminate-other-thread-note terminate other thread]||#include <pthread> _
  _
 pthread_t thr; _
 payload pl = {3}; _
@@ -1439,17 +1490,19 @@ if (pthread_cancel(thr)) { _
 @<&nbsp;&nbsp;>@printf("failed to cancel thread\n"); _
 @<&nbsp;&nbsp;>@exit (1); _
 }|| || ||
-||list threads||##gray|//no portable way//##|| || ||
-||wait on thread|| || || ||
-||lock|| || || ||
-||create message queue|| || || ||
-||send message|| || || ||
-||receive message|| || || ||
+||[[# list-threads]][#list-threads-note list threads]||##gray|//no portable way//##|| || ||
+||[[# wait-on-thread]][#wait-on-thread-note wait on thread]|| || || ||
+||[[# lock]][#lock-note lock]|| || || ||
+||[[# create-msg-queue]][#create-message-queue-note create message queue]|| || || ||
+||[[# send-msg]][#send-msg-note send message]|| || || ||
+||[[# receive-msg]][#receive-msg-note receive message]|| || || ||
 ||||||||~ [[# file-handles]][#file-handles-note file handles]||
 ||~ ||~ c||~ go||~ dart||
 ||[[# std-file-handles]][#std-file-handles-note standard file handles]||stdin stdout stderr||import "os" _
  _
-os.Stdin os.Stdout os.Stderr|| ||
+os.Stdin os.Stdout os.Stderr||import 'dart:io' as io; _
+ _
+io.stdin io.stdout io.stderr||
 ||[[# read-line-stdin]][#read-line-stdin-note read line from stdin]||char *line = NULL; _
 size_t cap = 0; _
 ssize_t len; _
@@ -1489,7 +1542,11 @@ if err != nil { _
 ||[[# write-line-stdout]][#write-line-stdout-note write line to stdout]||##gray|/* returns EOF on error */## _
 int retval = puts("Hello, World!");||import "os" _
  _
-os.Stdout.WriteString("Hello, World!\n")||print('Hello, World!');||
+os.Stdout.WriteString("Hello, World!\n")||import 'dart:io' as io; _
+ _
+print('Hello, World!'); _
+ _
+io.stdout.writeln('Hello, World!');||
 ||[[# printf]][#printf-note write formatted string to stdout] _
 @<&nbsp;>@||printf("count: %d\n", 7); _
 wprintf(L"count: %d\n", 7);||fmt.Printf("count: %d\n", 7)|| ||
@@ -1528,7 +1585,12 @@ if (fgets(line, BUFSIZ, f) == NULL) { _
 }|| || ||
 ||[[# file-line-iterate]][#file-line-iterate-note iterate over file by line]|| || || ||
 ||[[# read-file-array]][#read-file-array-note read file into array of strings]|| || || ||
-||[[# read-file-str]][#read-file-str-note read file into string]|| || || ||
+||[[# read-file-str]][#read-file-str-note read file into string]|| || ||import 'dart:io' as io; _
+ _
+File f = new io.File('/etc/hosts'); _
+f.readAsString().then((String s) { _
+@<&nbsp;&nbsp;>@print('length: ${s.length}'); _
+});||
 ||[[# write-str]][#write-str-note write string]||##gray|/* returns EOF on error */## _
 int retval = fputs("Hello, World!", f);|| || ||
 ||[[# write-line]][#write-line-note write line]||##gray|/* returns EOF on error */## _
@@ -1585,7 +1647,28 @@ if (stat("/tmp/foo", &buf) != 0) { _
 @<&nbsp;&nbsp;>@perror("stat failed"); _
 } else if (S_ISREG(buf.st_mode)) { _
 @<&nbsp;&nbsp;>@##gray|/* file is regular */## _
-}|| || ||
+}||import "os" _
+ _
+fi, err := os.Stat("/tmp/foo") _
+if os.IsNotExist(err) { _
+@<&nbsp;&nbsp;>@fmt.Printf("Does not exit\n") _
+} else { _
+@<&nbsp;&nbsp;>@fmt.Printf("Exists\n") _
+@<&nbsp;&nbsp;>@fm := fi.Mode() _
+@<&nbsp;&nbsp;>@if fm.IsRegular() { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@fmt.Printf("Is Regular") _
+@<&nbsp;&nbsp;>@} else { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@fmt.Printf("Is Not Regular") _
+@<&nbsp;&nbsp;>@} _
+}||import 'dart:io' as io; _
+ _
+File f = new io.File("/tmp/foo"); _
+ _
+##gray|@@//@@ existence check?## _
+ _
+if (f.existsSync()) { _
+@<&nbsp;&nbsp;>@print("is a regular file\n"); _
+}||
 ||[[# file-size]][#file-size-note file size] _
 @<&nbsp;>@||#include <sys/stat.h> _
  _
@@ -1595,7 +1678,7 @@ if (stat("/tmp/foo", &buf) != 0) { _
 @<&nbsp;&nbsp;>@perror("stat failed"); _
 } else { _
 @<&nbsp;&nbsp;>@printf("size: %llu\n", buf.st_size); _
-}|| || ||
+}||fi.Size()||f.lengthSync()||
 ||[[# readable-writable-executable]][#readable-writable-executable-note is file readable, writable, executable]||#include <unistd.h> _
  _
 if (access("/etc/hosts", R_OK) != 0) { _
@@ -1611,7 +1694,16 @@ if (access("/etc/hosts", X_OK) != 0) { _
  _
 if (chmod("/tmp/foo", 0755) == -1) { _
 @<&nbsp;&nbsp;>@perror("chmod failed"); _
-}|| || ||
+}||import "os" _
+ _
+err := os.Chmod("/tmp/foo", 0755) _
+if err != nil { _
+@<&nbsp;&nbsp;>@fmt.Printf("Chmod failed\n") _
+}|| ||
+||[[# last-modification-time]][#last-modification-time-note last modification time]|| || ||import 'dart:io" as io; _
+ _
+File f = new io.File("/etc/hosts"); _
+print(f.lastModifiedSync());||
 ||[[# file-cp-rm-mv]][#file-cp-rm-mv-note copy file, remove file, rename file]||##gray|/* no copy function in standard library */## _
  _
 if (remove("/tmp/foo")) { _
@@ -1620,7 +1712,25 @@ if (remove("/tmp/foo")) { _
  _
 if (rename("/tmp/bar", "/tmp/foo")) { _
 @<&nbsp;&nbsp;>@perror("rename failed"); _
-}|| || ||
+}||import "os" _
+ _
+##gray|@@//@@ no copy function in standard library## _
+ _
+err := os.Remove("/tmp/foo") _
+if err != nil { _
+@<&nbsp;&nbsp;>@fmt.Printf("Remove failed: %s\n", err) _
+} _
+ _
+err2 := os.Rename("/tmp/bar", "/tmp/foo") _
+if err2 != nil { _
+@<&nbsp;&nbsp;>@fmt.Printf("Rename failed: %s\n", err2) _
+}||import 'dart:io' as io; _
+ _
+File f = new io.File("/tmp/foo"); _
+f.copySync("/tmp/bar"); _
+f.deleteSync(); _
+File f2 = new io.File("/tmp/bar"); _
+f2.renameSync("/tmp/foo");||
 ||[[# symlink]][#symlink-note create symlink, symlink test, readlink]||#include <limits.h>@<&nbsp;&nbsp;>@##gray|/* PATH_MAX */## _
 #include <sys/stat.h> _
 #include <unistd.h> _
@@ -1645,15 +1755,58 @@ if (size >= 0 ) { _
 @<&nbsp;&nbsp;>@pbuf[size] = 0; _
 @<&nbsp;&nbsp;>@##gray|/* pbuf now contains null-terminated string _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;&nbsp;>@with target path */## _
-}|| || ||
+}||import "os" _
+ _
+err := os.Symlink("/etc/hosts", "/tmp/hosts") _
+if err != nil { _
+@<&nbsp;&nbsp;>@fmt.Printf("Symlink failed: %s\n", err) _
+} _
+ _
+fi, err2 := os.Lstat("/tmp/hosts") _
+if err2 == nil { _
+@<&nbsp;&nbsp;>@fm := fi.Mode() _
+@<&nbsp;&nbsp;>@if fm & os.ModeSymlink != 0 { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@fmt.Println("File is a Symlink") _
+@<&nbsp;&nbsp;>@} _
+} else { _
+@<&nbsp;&nbsp;>@fmt.Printf("Lstat failed: %s\n", err2) _
+} _
+ _
+s, err3 := os.Readlink("/tmp/hosts") _
+if err3 != nil { _
+@<&nbsp;&nbsp;>@fmt.Printf("Readlink failed: %s\n", err3) _
+} else { _
+@<&nbsp;&nbsp;>@fmt.Printf("Link target: %s\n", s) _
+}|| ||
 ||[[# unused-file-name]][#unused-file-name-note generate unused file name]||##gray|/* if first argument is NULL, path is in system temp _
 @<&nbsp;&nbsp;&nbsp;>@directory.  Caller should free() return value. */## _
-char *path = tempnam("/tmp", "foo");|| || ||
-||||||||~ [[# file-fmt]][#file-fmt-note file formats]||
-||~ ||~ c||~ go||~ dart||
+char *path = tempnam("/tmp", "foo");||import "io/ioutil" _
+ _
+##gray|@@//@@ Uses system tmp dir if 1st arg is empty string:## _
+f, err := ioutil.TempFile("/tmp", "foo") _
+if err == nil { _
+@<&nbsp;&nbsp;>@fmt.Printf("writing to: %s\n", f.Name()) _
+@<&nbsp;&nbsp;>@f.WriteString("foo content") _
+}|| ||
 ||||||||~ [[# directories]][#directories-note directories]||
 ||~ ||~ c||~ go||~ dart||
-||[[# build-pathname]][#build-pathname-note build pathname]|| || || ||
+||[[# working-dir]][#working-dir-note working directory]|| ||import "os" _
+ _
+dir, err := os.Getwd() _
+if err != nil { _
+@<&nbsp;&nbsp;>@os.Stderr.WriteString("Gtwd failed\n") _
+} else { _
+@<&nbsp;&nbsp;>@fmt.Printf("pwd: %s\n", dir) _
+} _
+ _
+err2 := os.Chdir("/tmp") _
+if err2 != nil { _
+@<&nbsp;&nbsp;>@os.Stderr.WriteString("Chdir failed\n"); _
+}|| ||
+||[[# build-pathname]][#build-pathname-note build pathname]|| ||import "path" _
+ _
+pathname := path.Join("/etc", "hosts") _
+fmt.Printf("path: %s\n", pathname)|| ||
 ||[[# dirname-basename]][#dirname-basename-note dirname and basename]||#include <libgen.h> _
  _
 ##gray|/* return pointers to statically allocated memory _
@@ -1682,7 +1835,14 @@ while (de = readdir(dir)) { _
 @<&nbsp;&nbsp;>@printf("%s\n", de->d_name); _
 } _
  _
-closedir(dir);|| || ||
+closedir(dir);||import "io/ioutil" _
+ _
+a, err := ioutil.ReadDir("/etc") _
+if err == nil { _
+@<&nbsp;&nbsp;>@for _, fi := range a { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@fmt.Printf("name: %s\n", fi.Name()) _
+@<&nbsp;&nbsp;>@} _
+}|| ||
 ||[[# glob]][#glob-note glob paths]||#include <glob.h> _
  _
 glob_t pglob; _
@@ -1694,19 +1854,35 @@ for (i = 0; i < pglob.gl_pathc; ++i) { _
 @<&nbsp;&nbsp;>@printf("%s\n", pglob.gl_pathv[i]); _
 } _
  _
-globfree(&pglob);|| || ||
+globfree(&pglob);||import "path/filepath" _
+ _
+a, err := filepath.Glob("/etc/*") _
+if err == nil { _
+@<&nbsp;&nbsp;>@for _, path := range(a) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@fmt.Printf("path: %s\n", path) _
+@<&nbsp;&nbsp;>@} _
+}|| ||
 ||[[# mkdir]][#mkdir-note make directory]||#include <sys/stat.h> _
  _
 if (mkdir("/tmp/foo")) { _
 @<&nbsp;&nbsp;>@fprintf(stderr, "mkdir err: %s\n", strerror(errno)); _
-}|| || ||
+}||err := os.Mkdir("/tmp/foo", 0775) _
+if err != nil { _
+@<&nbsp;&nbsp;>@fmt.Printf("Mkdir failed: %s\n", err) _
+}|| ||
 ||[[# recursive-cp]][#recursive-cp-note recursive copy]|| || || ||
 ||[[# rmdir]][#rmdir-note remove empty directory]||#include <unistd.h> _
  _
 if (rmdir("/tmp/foo") == -1) { _
 @<&nbsp;&nbsp;>@perror("rmdir failed"); _
-}|| || ||
-||[[# rm-rf]][#rm-rf-note remove directory and contents]|| || || ||
+}||err := os.Remove("/tmp/foo") _
+if err != nil { _
+@<&nbsp;&nbsp;>@fmt.Printf("Remove failed: %s", err) _
+}|| ||
+||[[# rm-rf]][#rm-rf-note remove directory and contents]|| ||err := os.RemoveAll("/tmp/foo") _
+if err != nil { _
+@<&nbsp;&nbsp;>@fmt.Printf("RemoveAll failed: %s", err) _
+}|| ||
 ||[[# dir-test]][#dir-test-note directory test] _
 @<&nbsp;>@||#include <sys/stat.h> _
  _
@@ -1716,7 +1892,17 @@ if (stat("/tmp/foo", &buf) != 0) { _
 @<&nbsp;&nbsp;>@perror("stat failed"); _
 } else if (S_ISDIR(buf.st_mode)) { _
 @<&nbsp;&nbsp;>@##gray|/* file is directory */## _
-}|| || ||
+}|| ||import 'dart:io' as io; _
+ _
+bool isDir; _
+ _
+io.FileSystemEntity.isDirectory('/tmp').then((isDir) { _
+@<&nbsp;&nbsp;>@if (isDir) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print('is directory'); _
+@<&nbsp;&nbsp;>@} else { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print('not a directory'); _
+@<&nbsp;&nbsp;>@} _
+});||
 ||[[# unused-dir]][#unused-dir-note generate unused directory]||#include <limits.h> _
  _
 char buf[PATH_MAX]; _
@@ -1728,14 +1914,130 @@ if (mkdtemp(buf) == NULL) { _
 @<&nbsp;&nbsp;>@perror("mkdtemp failed"); _
 } else { _
 @<&nbsp;&nbsp;>@##gray|/* use buf */## _
-}|| || ||
+}||import "io/ioutil" _
+ _
+##gray|@@//@@ Uses system tmp dir if 1st arg is empty string:## _
+path, err := ioutil.TempDir("/tmp", "foo") _
+if err == nil { _
+@<&nbsp;&nbsp;>@fmt.Printf("dir path: %s\n", path) _
+}|| ||
 ||[[# system-tmp-dir]][#system-tmp-dir-note system temporary file directory]||##gray|/* defined in <stdio.h> */## _
-P_tmpdir|| || ||
+P_tmpdir||import "os" _
+ _
+path := os.TempDir()|| ||
 ||||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
 ||~ ||~ c||~ go||~ dart||
-||[#main signature of main]||int main(int argc, char **argv) {|| || ||
-||[#first-argument first argument] _
-@<&nbsp;>@||##gray|//pathname of executable//##|| || ||
+||[[# cmd-line-arg]][#cmd-line-arg-note command line arguments]||int main(int argc, char @@**@@argv) { _
+@<&nbsp;&nbsp;>@if (argc > 1) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@printf("first arg: %s\n", argv[1]); _
+@<&nbsp;&nbsp;>@return 0; _
+}||import "os" _
+ _
+if len(os.Args) > 1 { _
+@<&nbsp;&nbsp;>@fmt.Printf("first arg: %\n", os.Args[1]) _
+}|| ||
+||[[# program-name]][#program-name-note program name]||int main(int argc, char @@**@@argv) { _
+@<&nbsp;&nbsp;>@printf("program name: %s\n", argv[0]); _
+@<&nbsp;&nbsp;>@return 0; _
+}||import "os" _
+ _
+fmt.Printf("program name: %s\n", os.Args[0])|| ||
+||[[# env-var]][#env-var-note environment variable]||#include <stdlib.h> _
+ _
+char *home = getenv("HOME"); _
+setenv("EDITOR", "emacs", 1); _
+unsetenv("EDITOR");||import "os" _
+ _
+home := os.Getenv("HOME") _
+ _
+err := os.Setenv("EDITOR", "emacs") _
+if err != nil { _
+@<&nbsp;&nbsp;>@fmt.Printf("Setenv failed: %s\n", err) _
+}|| ||
+||[[# env-var-iter]][#env-var-iter-note iterate over environment variables]||extern char @@**@@environ; _
+char @@**@@env, *p, *key; _
+ _
+for (env = environ; *env; ++env) { _
+@<&nbsp;&nbsp;>@p = strchr(*env, '='); _
+@<&nbsp;&nbsp;>@if (p) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@size_t keylen = p - *env; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@key = strndup(*env, keylen); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@printf("key: %s value: %s\n", key, *env + keylen + 1); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@free(key); _
+@<&nbsp;&nbsp;>@} _
+}||import "os" _
+import "strings" _
+ _
+for _, s := range os.Environ() { _
+@<&nbsp;&nbsp;>@a := strings.SplitN(s, "=", 2) _
+@<&nbsp;&nbsp;>@fmt.Printf("key: %s value: %s\n", a[0], a[1]) _
+}|| ||
+||[[# user-id-name]][#user-id-name-note get user id and name]||#include <unistd.h>@<&nbsp;&nbsp;>@##gray|/* getlogin */## _
+ _
+printf("uid: %d\n", getuid()); _
+printf("username: %s\n", getlogin());||import "os" _
+ _
+os.Getuid() _
+##gray|/* username? */##|| ||
+||[[# exit]][#exit-note exit]||##gray|/* use 0 for success; 1 through 127 for failure */## _
+exit(1);||import "os" _
+ _
+os.Exit(1)|| ||
+||[[# executable-test]][#executable-test-note executable test]||#include <unistd.h> _
+ _
+if (access("/bin/ls", X_OK) != 0) { _
+@<&nbsp;&nbsp;>@printf("not executable\n"); _
+}|| || ||
+||[[# external-cmd]][#external-cmd-note external command]||##gray|/* retval of -1 indicates fork or wait failed.  _
+@<&nbsp;&nbsp;&nbsp;>@127 indicates shell failed */## _
+int retval = system("ls -l *");|| ||import 'dart:io' as io; _
+ _
+io.Process.start('ls', ['-l', '/tmp']).then((process) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@io.stdout.addStream(process.stdout); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@io.stderr.addStream(process.stderr); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@process.exitCode.then(print); _
+@<&nbsp;&nbsp;>@});||
+||[[# fork]][#fork-note fork]|| || || ||
+||[[# exec]][#exec-note exec]|| || || ||
+||[[# pipe]][#pipe-note pipe]|| || || ||
+||[[# wait]][#wait-note wait]|| || || ||
+||[[# pid]][#pid-note get pid, parent pid]||#include <unistd.h> _
+ _
+##gray|/* getpid() and getppid() have return type pid_t */## _
+printf("%d\n", getpid()); _
+printf("%d\n", getppid())||import "os" _
+ _
+fmt.Println(os.Getpid()) _
+fmt.Println(os.Getppid())|| ||
+||[[# signal-handler]][#signal-handler-note set signal handler]||#include <signal.h> _
+ _
+void _
+handle_signal(int signo) { _
+@<&nbsp;&nbsp;>@switch(signo) { _
+@<&nbsp;&nbsp;>@case SIGUSR1: _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@puts("caught SIGUSR1"); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@break; _
+@<&nbsp;&nbsp;>@default: _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@printf("unexpected signal: %s", strsignal(signo)); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@break; _
+@<&nbsp;&nbsp;>@} _
+} _
+ _
+##gray|/*2nd arg can also be SIG_IGN or SIG_DFL */## _
+sig_t prev_handler = signal(SIGUSR1, &handle_signal); _
+ _
+if (prev_handler == SIG_ERR) { _
+@<&nbsp;&nbsp;>@perror("signal failed"); _
+@<&nbsp;&nbsp;>@exit(1); _
+}|| || ||
+||[[# send-signal]][#send-signal-note send signal]||#include <signal.h> _
+#include <unistd.h>@<&nbsp;&nbsp;>@##gray|/* getppid */## _
+ _
+if (kill(getppid(), SIGUSR1) == -1) { _
+@<&nbsp;&nbsp;>@perror("kill failed"); _
+}|| || ||
+||||||||~ [[# option-parsing]][#option-parsing-note option parsing]||
+||~ ||~ c||~ go||~ dart||
 ||[[# getopt]][#getopt-note getopt]||#include <getopt.h> _
  _
 ##gray|/* 2nd value indicates whether option takes an argument */## _
@@ -1784,62 +2086,6 @@ if (optind != argc - 1) { _
 } _
 else { _
 @<&nbsp;&nbsp;>@file = argv[optind]; _
-}|| || ||
-||[#environment-variable environment variable]||#include <stdlib.h> _
- _
-char *home = getenv("HOME"); _
-setenv("EDITOR", "emacs", 1); _
-unsetenv("EDITOR");|| || ||
-||[#iterate-environment-variable iterate thru environment variables]|| || || ||
-||[[# user-id-name]][#user-id-name-note get user id and name]||#include <unistd.h>@<&nbsp;&nbsp;>@##gray|/* getlogin */## _
- _
-printf("uid: %d\n", getuid()); _
-printf("username: %s\n", getlogin());|| || ||
-||[[# exit]][#exit-note exit]||##gray|/* use 0 for success; 1 through 127 for failure */## _
-exit(1);|| || ||
-||[[# executable-test]][#executable-test-note executable test]||#include <unistd.h> _
- _
-if (access("/bin/ls", X_OK) != 0) { _
-@<&nbsp;&nbsp;>@printf("not executable\n"); _
-}|| || ||
-||[[# external-cmd]][#external-cmd-note external command]||##gray|/* retval of -1 indicates fork or wait failed.  _
-@<&nbsp;&nbsp;&nbsp;>@127 indicates shell failed */## _
-int retval = system("ls -l *");|| || ||
-||[[# fork]][#fork-note fork]|| || || ||
-||[[# exec]][#exec-note exec]|| || || ||
-||[[# pipe]][#pipe-note pipe]|| || || ||
-||[[# wait]][#wait-note wait]|| || || ||
-||[[# pid]][#pid-note get pid, parent pid]||#include <unistd.h> _
- _
-##gray|/* getpid() and getppid() have return type pid_t */## _
-printf("%d\n", getpid()); _
-printf("%d\n", getppid())|| || ||
-||[[# signal-handler]][#signal-handler-note set signal handler]||#include <signal.h> _
- _
-void _
-handle_signal(int signo) { _
-@<&nbsp;&nbsp;>@switch(signo) { _
-@<&nbsp;&nbsp;>@case SIGUSR1: _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@puts("caught SIGUSR1"); _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@break; _
-@<&nbsp;&nbsp;>@default: _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@printf("unexpected signal: %s", strsignal(signo)); _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@break; _
-@<&nbsp;&nbsp;>@} _
-} _
- _
-##gray|/*2nd arg can also be SIG_IGN or SIG_DFL */## _
-sig_t prev_handler = signal(SIGUSR1, &handle_signal); _
- _
-if (prev_handler == SIG_ERR) { _
-@<&nbsp;&nbsp;>@perror("signal failed"); _
-@<&nbsp;&nbsp;>@exit(1); _
-}|| || ||
-||[[# send-signal]][#send-signal-note send signal]||#include <signal.h> _
-#include <unistd.h>@<&nbsp;&nbsp;>@##gray|/* getppid */## _
- _
-if (kill(getppid(), SIGUSR1) == -1) { _
-@<&nbsp;&nbsp;>@perror("kill failed"); _
 }|| || ||
 ||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
 ||~ ||~ c||~ go||~ dart||
@@ -2553,22 +2799,15 @@ Escape sequences in string literals.
 [[# expr-interpolation-note]]
 ++ [#expr-interpolation expression interpolation]
 
-[[# str-len-note]]
-++ [#str-len string length]
-
-[[# string-comparison]]
-++ string comparison
+[[# compare-str-note]]
+++ [#compare-str compare strings]
 
 **c:**
 
 Returns 1, 0, or -1 depending upon whether the first string is lexicographically greater, equal, or less than the second.  The variants //strncmp//, //strcasecmp//, and //strncasecmp// can perform comparisons on the first //n// characters of the strings or case insensitive comparisons.
 
-
-[[# to-c-string]]
-++ to C string
-
-[[# string-to-number]]
-++ numeric conversion
+[[# str-to-num-note]]
+++ [#str-to-num string to number]
 
 **c:**
 
@@ -2588,11 +2827,14 @@ double
 strtod(const char *str, char **endp);
 [[/code]]
 
+[[# num-to-str-note]]
+++ [#num-to-str number to string]
+
 [[# split-note]]
 ++ [#split split]
 
 [[# str-join-note]]
-++ [#str-join string join]
+++ [#str-join join]
 
 [[# str-concat-note]]
 ++ [#str-concat concatenate]
@@ -2618,10 +2860,28 @@ strtod(const char *str, char **endp);
 [[# pad-note]]
 ++ [#pad pad]
 
+[[# str-len-note]]
+++ [#str-len length]
+
 [[# char-type-note]]
 ++ [#char-type character type]
 
 The type for a character.
+
+[[# char-literal-note]]
+++ [#char-literal character literal]
+
+[[# char-lookup-note]]
+++ [#char-lookup character lookup]
+
+[[# char-index-note]]
+++ [#char-index character index]
+
+[[# char-tests-note]]
+++ [#char-tests character tests]
+
+[[# chr-ord-note]]
+++ [#chr-ord chr and ord]
 
 [[# regexes-note]]
 + [#regexes Regular Expressions]
@@ -3421,11 +3681,11 @@ Can the process read, write, or executable the file?
 [[# unused-file-name-note]]
 ++ [#unused-file-name generate unused file name]
 
-[[# file-fmt-note]]
-+ [#file-fmt File Formats]
-
 [[# directories-note]]
 + [#directories Directories]
+
+[[# working-dir-note]]
+++ [#working-dir working directory]
 
 [[# build-pathname-note]]
 ++ [#build-pathname build pathname]
@@ -3466,9 +3726,6 @@ Can the process read, write, or executable the file?
 [[# processes-environment-note]]
 + [#processes-environment Processes and Environment]
 
-[[# main]]
-++ signature of main
-
 [[# first-argument]]
 ++ first argument
 
@@ -3476,11 +3733,11 @@ Can the process read, write, or executable the file?
 
 The first argument is the pathname to the executable.  Whether the pathname is absolute or relative depends on how the executable was invoked.  If the executable was invoked via a symlink, then the first argument is the pathname of the symlink, not the executable the symlink points to.
 
-[[# environment-variable]]
-++ environment variable
+[[# env-var-note]]
+++ [#env-var environment variable]
 
-[[# iterate-thru-environment-variables]]
-++ iterate thru environment variables
+[[# env-var-iter-note]]
+++ [#env-var-iter iterate over environment variables]
 
 [[# exit-note]]
 ++ [#exit exit]
@@ -3494,6 +3751,9 @@ On POSIX systems zero indicates success and other values indicate failure.
 On Linux and Mac OS X the value returned to the parent is {{exit_arg & 0377}}.  If the process exited because of a signal, the kernel sets the exit status to 128 plus the signal number.  The signals are numbered starting from 1, leaving exit status values from 1 to 127 and perhaps 128 available for other failure conditions.
 
 The C standard library defines the values EXIT_SUCCESS and EXIT_FAILURE as an aid for writing code which is portable to systems which do not use 0 to indicate success.
+
+[[# option-parsing-note]]
++ [#option-parsing Option Parsing]
 
 [[# libraries-namespaces-note]]
 + [#libraries-namespaces Libraries and Namespaces]

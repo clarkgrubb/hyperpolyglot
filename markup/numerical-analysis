@@ -4,7 +4,7 @@
 
 [#tables tables] | [#import-export import and export] | [#relational-algebra relational algebra] | [#aggregation aggregation]
 
-[#vectors vectors] | [#matrices matrices] | [#optimization optimization] | [#polynomials polynomials] | [#descriptive-statistics descriptive statistics] | [#distributions distributions] | [#regression regression] | [#statistical-tests statistical tests] | [#time-series time series]
+[#vectors vectors] | [#matrices matrices] | [#optimization optimization] | [#polynomials polynomials] | [#descriptive-statistics descriptive statistics] | [#distributions distributions] | [#linear-regression linear regression] | [#statistical-tests statistical tests] | [#time-series time series]
 
 [#univariate-charts univariate charts] | [#bivariate-charts bivariate charts] | [#multivariate-charts multivariate charts]
 
@@ -220,7 +220,7 @@ r"don't " r'say "no"'||
 ||[[# str-esc]][#str-esc-note literal escapes]||##gray|% Octave double quote only:## _
 \\ \" \' \0 \a \b \f \n \r \t \v||\\ \" \' \a \b \f \n \r \t \v \##gray|//ooo//##||##gray|# single and double quoted:## _
 \##gray|//newline//## \\ \' \" \a \b \f \n \r \t \v \##gray|//ooo//## \x##gray|//hh//##||
-||[[# str-concat]][#str-concat-note concatenate]||strcat('one ', 'two ', 'three')||paste("one ", "two ", "three")||'one ' + 'two ' + 'three' _
+||[[# str-concat]][#str-concat-note concatenate]||strcat('one ', 'two ', 'three')||paste("one", "two", "three", sep=" ")||'one ' + 'two ' + 'three' _
 ##gray|//literals, but not variables, can be concatenated with juxtaposition://## _
 'one ' "two " 'three'||
 ||[[# str-replicate]][#str-replicate-note replicate] _
@@ -1139,7 +1139,7 @@ people = edit(people)||##gray|//none//##||
 readtable('/tmp/password.txt', 'Delimiter', '\t') _
  _
 ##gray|# file suffix must be .txt, .dat, or .csv##||##gray|# first row defines variable names:## _
-df = read.delim('/path/to.tab', stringsAsFactors=F)||##gray|# first row defines column names:## _
+df = read.delim('/path/to.tab', stringsAsFactors=F, quote=NULL)||##gray|# first row defines column names:## _
 df = pd.read_table('/path/to.tab')||
 ||[[# import-csv]][#import-csv-note import csv] _
 @<&nbsp;>@||##gray|% first row defines variable names:## _
@@ -1666,7 +1666,7 @@ dfunc$y|| ||
 F = ecdf(rnorm(100))|| ||
 ||[[# empirical-quantile-func]][#empirical-quantile-func-note empirical quantile function]|| ||F = ecdf(rnorm(100)) _
 Finv = ecdf(F(seq(0, 1, .01)))|| ||
-||||||||~ [[# regression]][#regression-note regression]||
+||||||||~ [[# linear-regression]][#linear-regression-note linear regression]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
 ||[[# simple-linear-regression]][#simple-linear-regression-note simple linear regression] _
 ##gray|//coefficient, intercept, and residuals//##||x = [1 2 3] _
@@ -1707,7 +1707,7 @@ y = 2 * x2 + rnorm(100) _
  _
 fit = lm(y ~ x1 + x2) _
 summary(fit)|| ||
-||[[# polynomial-regression]][#polynomial-regression-note polynomial regression]|| ||x1 = rnorm(100) _
+||[[# linear-regression-interaction]][#linear-regression-interaction-note interaction]|| ||x1 = rnorm(100) _
 x2 = rnorm(100) _
 y = 2 * x1 + x2 + 3 * x1 * x2 + rnorm(100) _
  _
@@ -4248,8 +4248,8 @@ How to construct a density function from a sample.
 [[# empirical-quantile-func-note]]
 ++ [#empirical-quantile-func empirical quantile function]
 
-[[# regression-note]]
-+ [#regression Regression]
+[[# linear-regression-note]]
++ [#linear-regression Linear Regression]
 
 [[# simple-linear-regression-note]]
 ++ [#simple-linear-regression simple linear regression]
@@ -4266,8 +4266,8 @@ The residuals are the difference between the actual values of //y// and the calc
 [[# multiple-linear-regression-note]]
 ++ [#multiple-linear-regression multiple linear regression]
 
-[[# polynomial-regression-note]]
-++ [#polynomial-regression polynomial regression]
+[[# linear-regression-interaction-note]]
+++ [#linear-regression-interaction interaction]
 
 [[# logistic-regression-note]]
 ++ [#logistic-regression logistic regression]

@@ -115,19 +115,35 @@ select current_timestamp;||select current_timestamp;||
 ||[[# inner-join]][#inner-join-note inner join]||SELECT * _
 FROM customers c _
 JOIN orders o _
-@<&nbsp;&nbsp;>@ON c.id = o.customer_id;|| || ||
+@<&nbsp;&nbsp;>@ON c.id = o.customer_id;||SELECT * _
+FROM customers c _
+JOIN orders o _
+@<&nbsp;&nbsp;>@ON c.id = o.customer_id;|| ||
 ||[[# left-outer-join]][#left-outer-join-note left outer join]||##gray|//include customers with no orders://## _
 SELECT * _
 FROM customers c _
 LEFT JOIN orders o _
-@<&nbsp;&nbsp;>@ON c.id = o.customer_id;|| || ||
+@<&nbsp;&nbsp;>@ON c.id = o.customer_id;||##gray|//include customers with no orders://## _
+SELECT * _
+FROM customers c _
+LEFT JOIN orders o _
+@<&nbsp;&nbsp;>@ON c.id = o.customer_id;|| ||
 ||[[# full-outer-join]][#full-outer-join-note full outer join]||##gray|//include customers with no orders and orders with no customers://## _
 SELECT * _
 FROM customers c _
 FULL JOIN orders o _
-@<&nbsp;&nbsp;>@ON c.id = o.customer_id;|| || ||
+@<&nbsp;&nbsp;>@ON c.id = o.customer_id;||SELECT * _
+FROM customers c _
+LEFT JOIN orders o _
+@<&nbsp;&nbsp;>@ON c.id = o.customer_id _
+UNION _
+SELECT * _
+FROM customers c _
+RIGHT JOIN orders o _
+@<&nbsp;&nbsp;>@ON c.id = o.customer_id;|| ||
 ||[[# cartesian-join]][#cartesian-join-note cartesian join]||SELECT * _
-FROM rows, columns;|| || ||
+FROM rows, columns;||SELECT * _
+FROM rows, columns;|| ||
 ||||||||~ [[# aggregate]][#aggregate-note aggregate]||
 ||~ ||~ postgresql||~ mysql||~ sqlite||
 ||[[# row-count]][#row-count-note row count] _
@@ -246,18 +262,14 @@ create index foo_bar_idx on foo (bar);||create index foo_bar_idx on foo ( bar );
 ||index hint|| || || ||
 ||||||||~ [[# import-export]][#import-export-note import and export]||
 ||~ ||~ postgresql||~ mysql||~ sqlite||
-||[[# import-tab]][#import-tab-note import tab delimited]||##gray|//what about header//## _
- _
-$ grep -v '^#' /etc/passwd | tr ':' '\t' > /tmp/passwd.tab _
- _
-$ echo 'create table etc_passwd ( name text, pw text, uid int, gid int, gecos text, home text, shell text );' | psql _
- _
-$ ( echo 'copy etc_passwd from stdin;' ; cat /tmp/passwd.tab ) | psql|| || ||
 ||[[# import-csv]][#import-csv-note import csv]||$ echo $'1,"one, two, three"\n2,four\n3,"five\nsix\nseven"' > /tmp/test.csv _
  _
 $ echo 'create table test_csv ( col1 int, col2 text );' | psql _
  _
-$ ( echo 'copy test_csv from stdin with (format csv); '; cat /tmp/test.csv ) | psql|| ||$ echo $'1,"one, two, three"\n2,four\n3,"five\nsix\nseven"' > /tmp/test.csv _
+$ ( echo 'copy test_csv from stdin with (format csv); '; cat /tmp/test.csv ) | psql _
+ _
+##gray|//trim header if there is one://## _
+( echo 'copy test_csv from stdin with (format csv); '; sed -n '2,$p' /tmp/test.csv ) | psql || ||$ echo $'1,"one, two, three"\n2,four\n3,"five\nsix\nseven"' > /tmp/test.csv _
  _
 $ sqlite3 _
  _
@@ -266,27 +278,6 @@ $ sqlite3 _
 @@>@@ .mode csv _
  _
 @@>@@ .import /tmp/test.csv test_csv||
-||[[# export-tab]][#export-tab-note export tab delimited]||##gray|//what about tabs or newlines in data//## _
- _
-echo 'copy foo to stdout;' | psql > /tmp/foo.tab _
- _
-##gray|//how to export at psql prompt://## _
-\f '\t' _
-\a _
-\pset footer off _
-\o foo.tab _
-select * from foo; _
-\o||##gray|user must have 'FILE' privilege: _
- _
- grant  FILE on *.* to 'joe'@'localhost';## _
- _
-SELECT * _
-INTO OUTFILE '/tmp/dump.tab' _
-FIELDS TERMINATED BY '\t' _
-LINES TERMINATED BY '\n' _
-FROM foo;||.mode tabs _
-.output /tmp/foo.tab _
-select * from foo;||
 ||[[# export-csv]][#export-csv-note export csv]||$ echo 'copy foo to stdout with (format csv);' | psql > /tmp/foo.csv||##gray|grant  FILE on *.* to 'joe'@'localhost';## _
  _
 SELECT * _

@@ -733,7 +733,9 @@ end||
 ||||||||||~ [[# objects]][#objects-note objects]||
 ||~  ||~ javascript||~ php||~ python||~ ruby||
 ||[[# def-class]][#def-class-note define class] _
-@<&nbsp;>@|| ||##purple|class## ##green|Int## _
+@<&nbsp;>@||function Int(i) { _
+@<&nbsp;&nbsp;>@this.value = i === undefined ? 0 : i; _
+}||##purple|class## ##green|Int## _
 { _
 @<&nbsp;&nbsp;>@##purple|public## $##peru|value##; _
 @<&nbsp;&nbsp;>@##purple|function## ##mediumblue|__construct##($##peru|int##=0) _
@@ -749,18 +751,23 @@ end||
 @<&nbsp;&nbsp;>@##purple|end## _
 ##purple|end##||
 ||[[# create-obj]][#create-obj-note create object] _
-@<&nbsp;>@|| ||$##peru|i## = ##purple|new## ##green|Int##(); _
+@<&nbsp;>@||var i = new Int(); _
+var i2 = new Int(7);||$##peru|i## = ##purple|new## ##green|Int##(); _
 $##peru|i2## = ##purple|new## ##green|Int##(7);||##peru|i## = Int() _
 ##peru|i2## = Int(7)||i = ##green|Int##.new _
 i2 = ##green|Int##.new(7)||
-||[[# instance-var]][#instance-var-note instance variable visibility]|| ||##gray|//visibility must be declared//##||##gray|//public; attributes starting with underscore private by convention//##||##gray|//private by default; use// attr_reader, attr_writer, attr_accessor //to make public//##||
+||[[# instance-var]][#instance-var-note instance variable visibility]||##gray|//public//##||##gray|//visibility must be declared//##||##gray|//public; attributes starting with underscore private by convention//##||##gray|//private by default; use// attr_reader, attr_writer, attr_accessor //to make public//##||
 ||[[# getter-setter]][#getter-setter-note get and set instance variable] _
-@<&nbsp;>@|| ||$##peru|v## = $##peru|i##->##peru|value##; _
+@<&nbsp;>@||var v = i.value; _
+i.value = v + 1;||$##peru|v## = $##peru|i##->##peru|value##; _
 $##peru|i##->##peru|value## = $##peru|v## + 1;||##peru|v## = i.value _
 i.value = v + 1||v = i.value _
 i.value = v + 1||
 ||[[# def-method]][#def-method-note define method] _
-@<&nbsp;>@|| ||##purple|function## ##0000CD|plus##($##peru|i##) _
+@<&nbsp;>@||##gray|/* inside constructor: */## _
+this.plus = function(v) { _
+@<&nbsp;&nbsp;>@return this.value + v; _
+};||##purple|function## ##0000CD|plus##($##peru|i##) _
 { _
 @<&nbsp;&nbsp;>@##purple|return## $##teal|this##->##peru|value## + $##peru|i##; _
 }||##purple|def## ##0000CD|plus##(##purple|self##,v): _
@@ -768,7 +775,7 @@ i.value = v + 1||
 @<&nbsp;&nbsp;>@value + i _
 ##purple|end##||
 ||[[# invoke-method]][#invoke-method-note invoke method] _
-@<&nbsp;>@|| ||$##peru|i##->plus(7)||i.plus(7)||i.plus(7)||
+@<&nbsp;>@||i.plus(3);||$##peru|i##->plus(7)||i.plus(7)||i.plus(7)||
 ||[[# def-class-method]][#def-class-method-note define class method]|| || ||##green|@classmethod## _
 ##purple|def## ##mediumblue|get_instances##(cls): _
 @<&nbsp;&nbsp;>@##purple|return## Counter.instances||class Foo _
@@ -1263,7 +1270,8 @@ py_compile.compile(##maroon|'foo.py'##)||$ ruby -c foo.rb||
 ||[[# warnings-flag]][#warnings-flag-note flags for stronger and strongest warnings]|| ||##gray|//none//##||$ python -t foo.py _
 $ python -3t foo.py||$ ruby -w foo.rb _
 $ ruby -W2 foo.rb||
-||[[# lint]][#lint-note lint]|| || ||$ sudo pip install pylint _
+||[[# lint]][#lint-note lint]||$ npm install jshint _
+$ ./node_modules/jshint/bin/jshint foo.js|| ||$ sudo pip install pylint _
 $ pylint foo.py||$ sudo gem install rubocop _
 $ rubocop -D foo.rb||
 ||[[# src-cleanup]][#src-cleanup-note source cleanup]|| || ||$ sudo pip install pep8 _

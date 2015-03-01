@@ -639,7 +639,10 @@ expr 0 '<' 1||
 ||[[# eval]][#eval-note eval]||while true; do _
 @<&nbsp;&nbsp;>@read -p '$ ' cmd _
 @<&nbsp;&nbsp;>@eval $cmd _
-done|| ||while true; do _
+done||while true _
+@<&nbsp;&nbsp;>@read cmd _
+@<&nbsp;&nbsp;>@eval $cmd _
+end||while true; do _
 @<&nbsp;&nbsp;>@read cmd?'$ ' _
 @<&nbsp;&nbsp;>@eval $cmd _
 done||while (1) _

@@ -22,10 +22,11 @@ $ git help||$ hg [-v] help _
 ||create repository with no working directory||$ git init @@--@@bare [DIR] _
  _
 ##gray|//puts repo in// DIR##||##gray|//none//##||
-||clone entire repository||$ git clone [-b [#BRANCH BRANCH]] [-o NAME] [#URL URL] [DIR] _
+||clone entire repository||$ git clone [-b [#BRANCH BRANCH]] [-o NAME] [@@--@@depth NUM] [#URL URL] [DIR] _
  _
 ##gray|-b: //checkout// BRANCH //in working dir// _
--o: //assign// NAME //to remote repo//##|| ||
+-o: //assign// NAME //to remote repo// _
+@@--@@depth: //copy commit history to depth NUM//##|| ||
 ||repository url formats||##gray|@@ssh://[user@]host.xz[:port]/path/to/repo.git/@@ _
 @@git://host.xz[:port]/path/to/repo.git/@@ _
 @@http[s]://host.xz[:port]/path/to/repo.git/@@ _
@@ -38,7 +39,7 @@ $ git help||$ hg [-v] help _
 @@https://[user[:pass]@]host[:port]/[path][#revision]@@ _
 @@ssh://[user@]host[:port]/[path][#revision]@@##||
 ||clone branch from repository|| ||$ hg clone [-r REV|-b BRANCH] … URL [DIR]||
-||clone repository; new repository has no working directory||$ git [http://schacon.github.com/git/git-clone.html clone] @@--@@bare [#URL URL] @@[@@[#DIR DIR]] _
+||clone repository; new repository has no working directory||$ git clone @@--@@bare [#URL URL] @@[@@[#DIR DIR]] _
  _
 ##gray|//puts repo in// DIR##||$ hg clone -U URL [DIR] _
  _
@@ -687,7 +688,7 @@ Mercurial bookmarks work like Git branches, with the exception that Mercurial do
 [[# list-dedicated-commit-branches-note]]
 ++ [#list-dedicated-commit-branches list "dedicated commit" branches]
 
-"dedicated commit" branches is the term used in this sheet to distinguish Mercurial-style branches from Git-style branches.  Note that Mercurial bookmarks are equivalent to Git-style branches.
+"dedicated commit" branches is the term used in this sheet to distinguish Mercurial-style branches from Git-style branches.  Mercurial bookmarks are equivalent to Git-style branches.
 
 In Git, branches are names which contain the hash of a commit.  This commit is the head of the branch, and because each commit knows its parents, the entire history of the branch can be constructed.  Git commits can belong to multiple branches, or they can belong to none at all.  If a Git commit is not reachable from any branch or tag, it is at risk of being garbage collected.
 

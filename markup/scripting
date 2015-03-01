@@ -58,7 +58,9 @@ another line _
 ||||||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
 ||~  ||~ javascript||~ php||~ python||~ ruby||
 ||[[# local-var]][#local-var-note local variable] _
-@<&nbsp;>@||var x = 1;||##gray|# in function body:## _
+@<&nbsp;>@||var x = 1; _
+ _
+var y = 2, z = 3;||##gray|# in function body:## _
 $##peru|v## = ##teal|NULL##; _
 $##peru|a## = []; _
 $##peru|d## = []; _
@@ -578,9 +580,17 @@ $##peru|s##[6];||##maroon|'lorem ipsum'##[6]||##maroon|"lorem ipsum"##[6]||
 @<&nbsp;>@||String.fromCharCode(65) _
 "A".charCodeAt(0)||chr(65) _
 ord(##maroon|"A"##)||##purple|chr##(65) _
-##purple|ord##(##maroon|'A'##)||65.chr _
-##maroon|"A"##.ord||
-||[[# str-to-char-array]][#str-to-char-array-note to array of characters]||"abcd".split("")||str_split(##maroon|"abcd"##)||##purple|list##(##maroon|'abcd'##)||##maroon|"abcd"##.split(##maroon|""##)||
+##purple|ord##(##maroon|'A'##) _
+ _
+##gray|# Python 3:## _
+##purple|chr##(0x3bb) _
+##purple|ord##(##maroon|'\u03bb'##)||65.chr _
+##maroon|"A"##.ord _
+ _
+0x3bb.chr(##maroon|'UTF-8'##) _
+##maroon|"\u03bb"##.codepoints.first||
+||[[# str-to-char-array]][#str-to-char-array-note to array of characters] _
+@<&nbsp;>@||"abcd".split("")||str_split(##maroon|"abcd"##)||##purple|list##(##maroon|'abcd'##)||##maroon|"abcd"##.split(##maroon|""##)||
 ||[[# translate-char]][#translate-char-note translate characters] _
 @<&nbsp;>@||##gray|//none//##||$##peru|ins## = implode(range(##maroon|"a"##, ##maroon|"z"##)); _
 $##peru|outs## = substr($##peru|ins##, 13, 13) . _
@@ -1294,7 +1304,7 @@ add3 1, 2, 3||
 ||[[# missing-arg]][#missing-arg-note missing argument behavior] _
 @<&nbsp;>@||##gray|//set to// undefined##||##gray|//set to// NULL //with warning//##||##gray|//raises// TypeError //if number of arguments doesn't match function arity//##||##gray|//raises// ArgumentError //if number of arguments doesn't match function arity//##||
 ||[[# extra-arg]][#extra-arg-note extra argument behavior] _
-@<&nbsp;>@|| || ||##gray|//raises// TypeError //if number of arguments doesn't match function arity//##||##gray|//raises// ArgumentError //if number of arguments doesn't match function arity//##||
+@<&nbsp;>@||##gray|//ignored//##||##gray|//ignored//##||##gray|//raises// TypeError //if number of arguments doesn't match function arity//##||##gray|//raises// ArgumentError //if number of arguments doesn't match function arity//##||
 ||[[# default-arg]][#default-arg-note default argument] _
 @<&nbsp;>@||##gray|//none//##||##purple|function## ##mediumblue|my_log##($##peru|x##, $##peru|base##=10) _
 { _
