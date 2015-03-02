@@ -516,7 +516,11 @@ char *s3 = (char *)calloc(len, sizeof(char)); _
 strcpy(s3, s1); _
 strcat(s3, s2); _
  _
-##gray|/* also wcscpy and wcscat */##||"hello" + " world"||"hello" + " world"||
+##gray|/* also wcscpy and wcscat */## _
+ _
+##gray|// with GNU extensions: ## _
+char *s4; _
+asprintf(&s4, "%s%s", s1, s2);||"hello" + " world"||"hello" + " world"||
 ||[[# str-replicate]][#str-replicate-note replicate]||##gray|//none//##||import "strings" _
  _
 hbar := strings.Repeat("-", 80)||var hbar = "-" * 80;||
