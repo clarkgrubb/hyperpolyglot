@@ -1,6 +1,6 @@
 [[# top]]//a side-by-side reference sheet//
 
-[#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#fixed-length-arrays fixed-length-arrays] | [#resizable-arrays resizable arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#concurrency concurrency] | [#file-handles file handles] | [#files files] | [#directories directories] | [#processes-environment processes and environment] | [#option-parsing option parsing] | [#libraries-namespaces libraries and namespaces] | [#user-defined-types user-defined types] | [#objects objects] | [#reflection reflection] | [#macros macros] | [#net-web net and web] | [#dom dom] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling]
+[#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#fixed-length-arrays fixed-length-arrays] | [#resizable-arrays resizable arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#concurrency concurrency] | [#file-handles file handles] | [#files files] | [#directories directories] | [#processes-environment processes and environment] | [#option-parsing option parsing] | [#libraries-namespaces libraries and namespaces] | [#user-defined-types user-defined types] | [#objects objects] | [#reflection reflection] | [#cpp-macros c preprocessor macros] | [#net-web net and web] | [#dom dom] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling]
 
 ||||||||~ [[# version]][#version-note version]||
 ||~ ||~ [#c c]||~ [#go go]||~ [#dart dart]||
@@ -74,7 +74,8 @@ int i; _
 int j = 3; _
  _
  ##gray|/* memory allocated on heap: */## _
-int *ptr = malloc(sizeof(int)); _
+int *ptr = malloc(sizeof *ptr); _
+##gray|/* if malloc fails, it returns NULL and sets errno to ENOMEM */## _
 *ptr = 7;||##gray|@@//@@ memory allocated on stack:## _
 var i int _
  _
@@ -87,10 +88,10 @@ ptr := new(int) _
 int j = 3;||
 ||[[# free-heap]][#free-heap-note free heap] _
 @<&nbsp;>@||free(ptr);||##gray|//none; uses garbage collection//##||##gray|//none; uses garbage collection//##|||
-||[[# global-var]][#global-var-note global variable]||##gray|/* in foo.cpp, outside of any function: */## _
+||[[# global-var]][#global-var-note global variable]||##gray|/* in foo.c, outside of any function: */## _
 int x = 7; _
  _
-##gray|/* to declare in bar.cpp: */## _
+##gray|/* to declare in bar.c: */## _
 extern int x;||##gray|@@//@@ foo.go:## _
 package foo _
  _
@@ -110,7 +111,11 @@ func baz() { _
  _
 @<&nbsp;&nbsp;>@fmt.Println(foo.X + y + z) _
 }|| ||
-||[[# uninitialized-var]][#uninitialized-var-note uninitialized variable]||##gray|//Stack variables and heap variables allocated with// malloc //have indeterminate values.  Global and static variables and heap variables allocated with// calloc //are zero-initialized.//##||##gray|//Every type has a zero value.  For numeric types it is zero and for strings it is the empty string.//##||##gray|//set to// null##||
+||[[# uninitialized-var]][#uninitialized-var-note uninitialized variable]||##gray|//The behavior of reading from uninitialized stack variables or unitialized memory allocated by// malloc //is undefined. _
+ _
+Global and static variables are zero-initialized. _
+ _
+Heap variables allocated by// calloc //have their bytes zeroed.//##||##gray|//Every type has a zero value.  For numeric types it is zero and for strings it is the empty string.//##||##gray|//set to// null##||
 ||[[# compile-time-const]][#compile-time-const-note compile time constant]||##gray|/* usually preprocessor is used: */## _
 #define PI 3.14||const Pi = 3.14||const double pi = 3.14;||
 ||[[# immutable-var]][#immutable-var-note immutable variable]||const int i = rand();||##gray|//none//##||import 'dart:math'; _
@@ -169,10 +174,11 @@ ptr = &i _
 ptr2 := &i||##gray|//none//##||
 ||[[# dereference]][#dereference-note dereference] _
 @<&nbsp;>@||int i2 = *ptr;||i2 := *ptr||##gray|//none//##||
-||[[# type-size]][#type-size-note type size]||sizeof(int) _
+||[[# type-size]][#type-size-note type size]||##gray|/* put type inside parens: */## _
+sizeof (int) _
  _
-##gray|/* also expressions and values: */## _
-sizeof(1 + 1)||import "unsafe" _
+##gray|/* expressions and values don't require parens: */## _
+sizeof 1 + 1||import "unsafe" _
  _
 ##gray|@@//@@ use expression or name of variable with type:## _
 unsafe.Sizeof(i) _
@@ -195,14 +201,14 @@ nil||null||
 ||[[# boolean-type]][#boolean-type-note boolean type] _
 @<&nbsp;>@||int _
  _
-##gray|/* includes macros for consistency with C++: */## _
+##gray|/* includes type for consistency with C++: */## _
 #include <stdbool.h> _
  _
 bool||bool||bool||
 ||[[# true-false]][#true-false-note true and false] _
 @<&nbsp;>@||1 0 _
  _
-##gray|/* includes macros for consistency with C++: */## _
+##gray|/* includes identifiers for consistency with C++: */## _
 #include <stdbool.h> _
  _
 true false||true false||true false||
@@ -212,26 +218,34 @@ true false||true false||true false||
 @<&nbsp;>@||&& @@||@@ !||&& @@||@@ !||&& @@||@@ !||
 ||[[# relational-op]][#relational-op-note relational operators] _
 @<&nbsp;>@||== != < > <= >=||== != < > <= >=||== != < > <= >=||
-||[[# int-type]][#int-type-note integer type]||signed char ##gray|//1+ byte//## _
+||[[# int-type]][#int-type-note integer type]||signed char ##gray|//1+ bytes//## _
 short int ##gray|//2+ bytes//## _
 int ##gray|//2+ bytes//## _
 long int ##gray|//4+ bytes//## _
-long long int ##gray|//4+ bytes//##||int  _
+long long int ##gray|//4+ bytes//## _
+ _
+##gray|//types with portable sizes are defined in// stdint.h:## _
+int8_t int16_t int32_t int64_t||int  _
 int8  _
 int16  _
 int32  _
 int64||int||
-||[[# unsigned-type]][#unsigned-type-note unsigned type]||unsigned char: 8+ _
+||[[# unsigned-type]][#unsigned-type-note unsigned type]||unsigned char: ##gray|//1+ bytes//## _
 unsigned short int ##gray|//2 bytes+//## _
 unsigned int ##gray|//2 bytes+//## _
 unsigned long int ##gray|//4+ bytes//## _
-unsigned long long int ##gray|//4+ bytes//##||uint8 (byte) _
+unsigned long long int ##gray|//4+ bytes//## _
+ _
+##gray|//types with portable sizes are defined in// stdint.h:## _
+uint8_t uint16_t uint32_t uint64_t||uint8 (byte) _
 uint16 _
 uint32 _
 uint64||##gray|//none//##||
 ||[[# float-type]][#float-type-note float type]||float ##gray|//4 bytes//## _
 double ##gray|//8 bytes//## _
-long double ##gray|//16 bytes//##||float32 _
+long double ##gray|//16 bytes//## _
+ _
+##gray|//registers may be larger on some systems//##||float32 _
 float64||double||
 ||[[# arith-op]][#arith-op-note arithmetic operators] _
 @<&nbsp;>@||@@+@@ - * / %||@@+@@ - * / %||@@+@@ - * / %||
@@ -364,11 +378,11 @@ x = cmplx.Phase(z) _
 x = cmplx.Abs(z) _
 w = cmplx.Conj(z)||##gray|//none//##||
 ||[[# random-num]][#random-num-note random number] _
-##gray|//uniform integer, uniform float//##||##gray|/* Value between 0 and RAND_MAX inclusive: */## _
-int n = rand(); _
+##gray|//uniform integer, uniform float//##||##gray|/* lrand48 returns value in [0, 2**31 - 1]: */## _
+long n = lrand48(()  % 100; _
  _
-##gray|/* Value in interval [0.0, 1.0]: */## _
-float x = (float)rand()/(float)RAND_MAX;||import "math/rand" _
+##gray|/* Value in interval [0.0, 1.0): */## _
+double x = drand48();||import "math/rand" _
  _
 n := rand.Intn(100) _
 x := rand.Float64()||import 'dart:math'; _
@@ -376,7 +390,7 @@ x := rand.Float64()||import 'dart:math'; _
 var rnd = new Random(); _
 int n = rnd.nextInt(100); _
 int x = rnd.nextDouble();||
-||[[# random-seed]][#random-seed-note random seed]||srand(17);||import "math/rand" _
+||[[# random-seed]][#random-seed-note random seed]||srand48(17);||import "math/rand" _
  _
 rand.Seed(17)||import 'dart:math'; _
  _
@@ -389,7 +403,7 @@ var rnd = new Random(17);||
 @<&nbsp;>@||char * _
 wchar_t * _
  _
-##gray|//The size of// wchar_t //is compiler dependent; gcc and clang use 32 bits; msvc uses 16 bits.//##||string||String||
+##gray|wchar_t //is typically 32 bits on Linux and 16 bits on Windows.//##||string||String||
 ||[[# str-literal]][#str-literal-note string literal] _
 @<&nbsp;>@||##gray|/* string in initialized data segment: */## _
 char *s = "hello"; _
@@ -511,7 +525,7 @@ s := strings.Join(parts, " ")||['foo', 'bar', 'baz'].join(' ')||
 ||[[# str-concat]][#str-concat-note concatenate]||char *s1 = "hello"; _
 char *s2 = " world"; _
 size_t len = strlen(s1) + strlen(s2) + 1; _
-char *s3 = (char *)calloc(len, sizeof(char)); _
+char *s3 = (char *)calloc(len, sizeof *s3); _
  _
 strcpy(s3, s1); _
 strcat(s3, s2); _
@@ -894,7 +908,7 @@ int a[10];||##gray|//compiler decides location in memory//##|| ||
 ||[[# allocate-array-on-heap]][#allocate-array-on-heap-note allocate on heap]||#include <stdlib.h> _
  _
 ##gray|/* memory zero-initialized: */## _
-int *a = calloc(10, sizeof(int));||##gray|//compiler decides location in memory//##|| ||
+int *a = calloc(10, sizeof *a);||##gray|//compiler decides location in memory//##|| ||
 ||[[# free-array-on-heap]][#free-array-on-heap-note free heap] _
 @<&nbsp;>@||free(a);||##gray|//none; garbage collected//##|| ||
 ||[[# array-literal]][#array-literal-note literal] _
@@ -973,7 +987,7 @@ compare(const void *a, const void *b) { _
 int a[5] = {6, 8, 10, 9, 7}; _
  _
 ##gray|/* 2nd arg is array length; 3rd arg is element size */## _
-qsort(a, 5, sizeof(int), &compare);|| || ||
+qsort(a, 5, sizeof (int), &compare);|| || ||
 ||||||||~ [[# resizable-arrays]][#resizable-arrays-note resizable arrays]||
 ||~ ||~ c||~ go||~ dart||
 ||[[# declare-array]][#declare-array-note declare]|| ||##gray|@@//@@ slice of length 5; capacity 10:## _
@@ -1139,7 +1153,7 @@ char* concat(int cnt,  @@...@@) { _
 @<&nbsp;&nbsp;>@} _
 @<&nbsp;&nbsp;>@va_end(ap); _
  _
-@<&nbsp;&nbsp;>@retval = calloc(len + 1, sizeof(char)); _
+@<&nbsp;&nbsp;>@retval = calloc(len + 1, sizeof *retval); _
  _
 @<&nbsp;&nbsp;>@va_start(ap, cnt); _
 @<&nbsp;&nbsp;>@for (i = 0, len = 0; i < cnt; i++) { _
@@ -1410,23 +1424,29 @@ cleanup: _
  _
 Cleanup: _
 @<&nbsp;&nbsp;>@fmt.Println("cleaning up@@...@@")||##gray|//none//##||
-||[[# longjmp]][#longjmp-note longjmp]||void _
+||[[# longjmp]][#longjmp-note longjump]||#include <setjmp.h> _
+ _
+void _
 callee(jmp_buf env) { _
-@<&nbsp;&nbsp;>@longjmp(env, 3); _
-@<&nbsp;&nbsp;>@##gray|/* unreachable */## _
+@<&nbsp;&nbsp;>@longjmp(env, 1); _
+@<&nbsp;&nbsp;>@/* unreachable */ _
 } _
  _
 void _
 caller() { _
 @<&nbsp;&nbsp;>@jmp_buf env; _
-@<&nbsp;&nbsp;>@int rv; _
  _
-@<&nbsp;&nbsp;>@if ((rv = setjmp(env)) == 0) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|/* rv is 0 */## _
+@<&nbsp;&nbsp;>@switch (setjmp(env)) { _
+@<&nbsp;&nbsp;>@case 0: _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@callee(env); _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|/* unreachable */## _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@/* unreachable */ _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@break; _
+@<&nbsp;&nbsp;>@case 1: _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@printf("returned from callee\n"); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@break; _
+@<&nbsp;&nbsp;>@default: _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@printf("unexpected setjump value\n"); _
 @<&nbsp;&nbsp;>@} _
-@<&nbsp;&nbsp;>@##gray|/* rv is 3 */## _
 }||##gray|//none//##||##gray|//none//##||
 ||||||||~ [[# exceptions]][#exceptions-note exceptions]||
 ||~ ||~ c||~ go||~ dart||
@@ -1562,9 +1582,9 @@ FILE *f = fopen("/tmp/err.log", "a");|| || ||
 ||[[# close-file]][#close-file-note close file]||##gray|/* returns EOF on error */## _
 int retval = fclose(f);|| || ||
 ||[[# close-file-implicitly]][#close-file-implicitly-note close file implicitly]||##gray|//none//##||##gray|//defer//##|| ||
-||[[# io-err]][#io-err-note i/o errors]||##gray|//Functions return values such as// EOF, NULL, //or// -1 //to indicate error.  In some cases errors are not distinguished from end-of-file.  The functions// ferror() //and// feof() //can be used to test a file handle. _
+||[[# io-err]][#io-err-note i/o errors]||##gray|//Functions return values such as// EOF, NULL, //or// -1 //to indicate error. Some functions return the value of// errno.  //In some cases errors are not distinguished from end-of-file.  The functions// ferror() //and// feof() //can be used to test a file handle. _
  _
-The type of error is stored in// errno.  strerror(errno) //converts the errors code to a string and// perror() //writes its argument to// stderr //with// sterror(errno).##|| || ||
+The type of error is stored in// errno.  strerror(errno) //or the thread safe// strerror_r(errno, buf, buflen) //convert the errors code to a string and// perror() //writes its argument to// stderr //with// sterror(errno).##|| || ||
 ||[[# read-line]][#read-line-note read line]||char line[BUFSIZ]; _
  _
 if (fgets(line, BUFSIZ, f) == NULL) { _
@@ -1809,22 +1829,25 @@ pathname := path.Join("/etc", "hosts") _
 fmt.Printf("path: %s\n", pathname)|| ||
 ||[[# dirname-basename]][#dirname-basename-note dirname and basename]||#include <libgen.h> _
  _
-##gray|/* return pointers to statically allocated memory _
-@<&nbsp;&nbsp;&nbsp;>@which is overwritten by subsequent calls */## _
-char *s1 = dirname("/etc/hosts"); _
-char *s2 = basename("/etc/hosts");||import "path" _
+char *s1 = strdup("/etc/hosts"); _
+char *s2 = strdup("/etc/hosts"); _
+##gray|/* Check whether s1 or s2 are NULL. */## _
+ _
+##gray|/* Some implementations return pointers to statically allocated _
+@<&nbsp;&nbsp;&nbsp;>@memory which is overwritten by subsequent calls; _
+@<&nbsp;&nbsp;&nbsp;>@others modify the input string. */## _
+char *s3 = dirname(s1); _
+char *s4 = basename(s2);||import "path" _
  _
 path.Dir("/etc/hosts") _
 path.Base("/etc/hosts")|| ||
-||[[# absolute-pathname]][#absolute-pathname-note absolute pathname]||#include <limits.h> _
+||[[# absolute-pathname]][#absolute-pathname-note absolute pathname]||char *s; _
  _
-char buf[PATH_MAX]; _
- _
-if (realpath("..", buf) == NULL) { _
+if ((s = realpath("..", NULL)) == NULL) { _
 @<&nbsp;&nbsp;>@perror("realpath failed"); _
 } _
 else { _
-@<&nbsp;&nbsp;>@##gray|/* use buf */## _
+@<&nbsp;&nbsp;>@##gray|/* use s */## _
 }|| || ||
 ||[[# dir-iterate]][#dir-iterate-note iterate over directory by file]||#include <dirent.h> _
  _
@@ -2011,19 +2034,21 @@ fmt.Println(os.Getpid()) _
 fmt.Println(os.Getppid())|| ||
 ||[[# signal-handler]][#signal-handler-note set signal handler]||#include <signal.h> _
  _
+##gray|/* assumes a POSIX environment */## _
 void _
 handle_signal(int signo) { _
+@<&nbsp;&nbsp;>@int restore = errno; _
 @<&nbsp;&nbsp;>@switch(signo) { _
 @<&nbsp;&nbsp;>@case SIGUSR1: _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@puts("caught SIGUSR1"); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@write(1, "caught SIGUSR1\n", 15); _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@break; _
 @<&nbsp;&nbsp;>@default: _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@printf("unexpected signal: %s", strsignal(signo)); _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@break; _
 @<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@errno = restore; _
 } _
  _
-##gray|/*2nd arg can also be SIG_IGN or SIG_DFL */## _
+##gray|/* 2nd arg can also be SIG_IGN or SIG_DFL */## _
 sig_t prev_handler = signal(SIGUSR1, &handle_signal); _
  _
 if (prev_handler == SIG_ERR) { _
@@ -2146,8 +2171,9 @@ enum day_of_week dow = tue;|| || ||
 @<&nbsp;&nbsp;>@silver int _
 @<&nbsp;&nbsp;>@bronze int _
 }|| ||
-||[#struct-declaration struct declaration]||struct medal_count spain;|| || ||
-||[#struct-initialization struct initialization]||struct medal_count spain = { "Spain", 3, 7, 4}; _
+||[#struct-declaration struct declaration] _
+@<&nbsp;>@||struct medal_count spain;|| || ||
+||[#struct-initialization struct initialization]||struct medal_count spain = {"Spain", 3, 7, 4}; _
  _
 struct medal_count france = { _
 @<&nbsp;&nbsp;>@.gold = 8, _
@@ -2161,6 +2187,14 @@ france := MedalCount{ _
 @<&nbsp;&nbsp;>@silver: 7, _
 @<&nbsp;&nbsp;>@gold: 8, _
 @<&nbsp;&nbsp;>@country: "France"}|| ||
+||[[# struct-literal]][#struct-literal-note struct literal]||struct medal_count france; _
+ _
+france = (struct medal_count) { _
+@<&nbsp;&nbsp;>@.gold = 8, _
+@<&nbsp;&nbsp;>@.silver = 7, _
+@<&nbsp;&nbsp;>@.bronze = 9, _
+@<&nbsp;&nbsp;>@.country = "France" _
+};|| || ||
 ||[#struct-member-assignment struct member assignment]||spain.country = "Spain"; _
 spain.gold = 3; _
 spain.silver = 7; _
@@ -2186,7 +2220,7 @@ if (n is! String) { _
 }||
 ||basic types|| || ||dynamic _
 num||
-||||||||~ [[# macros]][#macros-note macros]||
+||||||||~ [[# cpp-macros]][#cpp-macros-note c preprocessor macros]||
 ||~ ||~ c||~ go||~ dart||
 ||[[# include-file]][#include-file-note include file]||##gray|/* search path include system directories: */## _
 #include <stdio.h> _
@@ -2200,7 +2234,7 @@ num||
 ||macro with arguments||#define MIN(X, Y)  ((X) < (Y) ? (X) : (Y))|| || ||
 ||stringify macro argument|| || || ||
 ||concatenate tokens|| || || ||
-||conditional compilation||#if defined(__WIN32) _
+||conditional compilation||#if defined __WIN32 _
 @<&nbsp;&nbsp;>@win32_prinft("%f\n", x); _
 #else _
 @<&nbsp;&nbsp;>@printf("%f\n", x); _
@@ -2382,11 +2416,11 @@ drand48 _
 exit _
 free _
 getenv _
+lrand48 _
 malloc _
 mkdtemp _
 putenv _
 qsort _
-rand _
 realpath _
 srand _
 strtod _
@@ -3343,7 +3377,7 @@ char* concat(char* first,  ...) {
 
   va_end(ap);
 
-  retval = calloc(len+1,sizeof(char));
+  retval = calloc(len+1, sizeof *retval);
 
   va_start(ap, first);
 
@@ -3752,6 +3786,29 @@ On Linux and Mac OS X the value returned to the parent is {{exit_arg & 0377}}.  
 
 The C standard library defines the values EXIT_SUCCESS and EXIT_FAILURE as an aid for writing code which is portable to systems which do not use 0 to indicate success.
 
+[[# signal-handler-note]]
+++ [#signal-handler set signal handler]
+
+How to set a signal handler on a POSIX system.
+
+A quirk about {{signal}} is that some systems (e.g. Solaris) do not leave the signal handler registered after handling a signal.  Mac OS X and Linux do leave the signal handler registered.
+
+For portability, one can used {{sigaction}} instead of {{signal}}.
+
+Before writing a signal handler, review the list of permitted functions that you can call from the signal handler.  The list is available in {{man 2 sigaction}} on Mac OS X and {{man 7 signal}} on Linux.
+
+[[code]]
+$ man 2 sigaction
+
+$ man 7 signal
+[[/code]]
+
+* re-entrant functions
+* sigaction
+
+[[# send-signal-note]]
+++ [#send-signal send signal]
+
 [[# option-parsing-note]]
 + [#option-parsing Option Parsing]
 
@@ -3889,8 +3946,7 @@ The literal format for a struct can only be used during initialization.  If the 
 
 **c:**
 
-The period operator used for member access has higher precedence than the pointer operator.  Thus parens must be used
-to get at the member of a struct referenced by a pointer:
+The period operator used for member access has higher precedence than the pointer operator.  Thus parens must be used to get at the member of a struct referenced by a pointer:
 
 [[code]]
 struct medal_count {
@@ -3917,8 +3973,8 @@ printf("The winner (%s) earned %d silver medals", winner->country, winner->silve
 [[# reflection-note]]
 + [#reflection Reflection]
 
-[[# macros-note]]
-+ [#macros Macros]
+[[# cpp-macros-note]]
++ [#cpp-macros C Preprocessor Macros]
 
 * https://gcc.gnu.org/onlinedocs/cpp/
 

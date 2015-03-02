@@ -185,32 +185,36 @@ M-a||
 ||[[# del-prev-char]][#del-prev-char-note delete previous char]||X||DEL||M-x delete-backward-char||C-h||
 ||[[# del-next-word]][#del-next-word-note delete next word]||dw||M-d||M-x kill-word|| ||
 ||[[# del-prev-word]][#del-prev-word-note delete previous word]|| ||M-DEL||M-x backward-kill-word|| ||
-||delete to char|| ||M-z||M-x zap-to-char|| ||
+||[[# delete-to-char]][#delete-to-char-note delete to char]|| ||M-z||M-x zap-to-char|| ||
 ||[[# del-line]][#del-line-note delete to end of line]||d$ _
 D||C-k||M-x kill-line|| ||
-||delete line||dd||C-a C-k C-k|| ||C-k||
-||delete newline||##gray|//point on line://## _
+||[[# delete-line]][#delete-line-note delete line]||dd||C-a C-k C-k|| ||C-k||
+||[[# delete-newline]][#delete-newline-note delete newline]||##gray|//point on line://## _
 J||##gray|//point on line://## _
 C-e C-d _
 ##gray|//point on following line://## _
 C-a DEL|| || ||
-||copy line (vim calls this yank)||yy|| || || ||
-||kill region||##gray|//visual mode://## _
+||[[# copy-line]][#copy-line-note copy line] _
+ _
+##gray|//vim calls this yank//##||yy|| || || ||
+||[[# kill-region]][#kill-region-note kill region]||##gray|//visual mode://## _
 d||C-w||M-x kill-region|| ||
-||copy region||##gray|//visual mode://## _
+||[[# copy-region]][#copy-region-note copy region]||##gray|//visual mode://## _
 y||M-w||M-x kill-ring-save||M-a _
 M-6||
-||paste (emacs calls this yank)||p _
+||[[# paste]][#paste-note paste] _
+ _
+##gray|//emacs calls this yank//##||p _
 P||C-y||M-x yank||C-u||
-||replace paste with previous copy|| ||M-y||M-x yank-pop|| ||
-||paste line below/above current line||##gray|//if buffer populated by// dd //or// yy:## _
+||[[# replace-paste-prev-copy]][#replace-paste-prev-copy-note replace paste with previous copy]|| ||M-y||M-x yank-pop|| ||
+||[[# paste-line-adjacent-current]][#paste-line-adjacent-current-note paste line below/above current line]||##gray|//if buffer populated by// dd //or// yy:## _
 p _
 P|| || || ||
-||delete lines matching regexp|| || ||M-x flush-lines|| ||
-||delete lines not matching regexp|| || ||M-x keep-lines|| ||
-||system copy||C-c ##gray|//or//## ⌘c || ||M-x clipboard-kill-ring-save|| ||
-||system paste||C-v ##gray|//or//## ⌘v|| ||M-x clipboard-yank|| ||
-||system cut|| || ||M-x clipboard-kill-region|| ||
+||[[# delete-lines-regex]][#delete-lines-regex-note delete lines matching regexp]|| || ||M-x flush-lines|| ||
+||[[# delete-lines-not-matching-regex]][#delete-lines-not-matching-regex-note delete lines not matching regexp]|| || ||M-x keep-lines|| ||
+||[[# system-copy]][#system-copy-note system copy]||C-c ##gray|//or//## ⌘c || ||M-x clipboard-kill-ring-save|| ||
+||[[# system-paste]][#system-paste-note system paste]||C-v ##gray|//or//## ⌘v|| ||M-x clipboard-yank|| ||
+||[[# system-cut]][#system-cut-note system cut]|| || ||M-x clipboard-kill-region|| ||
 ||||||||||~ [[# files-buffers]]**[#files-buffers-note files and buffers]**||
 ||~  ||~ vim||~ emacs||~ emacs||~ nano||
 ||[[# pwd]][#pwd-note show current directory] _
@@ -325,17 +329,17 @@ C-x u|| ||##gray|//none or//## M-e ##gray|//when invoked with// {{-u}} //flag//#
 @<&nbsp;>@||:undolist|| || || ||
 ||||||||||~ [[# searching-replacing]]**[#searching-replacing-note searching and replacing]**||
 ||~  ||~ vim||~ emacs||~ emacs||~ nano||
-||search||/||C-s||M-x isearch-forward||C-w||
-||repeat last search||n||C-s|| ||M-w||
-||repeat last search backward||N||C-r|| || ||
-||search backwards||?||C-r||M-x isearch-backward|| ||
-||next 'x' on line||f x|| || || ||
-||previous 'x' on line||F x|| || || ||
-||search and replace||:%s/##gray|//pat//##/##gray|//repl//##/g|| ||M-x query-replace||C-\ _
+||[[# search]][#search-note search]||/||C-s||M-x isearch-forward||C-w||
+||[[# repeat-last-search]][#repeat-last-search-note repeat last search]||n||C-s|| ||M-w||
+||[[# repeat-last-search-backward]][#repeat-last-search-backward-note repeat last search backward]||N||C-r|| || ||
+||[[# search-backwards]][#search-backwards-note search backwards]||?||C-r||M-x isearch-backward|| ||
+||[[# next-char-on-line]][#next-char-on-line-note next 'x' on line]||f x|| || || ||
+||[[# prev-char-on-line]][#prev-char-on-line-note previous 'x' on line]||F x|| || || ||
+||[[# search-replace]][#search-replace-note search and replace]||:%s/##gray|//pat//##/##gray|//repl//##/g|| ||M-x query-replace||C-\ _
 M-r||
-||recursive edit during search and replace|| ||C-r|| || ||
-||exit recursive edit|| ||C-M-c||M-x exit-recursive-edit|| ||
-||search multiple buffers|| || ||M-x multi-occur|| ||
+||[[# recursive-edit]][#recursive-edit-note recursive edit during search and replace]|| ||C-r|| || ||
+||[[# exit-recursive-edit]][#exit-recursive-edit-note exit recursive edit]|| ||C-M-c||M-x exit-recursive-edit|| ||
+||[[# search-multiple-buffers]][#search-multiple-buffers-note search multiple buffers]|| || ||M-x multi-occur|| ||
 ||||||||||~ [[# sorting]][[# counting]]**[#sorting-note sorting and counting]**||
 ||~  ||~ vim||~ emacs||~ emacs||~ nano||
 ||[[# sort]][#sort-note sort region]||##gray|//visual mode://## _
@@ -355,9 +359,15 @@ M-x sort-columns|| ||
 ||||||||||~ [[# case]]**[#case-note case]**||
 ||~  ||~ vim||~ emacs||~ emacs||~ nano||
 ||[[# uppercase-word]][#uppercase-word-note uppercase word] _
-@<&nbsp;>@|| ||M-u||M-x upcase-word|| ||
+@<&nbsp;>@||gUw _
+ _
+##gray|//uppercase line://## _
+gUU||M-u||M-x upcase-word|| ||
 ||[[# lowercase-word]][#lowercase-word-note lowercase word] _
-@<&nbsp;>@|| ||M-l||M-x downcase-word|| ||
+@<&nbsp;>@||guw _
+ _
+##gray|//lowercase line://## _
+guu||M-l||M-x downcase-word|| ||
 ||[[# capitalize-word]][#capitalize-word-note capitalize word] _
 @<&nbsp;>@|| ||M-c||M-x capitalize-word|| ||
 ||[[# uppercase-region]][#uppercase-region-note uppercase region]||##gray|//visual mode://## _
@@ -368,8 +378,12 @@ gu||C-x C-l||M-x downcase-region|| ||
 @<&nbsp;>@|| || ||M-x capitalize-region|| ||
 ||||||||||~ [[# indentation]]**[#indentation-note indentation and rectangles]**||
 ||~  ||~ vim||~ emacs||~ emacs||~ nano||
-||indent line|| ||TAB||M-x indent-for-tab-command|| ||
-||indent region|| || ||M-x indent-region|| ||
+||indent line||@@>>@@|| || || ||
+||indent region||##gray|//visual mode://## _
+@@>@@|| || || ||
+||syntactically indent line|| ||##gray|//but electric-indent default in 24.4://## _
+TAB||M-x indent-for-tab-command|| ||
+||syntactically indent region|| || ||M-x indent-region|| ||
 ||replace tabs in region with spaces|| || ||M-x untabify|| ||
 ||fill paragraph|| ||M-q||M-x fill-paragraph|| ||
 ||justify paragraph|| ||C-u M-q|| ||
@@ -623,7 +637,8 @@ RET||M-x compile-goto-error|| ||
 ||~  ||~ ||~ emacs||~ emacs||~ ||
 ||diff buffer with version control|| ||C-x v =||M-x vc-diff|| ||
 ||revert buffer using version control|| ||C-x v u||M-x vc-revert|| ||
-||git blame on buffer|| ||C-x v g||M-x vc-annotate|| ||
+||git blame on buffer||##gray|//install vim-fugitive//## _
+:Gblame||C-x v g||M-x vc-annotate|| ||
 ||git status; use working directory||##gray|//install vim-fugitive//## _
 :Gstatus|| ||##gray|//install magit//## _
 M-x magit-status|| ||

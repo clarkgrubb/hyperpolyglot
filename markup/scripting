@@ -7,7 +7,7 @@
 ||||||||||~ [[# version]][#version-note version]||
 ||~ ||~ [#javascript javascript]||~ [#php php]||~ [#python python]||~ [#ruby ruby]||
 ||[[# version-used]][#version-used-note version used] _
-@<&nbsp;>@|| ||##gray|//5.4; 5.5//##||##gray|//2.7; 3.3//##||##gray|//1.9; 2.0//##||
+@<&nbsp;>@|| ||##gray|//5.5//##||##gray|//2.7; 3.3//##||##gray|//1.9; 2.0//##||
 ||[[# version]][#version-note show version] _
 @<&nbsp;>@||$ node @@--@@version||$ php @@--@@version||$ python -V _
 $ python @@--@@version||$ ruby @@--@@version||
@@ -109,7 +109,9 @@ function incr_global () { g++; }||list($##peru|g1##, $##peru|g2##) = [7, 8]; _
 @<&nbsp;&nbsp;>@##peru|$g1##, ##peru|$g2## = ##peru|$g2##, ##peru|$g1## _
 end||
 ||[[# const]][#const-note constant] _
-@<&nbsp;>@||##gray|//none//##||define(##maroon|"PI"##, 3.14);||##gray|# uppercase identifiers _
+@<&nbsp;>@||##gray|//none//##||define(##maroon|"PI"##, 3.14); _
+ _
+##purple|const## ##teal|PI## = 3.14;||##gray|# uppercase identifiers _
 # constant by convention## _
 ##peru|PI## = 3.14||##gray|# warning if capitalized _
 # identifier is reassigned## _
@@ -967,7 +969,7 @@ $##peru|a## = array_merge($##peru|a##, [4, 5, 6]);||##peru|a## = [1, 2, 3] _
 a.extend([4, 5, 6])||a = [1, 2, 3] _
 a2 = a + [4, 5, 6] _
 a.concat([4, 5, 6])||
-||[[# replicate-array]][#replicate-array-note replicate]||##gray|//none//##|| ||a = [##purple|None##] * 10 _
+||[[# replicate-array]][#replicate-array-note replicate]||##gray|//none//##||$##peru|a## = array_fill(0, 10, ##green|NULL##);||a = [##purple|None##] * 10 _
 a = [##purple|None for## i ##purple|in range##(0, 10)]||a = [##peru|nil##] * 10 _
 a = ##green|Array##.new(10, ##peru|nil##)||
 ||[[# array-copy]][#array-copy-note copy] _
