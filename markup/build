@@ -433,10 +433,10 @@ end _
 task :echo_date => :get_date do _
 @<&nbsp;&nbsp;>@puts date _
 end|| || ||
-||prompt user||##gray|//none//##||task :fooput do _
-@<&nbsp;&nbsp;>STDOUT.print "Enter foo: " _
-@<&nbsp;&nbsp;>input = STDIN.gets.strip _
-@<&nbsp;&nbsp;>STDOUT.puts "foo: #{input}" _
+||prompt user||##gray|//none//##||task :foo do _
+@<&nbsp;&nbsp;>@STDOUT.print "Enter foo: " _
+@<&nbsp;&nbsp;>@input = STDIN.gets.strip _
+@<&nbsp;&nbsp;>@STDOUT.puts "foo: #{input}" _
 end||<target name="foo"> _
 @<&nbsp;&nbsp;>@<input message="Enter foo:" addproperty="foo"/> _
 @<&nbsp;&nbsp;>@<echo>foo: ${foo}</echo> _

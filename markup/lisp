@@ -1,7 +1,6 @@
 [[# top]]//a side-by-side reference sheet//
 
-[#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#dates-time dates and time] | [#lists lists] _
-[#arrays arrays] | [#dictionaries dictionaries] | [#functions functions]  | [#execution-control execution control] | [#file-handles file handles] | [#file-buffers file buffers] | [#files files] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#macros macros] | [#reflection reflection] |  [#java-interop java interop]
+[#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#dates-time dates and time] | [#lists lists] | [#arrays arrays] | [#dictionaries dictionaries] | [#functions functions]  | [#execution-control execution control] | [#file-handles file handles] | [#file-buffers file buffers] | [#files files] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#macros macros] | [#reflection reflection] |  [#java-interop java interop]
 ||~ [[# general]]||~ [#common-lisp common lisp]||~ [#racket racket]||~ [#clojure clojure]||~ [#emacs-lisp emacs lisp]||
 ||[[# version-used]][#version-used-note version used] _
 @<&nbsp;>@||##gray|//SBCL 1.0.48//##||##gray|//Racket 5.1//##||##gray|//Clojure 1.2//##||##gray|//Emacs 24.1//##||
@@ -45,7 +44,7 @@
 ||[#quote quote] _
 @<&nbsp;>@||quote||quote||quote||quote||
 ||[#undefine undefine] _
-@<&nbsp;>@||(makunbound 'foo)||(namespace-undefine-variable! 'foo)||(ns-unmap *ns* 'foo)||(makunbound 'foo||
+@<&nbsp;>@||(makunbound 'foo)||(namespace-undefine-variable! 'foo)||(ns-unmap *ns* 'foo)||(makunbound 'foo)||
 ||[#cell-types cell types] _
 @<&nbsp;>@||##gray|//value, function, struct, class, ...//##||##gray|//value//##||##gray|//value//##||##gray|//value, function, struct, ...//##||
 ||[[# null]][#null-note null]||nil||null||nil||nil||
