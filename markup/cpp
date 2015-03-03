@@ -535,7 +535,7 @@ rpad += string(10 - s.length(), ' '); _
  _
 ostringstream oss; _
 oss @@<<@@ setw(10) @@<<@@ s; _
-string lpad(oss.str());||[@"hello" stringByPaddingToLength:10 withString:@" " startingAtIndex:0]|| || ||
+string lpad(oss.str());||[@"hello" stringByPaddingToLength:10 withString:@" " startingAtIndex:0]|| ||"hello".PadLeft(10)||
 ||[[# num-to-str]][#num-to-str-note number to string]||char buf[100]; _
 long n = 123; _
  _
@@ -579,8 +579,9 @@ size_t len = s.length();||[s length]||s.length()||s.Length||
 ||[[# extract-substr]][#extract-substr-note extract substring]||string("hello").substr(2, 2)||[@"hello" substringWithRange:NSMakeRange(2, 2)]||"hello".substring(2,4)||"hello".Substring(2, 2)||
 ||[[# char-type]][#char-type-note character type]||char _
 wchar_t|| ||char _
-Character|| ||
-||[[# char-literal]][#char-literal-note character literal]||char n = 'X';|| ||char n = 'X';|| ||
+Character||char _
+Char||
+||[[# char-literal]][#char-literal-note character literal]||char n = 'X';|| ||char n = 'X';||char n = 'X';||
 ||[[# test-char]][#test-char-note test character] _
 ##gray|//letter, digit, whitespace, uppercase letter, lowercase letter//##||##gray|@@//@@ functions have this signature: _
 @@//@@ _
@@ -590,7 +591,11 @@ isalpha _
 isdigit _
 isspace _
 isupper _
-islower|| || || ||
+islower|| || ||System.Char.IsLetter(Char) _
+System.Char.IsNumber(Char) _
+System.Char.IsWhiteSpace(Char) _
+System.Char.IsUpper(Char) _
+System.Char.IsLower(Char)||
 ||||||||||~ [[# regexes]][#regexes-note regular expressions]||
 ||~ ||~ c++||~ objective c||~ java||~ c#||
 ||[[# regex-type]][#regex-type-note regex type]||regex _
@@ -640,7 +645,7 @@ long epoch = sec - 11644473600; _
  _
 long ft = (epoch + 11644473600) * tenM; _
 DateTime dt2 = DateTime.FromFileTimeUtc(ft);||
-||[[# date-time-to-str]][#date-time-to-str-note date and time to string]|| || ||dt.toString()|| ||
+||[[# date-time-to-str]][#date-time-to-str-note date and time to string]|| || ||dt.toString()||dt.ToString()||
 ||[[# format-date]][#format-date-note format date]|| || ||String s = "yyyy-MM-dd HH:mm:ss"; _
 DateFormat fmt = new SimpleDateFormat(s); _
 String s2 = fmt.format(dt);||String s = "yyyy-MM-dd HH:mm:ss"); _
