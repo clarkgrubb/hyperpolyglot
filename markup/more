@@ -4,7 +4,7 @@
 
 ||~ [[# general]]||~ [#perl perl]||~ [#tcl tcl]||~ [#lua lua]||~ [#groovy groovy]||
 ||[[# version-used]][#version-used-note version used] _
-@<&nbsp;>@||##gray|//5.14; 5.16//##||##gray|//8.5//##||##gray|//5.1//##||##gray|//2.2//##||
+@<&nbsp;>@||##gray|//5.18//##||##gray|//8.5//##||##gray|//5.1//##||##gray|//2.2//##||
 ||[[# show-version]][#show-version-note show version]||$ perl @@--@@version||$ tclsh _
 % info tclversion||$ lua -v||$ groovy -v||
 ||[[# implicit-prologue]][#implicit-prologue-note implicit prologue] _
@@ -1265,7 +1265,7 @@ require Foo::Bar;|| || || ||
 push @INC, "/some/path";||##gray|//none//##||package.path|| ||
 ||[[# lib-path-env]][#lib-path-env-note library path environment variable]||$ PERL5LIB=~/lib perl foo.pl||TCLLIBPATH||LUA_PATH|| ||
 ||library path command line option||$ perl -I ~/lib foo.pl|| || || ||
-||simple global identifiers||##gray|//none//##|| || || || ||
+||simple global identifiers||##gray|//none//##|| || || ||
 ||multiple label identifiers||##gray|//all identifiers not declared with// my##|| || || ||
 ||[[# label-separator]][#label-separator-note label separator]||Foo::Bar::baz();||::||.|| ||
 ||[[# namespace-decl]][#namespace-decl-note namespace declaration]||package Foo; _
