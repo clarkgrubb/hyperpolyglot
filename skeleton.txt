@@ -1,6 +1,6 @@
 [[# top]]##gray|core:## [#version version] | [#grammar-execution grammar and execution] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#str strings] | [#regex regular expressions] | [#dates-time dates and time] | [#func functions] | [#exec-control execution control] | [#exceptions exceptions] | [#concurrency concurrency] | [#file-handle file handles] | [#file files] | [#file-fmt file formats] | [#dir directories] | [#env-processes processes and environment] | [#option-parsing option parsing] | [#lib-namespaces libraries and namespaces] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#reflection reflection] | [#net-web net and web] | [#dom dom] | [#gui gui] | [#unit-tests unit tests] | [#debug-profile debugging and profiling]
 
-##gray|data structures:## [#fixed-length-arrays fixed-length arrays] | [#resizable-arrays resizable arrays] | [#arithmetic-sequences arithmetic sequences] | [#lists lists] | [#tuples tuples] | [#stacks stacks] | [#queues queues] | [#sets sets] | [#dict dictionaries] | [#multidimensional-arrays multidimensional arrays] | [#user-defined-types user-defined types] | [#generic-types generic types] | [#dependent-types dependent types]
+##gray|data structures:## [#fixed-length-arrays fixed-length arrays] | [#resizable-arrays resizable arrays] | [#arithmetic-sequences arithmetic sequences] | [#lists lists] | [#tuples tuples] | [#stacks stacks] | [#queues queues] | [#sets sets] | [#dict dictionaries] | [#two-d-arrays 2d arrays] | [#three-d-arrays 3d arrays] | [#user-defined-types user-defined types] | [#generic-types generic types] | [#dependent-types dependent types]
 
 ##gray|auxiliary:## [#cpp-macros c preprocessor macros] | [#lisp-macros lisp macros] | [#java-interop java interop]
 
@@ -8,7 +8,7 @@
 
 ##gray|mathematics:## [#vectors vectors] | [#matrices matrices] | [#symbolic-expressions symbolic expressions] | [#calculus calculus] | [#equations-unknowns equations and unknowns] | [#optimization optimization] | [#combinatorics combinatorics] | [#number-theory number theory]  | [#elliptic-curves elliptic curves] | [#algebraic-numbers algebraic numbers] | [#polynomials polynomials] | [#rings rings] | [#power-series power series] | [#special-functions special functions] | [#permutations permutations] | [#groups groups] | [#subgroups subgroups] | [#group-homomorphisms group homomorphisms] | [#actions actions] | [#propositions propositions]
 
-##gray|statistics:## [#descriptive-statistics descriptive statistics] | [#distributions distributions] | [#regression regression] | [#statistical-tests statistical tests] | [#time-series time series]
+##gray|statistics:## [#descriptive-statistics descriptive statistics] | [#distributions distributions] | [#linear-regression linear regression] | [#statistical-tests statistical tests] | [#time-series time series]
 
 ##gray|charts:## [#univariate-charts univariate charts] | [#bivariate-charts bivariate charts] | [#multivariate-charts multivariate charts]
 
@@ -234,6 +234,8 @@ how boundary delimiters are handled||
 ||[[# char-literal]][#char-literal-note character literal]||#char-literal|| ||
 ||[[# lookup-char]][#lookup-char-note character lookup] _
 ##gray|//and byte//##||#lookup-char||is index zero-based or one-based? out-of-bounds?||
+||[[# char-index]][#char-index-note character index]||#char-index|| ||
+||[[# char-tests]][#char-test-note character tests]||#char-tests||such as defined in <ctype.h>||
 ||[[# chr-ord]][#chr-ord-note chr and ord] _
 @<&nbsp;>@||#chr-ord||"chr" converts an integer representing a code point to the corresponding character.  In language which represent characters by integers no such operation is necessary, but in other languages "chr" might return a string with one character.  "ord" is the inverse operation.  There must be a character encoding, whether implicit or explicit, and "chr" can fail if not given a code point that is in range.||
 ||[[# str-to-char-array]][#str-to-char-array-note to array of characters]||#str-to-char-array|| ||
@@ -491,6 +493,7 @@ iterate over i and print the numbers 0 to 9||
 ||[[# program-name]][#program-name-note program name]||#program-name|| ||
 ||[[# env-var]][#env-var-note environment variable] _
 ##gray|//get, set, clear//##||#env-var||not possible to set env variable in a portable way?||
+||[[# env-var-iter]][#env-var-iter-note iterate over environment variables]||#env-var-iter|| ||
 ||[[# user-id-name]][#user-id-name-note user id and name]||#user-id-name|| ||
 ||[[# exit]][#exit-note exit] _
 @<&nbsp;>@||#exit||and how to set the status code||
@@ -722,7 +725,7 @@ iterate over i and print the numbers 0 to 9||
 @<&nbsp;>@||#min-max-elem|| ||
 ||[[# universal-existential-test]][#universal-existential-test-note universal  and existential tests] _
 @<&nbsp;>@||#universal-existential-test|| ||
-||[[# shuffle-sample]][#shuffle-sample-note shuffle and sample]||#shuffle-sample|| ||
+||[[# shuffle-sample]][#shuffle-sample-note shuffle and sample]||#shuffle-sample||sample with replacement: R: sample(a, 3, replace=T)||
 ||[[# zip]][#zip-note zip] _
 @<&nbsp;>@||#zip||what if of different length?||
 ||[[# flatten]][#flatten-note flatten]||#flatten||one level and completely||
@@ -819,11 +822,10 @@ iterate over i and print the numbers 0 to 9||
 ||[[# dict-key-val-arrays]][#dict-key-val-arrays-note keys and values as arrays]||#dict-key-val-arrays|| ||
 ||[[# dict-sort-values]][#dict-sort-values-note sort by values]||#dict-sort-values|| ||
 ||[[# dict-default-val]][#dict-default-val-note default value, computed value]||#dict-default-val|| ||
-||||||~ [[# multidimensional-arrays]][#multidimensional-arrays-note multidimensional arrays]||
+||||||~ [[# two-d-arrays]][#two-d-arrays-note 2d arrays]||
 ||~ title ||~ anchor||~ description||
 ||[[# elem-type]][#elem-type-note element type]||#elem-type|| ||
 ||[[# permitted-elem-types]][#permitted-elem-types-note permitted element types]||#permitted-elem-types|| ||
-||[[# literal-1d-array]][#literal-1d-array-note 1d literal]||#literal-1d-array|| ||
 ||[[# literal-2d-array]][#literal-2d-array-note 2d literal]||#literal-2d-array|| ||
 ||[[# array-2d-from-seq]][#array-2d-from-seq-note construct 2d array from sequence of elements] _
 ##gray|//fill by row, by column//##||#array-2d-from-seq|| ||
@@ -831,14 +833,10 @@ iterate over i and print the numbers 0 to 9||
 ||[[# array-2d-from-cols]][#array-2d-from-cols-note construct 2d array from columns]||#array-2d-from-cols|| ||
 ||[[# array-2d-from-2d-arrays]][#array-2d-from-2d-arrays-note construct 2d array from 2d arrays] _
 ##gray|//stacked, side-by-side//##||#array-2d-from-2d-arrays|| ||
-||[[# array-3d-from-seq]][#array-3d-from-seq-note construct 3d array from sequence of elements]||#array-3d-from-seq|| ||
-||[[# array-3d-from-2d-arrays]][#array-3d-from-2d-arrays-note construct 3d array from 2d arrays]||#array-3d-from-2d-arrays|| ||
-||[[# array-3d-from-seq-of-seq-of-rows]][#array-3d-from-seq-of-seq-of-rows-note construct 3d array from sequence of sequences of rows]||#array-3d-from-seq-of-seq-of-rows|| ||
 ||[[# multidim-array-size]][#multidim-array-size-note size] _
 ##gray|//number of elements, _
 number of dimensions, _
 dimension lengths//##||#multidim-array-size|| ||
-||[[# array-1d-lookup]][#array-1d-lookup-note 1d array lookup]||#array-1d-lookup|| ||
 ||[[# array-2d-lookup]][#array-2d-lookup-note 2d array lookup]||#array-2d-lookup|| ||
 ||[[# multidim-out-of-bounds-behavior]][#multidim-out-of-bounds-behavior-note out-of-bounds behavior]||#multidim-out-of-bounds-behavior|| ||
 ||[[# index-1d-lookup-2d-array]][#index-1d-lookup-2d-array-note 1d index lookup of 2d array]||#index-1d-lookup-2d-array|| ||
@@ -846,9 +844,14 @@ dimension lengths//##||#multidim-array-size|| ||
 ||[[# multidim-update]][#multidim-update-note update]||#multidim-update|| ||
 ||[[# higher-order-update]][#higher-order-update-note higher order update]||#higher-order-update|| ||
 ||[[# multidim-transpose]][#multidim-transpose-note transpose]||#multidim-transpose|| ||
-||[[# multidim-swap-axes]][#multidim-swap-axes-note swap axes]||#multidim-swap-axes|| ||
 ||[[# multidim-map]][#multidim-map-note map elements]||#multidim-map|| ||
 ||[[# higher-order-map]][#higher-order-map-note higher order map]||#higher-order-map|| ||
+||||||~ [[# three-d-arrays]][#three-d-arrays-note 3d arrays]||
+||~ title ||~ anchor||~ description||
+||[[# array-3d-from-seq]][#array-3d-from-seq-note construct 3d array from sequence of elements]||#array-3d-from-seq|| ||
+||[[# array-3d-from-2d-arrays]][#array-3d-from-2d-arrays-note construct 3d array from 2d arrays]||#array-3d-from-2d-arrays|| ||
+||[[# array-3d-from-seq-of-seq-of-rows]][#array-3d-from-seq-of-seq-of-rows-note construct 3d array from sequence of sequences of rows]||#array-3d-from-seq-of-seq-of-rows|| ||
+||[[# multidim-swap-axes]][#multidim-swap-axes-note swap axes]||#multidim-swap-axes|| ||
 ||||||~ [[# user-defined-types]][#user-defined-types-note user-defined types]||
 ||~ title ||~ anchor||~ description||
 ||[[# type-alias]][#type-alias-note type alias]||#type-alias||new type and old are interchangeable||
@@ -1108,7 +1111,7 @@ sample of 10//##||#snedecors-f|| ||
 ||[[# empirical-density-func]][#empirical-density-func-note empirical density function]||#empirical-density-func|| ||
 ||[[# empirical-cumulative-distribution]][#empirical-cumulative-distribution-note empirical cumulative distribution]||#empirical-cumulative-distribution|| ||
 ||[[# empirical-quantile-func]][#empirical-quantile-func-note empirical quantile function]||#empirical-quantile-func|| ||
-||||||~ [[# regression]][#regression-note regression]||
+||||||~ [[# linear-regression]][#linear-regression-note linear regression]||
 ||~ title ||~ anchor||~ description||
 ||[[# simple-linear-regression]][#simple-linear-regression-note simple linear regression] _
 ##gray|//coefficient, intercept, and residuals//##||#simple-linear-regression|| ||
