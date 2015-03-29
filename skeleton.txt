@@ -235,7 +235,7 @@ how boundary delimiters are handled||
 ||[[# lookup-char]][#lookup-char-note character lookup] _
 ##gray|//and byte//##||#lookup-char||is index zero-based or one-based? out-of-bounds?||
 ||[[# char-index]][#char-index-note character index]||#char-index|| ||
-||[[# char-tests]][#char-test-note character tests]||#char-tests||such as defined in <ctype.h>||
+||[[# char-tests]][#char-tests-note character tests]||#char-tests||such as defined in <ctype.h>||
 ||[[# chr-ord]][#chr-ord-note chr and ord] _
 @<&nbsp;>@||#chr-ord||"chr" converts an integer representing a code point to the corresponding character.  In language which represent characters by integers no such operation is necessary, but in other languages "chr" might return a string with one character.  "ord" is the inverse operation.  There must be a character encoding, whether implicit or explicit, and "chr" can fail if not given a code point that is in range.||
 ||[[# str-to-char-array]][#str-to-char-array-note to array of characters]||#str-to-char-array|| ||
@@ -304,7 +304,7 @@ how boundary delimiters are handled||
 ||[[# redefine-func]][#redefine-func-note redefine]||#redefine-func||in particular, can built-ins be redefined||
 ||[[# overload-func]][#overload-func-note overload]||#overload-func|| ||
 ||[[# def-func-piecewise]][#def-func-piecewise-note define piecewise]||#def-func-piecewise|| ||
-||[[# nest-func]][#nest-func-note nest]||#nest-func||Note visibility of nested function.||
+||[[# nest-func]][#nest-func-note nest]||#nest-func||Note visibility of nested function.  Can nested function see local functions of parent variable?||
 ||[[# missing-arg]][#missing-arg-note missing argument behavior] _
 @<&nbsp;>@||#missing-arg||what about extra arg behavior?||
 ||[[# extra-arg]][#extra-arg-note extra argument behavior]||#extra-arg|| ||
@@ -315,7 +315,8 @@ how boundary delimiters are handled||
 ||[[# variadic-func]][#variadic-func-note variadic function]||#variadic-func|| ||
 ||[[# expand-array]][#expand-array-note pass array elements as separate arguments]||#expand-array||aka splat operator; should illustrate when not all arguments come from array||
 ||[[# param-alias]][#param-alias-note parameter alias] _
-@<&nbsp;>@||#param-alias||What if an expression is provided?  What about strings, arrays, and dictionaries in the normal case?||
+@<&nbsp;>@||#param-alias||What if an expression is provided?  What about strings, arrays, and dictionaries in the normal case? in out in Ada and ref in C#||
+||[[# uninitialized-param-alias]][#uninitialized-param-alias uninitialized parameter alias]||#uninitialized-param-alias||out in Ada and C#||
 ||[[# retval]][#retval-note return value] _
 @<&nbsp;>@||#retval||how return value||
 ||[[# no-retval]][#no-retval-note no return value]||#no-retval||how to declare function with no return value; aka a procedure||
