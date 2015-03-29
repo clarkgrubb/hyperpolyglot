@@ -246,7 +246,7 @@ csv().from.array(a).to.string(function (o) { s = o; });|| ||##purple|import## cs
 ##purple|end##||
 ||[[# parse-json]][#parse-json-note parse json]||var s1 = '{"t":1,"f":0}'; _
 var d1 = JSON.parse(s1);||$##peru|s1## = ##maroon|'{"t":1,"f":0}'##; _
-$##peru|a1## = json_decode($##peru|s1##);||##purple|import## json _
+$##peru|a1## = json_decode($##peru|s1##, ##teal|TRUE##);||##purple|import## json _
  _
 ##CD853F|d## = json.loads(##maroon|'{"t":1,"f":0}'##)||require ##maroon|'json'## _
  _
@@ -1136,7 +1136,6 @@ $##peru|s2## = base64_decode($##peru|b64##);||##purple|import## base64 _
 s = ##green|File##.open(##maroon|"foo.png"##).read _
 b64 = ##green|Base64##.encode64(s) _
 s2 = ##green|Base64##.decode64(b64)||
-||[[# smtp]][#smtp-note smtp]|| || || || ||
 ||||||||||~ [[# unit-tests]][#unit-tests-note unit tests]||
 ||~  ||~ node||~ php||~ python||~ ruby||
 ||[[# test-class]][#test-class-note test class]||##gray|@@//@@ npm install -g nodeunit## _

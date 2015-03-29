@@ -1,12 +1,13 @@
 //a side-by-side reference sheet//
 
-[[# top]][#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#arrays arrays] | [#user-defined-types user-defined types] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#file-handles file handles] | [#files files] | [#sql sql] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces]
+[[# top]][#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#arrays arrays] | [#user-defined-types user-defined types] | [#generic-types generic types] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#file-handles file handles] | [#files files] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces]
 
 ||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
 ||[[# version-used]][#version-used-note version used] _
-@<&nbsp;>@||##gray|//Free Pascal 2.4//##||##gray|//GNAT GCC 4.1//##||##gray|//Postgres 9.1//##||
+@<&nbsp;>@||##gray|//Free Pascal 2.4//##||##gray|//GNAT GCC 4.6//## _
+##gray|//Ada 2012//##||##gray|//Postgres 9.1//##||
 ||[[# show-version]][#show-version-note show version] _
-@<&nbsp;>@||$ fpc -v||$ gnatgcc @@--@@version||$ psql @@--@@version||
+@<&nbsp;>@||$ fpc -v||$ gnatgcc -gnat12 @@--@@version||$ psql @@--@@version||
 ||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
 ||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
 ||[[# hello-world]][#hello-world-note hello word]||$ cat hello.pas _
@@ -18,17 +19,15 @@ end. _
 $ fpc hello.pas _
  _
 $ ./hello||$ cat hello.adb _
-with Text_IO; use Text_IO; _
+with Text_IO; _
+use Text_IO; _
+ _
 procedure Hello is _
 begin _
-@<&nbsp;&nbsp;>@Put_Line ("Hello World!"); _
+@<&nbsp;&nbsp;>@Put_Line("Hello World!"); _
 end Hello; _
  _
-$ gnatgcc -c hello.adb _
- _
-$ gnatbind hello _
- _
-$ gnatlink hello _
+$ gnatmake -gnat12 hello.adb _
  _
 $ ./hello _
 Hello World!||##gray|//at psql prompt://## _
@@ -47,7 +46,16 @@ Hello World! _
 (1 row)||
 ||[[# file-suffixes]][#file-suffixes-note file suffixes]||foo.pas _
 foo.o _
-foo|| || ||
+foo||##gray|//source://## _
+foo.ads: specification _
+foo.adb: body _
+ _
+##gray|//compiler generated://## _
+foo.adi: compilation information _
+foo.o: object _
+foo|| ||
+||[[# source-code-encoding]][#source-code-encoding-note source code encoding]|| ||##gray|@@--@@ default is ISO 8859-1:## _
+pragma Wide_Character_Encoding(UTF8)|| ||
 ||[[# eol-comment]][#eol-comment-note end-of-line comment]||##gray|//not ISO Pascal://## _
 @@//@@ ##gray|//comment line//## _
 @@//@@ ##gray|//another line//##||@@--@@ ##gray|//comment line//## _
@@ -57,10 +65,10 @@ foo|| || ||
 ##gray|//another line//## *) _
  _
 { ##gray|//comment line//## _
-##gray|//another line//## }|| ||##gray|//none//##||
+##gray|//another line//## }||##gray|//none//##||##gray|//none//##||
 ||||||||~ [[# variables-expressions]][#variables-expressions-note variables and expressions]||
 ||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
-||[[# case-sensitive]][#case-sensitive-note case sensitive] _
+||[[# case-sensitive-id]][#case-sensitive-id-note are identifiers case sensitive] _
 @<&nbsp;>@||##gray|//no//##||##gray|//no//##||##gray|//no//##||
 ||[[# declarations]][#declarations-note declare constant, type, and variable]||program Foo; _
 const _
@@ -75,12 +83,12 @@ var _
 @<&nbsp;&nbsp;>@C: Customer; _
 begin _
 @<&nbsp;&nbsp;>@##gray|//body of program//##||procedure Foo is _
-@<&nbsp;&nbsp;>@Pi :  constant FLOAT := 3.14; _
-@<&nbsp;&nbsp;>@i : INTEGER; _
-@<&nbsp;&nbsp;>@type Customer is record _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Id : INTEGER; _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Name : String(1..4); _
-@<&nbsp;&nbsp;>@end record; _
+@<&nbsp;&nbsp;>@Pi:  constant Float := 3.14; _
+@<&nbsp;&nbsp;>@N: Integer; _
+@<&nbsp;&nbsp;>@type Customer is Record _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Id: Integer; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Name: String(1..4); _
+@<&nbsp;&nbsp;>@end Record; _
 @<&nbsp;&nbsp;>@C: Customer; _
 begin _
 @<&nbsp;&nbsp;>@##gray|//body of program//##|| create type customer as ( _
@@ -96,41 +104,57 @@ declare _
 begin _
 @<&nbsp;&nbsp;>@return; _
 end $$ language plpgsql;||
-||[#block block with local scope]|| || ||declare _
+||[#block block with local scope]|| ||declare _
+@<&nbsp;&nbsp;>@N: Integer;  _
+begin _
+@<&nbsp;&nbsp;>@N := 7;  _
+end;||declare _
 @<&nbsp;&nbsp;>@i integer := 3; _
 begin _
 @<&nbsp;&nbsp;>@raise notice 'i is %', i; _
 end;||
 ||[[# assignment]][#assignment-note assignment] _
-@<&nbsp;>@||X := 1;||x := 1;|| x = 1;||
-||[[# pointer-declaration]][#pointer-declaration-note pointer declaration]||IP: ^Integer;||type Integer_Pointer is access Integer; _
-Ip : Integer_Pointer;||##gray|//none//##||
-||[[# allocate-memory]][#allocate-memory-note allocate memory] _
+@<&nbsp;>@||X := 1;||X := 1;|| x = 1;||
+||[[# pointer-declaration]][#pointer-declaration-note pointer declaration]||IP: ^Integer;||type Integer_Ptr is access Integer; _
+Ip: Integer_Ptr;||##gray|//none//##||
+||[[# allocate-heap]][#allocate-heap-note allocate heap] _
 @<&nbsp;>@||new(IP);||Ip := new Integer;||##gray|//none//##||
-||[[# free-memory]][#free-memory-note free memory] _
-@<&nbsp;>@||dispose(IP);|| ||##gray|//none//##||
+||[[# free-heap]][#free-heap-note free heap] _
+@<&nbsp;>@||dispose(IP);||with Ada.Unchecked_Deallocation; _
+ _
+procedure Free_Example is _
+@<&nbsp;&nbsp;>@type Integer_Ptr is access Integer; _
+@<&nbsp;&nbsp;>@procedure Free is new Ada.Unchecked_Deallocation( _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Integer, Integer_Ptr); _
+@<&nbsp;&nbsp;>@Ip: Integer_Ptr; _
+begin _
+@<&nbsp;&nbsp;>@Ip := new Integer; _
+@<&nbsp;&nbsp;>@Ip.all := 7; _
+@<&nbsp;&nbsp;>@Free(Ip); _
+end Hello;||##gray|//none//##||
 ||[[# deference-pointer]][#dereference-pointer-note dereference pointer]||IP^ := 7; _
 Ans := 6 * IP^;||Ip.all := 7; _
 ans := 6 * Ip.all;||##gray|//none//##||
 ||[[# null]][#null-note null literal]||##gray|//can only be assigned to pointers://## _
 nil||##gray|//can only be assigned to access types://## _
 null||NULL||
-||[[# null-test]][#null-test-note null test]||X = nil||x = null||x is NULL _
+||[[# null-test]][#null-test-note null test]||X = nil||X = null||x is NULL _
 ##gray|x = NULL //is always false//##||
 ||[[# coalesce]][#coalesce-note coalesce] _
 @<&nbsp;>@||##gray|//none//##|| ||7 + coalesce(x, 0)||
 ||[[# nullif]][#nullif-note nullif] _
 @<&nbsp;>@||##gray|//none//##|| ||nullif(x, 0)||
 ||[[# conditional-expr]][#conditional-expr-note conditional expression] _
-@<&nbsp;>@||##gray|//none//##|| ||case when x > 0 then x else -x end||
+@<&nbsp;>@||##gray|//none//##||##gray|@@--@@ Ada 2012:## _
+(if X > 0 then X else -X)||case when x > 0 then x else -x end||
 ||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
 ||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
 ||[[# boolean-type]][#boolean-type-note boolean type] _
-@<&nbsp;>@||Boolean||BOOLEAN||BOOL BOOLEAN||
+@<&nbsp;>@||Boolean||Boolean||BOOL BOOLEAN||
 ||[[# true-false]][#true-false-note true and false] _
-@<&nbsp;>@||true false||TRUE FALSE||TRUE FALSE||
-||[[# falsehoods]][#falsehoods-note falsehoods]||false _
-##gray|//non booleans cause error in boolean context//##||FALSE _
+@<&nbsp;>@||True False||True False||TRUE FALSE||
+||[[# falsehoods]][#falsehoods-note falsehoods]||False _
+##gray|//non booleans cause error in boolean context//##||False _
 ##gray|//non booleans cause error in boolean context//##||FALSE NULL 0 _
 ##gray|//strings and floats cause error in boolean context//##||
 ||[[# logical-op]][#logical-op-note logical operators] _
@@ -140,14 +164,17 @@ and_then _
 or_else||and then _
 or else||AND _
 OR||
-||[[# int-type]][#int-type-note integer type]||Integer|| ||smallint: ##gray|//2 bytes//## _
+||[[# int-type]][#int-type-note integer type]||Integer||Integer||smallint: ##gray|//2 bytes//## _
 integer: ##gray|//4 bytes//## _
 bigint: ##gray|//8 bytes//##||
-||[[# float-type]][#float-type-note float type]||Real|| ||real: ##gray|//4 bytes//## _
+||[[# float-type]][#float-type-note float type]||Real||Float||real: ##gray|//4 bytes//## _
 double precision: ##gray|//8 bytes//##||
 ||[[# fixed-type]][#fixed-type-note fixed type] _
 @<&nbsp;>@||##gray|//four fractional digits://## _
-Currency|| ||numeric(##gray|//digits//##, ##gray|//fractional_digits//##)||
+Currency||	type Currency is delta 0.01 digits 18; _
+Amt: Currency; _
+ _
+Amt := 3.99;||numeric(##gray|//digits//##, ##gray|//fractional_digits//##)||
 ||[[# relational-op]][#relational-op-note relational operators] _
 @<&nbsp;>@||@@=@@ <> < > <= >=||@@=@@ /= < > <= >=||@@=@@ != ##gray|//also://## <> < > <= >=||
 ||[[# min-max]][#min-max-note min and max]||uses Math; _
@@ -157,25 +184,34 @@ Max(1, 2) _
 MinIntValue([1, 2, 3]) _
 MaxIntValue([1, 2, 3]) _
 MinValue([1.0, 2.0, 3.0]) _
-MaxValue([1.0, 2.0, 3.0])|| ||least(1,2,3) _
+MaxValue([1.0, 2.0, 3.0])||Integer'Min(1, 2) _
+Integer'Max(1, 2) _
+Integer'Min(1, Integer'Min(2, 3)) _
+Integer'Max(1, Integer'Max(2, 3)) _
+Float'Min(1.0, Float'Min(2.0, 3.0)) _
+Float'Max(1.0, Float'Max(2.0, 3.0))||least(1,2,3) _
 greatest(1,2,3)||
 ||[[# arith-op]][#arith-op-note arithmetic operators] _
 @<&nbsp;>@||+ - * / div mod||+ - * ##gray|//none//## / mod ##gray|//or//## rem||+ - * ##gray|//none//## / %||
 ||[[# int-div]][#int-div-note integer division] _
-@<&nbsp;>@||7 div 3|| ||7 / 3||
+@<&nbsp;>@||7 div 3||7 / 3||7 / 3||
 ||[[# int-div-zero]][#int-div-zero-note integer division by zero] _
-@<&nbsp;>@||##gray|//raises//## EDivByZero||##gray|//raises//## CONSTRAINT_ERROR||##gray|//raises//## division_by_zero||
+@<&nbsp;>@||##gray|//raises//## EDivByZero||##gray|//raises//## Constraint_Error||##gray|//raises//## division_by_zero||
 ||[[# float-div]][#float-div-note float division] _
-@<&nbsp;>@||7 / 3||Float(7)/Float(3)||7 * 1.0 / 3||
+@<&nbsp;>@||7 / 3||Float(7) / Float(3)||7 * 1.0 / 3||
 ||[[# float-div-zero]][#float-div-zero-note float division by zero] _
-@<&nbsp;>@||+Inf||##gray|//raises//## CONSTRAINT_ERROR||##gray|//raises//## division_by_zero||
+@<&nbsp;>@||+Inf||##gray|//raises//## Constraint_Error||##gray|//raises//## division_by_zero||
 ||[[# power]][#power-note power]||uses Math; _
  _
-Power(2, 16);||**||2 ^ 16||
+Power(2, 16);||2 ** 16||2 ^ 16||
 ||[[# sqrt]][#sqrt-note sqrt] _
-@<&nbsp;>@||Sqrt(2)|| ||sqrt(2)||
+@<&nbsp;>@||Sqrt(2)||with Ada.Numerics.Elementary_Functions; _
+use Ada.Numerics.Elementary_Functions; _
+ _
+##gray|@@--@@ no implicit type conversion of Integer to Float:## _
+Sqrt(2.0)||sqrt(2)||
 ||[[# sqrt-negative-one]][#sqrt-negative-one-note sqrt -1] _
-@<&nbsp;>@||##gray|//raises//## EInvalidOp||##gray|//raises//## ADA.NUMERICS.ARGUMENT_ERROR||##gray|//raises//## invalid_argument_for_power_function||
+@<&nbsp;>@||##gray|//raises//## EInvalidOp||##gray|//raises//## Ada.Numerics.Argument_Error||##gray|//raises//## invalid_argument_for_power_function||
 ||[[# transcendental-func]][#transcendental-func-note transcendental functions]||uses Math; _
  _
 Exp Ln Sin Cos Tan ArcSin ArcCos ArcTan ArcTan2||with Ada.Numerics.Elementary_Functions; _
@@ -189,7 +225,8 @@ Trunc Round Floor Ceil||##gray|//return Float://## _
 ##gray|//??//## Float'Rounding Float'Floor Float'Ceiling||trunc round floor ceil||
 ||[[# absolute-val]][#absolute-val-note absolute value] _
 ##gray|//and sign//##||Abs(-7) _
-##gray|//none//##|| ||abs(-7) _
+##gray|//none//##||Abs(-7) _
+##gray|//none//##||abs(-7) _
 sign(-7)||
 ||[[# int-overflow]][#int-overflow-note integer overflow] _
 @<&nbsp;>@||##gray|//modular arithmetic//##||##gray|//modular arithmetic//##||##gray|//raises//## numeric_value_out_of_range||
@@ -200,11 +237,12 @@ sign(-7)||
 Random||with Ada.Numerics.Float_Random; _
 with Ada.Numerics.Discrete_Random; _
 use Ada.Numerics; _
+ _
 procedure Foo is _
 @<&nbsp;&nbsp;>@type Rand_Range is range 0..99; _
 @<&nbsp;&nbsp;>@package Rand_Int is new Discrete_Random(Rand_Range); _
-@<&nbsp;&nbsp;>@IG : Rand_Int.Generator; _
-@<&nbsp;&nbsp;>@FG : Float_Random.Generator; _
+@<&nbsp;&nbsp;>@IG: Rand_Int.Generator; _
+@<&nbsp;&nbsp;>@FG: Float_Random.Generator; _
 begin _
 @<&nbsp;&nbsp;>@##gray|//use//## Rand_Int.Random(IG) _
 @<&nbsp;&nbsp;>@##gray|//use//## Float_Random.Random(FG)||floor(100 * random()) _
@@ -213,22 +251,30 @@ random()||
 @<&nbsp;>@||shl shr and or xor not|| ||@@ << >> @@ & | ^ ~||
 ||||||||~ [[# strings]][#strings-note strings]||
 ||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
-||[#string-literal string literal]||'Don''t say "foo"'||"Don't say ""foo"""||'Don''t say "foo"'||
-||[#fixed-string-type fixed length string type]|| ||##gray|//error unless string length is// n## _
-STRING(1..##gray|//n//##) _
-##gray|//length can be omitted if initialized with literal in declaration//##||##gray|//pads length to// n //with spaces://## _
+||[#string-literal string literal] _
+@<&nbsp;>@||'Don''t say "foo"'||"Don't say ""foo"""||'Don''t say "foo"'||
+||[#fixed-string-type fixed length string type]|| ||##gray|@@--@@ error unless string length is 6## _
+String(1..6) _
+Wide_Wide_String(1..6)||##gray|//pads length to// n //with spaces://## _
 char(##gray|//n//##)||
 ||[#bounded-string-type bounded length string type]|| || ||##gray|//error if// n //exceeded://## _
 varchar(##gray|//n//##)||
-||[#unbounded-string-type unbounded length string type]|| || ||text||
-||[#character-type character type]|| ||CHARACTER||char(1)||
+||[#unbounded-string-type unbounded length string type]|| ||with Ada.Strings.Unbounded; _
+ _
+Ada.Strings.Unbounded.Unbounded_String||text||
+||[#character-type character type]|| ||Character ##gray|//1 byte//## _
+Wide_Wide_Character ##gray|//4 bytes//##||char(1)||
 ||[#chr-ord chr and ord]||Chr(65) _
 Ord('A')|| ||chr(65) _
 ascii('A')||
-||[#string-concatenate concatenate]||'hello' + ' world'||"hello" & " world"||'hello' @@||@@ ' world'||
-||[#string-length length]||Length('hello')|| ||length('hello')||
-||[#extract-substring extract substring]||Copy(S, 1, 4)|| ||substr('hello', 1, 4)||
-||[#index-substring index of substring]||Pos('hell', 'hello')|| ||strpos('hello', 'hell')||
+||[#string-concatenate concatenate] _
+@<&nbsp;>@||'hello' + ' world'||"hello" & " world"||'hello' @@||@@ ' world'||
+||[#string-length length] _
+@<&nbsp;>@||Length('hello')|| ||length('hello')||
+||[#extract-substring extract substring] _
+@<&nbsp;>@||Copy(S, 1, 4)|| ||substr('hello', 1, 4)||
+||[#index-substring index of substring] _
+@<&nbsp;>@||Pos('hell', 'hello')|| ||strpos('hello', 'hell')||
 ||[#case-manipulation case manipulation]||uses SysUtils; _
  _
 UpperCase('hello') _
@@ -250,7 +296,8 @@ cast('3.14') as real)||
 ||[#number-string-conversion convert number to string]||uses SysUtils; _
  _
 'value: ' + IntToStr(8) _
-'value: ' + FloatToStr(3.14)|| ||##gray|//double pipe operator// @@||@@ //converts numbers operands to strings//## _
+'value: ' + FloatToStr(3.14)||Integer'Image(8) _
+Float'Image(3.14)||##gray|//double pipe operator// @@||@@ //converts numbers operands to strings//## _
 cast(8 to text) _
 cast(3.14 to text)||
 ||||||||~ [[# regexes]][#regexes-note regular expressions]||
@@ -263,18 +310,25 @@ where name similar to 'r[a-z]+';||
 ||[[# extract-subgroup]][#extract-subgroup-note extract subgroup]|| || ||select (regexp_matches('foobar', '(f..)bar'))[1];||
 ||||||||~ [[# dates-time]][#dates-time-note dates and time]||
 ||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
-||[[# current-date-time]][#current-date-time-note current date and time]|| || ||now()||
-||[[# date-time-to-str]][#date-time-to-str-note datetime to string]|| || ||to_char(now(), 'YYYY-MM-DD HH24:MI:SS')||
+||[[# current-datetime]][#current-datetime-note current datetime]|| ||with Ada.Calendar; _
+ _
+Now: Ada.Calendar.Time; _
+ _
+Now := Ada.Calendar.Clock;||now()||
+||[[# date-time-to-str]][#date-time-to-str-note datetime to string]|| ||with Ada.Calendar.Formating; _
+ _
+##gray|@@--@@ "2015-03-29 17:46:35":## _
+Ada.Calendar.Formatting.Image(Now);||to_char(now(), 'YYYY-MM-DD HH24:MI:SS')||
 ||[[# str-to-date-time]][#str-to-date-time-note string to datetime]|| || ||to_timestamp('2011-09-26 00:00:47', 'YYYY-MM-DD HH24:MI:SS')||
 ||||||||~ [[# arrays]][#arrays-note arrays]||
 ||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
-||[#declare-array declare array]||A:  array[1..5] of Integer;|| A : array(1..5) of Integer;||a int[];||
+||[#declare-array declare array]||A:  array[1..5] of Integer;||A: array(1..5) of Integer;||a int[];||
 ||[#array-length array length]|| ||A'Last||array_length(a, 1)||
 ||[#array-access array element access]|| A[1] := 3;|| A(1) := 3;||a[1] = 3;||
-||[#array-initialization array initialization]|| || A : array(1..5) of Integer := (1,3,5,2,4);||a int[] = array[1,3,5,2,4];||
+||[#array-initialization array initialization]|| ||A: array(1..5) of Integer := (1, 3, 5, 2, 4);||a int[] = array[1, 3, 5, 2, 4];||
 ||[#array-slice array slice]|| || A(3..4) := A(1..2);||a[1:2] _
 ##gray|//can assign to slice in// UPDATE //statement but not in assignment//##||
-||[#array-out-of-bounds array out of bounds behavior]||##gray|//undefined; free pascal permits out of bounds memory access//##||##gray|//compiler warning; raises//## CONSTRAINT_ERROR ##gray|//at runtime//##||NULL||
+||[#array-out-of-bounds array out of bounds behavior]||##gray|//undefined; free pascal permits out of bounds memory access//##||##gray|//compiler warning; raises//## Constraint_Error ##gray|//at runtime//##||NULL||
 ||[#declare-multidimensional-array declare multidimensional array]|| || ||a integer[][];||
 ||[#multidimensional-array-access multidimensional array access]|| || ||a[2][3] = 7;||¯
 ||||||||~ [[# user-defined-types]][#user-defined-types-note user-defined types]||
@@ -296,46 +350,55 @@ Customer = record _
 @<&nbsp;&nbsp;>@Id: Integer; _
 @<&nbsp;&nbsp;>@Name: String; _
 end;||type Customer is record _
-@<&nbsp;&nbsp;>@Id : Integer; _
-@<&nbsp;&nbsp;>@Name : String(1..4); _
+@<&nbsp;&nbsp;>@Id: Integer; _
+@<&nbsp;&nbsp;>@Name: String(1..4); _
 end record;||create type customer as ( _
 @<&nbsp;&nbsp;>@id integer, _
 @<&nbsp;&nbsp;>@name text _
 );||
-||[#declare-record declare record]||C: Customer;|| C : Customer := ( 17, "John" );||declare _
+||[#declare-record declare record]||C: Customer;||C: Customer := (17, "John");||declare _
 @<&nbsp;&nbsp;>@c customer; _
 begin _
 @<&nbsp;&nbsp;>@c = (17,'John'); _
 @<&nbsp;&nbsp;>@##gray|//code which uses// c##||
 ||[#record-member-access record member access]||C.Name := 'Fred';||C.Name := 'Fred';||c.name = 'Fred'||
 ||[#record-block record block]|| || || ||
+||||||||~ [[# generic-types]][#generic-types-note generic types]||
+||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
 ||||||||~ [[# functions]][#functions-note functions]||
-||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||¯
-||[[# def-func]][#def-func-note define function]||function Foo(M: Integer; N: Integer): Integer; _
+||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
+||[[# decl-func]][#decl-func-note declare]|| ||function Add(M: Integer; N: Integer) return Integer;|| ||
+||[[# def-func]][#def-func-note define]||function Add(M: Integer; N: Integer): Integer; _
 begin _
  @<&nbsp;&nbsp;>@Result := M + N; _
-end;|| ||create function foo(i int, j int) _
+end;||function Add(M: Integer; N: Integer) return Integer is _
+begin _
+@<&nbsp;&nbsp;>@return M + N; _
+end Add;||create function add(i int, j int) _
 returns int as $$ _
 begin _
 @<&nbsp;&nbsp;>@return i + j; _
 end; _
 $$ language plpgsql;||
-||[[# invoke-func]][#invoke-func-note invoke function]||Retval := Foo(7, 3);|| ||##gray|@@--@@ in select clause:## _
-select foo(1, 2); _
+||[[# call-func]][#call-func-note call]||Sum := Add(7, 3);||Sum := Add(7, 3);||##gray|@@--@@ in select clause:## _
+select add(1, 2); _
  _
 ##gray|@@--@@ in where clause:## _
-select * from cust where id = foo(1, 2); _
+select * from cust where id = add(1, 2); _
  _
 ##gray|@@--@@ inside PL/pgSQL functions can be used wherever _
 @@--@@ expressions are permitted.  Can be used as a statement _
 @@--@@ with perform:## _
-perform foo(1, 2);||
-||[[# undef-func]][#undef-func-note undefine function]||##gray|//none//##|| ||##gray|@@--@@ parameter types are required:## _
+perform add(1, 2);||
+||[[# undef-func]][#undef-func-note undefine function]||##gray|//none//##||##gray|//none//##||##gray|@@--@@ parameter types are required:## _
 drop function foo(int, int);||
 ||[[# no-retval]][#no-retval-note no return value]||procedure Message(Msg:  String); _
 begin _
 @<&nbsp;&nbsp;>@WriteLn(Msg); _
-end;|| ||##gray|@@--@@ declare return type as void:## _
+end;||procedure Message(Msg: String) is _
+begin _
+@<&nbsp;&nbsp;>@Text_IO.Put_Line(Msg); _
+end Message;||##gray|@@--@@ declare return type as void:## _
 create or replace function message(msg text) _
 returns void as $$ _
 begin _
@@ -354,7 +417,17 @@ begin _
 @<&nbsp;&nbsp;>@I := 3; _
 @<&nbsp;&nbsp;>@Incr(I); _
 @<&nbsp;&nbsp;>@WriteLn(I); ##gray|{ prints 4 }## _
-end.|| ||##gray|//none//##||
+end.||procedure Incr(N: in out Integer) is _
+begin _
+@<&nbsp;&nbsp;>@N := N + 1; _
+end Incr; _
+ _
+I := 3; _
+Incr(3);||##gray|//none//##||
+||[[# pass-uninitialized-by-ref]][#pass-uninitialized-by-ref-note pass uninitialized variable by reference]|| ||procedure Get_Pi(Pi: out Float) is _
+begin _
+@<&nbsp;&nbsp;>@Pi := 3.14; _
+end Get_Pi;||##gray|//none//##||
 ||[[# nested-func]][#nested-func-note nested function]|| || ||##gray|//none//##||
 ||[[# overloaded-func]][#overloaded-func-note overloaded function]|| || ||##gray|@@--@@integer version:## _
 create or replace function add(m int, n int) _
@@ -389,7 +462,6 @@ begin _
 @<&nbsp;&nbsp;>@else _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Result := Even(N - 1); _
 end;|| ||##gray|//none//##||
-||out parameter|| || || ||
 ||||||||~ [[# execution-control]][#execution-control-note execution control]||
 ||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
 ||[[# if]][#if-note if]||if I = 0 then _
@@ -415,6 +487,7 @@ elsif i = 1 then _
 else _
 @<&nbsp;&nbsp;>@return i @@||@@ ' hits'; _
 end if;||
+||[[# switch]][#switch-note switch]|| || || ||
 ||[[# while]][#while-note while]||I := 0; _
 while I < 10 do _
 begin _
@@ -437,13 +510,27 @@ end loop;||sum = 0; _
 for i in 1..n loop _
 @<&nbsp;&nbsp;>@sum = sum + i; _
 end loop;||
-||[[# break-continue]][#break-continue-note break and continue]|| || ||exit continue||
+||[[# break]][#break-note break]||break||exit||exit||
+||[[# continue]][#continue-note continue]||continue|| ||continue||
+||[[# goto]][#goto-note goto]|| || || ||
 ||||||||~ [[# exceptions]][#exceptions-note exceptions]||
 ||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
+||[[# predefined-exc]][#predefined-exc-note predefined exceptions]|| ||Constraint_Error _
+Program_Error _
+Storage_Error _
+Tasking_Error|| ||
+||[[# def-exc]][#def-exc-note define exception]||{$mode delphi} _
+ _
+type Err42 = class(Exception);||Err42: exception;||##gray|@@--@@ code string must be five digits or uppercase letters:## _
+begin _
+@<&nbsp;&nbsp;>@raise 'User defined error 42' using errcode = 'ERR42'; _
+exception when sqlstate 'ERR42' then _
+@<&nbsp;&nbsp;>@raise notice 'caught ERR42'; _
+end;||
 ||[[# raise-exc]][#raise-exc-note raise exception] _
 @<&nbsp;>@||{$mode delphi} _
  _
-raise Exception.Create('bad int: ' + IntToStr(7));|| ||##gray|@@--@@ raises exception with condition raise_exception:## _
+raise Exception.Create('bad int: ' + IntToStr(7));||raise Err42;||##gray|@@--@@ raises exception with condition raise_exception:## _
 raise exception 'bad int: %', i; _
  _
 ##gray|@@--@@ also possible to use predefined condition:## _
@@ -460,14 +547,6 @@ end;|| ||begin _
 exception when others then _
 @<&nbsp;&nbsp;>@raise notice 'risky() failed.'; _
 @<&nbsp;&nbsp;>@raise; _
-end;||
-||[[# def-exc]][#def-exc-note define exception]||{$mode delphi} _
- _
-type Err42 = class(Exception);|| ||##gray|@@--@@ code string must be five digits or uppercase letters:## _
-begin _
-@<&nbsp;&nbsp;>@raise 'User defined error 42' using errcode = 'ERR42'; _
-exception when sqlstate 'ERR42' then _
-@<&nbsp;&nbsp;>@raise notice 'caught ERR42'; _
 end;||
 ||[[# handle-any-exc]][#handle-any-exc-note handle any exception] _
 @<&nbsp;>@||{$mode delphi} _
@@ -495,7 +574,11 @@ end;||
 ||||||||~ [[# file-handles]][#file-handles-note file handles]||
 ||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
 ||[[# read-line-stdin]][#read-line-stdin-note read line from stdin]|| || ||##gray|//none//##||
-||[[# write-line-stdout]][#write-line-stdout-note write line to stdout]|| || ||##gray|//none//##||
+||[[# write-line-stdout]][#write-line-stdout-note write line to stdout]|| ||with Text_IO; _
+with Ada.Wide_Wide_Text_IO; _
+ _
+Text_IO.Put_Line("Hello!"); _
+Ada.Wide_Wide_Text_IO.Put_Line("Hello!");||##gray|//none//##||
 ||[[# write-line-stderr]][#write-line-stderr-note write line to stderr]|| || ||##gray|@@--@@ stderr stream goes to both client and server log. _
 @@--@@ _
 @@--@@ levels are: debug, log, info, notice, warning _
@@ -503,36 +586,42 @@ end;||
 raise notice 'i is %', i;||
 ||||||||~ [[# files]][#files-note files]||
 ||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
-||||||||~ [[# sql]][#sql-note sql]||
-||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
-||execute statement with no result|| || ||##gray|@@--@@ create table foo (s text, i int);## _
- _
-create or replace function insert_foo(s text, i int) _
-returns void as $$ _
-begin _
-@<&nbsp;&nbsp;>@insert into foo values (s, i); _
-end; ) _
-$$ language plpgsql; _
- _
-##gray|@@--@@ insert, update, and delete statements raise an _
-@@--@@ exception if they fail##||
-||select one row|| || || ||
-||select multiple rows|| || || ||
-||execute sql in string|| || ||create or replace function drop_table(tbl text) _
-returns void as $$ _
-begin _
-@<&nbsp;&nbsp;>@execute 'drop table ' @@||@@ quote_ident(tbl); _
-end; _
-$$ language plpgsql;||
-||functions to prevent sql injection|| || ||quote_literal _
-quote_nullable _
-quote_ident||
 ||||||||~ [[# directories]][#directories-note directories]||
 ||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
 ||||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
 ||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
+||[[# cmd-line-arg]][#cmd-line-arg-note command line arguments]|| ||with Ada.Command_Line; _
+ _
+Ada.Command_Line.Command_Name _
+Ada.Command_Line.Argument_Count _
+Ada.Command_Line.Argument(1) _
+Ada.Command_Line.Argument(2)|| ||
 ||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
 ||~ ||~ [#pascal pascal]||~ [#ada ada]||~ [#plpgsql plpgsql]||
+||[[# load-lib]][#load-lib-note load library]|| ||with Text_IO;|| ||
+||[[# namespace-decl]][#namespace-decl-note namespace declaration]|| ||$ cat put_hello.ads _
+package Put_Hello is _
+@<&nbsp;&nbsp;>@procedure Put_Hello; _
+end; _
+ _
+$ cat put_hello.adb _
+cat put_hello.adb _
+with Text_IO; _
+ _
+package body Put_Hello is _
+@<&nbsp;&nbsp;>@procedure Put_Hello is _
+@<&nbsp;&nbsp;>@begin _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Text_IO.Put_Line("Hello World!"); _
+@<&nbsp;&nbsp;>@end Put_Hello; _
+end;|| ||
+||[[# namespace-alias]][#namespace-alias-note namespace alias]|| ||with Text_IO; _
+ _
+procedure Hello is _
+@<&nbsp;&nbsp;>@package IO renames Text_IO; _
+begin _
+@<&nbsp;&nbsp;>@IO.Put_Line("Hello World!"); _
+end Hello;|| ||
+||[[# unqualified-import]][#unqualified-import-note unqualified import of namespace]|| ||use Text_IO;|| ||
 ||~ ||~ ##EFEFEF|@@________________________________________________________@@##||~ ##EFEFEF|@@________________________________________________________@@##||~ ##EFEFEF|@@________________________________________________________@@##||
 
 
@@ -557,9 +646,42 @@ How to get the version.
 
 A "Hello, World!" example.
 
+**ada:**
+
+{{gnatmake}} takes care of compiling everything that the final executable depends on and linking the final executable.
+
+It is possible to compile and link in separate steps:
+
+[[code]]
+$ cat hello.adb
+with Text_IO; use Text_IO;
+procedure Hello is
+begin
+  Put_Line ("Hello World!");
+end Hello;
+
+$ gnatgcc -gnat12 -c hello.adb
+
+$ gnatbind -gnat12 hello
+
+$ gnatlink -gnat12 hello
+
+$ ./hello
+Hello World!
+[[/code]]
+
+{{gnatgcc}} creates the files {{hello.ali}} and {{hello.o}}, and {{gnatlink}} creates the final executable {{hello}}.
+
+{{gnatbind}} creates the files {{b~hello2.adb}} and {{b~hello2.ads}}.   It is a necessary precursor to {{gnatlink}}.  {{gnatbind}} prevents linking a program in which objects are using incompatible versions of the same header.  This is a safety feature not provided by C and C++ linkers.
+
 [[# file-suffixes-note]]
 ++ [#file-suffixes file suffixes]
 
+Customary suffixes for source and object files.
+
+**ada:**
+
+The {{.adi}} file is generated whenever a {{.o}} file is generated.  The {{.o}} file is what goes into the final executable.  The {{.adi}} file contains information used by the compiler, including the flags that were used to comile the {{.o}} file and what files it depends on.
 
 [[# eol-comment-note]]
 ++ [#eol-comment end-of-line comment]
@@ -718,6 +840,9 @@ The short circuit version of //and// will not evaluate its second argument if th
 
 [[# user-defined-types-note]]
 + [#user-defined-types User-Defined Types]
+
+[[# generic-types-note]]
++ [#generic-types Generic Types]
 
 [[# functions-note]]
 + [#functions Functions]
@@ -886,9 +1011,6 @@ The RAISE statement is used to write to stderr.  Each message must be assigned o
 [[# files-note]]
 + [#files Files]
 
-[[# sql-note]]
-+ [#sql SQL]
-
 [[# directories-note]]
 + [#directories Directories]
 
@@ -904,26 +1026,52 @@ The RAISE statement is used to write to stderr.  Each message must be assigned o
 [http://www.freepascal.org/docs-html/ref/ref.html Free Pascal: Reference Guide]
 [http://www.freepascal.org/docs-html/rtl/index.html Free Pascal: Run-Time Language Reference]
 
-[http://www.standardpascal.org/The_Programming_Language_Pascal_1973.pdf The Programming Language Pascal] Wirth 1973
-[http://www.standardpascal.org/iso7185.html ISO 7185] 1983,1990
-[http://www.cs.virginia.edu/~evans/cs655-S00/readings/bwk-on-pascal.html Why Pascal is Not My Favorite Language] Kernighan 1981
-[http://pascal-central.com/ppl/chapter3.html Summary of ISO 7185 (1983) and ISO 10206 (1991)]
-
 [[# ada]]
 + [#top Ada]
 
-[http://www.infres.enst.fr/~pautet/Ada95/a95list.htm Ada Tutorial]
-[http://archive.adaic.com/standards/83rat/html/ratl-TOC.html Rationale for the Design of the Ada Programming Language] 1983
-[http://archive.adaic.com/standards/83lrm/html/Welcome.html Ada 83 Reference Manual]
-[http://www.adahome.com/rm95/ Ada 95 Reference Manual]
-[http://www.adaic.org/standards/05rm/RM.pdf Ada 2005 Reference Manual (pdf)]
-[http://gcc.gnu.org/onlinedocs/gcc-4.1.2/gnat_rm/ GNAT 4.1.2 Reference Manual]
-[http://www.cs.fit.edu/~ryan/ada/ada-hist.html History of the Ada Programming Language]
+[http://www.ada-auth.org/standards/12rm/html/RM-TOC.html Ada Reference Manual]
+[https://gcc.gnu.org/onlinedocs/gnat_rm/ GNAT Reference Manual]
+[https://gcc.gnu.org/onlinedocs/gnat_ugn/index.html GNAT User's Guide for Native Platforms]
+
+Ada has about 60 reserved words; these are written with lower case letters.  Other identifiers are written with underscores and capitalization, e.g. {{Put_Hello}}. 
+
+Files use lower case letters and underscores, but are otherwise named after the package they contain.  The package {{Put_Hello}} would go in the file {{put_hello.adb}}, with its specification in {{put_hello.ads}}.
 
 [[# plpgsql]]
 + [#top PL/SQL]
 
-[http://download.oracle.com/docs/cd/B28359_01/appdev.111/b28370/toc.htm Oracle 11g PL/SQL Language Reference]
-[http://download.oracle.com/docs/cd/B28359_01/appdev.111/b28419/toc.htm Oracle 11g PL/SQL Packages and Types Reference]
 [http://www.postgresql.org/docs/9.1/interactive/plpgsql.html PostgreSQL 9.1 Documention: PL/pgSQL]
 [http://www.postgresql.org/docs/9.1/interactive/plpgsql-porting.html Porting from PL/SQL to PL/pgSQL]
+
+Execute statement with no result:
+
+[[code]]
+-- create table foo (s text, i int);
+
+create or replace function insert_foo(s text, i int)
+returns void as $$
+begin
+  insert into foo values (s, i);
+end; )
+$$ language plpgsql;
+
+-- insert, update, and delete statements raise an
+-- exception if they fail
+[[/code]]
+
+Execute SQL in a string:
+
+[[code]]
+create or replace function drop_table(tbl text)
+returns void as $$
+begin
+  execute 'drop table ' || quote_ident(tbl);
+end;
+$$ language plpgsql;
+[[/code]]
+
+Functions to prevent sql injection:
+
+* quote_literal
+* quote_nullable
+* quote_ident

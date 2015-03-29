@@ -2067,8 +2067,8 @@ if (kill(getppid(), SIGUSR1) == -1) { _
  _
 ##gray|/* 2nd value indicates whether option takes an argument */## _
 static struct option long_opts[] = { _
-@<&nbsp;&nbsp;>@{"debug", 0, NULL, 'd'}, _
-@<&nbsp;&nbsp;>@{"threshold", 1, NULL, 't'}, _
+@<&nbsp;&nbsp;>@{"debug", no_argument, NULL, 'd'}, _
+@<&nbsp;&nbsp;>@{"threshold", required_argument, NULL, 't'}, _
 @<&nbsp;&nbsp;>@{0, 0, 0, 0} _
 }; _
  _

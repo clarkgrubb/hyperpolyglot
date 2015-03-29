@@ -422,22 +422,33 @@ $ man 7 create_table|| || ||
 ||[[# stop-server]][#stop-server-note stop server]|| || || ||
 ||[[# config-file]][#config-file-note config file]|| || || ||
 ||[[# reload-config-file]][#reload-config-file-note reload config file]|| || || ||
-||[[# data-dir]][#data-dir-note data directory]||##gray|//data directory is passed to server process using// -D //option://## _
-$ ps aux | grep postgres||/usr/local/var/mysql||##gray|//specified on command line//##||
+||[[# data-dir]][#data-dir-note data directory]||$ postgres -D /PATH/TO/DATA/DIR||$ mysqld @@--@@datadir /PATH/TO/DATA/DIR||##gray|//specified on command line//##||
 ||[[# create-db]][#create-db-note create database]||##gray|//at sql prompt://## _
 @@>@@ create database foo; _
  _
 ##gray|//at command line://## _
-$ createdb foo|| || ||
+$ createdb foo||##gray|//User must have 'create' privilege.//## _
+ _
+##gray|//at sql prompt://## _
+@@>@@ create database foo; _
+ _
+##gray|//at command line://## _
+$ mysqladmin create foo|| ||
 ||[[# drop-db]][#drop-db-note drop database]||@@>@@ drop database foo; _
  _
-$ dropdb foo|| || ||
-||[[# backup-db]][#backup-db-note backup database]||$ pg_dump ##gray|//db//## > /tmp/##gray|//db//##.sql _
+$ dropdb foo||##gray|//User must have 'drop' privilege.//## _
  _
-$ pg_dump -F=c ##gray|//db//## > /tmp/##gray|//db//##.postgres|| || ||
-||[[# restore-db]][#restore-db-note restore database]||$ psql -f /tmp/##gray|//db//##.sql _
+##gray|//at sql prompt://## _
+@@>@@ drop database foo; _
  _
-$ pg_restore -d ##gray|//db//## /tmp/##gray|//db//##.postgres|| || ||
+##gray|//at command line://## _
+$ mysqladmin drop foo|| ||
+||[[# backup-db]][#backup-db-note backup database]||$ pg_dump foo > /tmp/foo.sql _
+ _
+$ pg_dump -F=c foo > /tmp/foo.postgres||$ mysqldump foo > /tmp/foo.sql|| ||
+||[[# restore-db]][#restore-db-note restore database]||$ psql -f /tmp/foo.sql _
+ _
+$ pg_restore -d foo /tmp/foo.postgres||$ mysql < /tmp/foo.sql|| ||
 ||~ ||~ ##EFEFEF|@@_________________________________@@##||~ ##EFEFEF|@@_________________________________@@##||~ ##EFEFEF|@@_________________________________@@##||
 
 [[# version-used-note]]
