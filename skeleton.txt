@@ -1,4 +1,4 @@
-[[# top]]##gray|core:## [#version version] | [#grammar-execution grammar and execution] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#str strings] | [#regex regular expressions] | [#dates-time dates and time] | [#func functions] | [#exec-control execution control] | [#exceptions exceptions] | [#concurrency concurrency] | [#file-handle file handles] | [#file files] | [#file-fmt file formats] | [#dir directories] | [#env-processes processes and environment] | [#option-parsing option parsing] | [#lib-namespaces libraries and namespaces] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#reflection reflection] | [#net-web net and web] | [#dom dom] | [#gui gui] | [#unit-tests unit tests] | [#debug-profile debugging and profiling]
+[[# top]]##gray|core:## [#version version] | [#grammar-execution grammar and execution] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#str strings] | [#regex regular expressions] | [#dates-time dates and time] | [#func functions] | [#exec-control execution control] | [#exceptions exceptions] | [#concurrency concurrency] | [#streams streams] | [#file files] | [#file-fmt file formats] | [#dir directories] | [#env-processes processes and environment] | [#option-parsing option parsing] | [#lib-namespaces libraries and namespaces] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#reflection reflection] | [#net-web net and web] | [#dom dom] | [#gui gui] | [#unit-tests unit tests] | [#debug-profile debugging and profiling]
 
 ##gray|data structures:## [#fixed-length-arrays fixed-length arrays] | [#resizable-arrays resizable arrays] | [#arithmetic-sequences arithmetic sequences] | [#lists lists] | [#tuples tuples] | [#stacks stacks] | [#queues queues] | [#sets sets] | [#dict dictionaries] | [#two-d-arrays 2d arrays] | [#three-d-arrays 3d arrays] | [#user-defined-types user-defined types] | [#generic-types generic types] | [#dependent-types dependent types]
 
@@ -316,7 +316,7 @@ how boundary delimiters are handled||
 ||[[# expand-array]][#expand-array-note pass array elements as separate arguments]||#expand-array||aka splat operator; should illustrate when not all arguments come from array||
 ||[[# param-alias]][#param-alias-note parameter alias] _
 @<&nbsp;>@||#param-alias||What if an expression is provided?  What about strings, arrays, and dictionaries in the normal case? in out in Ada and ref in C#||
-||[[# uninitialized-param-alias]][#uninitialized-param-alias uninitialized parameter alias]||#uninitialized-param-alias||out in Ada and C#||
+||[[# uninitialized-param-alias]][#uninitialized-param-alias-note uninitialized parameter alias]||#uninitialized-param-alias||out in Ada and C#||
 ||[[# retval]][#retval-note return value] _
 @<&nbsp;>@||#retval||how return value||
 ||[[# no-retval]][#no-retval-note no return value]||#no-retval||how to declare function with no return value; aka a procedure||
@@ -364,8 +364,8 @@ iterate over i and print the numbers 0 to 9||
 @<&nbsp;>@||#break|| ||
 ||[[# break-from-nested-loops]][#break-from-nested-loops-note break from nested loops]||#break-from-nested-loops|| ||
 ||[[# continue]][#continue-note continue]||#continue||can't find a short example where continue is useful||
-||[[# statement-modifiers]][#statement-modifiers-note statement modifiers] _
-@<&nbsp;>@||#statement-modifiers|| ||
+||[[# stmt-modifiers]][#stmt-modifiers-note statement modifiers] _
+@<&nbsp;>@||#stmt-modifiers|| ||
 ||[[# single-stmt-branch-loop]][#single-stmt-branch-loop-note single statement branches and loops]||#single-stmt-branch-loop|| ||
 ||[[# dangling-else]][#dangling-else-note dangling else]||#dangling-else||if dangling else ambiguity, show how resolved||
 ||[[# goto]][#goto-note goto]||#goto|| ||
@@ -375,10 +375,10 @@ iterate over i and print the numbers 0 to 9||
 ||[[# base-exc]][#base-exc-note base exception] _
 ##gray|//and base of user defined exceptions//##||#base-exc||what can be thrown; base of all exceptions; of user defined exceptions; base exception methods||
 ||[[# predefined-exc]][#predefined-exc-note predefined exceptions]||#predefined-exc||use indentation to show hierarchy||
-||[[# raise-exc]][#raise-exc-note raise exception] _
+||[[# raise-exc]][#raise-exc-note raise] _
 @<&nbsp;>@||#raise-exc|| ||
-||[[# handle-exc]][#handle-exc-note handle exception]||#handle-exc|| ||
-||[[# def-exc]][#def-exc-note define exception]||#def-exc|| ||
+||[[# handle-exc]][#handle-exc-note handle]||#handle-exc|| ||
+||[[# def-exc]][#def-exc-note define]||#def-exc|| ||
 ||[[# re-raise-exc]][#re-raise-exc-note re-raise exception]||#re-raise-exc|| ||
 ||[[# catch-all-handler]][#catch-all-handler-note catch-all handler] _
 @<&nbsp;>@||#catch-all-handler|| ||
@@ -406,7 +406,7 @@ iterate over i and print the numbers 0 to 9||
 ||[[# create-msg-queue]][#create-msg-queue-note create message queue]||#create-msg-queue||for erlang, each process has an implicit queue; LIFO, FIFO, and priority queue||
 ||[[# send-msg]][#send-msg-note send message]||#send-msg|| ||
 ||[[# receive-msg]][#receive-msg-note receive message]||#receive-msg||how to receive a msg transactionally||
-||||||~ [[# file-handle]][#file-handle-note file handles]||
+||||||~ [[# streams]][#streams-note streams]||
 ||~ title ||~ anchor||~ description||
 ||[[# std-file-handles]][#std-file-handles-note standard file handles]||#std-file-handles|| ||
 ||[[# read-line-stdin]][#read-line-stdin-note read line from stdin]||#read-line-stdin|| ||
@@ -445,7 +445,7 @@ iterate over i and print the numbers 0 to 9||
 ||[[# seek]][#seek-note file handle position] _
 ##gray|//get, set//##||#seek||from start of file, current position, end of file||
 ||[[# tmp-file]][#tmp-file-note open temporary file]||#tmp-file|| ||
-||[[# string-io]][#string-io-note in memory file]||#string-io|| ||
+||[[# in-memory-stream]][#in-memory-stream-note in memory stream]||#in-memory-stream|| ||
 ||||||~ [[# file]][#file-note files]||
 ||~ title ||~ anchor||~ description||
 ||[[# create-empty-file]][#create-empty-file-note create empty file]||#create-empty-file||not an error if the file already exists; also how to touch a file, which updates the last modified timestamp if the file already exists||
@@ -474,6 +474,7 @@ iterate over i and print the numbers 0 to 9||
 ||~ title ||~ anchor||~ description||
 ||[[# working-dir]][#working-dir-note working directory] _
 ##gray|//get and set//##||#working-dir||aka current directory||
+||[[# program-dir]][#program-dir-note program directory]||#program-dir||The directory which contains the executable or script being executed||
 ||[[# build-pathname]][#build-pathname-note build pathname]||#build-pathname||does it remove doubled slashes.||
 ||[[# dirname-basename]][#dirname-basename-note dirname and basename]||#dirname-basename|| ||
 ||[[# absolute-pathname]][#absolute-pathname-note absolute pathname]||#absolute-pathname||does it understand ~; does it remove ..||
@@ -521,22 +522,26 @@ iterate over i and print the numbers 0 to 9||
 ||[[# link-lib]][#link-lib-note link library]||#link-lib|| ||
 ||[[# load-lib]][#load-lib-note load library] _
 @<&nbsp;>@||#load-lib|| ||
-||[[# reload-lib]][#reload-lib-note reload library] _
-@<&nbsp;>@||#reload-lib|| ||
+||[[# load-lib-subdir]][#load-lib-subdir-note load library in subdirectory]||#load-lib-subdir|| ||
+||[[# hot-patch]][#hot-patch-note hot patch] _
+@<&nbsp;>@||#hot patch||i.e. reload possibly modified version of library||
+||[[# load-err]][#load-err-note load error]||#load-err||
 ||[[# lib-path]][#lib-path-note library path] _
 @<&nbsp;>@||#lib-path|| ||
 ||[[# lib-path-env]][#lib-path-env-note library path environment variable]||#lib-path-env|| ||
 ||[[# lib-path-cmd-line]][#lib-path-cmd-line-note library path command line option]||#lib-path-cmd-line|| ||
-||[[# main-in-lib]][#main-in-lib-note main in library]||#main-in-lib|| ||
+||[[# main-in-lib]][#main-in-lib-note main routine in library]||#main-in-lib||i.e. how to put code in a library which only executes when the used as the entry point of the program||
 ||[[# namespace-decl]][#namespace-decl-note namespace declaration] _
 @<&nbsp;>@||#namespace-decl|| ||
 ||[[# subnamespace-decl]][#subnamespace-decl-note subnamespace declaration]||#subnamespace-decl|| ||
 ||[[# namespace-separator]][#namespace-separator-note namespace separator] _
 @<&nbsp;>@||#namespace-separator|| ||
-||[[# import-namespace]][#import-namespace-note import all definitions in namespace] _
-@<&nbsp;>@||#import-namespace|| ||
 ||[[# import-def]][#import-def-note import definitions] _
-@<&nbsp;>@||#import-def|| ||
+@<&nbsp;>@||#import-def||unqualified import||
+||[[# import-namespace]][#import-namespace-note import all definitions in namespace] _
+@<&nbsp;>@||#import-namespace||unqualified import||
+||[[# shadow-avoidance]][#shadow-avoidance-note shadow avoidance] _
+##gray|//namespace, identifier//##||#shadow-avoidance|| ||
 ||[[# app-env]][#app-env-note application environment] _
 ##gray|//create; add pkg//##||#app-env|| ||
 ||[[# multiple-installations]][#multiple-installations-note multiple installations]||#multiple-installations|| ||
@@ -636,6 +641,7 @@ iterate over i and print the numbers 0 to 9||
 ||[[# check-syntax]][#check-syntax-note check syntax] _
 @<&nbsp;>@||#check-syntax|| ||
 ||[[# stronger-warnings]][#stronger-warnings-note flag for stronger warnings]||#stronger-warnings|| ||
+||[[# stronger-errors]][#stronger-errors-note flag for stronger errors]||#strong-err|| ||
 ||[[# suppress-warnings]][#suppress-warnings-note suppress warnings]||#suppress-warnings|| ||
 ||[[# warnings-as-err]][#warnings-as-err-note treat warnings as errors]||#warnings-as-err|| ||
 ||[[# lint]][#lint-note lint]||#lint||unused declarations; paths with no return||
