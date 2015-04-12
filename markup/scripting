@@ -2,7 +2,7 @@
 
 **sheet one:** [#version version] | [#grammar-execution grammar and execution] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#resizable-arrays resizable arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#concurrency concurrency]
 
-**[[[scripting2|sheet two]]]:** [[[scripting2#file-handles|file handles]]] | [[[scripting2#files|files]]] | [[[scripting2#file-fmt|file formats]]] | [[[scripting2#directories|directories]]] | [[[scripting2#processes-environment|processes and environment]]] | [[[scripting2#option-parsing|option parsing]]] | [[[scripting2#libraries-namespaces|libraries and namespaces]]] | [[[scripting2#objects|objects]]] | [[[scripting2#inheritance-polymorphism|inheritance and polymorphism]]] | [[[scripting2#reflection|reflection]]] | [[[scripting2#net-web|net and web]]] | [[[scripting2#unit-tests|unit tests]]] | [[[scripting2#debugging-profiling|debugging and profiling]]] | [[[scripting2#java-interop|java interop]]]
+**[[[scripting2|sheet two]]]:** [[[scripting2#streams|streams]]] | [[[scripting2#files|files]]] | [[[scripting2#file-fmt|file formats]]] | [[[scripting2#directories|directories]]] | [[[scripting2#processes-environment|processes and environment]]] | [[[scripting2#option-parsing|option parsing]]] | [[[scripting2#libraries-namespaces|libraries and namespaces]]] | [[[scripting2#objects|objects]]] | [[[scripting2#inheritance-polymorphism|inheritance and polymorphism]]] | [[[scripting2#reflection|reflection]]] | [[[scripting2#net-web|net and web]]] | [[[scripting2#gui|gui]]] |  [[[scripting2#unit-tests|unit tests]]] | [[[scripting2#debugging-profiling|debugging and profiling]]] | [[[scripting2#java-interop|java interop]]]
 
 ||||||||||~ [[# version]][#version-note version]||
 ||~ ||~ [#javascript javascript]||~ [#php php]||~ [#python python]||~ [#ruby ruby]||
@@ -19,9 +19,15 @@ $ python @@--@@version||$ ruby @@--@@version||
 ||[[# interpreter]][#interpreter-note interpreter] _
 @<&nbsp;>@||$ node foo.js||$ php -f foo.php||$ python foo.py||$ ruby foo.rb||
 ||[[# repl]][#repl-note repl] _
-@<&nbsp;>@||$ node||$ php -a||$ python||$ irb||
+@<&nbsp;>@||$ node _
+ _
+##gray|//mac://## _
+$ osascript -l JavaScript -i||$ php -a||$ python||$ irb||
 ||[[# cmd-line-program]][#cmd-line-program-note command line program]||$ node -e 'var sys = require("sys"); _
-  sys.puts("hi world!");'||$ php -r 'echo "hi\n";'||$ python -c 'print("hi")'||$ ruby -e 'puts "hi"'||
+  sys.puts("hi world!");' _
+ _
+##gray|//mac://## _
+$ osascript -l JavaScript -e '1 + 1'||$ php -r 'echo "hi\n";'||$ python -c 'print("hi")'||$ ruby -e 'puts "hi"'||
 ||[[# block-delimiters]][#block-delimiters-note block delimiters] _
 @<&nbsp;>@||{}||{}||: ##gray|//and offside rule//##||{} _
 ##purple|do end##||
@@ -1808,7 +1814,7 @@ thr.start()|| thr = ##green|Thread##.new { sleep 10 }||
 ||~ ||~ ##EFEFEF|@@____________________________________________@@##||~ ##EFEFEF|@@____________________________________________@@##||~ ##EFEFEF|@@_____________________________________________@@##||~ ##EFEFEF|@@_____________________________________________@@##||
 
 
-**[[[scripting2|sheet two]]]:** [[[scripting2#file-handles|file handles]]] | [[[scripting2#file|files]]] | [[[scripting2#directories|directories]]] | [[[scripting2#processes-environment|processes and environment]]] | [[[scripting2#option-parsing|option parsing]]] | [[[scripting2#libraries-namespaces|libraries and namespaces]]] | [[[scripting2#objects|objects]]] | [[[scripting2#inheritance-polymorphism|inheritance and polymorphism]]] | [[[scripting2#reflection|reflection]]] | [[[scripting2#net-web|net and web]]] | [[[scripting2#unit-tests|unit tests]]] | [[[scripting2#debugging-profiling|debugging and profiling]]] | [[[scripting2#deployment|deployment]]]
+**[[[scripting2|sheet two]]]:** [[[scripting2#streams|streams]]] | [[[scripting2#file|files]]] | [[[scripting2#directories|directories]]] | [[[scripting2#processes-environment|processes and environment]]] | [[[scripting2#option-parsing|option parsing]]] | [[[scripting2#libraries-namespaces|libraries and namespaces]]] | [[[scripting2#objects|objects]]] | [[[scripting2#inheritance-polymorphism|inheritance and polymorphism]]] | [[[scripting2#reflection|reflection]]] | [[[scripting2#net-web|net and web]]] | [[[scripting2#gui|gui]]] | [[[scripting2#unit-tests|unit tests]]] | [[[scripting2#debugging-profiling|debugging and profiling]]] | [[[scripting2#deployment|deployment]]]
 
 [[# version-note]]
 + [#version Version]
@@ -4520,6 +4526,7 @@ How to make a thread wait for another thread to finish.
 + [#top JavaScript]
 
 [https://developer.mozilla.org/en-US/docs/Web/JavaScript Mozilla Developer Network: JavaScript]
+[https://developer.apple.com/library/mac/releasenotes/InterapplicationCommunication/RN-JavaScriptForAutomation/ JavaScript for Automation: Release Notes]
 
 [[# browsers]] 
 + [#top Browsers]

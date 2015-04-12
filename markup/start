@@ -7,19 +7,19 @@
 [[/row]]
 
 [[row]]
-[[cell]]**More Interpreted Languages:**[[/cell]][[cell]][[[more|Perl, Tcl, Lua, Groovy]]][[/cell]]
+[[cell]]**Interpreted Languages:**[[/cell]][[cell]][[[more|Perl, Lua, Groovy]]][[/cell]]
 [[/row]]
 
 [[row]]
-[[cell]]**Operating System Automation:**[[/cell]][[cell]][[[shell|POSIX Shell, Cmd.exe, PowerShell]]][[/cell]]
+[[cell]]**Command Line Interpreters:**[[/cell]][[cell]][[[shell|POSIX Shell, Cmd.exe, PowerShell]]][[/cell]]
 [[/row]]
 
 [[row]]
-[[cell]]**GUI Scripting:**[[/cell]][[cell]][[[gui|Smalltalk, AutoHotkey, AppleScript]]][[/cell]]
+[[cell]]**GUI Scripting:**[[/cell]][[cell]][[[gui|Smalltalk, Tcl, AutoHotkey]]][[/cell]]
 [[/row]]
 
 [[row]]
-[[cell]]**Stack-Oriented Languages:**[[/cell]][[cell]][[[stack|Forth, PostScript]]][[/cell]]
+[[cell]]**Forth and PostScript:**[[/cell]][[cell]][[[stack|Forth, PostScript]]][[/cell]]
 [[/row]]
 
 [[row]]
@@ -35,7 +35,7 @@
 [[/row]]
 
 [[row]]
-[[cell]]**C++ Style Languages:**[[/cell]][[cell]][[[cpp|C++, Objective-C, Java, C#]]][[/cell]]
+[[cell]]**C++, Objective-C, Java, C#:**[[/cell]][[cell]][[[cpp|C++, Objective-C, Java, C#]]][[/cell]]
 [[/row]]
 
 [[row]]
@@ -63,11 +63,11 @@
 [[/row]]
 
 [[row]]
-[[cell]]**Relational Data Languages:**[[/cell]][[cell]][[[data|SQL, Awk, Pig]]][[/cell]]
+[[cell]]**Computer Algebra Software:**[[/cell]][[cell]][[[computer-algebra|Mathematica, SymPy, GAP, Pari/GP]]][[/cell]]
 [[/row]]
 
 [[row]]
-[[cell]]**Fortran and APL:**[[/cell]][[cell]][[[fortran|Fortran, APL]]][[/cell]]
+[[cell]]**Relational Data Languages:**[[/cell]][[cell]][[[data|SQL, Awk, Pig]]][[/cell]]
 [[/row]]
 
 [[row]]
@@ -75,7 +75,7 @@
 [[/row]]
 
 [[row]]
-[[cell]]**Computer Algebra Software:**[[/cell]][[cell]][[[computer-algebra|Mathematica, SymPy, GAP, Pari/GP]]][[/cell]]
+[[cell]]**Fortran and APL:**[[/cell]][[cell]][[[fortran|Fortran, APL]]][[/cell]]
 [[/row]]
 
 [[/table]]

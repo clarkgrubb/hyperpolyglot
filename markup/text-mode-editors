@@ -225,6 +225,7 @@ P|| || || ||
 M-x ido-find-file||C-r||
 ||[[# open-file-read-only]][#open-file-read-only-note open file read only] _
 @<&nbsp;>@||:view ##gray|//path//##||C-x C-r||M-x find-file-read-only|| ||
+||[[# buffer-read-only]][#buffer-read-only-note toggle buffer read only]|| || ||M-x read-only-mode|| ||
 ||[[# show-buffer-file-name]][#show-buffer-file-name-note show buffer file name] _
 @<&nbsp;>@||:echo bufname("%")|| ||M-: buffer-file-name|| ||
 ||[[# list-buffers]][#list-buffers-note list buffers]||:ls||C-x C-b||M-x list-buffers _
@@ -501,10 +502,13 @@ C-x 8 RET 221e||M-x ucs-insert|| ||
 @<&nbsp;>@|| ||C-\||M-x toggle-input-method|| ||
 ||[[# describe-input-method]][#describe-input-method-note describe input method] _
 @<&nbsp;>@|| ||C-h I||M-x describe-input-method|| ||
-||how to type character at point|| || ||M-x quail-show-key|| || 
-||set file encoding||:w ++enc=utf-8 ##gray|//foo//##.txt||C-x RET f||M-x set-buffer-file-coding-system|| ||
-||show file encoding|| || ||M-: buffer-file-coding-system|| ||
-||list available encodings||:h encoding-values|| ||M-x list-coding-systems|| ||
+||[[# show-key]][#show-key-note how to type character at point]|| || ||M-x quail-show-key|| || 
+||[[# set-file-encoding]][#set-file-encoding-note set file encoding]||:w ++enc=utf-8 ##gray|//foo//##.txt||C-x RET f||M-x set-buffer-file-coding-system|| ||
+||[[# set-eol]][#set-eol-note set end of line character]|| || ||M-x set-buffer-file-coding-system RET utf-8-unix _
+M-x set-buffer-file-coding-system RET utf-8-dos _
+M-x set-buffer-file-coding-system RET utf-8-mac|| ||
+||[[# show-file-encoding]][#show-file-encoding-note show file encoding]|| || ||M-: buffer-file-coding-system|| ||
+||[[# list-encodings]][#lilst-encodings-note list available encodings]||:h encoding-values|| ||M-x list-coding-systems|| ||
 ||||||||||~ [[# help]]**[#help-note help]**||
 ||~  ||~ vim||~ emacs||~ emacs||~ nano||
 ||help //(q to exit help mode)//|| :help||C-h i||M-x info||C-g||

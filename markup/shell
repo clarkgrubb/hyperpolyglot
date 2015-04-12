@@ -1,12 +1,10 @@
 //a side-by-side reference sheet//
 
-[#grammar-invocation grammar and invocation] | [#var-expr variables and expression] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] _
-[#arrays arrays] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] |  [#files files] | [#directories directories] | [#processes-environment processes and environment] _
-[#libraries-namespaces libraries and namespaces] | [#reflection reflection]
+[#grammar-invocation grammar and invocation] | [#var-expr variables and expression] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#resizable-arrays resizable arrays] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#streams streams] | [#files files] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#reflection reflection] | [#debugging-profiling debugging and profiling]
 
 ||~ [[# general]]||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
 ||[[# version-used]][#version-used-note version used] _
-@<&nbsp;>@||##gray|//dash; POSIX 2008//##||##gray|//6.3//##||##gray|//2.0//##||
+@<&nbsp;>@||##gray|//dash; POSIX 2008//##||##gray|//6.3//##||##gray|//4.0//##||
 ||[[# version]][#version-note show version] _
 @<&nbsp;>@|| ||##gray|//displayed at startup//##||$host.version||
 ||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
@@ -18,7 +16,7 @@
 @@DOS>@@ powershell -file foo.ps1||
 ||[[# repl]][#repl-note repl] _
 @<&nbsp;>@||$ dash||@@>@@ cmd||@@>@@ powershell||
-||[[# exec-and-exit]][#exec-and-exit-note execute command and exit]||$ dash -c 'echo hi'||@@>@@ cmd /c "echo hi"||@@>@@ powershell -command 'write-host "hi"'||
+||[[# exec-and-exit]][#exec-and-exit-note execute command and exit]||$ dash -c 'echo hi'||@@>@@ cmd /c "echo hi"||@@>@@ powershell -command 'write-output "hi"'||
 ||[[# stmt-separator]][#stmt-separator-note statement separator]||##gray|//pipelines separated by//## _
 ; & && @@||@@ _
  _
@@ -26,7 +24,7 @@
 "" '' @@``@@ ()||##gray|//pipelines separated by//## & && @@||@@ _
  _
 ##gray|//lists of pipelines separated by newline unless preceded by caret ^ which is not inside double quote "//##||; ##gray|//or newline; a newline can be escaped with a backtick://## @@`@@  ##gray|//newlines are permitted in double quotes and after a pipe://## | ||
-||[[# word-separator]][#word-separator-note word separators]|| | & ; ( ) < > ##gray|//space tab//##|| || ||
+||[[# word-separator]][#word-separator-note word separators]|| | & ; ( ) < > ##gray|//space tab//##|| | & < > ##gray|//space tab//##|| ||
 ||[[# esc-special-char]][#esc-special-char-note escape special character]||##gray|# write "foo" to foo.txt:## _
 echo foo > foo.txt _
  _
@@ -45,11 +43,16 @@ relational expressions can only be used in the conditional of an// if //statemen
   _
 arithmetic expressions can only be assigned to a variable using// set /a##||##gray|//yes//##||
 ||[[# comment]][#comment-note end-of-line comment] _
-@<&nbsp;>@|| # ##gray|//comment//##|| rem ##gray|//comment//##||# ##gray|//comment//##||
+@<&nbsp;>@|| # ##gray|//comment//##|| rem ##gray|//comment//## _
+ _
+:: ##gray|//comment//##||# ##gray|//comment//##||
 ||[[# multiline-comment]][#multiline-comment-note comment out multiple lines]||@@<<@@EOF _
 ##gray|//comment//## _
 ##gray|//another comment//## _
-EOF|| ||<# ##gray|//comment//## _
+EOF||goto comment _
+##gray|//comment//## _
+##gray|//another comment//## _
+:comment||<# ##gray|//comment//## _
 ##gray|//another comment//## #>||
 ||||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
 ||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
@@ -71,19 +74,16 @@ set b=%tmp%||$a, $b = $b, $a||
 $x@@++@@ _
 $x@@--@@||
 ||[[# var-decl]][#var-decl-note variable declaration] _
-@<&nbsp;>@||##gray|//assignment//##, export, readonly|| ||##gray|//assignment//##||
-||variable evaluation|| || || ||
-||[[# identifiers-case-sensitive]][#identifiers-case-sensitive-note are identifiers case sensitive?]||##gray|//yes//##|| ||##gray|//no//##||
+@<&nbsp;>@||##gray|//assignment//##, export, readonly||##gray|//assignment//##||##gray|//assignment//##||
+||[[# identifiers-case-sensitive]][#identifiers-case-sensitive-note are identifiers case sensitive?]||##gray|//yes//##||##gray|//no//##||##gray|//no//##||
 ||[[# null]][#null-note null] _
-@<&nbsp;>@||''|| ||$null||
+@<&nbsp;>@||''||##gray|//Variables must contain a non-empty string.  This deletes the variable x://## _
+set x=||$null||
 ||[[# null-test]][#null-test-note null test] _
-@<&nbsp;>@||[ -z $v ]|| ||$v -eq $null||
-||[[# undef-access]][#undef-access-note undefined variable access]||''|| ||$null||
-||[[# undef-test]][#undef-test-note undefined test]||f [ ${foo+1} ]; then _
-@<&nbsp;&nbsp;>@echo "defined" _
-else _
-@<&nbsp;&nbsp;>@echo "undefined" _
-fi|| ||test-path variable:\foo||
+@<&nbsp;>@||if [ -z $v ] _
+then _
+@<&nbsp;&nbsp;>@echo not defined _
+fi||if not defined v echo not defined||$v -eq $null||
 ||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
 ||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
 ||[[# true-false]][#true-false-note true and false] _
@@ -121,42 +121,47 @@ not||-and -or -not||
 @<&nbsp;>@||$(( 1 + 3 ))||##gray|//arithmetic expression must be stored in a variable://## _
 set /a "foo=1+3"||1 + 3||
 ||[#arithmetic-operators arithmetic operators] _
-@<&nbsp;>@||+ - * ##gray|//none//## / % @@**@@||+ - * ##gray|//none//## / % ##gray|//none//##||+ - * / ##gray|//??//## % ##gray|//??//##||
+@<&nbsp;>@||+ - * ##gray|//none//## / % @@**@@ _
+ _
+##gray|//operators are integer-only in most shells; use// bc //for float arithmetic//##||+ - * ##gray|//none//## / % ##gray|//none//## _
+ _
+##gray|//operators only work on integers//##||+ - * / ##gray|//??//## % ##gray|//??//##||
 ||[#integer-division integer division] _
-@<&nbsp;>@||$(( $a / $b ))|| ||$rem = $null _
+@<&nbsp;>@||$(( $a / $b ))||set /a "result=7/3"||$rem = $null _
 $quot = [Math]::DivRem($a, $b, [ref] $rem)||
-||[[# int-div-zero]][#int-div-zero-note integer division by zero]||##gray|//writes "division by 0" error message; statement terminates with a 1 status//##|| ||##gray|//error: Attempted to divide by zero//##||
+||[[# int-div-zero]][#int-div-zero-note integer division by zero]||##gray|//writes "division by 0" error message; statement terminates with a 1 status//##||##gray|//Writes "Divide by zero error." and sets %errorlevel% to nonzero value.//##||##gray|//error: Attempted to divide by zero//##||
 ||[#float-division float division] _
-@<&nbsp;>@||@@`@@echo " scale=5; $a / $b " | bc@@`@@|| ||$a / $b||
-||[[# float-div-zero]][#float-div-zero-note float division by zero]||##gray|//writes "division by 0" error message; statement terminates with a 1 status//##|| ||##gray|//evaluates to// Infinity //which is not a float literal//##||
+@<&nbsp;>@||@@`@@echo " scale=5; $a / $b " | bc@@`@@||##gray|//none//##||$a / $b||
+||[[# float-div-zero]][#float-div-zero-note float division by zero]||##gray|//writes "division by 0" error message; statement terminates with a 1 status//##||##gray|//none//##||##gray|//evaluates to// Infinity //which is not a float literal//##||
 ||[[# power]][#power-note power] _
-@<&nbsp;>@|| || ||[Math]::pow(2, 32)||
+@<&nbsp;>@|| ||##gray|//none//##||[Math]::pow(2, 32)||
 ||[[# sqrt]][#sqrt-note sqrt] _
-@<&nbsp;>@|| || ||[Math]::sqrt(2)||
+@<&nbsp;>@|| ||##gray|//none//##||[Math]::sqrt(2)||
 ||[#sqrt-negative-two sqrt -2] _
-@<&nbsp;>@||##gray|//no sqrt//##|| ||##gray|//evaluates to// NaN //which is not a float literal//##||
+@<&nbsp;>@||##gray|//no sqrt//##||##gray|//none//##||##gray|//evaluates to// NaN //which is not a float literal//##||
 ||[#transcendental-func transcendental functions]||e l s c ##gray|//none//## ##gray|//none//## ##gray|//none//## a ##gray|//none//## _
 ##gray|//how to use://## _
-@@`@@echo 'e(2)' | bc -l@@`@@|| ||[Math]::exp [Math]::log _
+@@`@@echo 'e(2)' | bc -l@@`@@||##gray|//none//##||[Math]::exp [Math]::log _
 [Math]::sin [Math]::cos [Math]::tan _
 [Math]::asin [Math]::acos [Math]::atan _
 [Math]::atan2||
 ||[#float-truncation float truncation] _
-##gray|//round towards zero, round to nearest integer, round down, round up//##||##gray|//none and no floats//##|| ||[Math]::truncate(3.14) _
+##gray|//round towards zero, round to nearest integer, round down, round up//##||##gray|//none and no floats//##||##gray|//none//##||[Math]::truncate(3.14) _
 [Math]::round(3.14) _
 [Math]::floor(3.14) _
 [Math]::ceiling(3.14)||
 ||[[# abs-val]][#abs-val-note absolute value] _
-##gray|//and signum//##|| || ||[Math]::abs(-7) _
+##gray|//and signum//##|| ||##gray|//none//##||[Math]::abs(-7) _
 [Math]::sign(-7)||
 ||[#integer-overflow integer overflow] _
-@<&nbsp;>@||##gray|//modular arithmetic//##|| ||##gray|//converts to float//##||
+@<&nbsp;>@||##gray|//modular arithmetic//##||##gray|//sometimes modular arithmetic; sometimes writes error message and sets %errorlevel% to nonzero value.//##||##gray|//converts to float//##||
 ||[#float-overflow float overflow] _
-@<&nbsp;>@||##gray|//no floats//##|| ||##gray|//evaluates to// Infinity //which is not a float literal//##||
-||[#random random integer, uniform float]||echo $RANDOM ##gray|//15 bit integer//##|| ||random 100 _
+@<&nbsp;>@||##gray|//no floats//##||##gray|//none//##||##gray|//evaluates to// Infinity //which is not a float literal//##||
+||[#random random integer, uniform float]||echo $RANDOM ##gray|//15 bit integer//##||##gray|rem integer in range 0 to 32767:## _
+echo %random%||random 100 _
 random 1.0||
 ||[#seed-random seed random numbers]||RANDOM=17 _
-r=$RANDOM|| ||$r = random -setseed 17||
+r=$RANDOM||##gray|//none//##||$r = random -setseed 17||
 ||[#bit-operators bit operators] _
 @<&nbsp;>@||@<<< >> & | ^ ~>@||##gray|//use with// set /a:## _
 @<<< >> & | ^ ~>@||##gray|//none//## ##gray|//none//## -band -bor -bxor -bnot _
@@ -167,12 +172,15 @@ r=$RANDOM|| ||$r = random -setseed 17||
 ||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
 ||[#string-literal string literal]||'don'\''t say "no"' _
 "don't say \"no\"" _
-$'don\'t say "no"'||##gray|//none; barewords are used for strings//## _
+$'don\'t say "no"'||##gray|//None; barewords are used for strings.//## _
  _
-##gray|//double quotes are used for filenames which contain spaces and other special characters.  However, the double quotes are stored in variables and passed to commands.//##||'don''t say "no"' _
+##gray|//Double quotes are used for file names which contain spaces and other special characters.  However, the double quotes are stored in the variables and passed to commands.//##||'don''t say "no"' _
 "don't say @@`@@"no@@`@@""||
-||[#string-literal-newline newline in literal]||##gray|//yes//##||##gray|//no; a bareword string can be continued on the following line by ending a line with ^; the CRLF is not part of the value of the string; not possible to store a CRLF in a variable//##||##gray|//yes//##||
+||[#string-literal-newline newline in literal]||##gray|//yes//##||##gray|//No; a bareword string can be continued on the following line by ending a line with ^; the CRLF is not part of the value of the string; it is not possible to store a CRLF in a variable.//##||##gray|//yes//##||
 ||[#barewords barewords]||##gray|//yes//##||##gray|//yes//##||##gray|//yes//##||
+||[[# bareword-esc-char]][#bareword-esc-char-note bareword escape character]||##gray|//backslash://## \;||##gray|//caret://## ^< _
+ _
+##gray|//Characters special to the interpreter can be stored in a variable by preceding them by a caret: ^; the interpreter will attempt to interpret them when the variable is dereferenced, however.//##||##gray|//backquote://: @@`@@$||
 ||[#string-escapes escapes]||##gray|//in double quotes//## _
 \\ \" _
 ##gray|//in//## $' ' ##gray|//quotes://## _
@@ -185,7 +193,7 @@ item=ball _
 $item = "ball" _
 "$count $($item)s"||
 ||[#string-length length]||s="hello" _
-${#s}|| ||$s = "hello" _
+${#s}||##gray|//see footnote//##||$s = "hello" _
 $s.length||
 ||[#string-comparison string comparison]||[ $USER  = foo ] _
 [ $USER != foo ]|| ||##gray|# case insensitive:## _
@@ -196,8 +204,12 @@ $s.length||
 ||[#index-substring index of substring]||##gray|//none//##|| ||##gray|//returns -1 if not found://## _
 "foo bar".indexof("bar")||
 ||[#extract-substring extract substring]||s="foo bar" _
-${s:4:3}|| ||"foo bar".substring(4,3)||
-||[#string-concatenation string concatenation]||c="hello, ""world"|| ||$c = "hello, " + "world"||
+${s:4:3}||set s=foo bar _
+echo %s:~4:3%||"foo bar".substring(4, 3)||
+||[#string-concatenation string concatenation]||c="hello, ""world"||##gray|rem trailing whitespace is stored:## _
+set part1=hello,@<&nbsp;>@  _
+set part2=world _
+echo %part1%%part2%||$c = "hello, " + "world"||
 ||[#string-replication string replication]|| || ||$hbar = "-" * 80||
 ||[#split split]||##gray|//none//##|| ||"foo,bar,baz" -split ","||
 ||[#join join]||##gray|//none//##|| ||@("foo","bar","baz") -join ","||
@@ -217,11 +229,12 @@ $s + " " * (10 - $s.length) _
 $(( 7 + $A )) _
  _
 B=".037" _
-@@`@@echo 73.9 + $B | bc@@`@@|| ||7 + "12" _
+@@`@@echo 73.9 + $B | bc@@`@@||set x="12" _
+set /a "result=7+%x%"||7 + "12" _
  _
 73.9 + ".037"||
 ||[#number-to-string number to string] _
-@<&nbsp;>@||##gray|//all values are strings//##|| ||[convert]::tostring(7) + " items" _
+@<&nbsp;>@||##gray|//all values are strings//##||##gray|//all values are strings//##||[convert]::tostring(7) + " items" _
  _
 ##gray|# or use variable interpolation##||
 ||||||||~ [[# regexes]][#regex-note regular expressions]||
@@ -231,44 +244,51 @@ rx='[a-z][a-z]*' _
 if expr $s : $rx > /dev/null _
 then _
 @<&nbsp;&nbsp;>@##gray|//...//## _
-fi|| ||if ("hello" -match "^[a-z][a-z]*$") { _
+fi||set s=hello _
+echo %s%|findstr /r "[a-z][a-z]*" && (echo match ) ^ _
+@<&nbsp;&nbsp;>@@@||@@ (echo does not match)||if ("hello" -match "^[a-z][a-z]*$") { _
 @<&nbsp;&nbsp;>@##gray|//...//## _
 }||
 ||[[# single-subst]][#single-subst-note single substitution]||s='do re mi mi mi' _
 s=$(echo $s | sed s/mi/ma/)|| || ||
 ||[[# global-subst]][#global-subst-note global substitution]||s='do re mi mi mi' _
-s=$(echo $s | sed s/mi/ma/g)|| ||$s = "do re mi mi mi" _
+s=$(echo $s | sed s/mi/ma/g)||set "s=do re mi mi mi" _
+echo %s:mi=ma%||$s = "do re mi mi mi" _
 $s = $s -replace "mi", "ma"||
 ||||||||~ [[# dates-time]][#dates-time-note dates and time]||
 ||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
-||sleep||sleep 10|| || ||
-||||||||~ [[# arrays]][#array-note arrays]||
+||[[# current-datetime]][#current-datetime-note current datetime]||date +'%Y-%m-%d %H:%M:%S'||date /t && time /t||get-date -format 'yyyy-MM-dd HH:mm:ss' _
+get-date -uformat '%Y-%m-%d %H:%M:%S'||
+||[[# current-unix-epoch]][#current-unix-epoch-note current unix epoch]||date +'%s'|| ||get-date -uformat %s||
+||[[# fmt-datetime]][#fmt-datetime-note format datetime]||date -d '1970-01-01 00:00:00 UTC' +'%s'|| ||get-date -date '1970-01-01 00:00:00' -uformat %s||
+||||||||~ [[# resizable-arrays]][#resizable-arrays-note resizable arrays]||
 ||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
-||[#array-literal array literal]||nums=(1 2 3 4)||set nums=(1 2 3 4)||$nums = 1,2,3,4 _
-$nums = @(1,2,3,4)||
-||[#array-size array size]||${#nums[@]}||set numsc=0 _
+||[[# resizable-array-literal]][#resizable-array-literal-note literal]||nums=(1 2 3 4)||set nums=(1 2 3 4)||$nums = 1 ,2 ,3, 4 _
+$nums = @(1 ,2, 3, 4)||
+||[[# resizable-array-size]][#resizable-array-size-note size]||${#nums[@]}||set numsc=0 _
 for %i in %nums% do set /a numsc+=1 _
 echo %numsc%||$nums.Length||
-||[#array-lookup array lookup]||${nums[0]}|| ||$nums[0]||
-||[#array-modification array modification]||nums[1]=5|| ||$nums[0] = 5||
-||[#array-slice array slice]||${nums[@]:1:2}|| ||$nums[1..2]||
-||[#array-concatenation concatenation]||a=(1 2 3) _
+||[[# resizable-array-lookup]][#resizable-array-lookup-note lookup] _
+@<&nbsp;>@||${nums[0]}|| ||$nums[0]||
+||[[# resizable-array-update]][#resizable-array-update-note update] _
+@<&nbsp;>@||nums[1]=5|| ||$nums[0] = 5||
+||[#array-slice slice] _
+@<&nbsp;>@||${nums[@]:1:2}|| ||$nums[1..2]||
+||[#array-concatenation concatenate]||a=(1 2 3) _
 b=(4 5 6) _
-c=(${a[@]} ${b[@]})|| ||@(1,2,3) + @(4,5,6)||
-||[#array-back manipulate back of array]|| || || ||
-||[#array-front manipulate front of array]|| || || ||
-||[#array-iteration array iteration]||for i in ${nums[@]} _
+c=(${a[@]} ${b[@]})|| ||@(1, 2, 3) + @(4, 5, 6)||
+||[#array-iteration iterate over elements]||for i in ${nums[@]} _
 do echo $i _
 done|| ||foreach ($i in $nums) { _
-@<&nbsp;&nbsp;>@write-host $i _
+@<&nbsp;&nbsp;>@write-output $i _
 }||
-||[#array-sort sort]|| || ||$a = 3,2,4,1 _
+||[#array-sort sort]|| || ||$a = 3, 2, 4, 1 _
 $b = $a | Sort-Object||
-||[#array-reverse reverse]|| || ||$a = 1,2,3 _
+||[#array-reverse reverse]|| || ||$a = 1, 2, 3 _
 [array]::reverse($a)||
 ||||||||~ [[# functions]][#functions-note functions]||
 ||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
-||[#function-definition function definition]||add() { echo $(( $1 + $2 )); } _
+||[[# def-func]][#def-func-note define]||add() { echo $(( $1 + $2 )); } _
 ##gray|//or//## _
 function add { echo $(( $1 + $2 )); }||goto:eof _
 :add _
@@ -278,29 +298,44 @@ goto:eof||function add { _
 @<&nbsp;&nbsp;>@param ($a, $b) _
 @<&nbsp;&nbsp;>@$a + $b _
 }||
-||[#function-invocation function invocation]||add 1 2||call:add 1 2||add 1 2||
-||[#missing-argument missing argument value]||''|| ||$null||
-||[#extra-arguments extra arguments]||##gray|//ignored//##|| ||##gray|//ignored//##||
-||[#default-argument default argument value]||##gray|//none//##|| ||function add { _
+||[[# call-func]][#call-func-note call] _
+@<&nbsp;>@||add 1 2||call:add 1 2||add 1 2||
+||[[# missing-arg]][#missing-arg-note missing argument behavior]||''||##gray|//parameter treated as undefined variable or as containing the empty string//##||$null||
+||[[# extra-arg]][#extra-arg-note extra argument behavior]||##gray|//ignored//##||##gray|//none//##||##gray|//ignored//##||
+||[[# default-arg]][#default-arg-note default argument]||##gray|//none//##||##gray|//none//##||function add { _
 @<&nbsp;&nbsp;>@param ($a=0, $b=0) _
 @<&nbsp;&nbsp;>@$a + $b _
 }||
-||[#named-parameters named parameters]||##gray|//none//##|| || ||
-||[#variable-arguments variable number of arguments]||##gray|//args in//## $1, $2, ... ##gray|//with number of args in//## $#|| || ||
-||[#return-value return value]||return ##gray|//arg available in//## $? ##gray|//variable if a positive integer smaller than 256//##|| || ||
-||[#lambda-declaration lambda declaration]||##gray|//none//##|| ||$x = { write-host "foo" }||
-||[#lambda-invocation lambda invocation]||##gray|//none//##|| ||& $x _
+||[[# named-param]][#named-param-note named parameters]||##gray|//none//##||##gray|//none//##||add -a 1 -b 2||
+||[[# retval]][#retval-note return value]||return ##gray|//arg available in//## $? ##gray|//variable if a positive integer smaller than 256//##|| || ||
+||[[# anon-func-literal]][#anon-func-literal-note anonymous function literal]||##gray|//none//##||##gray|//none//##||$f = { write-output "foo" }||
+||[[# call-anon-func]][#call-anon-func-note call anonymous function]||##gray|//none//##||##gray|//none//##||& $f _
 ##gray|//or//## _
 $x.invoke()||
-||[#default-scope default scope]||##gray|//global//##|| || ||
-||[#nested-functions nested function definition]||##gray|//visible outside containing function//##|| || ||
+||[#default-scope default scope] _
+@<&nbsp;>@||##gray|//global//##||##gray|//global//##||##gray|//local//##||
+||[[# nest-func]][#nest-func-note nest]||##gray|//Nested function visible outside containing function.//##||##gray|//none//##||function add { _
+@<&nbsp;&nbsp;>@param ($a, $b) _
+@<&nbsp;&nbsp;>@function add2 { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@param ($a2, $b2) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@$a2 + $b2 _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@add2 $a $b _
+} _
+ _
+##gray|# Nested function not visible outside of containing _
+# function; nested function can see local variables _
+# of containing function.##||
 ||||||||~ [[# execution-control]][#execution-control-note execution control]||
 ||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
-||[#if if]||if [ $n -eq 0 ] _
-then echo "no hits" _
+||[[# if]][#if-note if]||if [ $n -eq 0 ] _
+then _
+@<&nbsp;&nbsp;>@echo "no hits" _
 elif [ $n -eq 1 ] _
-then echo "1 hit" _
-else echo $n " hits" _
+then _
+@<&nbsp;&nbsp;>@echo "1 hit" _
+else _
+@<&nbsp;&nbsp;>@echo $n " hits" _
 fi||if %n% equ 0 ( _
 @<&nbsp;&nbsp;>@echo no hits _
 ) else ( _
@@ -310,63 +345,145 @@ fi||if %n% equ 0 ( _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@echo %n% hits _
 @<&nbsp;&nbsp;>@) _
 )||if ($n -eq 0) { _
-@<&nbsp;&nbsp;>@write-host "no hits" _
+@<&nbsp;&nbsp;>@write-output "no hits" _
 } elseif ($n -eq 1) { _
-@<&nbsp;&nbsp;>@write-host "one hit" _
+@<&nbsp;&nbsp;>@write-output "one hit" _
 } else { _
-@<&nbsp;&nbsp;>@write-host "$n hits" _
+@<&nbsp;&nbsp;>@write-output "$n hits" _
 }||
-||[#while while]||i=0 _
+||[[# while]][#while-note while]||i=0 _
 while [ $i -lt 10 ] _
 do i=$(($i + 1)) _
-echo $i _
+@<&nbsp;&nbsp;>@echo $i _
 done||set i=0 _
 :loop _
 @<&nbsp;&nbsp;>@set /a i+=1 _
 @<&nbsp;&nbsp;>@echo %i% _
 if %i% lss 10 goto :loop||$i = 0 _
 while ($i -lt 10) { _
-@<&nbsp;&nbsp;>@write-host (++$i) _
+@<&nbsp;&nbsp;>@write-output (++$i) _
 }||
-||[#break-continue break/continue]||break continue|| ||break continue||
-||[#for for]||for i in 1 2 3 _
-do echo $i _
+||[[# for]][#for-note for]||for i in 1 2 3 _
+do _
+@<&nbsp;&nbsp;>@echo $i _
 done||set nums=(1 2 3 4) _
 for %%n in %nums% do echo %%n||for ($i=1; $i -le 3; $i++) { _
-@<&nbsp;&nbsp;>@write-host $i _
+@<&nbsp;&nbsp;>@write-output $i _
 }||
+||[[# break]][#break-note break] _
+@<&nbsp;>@||break|| ||break||
+||[[# continue]][#continue-note continue] _
+@<&nbsp;>@||continue|| ||continue||
 ||||||||~ [[# exceptions]][#exceptions-note exceptions]||
 ||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
-||[#raise-exception raise exception]||##gray|//return nonzero status//##|| ||throw "bam!"||
-||[#catch-exception catch exception]||trap 'echo "risky failed"' ERR _
-risky|| ||try { _
+||[[# raise-exc]][#raise-exc-note raise]||##gray|//Commands which fail return nonzero exit status. _
+ _
+Exit status of last command stored in $?//##||##gray|//Commands which fail return nonzero exit status. _
+ _
+Exit status of last command stored in %errorlevel%//##||throw "bam!"||
+||[[# handle-exc]][#handle-exc-note handle]||trap 'echo "risky failed"' ERR _
+risky||risky _
+ _
+if errorlevel 1 ( _
+@<&nbsp;&nbsp;>@echo risky failed _
+)||try { _
 @<&nbsp;&nbsp;>@throw "bam!" _
 } _
 catch { _
-@<&nbsp;&nbsp;>@write-host "caught!" _
+@<&nbsp;&nbsp;>@write-output "caught!" _
 }||
-||[#uncaught-exception uncaught exception behavior]||##gray|//stderr and continue//##|| || ||
-||||||||~ [[# files]][#file-note files]||
+||[[# uncaught-exc]][#uncaught-exc-note uncaught exception behavior]||##gray|//stderr and continue//##||##gray|//stderr and continue//##||##gray|//script exits//##||
+||||||||~ [[# concurrency]][#concurrency-note concurrency]||
 ||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
-||[#print-to-stdout print to standard out]||echo "hi world"|| ||write-host "hi world"||
-||[#standard-filehandles standard file handles]||/dev/stdin _
-/dev/stdout _
-/dev/stderr|| || ||
-||[#read-line read line]||@@`@@head -1 /etc/passwd@@`@@|| || ||
-||[#read-file read file]||@@`@@cat /tmp/a@@`@@|| || ||
-||[#write-file write to file]||echo "hello" > /tmp/a|| || ||
-||[#append-file append to file]||echo "hello" @@>>@@ /tmp/a|| || ||
+||[[# sleep]][#sleep-note sleep]||sleep 10||##gray|//vista and later://## _
+timeout 10||timeout 10||
+||||||||~ [[# streams]][#streams-note streams]||
+||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
+||[[# read-line-stdin]][#read-line-stdin-note read line from stdin]||##gray|# stored in $ine:## _
+read line _
+ _
+##gray|# with prompt:## _
+read -p 'line: ' line||##gray|rem stored in %line%:## _
+set /p line= _
+ _
+##gray|rem with prompt:## _
+set /p line="line: "||$line = read-host _
+ _
+##gray|# with prompt:## _
+$line = read-host 'line'||
+||[[# write-line-stdout]][#write-line-stdout-note write line to stdout]||echo "hi world"||echo hi world||write-output "hi world"||
+||[[# printf]][#printf-note write formatted string to stdout]||printf '%.2f\n' 3.1415|| || ||
+||[[# write-file-stdout]][#write-file-stdout-note write file to stdout]||cat foo.txt|| || ||
+||[[# write-stderr]][#write-stderr-note write to standard error]||echo "hi world" >&2||echo hi world >&2|| ||
+||[[# file-iterate]][#file-iterate-note iterate over file by line]||awk 'length($0) > 70 {print $0}' /etc/passwd|| || ||
+||[[# write-proc]][#write-proc-note write to process]||echo "hi world" | wc||echo hi world | find /c hi|| ||
+||[#write-file write to file]||echo "hello" > /tmp/a||echo hello > \tmp\a|| ||
+||[#append-file append to file]||echo "hello" @@>>@@ /tmp/a||echo hello @@>>@@ \tmp\a|| ||
+||||||||~ [[# files]][#files-note files]||
+||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
+||[[# create-empty-file]][#create-empty-file-note create empty file]||##gray|# does not overwrite existing file, but updates _
+# last mod. time:## _
+touch foo.txt||##gray|rem overwrites existing file:## _
+type nul > foo.txt||##gray|# error if file exists:## _
+new-item -type file foo.txt||
+||[[# file-test]][#file-test-note file exists test, file regular test]||if [ -e foo.txt ]; then echo "exists"; fi _
+if [ -f foo.txt ]; then echo "regular"; fi||if exist foo.txt ( echo exists ) _
+ _
+##gray|//??//##||if (test-path foo.txt) { write-output "exists" } _
+ _
+if (test-path -pathtype leaf) { _
+@<&nbsp;&nbsp;>@write-output "regular" _
+}||
+||[[# file-size]][#file-size-note file size]||ls -l foo.txt||dir foo.txt||get-childitem foo.txt||
+||[[# readable-writeable-executable]][#readable-writeable-executable-note is readable, is writeable, is executable]||if [ -r /etc/passwd ]; then echo readable; fi _
+if [ -w /tmp ]; then echo writeable; fi _
+if [ -x /bin/ls ]; then echo executable; fi|| || ||
+||[[# chmod]][#chmod-note set file permisions]||chmod 0600 foo.txt|| || ||
+||[[# last-modification-time]][#last-modification-time-note last modification time]||ls -l foo.txt||dir foo.txt||get-childitem foo.txt||
+||[[# file-cp-rm-mv]][#file-cp-rm-mv-note copy file, remove file, rename file]||cp /tmp/foo.txt /tmp/bar.txt _
+rm /tmp/foo.txt _
+mv /tmp/bar.txt /tmp/foo.txt||copy foo.txt bar.txt _
+del foo.txt _
+move bar.txt foo.txt||copy-item foo.txt bar.txt _
+remove-item foo.txt _
+move-item bar.txt foo.txt||
+||[[# symlink]][#symlink-note create symlink, symlink test, readlink]||ln -s /etc/passwd /tmp/passwd _
+if [ -h /tmp/passwd ]; then echo "symlink"; fi _
+readlink /tmp/passwd|| || ||
+||[[# unused-file-name]][#unused-file-name-note generate unused file name]||mktemp /tmp/fooXXXXX|| || [System.IO.Path]::GetTempFileName()||
 ||||||||~ [[# directories]][#directories-note directories]||
 ||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
-||current directory|| || || ||
-||directory of script|| || || ||
+||[[# working-dir]][#working-dir-note working directory] _
+##grey|//get and set//##||echo $(pwd) _
+echo $PWD _
+ _
+cd /tmp||echo %cd% _
+ _
+chdir \windows||$loc = get-location _
+echo $loc _
+ _
+set-location \windows||
+||[[# program-dir]][#program-dir-note program directory]||##gray|//bash only://## _
+"$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"||echo %~dp0|| ||
+||[[# direname-basename]][#dirname-basename-note dirname and basename]||dirname /etc/hosts _
+basename /etc/hosts|| || ||
+||[[# iterate-dir]][#iterate-dir-note iterate over directory by file]||for f in /etc/* _
+do _
+@<&nbsp;&nbsp;>@echo $f _
+done|| || ||
+||[[# mkdir]][#mkdir-note make directory]||mkdir /tmp/foo.d||mkdir foo||new-item -type directory foo||
+||[[# recursive-cp]][#recursive-cp-note recursive copy]||cp -R /tmp/foo.d /tmp/bar.d|| || ||
+||[[# rmdir]][#rmdir-note remove empty directory]||rmdir /tmp/foo.d||rmdir foo|| ||
+||[[# rm-rf]][#rm-rf-note remove directory and contents]||rm -rf /tmp/foo.d||rmdir /s /q foo|| ||
+||[[# dir-test]][#dir-test-note directory test]||if [ -d /tmp ]; then echo directory; fi|| || ||
 ||||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
 ||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
-||[#external-command external command]||ls||dir||dir||
-||[#backticks backticks]||s=@@`@@ls@@`@@|| ||$s=dir||
-||[#command-line-args command line args]||$1 _
+||[[# cmd-line-arg]][#cmd-line-arg-note command line args]||$1 _
 $2 _
 ##gray|//...//## _
+ _
+##gray|# number of args:## _
+$# _
  _
 ##gray|# pass args as $# words to twiddle## _
 twiddle "$@" _
@@ -376,30 +493,43 @@ twiddle "$*"||%1 _
 %2 _
 ##gray|//...//## _
  _
+##gray|rem number of args:## _
+set #=0 _
+for %%i in %* do set /a #+=1 _
+echo %#% _
+ _
 ##gray|rem no way to pass argument with space## _
 twiddle %*|| ||
-||number of command line arguments||$#||set #=0 _
-for %%i in %* do set /a #+=1 _
-echo %#%|| ||
-||script name|| ||%0|| ||
-||[#speech speech]||##gray|//depends on OS//##|| ||$sp = new-object -comobject "SAPI.SpVoice" _
-$sp.speak("I'm a PC")||
-||[#environment-variable environment variable]||##gray|//shell variables are environment variables//## _
+||[[# program-name]][#program-name-note program name]||$0||%0|| ||
+||[[# env-var]][#env-var-note environment variable] _
+##gray|//get, set, clear//##||##gray|//shell variables are environment variables//## _
 $HOME|| ||$env:home||
-||[#command-path command path]||which ping|| ||get-command ping||
-||[#exit exit]||exit 0||##gray|rem batch script exits:## _
+||[[# user-id-name]][#user-id-name-note user id and name]||id _
+ _
+##gray|# user name only; most systems:## _
+whoami|| || ||
+||[[# exit]][#exit-note exit]||exit 0||##gray|rem batch script exits:## _
 exit /b 0 _
  _
 ##gray|rem also closes cmd.exe window:## _
 exit 0||exit||
+||[[# external-cmd]][#external-cmd-note external command]||ls||dir||dir||
+||[[# cmd-subst]][#cmd-subst-note command substitution]||s=$(ls)||##gray|//none//##||$s=dir||
+||[#speech speech]||##gray|//mac only://## _
+say "I'm a Mac"|| ||$sp = new-object -comobject "SAPI.SpVoice" _
+$sp.speak("I'm a PC")||
+||[#command-path command path]||which ping|| ||get-command ping||
 ||[#set-signal-handler set signal handler]||function int_handler { _
 @<&nbsp;&nbsp;>@echo "exiting..."; _
 @<&nbsp;&nbsp;>@exit _
 } _
  _
 trap int_handler INT|| || ||
+||[[# send-signal]][#send-signal-note send signal]||kill -INT 1234 _
+kill -KILL 1234|| || ||
 ||[#start-background-job start job in background]||sleep 1000 &|| || ||
 ||[#suspend-job suspend current job]||##gray|//^Z//##|| || ||
+||[[# terminate-job]][#terminate-job-note terminate job]||kill %1|| || ||
 ||[#list-jobs list jobs]||jobs|| || ||
 ||[#background-suspended-job background suspended job]||bg %1|| || ||
 ||[#foreground-background-job bring background job into foreground]||fg %1|| || ||
@@ -409,17 +539,34 @@ trap int_handler INT|| || ||
 ||[#library library]||$ cat foo.sh _
 function add() { _
 @<&nbsp;&nbsp;>@echo $(($1 + $2)); _
-}|| || ||
+}|| ||##gray|//from directory in search path://## _
+ _
+@@>@@ type Modules\Foo\Foo.psm1 _
+function add { _
+@<&nbsp;&nbsp;>@param ($a, $b) _
+@<&nbsp;&nbsp;>@$a + $b _
+}||
 ||[#import-library import library]||source foo.sh _
-add 3 7|| || ||
-||[#library-path library path]||##gray|//none//##|| || ||
-||[#library-path-env library path environment variable]||##gray|//none//##|| || ||
-||[#namespace-declaration namespace declaration]||##gray|//none//##|| || ||
-||[#namespace-separator namespace separator]||##gray|//none//##|| || ||
+add 3 7|| ||import-module foo _
+ _
+add 1 2||
+||[#library-path-env library path environment variable]||##gray|//none//##|| ||$env:psmodulepath||
 ||||||||~ [[# reflection]][#reflection-note reflection]||
 ||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
-||[#class class]|| || || ||
+||[[# cmd-line-doc]][#cmd-line-doc-note command line documentation]||man ls||help dir||get-help get-childitem||
 ||[#list-variables list defined variables]||printenv||set||get-variable||
+||[#list-available-lib-note list available libraries]|| || ||get-module -listavailable||
+||||||||~ [[# debugging-profiling]][#debugging-profiling-note debugging and profiling]||
+||[[# check-syntax]][#check-syntax-note check syntax]||$ apt-get install shellcheck _
+$ shellcheck foo.sh|| || ||
+||[[# stronger-err]][#strong-err-note flags for stronger errors]||##gray|//bash only://## _
+bash -eu -o pipefail _
+ _
+##gray|-e: //exit with nonzero status if command fails// _
+-u: //exit with nonzero status if undefined variable accessed// _
+-o pipefail: //exit with nonzero status if command in pipeline fails//##|| || ||
+||[[# cpu-usage]][#cpu-usage-note cpu usage]||time ls|| || ||
+||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
 ||~ ||~ ##EFEFEF|@@__________________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________________@@##||
 
 
@@ -686,22 +833,6 @@ The null literal.
 
 How to test if a value is null.
 
-[[# undef-access-note]]
-++ [#undef-access undefined variable access]
-
-The value of an undefined variable, or the system behavior if there is no such value.
-
-[[# undef-test-note]]
-++ [#undef-test undefined test]
-
-How to determine if a variable is undefined.
-
-**posix shell:**
-
-The expression ${##gray|//var//##+##gray|//val//##} is ##gray|//val//## if ##gray|//var//## is defined, otherwise it is the empty string ''.
-
-The expression ${##gray|//var//##:+##gray|//val//##} is ##gray|//val//## if ##gray|//var//## is defined and not null, otherwise it is the empty string ''.
-
 [[# arithmetic-logic-note]]
 + [#arithmetic-logic Arithmetic and Logic]
 
@@ -956,7 +1087,7 @@ echo "the value of \$a is $a"
 A dollar sign {{$}} can be backtick escaped to prevent variable interpolation:
 
 [[code]]
-write-host "the value of @@`@@$a is $a"
+write-output "the value of @@`@@$a is $a"
 [[/code]]
 
 [[# string-length]]
@@ -1084,8 +1215,8 @@ echo ${str//mi/ma}
 [[# dates-time-note]]
 + [#dates-time Dates and Time]
 
-[[# array-note]]
-+ [#arrays Arrays]
+[[# resizable-arrays-note]]
++ [#resizable-arrays Resizable Arrays]
 
 [[# array-literal]]
 ++ array literal
@@ -1295,11 +1426,11 @@ trap exit ERR
 [[# wait-on-thread]]
 ++ wait on thread
 
-[[# file-note]]
-+ [#files Files]
+[[# streams-note]]
++ [#streams Streams]
 
 [[# print-to-stdout]]
-++ print to standard out
+++ write to standard out
 
 **posix shell:**
 
@@ -1324,6 +1455,8 @@ echo -n "hello"
 [[# append-file]]
 ++ append to file
 
+[[# files-note]]
++ [#files Files]
 
 [[# directories-note]]
 + [#directories Directories]
@@ -1406,6 +1539,9 @@ What a library looks like.
 
 [[# class]]
 ++ class
+
+[[# debugging-profiling-note]]
++ [#debugging-profiling Debugging and Profiling]
 
 [[# posix]]
 + [#top POSIX Shell]

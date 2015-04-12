@@ -5,7 +5,7 @@
 ||||||||||~ [[# version]][#version-note version]||
 ||~ ||~ [#cpp c++]||~ [#objective-c objective c]||~ [#java java]||~ [#c-sharp c#]||
 ||[[# version-used]][#version-used-note version used] _
-@<&nbsp;>@||##gray|//C11// _
+@<&nbsp;>@||##gray|//C++11// _
 //gcc 4.8// _
 //clang 3.5//##||##gray|//gcc 4.2//##||##gray|//java 1.7//##||##gray|//mono 2.10 (C# 4.0)//##||
 ||[[# show-version]][#show-version-note show version] _
@@ -101,7 +101,7 @@ int j = 3;||
  _
 Most implementations do not zero-initialize stack variables, so the value will be whatever happened to be in memory.//##||##gray|//behavior is undefined. _
  _
-Most implementations do not zero-initialize stack variables, so the value will be whatever happened to be in memory.//##||##gray|//zero initialized//##||##gray|//compiler prevents use of uninitialized local variable//##||
+Most implementations do not zero-initialize stack variables, so the value will be whatever happened to be in memory.//##||##gray|//compiler error//##||##gray|//compiler prevents use of uninitialized local variable//##||
 ||[[# global-var]][#global-var-note global variable]||##gray|@@//@@ in foo.cpp and outside of any function _
 @@//@@ or class definition:## _
 int foo = 7; _

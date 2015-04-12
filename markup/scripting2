@@ -1,10 +1,10 @@
 [[# top]]//a side-by-side reference sheet//
 
-**[[[scripting|sheet one]]]:** [[[scripting#grammar-invocation|grammar and invocation]]] | [[[scripting#var-expr|variables and expressions]]] | [[[scripting#arithmetic-logic|arithmetic and logic]]] | [[[scripting#strings|strings]]] | [[[scripting#regexes|regexes]]] | [[[scripting#dates-time|dates and time]]] | [[[scripting#arrays|arrays]]] | [[[scripting#dictionaries|dictionaries]]] | [[[scripting#functions|functions]]] | [[[scripting#execution-control|execution control]]] | [[[scripting#exceptions|exceptions]]] | [[[scripting#concurrency|concurrency]]] 
+**[[[scripting|sheet one]]]:** [[[scripting#grammar-invocation|grammar and invocation]]] | [[[scripting#var-expr|variables and expressions]]] | [[[scripting#arithmetic-logic|arithmetic and logic]]] | [[[scripting#strings|strings]]] | [[[scripting#regexes|regexes]]] | [[[scripting#dates-time|dates and time]]] | [[[scripting#resizable-arrays|resizable arrays]]] | [[[scripting#dictionaries|dictionaries]]] | [[[scripting#functions|functions]]] | [[[scripting#execution-control|execution control]]] | [[[scripting#exceptions|exceptions]]] | [[[scripting#concurrency|concurrency]]] 
 
-**sheet two:** [#file-handles file handles] | [#files files] | [#file-fmt file formats] | [#directories directories ] | [#processes-environment processes and environment] | [#option-parsing option parsing] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#reflection reflection] | [#net-web net and web] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling] | [#java-interop java interop]
+**sheet two:** [#streams streams] | [#files files] | [#file-fmt file formats] | [#directories directories ] | [#processes-environment processes and environment] | [#option-parsing option parsing] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#reflection reflection] | [#net-web net and web] | [#gui gui] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling] | [#java-interop java interop]
 
-||||||||||~ [[# file-handles]][#file-handles-note file handles]||
+||||||||||~ [[# streams]][#streams-note streams]||
 ||~  ||~ node||~ php||~ python||~ ruby||
 ||[[# std-file-handles]][#std-file-handles-note standard file handles]||process.stdin _
 process.stdout _
@@ -548,7 +548,24 @@ files = %x(ls) _
 ||||||||||~ [[# option-parsing]][#option-parsing-note option parsing]||
 ||~  ||~ node||~ php||~ python||~ ruby||
 ||[[# cmd-line-options]][#cmd-line-options-note command line options] _
-##gray|//boolean option, option with argument, usage//##|| ||$##peru|usage## = ##maroon|"usage: "## . _
+##gray|//boolean option, option with argument, usage//##||##gray|@@//@@ $ npm install commander## _
+program = require('commander'); _
+ _
+program.option('-f, --file <file>') _
+@<&nbsp;&nbsp;>@.option('-v, --verbose') _
+@<&nbsp;&nbsp;>@.parse(process.argv); _
+ _
+var file = program.file; _
+var verbose = program.verbose; _
+ _
+##gray|@@//@@ The flags -h and @@--@@help are generated _
+@@//@@ automatically. _
+@@//@@ _
+@@//@@ Processing stops at the first positional _
+@@//@@ argument. _
+@@//@@  _
+@@//@@ Positional arguments are available _
+@@//@@ in program.args.##||$##peru|usage## = ##maroon|"usage: "## . _
 @<&nbsp;&nbsp;>@$##teal|_SERVER##[##maroon|"SCRIPT_NAME"##] . _
 @<&nbsp;&nbsp;>@##maroon|" [-f FILE] [-v] [ARG @@...@@]\n"##; _
  _
@@ -573,9 +590,9 @@ $##peru|file## = $##peru|opts##[##maroon|"f"##] ? $##peru|opts##[##maroon|"f"##]
 # argument. _
 # _
 # Unrecognized options are ignored.  _
-# An option declared to have an argument _
-# is ignored if the argument is not _
-# provided on the command line. _
+# An option declared to have an _
+# argument is ignored if the argument _
+# is not provided on the command line. _
 # _
 # getopt() does not modify $argv or _
 # provide means to identify positional _
@@ -603,7 +620,8 @@ parser.add_argument(##maroon|'@@--@@verbose'##, ##maroon|'-v'##, _
 # Positional arguments are in _
 # args.positional_args _
 # _
-# Options can follow positional arguments.##||require ##maroon|'optparse'## _
+# Options can follow positional _
+# arguments.##||require ##maroon|'optparse'## _
  _
 options = {} _
 ##green|OptionParser##.new do |opts| _
@@ -633,24 +651,29 @@ verbose = options[##teal|:verbose##] _
 ||||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
 ||~  ||~ node||~ php||~ python||~ ruby||
 ||[[# load-lib]][#load-lib-note load library] _
-@<&nbsp;>@|| ||##purple|require_once##(##maroon|"foo.php"##);||##gray|# searches sys.path for foo.pyc or foo.py:## _
+@<&nbsp;>@||var foo = require('./foo.js'); _
+ _
+var foo = require('foo');||##purple|require_once##(##maroon|"foo.php"##);||##gray|# searches sys.path for foo.pyc or foo.py:## _
 ##purple|import## foo||require ##maroon|'foo.rb'## _
  _
 ##gray|# searches $LOAD_PATH for foo.rb, foo.so, _
 # foo.o, foo.dll:## _
 require ##maroon|'foo'##||
-||[[# load-lib-subdir]][#load-lib-subdir-note load library in subdirectory]|| ||##purple|require_once##(##maroon|'foo/bar.php'##);||##gray|# foo must contain @@__init__@@.py file## _
+||[[# load-lib-subdir]][#load-lib-subdir-note load library in subdirectory]||var bar = require('./foo/bar.js');||##purple|require_once##(##maroon|'foo/bar.php'##);||##gray|# foo must contain @@__init__@@.py file## _
 ##purple|import## foo.bar||require ##maroon|'foo/bar.rb'## _
  _
 require ##maroon|'foo/bar'##||
 ||[[# hot-patch]][#hot-patch-note hot patch] _
-@<&nbsp;>@|| ||##purple|require##(##maroon|"foo.php"##);||##purple|reload##(foo)||load ##maroon|'foo.rb'##||
-||[[# load-err]][#load-err-note load error]|| ||##gray|require //and// require_once //raise fatal error if library not found;// include //and// include_once emit warnings##||##gray|//raises// ImportError //if library not found; exceptions generated when parsing library propagate to client//##||##gray|//raises// LoadError //if library not found; exceptions generated when parsing library propagate to client//##||
-||[[# main-in-lib]][#main-in-lib-note main routine in library]|| ||##gray|//none//##||##purple|if @@__name__@@## == ##maroon|'@@__main__@@'##: _
+@<&nbsp;>@||delete require.cache[require.resolve('./foo.js')]; _
+var foo = require('./foo.js');||##purple|require##(##maroon|"foo.php"##);||##purple|reload##(foo)||load ##maroon|'foo.rb'##||
+||[[# load-err]][#load-err-note load error]||##gray|//raises// Errror //exception//##||##gray|require //and// require_once //raise fatal error if library not found;// include //and// include_once emit warnings##||##gray|//raises// ImportError //if library not found; exceptions generated when parsing library propagate to client//##||##gray|//raises// LoadError //if library not found; exceptions generated when parsing library propagate to client//##||
+||[[# main-in-lib]][#main-in-lib-note main routine in library]||if (require.main == module) { _
+@<&nbsp;&nbsp;>@##gray|//code//## _
+}||##gray|//none//##||##purple|if @@__name__@@## == ##maroon|'@@__main__@@'##: _
 @<&nbsp;&nbsp;>@##gray|//code//##||##purple|if## ##peru|$PROGRAM_NAME## == @@__FILE__@@ _
 @<&nbsp;&nbsp;>@##gray|//code//## _
 ##purple|end##||
-||[[# lib-path]][#lib-path-note library path]|| ||$##peru|libpath## = ini_get(##maroon|"include_path"##); _
+||[[# lib-path]][#lib-path-note library path]||##gray|//none//##||$##peru|libpath## = ini_get(##maroon|"include_path"##); _
  _
 ini_set(##maroon|"include_path"##, _
 @<&nbsp;&nbsp;>@$##peru|libpath## . ##maroon|":/some/path"##);||sys.path _
@@ -659,8 +682,8 @@ sys.path.append(##maroon|'/some/path'##)||##gray|# $: is synonym for $LOAD_PATH:
 ##peru|$LOAD_PATH _
  _
 $LOAD_PATH## @@<<@@ ##maroon|"/some/path"##||
-||[[# lib-path-env]][#lib-path-env-note library path environment variable]|| ||##gray|//none//##||$ PYTHONPATH=~/lib python foo.py||$ RUBYLIB=~/lib ruby foo.rb||
-||[[# lib-path-cmd-line]][#lib-path-cmd-line-note library path command line option]|| ||##gray|//none//##||##gray|//none//##||$ ruby -I ~/lib foo.rb||
+||[[# lib-path-env]][#lib-path-env-note library path environment variable]||$ NODE_PATH=~/lib node foo.js||##gray|//none//##||$ PYTHONPATH=~/lib python foo.py||$ RUBYLIB=~/lib ruby foo.rb||
+||[[# lib-path-cmd-line]][#lib-path-cmd-line-note library path command line option]||##gray|//none//##||##gray|//none//##||##gray|//none//##||$ ruby -I ~/lib foo.rb||
 ||[[# simple-global-identifiers]][#simple-global-identifiers-note simple global identifiers]|| ||##gray|//variables defined outside of functions or with// global //keyword//##||##gray|//built-in functions//##||##gray|//variables which start with// $##||
 ||[[# multiple-label-identifiers]][#multiple-label-identifiers-note multiple label identifiers]|| ||##gray|//classes, interfaces, functions, and constants//##||##gray|//modules//##||##gray|//constants, classes, and modules//##||
 ||[[# label-separator]][#label-separator-note label separator] _
@@ -694,17 +717,21 @@ $ touch foo/bar.py||##purple|module## ##green|Foo##::##green|Bar## _
  _
 ##gray|# classes can nest inside classes or _
 # modules; modules can nest in classes##||
-||[[# namespace-alias]][#namespace-alias-note namespace alias]|| ||use Foo as Fu;||##purple|import## foo ##purple|as## fu||Fu = Foo.dup _
- _
-include Fu||
-||[[# import-all-namespace]][#import-all-namespace-note unqualified import of namespace] _
+# ||[[# import-def]][#import-def-note import definitions] _
+@<&nbsp;>@|| ||##gray|//only class names can be imported//##||##purple|from## foo ##purple|import## bar, baz||##gray|//none//##||
+||[[# import-namespace]][#import-namespace-note import all definitions in namespace] _
 @<&nbsp;>@|| ||##gray|//none//##||##purple|from## foo ##purple|import## *||##gray|# inside class or module:## _
 ##purple|include## ##green|Foo##||
-||[[# import-all-subnamespaces]][#import-all-subnamespaces-note unqualified import of all subnamespaces]|| || ||##gray|# subnamespaces in list @@__all__@@ of _
+||[[# import-all-subnamespaces]][#import-all-subnamespaces-note import all subnamespaces]|| || ||##gray|# subnamespaces in list @@__all__@@ of _
 # @@foo/__init__.py@@ are imported## _
 ##purple|from## foo ##purple|import## *|| ||
-||[[# import-def]][#import-def-note unqualified import of definitions] _
-@<&nbsp;>@|| ||##gray|//only class names can be imported//##||##purple|from## foo ##purple|import## bar, baz||##gray|//none//##||
+||[[# shadow-avoidance]][#shadow-avoidance-note shadow-avoidance]|| ||use Foo as Fu;||##gray|# rename namespace:## _
+##purple|import## foo ##purple|as## fu _
+ _
+##gray|# rename identifier:## _
+##purple|from## sys ##purple|import## path ##purple|as## the_path||Fu = Foo.dup _
+ _
+include Fu||
 ||[[# pkg-management]][#pkg-management-note list installed packages, install a package] _
 @<&nbsp;>@|| ||$ pear list _
 $ pear install Math_BigInteger||$ pip freeze _
@@ -764,10 +791,15 @@ $##peru|i##->##peru|value## = $##peru|v## + 1;||##peru|v## = i.value _
 i.value = v + 1||v = i.value _
 i.value = v + 1||
 ||[[# def-method]][#def-method-note define method] _
-@<&nbsp;>@||##gray|/* inside constructor: */## _
+@<&nbsp;>@||##gray|@@//@@ inside constructor:## _
 this.plus = function(v) { _
 @<&nbsp;&nbsp;>@return this.value + v; _
-};||##purple|function## ##0000CD|plus##($##peru|i##) _
+}; _
+ _
+##gray|@@//@@ outside constructor:## _
+Int.prototype.plus = function (v) { _
+@<&nbsp;&nbsp;>@return this.value + v; _
+}||##purple|function## ##0000CD|plus##($##peru|i##) _
 { _
 @<&nbsp;&nbsp;>@##purple|return## $##teal|this##->##peru|value## + $##peru|i##; _
 }||##purple|def## ##0000CD|plus##(##purple|self##,v): _
@@ -1136,6 +1168,11 @@ $##peru|s2## = base64_decode($##peru|b64##);||##purple|import## base64 _
 s = ##green|File##.open(##maroon|"foo.png"##).read _
 b64 = ##green|Base64##.encode64(s) _
 s2 = ##green|Base64##.decode64(b64)||
+||||||||||~ [[# gui]][#gui-note gui]||
+||~  ||~ node||~ php||~ python||~ ruby||
+||pop-up box||var app = Application.currentApplication() _
+app.includeStandardAdditions = true _
+app.displayAlert('hi world')|| || || ||
 ||||||||||~ [[# unit-tests]][#unit-tests-note unit tests]||
 ||~  ||~ node||~ php||~ python||~ ruby||
 ||[[# test-class]][#test-class-note test class]||##gray|@@//@@ npm install -g nodeunit## _
@@ -1335,8 +1372,8 @@ jarray.array([1, 2, 3], ##maroon|'i'##)||[1, 2, 3].to_java(##green|Java##::int)|
 ||~ ||~ ##EFEFEF|@@____________________________________________@@##||~ ##EFEFEF|@@____________________________________________@@##||~ ##EFEFEF|@@____________________________________________@@##||~ ##EFEFEF|@@____________________________________________@@##||
 
 
-[[# file-handles-note]]
-+ [#file-handles File Handles]
+[[# streams-note]]
++ [#streams Streams]
 
 [[# std-file-handles-note]]
 ++ [#std-file-handles standard file handles]
@@ -2609,6 +2646,9 @@ A popular Base64 encoding is the one defined by [http://www.ietf.org/rfc/rfc2045
 If the input does not consist of a multiple of three characters, then the output is padded with one or two hyphens: =.
 
 Whitespace can inserted freely into Base64 output; this is necessary to support transmission by email.  When converting Base64 back to binary whitespace is ignored.
+
+[[# gui-note]]
++ [#gui GUI]
 
 [[# unit-tests-note]]
 + [#unit-tests Unit Tests]

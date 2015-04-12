@@ -1,310 +1,437 @@
 //a side-by-side reference sheet//
 
-[#grammar-invocation grammar and invocation] | [#var-expr variables and expression] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#resizable-arrays resizable arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#files files] | [#gui gui] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#reflection reflection]
+[#grammar-invocation grammar and invocation] | [#var-expr variables and expression] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#resizable-arrays resizable arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#streams streams] | [#files files] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#reflection reflection] | [#gui gui]
 
-||~ [[# general]]||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||~ [[# general]]||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
 ||[[# version-used]][#version-used-note version used] _
-@<&nbsp;>@||##gray|//Pharo 3.0//##||##gray|//1.1//##||##gray|//2.1//##||
-||[[# version]][#version-note show version] _
+@<&nbsp;>@||##gray|//Pharo 3.0//##||##gray|//8.5//##||##gray|//1.1//##||
+||[[# show-version]][#show-version-note show version] _
 @<&nbsp;>@||SmalltalkImage current aboutThisSystem. _
  _
 ##gray|//at command line://## _
-$ ./pharo Pharo.image printVersion||msgbox % a_ahkversion||$ osascript -e \ _
-@<&nbsp;&nbsp;>@"AppleScript's version"||
+$ ./pharo Pharo.image printVersion||$ tclsh _
+% info tclversion||msgbox % a_ahkversion||
 ||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
-||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
 ||[[# interpreter]][#interpreter-note interpreter] _
-@<&nbsp;>@|| ||@@>@@ autohotkey foo.ahk||$ osascript foo.scpt||
+@<&nbsp;>@|| ||$ tclsh foo.tcl||@@>@@ autohotkey foo.ahk||
+||[[# repl]][#repl-note repl] _
+@<&nbsp;>@|| ||$ tclsh|| ||
 ||[[# cmd-line-program]][#cmd-line-program-note command line program] _
-@<&nbsp;>@||$ Pharo @@--@@headless Pharo.image eval '1 + 1.'||##gray|//none//##||$ osascript -e 'say "hi"'||
-||[[# stmt-separator]][#stmt-separator-note statement separator]||##gray|//period://## .||##gray|//sometimes newline//## _
+@<&nbsp;>@||$ Pharo @@--@@headless Pharo.image eval '1 + 1.'||##gray|//none//##||##gray|//none//##||
+||[[# stmt-separator]][#stmt-separator-note statement separator]||##gray|//period://## .||##gray|//newline or// ;## _
+ _
+##gray|//newline not a separator inside {}, "", [] or after backslash: \//##||##gray|//sometimes newline//## _
  _
 ##gray|//newline does not terminate statement: _
  _
 @<&nbsp;&nbsp;>@(1) inside parens _
-@<&nbsp;&nbsp;>@(2) when following line starts with binary operator//##||##gray|//newline _
- _
-use ⌥l (option lowercase L) to escape newline and continue statement on following line//##||
-||[[# block-delimiters]][#block-delimiters-note block delimiters]||[ ]||{ }||##gray|//keyword//## ##gray|//...//## end ##gray|//keyword//## _
-on ##gray|//funcName//## ##gray|//...//## end ##gray|//funcName//##||
+@<&nbsp;&nbsp;>@(2) when following line starts with binary operator//##||
+||[[# block-delimiters]][#block-delimiters-note block delimiters]||[ ]||{} ##gray|//or//## ""||{ }||
 ||[[# expr-stmt]][#expr-stmt-note are expressions statements] _
-@<&nbsp;&nbsp;>@||##gray|//yes//##||##gray|//no//##||##gray|//yes//##||
-||[[# comment]][#comment-note end-of-line comment] _
-@<&nbsp;>@||##gray|//no//##||; ##gray|//comment//##||@@--@@ ##gray|//comment//##||
-||[[# multiline-comment]][#multiline-comment-note multiple line comment]||"##gray|//comment _
-another comment//##"||/* _
+@<&nbsp;&nbsp;>@||##gray|//yes//##||##gray|//no//##||##gray|//no//##||
+||[[# eol-comment]][#eol-comment-note end-of-line comment] _
+@<&nbsp;>@||##gray|//no//##||##gray|# comment##||; ##gray|//comment//##||
+||[[# multiple-line-comment]][#multiple-line-comment-note multiple line comment]||"##gray|//comment _
+another comment//##"||if (0) { _
+@<&nbsp;&nbsp;>@##gray|//commented out//## _
+@<&nbsp;&nbsp;>@##gray|//can contain {} if balanced//## _
+}||/* _
 ##gray|//comment//## _
 ##gray|//another comment//## _
-*/||(* ##gray|//comment//## _
-##gray|//another comment//## *)||
+*/||
 ||||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
-||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-||[[# assignment]][#assignment-note assignment]||a := 1.||s1 := PATH _
+||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[[# local-var]][#local-var-note local variable]|| ||##gray|# set variable inside procedure:## _
+proc foo {##gray|//args//##} { _
+@<&nbsp;&nbsp;>@set x 1 _
+@<&nbsp;&nbsp;>@##gray|//...//## _
+}|| ||
+||[[# global-var]][#global-var-note global variable]|| ||##gray|# set variable outside procedure:## _
+set g 1 _
+ _
+proc incr_global {} { _
+@<&nbsp;&nbsp;>@global g _
+@<&nbsp;&nbsp;>@incr g _
+}|| ||
+||[[# assignment]][#assignment-note assignment]||a := 1.||set x 1||s1 := PATH _
 s2 := "foo bar" _
  _
 ##gray|; traditional style:## _
 s1 = %PATH% _
-s2 = foo bar||set a to 1 _
-copy 1 to a||
+s2 = foo bar||
 ||[[# parallel-assignment]][#parallel-assignment-note parallel assignment] _
-@<&nbsp;>@||##gray|//none//##||##gray|//none//##||set {a,b} to {1,2}||
+@<&nbsp;>@||##gray|//none//##||lassign {1 2 3} x y z _
+ _
+##gray|# 3 is discarded:## _
+lassign {1 2 3} x y _
+ _
+##gray|# z is set to "":## _
+lassign {1 2} x y z||##gray|//none//##||
 ||[[# swap]][#swap-note swap] _
-@<&nbsp;>@|| ||##gray|//none//##||set {a,b} to {b,a}||
+@<&nbsp;>@|| ||lassign "$x $y" y x||##gray|//none//##||
 ||[[# compound-assignment]][#compound-assignment-note compound assignment] _
-##gray|//arithmetic, string, bit//##||##gray|//none//##||+= -= *= /= @@//@@= _
+##gray|//arithmetic, string, bit//##|| || ||+= -= *= /= @@//@@= _
 .= _
-<<= >>= &= |= ^=||##gray|//none//##||
-||[[# incr-decr]][#incr-decr-note increment and decrement]|| ||##gray|//premodifiers://## _
+@@<<= >>=@@ &= |= ^=||
+||[[# incr-decr]][#incr-decr-note increment and decrement]|| || ||##gray|//premodifiers://## _
 ++i @@--@@i _
  _
 ##gray|//postmodifiers://## _
-i++ i@@--@@||##gray|//none//##||
+i++ i@@--@@||
 ||[[# var-decl]][#var-decl-note variable declaration] _
-@<&nbsp;>@|| || ||##gray|//assignment//##, local, global||
+@<&nbsp;>@|| || || ||
 ||[[# null]][#null-note null] _
-@<&nbsp;>@||nil||""||null||
+@<&nbsp;>@||nil||""||""||
 ||[[# null-test]][#null-test-note null test] _
-@<&nbsp;>@||v = nil||v == "" _
+@<&nbsp;>@||v = nil||v eq ""||v == "" _
  _
 ##gray|; traditional style:## _
-v =||v = null||
-||[[# undef-access]][#undef-access-note undefined variable] _
-@<&nbsp;>@||##gray|//evaluates as// nil##||##gray|//evaluates as empty string//##||##gray|//error to access uninitialized variable//##||
-||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
-||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-||[[# true-false]][#true-false-note true and false] _
-@<&nbsp;>@||true false||1 0 _
- _
-##gray|//synonyms://## _
-true false||true false||
-||[[# falsehoods]][#falsehoods-note falsehoods]||false||0 ""||##gray|//only integers convert to booleans://## _
-false 0||
-||[[# logical-ops]][#logical-ops-note logical operators] _
-@<&nbsp;>@||& | not||and or not _
- _
-##gray|//synonyms://## _
-@@&& || !@@||and or not||
+v =||
+||[[# undef-var]][#undef-var-note undefined variable] _
+@<&nbsp;>@||##gray|//evaluates as// nil##||##gray|//error//##||##gray|//evaluates as empty string//##||
 ||[[# conditional-expr]][#conditional-expr-note conditional expression] _
-@<&nbsp;>@||x > 0 ifTrue: [x] ifFalse: [0 - x]||x > 0 ? x : -x||##gray|//none//##||
-||[#relational-operators relational operators] _
+@<&nbsp;>@||x > 0 ifTrue: [x] ifFalse: [0 - x]||expr $x > 0 ? $x : -$x||x > 0 ? x : -x||
+||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
+||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[[# true-false]][#true-false-note true and false] _
+@<&nbsp;>@||true false||1 0||1 0 _
+ _
+##gray|//synonyms://## _
+true false||
+||[[# falsehoods]][#falsehoods-note falsehoods]||false||0 "false" "no" _
+##gray|//most strings cause error in boolean context; nonzero numbers are true//##||0 ""||
+||[[# logical-op]][#logical-op-note logical operators] _
+@<&nbsp;>@||& | not||&& @@||@@ !||and or not _
+ _
+##gray|//synonyms://## _
+@@&& || !@@||
+||[[# relational-expr]][#relational-expr-note relational expression]|| ||if {$x > 3} {…} _
+##gray|# outside of conditionals use expr:## _
+expr $x > 3|| ||
+||[[# relational-op]][#relational-op-note relational operators] _
 @<&nbsp;>@||@@=@@ ~= > < >= <=||== != > < >= <= _
  _
+##gray|# string comparison:## _
+eq ne||== != > < >= <= _
+ _
 ##gray|//case insensitive equality://## _
-@@=@@||@@=@@ /= > < >= <=||
-||[#arithmetic-expr arithmetic expression] _
+@@=@@||
+||[[# min-max]][#min-max-note min and max]|| ||expr min(1, 2, 3) _
+expr max(1, 2, 3)|| ||
+||[[# arith-expr]][#arith-expr-note arithmetic expression] _
 @<&nbsp;>@||1 + 3 _
  _
 ##gray|"Binary operators are evaluated left to right. _
 This is 20:"## _
-1 + 3 * 5||1 + 3||1 + 3||
-||[#arithmetic-operators arithmetic operators] _
-##gray|//addition, subtraction, multiplication, float division, quotient, remainder//##||+ - * / @@//@@ \\||+ - * / @@//@@ ##gray|//none//## @@**@@ _
+1 + 3 * 5||expr 1 + 3 _
+##gray|# expr not needed in conditionals:## _
+if {1 + 3} {##gray|//…//##}||1 + 3||
+||[[# arith-op]][#arith-op-note arithmetic operators] _
+##gray|//addition, subtraction, multiplication, float division, quotient, remainder//##||+ - * / @@//@@ \\||+ - * ##gray|//none//## / %||+ - * / @@//@@ ##gray|//none//## @@**@@ _
  _
-##gray|//modulo function://## mod(m, n)||+ - * / div mod ^||
-||[#integer-division integer division] _
-@<&nbsp;>@||7 @@//@@ 3||7 @@//@@ 3||7 div 3||
+##gray|//modulo function://## mod(m, n)||
+||[[# int-dvi]][#int-div-node integer division] _
+@<&nbsp;>@||7 @@//@@ 3||expr $x / $y||7 @@//@@ 3||
 ||[[# int-div-zero]][#int-div-zero-note integer division by zero] _
-@<&nbsp;>@||##gray|ZeroDivide //exception//##||##gray|//evaluates to empty string//##||##gray|//error//##||
-||[#float-division float division] _
+@<&nbsp;>@||##gray|ZeroDivide //exception//##||##gray|//error//##||##gray|//evaluates to empty string//##||
+||[[# float-div]][#float-div-note float division] _
 @<&nbsp;>@||7 / 3 asFloat. _
  _
 ##gray|"exact rational:"## _
-7 / 3||7 / 3||7 / 3||
+7 / 3||expr $x * 1.0 / $y||7 / 3||
 ||[[# float-div-zero]][#float-div-zero-note float division by zero] _
-@<&nbsp;>@||##gray|ZeroDivide //exception//##||##gray|//evaluates to empty string//##||##gray|//error//##||
+@<&nbsp;>@||##gray|ZeroDivide //exception//##||##gray|//returns assignable value// Inf //if dividend is positive and// -Inf //if negative.  Raises error if dividend is zero. _
+ _
+There is a literal for// Inf.##||##gray|//evaluates to empty string//##||
 ||[[# power]][#power-note power] _
-@<&nbsp;>@||2 raisedTo 32||2 ** 32||2 ^ 32||
+@<&nbsp;>@||2 raisedTo 32||expr 2 @@**@@ 32 _
+expr pow(2, 32)||2 ** 32||
 ||[[# sqrt]][#sqrt-note sqrt] _
-@<&nbsp;>@||2 sqrt||sqrt(2)||2 ^ 0.5||
+@<&nbsp;>@||2 sqrt||##purple|expr## sqrt(2)||sqrt(2)||
 ||[#sqrt-negative-two sqrt -1] _
-@<&nbsp;>@||##gray|//raises// DomainError##||##gray|//evaluates to empty string//##||##gray|//error//##||
+@<&nbsp;>@||##gray|//raises// DomainError##||##gray|//error//##||##gray|//evaluates to empty string//##||
 ||[#transcendental-func transcendental functions]||exp ln _
 sin cos tan _
-arcSin arcCos arcTan||exp ln _
+arcSin arcCos arcTan||exp log sin cos tan asin acos atan atan2 _
+ _
+##gray|# how to use math functions:## _
+expr exp(2) _
+expr atan2(1, 1) _
+::tcl::mathfunc::exp 2 _
+::tcl::mathfunc::atan2 1 1||exp ln _
 sin cos tan _
-asin acos atan|| ||
-||transcendental constants||Float pi _
-Float e|| || ||
+asin acos atan||
+||[[# transcendental-const]][#transcendental-const-note transcendental constants]||Float pi _
+Float e||expr 4 * atan(1) _
+expr exp(1)|| ||
 ||[#float-truncation float truncation] _
 ##gray|//round towards zero, round to nearest integer, round down, round up//##||3.14 asInteger _
 3.14 rounded _
 3.14 ceiling _
-31.4 floor||##gray|//none//## _
+31.4 floor||expr int(3.1) _
+expr round(3.1) _
+expr floor(3.1) _
+expr ceil(3.1)||##gray|//none//## _
 round(3.14) _
 floor(3.14) _
-ceil(3.14)||3.14 div 1 _
-round 3.14 _
-##gray|//??//## _
-##gray|//??//##||
+ceil(3.14)||
 ||[[# abs-val]][#abs-val-note absolute value] _
-@<&nbsp;>@||-7 abs||abs(-7)||##gray|//none//##||
+@<&nbsp;>@||-7 abs||expr abs(-7)||abs(-7)||
 ||[#integer-overflow integer overflow] _
-@<&nbsp;>@||##gray|//converted to// LargePositiveInteger //or// LargeNegativeInteger##||##gray|//signed modular arithmetic//##||##gray|//converts to float//##||
+@<&nbsp;>@||##gray|//converted to// LargePositiveInteger //or// LargeNegativeInteger##||##gray|//arbitrary length integers since 8.5//##||##gray|//signed modular arithmetic//##||
 ||[#float-overflow float overflow] _
-@<&nbsp;>@||Float infinity ##gray|//or//## Float infinity negated||##gray|//evaluates to string value such as://## _
-1.#INF00||##gray|//error//##||
+@<&nbsp;>@||Float infinity ##gray|//or//## Float infinity negated||##gray|//error//##||##gray|//evaluates to string value such as://## _
+1.#INF00||
 ||[#random random integer, uniform float]||rnd := Random new. _
  _
 rnd next. _
-(rnd nextInt: 100) - 1.||##gray|; store results in n and x:## _
+(rnd nextInt: 100) - 1.||expr int(rand() * 100) _
+expr rand() _
+none||##gray|; store results in n and x:## _
 random, n, 0, 99 _
-random, x, 0.0, 1.0||random number from 0 to 99 _
-random number from 0.0 to 1.0||
+random, x, 0.0, 1.0||
 ||[#seed-random seed random numbers] _
 @<&nbsp;>@||rnd := Random new. _
-rnd :seed 17.||random, , 17||set r to random number with seed 17||
+rnd :seed 17.||expr srand(17)||random, , 17||
 ||[#bit-operators bit operators] _
 @<&nbsp;>@||5 bitShift: 1 _
 5 bitShift: -1 _
 5 bitAnd: 1 _
 5 bitOr: 1 _
-5 bitInvert ||@<<< >> & | ^ ~>@ ||##gray|//none//##||
+5 bitInvert ||@<<< >> & | ^ ~>@||@<<< >> & | ^ ~>@ ||
 ||||||||~ [[# strings]][#strings-note strings]||
-||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-||[#string-literal string literal]||'don''t say "no"'.||"don't say ""no"""||"don't say \"no\""||
-||[#string-literal-newline newline in literal]||##gray|//no//## _
+||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[[# str-literal]][#str-literal-note string literal]||'don''t say "no"'.||"don't say \"no\"" _
+{don't say "no"}||"don't say ""no"""||
+||[[# new-line-in-str-literal]][#newline-in-str-literal-note newline in literal]||##gray|//no//## _
  _
 ##gray|" print newline in Transcript:"## _
-Transcript cr.|| ||##gray|//yes//##||
-||[#string-escapes escapes]||##gray|//none//##|| ||\\ \" _
-\n \t \r _
-##gray|//other backslash sequences cause syntax error//##||
-||[#variable-interpolation variable interpolation]|| || ||##gray|//none//##||
-||[#string-length length]||'hello' byteSize||strlen("hello")||set s to "hello" _
-count s||
-||[#index-substring index of substring]||'foo bar' indexOfAnyOf: 'bar'||##gray|; returns 5:## _
-instr("foo bar", "bar")||set s to "foo bar" _
-offset of "bar" in s||
-||[#extract-substring extract substring]||'foo bar' copyFrom: 5 to: 7||substr("foo bar", 5, 3)||set s to "foo bar" _
-characters 5 thru 7 of s as text||
-||[#string-concatenation string concatenation]||'hello, ', 'world'||"hello, " . "world"||set c to "hello, " & "world"||
-||[#string-replication string replication]|| || || ||
-||[#split split]|| || || ||
-||[#join join]|| || || ||
-||[#sprintf sprintf]|| || || ||
-||[#case case manipulation]||'hello' asUppercase _
-'HELLO' asLowercase||s1 := "Hello" _
+Transcript cr.||##gray|//yes//##|| ||
+||[[# str-literal-esc]][#str-literal-esc-note literal escapes]||##gray|//none//##||##gray|//in double quotes://## _
+\a \b \f \n \r \t \v \\ \" \oooo \uhhhh \xhh|| ||
+||[[# var-interpolation]][#var-interpolation-note variable interpolation]|| ||set count 3 _
+set item "ball" _
+"$count ${item}s"|| ||
+||[[# str-concat]][#str-concat-note string concatenate]||'hello, ', 'world'||set s1 "Hello, " _
+set s2 "World!" _
+set s $s1$s2||"hello, " . "world"||
+||[[# str-replicate]][#str-replicate-note string replicate] _
+@<&nbsp;>@|| ||set hbar [string repeat "-" 80]|| ||
+||[[# str-join]][#str-join-note string join] _
+@<&nbsp;>@|| ||join [list "do" "re" "mi"] " "|| ||
+||[[# split]][#split-note split] _
+@<&nbsp;>@|| ||split "do re mi"|| ||
+||[[# fmt-str]][#fmt-str-note format string]|| ||set fmt "lorem %s %d %.2f" _
+format $fmt "ipsum" 13 3.7|| ||
+||[[# translate-case]][#translate-case-note translate case] _
+##gray|//to upper, to lower//##||'hello' asUppercase _
+'HELLO' asLowercase||string toupper "lorem" _
+string tolower "LOREM"||s1 := "Hello" _
 stringupper, s2, s1 _
-stringlower, s3, s2|| ||
-||[#strip strip]|| || || ||
-||[#pad pad on right, pad on left]|| || || ||
-||[#string-to-number string to number]||12' asInteger + 7|| ||set a to "12" _
-7 + a as integer _
- _
-set b = ".037" _
-73.9 + b as real||
-||[#number-to-string number to string] _
-@<&nbsp;>@||7 printString, ' items'|| ||7 as text & " items"||
-||character literal||$A|| || ||
-||chr and ord||65 asCharacter _
-$A asciiValue|| || ||
+stringlower, s3, s2||
+||[[# trim]][#trim-note trim]|| ||string trim " lorem " _
+string trimleft " lorem" _
+string trimright "lorem "|| ||
+||[[# pad]][#pad-note pad]|| ||format "%10s" "lorem" _
+format "%-10s" "lorem"|| ||
+||[[# str-to-num]][#str-to-num-note string to number]||12' asInteger + 7||##gray|# use expr to interpret as numbers:## _
+set x "12" _
+expr 7 + $x _
+set y ".037" _
+expr 73.9 + $y|| ||
+||[[# num-to-str]][#num-to-str-note number to string] _
+@<&nbsp;>@||7 printString, ' items'||##gray|//all values are strings//##|| ||
+||[[# str-len]][#str-len-note length] _
+@<&nbsp;>@||'hello' byteSize||string length "lorem"||strlen("hello")||
+||[[# index-substr]][#index-substr-note index of substring]||'foo bar' indexOfAnyOf: 'bar'||string first "ipsum" "lorem ipsum"||##gray|; returns 5:## _
+instr("foo bar", "bar")||
+||[[# extract-substr]][#extract-substr-note extract substring]||'foo bar' copyFrom: 5 to: 7||string range "lorem ipsum" 6 10||substr("foo bar", 5, 3)||
+||[[# char-literal]][#char-literal-note character literal]||$A|| || ||
+||[[# chr-ord]][#chr-ord-note chr and ord]||65 asCharacter _
+$A asciiValue||format %c 65 _
+scan A %c ascii_value|| ||
+||[[# str-to-char-array]][#str-to-char-array-note to array of characters]|| ||split "abcd" ""|| ||
 ||||||||~ [[# regexes]][#regex-note regular expressions]||
-||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-||[[# regex-match]][#regex-match-note regex match]|| || || ||
-||[[# single-subst]][#single-subst-note single substitution]|| || || ||
-||[[# global-subst]][#global-subst-note global substitution]|| || || ||
+||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[[# regex-match]][#regex-match-note regex match]|| ||if [regexp @@--@@ {1999} $s] { _
+@<&nbsp;&nbsp;>@puts "party!" _
+}|| ||
+||[[# regex-literal]][#regex-literal-note literal, custom delimited literal]|| || || ||
+||[[# char-class-abbrev]][#char-class-abbrev-note character class abbreviations and anchors]|| ||##gray|//char class abbrevs://## _
+. \d \D \s \S \w \W _
+ _
+##gray|//anchors://## ^ $ \A \m \M \y \Y \Z|| ||
+||[[# regex-anchors]][#regex-anchors-note anchors]|| || || ||
+||[[# case-insensitive-regex]][#case-insensitive-regex-note case insensitive match test]|| ||regexp -nocase @@--@@ {lorem} "Lorem"|| ||
+||[[# regex-modifiers]][#regex-modifiers-note modifiers]|| ||-all -expanded -indices -inline _
+-line -lineanchor -linestop -nocase|| ||
+||[[# subst]][#subst-note substitution]|| ||set s "do re mi mi mi" _
+regsub -all @@--@@ "mi" $s "ma"|| ||
+||[[# match-prematch-postmatch]][#match-prematch-postmatch-note match, prematch, postmatch]|| || || ||
+||[[# group-capture]][#group-capture-note group capture]|| ||set s "2009-06-03" _
+set rx {^(\d{4})-(\d{2})-(\d{2})$} _
+regexp @@--@@ $rx $s - yr mo dy|| ||
+||[[# named-grouped-capture]][#named-group-capture-note named group capture]|| || || ||
+||[[# scan]][#scan-note scan]|| || || ||
+||[[# backreference]][#backreference-note backreference] _
+##gray|//in regex, in substitution string//##|| ||regexp @@--@@ {(\w+) \1} "do do" _
+ _
+set rx {(\w+) (\w+)} _
+regsub -all @@--@@ $rx "do re" {\2 \1}|| ||
 ||||||||~ [[# dates-time]][#dates-time-note dates and time]||
-||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-|| ||Date today. _
-Time now.|| || ||
-||sleep|| || ||delay 10||
+||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[[# date-time-type]][#date-time-type-note date/time type]|| || || ||
+||[[# current-date-time]][#current-date-time-note current date/time]||Date today. _
+Time now.||set t [clock seconds]|| ||
+||[[# unix-epoch]][#unix-epoch-note to unix epoch, from unix epoch]|| ||t _
+set t2 1315716177|| ||
+||[[# current-unix-epoch]][#current-unix-epoch-note current unix epoch]|| || || ||
+||[[# strftime]][#strftime-note strftime]|| ||set fmt "%Y-%m-%d %H:%M:%S" _
+clock format $t -format $fmt|| ||
+||[[# strptime]][#strptime-note strptime]|| ||##gray|//none//##|| ||
+||[[# parse-date]][#parse-date-note parse date w/o format]|| ||set t [clock scan "July 7, 1999"]|| ||
+||[[# get-date-parts]][#get-date-parts-note get date parts]|| ||clock format $t -format "%Y" _
+clock format $t -format "%m" _
+clock format $t -format "%d"|| ||
+||[[# get-time-parts]][#get-time-parts-note get time parts]|| ||clock format $t -format "%H" _
+clock format $t -format "%M" _
+clock format $t -format "%S"|| ||
+||[[# date-from-parts]][#date-from-parts-note build date/time from parts]|| ||##gray|//none//##|| ||
+||[[# date-subtraction]][#date-subtraction-note result of date subtraction]|| || || ||
+||[[# add-time-duration]][#add-time-duration-note add time duration]|| || || ||
+||[[# local-tmz]][#local-tmz-note local timezone]|| || || ||
+||[[# tmz-offset]][#tmz-offset-note timezone name; offset from UTC; is daylight savings?]|| || || ||
+||[[# microseconds]][#microseconds-note microseconds]|| || || ||
+||[[# sleep]][#sleep-note sleep] _
+@<&nbsp;>@|| ||after 500|| ||
+||[[# timeout]][#timeout-note timeout]|| || || ||
 ||||||||~ [[# resizable-arrays]][#resizable-arrays-note resizable arrays]||
-||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-||[#array-literal array literal]||nums := OrderedCollection new. _
+||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[[# resizable-array-literal]][#resizable-array-literal-note literal]||nums := OrderedCollection new. _
 nums add: 1; add: 2; add: 3; add: 4. _
  _
 ##gray|"creates immutable array:"## _
-nums := #(1 2 3 4)|| ||set nums to {1,2,3,4}||
-||[#array-size array size]||nums size|| ||count nums _
-length of nums||
-||[#array-lookup array lookup]||nums at: 1|| ||item 1 of nums||
-||[#array-modification array modification]|| || ||set item 1 of nums to 5||
-||[#array-slice array slice]||nums copyFrom: 2 to: 3|| ||items 2 thru 3 of nums||
-||[#array-concatenation concatenation]|| || ||{1,2,3} & {4,5,6}||
+nums := #(1 2 3 4)||set a [list 1 2 3 4] _
+set a {1 2 3 4}|| ||
+||[[# resizable-array-size]][#resizable-array-size-note size]||nums size||llength $a|| ||
+||[[# resizable-array-lookup]][#resizable-array-lookup-note lookup]||nums at: 1||lindex $a 0|| ||
+||[[# resizable-array-update]][#resizable-array-update-note update]|| ||##gray|# provide start and end index: _
+# of elements to replace:## _
+set a [lreplace $a 1 1 "lorem"]|| ||
+||out-of-bounds behavior|| ||##gray|//returns// ""##|| ||
+||index of element _
+##gray|//first and last occurrence//##|| ||lsearch {6 7 7 8} 7 _
+lindex [lsearch -all {6 7 7 8} 7] end _
+##gray|# returns -1 if not found##|| ||
+||[#array-slice array slice]||nums copyFrom: 2 to: 3||lrange $a 1 2|| ||
+||slice to end|| ||lrange {"a" "b" "c" "d"} 1 end|| ||
+||[#array-concatenation concatenation]|| ||set a [concat {1 2 3} {4 5 6}]|| ||
 ||[#array-back manipulate back of array]||a := OrderedCollection new. _
 a add: 6; add: 7; add: 8. _
  _
 a add: 9. _
-a removeLast.|| ||set a to {6,7,8} _
-set end of a to 9 _
-##gray|//cannot remove elements from a list//##||
+a removeLast.||set a {6 7 8} _
+lappend a 9 _
+set i [lindex $a end] _
+set a [lreplace $a end end]|| ||
 ||[#array-front manipulate front of array]||a := OrderedCollection new. _
 a add: 6; add: 7; add: 8. _
  _
 a addFirst: 5. _
-a removeFirst.|| ||set a to {6,7,8} _
-set beginning of a to 5 _
-##gray|//cannot remove elements from a list//##||
-||[#array-iteration array iteration]||nums do: [:o| Transcript show: o printString; cr]|| ||repeat with i in nums _
-@<&nbsp;&nbsp;>@display dialog(i as text) _
-end repeat||
-||[#array-sort sort]|| || ||##gray|//none//##||
-||[#array-reverse reverse]|| || ||set a to {1,2,3} _
-set b to reverse of a||
+a removeFirst.||set a {6 7 8} _
+set a [concat {5} $a] _
+set a [lassign $a i]|| ||
+||[#array-iteration array iteration]||nums do: [:o| Transcript show: o printString; cr]||foreach i $a { puts $i }|| ||
+||[#array-reverse reverse]|| ||set a {1 2 3} _
+set a [lreverse $a]|| ||
+||[#array-sort sort]|| ||set a {3 1 4 2} _
+set a [lsort $a]|| ||
+||dedupe|| ||lsort -unique {1 2 2 3}|| ||
 ||[#membership membership] _
-@<&nbsp;>@||nums includes: 7|| || ||
+@<&nbsp;>@||nums includes: 7||expr {7 in $a} _
+expr {7 ni $a}|| ||
+||intersection|| ||package require struct::set _
+ _
+::struct::set intersect {1 2} {2 3}|| ||
+||union|| ||package require struct::set _
+ _
+::struct::set union {1 2} {2 3 4}|| ||
+||relative complement|| ||package require struct::set _
+ _
+::struct::set difference {1 2 3} {2}|| ||
 ||[#map map] _
-@<&nbsp;>@||#(1 2 3) collect: [ :o | o*o ]|| || ||
+@<&nbsp;>@||#(1 2 3) collect: [ :o | o*o ]||package require struct::list _
+ _
+proc sqr {x} {return [expr $x * $x]} _
+::struct::list map {1 2 3} sqr|| ||
 ||[#filter filter] _
-@<&nbsp;>@||#(1 2 3) select: [:o | o > 1]|| || ||
+@<&nbsp;>@||#(1 2 3) select: [:o | o > 1]||package require struct::list _
+ _
+proc gt1 {x} {return [expr $x > 1]} _
+::struct::list filter {1 2 3} gt1|| ||
 ||[#reduce reduce] _
-@<&nbsp;>@||#(1 2 3) inject: 0 into: [:m :o| m + o]|| || ||
+@<&nbsp;>@||#(1 2 3) inject: 0 into: [:m :o| m + o]||package require struct::list _
+ _
+::struct::list fold {1 2 3} 0 _
+  ::tcl::mathop::+|| ||
 ||[#universal-test universal test] _
 @<&nbsp;>@||#(1 2 3 4) allSatisfy: [:o | o even]|| || ||
 ||[#existential-test existential test] _
 @<&nbsp;>@||#(1 2 3 4) anySatisfy: [:o | o even]|| || ||
 ||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
-||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-||[#dictionary-literal dictionary literal] _
-@<&nbsp;>@||h := Dictionary new add: ##maroon|'t'##->1; add: ##maroon|'f'##->0; yourself|| || ||
-||[#dictionary-size dictionary size] _
-@<&nbsp;>@||h size|| || ||
-||[#dictionary-lookup dictionary lookup] _
-@<&nbsp;>@|| h at: ##maroon|'t'##|| || ||
-||[#dictionary-key-check is dictionary key present] _
-@<&nbsp;>@|| || || ||
-||[#dictionary-iteration dictionary iteration] _
-@<&nbsp;>@||h keysAndValuesDo: [:k :v|  ##gray|//code//## ]|| || ||
-||[#dictionary-keys-values keys and values of dictionary as arrays]||h keys _
+||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[[# dict-ctorl]][#dict-ctor-note constructor] _
+@<&nbsp;>@||h := Dictionary new add: ##maroon|'t'##->1; add: ##maroon|'f'##->0; yourself||set d [dict create t 1 f 0]|| ||
+||[[# dict-size]][#dict-size-note dictionary size] _
+@<&nbsp;>@||h size||dict size $d|| ||
+||[[# dict-lookup]][#dict-lookup-note lookup] _
+@<&nbsp;>@|| h at: ##maroon|'t'##||dict get $d t|| ||
+||[[# dict-update]][#dict-update-note update]|| ||dict set d t 2|| ||
+||[[# dict-missing-key]][#dict-missing-key-note missing key behavior] _
+@<&nbsp;>@||##gray|//raises exception//##||##gray|//error//##|| ||
+||[[# dict-is-key-present]][#dict-is-key-present-note is key present] _
+@<&nbsp;>@|| ||dict exists $d t|| ||
+||[[# dict-delete]][#dict-delete-note delete]|| ||dict unset d t|| ||
+||[[# dict-iter]][#dict-iter-note iterate] _
+@<&nbsp;>@||h keysAndValuesDo: [:k :v|  ##gray|//code//## ]||foreach {k v} $d { _
+@<&nbsp;&nbsp;>@##gray|//code//## _
+}|| ||
+||[[# dict-key-val-arrays]][#dict-key-val-arrays-note keys and values as arrays]||h keys _
 h values|| || ||
-||[#out-of-bounds out of bounds behavior] _
-@<&nbsp;>@||##gray|//raises exception//##|| || ||
 ||||||||~ [[# functions]][#functions-note functions]||
-||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-||[#function-definition function definition]||add := [ :a :b | a + b ]||add(x, y) { _
+||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[[# def-func]][#def-func-note define]||add := [ :a :b | a + b ]||proc add { x y } { _
+@<&nbsp;&nbsp;>@expr $x + $y _
+}||add(x, y) { _
 @<&nbsp;&nbsp;>@return x + y _
-}||on add(a, b) _
-@<&nbsp;&nbsp;>@return a + b _
-end add _
-##gray|//or//## _
-to add(a, b) _
-@<&nbsp;&nbsp;>@return a + b _
-end add||
-||[#function-invocation function invocation]||add value: 1 value: 2||x := add(1, 2)||add(1, 2)||
-||[#missing-argument missing argument value]||##gray|//raises// BlockClosure //exception//##||##gray|//error//##||##gray|//error//##||
-||[#extra-arguments extra arguments]||##gray|//raises// BlockClosure //exception//##||##gray|//error//##||##gray|//ignored//##||
-||[#default-argument default argument value]|| ||fapprox(x, y, eps=0.001) { _
+}||
+||[[# call-func]][#call-func-note call]||add value: 1 value: 2||##gray|# statement position:## _
+add 1 2 _
+ _
+##gray|# argument position:## _
+set a [ add 1 2 ]||x := add(1, 2)||
+||[[# missing-arg]][#missing-arg-note missing argument behavior]||##gray|//raises// BlockClosure //exception//##||##gray|//error//##||##gray|//error//##||
+||[[# extra-arg]][#extra-arg-note extra argument behavior]||##gray|//raises// BlockClosure //exception//##||##gray|//error//##||##gray|//error//##||
+||[[# default-arg]][#default-arg-note default argument]|| ||proc log {x {base 10 }} { ##gray|//...//## }||fapprox(x, y, eps=0.001) { _
 @<&nbsp;&nbsp;>@return abs(x - y) < eps _
-}||##gray|//none//##||
-||[#named-parameters named parameters]|| ||##gray|//none//##||to displayNums from x to y _
-@<&nbsp;&nbsp;>@set i to x _
-@<&nbsp;&nbsp;>@repeat while i <= y _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@display dialog (i as text) _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@set i to i + 1 _
-@<&nbsp;&nbsp;>@end repeat _
-end displayNums _
-displayNums to 5 from 1||
-||[#variable-arguments variable number of arguments]|| ||f(args*) { _
+}||
+||[#named-parameters named parameters]|| || ||##gray|//none//##||
+||[[# variadic-func]][#variadic-func-note variadic function]|| || ##gray|//last arg contains list of remaining values//##|f(args*) { _
 @<&nbsp;&nbsp;>@return args.maxindex() _
-}||##gray|//none//##||
-||[[# pass-by-ref]][#pass-by-ref-note pass by reference]|| ||swap(byref v1, byref v2) { _
+}|| ||
+||[[# pass-by-ref]][#pass-by-ref-note pass by reference]|| || ||swap(byref v1, byref v2) { _
 @<&nbsp;&nbsp;>@tmp := v1 _
 @<&nbsp;&nbsp;>@v1 := v2 _
 @<&nbsp;&nbsp;>@v2 := tmp _
-}|| ||
-||[#return-value return value]|| ||##gray|//argument of// return##||##gray|//argument of// return //or value of last statement executed//##||
+}||
+||[#return-value return value]|| ||return ##gray|//arg or empty string//##||##gray|//argument of// return##||
+||[[# nested-func]][#nested-func-note nested function]|| ||##gray|//defined when containing function executes; visible outside containing function//##|| ||
+||[[# anon-func-literal]][#anon-func-literal-note anonymous function literal]|| ||set sqr @@{{x}@@ {return [expr $x*$x]@@}}@@|| ||
+||[[# call-anon-func]][#call-anon-func-note call anonymous function] _
+@<&nbsp;>@|| ||apply $sqr 2|| ||
 ||||||||~ [[# execution-control]][#execution-control-note execution control]||
-||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
 ||[[# if]][#if-note if]||msg := [ :s | Transcript show: s. Transcript cr ] _
  _
 n = 0 _
@@ -315,7 +442,13 @@ ifFalse: [ _
 @<&nbsp;&nbsp;>@ifTrue: [ _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@msg value: '1 hit' ] _
 @<&nbsp;&nbsp;>@fFalse: [ _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@msg value: n printString, ' hits' ]].||if (n = 0) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@msg value: n printString, ' hits' ]].||if { 0 == $n } { _
+@<&nbsp;&nbsp;>@puts "no hits" _
+} elseif { 1 == $n } { _
+@<&nbsp;&nbsp;>@puts "1 hit" _
+} else { _
+@<&nbsp;&nbsp;>@puts "$n hits" _
+}||if (n = 0) { _
 @<&nbsp;&nbsp;>@msgbox % "zero hits" _
 } _
 else if (n = 1) { _
@@ -323,115 +456,150 @@ else if (n = 1) { _
 } _
 else { _
 @<&nbsp;&nbsp;>@msgbox % n . " hits" _
-}||if n = 0 then _
-@<&nbsp;&nbsp;>@display dialog ("0 hits") _
-else if n = 1 then _
-@<&nbsp;&nbsp;>@display dialog ("1 hit") _
-else _
-@<&nbsp;&nbsp;>@set s to n as text & " hits" _
-@<&nbsp;&nbsp;>@display dialog (s) _
-end if||
+}||
 ||[[# while]][#while-note while]||[  i < 100 ] _
 whileTrue: [ _
-@<&nbsp;&nbsp;>@i := i + 1 ].|| ||set i to 0 _
-repeat while i < 10 _
-@<&nbsp;&nbsp;>@set i to i + 1 _
-@<&nbsp;&nbsp;>@display dialog (i as text) _
-end repeat||
-||[[# break-continue]][#break-continue-note break/continue]|| ||exit 0||exit ##gray|//none//##||
+@<&nbsp;&nbsp;>@i := i + 1 ].||while { $i < 100 } { _
+@<&nbsp;&nbsp;>@incr i _
+}|| ||
+||[[# break-continue]][#break-continue-note break/continue]|| ||break continue||exit 0||
 ||[[# for]][#for-note for]||1 to: 100 do: [ :i | _
-@<&nbsp;&nbsp;>@msg value: i printString ].|| ||repeat with i from 1 to 3 _
-@<&nbsp;&nbsp;>@display dialog (i as text) _
-end repeat||
+@<&nbsp;&nbsp;>@msg value: i printString ].||for {set i 0} {$i < 10} {incr i} { _
+@<&nbsp;&nbsp;>@puts $i _
+}|| ||
 ||||||||~ [[# exceptions]][#exceptions-note exceptions]||
-||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-||[#raise-exception raise exception]||Exception raiseSignal: 'bam!'.|| ||error "bam!"||
+||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[#raise-exception raise exception]||Exception raiseSignal: 'bam!'.||error "bad arg"|| ||
 ||[#catch-exception catch exception]||[ o risky ] on: Exception do: [ :ex | _
-@<&nbsp;&nbsp;>@Transcript show: 'risky failed' ]|| ||try _
-@<&nbsp;&nbsp;>@error "bam!" _
-on error msg _
-@<&nbsp;&nbsp;>@display dialog ("error: " & msg) _
-end try||
-||[#uncaught-exception uncaught exception behavior]|| || ||##gray|//display error and exits//##||
+@<&nbsp;&nbsp;>@Transcript show: 'risky failed' ]||catch risky retval _
+if { retval != 0 } { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@puts "risky failed" _
+}|| ||
+||[#uncaught-exception uncaught exception behavior]|| ||##gray|//stderr and exit//##|| ||
+||||||||~ [[# streams]][#streams-note streams]||
+||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[[# standard-file-handles]][#standard-file-handles-note standard file handles]|| ||stdin _
+stdout _
+stderr|| ||
+||[[# read-stdin]][#read-stdin-note read line from stdin]|| ||gets stdin line|| ||
+||end-of-file behavior|| || || ||
+||chomp|| ||string trimright $line "\r\n"|| ||
+||[[# print-to-stdout]][#print-to-stdout-note write line to stdout]|| ||puts "Hello, World!"|| ||
+||write formatted string to stdout|| || || ||
+||[[# open-file]][#open-file-note open file for reading]|| ||set f [open "/tmp/foo"]|| ||
+||[[# open-file-write]][#open-file-write-note open file for writing]|| ||set f [open "/tmp/foo" "w"]|| ||
+||set file handle encoding|| || || ||
+||open file for appending|| || || ||
+||[[# close-file]][#close-file-note close file] _
+@<&nbsp;>@|| ||close $f|| ||
+||close file implicitly|| || || ||
+||i/o error|| || || ||
+||encoding error|| || || ||
+||[[# read-line]][#read-line-note read line] _
+@<&nbsp;>@|| ||gets $f|| ||
+||[[# file-iter]][#file-iter-note iterate over file by line]|| ||while { [gets $f s] >= 0 } { _
+@<&nbsp;&nbsp;>@##gray|//use s//## _
+}|| ||
+||read file into array of strings|| || || ||
+||read file into string|| ||set s [ read $f]|| ||
+||[[# write-file]][#write-file-note write string] _
+@<&nbsp;>@|| ||puts -nonewline $f "lorem ipsum"|| ||
+||write line|| || || ||
+||[[# flush-file]][#flush-file-note flush file handle]|| ||flush $f|| ||
+||end-of-file test|| || || ||
+||get and set file handle position|| || || ||
+||open temporary file|| || || ||
+||in memory file|| || || ||
 ||||||||~ [[# files]][#file-note files]||
-||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-||[#print-to-stdout print to standard out]|| || || ||
-||[#standard-filehandles standard file handles]|| || ||##gray|//none//##||
-||[#read-line read line]|| || ||set f to POSIX file "/etc/passwd" _
-set a to read f as text using delimiter linefeed _
-item 1 of a||
-||[#read-file read file]|| || ||set f to POSIX file "/tmp/a" _
-set s to f as text||
-||[#write-file write to file]|| || ||set f to POSIX file "/tmp/a" _
-open for access f with write permission _
-write "hello" to f _
-close access f||
-||[#append-file append to file]|| || ||set f to POSIX file "/tmp/a" _
-open for access f with write permission _
-write "hello" to f starting at eof _
-close access f||
-||||||||~ [[# gui]][#gui-note gui]||
-||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-||pop-up box|| ||msgbox % "hi world"||display dialog("hi world")||
+||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[[# file-test]][#file-test-note file exists test, file regular test]|| ||file exists "/etc/hosts" _
+file isfile "/etc/hosts"|| ||
+||[[# file-size]][#file-size-note file size]|| || || ||
+||[[# readable-writable-executable]][#readable-writable-executable-note is file readable, writable, executable]|| || || ||
+||[[# chmod]][#chmod-note set file permissions]|| ||set s "/tmp/foo" _
+file attributes $s -permissions 0755|| ||
+||last modification time|| || || ||
+||[[# file-cp-rm-mv]][#file-cp-rm-mv-note copy file, remove file, rename file]|| ||file copy "/tmp/foo" "/tmp/bar" _
+file delete "/tmp/foo" _
+file rename "/tmp/bar" "/tmp/foo"|| ||
+||create symlink, symlink test, readlink|| || || ||
+||[[# tmpfile]][#tmpfile-note generate unused file name]|| ||set tmp [::fileutil::tempfile foo] _
+set f [open $tmp "w"] _
+puts $f "lorem ipsum" _
+close $f _
+puts "tmp file: $tmp"|| ||
 ||||||||~ [[# directories]][#directories-note directories]||
-||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
+||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||working directory _
+##gray|//get and set//##|| || || ||
+||[[# build-pathname]][#build-pathname-note build pathname]|| ||file join "/etc" "hosts"|| ||
+||[[# dirname-basename]][#dirname-basename-note dirname and basename]|| ||file dirname "/etc/hosts" _
+file tail "/etc/hosts"|| ||
+||absolute pathname|| || || ||
+||[[# dir-iter]][#dir-iter-note iterate over directory by file]|| || || ||
+||glob paths|| || || ||
+||[[# mkdir]][#mkdir-note make directory]|| ||file mkdir "/tmp/foo/bar"|| ||
+||recursive copy|| || || ||
+||[[# rmdir]][#rmdir-note remove empty directory]|| ||file delete "/tmp/foodir"|| ||
+||[[# rm-rf]][#rm-rf-note remove directory and contents]|| ||file delete -force "/tmp/foodir"|| ||
+||[[# dir-test]][#dir-test-note directory test] _
+@<&nbsp;>@|| ||file isdirectory "/tmp"|| ||
+||generate unused directory|| || || ||
+||system temporary file directory|| || || ||
 ||||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
-||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-||[#external-command external command]|| || ||do shell script "ls"||
-||[#backticks backticks]|| || ||set s to do shell script "ls"||
-||[#command-line-args command line args]|| || ||##gray|//must declare run handler://## _
-on run argv _
-@<&nbsp;&nbsp;>@length of argv _
-@<&nbsp;&nbsp;>@item 1 of argv _
-@<&nbsp;&nbsp;>@item 2 of argv _
-@<&nbsp;&nbsp;>@##gray|//...//## _
-end run||
-||[#speech speech]|| || ||say "I'm a Mac"||
-||[#environment-variable environment variable]|| || ||system attribute "HOME"||
-||[#command-path command path]|| || || ||
-||[#exit exit]|| || ||##gray|//none//##||
-||[#set-signal-handler set signal handler]|| || ||##gray|//none//##||
-||[#start-background-job start job in background]|| || ||##gray|//none//##||
-||[#suspend-job suspend current job]|| || ||##gray|//none//##||
-||[#list-jobs list jobs]|| || ||##gray|//none//##||
-||[#background-suspended-job background suspended job]|| || ||##gray|//none//##||
-||[#foreground-background-job bring background job into foreground]|| || ||##gray|//none//##||
-||[#disown-job disown job]|| || ||##gray|//none//##||
+||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[[# cmd-line-arg]][#cmd-line-arg-note command line arguments]|| ||[lindex $argv 0] _
+[lindex $argv 1] _
+##gray|//...//##|| ||
+||[[# env-var]][#env-var-note environment variable] _
+##gray|//get, set//##|| ||$env(HOME)|| ||
+||[[# exit]][#exit-note exit] _
+@<&nbsp;>@|| ||exit 0|| ||
+||[[# external-cmd]][#external-cmd-note external command]|| ||exec ls|| ||
+||[[# cmd-subst]][#cmd-subst-note command substitution]|| ||set f [ open |ls ] _
+read f|| ||
 ||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
-||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-||[#library library]|| || ||$ cat foo.applescript _
-on showText(theText) _
-@<&nbsp;&nbsp;>@display dialog (theText) _
-end showText _
-$ osascript -o foo.scpt foo.applescript||
-||[#import-library import library]|| || ||set f to "/path/to/foo.scpt" _
-set foo to (load script POSIX file f) _
-tell foo to showText("bar")||
-||[#library-path library path]|| || || ||
-||[#library-path-env library path environment variable]|| || || ||
-||[#namespace-declaration namespace declaration]|| || || ||
-||[#namespace-separator namespace separator]|| || || ||
+||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[[# load-lib]][#load-lib-note load library]|| ||source foo.tcl _
+add 3 7|| ||
+||load library in subdirectory|| || || ||
+||hot patch|| || || ||
+||load error|| || || ||
+||main routine in library|| || || ||
+||[[# lib-path]][#lib-path-note library path]|| ||##gray|//none//##|| ||
+||[[# lib-path-env]][#lib-path-env-note library path environment variable]|| ||TCLLIBPATH|| ||
+||library path command line option|| || || ||
+||simple global identifiers|| || || ||
+||multiple label identifiers|| || || ||
+||[[# label-separator]][#label-separator-note label separator]|| ||::|| ||
+||[[# namespace-decl]][#namespace-decl-note namespace declaration]|| ||namespace || ||
+||child namespace declaration|| || || ||
+||unqualified import of namespace|| || || ||
+||unqualified import of definitions|| || || ||
+||[[# pkg-management]][#pkg-management-note list installed packaged, install a package]|| || || ||
 ||||||||~ [[# objects]][#objects-note objects]||
-||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-||[#define-class define class]|| || ||on makeInt(val) _
-@<&nbsp;&nbsp;>@script theInt _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@property value : val _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@on addOne() _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@set value to value + 1 _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@end addOne _
-@<&nbsp;&nbsp;>@end script _
-@<&nbsp;&nbsp;>@return theInt _
-end makeInt||
-||[#create-object create object]|| || ||set anInt to makeInt(7)||
-||[#getter-setter getter and setter]|| || ||get value of anInt _
-set value of anInt to 9||
-||[#invoke-method invoke method]|| || ||tell anInt to addOne()||
+||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[#define-class define class]|| || || ||
+||[#create-object create object]|| || || ||
+||[#getter-setter getter and setter]|| || || ||
+||[#invoke-method invoke method]|| || || ||
 ||||||||~ [[# reflection]][#reflection-note reflection]||
-||~ ||~ [#smalltalk smalltalk]||~ [#autohotkey autohotkey]||~ [#applescript applescript]||
-||[#class class]||'hello' class|| ||set s to "hello" _
-display dialog class of s||
+||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[#class class]||'hello' class|| || ||
 ||inspect methods||1 class selectors.|| || ||
-||~ ||~ ##EFEFEF|@@_______________________________________________________@@##||~ ##EFEFEF|@@_______________________________________________________@@##||~ ##EFEFEF|@@_______________________________________________________@@##||
+||||||||~ [[# gui]][#gui-note gui]||
+||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||pop-up box|| ||package require Tk _
+ _
+wm title . _
+grid [ttk::frame .f -padding "10 10 10 10"]  _
+grid [ttk::label .f.t -text "hi world"]||msgbox % "hi world"||
+||button|| || || ||
+||text entry|| || || ||
+||frame|| || || ||
+||label|| || || ||
+||image|| || || ||
+||~ ||~ ##EFEFEF|@@_________________________________________________________________@@##||~ ##EFEFEF|@@_________________________________________________________________@@##||~ ##EFEFEF|@@_________________________________________________________________@@##||
 
 
 [[# general-note]]
@@ -465,10 +633,50 @@ How to pass a single command to be executed as a command line argument.
 
 How the parser determines the end of a statement.
 
+**tcl:**
+
+Code fragments such as
+
+[[code]]
+1 + 1
+[[/code]]
+
+or
+
+[[code]]
+[expr 1 + 1]
+[[/code]]
+
+result in {{invalid command name}} errors when used as statements.
+
+The following is a valid statement:
+
+[[code]]
+expr 1 + 1
+[[/code]]
+
+The above cannot be used as an argument to a command without putting it inside square brackets, however.
+
+Since the constructs which can be used as statements and the constructs which can be used in the positions where expressions are normally used are disjoint, we claim that expressions are not statements in Tcl. 
+
 [[# block-delimiters-note]]
 ++ [#block-delimiters block delimiters]
 
 How blocks are delimited.
+
+**tcl:**
+
+The block delimiters {} and "" are the same as the string delimiters.  Double quotes "" cause variable interpolation and as a result they are not often used to delimit blocks.
+
+The following three lines of code behave the same:
+
+[[code]]
+if {true} {puts "true"}
+
+if "true" "puts \"true\""
+
+if "true" "puts {true}"
+[[/code]]
 
 [[# expr-stmt-note]]
 ++ [#expr-stmt are expressions statements]
@@ -485,24 +693,21 @@ How to make the remainder of the line a comment.
 
 How to comment out multiple lines.
 
+**tcl:**
+
+The method described requires that there not be an unmatched right curly bracket in the comment.
+
+
 [[# var-expr-note]]
 + [#var-expr Variables and Expressions]
 
 [[# identifiers-case-sensitive-note]]
 ++ [#identifiers-case-sensitive are identifiers case sensitive]
 
-**applescript:**
-
-In AppleScript, identifiers are case insensitive.  This holds for reserved keywords as well as user defined variable names.  The AppleScript Editor converts all keywords and identifiers in the source code to lower case when it is compiled.
-
 [[# assignment-note]]
 ++ [#assignment assignment]
 
 How to assign a value to a variable.
-
-**applescript:**
-
-{{set}} and {{copy}} are not synonyms when operating on lists, records, or objects.  The {{set}} command makes the left variable an alias of the right variable: the two variables then refer to the same array, record, or object.  The {{copy}} command will put a copy of the array, record, or object contained in the left variable.
 
 [[# parallel-assignment-note]]
 ++ [#parallel-assignment parallel assignment]
@@ -529,24 +734,14 @@ The C-style increment and decrement operators which can be used in expressions.
 
 How to declare a variable.
 
-**applescript:**
-
-Variables can be declared as {{local}} or {{global}}. It is not possible to initialize a variable in a declaration.   Undeclared variables are {{local}}: in the example below, {{c}} and {{e}} are not visible outside the function {{foo}}:
-
-[[code]]
-on foo(a,b)
-  local c
-  global d
-  set c to a+b
-  set d to a+b
-  set e to a+b
-end foo
-[[/code]]
-
 [[# null-note]]
 ++ [#null null]
 
 The null literal.
+
+**tcl**
+
+Tcl has has no null value.
 
 [[# null-test-note]]
 ++ [#null-test null test]
@@ -558,17 +753,12 @@ How to test if a value is null.
 
 The value of an undefined variable, or the behavior if there is no such value.
 
-**applescript:**
+**tcl:**
 
-How to test whether a variable is defined:
+The following test can be used to determine if a variable is defined:
 
 [[code]]
-try
-  set t to foo
-  display dialog ("defined")
-on error
-  display dialog ("undefined")
-end try
+expr ![info exists v]
 [[/code]]
 
 [[# arithmetic-logic-note]]
@@ -584,6 +774,10 @@ The literals for true and false.
 
 Values which are false in conditional expressions.
 
+**tcl:**
+
+0 is false and all other numeric values are true.  For non-numeric strings, "no" and "false" are false, and "yes" and "true" are true.  The comparison is case insensitive.  All other non-numeric strings raise an error when evaluated in a boolean context.
+
 [[# logical-ops-note]]
 ++ [#logical-ops logical operators]
 
@@ -594,16 +788,64 @@ Logical and, or, and not.
 
 The syntax for a conditional expression.
 
+[[# relational-expr-note]]
+++ [#relational-expr relational expression]
+
+**tcl**
+
+To evaluate a relational expression outside of the the conditional of an {{if}} statement, the {{expr}} command can be used.
+
+Use square brackets to make an expression an argument of a command:
+
+[[code]]
+puts [expr $x>1]
+[[/code]]
+
 [[# relational-operators]]
 ++ relational operators
+
+**tcl:**
+
+The {{eq}} and {{ne}} operators always perform comparisons on their operators as strings.  If the arguments are numeric, they are converted to a standard floating point representation.
+
+[[code]]
+% expr {"0" eq "00"}
+0
+% expr {"0" == "00"}
+1
+[[/code]]
+
+The {{==}} and {{!=}} operators try to convert their arguments to a numeric form for the purpose of comparison.  String comparison is used when no numeric conversion is possible:
+
+[[code]]
+% expr {"lorem" == "ipsum"}
+0
+[[/code]]
+
+The relational operators can be invoked as commands in the following manner:
+
+[[code]]
+% ::tcl::mathop::== 1 1
+1
+% ::tcl::mathop::!= 1 1
+0
+% ::tcl::mathop::> 1 1
+%::tcl::mathop::< 1 1
+0
+% ::tcl::mathop::>= 1 1
+1
+% ::tcl::mathop::<= 1 1
+1
+% ::tcl::mathop::eq "lorem" "ipsum"
+0
+%::tcl::mathop::ne "lorem" "ipsum"
+1
+[[/code]]
 
 **autohotkey:**
 
 {{<>}} is a synonym for {{!=}}.
 
-**applescript:**
-
-Verbal synonyms for the relational operators are provided.  For {{=}} the synonyms are {{equals}}, {{is equal}}, {{equal to}}, and {{is equal to}}.
 
 [[# string-to-number]]
 ++ convert from string
@@ -617,10 +859,27 @@ Verbal synonyms for the relational operators are provided.  For {{=}} the synony
 
 How to evaluate an arithmetic expression.
 
+**tcl:**
+
+Arithmetic expressions are normally evaluated with the {{expr}} command.  However, the conditional argument of an {{if}} statement is always evaluated as an expression.
+
 [[# arithmetic-operators]]
 ++ arithmetic operators
 
 The operators for addition, subtraction, multiplication, float division, integer division, modulus, and exponentiation.  Some languages provide a function //pow// instead of an operator for exponentiation.
+
+**tcl:**
+
+Arithmetic operators are normally used as arguments to {{expr}}, but commands also exist for each of them:
+
+[[code]]
+::tcl::mathop::+
+::tcl::mathop::-
+::tcl::mathop::*
+::tcl::mathop::/
+::tcl::mathop::**
+::tcl::mathop::%
+[[/code]]
 
 [[# integer-division]]
 ++ integer division
@@ -665,13 +924,6 @@ The examples show how to generate a uniform random integer in the range from 0 t
 
 [[# seed-random]]
 ++ seed random numbers
-
-**applescript:**
-
-The initial seed is set to a value that varies each time AppleScript is started up.
-
-If a repeatable sequence of random numbers is desired, the seed can be set to a specific value using the {{with seed}} parameter on the first call to {{random}}.  
-
 
 [[# bit-operators]]
 ++ bit operators
@@ -724,6 +976,10 @@ The string concatenation operator.
 
 How to split a string into an array of strings.
 
+**tcl:**
+
+//split// takes an optional 2nd argument which is a string containing the characters to split on.  //split// can only split on characters, not strings or regular expressions.  For each pair of adjacent splitting characters in the input string, there will be an empty string in the result list.
+
 [[# join]]
 ++ join
 
@@ -746,6 +1002,18 @@ How to create a string using a printf style format.
 [[# pad]]
 ++ pad on right, pad on left
 
+[[# str-to-num-note]]
+++ [#str-to-num string to number]
+
+**tcl:**
+
+All values are strings.  The //expr// function will concatenate the arguments together and then evaluate the string as a numerical expression.  If all the numbers are integers, the expression is computed using integer arithmetic.  Otherwise floating point arithmetic is used.  The variables can contain compound arithmetic expressions; the following script outputs 10:
+
+[[code]]
+set a "7+3"
+puts [expr $a]
+[[/code]]
+
 [[# regex-note]]
 + [#regexes Regular Expressions]
 
@@ -754,10 +1022,34 @@ How to create a string using a printf style format.
 
 How to test whether a regular expression matches a string.
 
+[[# regex-modifiers-note]]
+++ [#regex-modifiers modifiers]
+
+**tcl:**
+
+||~ modifier||~ description||
+||-all||causes regexp to return number of matches in string; causes regsub to replace all occurrences of match||
+||-expanded||ignore whitespace in patten||
+||-indices||modifies group capture: returns start and end indices of the substring instead of the substring itself||
+||-inline||return the total match and each of the group captures as a list. Normally the number of matches is returned||
+||-line||same as using -lineanchor and -linestop||
+||-lineanchor||causes ^ and $ to match the beginning and ending of lines (\A and \Z still match beginning and ending of string)||
+||-linestop||causes . to not matcch a newline||
+||-nocase||makes matching case insensitive||
+
 [[# single-subst-note]]
 ++ [#single-subst single substitution]
 
 How to replace the first occurrence of a pattern in a string.
+
+**tcl:**
+
+To replace only the first occurrence of the pattern, omit the {{-all}} flag:
+
+[[code]]
+set s "do re mi mi mi"
+regsub "mi" $s "ma"
+[[/code]]
 
 [[# global-subst-note]]
 ++ [#global-subst global substitution]
@@ -767,8 +1059,14 @@ How to replace all occurrences of a pattern in a string.
 [[# dates-time-note]]
 + [#dates-time Dates and Time]
 
+The Unix epoch is the number of seconds since January 1, 1970 UTC.  In the case of Lua, the native date/time object is the Unix epoch, so no conversion is needed.
+
 [[# resizable-array-note]]
 + [#resizable arrays Resizable Arrays]
+
+**tcl:**
+
+Tcl arrays are associative arrays.  The dict type is new in Tcl 8.5.  See the documentation for [http://www.tcl.tk/man/tcl8.5/TclCmd/array.htm array] and [http://www.tcl.tk/man/tcl8.5/TclCmd/dict.htm dict].
 
 [[# array-literal]]
 ++ array literal
@@ -784,6 +1082,16 @@ How to get the number of elements in an array.
 ++ array lookup
 
 How to access a value in an array by index.
+
+**tcl:**
+
+Does not support negative indices.  To change the 2nd element in the list //a// to 8, use
+
+[[code]]
+lset a 1 8
+[[/code]]
+
+//lset// will not increase the size of the list if the index is out of bounds.  For more list manipulation commands see http://www.tcl.tk/man/tcl/tutorial/Tcl15.html.
 
 [[# array-slice]]
 ++ array slice
@@ -828,6 +1136,25 @@ How to test whether an item in an array exists for which a condition holds.  Alw
 [[# dictionaries-note]]
 + [#dictionaries Dictionaries]
 
+**tcl:**
+
+The {{dict}} type was introduced in Tcl 8.5.
+
+In earlier versions of Tcl associative arrays were used when a dictionary type was needed, and they remain an alternative in Tcl 8.5.  Associative arrays are stored in variables as strings. The {{array}} command is used to treat the string as an associative array:
+
+[[code]]
+array set d [list "t" 1 "f" 0]
+array size d
+$d(t)
+array set d [list "t" 2]
+info exists d(t)
+array unset d "t"
+foreach {k v} [array get d] {
+  puts k
+  puts v
+}
+[[/code]]
+
 [[# dictionary-literal]]
 ++ dictionary literal
 
@@ -846,14 +1173,12 @@ How to test whether an item in an array exists for which a condition holds.  Alw
 [[# functions-note]]
 + [#functions Functions]
 
-Python has both functions and methods.  Ruby only has methods: functions defined at the top level are in fact methods on a special main object.  Perl subroutines can be invoked with a function syntax or a method syntax.
+**tcl:**
+
+Tcl variables inside functions have local scope. 
 
 [[# function-definition]]
 ++ function definition
-
-**applescript:**
-
-Functions are called //handlers// in AppleScript.
 
 [[# function-invocation]]
 ++ function invocation
@@ -883,51 +1208,6 @@ How to write a function which accepts a variable number of argument.
 
 How to write a function which uses named parameters.
 
-**applescript:**
-
-Named parameters are called //labeled parameters// in the AppleScript documentation.  The label must be one of the following prepositions:
-
-> about, above, against, apart from, around, aside from, at, below, beneath, beside, between, by, for, from,
-> instead of, into, on, onto, out of, over, since, thru/through, to, under
-
-For readability the definite article {{the}} can be inserted in between the label and the argument in either the function definition or the invocation.  
-
-To use other names for parameters, the {{given}} keyword can be used in conjunction with colon syntax:
-
-[[code]]
-on displayNums given startAt:x, endAt:y
-  set i to x
-  repeat while i <= y
-    display dialog (i as text)
-    set i to i + 1
-  end repeat
-end displayNums
-
-displayNums given startAt:1, endAt:5
-[[/code]]
-
-When a {{given}} parameter takes a boolean value as an argument, the {{with}} or {{without}} keywords can be used when the handler is invoked.  Consider the following handler definition:
-
-[[code]]
-on foo given flagLabel:flag
-  ...
-end foo
-[[/code]]
-
-Here are two ways to invoke {{foo}} with {{flag}} set to true:
-
-[[code]]
-foo given flagLabel:true
-foo with flagLabel
-[[/code]]
-
-Here are two ways to invoke {{foo}} with {{flag}} set to false:
-
-[[code]]
-foo given flagLabel:false
-foo without flagLabel
-[[/code]]
-
 [[# return-value]]
 ++ return value
 
@@ -947,6 +1227,14 @@ How to define a lambda function.
 
 [[# if]]
 ++ if
+
+**tcl:**
+
+Tcl also has a switch:
+
+[[code]]
+switch $a 0 { puts "no" } 1 { puts "yes" } 2 { puts "maybe" } default { puts "error" }
+[[/code]]
 
 **autohotkey:**
 
@@ -978,17 +1266,6 @@ else
 [[# for]]
 ++ for
 
-**applescript:**
-
-If a block of code needs to be executed a set number of times but no index variable is needed, AppleScript provides this alternate syntax:
-
-[[code]]
-repeat 3 times
-    display dialog ("tut")
-end repeat
-[[/code]]
-
-
 [[# exceptions-note]]
 + [#exceptions Exceptions]
 
@@ -997,43 +1274,22 @@ end repeat
 
 How to raise an exception.
 
-**applescript:**
-
-It is possible to associate an error code with the error using the {{number}} label:
-
-[[code]]
-error "bam!" number 7
-[[/code]]
-
-If no error number is specified, then the value -2700 is used.
 
 [[# catch-exception]]
 ++ catch exception
 
 How to handle an exception.
 
-**applescript:**
-
-If a variable name is specified after {{on error}} the error message is stored in it.  There can only be one error clause and it catches all errors.  To perform conditional error handling, use the {{number}} label and provide a variable name after it.  The error code will be stored in that variable.
-
-[[code]]
-try
-  error "bam!" number 7
-on error msg number errorCode
-  if errorCode = 7 then
-    display dialog ("error: " & msg)
-  else
-    display dialog ("unknown error")
-  end if
-end try
-[[/code]]
-
-A {{try}} block can be closed by {{end error}} in addition to {{end try}}.
 
 [[# uncaught-exception]]
 ++ uncaught exception behavior
 
 System behavior if an exception goes uncaught.  Most interpreters print the exception message to stderr and exit with a nonzero status.
+
+**tcl:**
+
+A tcl process can have multiple interpreters and multiple threads.  However, each interpreter is limited to a single thread.
+
 
 [[# wait-on-thread]]
 ++ wait on thread
@@ -1044,25 +1300,16 @@ System behavior if an exception goes uncaught.  Most interpreters print the exce
 [[# print-to-stdout]]
 ++ print to standard out
 
+**tcl:**
+
+To prevent //puts// from appending a newline to the output, use
+
+[[code]]
+puts -nonewline "hello"
+[[/code]]
+
 [[# standard-filehandles]]
 ++ standard filehandles
-
-**applescript:**
-
-AppleScript does not in general run with stdin and stdout filehandles.   When {{osascript}} is invoked as a shebang it is possible to read from stdin and write to stdout, however:
-
-[[code]]
-#!/usr/bin/env osascript
-set stdin to do shell script "cat"
-"Received from stdin: " & stdin
-[[/code]]
-
-Here is how the above script would be invoked:
-
-[[code]]
-$ echo "foo" | ./stdin-example.sh
-Received from stdin: foo
-[[/code]]
 
 
 [[# read-line]]
@@ -1088,6 +1335,11 @@ Received from stdin: foo
 
 [[# external-command]]
 ++ external command
+
+**tcl**
+
+When using tclsh as a shell or repl, external commands that do not have the same name as a built-in or user defined function can be executed directly without using the exec command.
+
 
 [[# backticks]]
 ++ backticks
@@ -1203,14 +1455,39 @@ Cascaded messages.
 
 No functions, just methods and blocks.
 
+[[# tcl]]
++ [#top Tcl]
+
+[http://tmml.sourceforge.net/doc/tcl/ Tcl Reference Manual]
+[http://tcllib.sourceforge.net/doc/ Tcl Standard Library]
+
+Tcl has some traits which will be familiar to anyone who has done Unix shell script programming:
+
+(1) variables have a $ prefix except when values are assigned to them, in which case they are used unadorned:
+
+[[code]]
+set v 42
+puts $v
+[[/code]]
+
+(2) statements consist of a command and zero or more arguments.  Commands which are not built-in functions or user defined functions are resolved by looking for an external command in the search path and running it.
+
+(3) the values are always stored in variables as strings.  Commands which expect numeric arguments perform an implicit conversion, so there isn't much practical consequence for the developer.
+
+(4) in the absence of quoting ("", {}, []) the arguments of a command are parsed into words using whitespace; commas are not used to separate arguments.
+
+(5) square brackets [] must be used to execute a function and use its return value as an argument.  A combination of square brackets [] and the {{expr}} command must be used to evaluate an expression and use its value as an argument:
+
+[[code]]
+puts [format "%10s" "lorem"]
+puts [expr 1 + 1]
+[[/code]]
+
+Square brackets can be used to invoke an external command, but the value of the square brackets containing an external command is always the empty string: "".
+
+Unlike shells, *, ?, ~ in variable names are not automatically expanded using the filesystem, but this behavior can be invoked with the glob command.
+
 [[# autohotkey]]
 + [#top AutoHotkey]
 
 [http://www.autohotkey.com/docs/ Documentation]
-
-[[# applescript]]
-+ [#top AppleScript]
-
-[http://developer.apple.com/library/mac/#documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html AppleScript Language Guide]
-
-The AppleScript Editor is a fast way to experiment with AppleScript.  Type code into the upper pane and click the //Run// button.  The return value of the last statement executed is displayed in the lower pane.
