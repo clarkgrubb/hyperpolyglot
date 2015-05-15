@@ -2,7 +2,7 @@
 
 ||~ ||~ [#rust rust]||~ [#swift swift]||~ [#scala scala]||
 ||[[# version-used]][#version-used-note version used] _
-@<&nbsp;>@||##gray|//0.11//##||##gray|//1.1//##||##gray|//2.11//##||
+@<&nbsp;>@||##gray|//1.0.0//##||##gray|//1.1//##||##gray|//2.11//##||
 ||[[# version]][#version-note show version] _
 @<&nbsp;>@||$ rustc @@--@@version||$ swift @@--@@version||$ scala -version||
 ||[[# implicit-prologue]][#implicit-prologue-note implicit prologue]||##gray|//none//##||import Foundation||##gray|//none; but these libraries always available:// _
@@ -65,14 +65,14 @@ val n = 1 + 2 _
  _
 ##gray|@@//@@ evaluates 1 + 2 each time n is used:## _
 def n = 1 + 2||
-||[[# variable]][#variable-note modifiable variable]||let mut n: int = 3; _
+||[[# variable]][#variable-note modifiable variable]||let mut n: isize = 3; _
 n = 4;||var n = 3 _
 n = 4||var n = 3 _
 n = 4 ||
 ||[[# assignment]][#assignment-note assignment]|| ||var i = 0 _
  _
 i = 3|| ||
-||[[# parallel-assignment]][#parallel-assignment-note parallel assignment]|| ||var (m, n) = (3, 7)|| ||
+||[[# parallel-assignment]][#parallel-assignment-note parallel assignment]|| let (x, y) = (3, 7); ||var (m, n) = (3, 7)|| ||
 ||[[# swap]][#swap-note swap]|| ||(x, y) = (y, x)|| ||
 ||[[# compound-assignment]][#compound-assignment-note compound assignment]|| ||##gray|//arithmetic://## _
 += -= *= /= %= _
@@ -94,7 +94,7 @@ i = 3|| ||
  _
 ##gray|//postmodifiers://## _
 i++ i@@--@@|| ||
-||[[# unit]][#unit-note unit type and value]|| ||Void _
+||[[# unit]][#unit-note unit type and value]|| () ||Void _
 ()||Unit _
 ()||
 ||[[# conditional-expression]][#conditional-expression-note conditional expression]||if x > 0 { x } else { -x }||x > 0 ? x : -x||val n = -3 _
@@ -110,7 +110,11 @@ nil||null||
 ||[[# coalesce]][#coalesce-note coalesce]|| || || ||
 ||[[# nullif]][#nullif-note nullif]|| || || ||
 ||[[# expr-type-declaration]][#expr-type-decl-note expression type declaration]|| || ||1: Double||
-||[[# let-in]][#let-in-note let ... in ...]|| || ||val z = { _
+||[[# let-in]][#let-in-note let ... in ...]|| let z = { _
+@<&nbsp;&nbsp;>@let x = 3.0; _
+@<&nbsp;&nbsp;>@let y = 2.0 * x; _
+@<&nbsp;&nbsp;>@x * y _
+}|| ||val z = { _
 @<&nbsp;&nbsp;>@val x = 3.0 _
 @<&nbsp;&nbsp;>@val y = 2.0 * x _
 @<&nbsp;&nbsp;>@x * y _
@@ -127,7 +131,7 @@ nil||null||
 ||[[# relational-op]][#relational-op-note relational operators]||== != < > <= >=||== != < > <= >=||== != < > <= >=||
 ||[[# min-max]][#min-max-note min and max]|| || ||math.min 1 2 _
 math.max 1 2||
-||[[# int-type]][#int-type-note integer type]||int ##gray|//machine dependent size//## _
+||[[# int-type]][#int-type-note integer type]||isize ##gray|//machine dependent size//## _
 i8 _
 i16 _
 i32 _
@@ -140,7 +144,7 @@ Int _
 Byte Short Long _
 ##gray|//arbitrary precision type://## _
 BigInt||
-||[[# unsigned-int-type]][#unsigned-int-type-note unsigned integer type]||uint ##gray|//machine dependent size//## _
+||[[# unsigned-int-type]][#unsigned-int-type-note unsigned integer type]||usize ##gray|//machine dependent size//## _
 u8 _
 u16 _
 u32 _
@@ -148,7 +152,7 @@ u64||UInt8 _
 UInt16 _
 UInt32 _
 UInt64 (UInt)|| ||
-||[[# int-literal]][#int-literal-note integer literal]||-4i _
+||[[# int-literal]][#int-literal-note integer literal]||-4isize _
  _
 ##gray|@@//@@ specify size:## _
 -4i32|| ||-4||
@@ -169,7 +173,7 @@ n + 7.0f32|| ||3 + 7.0||
 7i % 3i||7 / 3 _
 7 % 3||7 / 3 _
 7 % 3||
-||[[# int-div-zero]][#int-div-zero-note integer division by zero]||##gray|//runtime error//##||##gray|//process sent a// SIGILL //signal//##||java.lang.ArithmeticException||
+||[[# int-div-zero]][#int-div-zero-note integer division by zero]||##gray|//compiletime error//##||##gray|//process sent a// SIGILL //signal//##||java.lang.ArithmeticException||
 ||[[# float-div]][#float-div-note float division] _
 @<&nbsp;>@||7f64 / 3f64||Double(7) / 3||(7: Double) / 3||
 ||[[# float-div-zero]][#float-div-zero-note float division by zero]||##gray|@@//@@ these are float values but not literals:## _
@@ -274,7 +278,8 @@ second line";||##gray|//no//##||##gray|//in triple quote literal only//##||
 \x##gray|//hh//## \u##gray|//hhhh//## \U##gray|//hhhhhhhh//##||\0 \\ \t \n \r \" \' _
 \x##gray|//hh//## \u##gray|//hhhh//## \U##gray|//hhhhhhhh//##||\b \f \n \r \t \" \' _
 \u##gray|//hhhh//## \##gray|//o//## \##gray|//oo//## \##gray|//ooo//##||
-||[[# format-str]][#format-str-note format string]||let s = format!("foo {} {} {}", "bar", 7i, 3.14f32);||let n = 3, m = 5 _
+||[[# format-str]][#format-str-note format string]||let s = format!("foo {} {} {}", "bar", 7i, 3.14f32);_
+let s = format!("foo {2} {1} {0}", "bar", 7i, 3.14);||let n = 3, m = 5 _
 let msg =  "\(n) + \(m) is \(n + m)"||"foo %s %d %.2f".format("bar", 7, 3.1415)||
 ||[[# str-concat]][#str-concat-note concatenate] _
 @<&nbsp;>@|| ||"hello" + " world"||"Hello" + ", " + "World!"||
@@ -462,7 +467,8 @@ List(1, 2, 3).foldLeft(0)((x, y) => x + y)||
 ||[#tuple tuple]||(1, "hello", true)|| ||(1, "hello", true)||
 ||tuple type||(int, &str, bool)|| || ||
 ||[#tuple-element tuple element access]|| || ||(1, "hello", true)._1||
-||[#pair-element pair element access]|| || ||(12, "December")._1 _
+||[#pair-element pair element access]||(12, "December").0 _
+(12, "December").2 || ||(12, "December")._1 _
 (12, "December")._2||
 ||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
 ||~ ||~ rust||~ swift||~ scala||
