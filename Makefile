@@ -25,6 +25,7 @@ icons := favicon.gif touch-icon-ipad-retina.png touch-icon-iphone-retina.png
 robots := robots.txt
 css := hyperpolyglot.css
 static := $(errors) $(icons) $(robots) $(css)
+builds := $(patsubst %,build/%.html,$(paths))
 
 .PHONY: install
 install:
@@ -143,3 +144,17 @@ clean: clean.math clean.html
 .PHONY: clobber
 clobber: clean
 	rm -f $(wiki)
+
+build:
+	mkdir -p $@
+
+builds: $(builds)
+
+build/%.html: markup/% | build
+	( echo '<% title="Lorem Ipsum"; math=true %>' \
+	  && cat header.html.erb ) \
+	| erb > $@
+	./wikidot-to-html/src/wikidot_to_html.py < $< >> $@
+	( echo '<% foo=false %> ' \
+	  && cat footer.html.erb ) \
+	| erb >> $@
