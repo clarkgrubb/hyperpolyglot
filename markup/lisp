@@ -35,16 +35,20 @@
 (define white\ space\ symbol 3)||##gray|//none//##||(setq white\ space\ symbol 3)||
 ||[[# quoting-char-in-identifiers]][#quoting-char-in-identifiers-note quoting characters in identifiers]||(setq |white space symbol| 3)||(define |white space symbol| 3)||##gray|//none//##||##gray|//none//##||
 ||[[# eol-comment]][#eol-comment-note end-of-line comment]||(+ 1 1) ; adding ||(+ 1 1) ; adding||(+ 1 1) ; adding||(+ 1 1) ; adding||
+
 ||[[# multiple-line-comment]][#multiple-line-comment-note multiple line comment]||(+ 1 #| adding |# 1)||##gray|//r6rs://## _
 (+ 1 #| adding |# 1)|| || ||
+
 ||||||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
 ||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
 ||[#label label] _
 @<&nbsp;>@||set,setq,defun||define||def,defn||set,setq,defun||
 ||[#quote quote] _
 @<&nbsp;>@||quote||quote||quote||quote||
+
 ||[#undefine undefine] _
-@<&nbsp;>@||(makunbound 'foo)||(namespace-undefine-variable! 'foo)||(ns-unmap *ns* 'foo)||(makunbound 'foo)||
+||##gray|//variables:|## _ (makunbound 'foo) _ ##gray|//functions:|## _ (fmakunbound 'bar)||(namespace-undefine-variable! 'foo)||(ns-unmap *ns* 'foo)||##gray|//variables:|## _ (makunbound 'foo) _ ##gray|//functions:|## _ (fmakunbound 'bar)||
+
 ||[#cell-types cell types] _
 @<&nbsp;>@||##gray|//value, function, struct, class, ...//##||##gray|//value//##||##gray|//value//##||##gray|//value, function, struct, ...//##||
 ||[[# null]][#null-note null]||nil||null||nil||nil||
@@ -1251,6 +1255,11 @@ All lisps have a single quote macro abbreviation for //quote//.  Here are identi
 X
 (eval (quote X))
 [[/code]]
+
+[[# undefine]]
+++ undefine
+
+Historically there have been two major types of Lisp in terms of approach to namespaces, so called //Lisp-1// and //Lisp-2//. //Lisp-1// referred to the Scheme model of single namespace for variables and functions, while //Lisp-2// referred to the Common Lisp (and earlier Maclisp) approach of having separate namespaces for the two. Common Lisp and Emacs Lisp, being examples of Lisp-2, require separate functions for undefining each type of entity. Clojure and Racket, on the other hand, are //Lisp-1//, therefore they have a single function to handle undefining.
 
 [[# eq]]
 ++ eq, equal, =
