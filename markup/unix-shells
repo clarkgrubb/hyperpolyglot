@@ -1018,9 +1018,9 @@ How to remove a user defined function.
 ##gray|//define, list, remove, define suffix alias//##||alias ll='ls -l' _
 alias _
 unalias ll _
-##gray|//none//##||alias ll 'ls -l' _
+##gray|//none//##||alias ltr 'ls -ltr' _
 functions _
-function -e ll _
+functions -e ltr _
 ##gray|//none//##||alias ll='ls -l' _
 alias _
 unalias ll _

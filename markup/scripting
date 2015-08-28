@@ -250,7 +250,9 @@ math.sqrt(-1) _
  _
 ##gray|# returns complex float:## _
 ##purple|import## cmath _
-cmath.sqrt(-1)||##gray|//raises// Errno::EDOM##||
+cmath.sqrt(-1)||##gray|Math.sqrt(-1) raises Math::DomainError unless require 'complex' is in effect.## _
+ _
+##gray|(-1) ** 0.5 is (0+1.0i)##||
 ||[[# transcendental-func]][#transcendental-func-note transcendental functions] _
 @<&nbsp;>@||Math.exp Math.log Math.sin Math.cos Math.tan Math.asin Math.acos Math.atan Math.atan2||exp log sin cos tan asin acos atan atan2||##purple|from## math ##purple|import## exp, log, \ _
 sin, cos, tan, asin, acos, atan, atan2||include ##green|Math## _
@@ -668,7 +670,7 @@ preg_match($##peru|rx##, $##peru|s##, $##peru|m##); _
  _
 $##peru|m##[##maroon|"file"##] _
 $##peru|m##[##maroon|"suffix"##]||##peru|rx## = ##maroon|'^(?P<file>.+)\.(?P<suffix>.+)$'## _
-##peru|m## = re.search(rx, ##maroon|''foo.txt'##) _
+##peru|m## = re.search(rx, ##maroon|'foo.txt'##) _
  _
 m.groupdict()[##maroon|'file'##] _
 m.groupdict()[##maroon|'suffix'##]||rx = ##maroon|/^(?<file>.+)\.(?<suffix>.+)$/## _
