@@ -210,6 +210,8 @@ If the shell had any process groups running when it exits, they are sent a {{SIG
 
 A simple solution to the {{SIGHUP}} problem is to run each job with {{nohup}}.   Optionally, shells such as {{bash}} and {{zsh}} have a {{disown}} built-in which can be used on a process that is already running, should the user have neglected to run it with {{nohup}}.
 
+The {{fish}} shell, when invoking a process in the background with {{&}} will set the signal handling state of the process to ignore {{SIGHUP}}.  Some say it will also do the same if the process is suspended with {{^Z}} and then put in the background with {{bg}}, though it is not obvious to me how the operating system makes this possible.
+
 Multiplexers offer a solution which protects the shell instead of the job.  The user doesn't need to remember to run each job with {{nohup}}.  As an added benefit any state kept by the shell is preserved.  
 
 [[# def-server]]**server:**

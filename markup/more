@@ -1,6 +1,6 @@
 [[# top]]//a side-by-side reference sheet//
 
-[#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#arrays arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#streams streams] | [#files files] | [#file-fmt file formats] | [#directories directories] | [#processes-environment processes and environment] | [#option-parsing option parsing] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#reflection reflection] | [#net-web net and web] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling]
+[#grammar-invocation grammar and execution] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#arrays arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#streams streams] | [#files files] | [#file-fmt file formats] | [#directories directories] | [#processes-environment processes and environment] | [#option-parsing option parsing] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#reflection reflection] | [#net-web net and web] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling]
 
 ||~ [[# general]]||~ [#perl perl]||~ [#lua lua]||~ [#groovy groovy]||
 ||[[# version-used]][#version-used-note version used] _
@@ -8,7 +8,7 @@
 ||[[# show-version]][#show-version-note show version]||$ perl @@--@@version||$ lua -v||$ groovy -v||
 ||[[# implicit-prologue]][#implicit-prologue-note implicit prologue] _
 @<&nbsp;>@||use strict;|| || ||
-||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
+||||||||~ [[# grammar-execution]][#grammar-execution-note grammar and execution]||
 ||~ ||~ perl||~ lua||~ groovy||
 ||[[# interpreter]][#interpreter-note interpreter] _
 @<&nbsp;>@||$ perl foo.p||$ lua foo.lua||$ echo 'println "hi!"' > hi.groovy _
@@ -384,7 +384,7 @@ m = s =~ /(\d{4})-(\d{2})-(\d{2})/ _
 yr = m.group(1) _
 mo = m.group(2) _
 dy = m.group(3)||
-||[[# named-grouped-capture]][#named-group-capture-note named group capture]||$s = "foo.txt"; _
+||[[# named-group-capture]][#named-group-capture-note named group capture]||$s = "foo.txt"; _
 $s =~ /^(?<file>.+)\.(?<suffix>.+)$/; _
  _
 $+{"file"} _
@@ -1456,8 +1456,8 @@ Code which examples in the sheet assume to have already been executed.
 
 We adopt the convention that if an example uses a variable without declaring it, it should be taken to have been previously declared with {{my}}.
 
-[[# grammar-invocation-note]]
-+ [#grammar-invocation Grammar and Invocation]
+[[# grammar-execution-note]]
++ [#grammar-execution Grammar and Execution]
 
 [[# interpreter-note]]
 ++ [#interpreter interpreter]

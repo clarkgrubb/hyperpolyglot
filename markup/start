@@ -3,19 +3,19 @@
 [[table style="align:left;"]]
 
 [[row]]
-[[cell]]**Interpreted Languages:**[[/cell]][[cell]][[[scripting|JavaScript, PHP, Python, Ruby]]][[/cell]]
+[[cell]]**Scripting Languages I:**[[/cell]][[cell]][[[scripting|Node.js, PHP, Python, Ruby]]][[/cell]]
 [[/row]]
 
 [[row]]
-[[cell]]**Interpreted Languages:**[[/cell]][[cell]][[[more|Perl, Lua, Groovy]]][[/cell]]
+[[cell]]**Scripting Languages II:**[[/cell]][[cell]][[[more|Perl, Lua, Groovy]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**GUI Scripting:**[[/cell]][[cell]][[[gui|JavaScript, Smalltalk, Tcl, AutoHotkey]]][[/cell]]
 [[/row]]
 
 [[row]]
 [[cell]]**Command Line Interpreters:**[[/cell]][[cell]][[[shell|POSIX Shell, Cmd.exe, PowerShell]]][[/cell]]
-[[/row]]
-
-[[row]]
-[[cell]]**GUI Scripting:**[[/cell]][[cell]][[[gui|Smalltalk, Tcl, AutoHotkey]]][[/cell]]
 [[/row]]
 
 [[row]]
@@ -35,19 +35,23 @@
 [[/row]]
 
 [[row]]
-[[cell]]**C++, Objective-C, Java, C#:**[[/cell]][[cell]][[[cpp|C++, Objective-C, Java, C#]]][[/cell]]
+[[cell]]**C and Go:**[[/cell]][[cell]][[[c|C, Go]]][[/cell]]
 [[/row]]
 
 [[row]]
-[[cell]]**C, Go, and Dart:**[[/cell]][[cell]][[[c|C, Go, Dart]]][[/cell]]
-[[/row]]
-
-[[row]]
-[[cell]]**Pascal Style Languages:**[[/cell]][[cell]][[[pascal|Pascal, Ada, PL/pgSQL]]][[/cell]]
+[[cell]]**OO C Style Languages:**[[/cell]][[cell]][[[cpp|C++, Objective-C, Java, C#]]][[/cell]]
 [[/row]]
 
 [[row]]
 [[cell]]**Rust, Swift, Scala:**[[/cell]][[cell]][[[rust|Rust, Swift, Scala]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**TypeScript, Dart, Hack:**[[/cell]][[cell]][[[web|TypeScript, Dart, Hack]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**Pascal Style Languages:**[[/cell]][[cell]][[[pascal|Pascal, Ada, PL/pgSQL]]][[/cell]]
 [[/row]]
 
 [[row]]
@@ -67,15 +71,15 @@
 [[/row]]
 
 [[row]]
-[[cell]]**Relational Data Languages:**[[/cell]][[cell]][[[data|SQL, Awk, Pig]]][[/cell]]
-[[/row]]
-
-[[row]]
-[[cell]]**Gnuplot, GLPK, Coq:**[[/cell]][[cell]][[[misc-math|Gnuplot, GLPK, Coq]]][[/cell]]
+[[cell]]**Gnuplot and GLPK:**[[/cell]][[cell]][[[misc-math|Gnuplot, GLPK]]][[/cell]]
 [[/row]]
 
 [[row]]
 [[cell]]**Fortran and APL:**[[/cell]][[cell]][[[fortran|Fortran, APL]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**Relational Data Languages:**[[/cell]][[cell]][[[data|SQL, Awk, Pig]]][[/cell]]
 [[/row]]
 
 [[/table]]

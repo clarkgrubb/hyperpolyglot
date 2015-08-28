@@ -5,29 +5,23 @@
 **[[[scripting2|sheet two]]]:** [[[scripting2#streams|streams]]] | [[[scripting2#files|files]]] | [[[scripting2#file-fmt|file formats]]] | [[[scripting2#directories|directories]]] | [[[scripting2#processes-environment|processes and environment]]] | [[[scripting2#option-parsing|option parsing]]] | [[[scripting2#libraries-namespaces|libraries and namespaces]]] | [[[scripting2#objects|objects]]] | [[[scripting2#inheritance-polymorphism|inheritance and polymorphism]]] | [[[scripting2#reflection|reflection]]] | [[[scripting2#net-web|net and web]]] | [[[scripting2#gui|gui]]] |  [[[scripting2#unit-tests|unit tests]]] | [[[scripting2#debugging-profiling|debugging and profiling]]] | [[[scripting2#java-interop|java interop]]]
 
 ||||||||||~ [[# version]][#version-note version]||
-||~ ||~ [#javascript javascript]||~ [#php php]||~ [#python python]||~ [#ruby ruby]||
+||~ ||~ [#node node.js]||~ [#php php]||~ [#python python]||~ [#ruby ruby]||
 ||[[# version-used]][#version-used-note version used] _
 @<&nbsp;>@|| ||##gray|//5.5//##||##gray|//2.7; 3.3//##||##gray|//1.9; 2.0//##||
 ||[[# version]][#version-note show version] _
 @<&nbsp;>@||$ node @@--@@version||$ php @@--@@version||$ python -V _
 $ python @@--@@version||$ ruby @@--@@version||
 ||[[# implicit-prologue]][#implicit-prologue-note implicit prologue] _
-@<&nbsp;>@||<script src="underscore.js"> _
-</script>||##gray|//none//##||##purple|import## os, re, sys||##gray|//none//##||
+@<&nbsp;>@||##gray|@@//@@ npm install underscore## _
+##purple|var## ##peru|us## = require(##maroon|'underscore'##);||##gray|//none//##||##purple|import## os, re, sys||##gray|//none//##||
 ||||||||||~ [[# grammar-execution]][#grammar-execution-note grammar and execution]||
-||~  ||~ javascript||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# interpreter]][#interpreter-note interpreter] _
 @<&nbsp;>@||$ node foo.js||$ php -f foo.php||$ python foo.py||$ ruby foo.rb||
 ||[[# repl]][#repl-note repl] _
-@<&nbsp;>@||$ node _
- _
-##gray|//mac://## _
-$ osascript -l JavaScript -i||$ php -a||$ python||$ irb||
+@<&nbsp;>@||$ node||$ php -a||$ python||$ irb||
 ||[[# cmd-line-program]][#cmd-line-program-note command line program]||$ node -e 'var sys = require("sys"); _
-  sys.puts("hi world!");' _
- _
-##gray|//mac://## _
-$ osascript -l JavaScript -e '1 + 1'||$ php -r 'echo "hi\n";'||$ python -c 'print("hi")'||$ ruby -e 'puts "hi"'||
+  sys.puts("hi world!");'||$ php -r 'echo "hi\n";'||$ python -c 'print("hi")'||$ ruby -e 'puts "hi"'||
 ||[[# block-delimiters]][#block-delimiters-note block delimiters] _
 @<&nbsp;>@||{}||{}||: ##gray|//and offside rule//##||{} _
 ##purple|do end##||
@@ -62,11 +56,11 @@ comment line _
 another line _
 =end##||
 ||||||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
-||~  ||~ javascript||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# local-var]][#local-var-note local variable] _
-@<&nbsp;>@||var x = 1; _
+@<&nbsp;>@||##purple|var## ##peru|x## = 1; _
  _
-var y = 2, z = 3;||##gray|# in function body:## _
+##purple|var## ##peru|y## = 2, ##peru|z## = 3;||##gray|# in function body:## _
 $##peru|v## = ##teal|NULL##; _
 $##peru|a## = []; _
 $##peru|d## = []; _
@@ -100,7 +94,7 @@ nestable: _
 ||[[# global-var]][#global-var-note global variable]||##gray|@@//@@ assign without using var## _
 g = 1; _
  _
-function incr_global () { g++; }||list($##peru|g1##, $##peru|g2##) = [7, 8]; _
+##purple|function## ##mediumblue|incr_global## () { g++; }||list($##peru|g1##, $##peru|g2##) = [7, 8]; _
  _
 ##purple|function## ##0000CD|swap_globals##() { _
 @<&nbsp;&nbsp;>@##purple|global## $##peru|g1##, $##peru|g2##; _
@@ -165,31 +159,31 @@ y = tmp;||list($##peru|x##, $##peru|y##) = [$##peru|y##, $##peru|x##];||##peru|x
 &&= @@||@@= ^= _
 @@<<= >>= @@&= |= ^=||
 ||[[# incr-decr]][#incr-decr-note increment and decrement] _
-@<&nbsp;>@||var x = 1; _
-var y = ++x; _
-var z = @@--@@y;||$##peru|x## = 1; _
+@<&nbsp;>@||##purple|var## x = 1; _
+##purple|var## y = ++x; _
+##purple|var## z = @@--@@y;||$##peru|x## = 1; _
 $##peru|y## = ++$##peru|x##; _
 $##peru|z## = @@--@@$##peru|y##;||##gray|//none//##||x = 1 _
 ##gray|# x and y not mutated:## _
 y = x.succ _
 z = y.pred||
 ||[[# null]][#null-note null] _
-@<&nbsp;>@||null||##teal|NULL## ##gray|# case insensitive##||##teal|None##||##peru|nil##||
+@<&nbsp;>@||##green|null##||##teal|NULL## ##gray|# case insensitive##||##teal|None##||##peru|nil##||
 ||[[# null-test]][#null-test-note null test] _
-@<&nbsp;>@||v === null||is_null($##peru|v##) _
+@<&nbsp;>@||v === ##green|null##||is_null($##peru|v##) _
 ! isset($##peru|v##)||v == ##teal|None## _
 v ##purple|is## ##teal|None##||v == ##peru|nil## _
 v.nil?||
 ||[[# undef-var]][#undef-var-note undefined variable] _
-@<&nbsp;>@||undefined||##teal|NULL##||##gray|//raises// NameError##||##gray|//raises// NameError##||
+@<&nbsp;>@||##green|undefined##||##teal|NULL##||##gray|//raises// NameError##||##gray|//raises// NameError##||
 ||[[# conditional-expr]][#conditional-expr-note conditional expression] _
 @<&nbsp;>@||x > 0 ? x : -x||$##peru|x## > 0 ? $##peru|x## : -$##peru|x##||x ##purple|if## x > 0 ##purple|else## -x||x > 0 ? x : -x||
 ||||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
-||~  ||~ javascript||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# true-false]][#true-false-note true and false] _
-@<&nbsp;>@||true false||##teal|TRUE FALSE## ##gray|# case insensitive##||##purple|True False##||##peru|true false##||
+@<&nbsp;>@||##green|true false##||##teal|TRUE FALSE## ##gray|# case insensitive##||##purple|True False##||##peru|true false##||
 ||[[# falsehoods]][#falsehoods-note falsehoods] _
-@<&nbsp;>@||false null undefined "" 0 NaN||##teal|FALSE NULL## 0 0.0 ##maroon|"" "0"## []||##purple|False## ##teal|None## 0 0.0 ##maroon|''## [] {}||##peru|false nil##||
+@<&nbsp;>@||##green|false null undefined## ##maroon|""## 0 ##green|NaN##||##teal|FALSE NULL## 0 0.0 ##maroon|"" "0"## []||##purple|False## ##teal|None## 0 0.0 ##maroon|''## [] {}||##peru|false nil##||
 ||[[# logical-op]][#logical-op-note logical operators] _
 @<&nbsp;>@||@@&& ||@@ !||&& @@||@@ ! _
 ##gray|//lower precedence://## _
@@ -290,7 +284,7 @@ x.floor||
 ||[[# int-overflow]][#int-overflow-note integer overflow] _
 @<&nbsp;>@||##gray|//all numbers are floats//##||##gray|//converted to float//##||##gray|//becomes arbitrary length integer of type// long##||##gray|//becomes arbitrary length integer of type// Bignum##||
 ||[[# float-overflow]][#float-overflow-note float overflow] _
-@<&nbsp;>@||Infinity||INF||##gray|//raises// OverflowError##||##green|Infinity##||
+@<&nbsp;>@||##green|Infinity##||INF||##gray|//raises// OverflowError##||##green|Infinity##||
 ||[[# rational-construction]][#rational-construction-note rational construction] _
 @<&nbsp;>@|| ||##gray|//none//##||##purple|from## fractions ##purple|import## Fraction _
  _
@@ -358,12 +352,12 @@ base_convert(##maroon|"60"##, 7, 10);||##gray|//none//## _
 int(##maroon|"60"##, 7)||42.to_s(7) _
 ##maroon|"60"##.to_i(7)||
 ||||||||||~ [[# strings]][#strings-note strings]||
-||~  ||~ javascript||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# str-type]][#str-type-note string type] _
 @<&nbsp;>@||String||string||str||String||
 ||[[# str-literal]][#str-literal-note string literal] _
-@<&nbsp;>@||"don't say \"no\"" _
-'don\'t say "no"'||##maroon|"don't say \"no\""## _
+@<&nbsp;>@||##maroon|"don't say \"no\"" _
+'don\'t say "no"'##||##maroon|"don't say \"no\""## _
 ##maroon|'don\'t say "no"'##||##maroon|'don\'t say "no"'## _
 ##maroon|"don't say \"no\""## _
 ##maroon|"don't "## ##maroon|'say "no"'## _
@@ -614,7 +608,7 @@ $##peru|s## = str_replace($##peru|vowels##, ##maroon|""##, $##peru|s##);||##maro
 ||[[# squeeze-char]][#squeeze-char-note squeeze characters]||##gray|//none//##||$##peru|s## = ##maroon|"too@<&nbsp;&nbsp;>@much@<&nbsp;&nbsp;>@space"##; _
 $##peru|s## = = preg_replace(##maroon|'/(\s)+/'##, ##maroon|'\1'##, $##peru|s##);||re.sub(##maroon|'(\s)+'##, r##maroon|'\1'##, ##maroon|'too@<&nbsp;&nbsp;>@much@<&nbsp;&nbsp;>@space'##)||##maroon|"too@<&nbsp;&nbsp;>@much@<&nbsp;&nbsp;>@space"##.squeeze(##maroon|" "##)||
 ||||||||||~ [[# regexes]][#regexes-note regular expressions]||
-||~  ||~ javascript||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# regex-literal]][#regex-literal-note literal, custom delimited literal]||/lorem|ipsum/||##maroon|'/lorem|ipsum/'## _
 ##maroon|'(/etc/hosts)'##||re.compile(##maroon|'lorem|ipsum'##) _
 ##gray|//none//##||##maroon|/lorem|ipsum/ _
@@ -702,7 +696,7 @@ rx.sub(r##maroon|'\2 \1'##, ##maroon|'do re'##)||##maroon|/(\w+) \1/##.match(##m
 ||[[# recursive-regex]][#recursive-regex-note recursive regex] _
 @<&nbsp;>@||##gray|//none//##||##maroon|'/\(([^()]*|($R))\)/'##||##gray|//none//##||##maroon|/(?<foo>\(([^()]*|\g<foo>)*\))/##||
 ||||||||||~ [[# dates-time]][#dates-time-note dates and time]||
-||~  ||~ javascript||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# broken-down-datetime-type]][#broken-down-datetime-type-note broken-down datetime type] _
 @<&nbsp;>@||##green|Date##||##green|DateTime##||datetime.datetime||##green|Time##||
 ||[[# current-datetime]][#current-datetime-note current datetime]||##purple|var## ##peru|t## = ##purple|new## ##green|Date##();||$##peru|t## = ##purple|new## ##green|DateTime##(##maroon|"now"##); _
@@ -871,7 +865,7 @@ signal.alarm(0)||require ##maroon|'timeout'## _
 ##purple|rescue## ##green|Timeout##::##green|Error## _
 ##purple|end##||
 ||||||||||~ [[# resizable-arrays]][#resizable-arrays-note resizable arrays]||
-||~  ||~ javascript||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# array-literal]][#array-literal-note literal] _
 @<&nbsp;>@||a = [1, 2, 3, 4]||$##peru|a## = [1, 2, 3, 4]; _
  _
@@ -996,9 +990,9 @@ a3 = a.dup _
 a4 = ##green|Marshal##.load(##green|Marshal##.dump(a))||
 ||[[# array-as-func-arg]][#array-as-func-arg-note array as function argument]||##gray|//parameter contains address copy//##||##gray|//parameter contains deep copy//##||##gray|//parameter contains address copy//##||##gray|//parameter contains address copy//##||
 ||[[# iterate-over-array]][#iterate-over-array-note iterate over elements] _
-@<&nbsp;>@||_.each([1, 2, 3], function(n) { _
-@<&nbsp;&nbsp;>@alert(n); _
-})||##purple|foreach## ([1, 2, 3] ##purple|as## $##peru|i##) { _
+@<&nbsp;>@||[1, 2, 3].forEach(function(n) { _
+@<&nbsp;&nbsp;>@console.log(n); _
+});||##purple|foreach## ([1, 2, 3] ##purple|as## $##peru|i##) { _
 @<&nbsp;&nbsp;>@##purple|echo## ##maroon|"$i\n"##; _
 }||##purple|for## i ##purple|in## [1, 2, 3]: _
 @<&nbsp;&nbsp;>@##purple|print##(i)||[1, 2, 3].each { |i| puts i }||
@@ -1019,7 +1013,7 @@ end||
 @<&nbsp;&nbsp;>@##gray|//code//##||(1..1_000_000).each ##purple|do## |i| _
 @<&nbsp;&nbsp;>@##gray|//code//## _
 ##purple|end##||
-||[[# range-array]][#range-array-note instantiate range as array]||var a = _.range(1, 10);||$##peru|a## = range(1, 10);||##peru|a## = ##purple|range##(1, 11) _
+||[[# range-array]][#range-array-note instantiate range as array]||var a = us.range(1, 10);||$##peru|a## = range(1, 10);||##peru|a## = ##purple|range##(1, 11) _
 ##gray|//Python 3://## _
 ##peru|a## = ##purple|list##(##purple|range##(1, 11))||a = (1..10).to_a||
 ||[[# array-reverse]][#array-reverse-note reverse] _
@@ -1058,8 +1052,8 @@ a.sort ##purple|do## |x, y| _
 ||[[# array-dedupe]][#array-dedupe-note dedupe] _
 ##gray|//non-destructive, in-place//##||var a = [1, 2, 2, 3]; _
  _
-var a2 = _.uniq(a); _
-a = _.uniq(a);||$##peru|a## = [1, 2, 2, 3]; _
+var a2 = us.uniq(a); _
+a = us.uniq(a);||$##peru|a## = [1, 2, 2, 3]; _
  _
 $##peru|a2## = array_unique($##peru|a##); _
 $##peru|a## = array_unique($##peru|a##);||##peru|a## = [1, 2, 2, 3] _
@@ -1070,16 +1064,16 @@ $##peru|a## = array_unique($##peru|a##);||##peru|a## = [1, 2, 2, 3] _
 a2 = a.uniq _
 a.uniq!||
 ||[[# membership]][#membership-note membership] _
-@<&nbsp;>@||_.contains(a, 7)||in_array(7, $##peru|a##)||7 ##purple|in## a||a.include?(7)||
+@<&nbsp;>@||us.contains(a, 7)||in_array(7, $##peru|a##)||7 ##purple|in## a||a.include?(7)||
 ||[[# intersection]][#intersection-note intersection] _
-@<&nbsp;>@||_.intersection([1, 2], [2, 3, 4])|| $##peru|a## = [1, 2]; _
+@<&nbsp;>@||us.intersection([1, 2], [2, 3, 4])|| $##peru|a## = [1, 2]; _
 $##peru|b## = [2, 3, 4] _
 array_intersect($##peru|a##, $##peru|b##)||{1, 2} & {2, 3, 4}||[1, 2] & [2 ,3, 4]||
 ||[[# union]][#union-note union] _
-@<&nbsp;>@||_.union([1, 2], [2, 3, 4])||$##peru|a1## = [1, 2]; _
+@<&nbsp;>@||us.union([1, 2], [2, 3, 4])||$##peru|a1## = [1, 2]; _
 $##peru|a2## = [2, 3, 4]; _
 array_unique(array_merge($##peru|a1##, $##peru|a2##))||{1, 2} | {2, 3, 4}||[1, 2] | [2, 3, 4]||
-||[[# set-diff]][#set-diff-note relative complement, symmetric difference]||_.difference([1, 2, 3], [2]) _
+||[[# set-diff]][#set-diff-note relative complement, symmetric difference]||us.difference([1, 2, 3], [2]) _
 ##gray|//none//##||$##peru|a1## = [1, 2, 3]; _
 $##peru|a2## = [2]; _
 array_values(array_diff($##peru|a1##, $##peru|a2##)) _
@@ -1124,8 +1118,8 @@ a.some(even)||##gray|//use array_filter//##||##purple|all##(i % 2 == 0 ##purple|
 ##purple|any##(i % 2 == 0 ##purple|for## i ##purple|in## [1, 2, 3, 4])||[1, 2, 3, 4].all? {|i| i.even? } _
 [1, 2, 3, 4].any? {|i| i.even? }||
 ||[[# shuffle-sample]][#shuffle-sample-note shuffle and sample]||var a = [1, 2, 3, 4]; _
-a = _.shuffle(a); _
-var samp = _.sample([1, 2, 3, 4], 2);||$##peru|a## = [1, 2, 3, 4]; _
+a = us.shuffle(a); _
+var samp = us.sample([1, 2, 3, 4], 2);||$##peru|a## = [1, 2, 3, 4]; _
 shuffle($##peru|a##); _
 $##peru|samp## = array_rand(|[1, 2, 3, 4], 2);||##purple|from## random ##purple|import## shuffle, sample _
  _
@@ -1135,8 +1129,8 @@ samp = sample([1, 2, 3, 4], 2)||[1, 2, 3, 4].shuffle! _
 samp = [1, 2, 3, 4].sample(2)||
 ||[[# flatten]][#flatten-note flatten] _
 ##gray|//one level, completely//##||var a = [1, [2, [3, 4]]]; _
-var a2 = _.flatten(a, true); _
-var a3 = _.flatten(a);||##gray|//none//##||##gray|//none//##||a = [1, [2, [3, 4]]] _
+var a2 = us.flatten(a, true); _
+var a3 = us.flatten(a);||##gray|//none//##||##gray|//none//##||a = [1, [2, [3, 4]]] _
 a2 = a.flatten(1) _
 a3 = a.flatten||
 ||[[# zip]][#zip-note zip] _
@@ -1146,7 +1140,7 @@ a3 = a.flatten||
 @<&nbsp;&nbsp;>@[1, 2, 3], _
 @<&nbsp;&nbsp;>@[##maroon|"a"##, ##maroon|"b"##, ##maroon|"c"##]);||##peru|a## = zip([1, 2, 3], [##maroon|'a'##, ##maroon|'b'##, ##maroon|'c'##])||a = [1, 2, 3].zip([##maroon|"a"##, ##maroon|"b"##, ##maroon|"c"##])||
 ||||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
-||~  ||~ javascript||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# dict-literal]][#dict-literal-note literal] _
 @<&nbsp;>@||d = {"t": 1, "f": 0}; _
 ##gray|@@//@@ keys do not need to be quoted if they _
@@ -1165,8 +1159,8 @@ for (var k in d) { _
 }||count($##peru|d##)||##purple|len##(d)||d.size _
 d.length ##gray|# same as size##||
 ||[[# dict-lookup]][#dict-lookup-note lookup] _
-@<&nbsp;>@||d.t _
-d["t"]||$##peru|d##[##maroon|"t"##]||d[##maroon|'t'##]||d[##maroon|'t'##]||
+@<&nbsp;>@||d.hasOwnProperty("t") ? d["t"] : undefined _
+d.hasOwnProperty("t") ? d.t : undefined||$##peru|d##[##maroon|"t"##]||d[##maroon|'t'##]||d[##maroon|'t'##]||
 ||[[# dict-update]][#dict-update-note update]||d["t"] = 2; _
 d.t = 2;||$##peru|d##[##maroon|"t"##] = 2;||d[##maroon|'t'##] = 2||d[##maroon|'t'##] = 2||
 ||[[# dict-missing-key]][#dict-missing-key-note missing key behavior] _
@@ -1195,7 +1189,7 @@ unset($##peru|d##[1]);||##peru|d## = {1: ##purple|True##, 0: ##purple|False##} _
 ##purple|del## d[1]||d = {1 => ##peru|true##, 0 => ##peru|false##} _
 d.delete(1)||
 ||[[# dict-assoc-array]][#dict-assoc-array-note from array of pairs, from even length array]||var a = [["a", 1], ["b", 2], ["c", 3]]; _
-var d = _.object(a); _
+var d = us.object(a); _
  _
 ##gray|//none//##|| ||##peru|a## = [[##maroon|'a'##, 1], [##maroon|'b'##, 2], [##maroon|'c'##, 3]] _
 ##peru|d## = ##purple|dict##(a) _
@@ -1208,7 +1202,7 @@ a = [##maroon|'a'##, 1, ##maroon|'b'##, 2, ##maroon|'c'##, 3] _
 d = ##green|Hash##[*a]||
 ||[[# dict-merge]][#dict-merge-note merge]||var d1 = {"a": 1, "b": 2}; _
 var d2 = {"c": 3, "d": 4}; _
-d1 = _.extend(d1, d2);||$##peru|d1## = [##maroon|"a"## => 1, ##maroon|"b"## => 2]; _
+d1 = us.extend(d1, d2);||$##peru|d1## = [##maroon|"a"## => 1, ##maroon|"b"## => 2]; _
 $##peru|d2## = [##maroon|"b"## => 3, ##maroon|"c"## => 4]; _
 $##peru|d1## = array_merge($##peru|d1##, $##peru|d2##);||##peru|d1## = {##maroon|'a'##: 1, ##maroon|'b'##: 2} _
 ##peru|d2## = {##maroon|'b'##: 3, ##maroon|'c'##: 4} _
@@ -1216,7 +1210,7 @@ d1.update(d2)||d1 = {##maroon|'a'## => 1, ##maroon|'b'## => 2} _
 d2 = {##maroon|'b'## => 3, ##maroon|'c'## => 4} _
 d1.merge!(d2)||
 ||[[# dict-invert]][#dict-invert-note invert]||var to_num = {'t': 1, 'f': 0}; _
-var to_let = _.invert(to_num);||$##peru|to_num## = [##maroon|"t"## => 1, ##maroon|"f"## => 0]; _
+var to_let = us.invert(to_num);||$##peru|to_num## = [##maroon|"t"## => 1, ##maroon|"f"## => 0]; _
 $##peru|to_let## = array_flip($##peru|to_num##);||##peru|to_num## = {##maroon|'t##': 1, ##maroon|'f'##: 0} _
 ##gray|# dict comprehensions added in 2.7:## _
 ##peru|to_let## = {v: k ##purple|for## k, v _
@@ -1224,7 +1218,9 @@ $##peru|to_let## = array_flip($##peru|to_num##);||##peru|to_num## = {##maroon|'t
 to_let = to_num.invert||
 ||[[# dict-iter]][#dict-iter-note iterate] _
 @<&nbsp;>@||for (var k in d) { _
-@<&nbsp;&nbsp;>@##gray|//use k or d[k]//## _
+@<&nbsp;&nbsp;>@if (d.hasOwnProperty(k)) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|//use k or d[k]//## _
+@<&nbsp;&nbsp;>@} _
 }||##purple|foreach## ($##peru|d## as $##peru|k## => $##peru|v##) { _
 @<&nbsp;&nbsp;>@##gray|//code//## _
 }||##purple|for## k, v ##purple|in## d.iteritems(): _
@@ -1235,8 +1231,8 @@ to_let = to_num.invert||
 @<&nbsp;&nbsp;>@##gray|//code//##||d.each ##purple|do## |k,v| _
 @<&nbsp;&nbsp;>@##gray|//code//## _
 ##purple|end##||
-||[[# dict-key-val]][#dict-key-val-note keys and values as arrays]||_.keys(d) _
-_.values(d)||array_keys($##peru|d##) _
+||[[# dict-key-val]][#dict-key-val-note keys and values as arrays]||us.keys(d) _
+us.values(d)||array_keys($##peru|d##) _
 array_values($##peru|d##)||d.keys() _
 d.values() _
  _
@@ -1250,7 +1246,7 @@ d.values||
 @<&nbsp;&nbsp;>@return 0; _
 } _
  _
-for (p in _.pairs(d).sort(cmp2)) { _
+for (p in us.pairs(d).sort(cmp2)) { _
 @<&nbsp;&nbsp;>@alert(p[0] + ": " + p[1]); _
 }||asort($##peru|d##); _
  _
@@ -1287,7 +1283,7 @@ factorial = ##green|Hash##.new ##purple|do## |h,k| _
 @<&nbsp;&nbsp;>@k > 1 ? k * h[k-1] : 1 _
 ##purple|end##||
 ||||||||||~ [[# functions]][#functions-note functions]||
-||~  ||~ javascript||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# def-func]][#def-func-note define] _
 @<&nbsp;>@||function add(x, y) { _
 @<&nbsp;&nbsp;>@return x+y; _
@@ -1536,7 +1532,7 @@ operator.itemgetter(2)(a)||3.*(7) _
 a = [##maroon|'foo'##, ##maroon|'bar'##, ##maroon|'baz'##] _
 a.[](2)||
 ||||||||||~ [[# execution-control]][#execution-control-note execution control]||
-||~  ||~ javascript||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# if]][#if-note if] _
 @<&nbsp;>@||if (0 == n) { _
 @<&nbsp;&nbsp;>@alert("no hits"); _
@@ -1609,7 +1605,7 @@ default: _
 @<&nbsp;>@||##gray|//none//##||##gray|//none//##||##gray|//none//##||puts ##maroon|"positive"## ##purple|if## i > 0 _
 puts ##maroon|"nonzero"## ##purple|unless## i == 0||
 ||||||||||~ [[# exceptions]][#exceptions-note exceptions]||
-||~  ||~ javascript||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# base-exc]][#base-exc-note base exception]||##gray|//Any value can be thrown.//##||Exception||BaseException _
  _
 ##gray|//User-defined exceptions should subclass// Exception.## _
@@ -1801,7 +1797,7 @@ finally { _
 @<&nbsp;&nbsp;>@release_resource _
 ##purple|end##||
 ||||||||||~ [[# concurrency]][#concurrency-note concurrency]||
-||~  ||~ javascript||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# start-thread]][#start-thread-note start thread] _
 @<&nbsp;>@|| ||##gray|//none//##||##purple|class## ##green|sleep10##(threading.Thread): _
 @<&nbsp;&nbsp;>@##purple|def## ##0000CD|run##(##purple|self##): _
@@ -1811,7 +1807,7 @@ finally { _
 thr.start()|| thr = ##green|Thread##.new { sleep 10 }||
 ||[[# wait-on-thread]][#wait-on-thread-note wait on thread] _
 @<&nbsp;>@|| || ||thr.join()||thr.join||
-||~ ||~ ##EFEFEF|@@____________________________________________@@##||~ ##EFEFEF|@@____________________________________________@@##||~ ##EFEFEF|@@_____________________________________________@@##||~ ##EFEFEF|@@_____________________________________________@@##||
+||~ ||~ ##EFEFEF|@@_______________________________________________@@##||~ ##EFEFEF|@@____________________________________________@@##||~ ##EFEFEF|@@_____________________________________________@@##||~ ##EFEFEF|@@_____________________________________________@@##||
 
 
 **[[[scripting2|sheet two]]]:** [[[scripting2#streams|streams]]] | [[[scripting2#file|files]]] | [[[scripting2#directories|directories]]] | [[[scripting2#processes-environment|processes and environment]]] | [[[scripting2#option-parsing|option parsing]]] | [[[scripting2#libraries-namespaces|libraries and namespaces]]] | [[[scripting2#objects|objects]]] | [[[scripting2#inheritance-polymorphism|inheritance and polymorphism]]] | [[[scripting2#reflection|reflection]]] | [[[scripting2#net-web|net and web]]] | [[[scripting2#gui|gui]]] | [[[scripting2#unit-tests|unit tests]]] | [[[scripting2#debugging-profiling|debugging and profiling]]] | [[[scripting2#deployment|deployment]]]
@@ -4522,79 +4518,10 @@ Ruby MRI threads are operating system threads, but a global interpreter lock pre
 
 How to make a thread wait for another thread to finish.
 
-[[# javascript]]
-+ [#top JavaScript]
-
-[https://developer.mozilla.org/en-US/docs/Web/JavaScript Mozilla Developer Network: JavaScript]
-[https://developer.apple.com/library/mac/releasenotes/InterapplicationCommunication/RN-JavaScriptForAutomation/ JavaScript for Automation: Release Notes]
-
-[[# browsers]] 
-+ [#top Browsers]
-
-[https://developer.mozilla.org/en-US/docs/Web/API/document Mozilla Developer Network: Document]
-[https://developer.mozilla.org/en-US/docs/Web/API/Window Mozilla Document Network: Window]
-[http://www.w3.org/TR/DOM-Level-3-Core/ W3C: Document Object Model (DOM) Level 3 Core Specification]
-[http://www.w3.org/TR/DOM-Level-3-Events/ W3C: Document Object Model (DOM) Level 3 Events Specification]
-
-Most browsers include a debugger which can be launched with a keystroke:
-
-||~ browser||~ mac||~ windows||~ linux||
-||Chrome||⌥⌘J||Cmd+Shift+J||Cmd+Shift+J||
-||Firefox||⌥⌘S||Cmd+Shift+S||Cmd+Shift+S||
-||Safari||⌥⌘C|| || ||
-
-The debugger has a console pane, which is a JavaScript REPL.
-
-[[code]]
-> Math.log(10)
-2.302585092994046
-
-> alert("Hello, World!")
-[[/code]]
-
-The console provides a global object named {{document}} which provides access to the DOM of the current page:
-
-[[code]]
-> document.getElementsByTagName("div").length
-302
-[[/code]]
-
-//TODO: more ways to select node elements.  Attributes of node elements.//
-
-There is also a global object named {{window}} which is useful.
-
-JavaScript can be embedded in an HTML document using the {{<script>}} tag:
-
-[[code]]
-<script>
-  var sum = 1 + 2;
-  alert('the sum is ' + sum);
-</script>
-[[/code]]
-
-Alternatively the JavaScript can be in a separate file served by the same server:
-
-[[code]]
-<script src="foo.js"></script>
-[[/code]]
-
-{{<script>}} tags can be placed in either the {{<head>}} or the {{<body>}} of an {{<html>}} document.  They are executed as they are encountered by the browser.  If there is a syntax error, then none of the JavaScript in the {{<script>}} tag is executed.  If there is an unhandled exception, the browser stops execution of the {{<script>}} at that point.  Neither syntax errors nor unhandled exceptions prevent the browser from executing JavaScript in subsequent {{<script>}} tags.
-
-//using JavaScript to modify the DOM//
-
-//waiting for all JavaScript to load//
-
-//javascript URL//
-
-//DOM events//
-
-To guard against websites serving malicious JavaScript code, the JavaScript interpreters in browsers do not provide the ability to interact with the local operating system.  In particular, client-side JavaScript cannot read or write to files.  Client-side JavaScript cannot spawn other processes. 
-
-Client-side JavaScript can make HTTP requests.  Client-side JavaScript can modify the DOM of an HTML page which was served from the same [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Same_origin_policy_for_JavaScript origin] as the JavaScript.  To be from the same origin, the URLs must have the same protocol, domain, and port.  Client-side JavaScript can also get and set cookies which share the same origin.  The origin policy for cookies is slightly relaxed, since the JavaScript can also get and set cookies for a parent domain, excluding public top level domains such as {{.com}}, {{.net}}, and {{.org}}.
-
 [[# node]]
 + [#top Node]
 
+[https://developer.mozilla.org/en-US/docs/Web/JavaScript Mozilla Developer Network: JavaScript]
 [http://nodejs.org/api/ Node.js]
 
 //using node//
@@ -4622,13 +4549,7 @@ From the perspective of a PHP programmer, there no important differences between
 2.7: [http://docs.python.org/reference/index.html Language], [http://docs.python.org/library/index.html Standard Library]
 3.2: [http://docs.python.org/py3k/reference/index.html Language], [http://docs.python.org/py3k/library/index.html Standard Library]
 
-Python uses leading whitespace to indicate block structure.  It is not recommended to mix tabs and spaces in leading whitespace, but when this is done, a tab is equal to 8 spaces.  The command line options '-t' and '-tt' will warn and raise an error respectively when tabs are used inconsistently for indentation.
-
-Regular expressions and functions for interacting with the operating system are not available by default and must be imported to be used, i.e.
-
-[[code]]
-import re, sys, os
-[[/code]]
+Python uses leading whitespace to indicate block structure.  When tabs and spaces are mixed a tab is equal to 8 spaces.  The command line options '-t' and '-tt' will warn and raise an error respectively when tabs are mixed with spaces.
 
 Identifiers in imported modules must be fully qualified unless imported with //from/import//:
 
@@ -4637,9 +4558,9 @@ from sys import path
 from re import *
 [[/code]]
 
-There are two basic sequence types: the mutable list and the immutable tuple. The literal syntax for lists uses square brackets and commas [1, 2, 3] and the literal syntax for tuples uses parens and commas (1 ,2, 3).
+There are two basic sequence types: the mutable list and the immutable tuple. List literals use square brackets and commas [1, 2, 3]; tuple literals use parens and commas (1 ,2, 3).
 
-The dictionary data type literal syntax uses curly brackets, colons, and commas { “hello”:5, “goodbye”:7 }.  Python 3 adds a literal syntax for sets which uses curly brackets and commas: {1, 2, 3}.  This notation is also available in Python 2.7.  Dictionaries and sets are implemented using hash tables and as a result dictionary keys and set elements must be hashable.
+The dictionary literals use curly brackets, colons, and commas { “hello”: 5, “goodbye”: 7 }.  Python has sets; set literals use curly brackets and commas: {1, 2, 3}.  Dictionaries and sets are implemented using hash tables so dictionary keys and set elements must be hashable.
 
 All values that can be stored in a variable and passed to functions as arguments are objects in the sense that they have methods which can be invoked using the method syntax.
 

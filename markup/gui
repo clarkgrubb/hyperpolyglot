@@ -1,25 +1,34 @@
 //a side-by-side reference sheet//
 
-[#grammar-invocation grammar and invocation] | [#var-expr variables and expression] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#resizable-arrays resizable arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#streams streams] | [#files files] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#reflection reflection] | [#gui gui]
+[#grammar-invocation grammar and invocation] | [#var-expr variables and expression] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#resizable-arrays resizable arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#streams streams] | [#files files] | [#file-fmt file formats] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#reflection reflection] | [#gui gui] | [#net-web net and web]
 
-||~ [[# general]]||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||~ [[# general]]||~ [#javascript javascript]||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
 ||[[# version-used]][#version-used-note version used] _
-@<&nbsp;>@||##gray|//Pharo 3.0//##||##gray|//8.5//##||##gray|//1.1//##||
+@<&nbsp;>@||##gray|//ECMAScript 5//##||##gray|//Pharo 3.0//##||##gray|//8.5//##||##gray|//1.1//##||
 ||[[# show-version]][#show-version-note show version] _
-@<&nbsp;>@||SmalltalkImage current aboutThisSystem. _
+@<&nbsp;>@||[http://kangax.github.io/compat-table/es5/ ECMAScript 5 compatibility]||SmalltalkImage current aboutThisSystem. _
  _
 ##gray|//at command line://## _
 $ ./pharo Pharo.image printVersion||$ tclsh _
 % info tclversion||msgbox % a_ahkversion||
-||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
-||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
+||~ ||~ [#javascript javascript]||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
 ||[[# interpreter]][#interpreter-note interpreter] _
-@<&nbsp;>@|| ||$ tclsh foo.tcl||@@>@@ autohotkey foo.ahk||
+@<&nbsp;>@|| || ||$ tclsh foo.tcl||@@>@@ autohotkey foo.ahk||
 ||[[# repl]][#repl-note repl] _
-@<&nbsp;>@|| ||$ tclsh|| ||
+@<&nbsp;>@||##gray|//Javascript Console:// _
+ _
+@<&nbsp;&nbsp;>@Chrome (Mac): ⌥⌘J _
+@<&nbsp;&nbsp;>@Chrome (Win): Ctrl+Shift+J _
+@<&nbsp;&nbsp;>@Firefox (Mac): ⌥⌘K _
+@<&nbsp;&nbsp;>@Firefox (Win): Ctrl+Shift+K##|| ||$ tclsh|| ||
 ||[[# cmd-line-program]][#cmd-line-program-note command line program] _
-@<&nbsp;>@||$ Pharo @@--@@headless Pharo.image eval '1 + 1.'||##gray|//none//##||##gray|//none//##||
-||[[# stmt-separator]][#stmt-separator-note statement separator]||##gray|//period://## .||##gray|//newline or// ;## _
+@<&nbsp;>@|| ||$ Pharo @@--@@headless Pharo.image eval '1 + 1.'||##gray|//none//##||##gray|//none//##||
+||[[# stmt-separator]][#stmt-separator-note statement separator]||##gray|//; or newline _
+ _
+newline not separator inside (), [], {}, "", '', or after binary operator _
+ _
+newline sometimes not separator when following line would not parse as a valid statement//##||##gray|//period://## .||##gray|//newline or// ;## _
  _
 ##gray|//newline not a separator inside {}, "", [] or after backslash: \//##||##gray|//sometimes newline//## _
  _
@@ -27,12 +36,19 @@ $ ./pharo Pharo.image printVersion||$ tclsh _
  _
 @<&nbsp;&nbsp;>@(1) inside parens _
 @<&nbsp;&nbsp;>@(2) when following line starts with binary operator//##||
-||[[# block-delimiters]][#block-delimiters-note block delimiters]||[ ]||{} ##gray|//or//## ""||{ }||
+||[[# block-delimiters]][#block-delimiters-note block delimiters] _
+@<&nbsp;>@||{}||[ ]||{} ##gray|//or//## ""||{ }||
+||[[# local-scope-regions]][#local-scope-regions-note regions which define lexical scope]||##gray|//top level: _
+@<&nbsp;&nbsp;>@html page _
+ _
+nestable: _
+@<&nbsp;&nbsp;>@function//##|| || || ||
 ||[[# expr-stmt]][#expr-stmt-note are expressions statements] _
-@<&nbsp;&nbsp;>@||##gray|//yes//##||##gray|//no//##||##gray|//no//##||
+@<&nbsp;&nbsp;>@|| ||##gray|//yes//##||##gray|//no//##||##gray|//no//##||
 ||[[# eol-comment]][#eol-comment-note end-of-line comment] _
-@<&nbsp;>@||##gray|//no//##||##gray|# comment##||; ##gray|//comment//##||
-||[[# multiple-line-comment]][#multiple-line-comment-note multiple line comment]||"##gray|//comment _
+@<&nbsp;>@||##gray|@@//@@ comment##||##gray|//no//##||##gray|# comment##||; ##gray|//comment//##||
+||[[# multiple-line-comment]][#multiple-line-comment-note multiple line comment]||##gray|/* line _
+another line */##||"##gray|//comment _
 another comment//##"||if (0) { _
 @<&nbsp;&nbsp;>@##gray|//commented out//## _
 @<&nbsp;&nbsp;>@##gray|//can contain {} if balanced//## _
@@ -40,28 +56,33 @@ another comment//##"||if (0) { _
 ##gray|//comment//## _
 ##gray|//another comment//## _
 */||
-||||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
-||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
-||[[# local-var]][#local-var-note local variable]|| ||##gray|# set variable inside procedure:## _
+||||||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
+||~ ||~ [#javascript javascript]||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[[# local-var]][#local-var-note local variable]||var x = 1; _
+ _
+var y = 2, z = 3;|| ||##gray|# set variable inside procedure:## _
 proc foo {##gray|//args//##} { _
 @<&nbsp;&nbsp;>@set x 1 _
 @<&nbsp;&nbsp;>@##gray|//...//## _
 }|| ||
-||[[# global-var]][#global-var-note global variable]|| ||##gray|# set variable outside procedure:## _
+||[[# global-var]][#global-var-note global variable]||##gray|@@//@@ assign without using var## _
+g = 1; _
+ _
+function incr_global () { g++; }|| ||##gray|# set variable outside procedure:## _
 set g 1 _
  _
 proc incr_global {} { _
 @<&nbsp;&nbsp;>@global g _
 @<&nbsp;&nbsp;>@incr g _
 }|| ||
-||[[# assignment]][#assignment-note assignment]||a := 1.||set x 1||s1 := PATH _
+||[[# assignment]][#assignment-note assignment]||x = 1;||a := 1.||set x 1||s1 := PATH _
 s2 := "foo bar" _
  _
 ##gray|; traditional style:## _
 s1 = %PATH% _
 s2 = foo bar||
 ||[[# parallel-assignment]][#parallel-assignment-note parallel assignment] _
-@<&nbsp;>@||##gray|//none//##||lassign {1 2 3} x y z _
+@<&nbsp;>@||##gray|//none//##||##gray|//none//##||lassign {1 2 3} x y z _
  _
 ##gray|# 3 is discarded:## _
 lassign {1 2 3} x y _
@@ -69,58 +90,72 @@ lassign {1 2 3} x y _
 ##gray|# z is set to "":## _
 lassign {1 2} x y z||##gray|//none//##||
 ||[[# swap]][#swap-note swap] _
-@<&nbsp;>@|| ||lassign "$x $y" y x||##gray|//none//##||
+@<&nbsp;>@||tmp = x; _
+x = y; _
+y = tmp;|| ||lassign "$x $y" y x||##gray|//none//##||
 ||[[# compound-assignment]][#compound-assignment-note compound assignment] _
-##gray|//arithmetic, string, bit//##|| || ||+= -= *= /= @@//@@= _
+##gray|//arithmetic, string, bit//##||+= -= *= /= ##gray|//none//## %= _
++= _
+##gray|//none//## _
+@@<<= >>= @@&= |= ^=|| || ||+= -= *= /= @@//@@= _
 .= _
 @@<<= >>=@@ &= |= ^=||
-||[[# incr-decr]][#incr-decr-note increment and decrement]|| || ||##gray|//premodifiers://## _
+||[[# incr-decr]][#incr-decr-note increment and decrement]||var x = 1; _
+var y = ++x; _
+var z = @@--@@y;|| || ||##gray|//premodifiers://## _
 ++i @@--@@i _
  _
 ##gray|//postmodifiers://## _
 i++ i@@--@@||
 ||[[# var-decl]][#var-decl-note variable declaration] _
-@<&nbsp;>@|| || || ||
+@<&nbsp;>@|| || || || ||
 ||[[# null]][#null-note null] _
-@<&nbsp;>@||nil||""||""||
+@<&nbsp;>@||null||nil||""||""||
 ||[[# null-test]][#null-test-note null test] _
-@<&nbsp;>@||v = nil||v eq ""||v == "" _
+@<&nbsp;>@||v === null||v = nil||v eq ""||v == "" _
  _
 ##gray|; traditional style:## _
 v =||
 ||[[# undef-var]][#undef-var-note undefined variable] _
-@<&nbsp;>@||##gray|//evaluates as// nil##||##gray|//error//##||##gray|//evaluates as empty string//##||
+@<&nbsp;>@||undefined||##gray|//evaluates as// nil##||##gray|//error//##||##gray|//evaluates as empty string//##||
 ||[[# conditional-expr]][#conditional-expr-note conditional expression] _
-@<&nbsp;>@||x > 0 ifTrue: [x] ifFalse: [0 - x]||expr $x > 0 ? $x : -$x||x > 0 ? x : -x||
-||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
-||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+@<&nbsp;>@||x > 0 ? x : -x||x > 0 ifTrue: [x] ifFalse: [0 - x]||expr $x > 0 ? $x : -$x||x > 0 ? x : -x||
+||||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
+||~ ||~ [#javascript javascript]||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
 ||[[# true-false]][#true-false-note true and false] _
-@<&nbsp;>@||true false||1 0||1 0 _
+@<&nbsp;>@||true false||true false||1 0||1 0 _
  _
 ##gray|//synonyms://## _
 true false||
-||[[# falsehoods]][#falsehoods-note falsehoods]||false||0 "false" "no" _
+||[[# falsehoods]][#falsehoods-note falsehoods]||false null undefined "" 0 NaN||false||0 "false" "no" _
 ##gray|//most strings cause error in boolean context; nonzero numbers are true//##||0 ""||
 ||[[# logical-op]][#logical-op-note logical operators] _
-@<&nbsp;>@||& | not||&& @@||@@ !||and or not _
+@<&nbsp;>@||@@&& ||@@ !||& | not||&& @@||@@ !||and or not _
  _
 ##gray|//synonyms://## _
 @@&& || !@@||
-||[[# relational-expr]][#relational-expr-note relational expression]|| ||if {$x > 3} {…} _
+||[[# relational-expr]][#relational-expr-note relational expression]|| || ||if {$x > 3} {…} _
 ##gray|# outside of conditionals use expr:## _
 expr $x > 3|| ||
 ||[[# relational-op]][#relational-op-note relational operators] _
-@<&nbsp;>@||@@=@@ ~= > < >= <=||== != > < >= <= _
+@<&nbsp;>@||@@===@@ !== < > >= <= _
+ _
+##gray|//perform type coercion://## _
+@@==@@ !=||@@=@@ ~= > < >= <=||== != > < >= <= _
  _
 ##gray|# string comparison:## _
 eq ne||== != > < >= <= _
  _
 ##gray|//case insensitive equality://## _
 @@=@@||
-||[[# min-max]][#min-max-note min and max]|| ||expr min(1, 2, 3) _
+||[[# min-max]][#min-max-note min and max]||Math.min(1, 2, 3) _
+Math.max(1, 2, 3) _
+ _
+Math.min.apply(Math, [1, 2, 3]) _
+Math.max.apply(Math, [1, 2, 3])|| ||expr min(1, 2, 3) _
 expr max(1, 2, 3)|| ||
 ||[[# arith-expr]][#arith-expr-note arithmetic expression] _
-@<&nbsp;>@||1 + 3 _
+@<&nbsp;>@|| ||1 + 3 _
  _
 ##gray|"Binary operators are evaluated left to right. _
 This is 20:"## _
@@ -128,30 +163,32 @@ This is 20:"## _
 ##gray|# expr not needed in conditionals:## _
 if {1 + 3} {##gray|//…//##}||1 + 3||
 ||[[# arith-op]][#arith-op-note arithmetic operators] _
-##gray|//addition, subtraction, multiplication, float division, quotient, remainder//##||+ - * / @@//@@ \\||+ - * ##gray|//none//## / %||+ - * / @@//@@ ##gray|//none//## @@**@@ _
+##gray|//addition, subtraction, multiplication, float division, quotient, remainder//##||+ - * / ##gray|//none//## %||+ - * / @@//@@ \\||+ - * ##gray|//none//## / %||+ - * / @@//@@ ##gray|//none//## @@**@@ _
  _
 ##gray|//modulo function://## mod(m, n)||
 ||[[# int-dvi]][#int-div-node integer division] _
-@<&nbsp;>@||7 @@//@@ 3||expr $x / $y||7 @@//@@ 3||
+@<&nbsp;>@||Math.floor(x / y)||7 @@//@@ 3||expr $x / $y||7 @@//@@ 3||
 ||[[# int-div-zero]][#int-div-zero-note integer division by zero] _
-@<&nbsp;>@||##gray|ZeroDivide //exception//##||##gray|//error//##||##gray|//evaluates to empty string//##||
+@<&nbsp;>@||##gray|//returns assignable value Infinity, NaN, or -Infinity depending upon whether dividend is positive, zero, or negative. _
+ _
+There are literals for Infinity and NaN.//##||##gray|ZeroDivide //exception//##||##gray|//error//##||##gray|//evaluates to empty string//##||
 ||[[# float-div]][#float-div-note float division] _
-@<&nbsp;>@||7 / 3 asFloat. _
+@<&nbsp;>@||13 / 5||7 / 3 asFloat. _
  _
 ##gray|"exact rational:"## _
 7 / 3||expr $x * 1.0 / $y||7 / 3||
 ||[[# float-div-zero]][#float-div-zero-note float division by zero] _
-@<&nbsp;>@||##gray|ZeroDivide //exception//##||##gray|//returns assignable value// Inf //if dividend is positive and// -Inf //if negative.  Raises error if dividend is zero. _
+@<&nbsp;>@||##gray|//same behavior as for integers//##||##gray|ZeroDivide //exception//##||##gray|//returns assignable value// Inf //if dividend is positive and// -Inf //if negative.  Raises error if dividend is zero. _
  _
 There is a literal for// Inf.##||##gray|//evaluates to empty string//##||
 ||[[# power]][#power-note power] _
-@<&nbsp;>@||2 raisedTo 32||expr 2 @@**@@ 32 _
+@<&nbsp;>@||Math.pow(2, 32)||2 raisedTo 32||expr 2 @@**@@ 32 _
 expr pow(2, 32)||2 ** 32||
 ||[[# sqrt]][#sqrt-note sqrt] _
-@<&nbsp;>@||2 sqrt||##purple|expr## sqrt(2)||sqrt(2)||
-||[#sqrt-negative-two sqrt -1] _
-@<&nbsp;>@||##gray|//raises// DomainError##||##gray|//error//##||##gray|//evaluates to empty string//##||
-||[#transcendental-func transcendental functions]||exp ln _
+@<&nbsp;>@||Math.sqrt(2)||2 sqrt||##purple|expr## sqrt(2)||sqrt(2)||
+||[#sqrt-negative-one sqrt -1] _
+@<&nbsp;>@||NaN||##gray|//raises// DomainError##||##gray|//error//##||##gray|//evaluates to empty string//##||
+||[#transcendental-func transcendental functions]||Math.exp Math.log Math.sin Math.cos Math.tan Math.asin Math.acos Math.atan Math.atan2||exp ln _
 sin cos tan _
 arcSin arcCos arcTan||exp log sin cos tan asin acos atan atan2 _
  _
@@ -162,11 +199,15 @@ expr atan2(1, 1) _
 ::tcl::mathfunc::atan2 1 1||exp ln _
 sin cos tan _
 asin acos atan||
-||[[# transcendental-const]][#transcendental-const-note transcendental constants]||Float pi _
+||[[# transcendental-const]][#transcendental-const-note transcendental constants]||Math.PI _
+Math.E||Float pi _
 Float e||expr 4 * atan(1) _
 expr exp(1)|| ||
 ||[#float-truncation float truncation] _
-##gray|//round towards zero, round to nearest integer, round down, round up//##||3.14 asInteger _
+##gray|//round towards zero, round to nearest integer, round down, round up//##||##gray|//none//## _
+Math.round(3.1) _
+Math.floor(3.1) _
+Math.ceil(3.1)||3.14 asInteger _
 3.14 rounded _
 3.14 ceiling _
 31.4 floor||expr int(3.1) _
@@ -177,13 +218,14 @@ round(3.14) _
 floor(3.14) _
 ceil(3.14)||
 ||[[# abs-val]][#abs-val-note absolute value] _
-@<&nbsp;>@||-7 abs||expr abs(-7)||abs(-7)||
+@<&nbsp;>@||Math.abs(-3)||-7 abs||expr abs(-7)||abs(-7)||
 ||[#integer-overflow integer overflow] _
-@<&nbsp;>@||##gray|//converted to// LargePositiveInteger //or// LargeNegativeInteger##||##gray|//arbitrary length integers since 8.5//##||##gray|//signed modular arithmetic//##||
+@<&nbsp;>@||##gray|//all numbers are floats//##||##gray|//converted to// LargePositiveInteger //or// LargeNegativeInteger##||##gray|//arbitrary length integers since 8.5//##||##gray|//signed modular arithmetic//##||
 ||[#float-overflow float overflow] _
-@<&nbsp;>@||Float infinity ##gray|//or//## Float infinity negated||##gray|//error//##||##gray|//evaluates to string value such as://## _
+@<&nbsp;>@||Infinity||Float infinity ##gray|//or//## Float infinity negated||##gray|//error//##||##gray|//evaluates to string value such as://## _
 1.#INF00||
-||[#random random integer, uniform float]||rnd := Random new. _
+||[#random random integer, uniform float]||Math.floor(Math.random() * 100) _
+Math.random()||rnd := Random new. _
  _
 rnd next. _
 (rnd nextInt: 100) - 1.||expr int(rand() * 100) _
@@ -192,142 +234,217 @@ none||##gray|; store results in n and x:## _
 random, n, 0, 99 _
 random, x, 0.0, 1.0||
 ||[#seed-random seed random numbers] _
-@<&nbsp;>@||rnd := Random new. _
+@<&nbsp;>@||##gray|//none//##||rnd := Random new. _
 rnd :seed 17.||expr srand(17)||random, , 17||
 ||[#bit-operators bit operators] _
-@<&nbsp;>@||5 bitShift: 1 _
+@<&nbsp;>@||@@<< >> & | ^ ~@@||5 bitShift: 1 _
 5 bitShift: -1 _
 5 bitAnd: 1 _
 5 bitOr: 1 _
 5 bitInvert ||@<<< >> & | ^ ~>@||@<<< >> & | ^ ~>@ ||
-||||||||~ [[# strings]][#strings-note strings]||
-||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
-||[[# str-literal]][#str-literal-note string literal]||'don''t say "no"'.||"don't say \"no\"" _
+||[[# binary-octal-hex-literals]][#binary-octal-hex-literals-note binary, octal, and hex literals]||##gray|//none//## _
+052 ##gray|@@//@@ deprecated## _
+0x2a|| || || ||
+||[[# radix]][#radix-note radix] _
+##gray|//convert integer to and from string with radix//##||(42).toString(7) _
+##gray|//??//##|| || || ||
+||||||||||~ [[# strings]][#strings-note strings]||
+||~ ||~ [#javascript javascript]||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[[# str-type]][#str-type-note string type] _
+@<&nbsp;>@||String|| || || ||
+||[[# str-literal]][#str-literal-note string literal]||"don't say \"no\"" _
+'don\'t say "no"'||'don''t say "no"'.||"don't say \"no\"" _
 {don't say "no"}||"don't say ""no"""||
-||[[# new-line-in-str-literal]][#newline-in-str-literal-note newline in literal]||##gray|//no//## _
+||[[# new-line-in-str-literal]][#newline-in-str-literal-note newline in literal]||##gray|//yes//##||##gray|//no//## _
  _
 ##gray|" print newline in Transcript:"## _
 Transcript cr.||##gray|//yes//##|| ||
-||[[# str-literal-esc]][#str-literal-esc-note literal escapes]||##gray|//none//##||##gray|//in double quotes://## _
+||[[# str-literal-esc]][#str-literal-esc-note literal escapes]||##gray|//single and double quotes://## _
+\b \f \n \r \t \v \uhhhh \xhh \" \' \\||##gray|//none//##||##gray|//in double quotes://## _
 \a \b \f \n \r \t \v \\ \" \oooo \uhhhh \xhh|| ||
-||[[# var-interpolation]][#var-interpolation-note variable interpolation]|| ||set count 3 _
+||[[# var-interpolation]][#var-interpolation-note variable interpolation]||##gray|@@//@@ None; use string concatenation. _
+@@//@@ Both of these expressions are '11':## _
+1 + "1" _
+"1" + 1|| ||set count 3 _
 set item "ball" _
 "$count ${item}s"|| ||
-||[[# str-concat]][#str-concat-note string concatenate]||'hello, ', 'world'||set s1 "Hello, " _
+||[[# str-concat]][#str-concat-note string concatenate]||s = "Hello, " + "World!";||'hello, ', 'world'||set s1 "Hello, " _
 set s2 "World!" _
 set s $s1$s2||"hello, " . "world"||
 ||[[# str-replicate]][#str-replicate-note string replicate] _
-@<&nbsp;>@|| ||set hbar [string repeat "-" 80]|| ||
+@<&nbsp;>@||var hbar = Array(80).join("-");|| ||set hbar [string repeat "-" 80]|| ||
 ||[[# str-join]][#str-join-note string join] _
-@<&nbsp;>@|| ||join [list "do" "re" "mi"] " "|| ||
+@<&nbsp;>@||["do", "re", "mi"].join(" ")|| ||join [list "do" "re" "mi"] " "|| ||
 ||[[# split]][#split-note split] _
-@<&nbsp;>@|| ||split "do re mi"|| ||
-||[[# fmt-str]][#fmt-str-note format string]|| ||set fmt "lorem %s %d %.2f" _
+@<&nbsp;>@||##gray|@@//@@ [ "do", "re", "", "mi", "" ]:## _
+"do re@<&nbsp;&nbsp;>@mi ".split(" ") _
+ _
+##gray|@@//@@ [ "do", "re", "mi", "" ]:## _
+"do re@<&nbsp;&nbsp;>@mi ".split(/\s+/)|| ||split "do re mi"|| ||
+||[[# fmt-str]][#fmt-str-note format string]||##gray|@@//@@ None; use string concatenation. _
+@@//@@ Evaluates to "12.35":## _
+12.3456.toFixed(2)|| ||set fmt "lorem %s %d %.2f" _
 format $fmt "ipsum" 13 3.7|| ||
 ||[[# translate-case]][#translate-case-note translate case] _
-##gray|//to upper, to lower//##||'hello' asUppercase _
+##gray|//to upper, to lower//##||"lorem".toUpperCase() _
+"LOREM".toLowerCase()||'hello' asUppercase _
 'HELLO' asLowercase||string toupper "lorem" _
 string tolower "LOREM"||s1 := "Hello" _
 stringupper, s2, s1 _
 stringlower, s3, s2||
-||[[# trim]][#trim-note trim]|| ||string trim " lorem " _
+||[[# trim]][#trim-note trim]||" lorem ".trim() _
+##gray|# some browsers:## _
+" lorem".trimLeft() _
+"lorem ".trimRight()|| ||string trim " lorem " _
 string trimleft " lorem" _
 string trimright "lorem "|| ||
-||[[# pad]][#pad-note pad]|| ||format "%10s" "lorem" _
+||[[# pad]][#pad-note pad]||##gray|//none//##|| ||format "%10s" "lorem" _
 format "%-10s" "lorem"|| ||
-||[[# str-to-num]][#str-to-num-note string to number]||12' asInteger + 7||##gray|# use expr to interpret as numbers:## _
+||[[# str-to-num]][#str-to-num-note string to number]||7 + parseInt("12", 10) _
+73.9 + parseFloat(".037") _
+ _
+##gray|@@//@@ 12:## _
+parseInt("12A") _
+##gray|@@//@@ NaN:## _
+parseInt("A")||12' asInteger + 7||##gray|# use expr to interpret as numbers:## _
 set x "12" _
 expr 7 + $x _
 set y ".037" _
 expr 73.9 + $y|| ||
 ||[[# num-to-str]][#num-to-str-note number to string] _
-@<&nbsp;>@||7 printString, ' items'||##gray|//all values are strings//##|| ||
+@<&nbsp;>@||"value: " + 8||7 printString, ' items'||##gray|//all values are strings//##|| ||
+||[[# prefix-suffix-test]][#prefix-suffix-test-note prefix and suffix test]||"foobar".startsWith("foo") _
+"foobar".endsWith("bar")|| || || ||
 ||[[# str-len]][#str-len-note length] _
-@<&nbsp;>@||'hello' byteSize||string length "lorem"||strlen("hello")||
-||[[# index-substr]][#index-substr-note index of substring]||'foo bar' indexOfAnyOf: 'bar'||string first "ipsum" "lorem ipsum"||##gray|; returns 5:## _
+@<&nbsp;>@||"lorem".length||'hello' byteSize||string length "lorem"||strlen("hello")||
+||[[# index-substr]][#index-substr-note index of substring]||##gray|@@//@@ returns -1 if not found:## _
+"lorem ipsum".indexOf("ipsum")||'foo bar' indexOfAnyOf: 'bar'||string first "ipsum" "lorem ipsum"||##gray|; returns 5:## _
 instr("foo bar", "bar")||
-||[[# extract-substr]][#extract-substr-note extract substring]||'foo bar' copyFrom: 5 to: 7||string range "lorem ipsum" 6 10||substr("foo bar", 5, 3)||
-||[[# char-literal]][#char-literal-note character literal]||$A|| || ||
-||[[# chr-ord]][#chr-ord-note chr and ord]||65 asCharacter _
+||[[# extract-substr]][#extract-substr-note extract substring]||"lorem ipsum".substr(6, 5) _
+"lorem ipsum".substring(6, 11)||'foo bar' copyFrom: 5 to: 7||string range "lorem ipsum" 6 10||substr("foo bar", 5, 3)||
+||[[# char-literal]][#char-literal-note character literal]|| ||$A|| || ||
+||[[# lookup-char]][#lookup-char-note character lookup]||"lorem ipsum"[6]|| || || ||
+||[[# chr-ord]][#chr-ord-note chr and ord]||String.fromCharCode(65) _
+"A".charCodeAt(0)||65 asCharacter _
 $A asciiValue||format %c 65 _
 scan A %c ascii_value|| ||
-||[[# str-to-char-array]][#str-to-char-array-note to array of characters]|| ||split "abcd" ""|| ||
-||||||||~ [[# regexes]][#regex-note regular expressions]||
-||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
-||[[# regex-match]][#regex-match-note regex match]|| ||if [regexp @@--@@ {1999} $s] { _
+||[[# str-to-char-array]][#str-to-char-array-note to array of characters]||"abcd".split("")|| ||split "abcd" ""|| ||
+||||||||||~ [[# regexes]][#regex-note regular expressions]||
+||~ ||~ [#javascript javascript]||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[[# regex-match]][#regex-match-note regex match]||if (s.match(/1999/)) { _
+@<&nbsp;&nbsp;>@alert("party!"); _
+}|| ||if [regexp @@--@@ {1999} $s] { _
 @<&nbsp;&nbsp;>@puts "party!" _
 }|| ||
-||[[# regex-literal]][#regex-literal-note literal, custom delimited literal]|| || || ||
-||[[# char-class-abbrev]][#char-class-abbrev-note character class abbreviations and anchors]|| ||##gray|//char class abbrevs://## _
+||[[# regex-literal]][#regex-literal-note literal, custom delimited literal]||/lorem|ipsum/|| || || ||
+||[[# char-class-abbrev]][#char-class-abbrev-note character class abbreviations and anchors]||. \d \D \s \S \w \W|| ||##gray|//char class abbrevs://## _
 . \d \D \s \S \w \W _
  _
 ##gray|//anchors://## ^ $ \A \m \M \y \Y \Z|| ||
-||[[# regex-anchors]][#regex-anchors-note anchors]|| || || ||
-||[[# case-insensitive-regex]][#case-insensitive-regex-note case insensitive match test]|| ||regexp -nocase @@--@@ {lorem} "Lorem"|| ||
-||[[# regex-modifiers]][#regex-modifiers-note modifiers]|| ||-all -expanded -indices -inline _
+||[[# regex-anchors]][#regex-anchors-note anchors]||^ $ \b \B|| || || ||
+||[[# case-insensitive-regex]][#case-insensitive-regex-note case insensitive match test]||"Lorem".match(/lorem/i)|| ||regexp -nocase @@--@@ {lorem} "Lorem"|| ||
+||[[# regex-modifiers]][#regex-modifiers-note modifiers]||g i m|| ||-all -expanded -indices -inline _
 -line -lineanchor -linestop -nocase|| ||
-||[[# subst]][#subst-note substitution]|| ||set s "do re mi mi mi" _
+||[[# subst]][#subst-note substitution]||s = "do re mi mi mi"; _
+s.replace(/mi/g, "ma");|| ||set s "do re mi mi mi" _
 regsub -all @@--@@ "mi" $s "ma"|| ||
-||[[# match-prematch-postmatch]][#match-prematch-postmatch-note match, prematch, postmatch]|| || || ||
-||[[# group-capture]][#group-capture-note group capture]|| ||set s "2009-06-03" _
+||[[# match-prematch-postmatch]][#match-prematch-postmatch-note match, prematch, postmatch]||##per|m## = /\d{4}/.exec(s); _
+if (m) { _
+@<&nbsp;&nbsp;>@match = m[0]; _
+@<&nbsp;&nbsp;>@##gray|# no prematch or postmatch## _
+}|| || || ||
+||[[# group-capture]][#group-capture-note group capture]||rx = /^(\d{4})-(\d{2})-(\d{2})$/; _
+m = rx.exec('2009-06-03'); _
+yr = m[1]; _
+mo = m[2]; _
+dy = m[3];|| ||set s "2009-06-03" _
 set rx {^(\d{4})-(\d{2})-(\d{2})$} _
 regexp @@--@@ $rx $s - yr mo dy|| ||
-||[[# named-grouped-capture]][#named-group-capture-note named group capture]|| || || ||
-||[[# scan]][#scan-note scan]|| || || ||
+||[[# named-grouped-capture]][#named-group-capture-note named group capture]|| || || || ||
+||[[# scan]][#scan-note scan]||var a = "dolor sit amet".match(/\w+/g);|| || || ||
 ||[[# backreference]][#backreference-note backreference] _
-##gray|//in regex, in substitution string//##|| ||regexp @@--@@ {(\w+) \1} "do do" _
+##gray|//in regex, in substitution string//##||/(\w+) \1/.exec("do do") _
+ _
+"do re".replace(/(\w+) (\w+)/, '$2 $1')|| ||regexp @@--@@ {(\w+) \1} "do do" _
  _
 set rx {(\w+) (\w+)} _
 regsub -all @@--@@ $rx "do re" {\2 \1}|| ||
-||||||||~ [[# dates-time]][#dates-time-note dates and time]||
-||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
-||[[# date-time-type]][#date-time-type-note date/time type]|| || || ||
-||[[# current-date-time]][#current-date-time-note current date/time]||Date today. _
+||||||||||~ [[# dates-time]][#dates-time-note dates and time]||
+||~ ||~ [#javascript javascript]||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[[# broken-down-datetime-type]][#broken-down-datetime-type-note broken-down datetime type] _
+@<&nbsp;>@||Date|| || || ||
+||[[# current-datetime]][#current-datetime-note current date/time]||var t = new Date();||Date today. _
 Time now.||set t [clock seconds]|| ||
-||[[# unix-epoch]][#unix-epoch-note to unix epoch, from unix epoch]|| ||t _
+||[[# unix-epoch]][#unix-epoch-note to unix epoch, from unix epoch]||Math.round(t.getTime() / 1000) _
+ _
+var epoch = 1315716177; _
+var t2 = new Date(epoch * 1000);|| ||t _
 set t2 1315716177|| ||
-||[[# current-unix-epoch]][#current-unix-epoch-note current unix epoch]|| || || ||
-||[[# strftime]][#strftime-note strftime]|| ||set fmt "%Y-%m-%d %H:%M:%S" _
+||[[# current-unix-epoch]][#current-unix-epoch-note current unix epoch]||(##purple|new## ##green|Date##()).getTime() / 1000|| || || ||
+||[[# strftime]][#strftime-note strftime]|| || ||set fmt "%Y-%m-%d %H:%M:%S" _
 clock format $t -format $fmt|| ||
-||[[# strptime]][#strptime-note strptime]|| ||##gray|//none//##|| ||
-||[[# parse-date]][#parse-date-note parse date w/o format]|| ||set t [clock scan "July 7, 1999"]|| ||
-||[[# get-date-parts]][#get-date-parts-note get date parts]|| ||clock format $t -format "%Y" _
+||[[# strptime]][#strptime-note strptime]|| || ||##gray|//none//##|| ||
+||[[# parse-date]][#parse-date-note parse date w/o format]||var t = new Date("July 7, 1999");|| ||set t [clock scan "July 7, 1999"]|| ||
+||[[# get-date-parts]][#get-date-parts-note get date parts]||t.getFullYear() _
+t.getMonth() + 1 _
+t.getDate() ##gray|@@//@@ getDay() is day of week##|| ||clock format $t -format "%Y" _
 clock format $t -format "%m" _
 clock format $t -format "%d"|| ||
-||[[# get-time-parts]][#get-time-parts-note get time parts]|| ||clock format $t -format "%H" _
+||[[# get-time-parts]][#get-time-parts-note get time parts]||t.getHours() _
+t.getMinutes() _
+t.getSeconds()|| ||clock format $t -format "%H" _
 clock format $t -format "%M" _
 clock format $t -format "%S"|| ||
-||[[# date-from-parts]][#date-from-parts-note build date/time from parts]|| ||##gray|//none//##|| ||
-||[[# date-subtraction]][#date-subtraction-note result of date subtraction]|| || || ||
-||[[# add-time-duration]][#add-time-duration-note add time duration]|| || || ||
-||[[# local-tmz]][#local-tmz-note local timezone]|| || || ||
-||[[# tmz-offset]][#tmz-offset-note timezone name; offset from UTC; is daylight savings?]|| || || ||
-||[[# microseconds]][#microseconds-note microseconds]|| || || ||
+||[[# date-from-parts]][#date-from-parts-note build date/time from parts]||var yr = 1999; _
+var mo = 9; _
+var dy = 10; _
+var hr = 23; _
+var mi = 30; _
+var ss = 0; _
+var t = new Date(yr, mo - 1, dy, hr, mi, ss);|| ||##gray|//none//##|| ||
+||[[# date-subtraction]][#date-subtraction-note result of date subtraction]||##gray|//number containing time difference in milliseconds//##|| || || ||
+||[[# add-time-duration]][#add-time-duration-note add time duration]||var t1 = new Date(); _
+var delta = (10 * 60 + 3) * 1000; _
+var t2 = new Date(t1.getTime() + delta);|| || || ||
+||[[# local-tmz]][#local-tmz-note local timezone]|| || || || ||
+||[[# tmz-offset]][#tmz-offset-note timezone name; offset from UTC; is daylight savings?]|| || || || ||
+||[[# microseconds]][#microseconds-note microseconds]|| || || || ||
 ||[[# sleep]][#sleep-note sleep] _
-@<&nbsp;>@|| ||after 500|| ||
-||[[# timeout]][#timeout-note timeout]|| || || ||
-||||||||~ [[# resizable-arrays]][#resizable-arrays-note resizable arrays]||
-||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
-||[[# resizable-array-literal]][#resizable-array-literal-note literal]||nums := OrderedCollection new. _
+@<&nbsp;>@||##gray|//none//##|| ||after 500|| ||
+||[[# timeout]][#timeout-note timeout]|| || || || ||
+||||||||||~ [[# resizable-arrays]][#resizable-arrays-note resizable arrays]||
+||~ ||~ [#javascript javascript]||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[[# resizable-array-literal]][#resizable-array-literal-note literal]||a = [1, 2, 3, 4]||nums := OrderedCollection new. _
 nums add: 1; add: 2; add: 3; add: 4. _
  _
 ##gray|"creates immutable array:"## _
 nums := #(1 2 3 4)||set a [list 1 2 3 4] _
 set a {1 2 3 4}|| ||
-||[[# resizable-array-size]][#resizable-array-size-note size]||nums size||llength $a|| ||
-||[[# resizable-array-lookup]][#resizable-array-lookup-note lookup]||nums at: 1||lindex $a 0|| ||
-||[[# resizable-array-update]][#resizable-array-update-note update]|| ||##gray|# provide start and end index: _
+||[[# resizable-array-size]][#resizable-array-size-note size]||a.length||nums size||llength $a|| ||
+||empty test||##gray|@@//@@ TypeError if a is null or undefined:## _
+a.length === 0|| || || ||
+||[[# resizable-array-lookup]][#resizable-array-lookup-note lookup]||a[0]||nums at: 1||lindex $a 0|| ||
+||[[# resizable-array-update]][#resizable-array-update-note update]||a[0] = "lorem"|| ||##gray|# provide start and end index: _
 # of elements to replace:## _
 set a [lreplace $a 1 1 "lorem"]|| ||
-||out-of-bounds behavior|| ||##gray|//returns// ""##|| ||
+||out-of-bounds behavior||##gray|//returns// undefined##|| ||##gray|//returns// ""##|| ||
 ||index of element _
-##gray|//first and last occurrence//##|| ||lsearch {6 7 7 8} 7 _
+##gray|//first and last occurrence//##||##gray|@@//@@ returns -1 if not found:## _
+[6, 7, 7, 8].indexOf(7) _
+[6, 7, 7, 8].lastIndexOf(7)|| ||lsearch {6 7 7 8} 7 _
 lindex [lsearch -all {6 7 7 8} 7] end _
 ##gray|# returns -1 if not found##|| ||
-||[#array-slice array slice]||nums copyFrom: 2 to: 3||lrange $a 1 2|| ||
-||slice to end|| ||lrange {"a" "b" "c" "d"} 1 end|| ||
-||[#array-concatenation concatenation]|| ||set a [concat {1 2 3} {4 5 6}]|| ||
-||[#array-back manipulate back of array]||a := OrderedCollection new. _
+||[#array-slice slice]||##gray|@@//@@ select 3rd and 4th elements:## _
+["a", "b", "c", "d"].slice(2, 4)||nums copyFrom: 2 to: 3||lrange $a 1 2|| ||
+||slice to end||["a", "b", "c", "d"].slice(1)|| ||lrange {"a" "b" "c" "d"} 1 end|| ||
+||[#array-concatenation concatenation]||a = [1, 2, 3].concat([4, 5, 6]);|| ||set a [concat {1 2 3} {4 5 6}]|| ||
+||copy||a = [1, 2, [3, 4]]; _
+a2 = a; _
+a3 = a.slice(0); _
+a4 = JSON.parse(JSON.stringify(a));|| || || ||
+||[#array-back manipulate back of array]||a = [6, 7, 8]; _
+a.push(9); _
+i = a.pop();||a := OrderedCollection new. _
 a add: 6; add: 7; add: 8. _
  _
 a add: 9. _
@@ -335,104 +452,158 @@ a removeLast.||set a {6 7 8} _
 lappend a 9 _
 set i [lindex $a end] _
 set a [lreplace $a end end]|| ||
-||[#array-front manipulate front of array]||a := OrderedCollection new. _
+||[#array-front manipulate front of array]||a = [6, 7, 8]; _
+a.unshift(5); _
+i = a.shift();||a := OrderedCollection new. _
 a add: 6; add: 7; add: 8. _
  _
 a addFirst: 5. _
 a removeFirst.||set a {6 7 8} _
 set a [concat {5} $a] _
 set a [lassign $a i]|| ||
-||[#array-iteration array iteration]||nums do: [:o| Transcript show: o printString; cr]||foreach i $a { puts $i }|| ||
-||[#array-reverse reverse]|| ||set a {1 2 3} _
+||[#array-iteration array iteration]||[1, 2, 3].forEach(function(n) { _
+@<&nbsp;&nbsp;>@alert(n); _
+});||nums do: [:o| Transcript show: o printString; cr]||foreach i $a { puts $i }|| ||
+||[#array-reverse reverse]||var a = [1, 2, 3]; _
+a.reverse();|| ||set a {1 2 3} _
 set a [lreverse $a]|| ||
-||[#array-sort sort]|| ||set a {3 1 4 2} _
+||[#array-sort sort]||var a = [3, 1, 4, 2]; _
+a.sort();|| ||set a {3 1 4 2} _
 set a [lsort $a]|| ||
-||dedupe|| ||lsort -unique {1 2 2 3}|| ||
+||dedupe|| || ||lsort -unique {1 2 2 3}|| ||
 ||[#membership membership] _
-@<&nbsp;>@||nums includes: 7||expr {7 in $a} _
+@<&nbsp;>@|| ||nums includes: 7||expr {7 in $a} _
 expr {7 ni $a}|| ||
-||intersection|| ||package require struct::set _
+||intersection|| || ||package require struct::set _
  _
 ::struct::set intersect {1 2} {2 3}|| ||
-||union|| ||package require struct::set _
+||union|| || ||package require struct::set _
  _
 ::struct::set union {1 2} {2 3 4}|| ||
-||relative complement|| ||package require struct::set _
+||relative complement|| || ||package require struct::set _
  _
 ::struct::set difference {1 2 3} {2}|| ||
 ||[#map map] _
-@<&nbsp;>@||#(1 2 3) collect: [ :o | o*o ]||package require struct::list _
+@<&nbsp;>@||##gray|@@//@@ callback gets 3 args: _
+@@//@@ value, index, array## _
+a.map(function(x) { return x * x })||#(1 2 3) collect: [ :o | o*o ]||package require struct::list _
  _
 proc sqr {x} {return [expr $x * $x]} _
 ::struct::list map {1 2 3} sqr|| ||
 ||[#filter filter] _
-@<&nbsp;>@||#(1 2 3) select: [:o | o > 1]||package require struct::list _
+@<&nbsp;>@||a.filter(function(x) { return x > 1 })||#(1 2 3) select: [:o | o > 1]||package require struct::list _
  _
 proc gt1 {x} {return [expr $x > 1]} _
 ::struct::list filter {1 2 3} gt1|| ||
 ||[#reduce reduce] _
-@<&nbsp;>@||#(1 2 3) inject: 0 into: [:m :o| m + o]||package require struct::list _
+@<&nbsp;>@||a.reduce(function(m, o) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return m + o; _
+@<&nbsp;&nbsp;>@}, 0)||#(1 2 3) inject: 0 into: [:m :o| m + o]||package require struct::list _
  _
 ::struct::list fold {1 2 3} 0 _
   ::tcl::mathop::+|| ||
 ||[#universal-test universal test] _
-@<&nbsp;>@||#(1 2 3 4) allSatisfy: [:o | o even]|| || ||
+@<&nbsp;>@|| ||#(1 2 3 4) allSatisfy: [:o | o even]|| || ||
 ||[#existential-test existential test] _
-@<&nbsp;>@||#(1 2 3 4) anySatisfy: [:o | o even]|| || ||
-||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
-||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+@<&nbsp;>@||var a = [1, 2, 3, 4]; _
+var even = function(x) { _
+@<&nbsp;&nbsp;>@return x % 2 == 0; _
+}; _
+ _
+a.every(even) _
+a.some(even)||#(1 2 3 4) anySatisfy: [:o | o even]|| || ||
+||||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
+||~ ||~ [#javascript javascript]||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
 ||[[# dict-ctorl]][#dict-ctor-note constructor] _
-@<&nbsp;>@||h := Dictionary new add: ##maroon|'t'##->1; add: ##maroon|'f'##->0; yourself||set d [dict create t 1 f 0]|| ||
+@<&nbsp;>@||d = {"t": 1, "f": 0}; _
+##gray|// keys do not need to be quoted if they _
+// are a legal JavaScript variable name _
+//and not a reserved word##||h := Dictionary new add: ##maroon|'t'##->1; add: ##maroon|'f'##->0; yourself||set d [dict create t 1 f 0]|| ||
 ||[[# dict-size]][#dict-size-note dictionary size] _
-@<&nbsp;>@||h size||dict size $d|| ||
+@<&nbsp;>@||var size = 0; _
+for (var k in d) { _
+@<&nbsp;&nbsp;>@if (d.hasOwnProperty(k)) size++; _
+}||h size||dict size $d|| ||
 ||[[# dict-lookup]][#dict-lookup-note lookup] _
-@<&nbsp;>@|| h at: ##maroon|'t'##||dict get $d t|| ||
-||[[# dict-update]][#dict-update-note update]|| ||dict set d t 2|| ||
+@<&nbsp;>@||d.t _
+d["t"]|| h at: ##maroon|'t'##||dict get $d t|| ||
+||[[# dict-update]][#dict-update-note update]||d["t"] = 2; _
+d.t = 2;|| ||dict set d t 2|| ||
 ||[[# dict-missing-key]][#dict-missing-key-note missing key behavior] _
-@<&nbsp;>@||##gray|//raises exception//##||##gray|//error//##|| ||
+@<&nbsp;>@||var d = {}; _
+##gray|@@//@@ sets s to undefined:## _
+var s = d["lorem"]; _
+##gray|@@//@@ adds key/value pair:## _
+d["lorem"] = "ipsum"; ||##gray|//raises exception//##||##gray|//error//##|| ||
 ||[[# dict-is-key-present]][#dict-is-key-present-note is key present] _
-@<&nbsp;>@|| ||dict exists $d t|| ||
-||[[# dict-delete]][#dict-delete-note delete]|| ||dict unset d t|| ||
+@<&nbsp;>@||d.hasOwnProperty("t");|| ||dict exists $d t|| ||
+||[[# dict-delete]][#dict-delete-note delete]||delete d["t"]; _
+delete d.t;|| ||dict unset d t|| ||
 ||[[# dict-iter]][#dict-iter-note iterate] _
-@<&nbsp;>@||h keysAndValuesDo: [:k :v|  ##gray|//code//## ]||foreach {k v} $d { _
+@<&nbsp;>@||for (var k in d) { _
+@<&nbsp;&nbsp;>@##gray|//use k or d[k]//## _
+}||h keysAndValuesDo: [:k :v|  ##gray|//code//## ]||foreach {k v} $d { _
 @<&nbsp;&nbsp;>@##gray|//code//## _
 }|| ||
-||[[# dict-key-val-arrays]][#dict-key-val-arrays-note keys and values as arrays]||h keys _
+||[[# dict-key-val-arrays]][#dict-key-val-arrays-note keys and values as arrays]|| ||h keys _
 h values|| || ||
-||||||||~ [[# functions]][#functions-note functions]||
-||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
-||[[# def-func]][#def-func-note define]||add := [ :a :b | a + b ]||proc add { x y } { _
+||||||||||~ [[# functions]][#functions-note functions]||
+||~ ||~ [#javascript javascript]||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[[# def-func]][#def-func-note define]||function add(x, y) { _
+@<&nbsp;&nbsp;>@return x+y; _
+}||add := [ :a :b | a + b ]||proc add { x y } { _
 @<&nbsp;&nbsp;>@expr $x + $y _
 }||add(x, y) { _
 @<&nbsp;&nbsp;>@return x + y _
 }||
-||[[# call-func]][#call-func-note call]||add value: 1 value: 2||##gray|# statement position:## _
+||[[# call-func]][#call-func-note call]||add(1, 2)||add value: 1 value: 2||##gray|# statement position:## _
 add 1 2 _
  _
 ##gray|# argument position:## _
 set a [ add 1 2 ]||x := add(1, 2)||
-||[[# missing-arg]][#missing-arg-note missing argument behavior]||##gray|//raises// BlockClosure //exception//##||##gray|//error//##||##gray|//error//##||
-||[[# extra-arg]][#extra-arg-note extra argument behavior]||##gray|//raises// BlockClosure //exception//##||##gray|//error//##||##gray|//error//##||
-||[[# default-arg]][#default-arg-note default argument]|| ||proc log {x {base 10 }} { ##gray|//...//## }||fapprox(x, y, eps=0.001) { _
+||[[# missing-arg]][#missing-arg-note missing argument behavior]||##gray|//set to// undefined##||##gray|//raises// BlockClosure //exception//##||##gray|//error//##||##gray|//error//##||
+||[[# extra-arg]][#extra-arg-note extra argument behavior]||##gray|//ignored//##||##gray|//raises// BlockClosure //exception//##||##gray|//error//##||##gray|//error//##||
+||[[# default-arg]][#default-arg-note default argument]||##gray|//none//##|| ||proc log {x {base 10 }} { ##gray|//...//## }||fapprox(x, y, eps=0.001) { _
 @<&nbsp;&nbsp;>@return abs(x - y) < eps _
 }||
-||[#named-parameters named parameters]|| || ||##gray|//none//##||
-||[[# variadic-func]][#variadic-func-note variadic function]|| || ##gray|//last arg contains list of remaining values//##|f(args*) { _
+||[#named-parameters named parameters]|| || || ||##gray|//none//##||
+||[[# variadic-func]][#variadic-func-note variadic function]||##gray|//args in//## arguments[0], arguments[1], ##gray|//… with number of args in//## arguments.length|| || ##gray|//last arg contains list of remaining values//##|f(args*) { _
 @<&nbsp;&nbsp;>@return args.maxindex() _
 }|| ||
-||[[# pass-by-ref]][#pass-by-ref-note pass by reference]|| || ||swap(byref v1, byref v2) { _
+||[[# pass-by-ref]][#pass-by-ref-note pass by reference]|| || || ||swap(byref v1, byref v2) { _
 @<&nbsp;&nbsp;>@tmp := v1 _
 @<&nbsp;&nbsp;>@v1 := v2 _
 @<&nbsp;&nbsp;>@v2 := tmp _
 }||
-||[#return-value return value]|| ||return ##gray|//arg or empty string//##||##gray|//argument of// return##||
-||[[# nested-func]][#nested-func-note nested function]|| ||##gray|//defined when containing function executes; visible outside containing function//##|| ||
-||[[# anon-func-literal]][#anon-func-literal-note anonymous function literal]|| ||set sqr @@{{x}@@ {return [expr $x*$x]@@}}@@|| ||
+||[#return-value return value]||##gray|Return //arg or// undefined. //If invoked with// new //and// return //value not an object, returns// this.##|| ||return ##gray|//arg or empty string//##||##gray|//argument of// return##||
+||[[# nested-func]][#nested-func-note nested function]|| || ||##gray|//defined when containing function executes; visible outside containing function//##|| ||
+||[[# anon-func-literal]][#anon-func-literal-note anonymous function literal]||var sqr = function(x) { return x*x; }|| ||set sqr @@{{x}@@ {return [expr $x*$x]@@}}@@|| ||
 ||[[# call-anon-func]][#call-anon-func-note call anonymous function] _
-@<&nbsp;>@|| ||apply $sqr 2|| ||
-||||||||~ [[# execution-control]][#execution-control-note execution control]||
-||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
-||[[# if]][#if-note if]||msg := [ :s | Transcript show: s. Transcript cr ] _
+@<&nbsp;>@||sqr(2)|| ||apply $sqr 2|| ||
+||[[# private-state-func]][#private-state-func-note function with private state]||function counter() { _
+@<&nbsp;&nbsp;>@counter.i += 1; _
+@<&nbsp;&nbsp;>@return counter.i; _
+} _
+ _
+counter.i = 0; _
+alert(counter());|| || || ||
+||[[# closure]][#closure-note closure]||function make_counter() { _
+@<&nbsp;&nbsp;>@var i = 0; _
+ _
+@<&nbsp;&nbsp;>@return function() { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@i += 1; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return i; _
+@<&nbsp;&nbsp;>@} _
+}|| || || ||
+||||||||||~ [[# execution-control]][#execution-control-note execution control]||
+||~ ||~ [#javascript javascript]||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[[# if]][#if-note if]||if (0 == n) { _
+@<&nbsp;&nbsp;>@alert("no hits"); _
+} else if (1 == n) { _
+@<&nbsp;&nbsp;>@alert("1 hit"); _
+} else { _
+@<&nbsp;&nbsp;>@alert(n + " hits"); _
+}||msg := [ :s | Transcript show: s. Transcript cr ] _
  _
 n = 0 _
 ifTrue: [ _
@@ -457,150 +628,295 @@ else if (n = 1) { _
 else { _
 @<&nbsp;&nbsp;>@msgbox % n . " hits" _
 }||
-||[[# while]][#while-note while]||[  i < 100 ] _
+||[[# switch]][#switch-note switch]||switch (n) { _
+case 0: _
+@<&nbsp;&nbsp;>@alert("no hits\n"); _
+@<&nbsp;&nbsp;>@break; _
+case 1: _
+@<&nbsp;&nbsp;>@alert("one hit\n"); _
+@<&nbsp;&nbsp;>@break; _
+default: _
+@<&nbsp;&nbsp;>@alert(n + " hits\n"); _
+}|| || || ||
+||[[# while]][#while-note while]||while (i < 100) { _
+@<&nbsp;&nbsp;>@i += 1; _
+}||[  i < 100 ] _
 whileTrue: [ _
 @<&nbsp;&nbsp;>@i := i + 1 ].||while { $i < 100 } { _
 @<&nbsp;&nbsp;>@incr i _
 }|| ||
-||[[# break-continue]][#break-continue-note break/continue]|| ||break continue||exit 0||
-||[[# for]][#for-note for]||1 to: 100 do: [ :i | _
+||[[# break-continue]][#break-continue-note break/continue]||break continue|| ||break continue||exit 0||
+||[[# for]][#for-note for]||for (var i = 0; i < 10; i++) { _
+@<&nbsp;&nbsp;>@alert(i); _
+}||1 to: 100 do: [ :i | _
 @<&nbsp;&nbsp;>@msg value: i printString ].||for {set i 0} {$i < 10} {incr i} { _
 @<&nbsp;&nbsp;>@puts $i _
 }|| ||
-||||||||~ [[# exceptions]][#exceptions-note exceptions]||
-||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
-||[#raise-exception raise exception]||Exception raiseSignal: 'bam!'.||error "bad arg"|| ||
-||[#catch-exception catch exception]||[ o risky ] on: Exception do: [ :ex | _
+||||||||||~ [[# exceptions]][#exceptions-note exceptions]||
+||~ ||~ [#javascript javascript]||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[[# base-exc]][#base-exc-note base exception]||##gray|//Any value can be thrown.//##|| || || ||
+||[[# predefined-exc]][#predefined-exc-note predefined exceptions]||Error _
+@<&nbsp;&nbsp;>@EvalError _
+@<&nbsp;&nbsp;>@RangeError _
+@<&nbsp;&nbsp;>@ReferenceError _
+@<&nbsp;&nbsp;>@SyntaxError _
+@<&nbsp;&nbsp;>@TypeError _
+@<&nbsp;&nbsp;>@URIError|| || || ||
+||[#raise-exception raise exception]||throw new Error("bad arg");||Exception raiseSignal: 'bam!'.||error "bad arg"|| ||
+||[[# catch-all-handler]][#catch-all-handler-note catch-all handler] _
+@<&nbsp;>@||try { _
+@<&nbsp;&nbsp;>@risky(); _
+} _
+catch (e) { _
+@<&nbsp;&nbsp;>@alert("risky failed: " + e.message); _
+}|| || || ||
+||[#uncaught-exception uncaught exception behavior]|| || ||##gray|//stderr and exit//##|| ||
+||[[# re-raise-exc]][#re-raise-exc-note re-raise exception]||try { _
+@<&nbsp;&nbsp;>@throw new Error("bam!"); _
+} _
+catch (e) { _
+@<&nbsp;&nbsp;>@alert("re-raising@@...@@"); _
+@<&nbsp;&nbsp;>@throw e; _
+}|| || || ||
+||[[# last-exc-global]][#last-exc-global-note global variable for last exception]||##gray|//none//##|| || || ||
+||[[# def-exc]][#def-exc-note define exception]||function Bam(msg) { _
+@<&nbsp;&nbsp;>@this.message = msg; _
+} _
+ _
+Bam.prototype = new Error;|| || || ||
+||[[# handle-exc]][#handle-exc-note handle exception]||try { _
+@<&nbsp;&nbsp;>@throw new Bam("bam!"); _
+} _
+catch (e) { _
+@<&nbsp;&nbsp;>@if (e instanceof Bam) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@alert(e.message); _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@else { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@throw e; _
+@<&nbsp;&nbsp;>@} _
+}||[ o risky ] on: Exception do: [ :ex | _
 @<&nbsp;&nbsp;>@Transcript show: 'risky failed' ]||catch risky retval _
 if { retval != 0 } { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@puts "risky failed" _
 }|| ||
-||[#uncaught-exception uncaught exception behavior]|| ||##gray|//stderr and exit//##|| ||
-||||||||~ [[# streams]][#streams-note streams]||
-||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
-||[[# standard-file-handles]][#standard-file-handles-note standard file handles]|| ||stdin _
+||[[# finally-block]][#finally-block-note finally block] _
+@<&nbsp;>@||acquire_resource(); _
+try { _
+@<&nbsp;&nbsp;>@risky(); _
+} _
+finally { _
+@<&nbsp;&nbsp;>@release_resource(); _
+}|| || || ||
+||||||||||~ [[# streams]][#streams-note streams]||
+||~ ||~ [#javascript javascript]||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[[# standard-file-handles]][#standard-file-handles-note standard file handles]|| || ||stdin _
 stdout _
 stderr|| ||
-||[[# read-stdin]][#read-stdin-note read line from stdin]|| ||gets stdin line|| ||
-||end-of-file behavior|| || || ||
-||chomp|| ||string trimright $line "\r\n"|| ||
-||[[# print-to-stdout]][#print-to-stdout-note write line to stdout]|| ||puts "Hello, World!"|| ||
-||write formatted string to stdout|| || || ||
-||[[# open-file]][#open-file-note open file for reading]|| ||set f [open "/tmp/foo"]|| ||
-||[[# open-file-write]][#open-file-write-note open file for writing]|| ||set f [open "/tmp/foo" "w"]|| ||
-||set file handle encoding|| || || ||
-||open file for appending|| || || ||
+||[[# read-stdin]][#read-stdin-note read line from stdin]|| || ||gets stdin line|| ||
+||end-of-file behavior|| || || || ||
+||chomp|| || ||string trimright $line "\r\n"|| ||
+||[[# print-to-stdout]][#print-to-stdout-note write line to stdout]|| || ||puts "Hello, World!"|| ||
+||write formatted string to stdout|| || || || ||
+||[[# open-file]][#open-file-note open file for reading]|| || ||set f [open "/tmp/foo"]|| ||
+||[[# open-file-write]][#open-file-write-note open file for writing]|| || ||set f [open "/tmp/foo" "w"]|| ||
+||set file handle encoding|| || || || ||
+||open file for appending|| || || || ||
 ||[[# close-file]][#close-file-note close file] _
-@<&nbsp;>@|| ||close $f|| ||
-||close file implicitly|| || || ||
-||i/o error|| || || ||
-||encoding error|| || || ||
+@<&nbsp;>@|| || ||close $f|| ||
+||close file implicitly|| || || || ||
+||i/o error|| || || || ||
+||encoding error|| || || || ||
 ||[[# read-line]][#read-line-note read line] _
-@<&nbsp;>@|| ||gets $f|| ||
-||[[# file-iter]][#file-iter-note iterate over file by line]|| ||while { [gets $f s] >= 0 } { _
+@<&nbsp;>@|| || ||gets $f|| ||
+||[[# file-iter]][#file-iter-note iterate over file by line]|| || ||while { [gets $f s] >= 0 } { _
 @<&nbsp;&nbsp;>@##gray|//use s//## _
 }|| ||
-||read file into array of strings|| || || ||
-||read file into string|| ||set s [ read $f]|| ||
+||read file into array of strings|| || || || ||
+||read file into string|| || ||set s [ read $f]|| ||
 ||[[# write-file]][#write-file-note write string] _
-@<&nbsp;>@|| ||puts -nonewline $f "lorem ipsum"|| ||
-||write line|| || || ||
-||[[# flush-file]][#flush-file-note flush file handle]|| ||flush $f|| ||
-||end-of-file test|| || || ||
-||get and set file handle position|| || || ||
-||open temporary file|| || || ||
-||in memory file|| || || ||
-||||||||~ [[# files]][#file-note files]||
-||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
-||[[# file-test]][#file-test-note file exists test, file regular test]|| ||file exists "/etc/hosts" _
+@<&nbsp;>@|| || ||puts -nonewline $f "lorem ipsum"|| ||
+||write line|| || || || ||
+||[[# flush-file]][#flush-file-note flush file handle]|| || ||flush $f|| ||
+||end-of-file test|| || || || ||
+||get and set file handle position|| || || || ||
+||open temporary file|| || || || ||
+||in memory file|| || || || ||
+||||||||||~ [[# files]][#file-note files]||
+||~ ||~ [#javascript javascript]||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[[# file-test]][#file-test-note file exists test, file regular test]|| || ||file exists "/etc/hosts" _
 file isfile "/etc/hosts"|| ||
-||[[# file-size]][#file-size-note file size]|| || || ||
-||[[# readable-writable-executable]][#readable-writable-executable-note is file readable, writable, executable]|| || || ||
-||[[# chmod]][#chmod-note set file permissions]|| ||set s "/tmp/foo" _
+||[[# file-size]][#file-size-note file size]|| || || || ||
+||[[# readable-writable-executable]][#readable-writable-executable-note is file readable, writable, executable]|| || || || ||
+||[[# chmod]][#chmod-note set file permissions]|| || ||set s "/tmp/foo" _
 file attributes $s -permissions 0755|| ||
-||last modification time|| || || ||
-||[[# file-cp-rm-mv]][#file-cp-rm-mv-note copy file, remove file, rename file]|| ||file copy "/tmp/foo" "/tmp/bar" _
+||last modification time|| || || || ||
+||[[# file-cp-rm-mv]][#file-cp-rm-mv-note copy file, remove file, rename file]|| || ||file copy "/tmp/foo" "/tmp/bar" _
 file delete "/tmp/foo" _
 file rename "/tmp/bar" "/tmp/foo"|| ||
-||create symlink, symlink test, readlink|| || || ||
-||[[# tmpfile]][#tmpfile-note generate unused file name]|| ||set tmp [::fileutil::tempfile foo] _
+||create symlink, symlink test, readlink|| || || || ||
+||[[# tmpfile]][#tmpfile-note generate unused file name]|| || ||set tmp [::fileutil::tempfile foo] _
 set f [open $tmp "w"] _
 puts $f "lorem ipsum" _
 close $f _
 puts "tmp file: $tmp"|| ||
-||||||||~ [[# directories]][#directories-note directories]||
-||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||||||||||~ [[# file-fmt]][#file-fmt-note file formats]||
+||~ ||~ [#javascript javascript]||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[[# parse-json]][#parse-json-note parse json]||var s1 = '{"t":1,"f":0}'; _
+var d1 = JSON.parse(s1);|| || || ||
+||[[# generate-json]][#generate-json-note generate json]||var d2 = {'t': 1, 'f': 0}; _
+var s2 = JSON.stringify(d1);|| || || ||
+||||||||||~ [[# directories]][#directories-note directories]||
+||~ ||~ [#javascript javascript]||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
 ||working directory _
-##gray|//get and set//##|| || || ||
-||[[# build-pathname]][#build-pathname-note build pathname]|| ||file join "/etc" "hosts"|| ||
-||[[# dirname-basename]][#dirname-basename-note dirname and basename]|| ||file dirname "/etc/hosts" _
+##gray|//get and set//##|| || || || ||
+||[[# build-pathname]][#build-pathname-note build pathname]|| || ||file join "/etc" "hosts"|| ||
+||[[# dirname-basename]][#dirname-basename-note dirname and basename]|| || ||file dirname "/etc/hosts" _
 file tail "/etc/hosts"|| ||
-||absolute pathname|| || || ||
-||[[# dir-iter]][#dir-iter-note iterate over directory by file]|| || || ||
-||glob paths|| || || ||
-||[[# mkdir]][#mkdir-note make directory]|| ||file mkdir "/tmp/foo/bar"|| ||
-||recursive copy|| || || ||
-||[[# rmdir]][#rmdir-note remove empty directory]|| ||file delete "/tmp/foodir"|| ||
-||[[# rm-rf]][#rm-rf-note remove directory and contents]|| ||file delete -force "/tmp/foodir"|| ||
+||absolute pathname|| || || || ||
+||[[# dir-iter]][#dir-iter-note iterate over directory by file]|| || || || ||
+||glob paths|| || || || ||
+||[[# mkdir]][#mkdir-note make directory]|| || ||file mkdir "/tmp/foo/bar"|| ||
+||recursive copy|| || || || ||
+||[[# rmdir]][#rmdir-note remove empty directory]|| || ||file delete "/tmp/foodir"|| ||
+||[[# rm-rf]][#rm-rf-note remove directory and contents]|| || ||file delete -force "/tmp/foodir"|| ||
 ||[[# dir-test]][#dir-test-note directory test] _
-@<&nbsp;>@|| ||file isdirectory "/tmp"|| ||
-||generate unused directory|| || || ||
-||system temporary file directory|| || || ||
-||||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
-||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
-||[[# cmd-line-arg]][#cmd-line-arg-note command line arguments]|| ||[lindex $argv 0] _
+@<&nbsp;>@|| || ||file isdirectory "/tmp"|| ||
+||generate unused directory|| || || || ||
+||system temporary file directory|| || || || ||
+||||||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
+||~ ||~ [#javascript javascript]||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[[# cmd-line-arg]][#cmd-line-arg-note command line arguments]|| || ||[lindex $argv 0] _
 [lindex $argv 1] _
 ##gray|//...//##|| ||
 ||[[# env-var]][#env-var-note environment variable] _
-##gray|//get, set//##|| ||$env(HOME)|| ||
+##gray|//get, set//##|| || ||$env(HOME)|| ||
+||[[# pid]][#pid-note get pid, parent pid]|| || || || ||
 ||[[# exit]][#exit-note exit] _
-@<&nbsp;>@|| ||exit 0|| ||
-||[[# external-cmd]][#external-cmd-note external command]|| ||exec ls|| ||
-||[[# cmd-subst]][#cmd-subst-note command substitution]|| ||set f [ open |ls ] _
+@<&nbsp;>@|| || ||exit 0|| ||
+||[[# external-cmd]][#external-cmd-note external command]|| || ||exec ls|| ||
+||[[# cmd-subst]][#cmd-subst-note command substitution]|| || ||set f [ open |ls ] _
 read f|| ||
-||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
-||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
-||[[# load-lib]][#load-lib-note load library]|| ||source foo.tcl _
+||||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
+||~ ||~ [#javascript javascript]||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[[# load-lib]][#load-lib-note load library]|| || ||source foo.tcl _
 add 3 7|| ||
-||load library in subdirectory|| || || ||
-||hot patch|| || || ||
-||load error|| || || ||
-||main routine in library|| || || ||
-||[[# lib-path]][#lib-path-note library path]|| ||##gray|//none//##|| ||
-||[[# lib-path-env]][#lib-path-env-note library path environment variable]|| ||TCLLIBPATH|| ||
-||library path command line option|| || || ||
-||simple global identifiers|| || || ||
-||multiple label identifiers|| || || ||
-||[[# label-separator]][#label-separator-note label separator]|| ||::|| ||
-||[[# namespace-decl]][#namespace-decl-note namespace declaration]|| ||namespace || ||
-||child namespace declaration|| || || ||
-||unqualified import of namespace|| || || ||
-||unqualified import of definitions|| || || ||
-||[[# pkg-management]][#pkg-management-note list installed packaged, install a package]|| || || ||
-||||||||~ [[# objects]][#objects-note objects]||
-||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
-||[#define-class define class]|| || || ||
-||[#create-object create object]|| || || ||
-||[#getter-setter getter and setter]|| || || ||
-||[#invoke-method invoke method]|| || || ||
-||||||||~ [[# reflection]][#reflection-note reflection]||
-||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
-||[#class class]||'hello' class|| || ||
-||inspect methods||1 class selectors.|| || ||
-||||||||~ [[# gui]][#gui-note gui]||
-||~ ||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
-||pop-up box|| ||package require Tk _
+||load library in subdirectory|| || || || ||
+||hot patch|| || || || ||
+||load error|| || || || ||
+||main routine in library|| || || || ||
+||[[# lib-path]][#lib-path-note library path]|| || ||##gray|//none//##|| ||
+||[[# lib-path-env]][#lib-path-env-note library path environment variable]|| || ||TCLLIBPATH|| ||
+||library path command line option|| || || || ||
+||simple global identifiers|| || || || ||
+||multiple label identifiers|| || || || ||
+||[[# label-separator]][#label-separator-note label separator]|| || ||::|| ||
+||[[# namespace-decl]][#namespace-decl-note namespace declaration]|| || ||namespace || ||
+||child namespace declaration|| || || || ||
+||unqualified import of namespace|| || || || ||
+||unqualified import of definitions|| || || || ||
+||[[# pkg-management]][#pkg-management-note list installed packaged, install a package]|| || || || ||
+||||||||||~ [[# objects]][#objects-note objects]||
+||~ ||~ [#javascript javascript]||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[[# def-class]][#def-class-note define class] _
+@<&nbsp;>@||function Int(i) { _
+@<&nbsp;&nbsp;>@this.value = i === undefined ? 0 : i; _
+}|| || || ||
+||[[# create-obj]][#create-obj-note create object] _
+@<&nbsp;>@||var i = new Int(); _
+var i2 = new Int(7);|| || || ||
+||[[# instance-var]][#instance-var-note instance variable visibility]||##gray|//public//##|| || || ||
+||[[# getter-setter]][#getter-setter-note get and set instance variable] _
+@<&nbsp;>@||var v = i.value; _
+i.value = v + 1;|| || || ||
+||[[# def-method]][#def-method-note define method] _
+@<&nbsp;>@||##gray|@@//@@ inside constructor:## _
+this.plus = function(v) { _
+@<&nbsp;&nbsp;>@return this.value + v; _
+}; _
+ _
+##gray|@@//@@ outside constructor:## _
+Int.prototype.plus = function (v) { _
+@<&nbsp;&nbsp;>@return this.value + v; _
+}|| || || ||
+||[[# invoke-method]][#invoke-method-note invoke method] _
+@<&nbsp;>@||i.plus(3);|| || || ||
+||||||||||~ [[# inheritance-polymorphism]][#inheritance-polymorphism-note inheritance and polymorphism]||
+||~ ||~ [#javascript javascript]||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[[# inheritance]][#inheritance-note subclass] _
+@<&nbsp;>@|| || || || ||
+||[[# mixin]][#mixin-note mixin]|| || || || ||
+||[[# op-overload]][#op-overload-note overload operator]|| || || || ||
+||||||||||~ [[# reflection]][#reflection-note reflection]||
+||~ ||~ [#javascript javascript]||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[[# object-id]][#object-id-note object id] _
+@<&nbsp;>@||##gray|//none//##|| || || ||
+||[[# inspect-type]][#inspect-type-note inspect type] _
+@<&nbsp;>@||typeof([]) === 'object'|| || || ||
+||[[# types]][#types-note basic types]||number _
+string _
+boolean _
+undefined _
+function _
+object _
+ _
+##gray|# these evaluate as 'object':## _
+typeof(null) _
+typeof([]) _
+typeof({})|| || || ||
+||[[# inspect-class]][#inspect-class-note inspect class]||##gray|@@//@@ returns prototype object:## _
+Object.getPrototypeOf(o)||'hello' class|| || ||
+||[[# inspect-class-hierarchy]][#inspect-class-hierarchy-note inspect class hierarchy]||var pa = Object.getPrototypeOf(o) _
+##gray|@@//@@prototype's of prototype object:## _
+var grandpa = Object.getPrototypeOf(pa)|| || || ||
+||[[# has-method]][#has-method-note has method?] _
+@<&nbsp;>@||o.reverse && typeof(o.reverse) === 'function'|| || || ||
+||[[# msg-passing]][#msg-passing-note message passing] _
+@<&nbsp;>@||##gray|//not a standard feature//##|| || || ||
+||[[# eval]][#eval-note eval] _
+@<&nbsp;>@||eval('1 + 1')|| || || ||
+||[[# list-obj-methods]][#list-obj-methods-note list object methods] _
+@<&nbsp;>@|| ||1 class selectors.|| || ||
+||[[# list-obj-attr]][#list-obj-attr-note list object attributes] _
+@<&nbsp;>@|| || || || ||
+||[[# list-loaded-lib]][#list-loaded-lib-note list loaded libraries]|| || || || ||
+||[[# list-loaded-namespaces]][#list-loaded-namespaces-note list loaded namespaces]|| || || || ||
+||[[# inspect-namespace]][#inspect-namespace-note inspect namespace]|| || || || ||
+||[[# pretty-print]][#pretty-print-note pretty-print] _
+@<&nbsp;>@||var d = {"lorem": 1, "ipsum": [2, 3]}; _
+console.log(JSON.stringify(d, null, 2));|| || || ||
+||[[# src-line-file]][#src-line-file-note source line number and file name]|| || || || ||
+||[[# cmd-line-doc]][#cmd-line-doc-note command line documentation]|| || || || ||
+||||||||||~ [[# gui]][#gui-note gui]||
+||~ ||~ [#javascript javascript]||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||pop-up box||var app = Application.currentApplication() _
+app.includeStandardAdditions = true _
+app.displayAlert('hi world')|| ||package require Tk _
  _
 wm title . _
 grid [ttk::frame .f -padding "10 10 10 10"]  _
 grid [ttk::label .f.t -text "hi world"]||msgbox % "hi world"||
-||button|| || || ||
-||text entry|| || || ||
-||frame|| || || ||
-||label|| || || ||
-||image|| || || ||
-||~ ||~ ##EFEFEF|@@_________________________________________________________________@@##||~ ##EFEFEF|@@_________________________________________________________________@@##||~ ##EFEFEF|@@_________________________________________________________________@@##||
-
+||button|| || || || ||
+||text entry|| || || || ||
+||frame|| || || || ||
+||label|| || || || ||
+||image|| || || || ||
+||||||||||~ [[# net-web]][#net-web-note net and web]||
+||~ ||~ [#javascript javascript]||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
+||[[# hostname-ip]][#hostname-ip-note get local hostname, dns lookup, reverse dns lookup]|| || || || ||
+||[[# http-get]][#http-get-note http get] _
+@<&nbsp;>@|| || || || ||
+||[[# http-post]][#http-post-note http post] _
+@<&nbsp;>@|| || || || ||
+||[[# serve-pwd]][#serve-pwd-note serve working directory]|| || || || ||
+||[[# absolute-url]][#absolute-url-note absolute url] _
+##gray|//from base and relative url//##|| || || || ||
+||[[# parse-url]][#parse-url-note parse url]|| || || || ||
+||[[# url-encode]][#url-encode-note url encode/decode] _
+@<&nbsp;>@|| || || || ||
+||[[# html-escape]][#html-escape-note html escape] _
+##gray|//escape character data, escape attribute value, unescape html entities//##|| || || || ||
+||[[# base64]][#base64-note base64 encode/decode]|| || || || ||
+||~ ||~ ##EFEFEF|@@____________________________________________@@##||~ ##EFEFEF|@@____________________________________________@@##||~ ##EFEFEF|@@____________________________________________@@##||~ ##EFEFEF|@@____________________________________________@@##||
 
 [[# general-note]]
 + [#general General]
@@ -1327,6 +1643,9 @@ puts -nonewline "hello"
 [[# gui-note]]
 + [#gui GUI]
 
+[[# file-fmt-note]]
++ [#file-fmt File Formats]
+
 [[# directories-note]]
 + [#directories Directories]
 
@@ -1491,3 +1810,69 @@ Unlike shells, *, ?, ~ in variable names are not automatically expanded using th
 + [#top AutoHotkey]
 
 [http://www.autohotkey.com/docs/ Documentation]
+
+[[# javascript]]
++ [#top JavaScript]
+
+[https://developer.mozilla.org/en-US/docs/Web/JavaScript Mozilla Developer Network: JavaScript]
+[https://developer.apple.com/library/mac/releasenotes/InterapplicationCommunication/RN-JavaScriptForAutomation/ JavaScript for Automation: Release Notes]
+[https://developer.mozilla.org/en-US/docs/Web/API/document Mozilla Developer Network: Document]
+[https://developer.mozilla.org/en-US/docs/Web/API/Window Mozilla Document Network: Window]
+[http://www.w3.org/TR/DOM-Level-3-Core/ W3C: Document Object Model (DOM) Level 3 Core Specification]
+[http://www.w3.org/TR/DOM-Level-3-Events/ W3C: Document Object Model (DOM) Level 3 Events Specification]
+
+Most browsers include a debugger which can be launched with a keystroke:
+
+||~ browser||~ mac||~ windows||~ linux||
+||Chrome||⌥⌘J||Cmd+Shift+J||Cmd+Shift+J||
+||Firefox||⌥⌘S||Cmd+Shift+S||Cmd+Shift+S||
+||Safari||⌥⌘C|| || ||
+
+The debugger has a console pane, which is a JavaScript REPL.
+
+[[code]]
+> Math.log(10)
+2.302585092994046
+
+> alert("Hello, World!")
+[[/code]]
+
+The console provides a global object named {{document}} which provides access to the DOM of the current page:
+
+[[code]]
+> document.getElementsByTagName("div").length
+302
+[[/code]]
+
+//TODO: more ways to select node elements.  Attributes of node elements.//
+
+There is also a global object named {{window}} which is useful.
+
+JavaScript can be embedded in an HTML document using the {{<script>}} tag:
+
+[[code]]
+<script>
+  var sum = 1 + 2;
+  alert('the sum is ' + sum);
+</script>
+[[/code]]
+
+Alternatively the JavaScript can be in a separate file served by the same server:
+
+[[code]]
+<script src="foo.js"></script>
+[[/code]]
+
+{{<script>}} tags can be placed in either the {{<head>}} or the {{<body>}} of an {{<html>}} document.  They are executed as they are encountered by the browser.  If there is a syntax error, then none of the JavaScript in the {{<script>}} tag is executed.  If there is an unhandled exception, the browser stops execution of the {{<script>}} at that point.  Neither syntax errors nor unhandled exceptions prevent the browser from executing JavaScript in subsequent {{<script>}} tags.
+
+//using JavaScript to modify the DOM//
+
+//waiting for all JavaScript to load//
+
+//javascript URL//
+
+//DOM events//
+
+To guard against websites serving malicious JavaScript code, the JavaScript interpreters in browsers do not provide the ability to interact with the local operating system.  In particular, client-side JavaScript cannot read or write to files.  Client-side JavaScript cannot spawn other processes. 
+
+Client-side JavaScript can make HTTP requests.  Client-side JavaScript can modify the DOM of an HTML page which was served from the same [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Same_origin_policy_for_JavaScript origin] as the JavaScript.  To be from the same origin, the URLs must have the same protocol, domain, and port.  Client-side JavaScript can also get and set cookies which share the same origin.  The origin policy for cookies is slightly relaxed, since the JavaScript can also get and set cookies for a parent domain, excluding public top level domains such as {{.com}}, {{.net}}, and {{.org}}.

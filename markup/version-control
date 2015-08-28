@@ -27,13 +27,13 @@ $ git help||$ hg [-v] help _
 ##gray|-b: //checkout// BRANCH //in working dir// _
 -o: //assign// NAME //to remote repo// _
 @@--@@depth: //copy commit history to depth NUM//##|| ||
-||repository url formats||##gray|@@ssh://[user@]host.xz[:port]/path/to/repo.git/@@ _
-@@git://host.xz[:port]/path/to/repo.git/@@ _
-@@http[s]://host.xz[:port]/path/to/repo.git/@@ _
-@@ftp[s]://host.xz[:port]/path/to/repo.git/@@ _
-@@rsync://host.xz/path/to/repo.git/@@ _
-@@/path/to/repo.git/@@ _
-@@file:///path/to/repo.git/@@##||##gray|@@local/filesystem/path[#revision]@@ _
+||repository url formats||##gray|@@ssh://[user@]host.xz[:port]/path/to/repo.git@@ _
+@@git://host.xz[:port]/path/to/repo.git@@ _
+@@http[s]://host.xz[:port]/path/to/repo.git@@ _
+@@ftp[s]://host.xz[:port]/path/to/repo.git@@ _
+@@rsync://host.xz/path/to/repo.git@@ _
+@@/path/to/repo.git@@ _
+@@file:///path/to/repo.git@@##||##gray|@@local/filesystem/path[#revision]@@ _
 @@file://local/filesystem/path[#revision]@@ _
 @@http://[user[:pass]@]host[:port]/[path][#revision]@@ _
 @@https://[user[:pass]@]host[:port]/[path][#revision]@@ _
@@ -285,9 +285,9 @@ tip //refers to the most recent revision in the repository.//##||
  _
 ##gray|@@--@@parents: //after commit identifier show parent commit identifiers//##||$ hg log||
 ||commits as graph||$ git log @@--@@graph||$ hg log -G||
-||first parent history||$ git @@--@@first-parent|| ||
+||first parent history||$ git log @@--@@first-parent|| ||
 ||chronological order||$ git log @@--@@reverse|| ||
-||all commits in repository||$ git [@@--@@source] @@--@@all _
+||all commits in repository||$ git log [@@--@@source] @@--@@all _
  _
 ##gray|@@--@@source: //print ref name after each commit//##|| ||
 ||limit commits||$ git log [@@--@@skip=NUM] -(n NUM|-NUM) _

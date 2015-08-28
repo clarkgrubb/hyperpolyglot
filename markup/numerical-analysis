@@ -4,7 +4,7 @@
 
 [#tables tables] | [#import-export import and export] | [#relational-algebra relational algebra] | [#aggregation aggregation]
 
-[#vectors vectors] | [#matrices matrices] | [#optimization optimization] | [#polynomials polynomials] | [#descriptive-statistics descriptive statistics] | [#distributions distributions] | [#linear-regression linear regression] | [#statistical-tests statistical tests] | [#time-series time series]
+[#vectors vectors] | [#matrices matrices] | [#optimization optimization] | [#polynomials polynomials] | [#descriptive-statistics descriptive statistics] | [#distributions distributions] | [#linear-regression linear regression] | [#statistical-tests statistical tests] | [#time-series time series] | [#fast-fourier-transform fast fourier transform]
 
 [#univariate-charts univariate charts] | [#bivariate-charts bivariate charts] | [#multivariate-charts multivariate charts]
 
@@ -22,8 +22,7 @@ $ octave @@--version@@||$ R @@--version@@||sys.version _
 np.@@__version__@@ _
 sp.@@__version__@@ _
 mpl.@@__version__@@||
-||[[# implicit-prologue]][#implicit-prologue-note implicit prologue]||##gray|//none//##||install.packages('ggplot2') _
-library('ggplot2')||import sys, os, re, math _
+||[[# implicit-prologue]][#implicit-prologue-note implicit prologue]||##gray|//none//##|| ||import sys, os, re, math _
 import numpy as np _
 import scipy as sp _
 import scipy.stats as stats _
@@ -2137,6 +2136,15 @@ acf(x + x2, lag.max=20)|| ||
 ||[[# arma]][#arma-note arma]|| || || ||
 ||[[# arima]][#arima-note arima]|| || || ||
 ||[[# automatic-arima]][#arima-note arima with automatic model selection]|| || || ||
+||||||||~ [[# fast-fourier-transform]][#fast-fourier-transform-note fast fourier transform]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy matplotlib]||
+||[[# fft]][#fft-note fft]||x = 3 * sin(1:100) + sin(3 * (1:100)) + randn(1, 100) _
+ _
+dft = fft(x)|| || ||
+||[[# ifft]][#ifft-note inverse fft]|| || || ||
+||[[# fftshift]][#fftshift-note shift constant component to center]|| || || ||
+||[[# fft2]][#fft2-note two-dimensional fft]|| || || ||
+||[[# fftn]][#fftn-note n-dimensional fft]|| || || ||
 ||||||||~ [[# univariate-charts]][#univariate-chart-note univariate charts]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy matplotlib]||
 ||[[image http://farm5.static.flickr.com/4090/5039793334_f76edece33_m.jpg]] [[# bar-chart]][#bar-chart-note vertical bar chart]||bar([7 3 8 5 5])||cnts = c(7,3,8,5,5) _
@@ -2200,6 +2208,7 @@ figure _
 open new plot||hist(rnorm(100)) _
 dev.new() _
 hist(rnorm(100))|| ||
+||[[# close-plot-windows]][#close-plot-windows-note close all plot windows]||close all||graphics.off()|| ||
 ||[[# save-plot-as-png]][#save-plot-as-png-note save plot as png]|| f = figure _
 hist(randn(100)) _
 print(f, '-dpng', 'histogram.png')||png('hist.png') _
@@ -2375,7 +2384,10 @@ legend('topleft', c('first', 'second'), _
 points(rnorm(20), rnorm(20), _
 @<&nbsp;&nbsp;>@col='red')|| ||
 ||[[# area-chart]][[image http://farm6.static.flickr.com/5041/5268071368_75c3aee42e_t.jpg]] _
-[#area-chart-note stacked area chart]|| ||x = rep(0:4, each=3) _
+[#area-chart-note stacked area chart]|| ||install.packages('ggplot2') _
+library('ggplot2') _
+ _
+x = rep(0:4, each=3) _
 y = round(5 * runif(15)) _
 letter = rep(LETTERS[1:3], 5) _
 df = data.frame(x, y, letter) _
@@ -2385,7 +2397,10 @@ p = ggplot(df, aes(x=x, y=y, _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@fill=letter)) _
 p + geom_area(position='stack')|| ||
 ||[[# overlapping-area-chart]][[image http://farm8.staticflickr.com/7557/15815944099_9b56eb2af4_t.jpg]] _
-[#overlapping-area-chart-note overlapping area chart]|| ||x = rep(0:4, each=3) _
+[#overlapping-area-chart-note overlapping area chart]|| ||install.packages('ggplot2') _
+library('ggplot2') _
+ _
+x = rep(0:4, each=3) _
 y = round(5 * runif(15)) _
 letter = rep(LETTERS[1:3], 5) _
 df = data.frame(x, y, letter) _
@@ -2402,7 +2417,10 @@ library('scatterplot3d') _
 scatterplot3d(rnorm(50), rnorm(50), _
 @<&nbsp;&nbsp;>@rnorm(50), type="h")|| ||
 ||[[# bubble-chart]][[image http://farm9.staticflickr.com/8591/15999976481_b2082d7d5b_t.jpg]] _
-[#bubble-chart-note bubble chart]|| ||df = data.frame(x=rnorm(20), _
+[#bubble-chart-note bubble chart]|| ||install.packages('ggplot2') _
+library('ggplot2') _
+ _
+df = data.frame(x=rnorm(20), _
 @<&nbsp;&nbsp;>@y=rnorm(20), z=rnorm(20)) _
  _
 p = ggplot(df, aes(x=x, y=y, size=z)) _
@@ -4561,6 +4579,24 @@ How to get a data point in a time series by its ordinal position.
 
 [[# arima-note]]
 ++ [#arima arima]
+
+[[# fast-fourier-transform-note]]
++ [#fast-fourier-transform Fast Fourier Transform]
+
+[[# fft-note]]
+++ [[# fft fft]
+
+[[# ifft-note]]
+++ [#ifft inverse fft]
+
+[[# fftshift-note]]
+++ [#fftshift shift constant component to center]
+
+[[# fft2-note]]
+++ [#fft2 two-dimensional fft]
+
+[[# fftn-note]]
+++ [#fftn n-dimensional fft]
 
 [[# univariate-chart-note]]
 + [#univariate-charts Univariate Charts]

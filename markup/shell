@@ -1,13 +1,13 @@
 //a side-by-side reference sheet//
 
-[#grammar-invocation grammar and invocation] | [#var-expr variables and expression] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#resizable-arrays resizable arrays] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#streams streams] | [#files files] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#reflection reflection] | [#debugging-profiling debugging and profiling]
+[#grammar-execution grammar and execution] | [#var-expr variables and expression] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#resizable-arrays resizable arrays] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#streams streams] | [#files files] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#reflection reflection] | [#debugging-profiling debugging and profiling]
 
 ||~ [[# general]]||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
 ||[[# version-used]][#version-used-note version used] _
 @<&nbsp;>@||##gray|//dash; POSIX 2008//##||##gray|//6.3//##||##gray|//4.0//##||
 ||[[# version]][#version-note show version] _
 @<&nbsp;>@|| ||##gray|//displayed at startup//##||$host.version||
-||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
+||||||||~ [[# grammar-execution]][#grammar-execution-note grammar and execution]||
 ||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
 ||[[# interpreter]][#interpreter-note interpreter] _
 @<&nbsp;>@||$ dash foo.sh||##gray|//when foo.bat is in the search path://## _
@@ -587,8 +587,8 @@ How to get the version.
 
 The version number displayed at start up is the Windows kernel version. 6.3 is the Windows 8.1 kernel version number.
 
-[[# grammar-invocation-note]]
-+ [#grammar-invocation Grammar and Invocation]
+[[# grammar-execution-note]]
++ [#grammar-execution Grammar and Execution]
 
 [[# interpreter-note]]
 ++ [#interpreter interpreter]

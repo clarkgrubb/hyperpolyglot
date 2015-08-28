@@ -2,10 +2,10 @@
 
 **[[[scripting|sheet one]]]:** [[[scripting#grammar-invocation|grammar and invocation]]] | [[[scripting#var-expr|variables and expressions]]] | [[[scripting#arithmetic-logic|arithmetic and logic]]] | [[[scripting#strings|strings]]] | [[[scripting#regexes|regexes]]] | [[[scripting#dates-time|dates and time]]] | [[[scripting#resizable-arrays|resizable arrays]]] | [[[scripting#dictionaries|dictionaries]]] | [[[scripting#functions|functions]]] | [[[scripting#execution-control|execution control]]] | [[[scripting#exceptions|exceptions]]] | [[[scripting#concurrency|concurrency]]] 
 
-**sheet two:** [#streams streams] | [#files files] | [#file-fmt file formats] | [#directories directories ] | [#processes-environment processes and environment] | [#option-parsing option parsing] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#reflection reflection] | [#net-web net and web] | [#gui gui] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling] | [#java-interop java interop]
+**sheet two:** [#streams streams] | [#files files] | [#file-fmt file formats] | [#directories directories ] | [#processes-environment processes and environment] | [#option-parsing option parsing] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#reflection reflection] | [#net-web net and web] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling] | [#java-interop java interop]
 
 ||||||||||~ [[# streams]][#streams-note streams]||
-||~  ||~ node||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# std-file-handles]][#std-file-handles-note standard file handles]||process.stdin _
 process.stdout _
 process.stderr||##gray|//only set by CLI; not set when reading script from stdin://## _
@@ -122,7 +122,7 @@ f.puts(##maroon|"lorem ipsum"##) _
 f.rewind _
 s = f.read||
 ||||||||||~ [[# files]][#files-note files]||
-||~  ||~ node||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# file-test]][#file-test-note file exists test, file regular test] _
 @<&nbsp;>@||var fs = require('fs'); _
  _
@@ -206,7 +206,7 @@ f, path = tempfile.mkstemp( _
 @<&nbsp;&nbsp;>@prefix=##maroon|'foo'##, _
 @<&nbsp;&nbsp;>@dir=##maroon|'/tmp'##)|| ||
 ||||||||||~ [[# file-fmt]][#file-fmt-note file formats]||
-||~  ||~ node||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# parse-csv]][#parse-csv-note parse csv]||var fs = require('fs'); _
 ##gray|# npm install csv## _
 var csv = require('csv'); _
@@ -377,7 +377,7 @@ doc = doc.xpath(##maroon|"@@//@@a"##).each ##purple|do## |link| _
 @<&nbsp;&nbsp;>@puts link[##maroon|"href"##] _
 ##purple|end##||
 ||||||||||~ [[# directories]][#directories-note directories]||
-||~  ||~ node||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# working-dir]][#working-dir-note working directory]||var old_dir = process.cwd(); _
  _
 process.chdir("/tmp");||$##peru|old_dir## = getcwd(); _
@@ -387,8 +387,13 @@ chdir(##maroon|"/tmp"##);||##peru|old_dir## = os.path.abspath(##maroon|'.'##) _
 os.chdir(##maroon|'/tmp'##)||old_dir = ##green|Dir##.pwd _
  _
 ##green|Dir##.chdir(##maroon|"/tmp"##)||
-||[[# build-pathname]][#build-pathname-note build pathname]|| ||##maroon|"/etc"## . ##teal|DIRECTORY_SEPARATOR## . ##maroon|"hosts"##||os.path.join(##maroon|'/etc'##, ##maroon|'hosts'##)||##green|File##.join(##maroon|"/etc"##, ##maroon|"hosts"##)||
-||[[# dirname-basename]][#dirname-basename-note dirname and basename]|| ||dirname(##maroon|"/etc/hosts"##) _
+||[[# build-pathname]][#build-pathname-note build pathname]||var path = require('path'); _
+ _
+path.join('/etc', 'hosts');||##maroon|"/etc"## . ##teal|DIRECTORY_SEPARATOR## . ##maroon|"hosts"##||os.path.join(##maroon|'/etc'##, ##maroon|'hosts'##)||##green|File##.join(##maroon|"/etc"##, ##maroon|"hosts"##)||
+||[[# dirname-basename]][#dirname-basename-note dirname and basename]||var path = require('path'); _
+ _
+path.dirname('/etc/hosts') _
+path.basename('/etc/hosts')||dirname(##maroon|"/etc/hosts"##) _
 basename(##maroon|"/etc/hosts"##)||os.path.dirname(##maroon|'/etc/hosts'##) _
 os.path.basename(##maroon|'/etc/hosts'##)||##green|File##.dirname(##maroon|"/etc/hosts"##) _
 ##green|File##.basename(##maroon|"/etc/hosts"##)||
@@ -410,7 +415,11 @@ os.path.expanduser(##maroon|'~/foo'##)||##gray|# symbolic links are not resolved
 ##green|File##.expand_path(##maroon|"../foo"##) _
 ##green|File##.expand_path(##maroon|"./foo"##) _
 ##green|File##.expand_path(##maroon|"~/foo"##)||
-||[[# dir-iterate]][#dir-iterate-note iterate over directory by file]|| ||if ($##peru|dir## = opendir(##maroon|"/etc"##)) { _
+||[[# dir-iterate]][#dir-iterate-note iterate over directory by file]||var fs = require('fs'); _
+ _
+fs.readdirSync('/etc').forEach( _
+@<&nbsp;&nbsp;>@function(s) { console.log(s); } _
+);||if ($##peru|dir## = opendir(##maroon|"/etc"##)) { _
 @<&nbsp;&nbsp;>@##purple|while## ($##peru|file## = readdir($##peru|dir##)) { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"$file\n"##; _
 @<&nbsp;&nbsp;>@} _
@@ -459,7 +468,7 @@ tempfile.gettempdir()||require ##maroon|'tmpdir'## _
  _
 ##green|Dir##.tmpdir||
 ||||||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
-||~  ||~ node||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# cmd-line-arg]][#cmd-line-arg-note command line arguments] _
 ##gray|//and script name//##||process.argv.slice(2) _
 process.argv[1] _
@@ -507,8 +516,6 @@ getpass.getuser()||require ##maroon|'etc'## _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@exit 1 _
 @<&nbsp;&nbsp;>@##purple|end## _
 )||
-||[[# executable-test]][#executable-test-note executable test] _
-@<&nbsp;>@|| || is_executable(##maroon|"/bin/ls"##)||os.access(##maroon|'/bin/ls'##, os.X_OK)||##green|File##.executable?(##maroon|"/bin/ls"##)||
 ||[[# external-cmd]][#external-cmd-note external command] _
 @<&nbsp;>@|| ||system(##maroon|"ls -l /tmp"##, $##peru|retval##); _
 ##purple|if## ($##peru|retval##) { _
@@ -546,7 +553,7 @@ files = %x(ls) _
 @<&nbsp;&nbsp;>@##purple|raise## ##maroon|"ls failed"## _
 ##purple|end##||
 ||||||||||~ [[# option-parsing]][#option-parsing-note option parsing]||
-||~  ||~ node||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# cmd-line-options]][#cmd-line-options-note command line options] _
 ##gray|//boolean option, option with argument, usage//##||##gray|@@//@@ $ npm install commander## _
 program = require('commander'); _
@@ -649,7 +656,7 @@ verbose = options[##teal|:verbose##] _
 # _
 # Options can follow positional args.##||
 ||||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
-||~  ||~ node||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# load-lib]][#load-lib-note load library] _
 @<&nbsp;>@||var foo = require('./foo.js'); _
  _
@@ -717,7 +724,7 @@ $ touch foo/bar.py||##purple|module## ##green|Foo##::##green|Bar## _
  _
 ##gray|# classes can nest inside classes or _
 # modules; modules can nest in classes##||
-# ||[[# import-def]][#import-def-note import definitions] _
+||[[# import-def]][#import-def-note import definitions] _
 @<&nbsp;>@|| ||##gray|//only class names can be imported//##||##purple|from## foo ##purple|import## bar, baz||##gray|//none//##||
 ||[[# import-namespace]][#import-namespace-note import all definitions in namespace] _
 @<&nbsp;>@|| ||##gray|//none//##||##purple|from## foo ##purple|import## *||##gray|# inside class or module:## _
@@ -725,7 +732,7 @@ $ touch foo/bar.py||##purple|module## ##green|Foo##::##green|Bar## _
 ||[[# import-all-subnamespaces]][#import-all-subnamespaces-note import all subnamespaces]|| || ||##gray|# subnamespaces in list @@__all__@@ of _
 # @@foo/__init__.py@@ are imported## _
 ##purple|from## foo ##purple|import## *|| ||
-||[[# shadow-avoidance]][#shadow-avoidance-note shadow-avoidance]|| ||use Foo as Fu;||##gray|# rename namespace:## _
+||[[# shadow-avoidance]][#shadow-avoidance-note shadow avoidance]|| ||use Foo as Fu;||##gray|# rename namespace:## _
 ##purple|import## foo ##purple|as## fu _
  _
 ##gray|# rename identifier:## _
@@ -758,7 +765,7 @@ spec = ##green|Gem##::##green|Specification##.new do |s| _
 @<&nbsp;&nbsp;>@s.files = Dir[##maroon|"lib/*.rb"##] _
 end||
 ||||||||||~ [[# objects]][#objects-note objects]||
-||~  ||~ javascript||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# def-class]][#def-class-note define class] _
 @<&nbsp;>@||function Int(i) { _
 @<&nbsp;&nbsp;>@this.value = i === undefined ? 0 : i; _
@@ -862,7 +869,7 @@ end||
 @<&nbsp;&nbsp;>@puts ##maroon|"bye, #{val}"## _
 }||
 ||||||||||~ [[# inheritance-polymorphism]][#inheritance-polymorphism-note inheritance and polymorphism]||
-||~  ||~ javascript||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# inheritance]][#inheritance-note subclass] _
 @<&nbsp;>@|| ||##purple|class## ##green|Counter## ##purple|extends## ##green|Int## _
 { _
@@ -913,7 +920,7 @@ end||
 @<&nbsp;&nbsp;>@##purple|end## _
 ##purple|end##||
 ||||||||||~ [[# reflection]][#reflection-note reflection]||
-||~  ||~ javascript||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# object-id]][#object-id-note object id] _
 @<&nbsp;>@||##gray|//none//##|| ||id(o)||o.object_id||
 ||[[# inspect-type]][#inspect-type-note inspect type] _
@@ -1010,7 +1017,8 @@ URI.constants _
 URI.methods _
 URI.class_variables||
 ||[[# pretty-print]][#pretty-print-note pretty-print] _
-@<&nbsp;>@|| ||$##peru|d## = array(##maroon|"lorem"##=>1, _
+@<&nbsp;>@||var d = {"lorem": 1, "ipsum": [2, 3]}; _
+console.log(JSON.stringify(d, null, 2));||$##peru|d## = array(##maroon|"lorem"##=>1, _
 @<&nbsp;&nbsp;>@##maroon|"ipsum"##=>array(2,3)); _
  _
 print_r($##peru|d##);||##purple|import## pprint _
@@ -1034,7 +1042,7 @@ $ pydoc math.atan2||$ ri -c _
 $ ri Math _
 $ ri Math.atan2||
 ||||||||||~ [[# net-web]][#net-web-note net and web]||
-||~  ||~ javascript||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# hostname-ip]][#hostname-ip-note get local hostname, dns lookup, reverse dns lookup]|| ||$##peru|host## = gethostname(); _
 $##peru|ip## = gethostbyname($##peru|host##); _
 $##peru|host2## = gethostbyaddr($##peru|ip##);||##purple|import## socket _
@@ -1051,7 +1059,16 @@ ip = ##green|Socket##.getaddrinfo( _
  _
 host2 = ##green|Socket##.gethostbyaddr(ip)[0]||
 ||[[# http-get]][#http-get-note http get] _
-@<&nbsp;>@|| ||$##CD853F|url## = ##maroon|'@@http://www.google.com@@'##; _
+@<&nbsp;>@||##gray|@@//@@ npm install request## _
+var request = require('request'); _
+ _
+request('@@http://www.google.com@@', _
+@<&nbsp;&nbsp;>@function(err, resp, body) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@if (!err && resp.statusCode == 200) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@console.log(body); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@} _
+);||$##CD853F|url## = ##maroon|'@@http://www.google.com@@'##; _
 $##peru|s## = file_get_contents($##peru|url##);||##purple|import## httplib _
  _
 ##CD853F|url## = ##maroon|'www.google.com'## _
@@ -1168,13 +1185,8 @@ $##peru|s2## = base64_decode($##peru|b64##);||##purple|import## base64 _
 s = ##green|File##.open(##maroon|"foo.png"##).read _
 b64 = ##green|Base64##.encode64(s) _
 s2 = ##green|Base64##.decode64(b64)||
-||||||||||~ [[# gui]][#gui-note gui]||
-||~  ||~ node||~ php||~ python||~ ruby||
-||pop-up box||var app = Application.currentApplication() _
-app.includeStandardAdditions = true _
-app.displayAlert('hi world')|| || || ||
 ||||||||||~ [[# unit-tests]][#unit-tests-note unit tests]||
-||~  ||~ node||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# test-class]][#test-class-note test class]||##gray|@@//@@ npm install -g nodeunit## _
  _
 exports.testFoo = function(test) { _
@@ -1297,7 +1309,7 @@ foo.run(13)||
 @<&nbsp;&nbsp;>@puts ##maroon|"tearing down"## _
 ##purple|end##||
 ||||||||||~ [[# debugging-profiling]][#debugging-profiling-note debugging and profiling]||
-||~  ||~ javascript||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# check-syntax]][#check-syntax-note check syntax] _
 @<&nbsp;>@|| ||$ php -l foo.php||##purple|import## py_compile _
  _
@@ -1307,13 +1319,15 @@ py_compile.compile(##maroon|'foo.py'##)||$ ruby -c foo.rb||
 $ python -3t foo.py||$ ruby -w foo.rb _
 $ ruby -W2 foo.rb||
 ||[[# lint]][#lint-note lint]||$ npm install jshint _
-$ ./node_modules/jshint/bin/jshint foo.js|| ||$ sudo pip install pylint _
+$ ##gray|//NODE_MODULES//##/jshint/bin/jshint foo.js|| ||$ sudo pip install pylint _
 $ pylint foo.py||$ sudo gem install rubocop _
 $ rubocop -D foo.rb||
 ||[[# src-cleanup]][#src-cleanup-note source cleanup]|| || ||$ sudo pip install pep8 _
 $ pep8 foo.py||$ sudo gem install rubocop _
 $ rubocop -D foo.rb||
-||[[# debugger]][#debugger-note run debugger]|| || ||$ python -m pdb foo.py||$ sudo gem install ruby-debug _
+||[[# debugger]][#debugger-note run debugger]||$ npm install node-inspector _
+##gray|//launches a browser://## _
+$ node-debug foo.js|| ||$ python -m pdb foo.py||$ sudo gem install ruby-debug _
 $ rdebug foo.rb||
 ||[[# debugger-cmds]][#debugger-cmds-note debugger commands]|| || ||h l n s b c w u d p q||h l n s b c w u down p q||
 ||[[# benchmark]][#benchmark-note benchmark code]|| || ||##purple|import## timeit _
@@ -1327,10 +1341,18 @@ i = 0 _
 puts ##green|Benchmark##.measure ##purple|do## _
 @<&nbsp;&nbsp;>@n.times { i += 1 } _
 ##purple|end##||
-||[[# profile]][#profile-note profile code]|| || ||$ python -m cProfile foo.py||$ sudo gem install ruby-prof _
+||[[# profile]][#profile-note profile code]||##gray|//node 0.10 and earlier//## _
+ _
+##gray|//install and build://## _
+$ npm install profiler _
+$ ##gray|//NODE_MODULES//##/profiler/tools/build-nprof _
+ _
+##gray|//profile//## _
+$ node @@--@@prof foo.js _
+$ nprof|| ||$ python -m cProfile foo.py||$ sudo gem install ruby-prof _
 $ ruby-prof foo.rb||
 ||||||||||~ [[# java-interop]][#java-interop-note java interoperation]||
-||~  ||~ javascript||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# java-version]][#java-version-note version] _
 @<&nbsp;>@|| || ||##gray|//Jython 2.5 _
 compatible with Python 2.5 :(//##||##gray|//JRuby 1.7 _
@@ -1370,6 +1392,7 @@ jarray.array([1, 2, 3], ##maroon|'i'##)||[1, 2, 3].to_java(##green|Java##::int)|
 ||[[# java-open]][#java-open-note are java class open?] _
 @<&nbsp;>@|| || ||##gray|//no//##||##gray|//yes//##||
 ||~ ||~ ##EFEFEF|@@____________________________________________@@##||~ ##EFEFEF|@@____________________________________________@@##||~ ##EFEFEF|@@____________________________________________@@##||~ ##EFEFEF|@@____________________________________________@@##||
+
 
 
 [[# streams-note]]
@@ -1966,11 +1989,6 @@ The script can be terminated without executing registered exit code by calling /
 ++ [#signal-handler set signal handler]
 
 How to register a signal handling function.
-
-[[# executable-test-note]]
-++ [#executable-test executable test]
-
-How to test whether a file is executable.
 
 [[# external-cmd-note]]
 ++ [#external-cmd external command]
@@ -2646,9 +2664,6 @@ A popular Base64 encoding is the one defined by [http://www.ietf.org/rfc/rfc2045
 If the input does not consist of a multiple of three characters, then the output is padded with one or two hyphens: =.
 
 Whitespace can inserted freely into Base64 output; this is necessary to support transmission by email.  When converting Base64 back to binary whitespace is ignored.
-
-[[# gui-note]]
-+ [#gui GUI]
 
 [[# unit-tests-note]]
 + [#unit-tests Unit Tests]

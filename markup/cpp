@@ -665,8 +665,35 @@ DateTime dt2 = DateTime.ParseExact( _
 dt2.getTime() - dt.getTime()|| ||
 ||[[# add-duration]][#add-duration-note add duration]|| || ||long day_ms = 24 * 3600 * 1000; _
 Date dt = new Date(dt.getTime() + day_ms));|| ||
-||[[# date-parts]][#date-parts-note date parts]|| || || || ||
-||[[# time-parts]][#time-parts-note time parts]|| || || || ||
+||[[# date-parts]][#date-parts-note date parts]|| || ||import java.util.Date; _
+import java.util.Calendar; _
+import java.util.GregorianCalendar; _
+ _
+Date dt = new Date(); _
+GregorianCalendar cal = new GregorianCalendar(); _
+cal.setTime(dt); _
+ _
+cal.get(Calendar.YEAR) _
+cal.get(Calendar.MONTH) + 1 _
+cal.get(Calendar.DAY_OF_MONTH)|| ||
+||[[# time-parts]][#time-parts-note time parts]|| || ||import java.util.Date; _
+import java.util.Calendar; _
+import java.util.GregorianCalendar; _
+ _
+Date dt = new Date(); _
+GregorianCalendar cal = new GregorianCalendar(); _
+cal.setTime(dt); _
+ _
+cal.get(Calendar.HOUR_OF_DAY) _
+cal.get(Calendar.MINUTE) _
+cal.get(Calendar.SECOND)|| ||
+||[[# build-datetime]][#build-datetime-note build broken-down datetime]|| || ||import java.util.GregorianCalendar; _
+ _
+int yr = 2015, mo = 5, dy = 31; _
+int hr = 9, mi = 0, ss = 0; _
+GregorianCalendar cal = _
+@<&nbsp;&nbsp;>@new GregorianCalendar(yr, mo - 1, dy, hr, mi, ss); _
+Date dt = cal.getTime();|| ||
 ||||||||||~ [[# fixed-length-arrays]][#fixed-length-arrays-note fixed-length arrays]||
 ||~ ||~ c++||~ objective c||~ java||~ c#||
 ||[[# fixed-len-array-stack]][#fixed-len-array-stack-note declare on stack]||int a[10];||int a[10];||##gray|//arrays must be allocated on heap//##||##gray|//arrays must be allocated on heap//##||
