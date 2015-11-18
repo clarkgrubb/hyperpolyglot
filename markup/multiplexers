@@ -183,7 +183,7 @@ caption always "%1@@`@@"||#(##gray|//cmd//##)||
 ||color||%{ry}##gray|//red text, yellow background//##%{dd}foo||#[fg=red,bg=yellow]##gray|//red text, yellow background//###[default]||
 ||fully qualified hostname|| ||#H||
 ||hostname||%H||#h||
-||session name|| ||#S||
+||session name||%S ##gray|//added in 4.1//##||#S||
 ||current window flag||%F||#F||
 ||current window index||%n||#I||
 ||current pane index||##gray|//none//##||#P|||

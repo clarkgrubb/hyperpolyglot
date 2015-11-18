@@ -63,7 +63,7 @@
 [[/row]]
 
 [[row]]
-[[cell]]**Numerical Analysis & Statistics:**[[/cell]][[cell]][[[numerical-analysis|MATLAB, R, NumPy]]][[/cell]]
+[[cell]]**Numerical Analysis & Statistics:**[[/cell]][[cell]][[[numerical-analysis|MATLAB, R, NumPy, Julia]]][[/cell]]
 [[/row]]
 
 [[row]]
@@ -76,10 +76,6 @@
 
 [[row]]
 [[cell]]**Fortran and APL:**[[/cell]][[cell]][[[fortran|Fortran, APL]]][[/cell]]
-[[/row]]
-
-[[row]]
-[[cell]]**Relational Data Languages:**[[/cell]][[cell]][[[data|SQL, Awk, Pig]]][[/cell]]
 [[/row]]
 
 [[/table]]
@@ -109,6 +105,10 @@
 
 [[row]]
 [[cell]]**Relational Databases:**[[/cell]][[cell]][[[db|PostgreSQL, MySQL, SQLite]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**Relational Queries:**[[/cell]][[cell]][[[data|SQL, Awk, Pig]]][[/cell]]
 [[/row]]
 
 [[row]]

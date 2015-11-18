@@ -732,7 +732,7 @@ M.adjoint()|| || ||
 ||rank||MatrixRank[@@{{1, 1}, {0, 0}}@@]|| ||RankMat([[1, 1], [0, 0]])||matrank([1, 1; 0, 0])||
 ||nullspace basis||NullSpace[@@{{1, 1}, {0, 0}}@@]|| || ||matker([1, 1; 0, 0])||
 ||range basis|| || ||matimage([1, 1; 0, 0])||
-||eigenvalues||Eigenvalues[@@{{1, 2}, {3, 4}}@@]||A.eigenvals()|| || ||
+||eigenvalues||Eigenvalues[@@{{1, 2}, {3, 4}}@@]||A.eigenvals()|| ||[vals, vecs] = mateigen([1, 2; 3, 4], flag=1)||
 ||eigenvectors||Eigenvectors[@@{{1, 2}, {3, 4}}@@]||A.eigenvects()|| ||mateigen([1, 2; 3, 4])||
 ||singular value decomposition||SingularValueDecomposition[@@{{1, 1}, {1, 0}}@@]|| || || ||
 ||qr decomposition||QRDecomposition[@@{{1, 2}, {3, 4}}@@]|| || ||matqr([1, 2; 3, 4])||
@@ -810,23 +810,33 @@ LucasL[10]|| || ||fibonacci(10) _
 ||bernoulli number||BernoulliB[100]|| || ||bernfrac(100)||
 ||||||||||~ [[# number-theory]][#number-theory-note number theory]||
 ||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
-||[[# prime-test]][#prime-test-note prime test]||PrimeQ[7]||sympy.ntheory.primetest.isprime(7)||IsPrimeInt(7);||isprime(7)||
-||[[# pseudoprime-test]][#pseudoprime-test-note pseudoprime test]|| || || ||ispseudoprime(7)||
-||divisors||Divisors[100]|| || ||divisors(100)||
-||[[# prime-factors]][#prime-factors prime factors]||##gray|//returns// @<{{>@2, 2}, {3, 1}, {7, 1}}## _
-FactorInteger[84]||sympy.ntheory.factorint(84)|| ||##gray|@@\\@@ [2,2; 3,1; 7,1]:## _
+||[[# pseudoprime-test]][#pseudoprime-test-note pseudoprime test]||PrimeQ[7]||sympy.ntheory.primetest.isprime(7) _
+sympy.ntheory.primetest.mr(7, [2, 3])||IsPrimeInt(7);||ispseudoprime(7)||
+||[[# true-prime-test]][#true-prime-test-note true prime test]|| || || ||isprime(7)||
+||[[# divisors]][#divisors-note divisors]||##gray|(* {1, 2, 4, 5, 10, 20, 25, 50, 100}: *)## _
+Divisors[100]||sympy.ntheory.divisors(100)|| ||divisors(100)||
+||[[# prime-factors]][#prime-factors prime factors]||##gray|(* returns @<{{>@2, 2}, {3, 1}, {7, 1}} *)## _
+FactorInteger[84]||##gray|# {2: 2, 3: 1, 7: 1}:## _
+sympy.ntheory.factorint(84)|| ||##gray|@@\\@@ [2,2; 3,1; 7,1]:## _
 factor(84)||
-||next prime _
+||[[# next-prime]][#next-prime-note next prime] _
  _
-##gray|//and preceding//##||NextPrime[1000]|| || ||nextprime(1000) _
+##gray|//and preceding//##||NextPrime[1000] _
+NextPrime[1000, -1]||sympy.ntheory.generate.nextprime(1000) _
+sympy.ntheory.generate.prevprime(1000)|| ||nextprime(1000) _
 precprime(1000)||
-||nth prime||Prime[100]|| || ||##gray|@@\\@@ first 100 primes: primes(100)## _
+||[[# nth-prime]][#nth-prime-note nth prime]||##gray|(* 541: *)## _
+Prime[100]||sympy.ntheory.generate.prime(100)|| ||##gray|@@\\@@ first 100 primes: primes(100)## _
 primes(100)[100]||
-||prime counting function||PrimePi[100] || || || ||
-||divmod||QuotientRemainder[7, 3]|| || ||divrem(7, 3)||
-||coprime test||CoprimeQ[14, 45]|| || || ||
-||[[# gcd]][#gcd-note greatest common divisor]||GCD[14, 21]||sympy.igcd(14, 21)|| ||gcd(14, 21)||
-||[[# lcm]][#lcm-note least common multiple]||LCM[14, 21]|| || ||lcm(14, 21)||
+||[[# prime-counting-func]][#prime-counting-func-note prime counting function]||##gray|(* 25: *)## _
+PrimePi[100]||sympy.ntheory.generate.primepi(100)|| || ||
+||[[# divmod]][#divmod-note divmod]||QuotientRemainder[7, 3]||divmod(7, 3)|| ||divrem(7, 3)||
+||[[# gcd]][#gcd-note greatest common divisor] _
+ _
+##gray|//and coprime test//##||GCD[14, 21] _
+ _
+CoprimeQ[14, 21]||sympy.gcd(14, 21)|| ||gcd(14, 21)||
+||[[# lcm]][#lcm-note least common multiple]||LCM[14, 21]||sympy.lcm(14, 21)|| ||lcm(14, 21)||
 ||integer residues|| || || ||##gray|@@\\@@ (2 + 3) % 5:## _
 Mod(2, 5) + Mod(3, 5)||
 ||chinese remainder theorem|| || || ||chinese(Mod(3, 17), Mod(8, 11))|||
@@ -859,7 +869,7 @@ sizedigits(1234)||
 ||to continued fraction||cf = ContinuedFraction[Pi, 100]|| || ||\p 100 _
 contfrac(Pi)||
 ||from continued fraction||##gray|(* rational approx. of π: *)## _
-FromContinudFraction[cf]|| || || ||
+FromContinuedFraction[cf]|| || || ||
 ||||||||||~ [[# elliptic-curves]][#elliptic-curves-note elliptic curves]||
 ||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
 ||elliptic curve from coefficients|| || || ||##gray|@@\\@@ ellinit([a, b, c, d, e]) where _
@@ -2135,6 +2145,75 @@ How to compute the 1-norm, the 2-norm, the infinity norm, and the frobenius norm
 
 [[# number-theory-note]]
 + [#number-theory Number Theory]
+
+[[# pseudoprime-test-note]]
+++ [#pseudoprime-test pseudoprime test]
+
+A fast primality test.
+
+A number of primality tests exists which give occasional false positives.  The simplest of these use Fermat's Little Theorem, in which for prime {{p}} and {{a}} in {{ {1, ..., p - 1} }}:
+
+[[math]]
+a^{p-1} \equiv 1 \bmod p
+[[/math]]
+
+The test for a candidate prime {{p}} is to randomly choose several values for {{a}} in {{ {1, ..., p - 1} }} and evaluate
+
+[[math]]
+a^{p-1} \bmod p
+[[/math]]
+
+If any of them are not equivalent to 1, then the test shows that p is not prime.  Unfortunately, there are composite numbers {{n}}, the [Carmichael numbers https://oeis.org/A002997], for which
+
+[[math]]
+a^{n-1} \equiv 1 \bmod n
+[[/math]]
+
+holds for all {{a}} in {{ {1, ..., n - 1} }}.
+
+A stronger test is the Miller-Rabin primality test.  Given a candidate prime {{n}}, we factor {{n - 1}} as {{2^^r^^ ⋅ d}} where {{d}} is odd.  If {{n}} is prime, then one of the following must be true:
+
+[[math]]
+a^d \equiv 1 \bmod n
+[[/math]]
+
+[[math]]
+a^{2^r \cdot d} \equiv -1 \bmod n
+[[/math]]
+
+
+[[# true-prime-test-note]]
+++ [#true-prime-test true prime test]
+
+Pseuodoprime tests are known for which there are no known counterexamples, and which are correct for for all integers up to a very large size.  Since conclusively showing that a number is prime is a slow operation for larger integers, a true prime test is often not practical.
+
+[[# divisors-note]]
+++ [#divisors divisors]
+
+The list of divisors for an integer.
+
+[[# prime-factors-note]]
+++ [#prime-factors prime factors]
+
+The list of prime factors for an integer, with their multiplicities.
+
+[[# next-prime-note]]
+++ [#next-prime next prime]
+
+The smallest prime number greater than an integer.  Also the greatest prime number smaller than an integer.
+
+[[# nth-prime-note]]
+++ [#nth-prime nth prime]
+
+The n-th prime number.
+
+++ prime counting function
+
+++ divmod
+
+++ greatest common divisor
+
+++ least common multiple
 
 [[# elliptic-curves-note]]
 + [#elliptic-curves Elliptic Curves]

@@ -1170,7 +1170,7 @@ from HTMLParser import HTMLParser _
  _
 s = cgi.escape('<>&') _
 s2 = cgi.escape('<>&"', True) _
-s3 = HTMLParser().unescape(||require 'cgi' _
+s3 = HTMLParser().unescape(s2)||require 'cgi' _
  _
 s2 = CGI.escapeHTML('<>&"') _
 s3 = CGI.unescapeHTML(s2)||

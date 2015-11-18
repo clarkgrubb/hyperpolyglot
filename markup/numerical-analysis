@@ -4,33 +4,33 @@
 
 [#tables tables] | [#import-export import and export] | [#relational-algebra relational algebra] | [#aggregation aggregation]
 
-[#vectors vectors] | [#matrices matrices] | [#optimization optimization] | [#polynomials polynomials] | [#descriptive-statistics descriptive statistics] | [#distributions distributions] | [#linear-regression linear regression] | [#statistical-tests statistical tests] | [#time-series time series] | [#fast-fourier-transform fast fourier transform]
+[#vectors vectors] | [#matrices matrices] | [#sparse-matrices sparse matrices] | [#optimization optimization] | [#polynomials polynomials] | [#descriptive-statistics descriptive statistics] | [#distributions distributions] | [#linear-regression linear regression] | [#statistical-tests statistical tests] | [#time-series time series] | [#fast-fourier-transform fast fourier transform] | [#clustering clustering]
 
 [#univariate-charts univariate charts] | [#bivariate-charts bivariate charts] | [#multivariate-charts multivariate charts]
 
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# version-used]][#version-used-note version used]||##gray|//MATLAB 8.3//## _
  _
 ##gray|//Octave 3.8//##||##gray|//3.1//##||##gray|//Python 2.7//## _
 ##gray|//NumPy 1.7//## _
 ##gray|//SciPy 0.13//## _
 ##gray|//Pandas 0.12//## _
-##gray|//Matplotlib 1.3//##||
+##gray|//Matplotlib 1.3//##||##gray|//0.4//##||
 ||[[# show-version]][#show-version-note show version]||$ matlab -nojvm -nodisplay -r 'exit' _
  _
 $ octave @@--version@@||$ R @@--version@@||sys.version _
 np.@@__version__@@ _
 sp.@@__version__@@ _
-mpl.@@__version__@@||
+mpl.@@__version__@@||$ julia @@--@@version||
 ||[[# implicit-prologue]][#implicit-prologue-note implicit prologue]||##gray|//none//##|| ||import sys, os, re, math _
 import numpy as np _
 import scipy as sp _
 import scipy.stats as stats _
 import pandas as pd _
 import matplotlib as mpl _
-import matplotlib.pyplot as plt||
-||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+import matplotlib.pyplot as plt|| ||
+||||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# interpreter]][#interpreter-note interpreter] _
 @<&nbsp;>@||$ cat @@>>@@foo.m _
 1 + 1 _
@@ -46,18 +46,21 @@ $ Rscript foo.r _
 $ R -f foo.r||$ cat @@>>@@foo.py _
 print(1 + 1) _
  _
-$ python foo.py||
+$ python foo.py||$ cat @@>>@@foo.jl _
+println(1 + 1) _
+ _
+$ julia foo.jl||
 ||[[# repl]][#repl-note repl] _
 @<&nbsp;>@||$ matlab -nojvm -nodisplay _
  _
-$ octave||$ R||$ python||
+$ octave||$ R||$ python||$ julia||
 ||[[# cmd-line-program]][#cmd-line-program-note command line program]||$ matlab -nojvm -nodisplay -r 'disp(1 + 1); exit' _
  _
-$ octave @@--@@silent @@--@@eval '1 + 1'||$ Rscript -e 'print("hi")'||python -c 'print("hi")'||
+$ octave @@--@@silent @@--@@eval '1 + 1'||$ Rscript -e 'print("hi")'||python -c 'print("hi")'||$ julia -e 'println("hi")'||
 ||[[# block-delimiters]][#block-delimiters-note block delimiters]||function end _
 if elseif else end _
 while end _
-for end||{ }||##gray|//offside rule//##||
+for end||{ }||##gray|//offside rule//##|| ||
 ||[[# stmt-separator]][#stmt-separator-note statement separator]||; ##gray|//or newline//## _
  _
 ##gray|//Newlines not separators after three dots:// @@...@@## _
@@ -66,37 +69,46 @@ for end||{ }||##gray|//offside rule//##||
  _
 ##gray|//Newlines not separators inside (), [], {}, '', "", or after binary operator.//##||##gray|//newline or ; _
  _
-Newlines not separators inside (), [], {}, triple quote literals, or after backslash: \//##||
+Newlines not separators inside (), [], {}, triple quote literals, or after backslash: \//##|| ||
 ||[[# eol-comment]][#eol-comment-note end-of-line comment] _
-@<&nbsp;>@||1 + 1 ##gray|% addition##||1 + 1 ##gray|# addition##||1 + 1 ##gray|# addition##||
-||||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+@<&nbsp;>@||1 + 1 ##gray|% addition##||1 + 1 ##gray|# addition##||1 + 1 ##gray|# addition##||1 + 1 ##gray|# addition##||
+||||||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# assignment]][#assignment-note assignment]||i = 3||i = 3 _
 i <- 3 _
 3 -> i _
-assign("i", 3)||i = 3||
+assign("i", 3)||i = 3||i = 3||
+||[[# parallel-assignment]][#parallel-assignment-note parallel assignment]|| || || || ||
+||[[# swap]][#swap-note swap]|| || || || ||
 ||[[# compound-assignment]][#compound-assignment-note compound assignment] _
 ##gray|//arithmetic, string, logical//##||##gray|//none//##||##gray|//none//##||##gray|# do not return values:## _
 += -= *= /= @@//@@= %= @@**@@= _
 += *= _
-&= |= ^=||
-||[[# null]][#null-note null]||##gray|% only used in place of numeric values:## _
-NaN||NA NULL||None||
+&= |= ^=|| ||
+||[[# null]][#null-note null]||##gray|% Only used in place of numeric values:## _
+NaN||NA NULL||None np.nan _
+ _
+##gray|# None cannot be stored in a numpy array; _
+# np.nan can if dtype is float64.##||##gray|# Only used in place of float values:## _
+NaN||
 ||[[# null-test]][#null-test-note null test]||isnan(v) _
  _
 ##gray|% true for '', []:## _
 isempty(v)||is.na(v) _
 is.null(v)||v == None _
-v is None||
+v is None _
+ _
+np.isnan(np.nan) _
+##gray|# np.nan == np.nan is False##||isnan(v)||
 ||[[# cond-expr]][#cond-expr-note conditional expression]||##gray|//none//##||(if (x > 0) x else -x) _
-ifelse(x > 0, x, -x)||x if x > 0 else -x||
-||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+ifelse(x > 0, x, -x)||x if x > 0 else -x||x > 0 ? x : -x||
+||||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# true-false]][#true-false-note true and false] _
-@<&nbsp;>@||1 0 true false||TRUE FALSE T F||True False||
+@<&nbsp;>@||1 0 true false||TRUE FALSE T F||True False||true false||
 ||[[# falsehoods]][#falsehoods-note falsehoods]||false 0 0.0 _
 ##gray|//matrices evaluate to false unless nonempty and all entries evaluate to true//##||FALSE F 0 0.0 _
-##gray|//matrices evaluate to value of first entry; string in boolean context causes error//##||False None 0 0.0 '' [] {}||
+##gray|//matrices evaluate to value of first entry; string in boolean context causes error//##||False None 0 0.0 '' [] {}||false||
 ||[[# logical-op]][#logical-op-note logical operators]||~true | (true & false) _
  _
 ##gray|% short-circuit operators:## _
@@ -104,19 +116,31 @@ ifelse(x > 0, x, -x)||x if x > 0 else -x||
 ##gray|//short-circuit operators://## _
 && @@||@@ _
  _
-##gray|& //and// | //can operate on and return vectors, but// @@&&@@ //and// @@||@@ //return scalars//##||and or not||
+##gray|& //and// | //can operate on and return vectors, but// @@&&@@ //and// @@||@@ //return scalars//##||and or not||@@&& || !@@||
 ||[[# relational-op]][#relational-op-note relational operators] _
-@<&nbsp;>@||== ~= > < >= <=||== != > < >= <=||== != > < >= <=||
+@<&nbsp;>@||== ~= > < >= <=||== != > < >= <=||== != > < >= <=||== != > < >= <=||
+||[[# int-type]][#int-type-note integer type]|| || || ||Int8 Int16 Int32 Int64 Int128 _
+ _
+Int ##gray|//is either 32 or 64 bits, depending on//## WORD_SIZE||
+||[[# unsigned-type]][#unsigned-type-note unsigned type]|| || || ||UInt8 UInt16 UInt32 UInt64 UInt128 _
+ _
+UInt ##gray|//is either 32 or 64 bits, depending on//## WORD_SIZE||
+||[[# float-type]][#float-type-note float type] _
+@<&nbsp;>@|| || || ||Float16 Float32 Float64||
 ||[[# arith-op]][#arith-op-note arithmetic operators] _
-##gray|//add, sub, mult, div, quot, rem//##||+ - * / ##gray|//none//## mod(##gray|//n//##, ##gray|//divisor//##)||+ - * / %/% %%||+ - * / // %||
+##gray|//add, sub, mult, div, quot, rem//##||+ - * / ##gray|//none//## mod(##gray|//n//##, ##gray|//divisor//##)||+ - * / %/% %%||+ - * / // %||+ - * / div(##gray|//n//##, ##gray|//divisor//##) rem(##gray|//n//##, ##gray|//divisor//##) _
+ _
+##gray|# always non-negative:## _
+mod(##gray|//n//##, ##gray|//divisor//##)||
 ||[[# int-div]][#int-div-note integer division] _
 @<&nbsp;>@||fix(13 / 5)||13 %/% 5 _
-as.integer(13 / 5)||13 // 5||
+as.integer(13 / 5)||13 // 5||div(13, 5)||
 ||[[# int-div-zero]][#int-div-zero-note integer division by zero] _
 @<&nbsp;>@||Inf NaN ##gray|//or//## -Inf||##gray|//result of converting Inf or NaN to an integer with as.integer://## _
-NA||##gray|//raises// ZeroDivisionError##||
+NA||##gray|//raises// ZeroDivisionError##||##gray|//raises// DivideError##||
 ||[[# float-div]][#float-div-note float division] _
-@<&nbsp;>@||13 / 5||13 / 5||float(13) / 5||
+@<&nbsp;>@||13 / 5||13 / 5||float(13) / 5||13 / 5 _
+5 \ 13||
 ||[[# float-div-zero]][#float-div-zero-note float division by zero] _
 ##gray|//dividend is positive, zero, negative//##||##gray|//these values are literals://## _
 Inf _
@@ -124,24 +148,31 @@ NaN _
 -Inf||##gray|//these values are literals://## _
 Inf _
 NaN _
--Inf||##gray|//raises// ZeroDivisionError##||
+-Inf||##gray|//raises// ZeroDivisionError##||##gray|//these values are literals://## _
+Inf _
+NaN _
+-Inf||
 ||[[# power]][#power-note power]||2 ^ 16||2 ^ 16 _
-2 ** 16||2 @@**@@ 16||
+2 ** 16||2 @@**@@ 16||2 ^ 16||
 ||[[# sqrt]][#sqrt-note sqrt] _
-@<&nbsp;>@||sqrt(2)||sqrt(2)||math.sqrt(2)||
+@<&nbsp;>@||sqrt(2)||sqrt(2)||math.sqrt(2)||sqrt(2)||
 ||[[# sqrt-negative-one]][#sqrt-negative-one-note sqrt -1]||##gray|% returns 0 + 1i:## _
 sqrt(-1)||##gray|# returns NaN:## _
 sqrt(-1) _
  _
 ##gray|# returns 0+1i:## _
 sqrt(-1+0i)||##gray|# raises ValueError:## _
-math.sqrt(-2) _
+math.sqrt(-1) _
  _
 ##gray|# returns 1.41421j:## _
 import cmath _
-cmath.sqrt(-2)||
-||[[# transcendental-func]][#transcendental-func-note transcendental functions]||exp log sin cos tan asin acos atan atan2||exp log sin cos tan asin acos atan atan2||math.exp math.log math.sin math.cos math.tan math.asin math.acos math.atan math.atan2||
-||[[# transcendental-const]][#transcendental-const-note transcendental constants]||pi e||pi exp(1)||math.pi math.e||
+cmath.sqrt(-1)||##gray|# raises DomainError:## _
+sqrt(-1) _
+ _
+##gray|# returns 0.0 + 1.0im:## _
+sqrt(-1 + 0im)||
+||[[# transcendental-func]][#transcendental-func-note transcendental functions]||exp log sin cos tan asin acos atan atan2||exp log sin cos tan asin acos atan atan2||math.exp math.log math.sin math.cos math.tan math.asin math.acos math.atan math.atan2||exp log sin cos tan asin acos atan atan2||
+||[[# transcendental-const]][#transcendental-const-note transcendental constants]||pi e||pi exp(1)||math.pi math.e||pi e||
 ||[[# float-truncation]][#float-truncation-note float truncation] _
 ##gray|//round towards zero, to nearest integer, down, up//##||fix(x) _
 round(x) _
@@ -152,13 +183,21 @@ floor(x) _
 ceiling(x)||int(x) _
 int(round(x)) _
 math.floor(x) _
-math.ceil(x)||
+math.ceil(x)||Int(trunc(x)) _
+Int(round(x)) _
+Int(floor(x)) _
+Int(ceil(x)) _
+ _
+##gray|# trunc() and other functions return floats. _
+# Int() raises InexactError if float argument has _
+# nonzero fractional portion.##||
 ||[[# absolute-val]][#absolute-val-note absolute value] _
 ##gray|//and signum//##||abs sign||abs sign||abs(-3.7) _
-math.copysign(1, -3.7)||
-||[[# int-overflow]][#int-overflow-note integer overflow]||##gray|//becomes float; largest representable integer in the variable// intmax##||##gray|//becomes float; largest representable integer in the variable// .Machine$integer.max##||##gray|//becomes arbitrary length integer of type// long##||
+math.copysign(1, -3.7)||abs(-3.7) _
+sign(-3.7)||
+||[[# int-overflow]][#int-overflow-note integer overflow]||##gray|//becomes float; largest representable integer in the variable// intmax##||##gray|//becomes float; largest representable integer in the variable// .Machine$integer.max##||##gray|//becomes arbitrary length integer of type// long##|| ||
 ||[[# float-overflow]][#float-overflow-note float overflow] _
-@<&nbsp;>@||Inf||Inf||##gray|//raises// OverflowError##||
+@<&nbsp;>@||Inf||Inf||##gray|//raises// OverflowError##|| ||
 ||[[# float-limits]][#float-limits-note float limits] _
 @<&nbsp;>@||eps _
 realmax _
@@ -166,9 +205,13 @@ realmin||.Machine$double.eps _
 .Machine$double.xmax _
 .Machine$double.xmin||np.finfo(np.float64).eps _
 np.finfo(np.float64).max _
-np.finfo(np.float64).min||
+np.finfo(np.float64).min|| ||
+||[[# rational-construction]][#rational-construction-note rational construction]|| || || ||22 @@//@@ 7||
+||[[# rational-decomposition]][#rational-decomposition-note rational decomposition]|| || || ||num(22 @@//@@ 7) _
+den(22 @@//@@ 7)||
 ||[[# complex-construction]][#complex-construction-note complex construction] _
-@<&nbsp;>@||1 + 3i||1 + 3i||1 + 3j||
+@<&nbsp;>@||1 + 3i||1 + 3i||1 + 3j||1 + 3im _
+complex(1, 3)||
 ||[[# complex-decomposition]][#complex-decomposition-note complex decomposition]||real imag _
 abs arg _
 conj||Re Im _
@@ -177,12 +220,17 @@ Conj||import cmath _
  _
 z.real _
 z.imag _
-cmath.polar(z)[1]||
+cmath.polar(z)[1]||real(1 + 3im) _
+imag(1 + 3im) _
+abs(1 + 3im) _
+angle(1 + 3im) _
+conj(1 + 3im)||
 ||[[# random-num]][#random-num-note random number] _
 ##gray|//uniform integer, uniform float//##||floor(100 * rand) _
 rand||floor(100 * runif(1)) _
 runif(1)||np.random.randint(0, 100) _
-np.random.rand()||
+np.random.rand()||rand(1:100) _
+rand()||
 ||[[# random-seed]][#random-seed-note random seed] _
 ##gray|//set, get, and restore//##||rand('state', 17) _
 sd = rand('state') _
@@ -190,7 +238,7 @@ rand('state', sd)||set.seed(17) _
 sd = .Random.seed _
 ##gray|//none//##||np.random.seed(17) _
 sd = np.random.get_state() _
-np.random.set_state(sd)||
+np.random.set_state(sd)|| ||
 ||[[# bit-op]][#bit-op-note bit operators]||bitshift(100, 3) _
 bitshift(100, -3) _
 bitand(1, 2) _
@@ -204,42 +252,59 @@ bitcmp(1, 16)||##gray|//none//##||100 @@<<@@ 3 _
 1 & 2 _
 1 | 2 _
 1 ^ 2 _
-~1||
-||||||||~ [[# strings]][#strings-note strings]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+~1|| ||
+||[[# binary-octal-hex-literals]][#binary-octal-hex-literals-note binary, octal, and hex literals]|| || || ||0b101010 _
+0o52 _
+0x2a||
+||[[# radix]][#radix-note radix] _
+##gray|//convert integer to and from string with radix//##|| || || ||base(7, 42) _
+parse(Int, "60", 7)||
+||||||||||~ [[# strings]][#strings-note strings]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# str-literal]][#str-literal-note literal]|| 'don''t say "no"' _
  _
 ##gray|% Octave only:## _
 "don't say \"no\""||"don't say \"no\"" _
 'don\'t say "no"'||'don\'t say "no"' _
 "don't say \"no\"" _
-r"don't " r'say "no"'||
+r"don't " r'say "no"'||"don't say \"no\""||
 ||[[# str-newline]][#str-newline-note newline in literal] _
-@<&nbsp;>@||##gray|//no//##||##gray|//yes//##||##gray|//no//##||
+@<&nbsp;>@||##gray|//no//##||##gray|//yes//##||##gray|//no//##||##gray|//yes//##||
 ||[[# str-esc]][#str-esc-note literal escapes]||##gray|% Octave double quote only:## _
 \\ \" \' \0 \a \b \f \n \r \t \v||\\ \" \' \a \b \f \n \r \t \v \##gray|//ooo//##||##gray|# single and double quoted:## _
-\##gray|//newline//## \\ \' \" \a \b \f \n \r \t \v \##gray|//ooo//## \x##gray|//hh//##||
+\##gray|//newline//## \\ \' \" \a \b \f \n \r \t \v \##gray|//ooo//## \x##gray|//hh//##||\\ \" \' \a \b \f \n \t \r \v _
+ \##gray|//ooo//## \x##gray|//hh//## \u##gray|//hhhh//## \U##gray|//hhhhhhhh//##||
+||[[# var-interpolation]][#var-interpolation-note variable interpolation]|| || || ||count = 3 _
+item = "ball" _
+println("$count $(item)s")||
+||[[# expr-interpolation]][#expr-interpolation-note expression interpolation] _
+@<&nbsp;>@|| || || ||"1 + 1 = $(1 + 1)"||
 ||[[# str-concat]][#str-concat-note concatenate]||strcat('one ', 'two ', 'three')||paste("one", "two", "three", sep=" ")||'one ' + 'two ' + 'three' _
 ##gray|//literals, but not variables, can be concatenated with juxtaposition://## _
-'one ' "two " 'three'||
+'one ' "two " 'three'||"one " * "two " * "three" _
+ _
+string("one ", "two ", "three")||
 ||[[# str-replicate]][#str-replicate-note replicate] _
-@<&nbsp;>@||hbar = repmat('-', 1, 80)||hbar = paste(rep('-', 80), collapse='')||hbar = '-' * 80||
+@<&nbsp;>@||hbar = repmat('-', 1, 80)||hbar = paste(rep('-', 80), collapse='')||hbar = '-' * 80||hbar = "-" ^ 80 _
+ _
+hbar = repeat("-", 80)||
 ||[[# index-substr]][#index-substr-note index of substring]||##gray|% returns array of one-indexed _
 % locations ## _
 strfind('hello', 'el')||##gray|//counts from one, returns _
 -1 if not found//## _
-regexpr("el", "hello")||##gray|//counts from zero, raises// ValueError //if not found://## _
-'hello'.index('el')||
+regexpr("el", "hello")||##gray|# Counts from zero; raises ValueError if not found:## _
+'hello'.index('el')||##gray|# returns UnitRange:## _
+search("hello", "el")||
 ||[[# extract-substr]][#extract-substr-note extract substring] _
 @<&nbsp;>@||s = 'hello' _
 ##gray|% syntax error: 'hello'(1:4)## _
-s(1:4)||substr("hello", 1, 4)||'hello'[0:4]||
+s(1:4)||substr("hello", 1, 4)||'hello'[0:4]||"hello"[1:4]||
 ||[[# split]][#split-note split]|| ##gray|% returns cell array:## _
-strsplit('foo,bar,baz', ',')||strsplit('foo,bar,baz', ',')||'foo,bar,baz'.split(',')||
+strsplit('foo,bar,baz', ',')||strsplit('foo,bar,baz', ',')||'foo,bar,baz'.split(',')||split("foo,bar,baz", ",")||
 ||[[# join]][#join-note join]||##gray|% takes cell array as arg:## _
 strjoin({'foo', 'bar', 'baz'}, ',')||paste("foo", "bar", "baz", sep=",") _
 paste(c('foo', 'bar', 'baz'), _
-@<&nbsp;&nbsp;>@collapse=',')||','.join(['foo', 'bar', 'baz'])||
+@<&nbsp;&nbsp;>@collapse=',')||','.join(['foo', 'bar', 'baz'])||join(["foo", "bar", "baz"], ",")||
 ||[[# trim]][#trim-note trim] _
 ##gray|//both sides, left, right//##||strtrim(' foo ') _
 ##gray|//none//## _
@@ -249,7 +314,7 @@ deblank('foo ')||gsub("(^[\n\t ]+|[\n\t ]+$)", _
 sub("^[\n\t ]+", "", " foo") _
 sub("[\n\t ]+$", "", "foo ")||' foo '.strip() _
 ' foo'.lstrip() _
-'foo '.rstrip()||
+'foo '.rstrip()|| ||
 ||[[# pad]][#pad-note pad] _
 ##gray|//on right, on left, centered//##||s = repmat(' ', 1, 10) _
 s(1:5) = 'lorem' _
@@ -259,64 +324,83 @@ strjust(s, 'center')||sprintf("%-10s", "lorem") _
 sprintf("%10s", "lorem") _
 ##gray|//none//##||'lorem'.ljust(10) _
 'lorem'.rjust(10) _
-'lorem'.center(10)||
+'lorem'.center(10)|| ||
 ||[[# num-to-str]][#num-to-str-note number to string] _
-@<&nbsp;>@||strcat('value: ', num2str(8))||paste("value: ", toString("8"))||'value: ' + str(8)||
+@<&nbsp;>@||strcat('value: ', num2str(8))||paste("value: ", toString("8"))||'value: ' + str(8)|| ||
 ||[[# str-to-num]][#str-to-num-note string to number]||7 + str2num('12') _
 73.9 + str2num('.037')||7 + as.integer("12") _
 73.9 + as.double(".037")||7 + int('12') _
-73.9 + float('.037')||
+73.9 + float('.037')||7 + parse(Int, "12") _
+73.9 + parse(Float64, ".037")||
 ||[[# case-manipulation]][#case-manipulation-note translate case]||lower('FOO') _
 upper('foo')||tolower("FOO") _
 toupper("foo")||'foo'.upper() _
-'FOO'.lower()||
+'FOO'.lower()||uppercase("foo") _
+lowercase("FOO")||
 ||[[# sprintf]][#sprintf-note sprintf] _
-@<&nbsp;>@||sprintf('%s: %.3f %d', 'foo', 2.2, 7)||sprintf("%s: %.3f %d", "foo", 2.2, 7)||'%s: %.3f %d' % ('foo', 2.2, 7)||
+@<&nbsp;>@||sprintf('%s: %.3f %d', 'foo', 2.2, 7)||sprintf("%s: %.3f %d", "foo", 2.2, 7)||'%s: %.3f %d' % ('foo', 2.2, 7)||@sprintf("%s: %.2f %d", "foo", 2.2, 7)||
 ||[[# str-len]][#str-len-note length] _
-@<&nbsp;>@||length('hello')||nchar("hello")||len('hello')||
+@<&nbsp;>@||length('hello')||nchar("hello")||len('hello')||length("hello") _
+ _
+##gray|# index of first byte of last char:## _
+endof("hello")||
 ||[[# char-access]][#char-access-note character access] _
 @<&nbsp;>@||s = 'hello' _
 ##gray|% syntax error: 'hello'(1)## _
-s(1)||substr("hello", 1, 1)||'hello'[0]||
+s(1)||substr("hello", 1, 1)||'hello'[0]||"hello"[1] _
+ _
+##gray|# index must be byte-index of the first byte of a _
+# character.  Raises BoundsErrror if no such byte, _
+# and UnicodeError if byte not first in char.##||
 ||[[# chr-ord]][#chr-ord-note chr and ord]||char(65) _
 double('A')||intToUtf8(65) _
 utf8ToInt("A")||chr(65) _
-ord('A')||
-||||||||~ [[# regexes]][#regexes-note regular expressions]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+ord('A')||Char(65) _
+Int('A')||
+||||||||||~ [[# regexes]][#regexes-note regular expressions]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# char-class-abbrevs]][#char-class-abbrevs-note character class abbreviations]||. \d \D \s \S \w \W _
  _
 ##gray|% also C-string style backslash escapes:## _
 \a \b \f \n \r \t \v||##gray|# escape backslash in strings by doubling:## _
-. \d \D \s \S \w \W||. \d \D \s \S \w \W||
+. \d \D \s \S \w \W||. \d \D \s \S \w \W||. \d \D \h \H \s \S \v \V \w \W||
 ||[[# regex-anchors]][#regex-anchors-note anchors] _
 @<&nbsp;>@||^ $ \< \>||##gray|# escape backslash in strings by doubling:## _
-^ $ \< \> \b \B||^ $ \A \b \B \Z||
+^ $ \< \> \b \B||^ $ \A \b \B \Z||^ $ \A \b \B \z \Z||
 ||[[# regex-match]][#regex-match-note match test]||regexp('hello', '^[a-z]+$') _
  regexp('hello', '^\S+$')||regexpr("^[a-z]+$", "hello") > 0 _
 regexpr('^\\S+$', "hello") > 0||re.search(r'^[a-z]+$', 'hello') _
-re.search(r'^\S+$', 'hello')||
-||[[# case-insensitive-regex-match]][#case-insensitive-regex-match-note case insensitive match test]||regexpi('Lorem Ipsum', 'lorem')||regexpr('(?i)lorem', "Lorem Ipsum") > 0||re.search(r'lorem', 'Lorem Ipsum', re.I)||
+re.search(r'^\S+$', 'hello')||ismatch(r"^[a-z]+$", "hello")||
+||[[# case-insensitive-regex-match]][#case-insensitive-regex-match-note case insensitive match test]||regexpi('Lorem Ipsum', 'lorem')||regexpr('(?i)lorem', "Lorem Ipsum") > 0||re.search(r'lorem', 'Lorem Ipsum', re.I)||ismatch(r"lorem"i, "Lorem Ipsum")||
+||[[# regex-modifiers]][#regex-modifiers-note modifiers] _
+@<&nbsp;>@||##gray|//none//##||(?i) (?m) (?s) (?x)||re.I re.M re.S re.X||i m s x||
 ||[[# regex-subst]][#regex-subst-note substitution] _
-##gray|//first match, all matches//##||regexprep('do re mi mi mi', 'mi', 'ma', 'once') _
-regexprep('do re mi mi mi', 'mi', 'ma')||sub('mi', 'ma', 'do re mi mi mi') _
+##gray|//first match, all matches//##||s = 'do re mi mi mi' _
+regexprep(s, 'ma', 'once') _
+regexprep(s, 'mi', 'ma')||sub('mi', 'ma', 'do re mi mi mi') _
 gsub('mi', 'ma', 'do re mi mi mi')||rx = re.compile(r'mi') _
 s = rx.sub('ma', 'do re mi mi mi', 1) _
-s2 = rx.sub('ma', 'do re mi mi mi')||
+s2 = rx.sub('ma', 'do re mi mi mi')||replace("do re mi mi mi", r"mi", s"ma", 1) _
+replace("do re mi mi mi", r"mi", s"ma")||
 ||[[# regex-backreference]][#regex-backreference-note backreference in match and substitution]||regexp('do do', '(\w+) \1') _
 regexprep('do re', '(\w+) (\w+)', '$2 $1')||regexpr('(\\w+) \\1', 'do do') > 0 _
 sub('(\\w+) (\\w+)', '\\2 \\1', 'do re')||##gray|//none//## _
  _
 rx = re.compile(r'(\w+) (\w+)') _
-rx.sub(r'\2 \1', 'do re')||
-||||||||~ [[# dates-time]][#dates-time-note dates and time]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+rx.sub(r'\2 \1', 'do re')||ismatch(r"(\w+) \1", "do do")||
+||[[# group-capture]][#group-capture-note group capture]|| || ||rx = '(\d{4})-(\d{2})-(\d{2})' _
+m = re.search(rx, '2010-06-03') _
+yr, mo, dy = m.groups()||rx = r"(\d{4})-(\d{2})-(\d{2})" _
+m = match(rx, "2010-06-03") _
+yr, mn, dy = m.captures||
+||||||||||~ [[# dates-time]][#dates-time-note dates and time]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# current-date-time]][#current-date-time-note current date/time] _
 @<&nbsp;>@||t = now||t = as.POSIXlt(Sys.time())||import datetime _
  _
-t = datetime.datetime.now()||
-||[[# date-time-type]][#date-time-type-note date/time type]||##gray|//floating point number representing days since year 0 in the Gregorian calendar//##||POSIXlt||datettime||
-||[[# date-time-diff-type]][#date-time-diff-type-note date/time difference type]||##gray|//floating point number representing days//##||##gray|//a// difftime //object which behaves like a floating point number representing seconds//##||##gray|timedelta, //which can be converted to float value in seconds via// total_seconds() //method//##||
+t = datetime.datetime.now()||t = now()||
+||[[# date-time-type]][#date-time-type-note date/time type]||##gray|//floating point number representing days since year 0 in the Gregorian calendar//##||POSIXlt||datettime||DateTime||
+||[[# date-time-diff-type]][#date-time-diff-type-note date/time difference type]||##gray|//floating point number representing days//##||##gray|//a// difftime //object which behaves like a floating point number representing seconds//##||##gray|timedelta, //which can be converted to float value in seconds via// total_seconds() //method//##||Base.Dates.Millisecond||
 ||[[# date-parts]][#date-parts-note get date parts]||dv = datevec(t) _
 dv(1) _
 dv(2) _
@@ -325,7 +409,9 @@ dv(3) _
 t$mon + 1 _
 t$mday||t.year _
 t.month _
-t.day||
+t.day||Dates.year(t) _
+Dates.month(t) _
+Dates.day(t)||
 ||[[# time-parts]][#time-parts-note get time parts]||dv = datevec(t) _
 dv(4) _
 dv(5) _
@@ -333,7 +419,9 @@ dv(6)||t$hour _
 t$min _
 t$sec||t.hour _
 t.minute _
-t.second||
+t.second||Dates.hour(t) _
+Dates.minute(t) _
+Dates.second(t)||
 ||[[# build-date-time]][#build-date-time-note build date/time from parts]||t = datenum([2011 9 20 23 1 2])||t = as.POSIXlt(Sys.time()) _
 t$year = 2011 - 1900 _
 t$mon = 9 - 1 _
@@ -342,65 +430,77 @@ t$hour = 23 _
 t$min = 1 _
 t$sec = 2||import datetime _
  _
-t = datetime.datetime(2011, 9, 20, 23, 1, 2)||
+t = datetime.datetime(2011, 9, 20, 23, 1, 2)||t = DateTime(2011, 9, 20, 23, 1, 2)||
 ||[[# date-to-str]][#date-to-str-note convert to string] _
-@<&nbsp;>@||datestr(t)||print(t)||str(t)||
-||[[# strptime]][#strptime-note strptime]||s = '2011-09-20 23:01:02' _
+@<&nbsp;>@||datestr(t)||print(t)||str(t)||"$t"||
+||[[# strptime]][#strptime-note parse datetime]||s = '2011-09-20 23:01:02' _
 fmt = 'yyyy-mm-dd HH:MM:SS' _
 t = datenum(s, fmt)||t = strptime('2011-09-20 23:01:02', _
 @<&nbsp;&nbsp;>@'%Y-%m-%d %H:%M:%S')||import datetime _
  _
 s = '2011-05-03 10:00:00' _
 fmt = '%Y-%m-%d %H:%M:%S' _
-t = datetime.datetime.strptime(s, fmt)||
-||[[# strftime]][#strftime-note strftime] _
-@<&nbsp;>@||datestr(t, 'yyyy-mm-dd HH:MM:SS')||format(t, format='%Y-%m-%d %H:%M:%S')||t.strftime('%Y-%m-%d %H:%M:%S')||
+t = datetime.datetime.strptime(s, fmt)||fmt = "yyyy-mm-dd HH:MM:SS" _
+ t = DateTime("2011-05-03 10:00:00", fmt) _
+ _
+##gray|# fmt string can be compiled:## _
+df = Dates.DateFormat(fmt) _
+t2 = DateTime("2011-05-03 10:00:00", df)||
+||[[# strftime]][#strftime-note format datetime] _
+@<&nbsp;>@||datestr(t, 'yyyy-mm-dd HH:MM:SS')||format(t, format='%Y-%m-%d %H:%M:%S')||t.strftime('%Y-%m-%d %H:%M:%S')||Dates.format(t, "yyyy-mm-dd HH:MM:SS")||
 ||[[# sleep]][#sleep-note sleep]||pause(0.5)||Sys.sleep(0.5)||import time _
  _
-time.sleep(0.5)||
-||||||||~ [[# tuples]][#tuples-note tuples]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+time.sleep(0.5)||sleep(0.5)||
+||||||||||~ [[# tuples]][#tuples-note tuples]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# tuple-type]][#tuple-type-note type] _
-@<&nbsp;>@||cell||list||tuple||
+@<&nbsp;>@||cell||list||tuple||Tuple{##gray|T[, @@...@@]##}||
 ||[[# tuple-literal]][#tuple-literal-note literal] _
-@<&nbsp;>@||tup = {1.7, 'hello', [1 2 3]}||tup = list(1.7, "hello", c(1, 2, 3))||tup = (1.7, "hello", [1,2,3])||
+@<&nbsp;>@||tup = {1.7, 'hello', [1 2 3]}||tup = list(1.7, "hello", c(1, 2, 3))||tup = (1.7, "hello", [1,2,3])||tup = (1.7, "foo", [1, 2, 3])||
 ||[[# tuple-access]][#tuple-access-note lookup element] _
 @<&nbsp;>@||##gray|% indices start at one:##  _
 tup{1}||##gray|# indices start at one:##  _
 tup[[1]]||##gray|# indices start at zero:##  _
-tup[0]||
+tup[0]||##gray|# indices start at one:## _
+tup[1]||
 ||[[# tuple-update]][#tuple-update-note update element] _
-@<&nbsp;>@||tup{1} = 2.7||tup[[1]] = 2.7||##gray|//tuples are immutable//##||
+@<&nbsp;>@||tup{1} = 2.7||tup[[1]] = 2.7||##gray|//tuples are immutable//##||##gray|//tuples are immutable//##||
 ||[[# tuple-len]][#tuple-len-note length] _
-@<&nbsp;>@||length(tup)||length(tup)||len(tup)||
-||||||||~ [[# arrays]][#arrays-note arrays]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+@<&nbsp;>@||length(tup)||length(tup)||len(tup)||length(tup)||
+||||||||||~ [[# arrays]][#arrays-note arrays]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# array-elem-type]][#array-elem-type-note element type]||##gray|//always numeric//##||##gray|# "numeric":## _
 class(c(1, 2, 3)) _
  _
 ##gray|# arrays can also have "boolean" or "string" elements##||##gray|# values can have different types:## _
-[type(x) for x in a]||
+[type(x) for x in a]||a = [1, 2, 3] _
+ _
+##gray|# Array{Int64, 2}:## _
+typeof(a) _
+##gray|# Int64:## _
+typeof(a[1])||
 ||[[# array-literal]][#array-literal-note literal] _
 @<&nbsp;>@||a = [1, 2, 3, 4] _
  _
 ##gray|% commas are optional:## _
 a = [1 2 3 4]||##gray|# use c() constructor:## _
-a = c(1, 2, 3, 4)||a = [1, 2, 3, 4]||
+a = c(1, 2, 3, 4)||a = [1, 2, 3, 4]||a = [1, 2, 3, 4]||
 ||[[# array-size]][#array-size-note size] _
-@<&nbsp;>@||length(a)||length(a)||len(a)||
+@<&nbsp;>@||length(a)||length(a)||len(a)||length(a)||
 ||[[# array-empty-test]][#array-empty-test-note empty test] _
 @<&nbsp;>@||length(a) == 0 _
  _
 ##gray|% An array used in a conditional test is _
 % false unless nonempty and all entries evaluate _
-% as true.##||length(a) == 0||not a||
+% as true.##||length(a) == 0||not a||isempty(a)||
 ||[[# array-lookup]][#array-lookup-note lookup] _
-@<&nbsp;>@||##gray|% indices start at one:## _
-a(1)||##gray|# indices start at one## _
-a[1]||##gray|# indices start at zero## _
-a[0]||
+@<&nbsp;>@||##gray|% Indices start at one:## _
+a(1)||##gray|# Indices start at one:## _
+a[1]||##gray|# Indices start at zero:## _
+a[0]||##gray|# Indices start at one:## _
+a[1]||
 ||[[# array-update]][#array-update-note update] _
-@<&nbsp;>@||a(1) = -1||a[1] = -1||a[0] = -1||
+@<&nbsp;>@||a(1) = -1||a[1] = -1||a[0] = -1||a[1] = -1||
 ||[[# array-out-of-bounds]][#array-out-of-bounds-note out-of-bounds behavior]||a = [] _
  _
 ##gray|% error:## _
@@ -416,7 +516,12 @@ a[10] = "lorem"||a = [] _
 ##gray|# raises IndexError:## _
 a[10] _
 ##gray|# raises IndexError:## _
-a[10] = 'lorem'||
+a[10] = 'lorem'||a = [] _
+ _
+##gray|# raises BoundsError:## _
+a[10] _
+##gray|# raises BoundsError:## _
+a[10] = "lorem"||
 ||[[# array-element-index]][#array-element-index-note index of element]||a = [7 8 9 10 8] _
  _
 ##gray|% returns [2 5]:## _
@@ -429,7 +534,12 @@ find(a == 8, 1, 'first')||a = c('x', 'y', 'z', 'w', 'y') _
 which(a == 'y')||a = ['x', 'y', 'z', 'w', 'y'] _
  _
 a.index('y')@<&nbsp;&nbsp;&nbsp;>@##gray|# 1## _
-a.rindex('y')@<&nbsp;&nbsp;>@##gray|# 4##||
+a.rindex('y')@<&nbsp;&nbsp;>@##gray|# 4##||a = ["x", "y", "z", "w", "y"] _
+ _
+##gray|# 2:## _
+findfirst(a, "y") _
+##gray|# 5:## _
+julia> findlast(a, "y")||
 ||[[# array-slice]][#array-slice-note slice] _
 ##gray|//by endpoints//##||a = ['a' 'b' 'c' 'd' 'e'] _
  _
@@ -440,7 +550,10 @@ a(3:4)||a = c("a", "b", "c", "d", "e") _
 a[seq(3, 4)]||a = ['a', 'b', 'c', 'd', 'e'] _
  _
 ##gray|# ['c', 'd']:## _
-a[2:4]||
+a[2:4]||a = ["a", "b", "c", "d", "e"] _
+ _
+##gray|# ["c", "d"]:## _
+a[3:4]||
 ||[[# array-slice-to-end]][#array-slice-to-end-note slice to end] _
 @<&nbsp;>@||a = ['a' 'b' 'c' 'd' 'e'] _
  _
@@ -452,9 +565,14 @@ tail(a, n=length(a) - 2) _
 a[-1:-2]||a = ['a', 'b', 'c', 'd', 'e'] _
  _
 ##gray|# ['c', 'd', 'e']:## _
-a[2:]||
-||[[# int-array-as-index]][#int-array-as-index integer array as index]||[1 2 3]([1 3 3])||c(1, 2, 3)[c(1, 3, 3)]||np.array([1, 2,3])[[0, 2, 2]]||
-||[[# logical-array-as-index]][#logical-array-as-index logical array as index]||[1 2 3]([true false true])||c(1, 2, 3)[c(T, F, T)]||np.array([1, 2, 3])[[True, False, True]]||
+a[2:]||a = ["a", "b", "c", "d", "e"] _
+ _
+##gray|# ["c", "d", "e"]:## _
+a[3:end]||
+||[[# int-array-as-index]][#int-array-as-index integer array as index]||[7 8 9]([1 3 3])||c(7, 8, 9)[c(1, 3, 3)]||np.array([7, 8, 9])[[0, 2, 2]]||##gray|# [7, 9, 9]:## _
+[7, 8, 9][[1, 3, 3]]||
+||[[# logical-array-as-index]][#logical-array-as-index logical array as index]||[7 8 9]([true false true])||c(7, 8, 9)[c(T, F, T)]||np.array([7, 8, 9])[[True, False, True]]||##gray|# [7, 9]:## _
+[7, 8, 9][[true, false, true]]||
 ||[[# array-concatenation]][#array-concatenation-note concatenate]||a = [1 2 3] _
 a2 = [a [4 5 6]] _
 a = [a [4 5 6]] _
@@ -463,12 +581,14 @@ a = horzcat(a, a2)||a = c(1, 2, 3) _
 a2 = append(a, c(4, 5, 6)) _
 a = append(a, c(4, 5, 6))||a = [1, 2, 3] _
 a2 = a + [4, 5, 6] _
-a.extend([4, 5, 6])||
+a.extend([4, 5, 6])||a = [1, 2, 3] _
+a2 = vcat(a, [4, 5, 6]) _
+a = vcat(a, [4, 5, 6])||
 ||[[# array-replication]][#array-replication-note replicate]||a = repmat(NA, 1, 10)||a = rep(NA, 10) _
  _
 ##gray|# 30 a's, 50 b's, and 90 c's:## _
 rep(c("a", "b", "c"), c(30, 50, 90))||a = [None] * 10 _
-a = [None for i in range(0, 10)]||
+a = [None for i in range(0, 10)]||fill(NaN, 10)||
 ||[[# array-copy]][#array-copy-note copy] _
 ##gray|//address copy, shallow copy, deep copy//##||##gray|//There is no address copy.  Because arrays cannot be nested, there is no distinction between shallow copy and deep copy.  Assignment and passing an array to a function can be regarded as performing a shallow or deep copy, though MATLAB does not allocate memory for a 2nd array until one of the arrays is modified.//##||##gray|//Arrays in R behave like arrays in MATLAB.//##||import copy _
  _
@@ -476,7 +596,11 @@ a = [1, 2, [3, 4]] _
  _
 a2 = a _
 a3 = list(a) _
-a4 = copy.deepcopy(a)||
+a4 = copy.deepcopy(a)||a = Any[1, 2, [3, 4]] _
+ _
+a2 = a _
+a3 = copy(a) _
+a4 = deepcopy(a)||
 ||[[# array-iteration]][#array-iteration-note iteration] _
 @<&nbsp;>@||a = [9 7 3] _
 for i = 1:numel(a) _
@@ -485,37 +609,50 @@ for i = 1:numel(a) _
 end||for (x in c(9, 7, 3)) { _
 @<&nbsp;&nbsp;>@print(x) _
 }||for i in [9, 7, 3]: _
-@<&nbsp;&nbsp;>@print(i)||
+@<&nbsp;&nbsp;>@print(i)||for i = [9, 7, 3] _
+@<&nbsp;&nbsp;>@println(i) _
+end||
 ||[[# indexed-array-iteration]][#indexed-array-iteration-note indexed iteration]|| ||for (i in seq_along(a)) { _
 @<&nbsp;&nbsp;>@cat(sprintf("%s at index %d\n", i, a[i])) _
 }||a = ['do', 're', 'mi', 'fa'] _
 for i, s in enumerate(a): _
-@<&nbsp;&nbsp;>@print('%s at index %d' % (s, i))||
+@<&nbsp;&nbsp;>@print('%s at index %d' % (s, i))||a = ["do", "re", "mi", "fa"] _
+for (i, s) in enumerate(a) _
+@<&nbsp;&nbsp;>@println(i, " ", s) _
+end||
 ||[[# array-reverse]][#array-reverse-note reverse]||a = [1 2 3] _
 a2 = fliplr(a) _
 a = fliplr(a)||a = c(1, 2, 3) _
 a2 = rev(a) _
 a = rev(a)||a = [1, 2, 3] _
 a2 = a[::-1] _
-a.reverse()||
+a.reverse()||a = [1, 2, 3] _
+a2 = reverse(a) _
+reverse!(a)||
 ||[[# array-sort]][#array-sort-note sort]||a = [3 1 4 2] _
 a = sort(a)||a = c('b', 'A', 'a', 'B') _
 a2 = sort(a) _
 a = sort(a)||a = ['b', 'A', 'a', 'B'] _
 sorted(a) _
 a.sort() _
-a.sort(key=str.lower)||
+a.sort(key=str.lower)||a = [3, 1, 4, 2] _
+a2 = sort(a) _
+sort!(a)||
 ||[[# array-dedupe]][#array-dedupe-note dedupe]||a = [1 2 2 3] _
 a2 = unique(a)||a = c(1, 2, 2, 3) _
 a2 = unique(a)||a = [1, 2, 2, 3] _
-a2 = list(set(a)))||
+a2 = list(set(a)))||a = unique([1, 2, 2, 3])||
 ||[[# membership]][#membership-note membership] _
 @<&nbsp;>@||ismember(7, a)||7 %in% a _
-is.element(7, a)||7 in a||
+is.element(7, a)||7 in a||7 in a _
+7 ∈ a _
+a ∋ 7||
 ||[[# intersection]][#intersection-note intersection] _
-@<&nbsp;>@||intersect([1 2], [2 3 4])||intersect(c(1, 2), c(2, 3, 4))||{1, 2} & {2, 3, 4}||
+@<&nbsp;>@||intersect([1 2], [2 3 4])||intersect(c(1, 2), c(2, 3, 4))||{1, 2} & {2, 3, 4}||intersection([1, 2], [2, 3, 4]) _
+∩([1, 2], [2, 3, 4])||
 ||[[# union]][#union-note union] _
-@<&nbsp;>@||union([1 2], [2 3 4])||union(c(1, 2), c(2, 3, 4))||{1, 2} | {2, 3, 4}||
+@<&nbsp;>@||union([1 2], [2 3 4])||union(c(1, 2), c(2, 3, 4))||{1, 2} | {2, 3, 4}||union([1, 2], [2, 3, 4]) _
+∪([1, 2], [2, 3, 4])|||
 ||[[# set-diff]][#set-diff-note relative complement, symmetric difference]||setdiff([1 2 3], [2]) _
  _
 a1 = [1 2] _
@@ -525,11 +662,12 @@ union(setdiff(a1, a2), setdiff(a2, a1))||setdiff(c(1, 2, 3), c(2)) _
 union(setdiff(c(1, 2), c(2, 3, 4)), _
 @<&nbsp;&nbsp;>@setdiff(c(2, 3, 4), c(1, 2)))||{1, 2, 3} - {2} _
  _
-{1, 2} ^ {2, 3, 4}||
+{1, 2} ^ {2, 3, 4}||setdiff([1, 2, 3], [2]) _
+symdiff([1, 2], [2, 3, 4])||
 ||[[# map]][#map-note map] _
 @<&nbsp;>@||arrayfun( @(x) x*x, [1 2 3])||sapply(c(1,2,3), function (x) { x * x})||map(lambda x: x * x, [1, 2, 3]) _
 ##gray|# or use list comprehension:## _
-[x * x for x in [1, 2, 3]]||
+[x * x for x in [1, 2, 3]]|| ||
 ||[[# filter]][#filter-note filter] _
 @<&nbsp;>@||a = [1 2 3] _
 a(a > 2)||a = c(1, 2, 3) _
@@ -537,21 +675,24 @@ a[a > 2] _
  _
 Filter(function(x) { x > 2}, a)||filter(lambda x: x > 1, [1, 2, 3]) _
 ##gray|# or use list comprehension:## _
-[x for x in [1, 2, 3] if x > 1]||
+[x for x in [1, 2, 3] if x > 1]|| ||
 ||[[# reduce]][#reduce-note reduce] _
-@<&nbsp;>@|| ||Reduce(function(x, y) { x + y }, c(1, 2, 3), 0)||reduce(lambda x, y: x + y, [1 ,2, 3], 0)||
+@<&nbsp;>@|| ||Reduce(function(x, y) { x + y }, c(1, 2, 3), 0)||reduce(lambda x, y: x + y, [1 ,2, 3], 0)||reduce(+, [1, 2, 3]) _
+foldl(-, 0, [1, 2, 3]) _
+foldr(-, 0, [1, 2, 3])||
 ||[[# universal-existential-test]][#universal-existential-test-note universal  and existential tests] _
 @<&nbsp;>@||all(mod([1 2 3 4], 2) == 0) _
 any(mod([1 2 3 4]) == 0)||all(c(1, 2, 3, 4) %% 2 == 0) _
 any(c(1, 2, 3, 4) %% 2 == 0)||all(i % 2 == 0 for i in [1, 2, 3, 4]) _
-any(i % 2 == 0 for i in [1, 2, 3, 4])||
+any(i % 2 == 0 for i in [1, 2, 3, 4])||all([x % 2 == 0 for x in [1, 2, 3, 4]]) _
+any([x % 2 == 0 for x in [1, 2, 3, 4]])||
 ||[[# shuffle-sample]][#shuffle-sample-note shuffle and sample]|| ||a = c(1, 1, 2, 3, 9, 28) _
 sample(a, 3) _
 a[sample.int(length(a))]||from random import shuffle, sample _
  _
 a = [1, 2, 3, 4] _
 shuffle(a) _
-sample(a, 2)||
+sample(a, 2)|| ||
 ||[[# zip]][#zip-note zip] _
 @<&nbsp;>@||##gray|//none; MATLAB arrays can't be nested//##||##gray|# R arrays can't be nested. _
 # One approximation of zip is a 2d array:## _
@@ -560,30 +701,33 @@ a = rbind(c(1, 2, 3), c('a', 'b', 'c')) _
 ##gray|# To prevent data type coercion, use a data frame:## _
 df = data.frame(numbers=c(1, 2, 3), _
 @<&nbsp;&nbsp;>@letters=c('a', 'b', 'c'))||##gray|# array of 3 pairs:## _
-a = zip([1, 2, 3], ['a', 'b', 'c'])||
-||||||||~ [[# arithmetic-sequences]][#arithmetic-sequences-note arithmetic sequences]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+a = zip([1, 2, 3], ['a', 'b', 'c'])|| ||
+||||||||||~ [[# arithmetic-sequences]][#arithmetic-sequences-note arithmetic sequences]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# arith-seq-diff-one]][#arith-seq-diff-one-note unit difference]||1:100||##gray|# type integer:## _
 1:100 _
 seq(1, 100) _
  _
 ##gray|# type double:## _
-seq(1, 100, 1)||range(1, 101)||
+seq(1, 100, 1)||range(1, 101)||1:100||
 ||[[# arith-seq-diff-ten]][#arith-seq-diff-ten-note difference of 10]||0:10:100||##gray|# type double:## _
-seq(0, 100, 10)||range(0, 101, 10)||
+seq(0, 100, 10)||range(0, 101, 10)||0:10:100||
 ||[[# arith-seq-diff-tenth]][#arith-seq-diff-tenth-note difference of 0.1]||0:0.1:10||seq(0, 10, 0.1)||[0.1 * x for x in range(0, 101)] _
  _
 ##gray|# 3rd arg is length of sequence, not step size:## _
-sp.linspace(0, 10, 100)||
+sp.linspace(0, 10, 100)||0:0.1:10||
 ||[[# iter-over-arith-seq]][#iter-over-arith-seq-note iterate over arithmetic sequence]|| || ||##gray|# range replaces xrange in Python 3:## _
 n = 0 _
 for i in xrange(1, 1000001): _
-@<&nbsp;&nbsp;>@n += i||
+@<&nbsp;&nbsp;>@n += i||n = 0 _
+for i in 1:1000000 _
+@<&nbsp;&nbsp;>@n += i _
+end||
 ||[[# arith-seq-to-array]][#arith-seq-to-array-note convert arithmetic sequence to array]|| || ||a = range(1, 11) _
 ##gray|# Python 3:## _
-a = list(range(1, 11))||
-||||||||~ [[# two-d-arrays]][#two-d-arrays-note two dimensional arrays]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+a = list(range(1, 11))||a = Array(1:10)||
+||||||||||~ [[# two-d-arrays]][#two-d-arrays-note two dimensional arrays]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# array-2d-elem-type]][#array-2d-elem-type-note element type]||##gray|//always numeric//##||A = array(c(1, 2, 3)) _
  _
 ##gray|# "array":## _
@@ -593,19 +737,19 @@ class(A) _
 class(c(A))||np.array([1, 2, 3]).dtype _
  _
 ##gray|# possible values: np.bool, np.int64, np.float64, _
-# np.complex128, @@...@@##||
+# np.complex128, @@...@@##|| ||
 ||[[# array-2d-literal]][#array-2d-literal-note literal]||[1, 2; 3, 4] _
  _
 ##gray|% commas optional; newlines can replace semicolons::## _
 [1 2 _
-@<&nbsp;>@3 4]||##gray|//none//##||##gray|//none//##||
-||[[# array-2d-construct-seq]][#array-2d-construct-seq-note construct from sequence]||reshape([1 2 3 4], 2, 2)||array(c(1, 2, 3, 4), dim=c(2, 2))||np.array([1, 2, 3, 4]).reshape(2, 2)||
+@<&nbsp;>@3 4]||##gray|//none//##||##gray|//none//##|| ||
+||[[# array-2d-construct-seq]][#array-2d-construct-seq-note construct from sequence]||reshape([1 2 3 4], 2, 2)||array(c(1, 2, 3, 4), dim=c(2, 2))||np.array([1, 2, 3, 4]).reshape(2, 2)|| ||
 ||[[# array-2d-construct-rows]][#array-2d-construct-rows-note construct from rows]||row1 = [1 2 3] _
 row2 = [4 5 6] _
  _
 A = [row1; row2]||rbind(c(1, 2, 3), c(4, 5, 6))||np.vstack((np.array([1, 2, 3]), np.array([4, 5, 6]))) _
  _
-np.array([[1, 2], [3, 4]])||
+np.array([[1, 2], [3, 4]])|| ||
 ||[[# array-2d-construct-columns]][#array-2d-construct-columns-note construct from columns]||col1 = [1; 4] _
 col2 = [2; 5] _
 col3 = [3; 6] _
@@ -616,7 +760,7 @@ A = [col1, col2, col3]||cbind(c(1, 4), c(2, 5), c(3, 6))||cols = ( _
 @<&nbsp;&nbsp;>@np.array([2, 5]), _
 @<&nbsp;&nbsp;>@np.array([3, 6]) _
 ) _
-np.vstack(cols).transpose()||
+np.vstack(cols).transpose()|| ||
 ||[[# array-2d-construct-subarrays]][#array-2d-construct-subarrays-note construct from subarrays]||A = [1 3; 2 4] _
  _
 A4_by_2 = [A; A] _
@@ -624,7 +768,7 @@ A2_by_4 = [A A]||A = matrix(c(1, 2, 3, 4), nrow=2) _
 A4_by_2 = rbind(A, A) _
 A2_by_4 = cbind(A, A)||A = np.array([[1, 2], [3, 4]]) _
 A2_by_4 = np.hstack([A, A]) _
-A4_by_2 = np.vstack([A, A])||
+A4_by_2 = np.vstack([A, A])|| ||
 ||[[# array-2d-size]][#array-2d-size-note size] _
 ##gray|//number of elements, number of dimensions, dimension lengths//##||numel(A) _
 ndims(A) _
@@ -641,7 +785,9 @@ A.ndim _
 A.shape _
  _
 ##gray|# number of rows:## _
-len(A)||
+len(A)||length(A) _
+ndims(A) _
+size(A)||
 ||[[# array-2d-lookup]][#array-2d-lookup-note lookup]||##gray|% indices start at one:## _
 [1 2; 3 4](1, 1)||##gray|# indices start at one:## _
 A = array(c(1, 2, 3, 4), dim=c(2, 2) _
@@ -650,7 +796,7 @@ A[1, 1]||##gray|# indices start at zero:## _
 A = np.array([[1, 2], [3, 4]]) _
  _
 A[0][0] ##gray|//or//## _
-A[0, 0]||
+A[0, 0]|| ||
 ||[[# array-2d-1d-lookup]][#array-2d-1d-lookup-note 1d lookup]||A = [2 4; 6 8] _
 ##gray|% returns 8:## _
 A(4) _
@@ -665,7 +811,7 @@ A[4]||A = np.array([[2, 4], [6, 8]]) _
 A[1] _
  _
 ##gray|# returns 8:## _
-A.reshape(4)[3]||
+A.reshape(4)[3]|| ||
 ||[[# array-2d-slice]][#array-2d-slice-note lookup row or column]||A = [1 2 3; 4 5 6; 7 8 9] _
  _
 ##gray|% 2nd row:## _
@@ -684,11 +830,11 @@ A[, 2]||A = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]]) _
 A[1, :] _
  _
 ##gray|# 2nd column:## _
-A[:, 1]||
+A[:, 1]|| ||
 ||[[# array-2d-update]][#array-2d-update-note update]||A = [2 4; 6 8] _
 A(1, 1) = 3||A = array(c(2, 4, 6, 8), dim=c(2, 2)) _
 A[1, 1] = 3||A = np.array([[2, 4], [6, 8]]) _
-A[0, 0] = 3||
+A[0, 0] = 3|| ||
 ||[[# array-2d-update-row-col]][#array-2d-update-row-col-note update row or column]||A = [1 2; 3 4] _
  _
 ##gray|% [2 1; 3 4]:## _
@@ -704,7 +850,7 @@ A[0, :] = [2, 1] _
 ##gray|# or## _
 A[0] = [2, 1] _
  _
-A[:, 0] = [3, 2]||
+A[:, 0] = [3, 2]|| ||
 ||[[# array-2d-update-subarray]][#array-2d-update-subarray-note update subarray]||A = ones(3, 3) _
 A(1:2, 1:2) = 2 * ones(2, 2) _
 ##gray|% or just:## _
@@ -712,14 +858,14 @@ A(1:2, 1:2) = 2||A = array(1, dim=c(3, 3)) _
 A[1:2, 1:2] = array(2, dim=c(2, 2)) _
 ##gray|# or just:## _
 A[1:2, 1:2] = 2||A = np.ones([3, 3]) _
-A[0:2, 0:2] = 2 * np.ones([2, 2])||
+A[0:2, 0:2] = 2 * np.ones([2, 2])|| ||
 ||[[# array-2d-out-of-bounds]][#array-2d-out-of-bounds-note out-of-bounds behavior]||A = [2 4; 6 8] _
  _
 ##gray|% error:## _
 x = A(3, 1) _
  _
 ##gray|% becomes 3x2 array with zero at (3, 2):## _
-A(3, 1) = 9||##gray|//Lookups and updates both cause subscript out of bounds error.//##||##gray|//Lookups and updates both raise an// IndexError //exception.//##||
+A(3, 1) = 9||##gray|//Lookups and updates both cause subscript out of bounds error.//##||##gray|//Lookups and updates both raise an// IndexError //exception.//##|| ||
 ||[[# array-2d-slice-subarray]][#array-2d-slice-subarray-note slice subarray]||A = reshape(1:16, 4, 4)' _
  _
 ##gray|% top left 2x2 subarray:## _
@@ -745,14 +891,14 @@ A[c(1, 4), c(1, 4)]||A = np.array(range(1, 17)).reshape(4, 4) _
 A[0:2, 0:2] _
  _
 ##gray|# bottom right 2x2 subarray:## _
-A[2:, 2:]||
+A[2:, 2:]|| ||
 ||[[# array-2d-transpose]][#array-2d-transpose-note transpose]||A = [1 2; 3 4] _
  _
 A' _
 transpose(A)||A = array(c(1, 2, 3, 4), dim=c(2, 2)) _
 t(A)||A = np.array([[1, 2], [3, 4]]) _
 A.transpose() _
-A.T||
+A.T|| ||
 ||[[# array-2d-flip]][#array-2d-flip-note flip]||##gray|% [ 2 1; 4 3]:## _
 fliplr([1 2; 3 4]) _
  _
@@ -766,7 +912,7 @@ fliplr(A) _
 flipud(A)||A = np.array([[1, 2], [3, 4]]) _
  _
 np.fliplr(A) _
-np.flipud(A)||
+np.flipud(A)|| ||
 ||[[# array-2d-circular-shift]][#array-2d-circular-shift-note circular shift] _
  _
 ##gray|//along columns, along rows//##||A = [1 2; 3, 4] _
@@ -787,7 +933,7 @@ circshift(A, c(1, 0)) _
 circshift(A, c(0, 1))||A = np.array([[1, 2], [3, 4]]) _
  _
 np.roll(A, 1, axis=0) _
-np.roll(A, 1, axis=1)||
+np.roll(A, 1, axis=1)|| ||
 ||[[# array-2d-rotate]][#array-2d-rotate-note rotate] _
 ##gray|//clockwise, counter-clockwise//##||A = [1 2; 3 4] _
  _
@@ -808,7 +954,7 @@ rot90(A, 2)||A = np.array([[1, 2], [3, 4]]) _
  _
 np.rot90(A) _
 np.rot90(A, -1) _
-np.rot90(A, 2)||
+np.rot90(A, 2)|| ||
 ||[[# array-2d-reduce]][#array-2d-reduce-note reduce] _
 ##gray|//rows, columns//##||M = [1 2; 3 4] _
  _
@@ -832,13 +978,13 @@ np.add.reduce(A, 0) _
  _
 ##gray|# np.add is a built-in universal function.  All universal functions have a reduce method.## _
  _
-##gray|# np.sum(A, 1,) and np.sum(A, 0) also sum rows and columns##|||
-||||||||~ [[# three-d-arrays]][#three-d-arrays-note three dimensional arrays]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
-||[[# array-3d-construct-seq]][#array-3d-construct-seq-note construct from sequence]||reshape([1 2 3 4 5 6 7 8], 2, 2, 2)||array(c(1, 2, 3, 4, 5, 6, 7, 8), dim=c(2, 2, 2))||np.array([1, 2, 3, 4, 5, 6, 7, 8]).reshape(2, 2, 2)||
-||[[# array-3d-construct-nested-seq]][#array-3d-construct-nested-seq-note construct from nested sequences]||##gray|//none//##||##gray|//none//##||np.array([[[1, 2], [3, 4]], [[5, 6], [7, 8]]])||
+##gray|# np.sum(A, 1,) and np.sum(A, 0) also sum rows and columns##|| ||
+||||||||||~ [[# three-d-arrays]][#three-d-arrays-note three dimensional arrays]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
+||[[# array-3d-construct-seq]][#array-3d-construct-seq-note construct from sequence]||reshape([1 2 3 4 5 6 7 8], 2, 2, 2)||array(c(1, 2, 3, 4, 5, 6, 7, 8), dim=c(2, 2, 2))||np.array([1, 2, 3, 4, 5, 6, 7, 8]).reshape(2, 2, 2)|| ||
+||[[# array-3d-construct-nested-seq]][#array-3d-construct-nested-seq-note construct from nested sequences]||##gray|//none//##||##gray|//none//##||np.array([[[1, 2], [3, 4]], [[5, 6], [7, 8]]])|| ||
 ||[[# array-3d-construct-2d-arrays]][#array-3d-construct-2d-arrays-note construct 3d array from 2d arrays]||A = [1, 2; 3, 4] _
-A(:,:,2) = [5, 6; 7, 8]|| || ||
+A(:,:,2) = [5, 6; 7, 8]|| || || ||
 ||[[# array-3d-permute-axes]][#array-3d-permute-axes-note permute axes]||A = reshape([1 2 3 4 5 6 7 8], 2, 2, 2) _
  _
 ##gray|% swap 2nd and 3rd axes:## _
@@ -848,18 +994,18 @@ permute(A, [1 3 2])||A = array(1:8, dim=c(2, 2, 2)) _
 aperm(A, perm=c(1, 3, 2))||A = np.array(range(1, 9)).reshape(2, 2, 2) _
  _
 ##gray|# swap 2nd and 3rd axes:## _
-A.transpose((0, 2, 1))||
+A.transpose((0, 2, 1))|| ||
 ||[[# array-3d-flip]][#array-3d-flip-note flip]||A = reshape([1 2 3 4 5 6 7 8], 2, 2, 2)  _
  _
-flipdim(A, 3)||##gray|//none//##||##gray|//none//##||
+flipdim(A, 3)||##gray|//none//##||##gray|//none//##|| ||
 ||[[# array-3d-circular-shift]][#array-3d-circular-shift-note circular shift]||A = reshape([1 2 3 4 5 6 7 8], 2, 2, 2) _
  _
 ##gray|% 3rd arg specifies axis:## _
 circshift(A, 1, 3)||##gray|//none//##||A = np.array([1, 2, 3, 4, 5, 6, 7, 8]).reshape(2, 2, 2) _
  _
-np.roll(A, 1, axis=2)||
-||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+np.roll(A, 1, axis=2)|| ||
+||||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# dict-literal]][#dict-literal-note literal] _
 @<&nbsp;>@||##gray|% no literal; use constructor:## _
 d = struct('n', 10, 'avg', 3.7, 'sd', 0.4) _
@@ -869,22 +1015,23 @@ d = cell2struct({10 3.7 0.4}, {'n' 'avg' 'sd'}, 2)||##gray|# keys are 'n', 'avg'
 d = list(n=10, avg=3.7, sd=0.4) _
  _
 ##gray|# keys are 1, 2, and 3:## _
-d2 = list('do', 're', 'mi')||d = {'n': 10, 'avg': 3.7, 'sd': 0.4}||
-||[[# dict-size]][#dict-size-note size]||length(fieldnames(d))||length(d)||len(d)||
+d2 = list('do', 're', 'mi')||d = {'n': 10, 'avg': 3.7, 'sd': 0.4}||d = Dict("n"=>10.0, "avg"=>3.7, "sd"=>0.4)||
+||[[# dict-size]][#dict-size-note size] _
+@<&nbsp;>@||length(fieldnames(d))||length(d)||len(d)||length(d)||
 ||[[# dict-lookup]][#dict-lookup-note lookup] _
 @<&nbsp;>@||d.n _
 getfield(d, 'n')||d[['n']] _
  _
 ##gray|# if 'n' is a key:## _
-d$n||d['n']||
+d$n||d['n']|| ||
 ||[[# dict-update]][#dict-update-note update] _
-@<&nbsp;>@||d.var = d.sd@@**2@@||d$var = d$sd@@**@@2||d['var'] = d['sd']@@**@@2||
+@<&nbsp;>@||d.var = d.sd@@**2@@||d$var = d$sd@@**@@2||d['var'] = d['sd']@@**@@2|| ||
 ||[[# dict-missing-key]][#dict-missing-key-note missing key behavior] _
-@<&nbsp;>@||##gray|//error//##||NULL||##gray|//raises// KeyError##||
+@<&nbsp;>@||##gray|//error//##||NULL||##gray|//raises// KeyError##|| ||
 ||[[# dict-is-key-present]][#dict-is-key-present-note is key present] _
-@<&nbsp;>@||isfield(d, 'var')||is.null(d$var)||'var' in d||
+@<&nbsp;>@||isfield(d, 'var')||is.null(d$var)||'var' in d||haskey(d, "var")||
 ||[[# dict-delete]][#dict-delete-note delete] _
-@<&nbsp;>@||d = rmfield(d, 'sd')||d$sd = NULL||del(d['sd'])||
+@<&nbsp;>@||d = rmfield(d, 'sd')||d$sd = NULL||del(d['sd'])|| ||
 ||[[# dict-iterate]][#dict-iterate-note iterate]||for i = 1:numel(fieldnames(d)) _
 @<&nbsp;&nbsp;>@k = fieldnames(d){i} _
 @<&nbsp;&nbsp;>@v = d.(k) _
@@ -893,43 +1040,53 @@ end||for (k in names(d)) { _
 @<&nbsp;&nbsp;>@v = d[[k]] _
 @<&nbsp;&nbsp;>@##gray|//code//## _
 }||for k, v in d.iteritems(): _
-@<&nbsp;&nbsp;>@##gray|//code//##||
+@<&nbsp;&nbsp;>@##gray|//code//##|| ||
 ||[[# dict-keys-values-arrays]][#dict-keys-values-arrays-note keys and values as arrays]||##gray|% these return cell arrays:## _
 fieldnames(d) _
 struct2cell(d)||names(d) _
 unlist(d, use.names=F)||d.keys() _
-d.values()||
+d.values()|| ||
 ||[[# dict-merge]][#dict-merge-note merge]||##gray|//none//##||d1 = list(a=1, b=2) _
 d2 = list(b=3, c=4) _
 ##gray|# values of first dictionary take precedence:## _
 d3 = c(d1, d2)||d1 = {'a':1, 'b':2} _
 d2 = {'b':3, 'c':4} _
-d1.update(d2)||
-||||||||~ [[# functions]][#functions-note functions]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+d1.update(d2)|| ||
+||||||||||~ [[# functions]][#functions-note functions]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# def-func]][#def-func-note define function]||function add(x, y) _
 @<&nbsp;&nbsp;>@x + y _
-end||add = function(x, y) {x + y}|| ||
+end||add = function(x, y) {x + y}|| ||function add(x,y) _
+@<&nbsp;&nbsp;>@x + y _
+end _
+ _
+##gray|# optional syntax when body is an expression:## _
+add(x, y) = x + y||
 ||[[# invoke-func]][#invoke-func-note invoke function] _
-@<&nbsp;>@||add(3, 7)||add(3, 7)|| ||
-||[[# nested-func]][#nested-func-note nested function]||function ret1 = foo(x, y) _
-@<&nbsp;&nbsp;>@function ret2 = bar(x, y) _
+@<&nbsp;>@||add(3, 7)||add(3, 7)|| ||add(3, 7)||
+||[[# nested-func]][#nested-func-note nested function]||function ret1 = add3(x, y, z) _
+@<&nbsp;&nbsp;>@function ret2 = add2(x, y) _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@ret2 = x + y; _
 @<&nbsp;&nbsp;>@end _
  _
-@<&nbsp;&nbsp;>@ret1 = bar(x, y); _
-end||foo = function(x, y) { _
-@<&nbsp;&nbsp;>@bar = function(x, y) { x + y } _
-@<&nbsp;&nbsp;>@bar(x, y) _
-}|| ||
-||[[# missing-arg]][#missing-arg-note missing argument behavior]||##gray|//raises error if code with the parameter that is missing an argument is executed//##||##gray|//raises error//##|| ||
+@<&nbsp;&nbsp;>@ret1 = add2(x, y) + z; _
+end||add3 = function(x, y, z) { _
+@<&nbsp;&nbsp;>@add2 = function(x, y) { x + y } _
+@<&nbsp;&nbsp;>@add2(x, y) + z _
+}|| ||function add3(x, y, z) _
+@<&nbsp;&nbsp;>@function add2(x2, y2) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@x2 + y2 _
+@<&nbsp;&nbsp;>@end _
+@<&nbsp;&nbsp;>@add2(x, y) + z _
+end||
+||[[# missing-arg]][#missing-arg-note missing argument behavior]||##gray|//raises error if code with the parameter that is missing an argument is executed//##||##gray|//raises error//##|| ||##gray|//raises// MethodError##||
 ||[[# extra-arg]][#extra-arg-note extra argument behavior] _
-@<&nbsp;>@||##gray|//ignored//##||##gray|//raises error//##|| ||
+@<&nbsp;>@||##gray|//ignored//##||##gray|//raises error//##|| ||##gray|//raises// MethodError##||
 ||[[# default-arg]][#default-arg-note default argument]||function mylog(x, base=10) _
 @<&nbsp;&nbsp;>@log(x) / log(base) _
 end||mylog = function(x,base=10) { _
 @<&nbsp;&nbsp;>@log(x) / log(base) _
-}|| ||
+}|| || ||
 ||[[# variadic-func]][#variadic-func-note variadic function]||function s = add(varargin) _
 @<&nbsp;&nbsp;>@if nargin == 0 _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@s = 0 _
@@ -946,7 +1103,7 @@ end||add = function (@@...@@) { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@s = s + a[[i]] _
 @<&nbsp;&nbsp;>@} _
 @<&nbsp;&nbsp;>@return(s) _
-}|| ||
+}|| || ||
 ||[[# retval]][#retval-note return value]||function ret = add(x, y) _
 @<&nbsp;&nbsp;>@ret = x + y; _
 end _
@@ -954,30 +1111,38 @@ end _
 ##gray|% If a return variable is declared, the value assigned _
 % to it is returned.  Otherwise the value of the last _
 % statement will be used if it does not end with a _
-% semicolon.##||##gray|return //argument or last expression evaluated.//  NULL //if// return //called without an argument.//##|| ||
+% semicolon.##||##gray|return //argument or last expression evaluated.//  NULL //if// return //called without an argument.//##|| ||##gray|return //argument or last expression evaluated.//  Void //if// return //called without an argument.//##||
 ||[[# multiple-retval]][#multiple-retval-note multiple return values]||function [x, y] = first_two(a) _
 @<&nbsp;&nbsp;>@x = a(1); _
 @<&nbsp;&nbsp;>@y = a(2); _
 end _
  _
 ##gray|% sets first to 7; second to 8:## _
-[first, second] = first_two([7 8 9])|| || ||
+[first, second] = first_two([7 8 9])|| || ||function first_two(a) _
+@<&nbsp;&nbsp;>@a[1], a[2] _
+end _
+ _
+x, y = first_two([1, 2, 3])||
 ||[[# anonymous-func-literal]][#anonymous-func-literal-note anonymous function literal]||##gray|% body must be an expression:## _
-@(a,b) a+b||function(a,b) {a+b}|| ||
-||[[# invoke-anonymous-func]][#invoke-anonymous-func-note invoke anonymous function]|| || || ||
+@(x, y) x + y||function(x, y) {x + y}|| ||add = (x, y) -> x + y _
+ _
+add = function(x, y) _
+@<&nbsp;&nbsp;>@x + y _
+end||
+||[[# invoke-anonymous-func]][#invoke-anonymous-func-note invoke anonymous function]|| || || ||add(1, 2)||
 ||[[# closure]][#closure-note closure]|| ||make_counter = function() { _
 @<&nbsp;&nbsp;>@i = 0 _
 @<&nbsp;&nbsp;>@function() { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@i @@<<@@- i + 1 _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@i _
 @<&nbsp;&nbsp;>@} _
-}|| ||
+}|| || ||
 ||[[# func-as-val]][#func-as-val-note function as value] _
-@<&nbsp;>@||@add||add|| ||
-||[[# overload-operator]][#overload-operator-note overload operator]|| || || ||
-||[[# call-op-like-func]][#call-op-like-func-note call operator like function]|| ||@@`+`@@(3, 7)|| ||
-||||||||~ [[# execution-control]][#execution-control-note execution control]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+@<&nbsp;>@||@add||add|| ||add||
+||[[# overload-operator]][#overload-operator-note overload operator]|| || || || ||
+||[[# call-op-like-func]][#call-op-like-func-note call operator like function]|| ||@@`+`@@(3, 7)|| ||+(3, 7)||
+||||||||||~ [[# execution-control]][#execution-control-note execution control]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# if]][#if-note if]||if (x > 0) _
 @<&nbsp;&nbsp;>@disp('positive') _
 elseif (x < 0) _
@@ -995,7 +1160,13 @@ end||if (x > 0) { _
 elif x < 0: _
 @<&nbsp;&nbsp;>@print('negative') _
 else: _
-@<&nbsp;&nbsp;>@print('zero')||
+@<&nbsp;&nbsp;>@print('zero')||if x > 0 _
+@<&nbsp;&nbsp;>@println("positive") _
+elseif x < 0 _
+@<&nbsp;&nbsp;>@println("negative") _
+else _
+@<&nbsp;&nbsp;>@println("zero") _
+end||
 ||[[# while]][#while-note while]||i = 0 _
 while (i < 10) _
 @<&nbsp;&nbsp;>@i = i + 1 _
@@ -1005,17 +1176,23 @@ end||while (i < 10) { _
 @<&nbsp;&nbsp;>@print(i) _
 }||while i < 10: _
 @<&nbsp;&nbsp;>@i += 1 _
-@<&nbsp;&nbsp;>@print(i)||
+@<&nbsp;&nbsp;>@print(i)||i = 0 _
+while i < 10 _
+@<&nbsp;&nbsp;>@i += 1 _
+@<&nbsp;&nbsp;>@println(i) _
+end||
 ||[[# for]][#for-note for]||for i = 1:10 _
 @<&nbsp;&nbsp;>@disp(i) _
 end||for (i in 1:10) { _
 @<&nbsp;&nbsp;>@print(i) _
 }||for i in range(1,11): _
-@<&nbsp;&nbsp;>@print(i)||
+@<&nbsp;&nbsp;>@print(i)||for i = 1:10 _
+@<&nbsp;&nbsp;>@println(i) _
+end||
 ||[[# break-continue]][#break-continue-note break/continue] _
-@<&nbsp;>@||break continue||break next||break continue||
+@<&nbsp;>@||break continue||break next||break continue||break continue||
 ||[[# raise-exc]][#raise-exc-note raise exception] _
-@<&nbsp;>@||error('%s', 'failed')||stop('failed')||raise Exception('failed')||
+@<&nbsp;>@||error('%s', 'failed')||stop('failed')||raise Exception('failed')||throw("failed")||
 ||[[# handle-exc]][#handle-exc-note handle exception]||try _
 @<&nbsp;&nbsp;>@error('failed') _
 catch err _
@@ -1025,43 +1202,43 @@ end||tryCatch( _
 @<&nbsp;&nbsp;>@error=function(e) print(message(e)))||try: _
 @<&nbsp;&nbsp;>@raise Exception('failed') _
 except Exception as e: _
-@<&nbsp;&nbsp;>@print(e)||
-||||||||~ [[# file-handle]][#file-handle-note file handles]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+@<&nbsp;&nbsp;>@print(e)|| ||
+||||||||||~ [[# file-handle]][#file-handle-note file handles]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# std-file-handles]][#std-file-handles-note standard file handles]||0 1 2 _
  _
 ##gray|% Octave has predefined variables _
 % containing the above descriptors:## _
-stdin stdout stderr||stdin() stdout() stderr()||sys.stdin sys.stdout sys.stderr||
-||[[# read-line-stdin]][#read-line-stdin-note read line from stdin]||line = input('', 's')||line = readLines(n=1)||line = sys.stdin.readline()||
+stdin stdout stderr||stdin() stdout() stderr()||sys.stdin sys.stdout sys.stderr||STDIN STDOUT STDERR||
+||[[# read-line-stdin]][#read-line-stdin-note read line from stdin]||line = input('', 's')||line = readLines(n=1)||line = sys.stdin.readline()||line = readline()||
 ||[[# write-line-stdout]][#write-line-stdout-note write line to stdout]||fprintf(1, 'hello\n')||cat("hello\n") _
  _
-writeLines("hello")||print('hello')||
+writeLines("hello")||print('hello')||println("hello")||
 ||[[# printf]][#printf-note write formatted string to stdout]||fprintf(1, '%.2f\n', pi)||cat(sprintf("%.2f\n", pi))||import math _
  _
-print('%.2f' % math.pi)||
+print('%.2f' % math.pi)|| ||
 ||[[# open-file]][#open-file-note open file for reading]||f = fopen('/etc/hosts') _
 if (f == -1) _
 @<&nbsp;&nbsp;>@error('failed to open file') _
-end||f = file("/etc/hosts", "r")||f = open('/etc/hosts')||
+end||f = file("/etc/hosts", "r")||f = open('/etc/hosts')||f = open("/etc/hosts")||
 ||[[# open-file-write]][#open-file-write-note open file for writing]||if ((f = fopen('/tmp/test', 'w') == -1) _
 @<&nbsp;&nbsp;>@error('failed to open file') _
-endif||f = file("/tmp/test", "w")||f = open('/tmp/test', 'w')||
+endif||f = file("/tmp/test", "w")||f = open('/tmp/test', 'w')||f = open("/etc/hosts", "w")||
 ||[[# open-file-append]][#open-file-append-note open file for appending]||if ((f = fopen('/tmp/err.log', 'a') == -1) _
 @<&nbsp;&nbsp;>@error('failed to open file') _
-endif||f = file("/tmp/err.log", "a")||f = open('/tmp/err.log', 'a')||
-||[[# close-file]][#close-file-note close file]||fclose(f)||close(f)||f.close()||
-||[[# io-err]][#io-err-note i/o errors]||##gray|fopen //returns -1;// fclose //throws an error//##|| ||##gray|//raise// IOError //exception//##||
-||[[# read-line]][#read-line-note read line]||line = fgets(f)||line = readLines(f, n=1)||line = f.readline()||
+endif||f = file("/tmp/err.log", "a")||f = open('/tmp/err.log', 'a')||f = open("/tmp/err.log", "a")||
+||[[# close-file]][#close-file-note close file]||fclose(f)||close(f)||f.close()||close(f)||
+||[[# io-err]][#io-err-note i/o errors]||##gray|fopen //returns -1;// fclose //throws an error//##|| ||##gray|//raise// IOError //exception//##|| ||
+||[[# read-line]][#read-line-note read line]||line = fgets(f)||line = readLines(f, n=1)||line = f.readline()||line = readline(f)||
 ||[[# file-iterate]][#file-iterate-note iterate over file by line]||while(!feof(f)) _
 @<&nbsp;&nbsp;>@line = fgets(f) _
 @<&nbsp;&nbsp;>@puts(line) _
 endwhile|| ||for line in f: _
-@<&nbsp;&nbsp;>@print(line)||
-||[[# read-file-array]][#read-file-array-note read file into array of strings]|| ||lines = readLines(f)||lines = f.readlines()||
-||[[# write-str]][#write-str-note write string]||fputs(f, 'lorem ipsum')||cat("lorem ipsum", file=f)||f.write('lorem ipsum')||
-||[[# write-line]][#write-line-note write line]||fputs(f, 'lorem ipsum\n')||writeLines("lorem ipsum", con=f)||f.write('lorem ipsum\n')||
-||[[# flush]][#flush-note flush file handle]||fflush(f)||flush(f)||f.flush()||
+@<&nbsp;&nbsp;>@print(line)|| ||
+||[[# read-file-array]][#read-file-array-note read file into array of strings]|| ||lines = readLines(f)||lines = f.readlines()||lines = readlines(f)||
+||[[# write-str]][#write-str-note write string]||fputs(f, 'lorem ipsum')||cat("lorem ipsum", file=f)||f.write('lorem ipsum')||write(f, "lorem ipsum")||
+||[[# write-line]][#write-line-note write line]||fputs(f, 'lorem ipsum\n')||writeLines("lorem ipsum", con=f)||f.write('lorem ipsum\n')|| ||
+||[[# flush]][#flush-note flush file handle]||fflush(f)||flush(f)||f.flush()|| ||
 ||[[# seek]][#seek-note file handle position] _
 ##gray|//get, set//##||ftell(f) _
  _
@@ -1072,8 +1249,8 @@ fseek(f, 0, SEEK_SET)||seek(f) _
 # origin can also be "current" or "end"## _
 seek(f, where=0, origin="start")||f.tell() _
  _
-f.seek(0)||
-||[[# redirect-stdout-to-file]][#redirect-stdout-to-file-note redirect stdout to file]|| ||sink("foo.txt")|| ||
+f.seek(0)|| ||
+||[[# redirect-stdout-to-file]][#redirect-stdout-to-file-note redirect stdout to file]|| ||sink("foo.txt")|| || ||
 ||write variables to file||A = [1 2; 3 4] _
 B = [4 3; 2 1] _
  _
@@ -1085,7 +1262,7 @@ B = np.matrix([[4, 3], [2, 1]]) _
  _
 ##gray|# Data must be of type np.array;## _
 ##gray|# file will have .npz suffix:## _
-np.savez('data', A=A, B=B)||
+np.savez('data', A=A, B=B)|| ||
 ||read variables from file||##gray|% puts A and B in scope:## _
 load('data.mdata') _
  _
@@ -1093,10 +1270,10 @@ load('data.mdata') _
 load('data.mdata', 'A')||##gray|# puts A and B in scope:## _
 load('data.rdata')||data = np.load('data.npz') _
 A = data['A'] _
-B = data['B']||
-||write all variables in scope to file||save('data.txt')||save.image('data.txt')|| ||
-||||||||~ [[# directories]][#directories-note directories]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+B = data['B']|| ||
+||write all variables in scope to file||save('data.txt')||save.image('data.txt')|| || ||
+||||||||||~ [[# directories]][#directories-note directories]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# working-dir]][#working-dir-note working directory] _
 ##gray|//get, set//##||pwd _
  _
@@ -1104,12 +1281,12 @@ cd('/tmp')||getwd() _
  _
 setwd("/tmp")||os.path.abspath('.') _
  _
-os.chdir('/tmp')||
-||[[# build-pathname]][#build-pathname-note build pathname]||fullfile('/etc', 'hosts')||file.path("/etc", "hosts")||os.path.join('/etc', 'hosts')||
+os.chdir('/tmp')|| ||
+||[[# build-pathname]][#build-pathname-note build pathname]||fullfile('/etc', 'hosts')||file.path("/etc", "hosts")||os.path.join('/etc', 'hosts')|| ||
 ||[[# dirname-basename]][#dirname-basename-note dirname and basename]||[dir, base] = fileparts('/etc/hosts')||dirname("/etc/hosts") _
 basename("/etc/hosts")||os.path.dirname('/etc/hosts') _
-os.path.basename('/etc/hosts')||
-||[[# absolute-pathname]][#absolute-pathname-note absolute pathname]|| ||normalizePath("..")||os.path.abspath('..')||
+os.path.basename('/etc/hosts')|| ||
+||[[# absolute-pathname]][#absolute-pathname-note absolute pathname]|| ||normalizePath("..")||os.path.abspath('..')|| ||
 ||[[# iterate-dir]][#iterate-dir-note iterate over directory by file]||##gray|% lists /etc:## _
 ls('/etc') _
  _
@@ -1118,18 +1295,18 @@ ls()||##gray|# list.files() defaults to working directory## _
 for (path in list.files('/etc')) { _
 @<&nbsp;&nbsp;>@print(path) _
 }||for filename in os.listdir('/etc'): _
-@<&nbsp;&nbsp;>@print(filename)|| 
+@<&nbsp;&nbsp;>@print(filename)|| ||
 ||[[# glob-paths]][#glob-paths-note glob paths]||glob('/etc/*')||Sys.glob('/etc/*')||import glob _
  _
-glob.glob('/etc/*')||
-||||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+glob.glob('/etc/*')|| ||
+||||||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# cmd-line-arg]][#cmd-line-arg-note command line arguments]||##gray|% does not include interpreter name:## _
 argv()||##gray|# first arg is name of interpreter:## _
 commandArgs() _
  _
 ##gray|# arguments after @@--@@args only:## _
-commandArgs(TRUE)||sys.argv||
+commandArgs(TRUE)||sys.argv||ARGS||
 ||[[# env-var]][#env-var-note environment variable] _
 ##gray|//get, set//##||getenv('HOME') _
  _
@@ -1137,50 +1314,53 @@ setenv('PATH', '/bin')||Sys.getenv("HOME") _
  _
 Sys.setenv(PATH="/bin")||os.getenv('HOME') _
  _
-os.environ['PATH'] = '/bin'||
+os.environ['PATH'] = '/bin'||ENV["HOME"] _
+ _
+ENV["PATH"] = "/bin"||
 ||[[# exit]][#exit-note exit] _
-@<&nbsp;>@||exit(0)||quit(save="no", status=0)||sys.exit(0)||
+@<&nbsp;>@||exit(0)||quit(save="no", status=0)||sys.exit(0)||exit(0)||
 ||[[# external-cmd]][#external-cmd-note external command]||if (shell_cmd('ls -l /tmp')) _
 @<&nbsp;&nbsp;>@error('ls failed') _
 endif||if (system("ls -l /tmp")) { _
 @<&nbsp;&nbsp;>@stop("ls failed") _
 }||if os.system('ls -l /tmp'): _
-@<&nbsp;&nbsp;>@raise Exception('ls failed')||
-||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+@<&nbsp;&nbsp;>@raise Exception('ls failed')|| ||
+||[[# cmd-subst]][#cmd-subst-note command substitution]|| || || ||s = readall(`ls`)||
+||||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# load-lib]][#load-lib-note load library]||##gray|//When a function is invoked, MATLAB searches the library path for a file with the same name and a// .m //suffix.  Other functions defined in the file are not visible outside the file.//##||##gray|# quoting the name of the package is optional:## _
 require("foo") _
 ##gray|# or: ## _
 library("foo") _
  _
-##gray|# if the package does not exist, require returns false, and library raises an error.##||import foo||
-||[[# list-lib]][#list-lib-note list loaded libraries]||##gray|//none//##||search()||dir()||
+##gray|# if the package does not exist, require returns false, and library raises an error.##||import foo||include("foo.jl")||
+||[[# list-lib]][#list-lib-note list loaded libraries]||##gray|//none//##||search()||dir()|| ||
 ||[[# lib-path]][#lib-path-note library search path]||path() _
 addath('~/foo') _
-rmpath('~/foo')||.libPaths()||sys.path||
+rmpath('~/foo')||.libPaths()||sys.path|| ||
 ||[[# source-file]][#source-file-note source file] _
-@<&nbsp;>@||run('foo.m')||source("foo.r")||##gray|//none//##||
+@<&nbsp;>@||run('foo.m')||source("foo.r")||##gray|//none//##|| ||
 ||[[# install-pkg]][#install-pkg-note install package]||##gray|% Octave: how to install package _
 % downloaded from Octave-Forge: ## _
-pkg install foo-1.0.0.tar.gz ||install.packages("ggplot2")||$ pip install scipy||
+pkg install foo-1.0.0.tar.gz ||install.packages("ggplot2")||$ pip install scipy|| ||
 ||[[# load-pkg]][#load-pkg-note load package library]||##gray|% Octave:## _
 pkg load foo||require("foo") _
 ##gray|# or:## _
-library("foo")||import foo||
+library("foo")||import foo|| ||
 ||[[# list-pkg]][#list-pkg-note list installed packages]||##gray|% Octave:## _
 pkg list||library() _
-installed.packages()||$ pip freeze||
-||||||||~ [[# reflection]][#reflection-note reflection]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+installed.packages()||$ pip freeze|| ||
+||||||||||~ [[# reflection]][#reflection-note reflection]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# data-type]][#data-type-note data type]||class(x)||class(x) _
 ##gray|# often more informative:## _
-str(x)||type(x)||
+str(x)||type(x)||typeof(x)||
 ||[[# attr]][#attr-note attributes]||##gray|% if x holds an object:## _
 x||attributes(x)||[m for m in dir(x) _
-@<&nbsp;&nbsp;>@if not callable(getattr(o,m))]||
+@<&nbsp;&nbsp;>@if not callable(getattr(o,m))]||fieldnames(x)||
 ||[[# methods]][#method-note methods]||##gray|% if x holds an object:## _
 methods(x)||##gray|//none; objects are implemented by functions which dispatch based on type of first arg//##||[m for m in dir(x) _
-@<&nbsp;&nbsp;>@if callable(getattr(o,m))]||
+@<&nbsp;&nbsp;>@if callable(getattr(o,m))]||methods(x)||
 ||[[# var-in-scope]][#var-in-scope-note variables in scope]||who() _
  _
 ##gray|% with size and type:## _
@@ -1188,18 +1368,18 @@ whos()||objects() _
 ls() _
  _
 ##gray|# with type and description:## _
-ls.str()||dir()||
+ls.str()||dir()||whos()||
 ||[[# undef-var]][#undef-var-note undefine variable] _
-@<&nbsp;>@||clear('x')||rm(v)||del(x)||
-||[[# undef-all-var]][#undef-all-var-note undefine all variables]||clear -a||rm(list=objects())|| ||
+@<&nbsp;>@||clear('x')||rm(v)||del(x)||##gray|//none//##||
+||[[# undef-all-var]][#undef-all-var-note undefine all variables]||clear -a||rm(list=objects())|| ||##gray|//none//##||
 ||[[# eval]][#eval-note eval] _
-@<&nbsp;>@||eval('1 + 1')||eval(parse(text='1 + 1'))||eval('1 + 1')||
+@<&nbsp;>@||eval('1 + 1')||eval(parse(text='1 + 1'))||eval('1 + 1')||eval(parse("1 + 1"))||
 ||[[# func-doc]][#func-doc-note function documentation]||help tan||help(tan) _
-?tan||math.tan.@@__doc__@@||
-||[[# ls-lib]][#ls-lib-note list library functions]||##gray|//none//##||ls("package:moments")||dir(stats)||
-||[[# grep-doc]][#grep-doc-note search documentation]||docsearch tan||??tan||$ pydoc -k tan||
-||||||||~ [[# tables]][#tables-note tables]||
-||~ ||~ ||~ [#r r]||~ [#numpy numpy]||
+?tan||math.tan.@@__doc__@@||?tan||
+||[[# ls-lib]][#ls-lib-note list library functions]||##gray|//none//##||ls("package:moments")||dir(stats)||whos(Base)||
+||[[# grep-doc]][#grep-doc-note search documentation]||docsearch tan||??tan||$ pydoc -k tan||apropos("tan")||
+||||||||||~ [[# tables]][#tables-note tables]||
+||~ ||~ ||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# construct-from-column-arrays]][#construct-from-column-arrays-note construct from column arrays]||sx = {'F' 'F' 'F' 'M' 'M' 'M'} _
 ht = [69 64 67 68 72 71] _
 wt = [148 132 142 149 167 165] _
@@ -1212,16 +1392,25 @@ wt = c(148, 132, 142, 149, 167, 165) _
 people = data.frame(sx, ht, wt)||sx = ['F', 'F', 'F', 'F', 'M', 'M'] _
 ht = [69, 64, 67, 66, 72, 70] _
 wt = [150, 132, 142, 139, 167, 165] _
-people = pd.DataFrame({'sx': sx, 'ht': ht, 'wt': wt})||
+people = pd.DataFrame({'sx': sx, 'ht': ht, 'wt': wt})|| ||
+||[[# construct-from-row-dictionaries]][#construct-from-row-dictionaries-note construct from row dictionaries]|| || ||rows = [ _
+@<&nbsp;&nbsp;>@{'sx': 'F', 'ht': 69, 'wt': 150}, _
+@<&nbsp;&nbsp;>@{'sx': 'F', 'ht': 64, 'wt': 132}, _
+@<&nbsp;&nbsp;>@{'sx': 'F', 'ht': 67, 'wt': 142}, _
+@<&nbsp;&nbsp;>@{'sx': 'F', 'ht': 66, 'wt': 139}, _
+@<&nbsp;&nbsp;>@{'sx': 'M', 'ht': 72, 'wt': 167}, _
+@<&nbsp;&nbsp;>@{'sx': 'M', 'ht': 70, 'wt': 165}] _
+people = pd.DataFrame(rows)|| ||
 ||[[# table-size]][#table-size-note size]||height(people) _
 width(people)||nrow(people) _
 ncol(people) _
  _
 ##gray|# number of rows and cols in 2-element vector:## _
-dim(people)|| ||
+dim(people)||len(people) _
+len(people.columns)|| ||
 ||[[# column-names-as-array]][#column-names-as-array-note column names as array]||people.Properties.VariableNames||names(people) _
 colnames(people)||##gray|//returns// Index //object://## _
-people.columns||
+people.columns|| ||
 ||[[# access-column-as-array]][#access-column-as-array-note access column as array]||people.ht _
 people.(2)||##gray|# vectors:## _
 people$ht _
@@ -1231,26 +1420,30 @@ people[[2]] _
 ##gray|# 1 column data frame:## _
 people[2]||people['ht'] _
  _
-##gray|//if name does not conflict with any// DataFrame //attributes://## _
-people.ht||
+##gray|# if name does not conflict with any DataFrame attributes:## _
+people.ht|| ||
 ||[[# access-row-as-tuple]][#access-row-as-tuple-note access row as tuple]||people(1,:)||##gray|# 1 row data frame:## _
 people[1, ] _
 ##gray|# list:## _
-as.list(people[1, ])||people.ix[0]||
+as.list(people[1, ])||people.ix[0]|| ||
 ||[[# access-datum]][#access-datum-note access datum]||##gray|% height of 1st person:## _
 people(1,2)||##gray|# height of 1st person:## _
-people[1,2]||people.get_value(0, 'ht')||
-||[[# order-rows-by-column]][#order-rows-by-column-note order rows by column]||sortrows(people, 'ht')||people[order(people$ht), ]|| ||
-||[[# order-rows-by-multiple-columns]][#order-rows-by-multiple-columns-note order rows by multiple columns]||sortrows(people, {'sx', 'ht'})||people[order(people$sx, people$ht), ]|| ||
-||[[# order-rows-descending-order]][#order-rows-descending-order-note order rows in descending order]||sortrows(people, 'ht', 'descend')||people[order(-people$ht), ]|| ||
+people[1,2]||people.get_value(0, 'ht')|| ||
+||[[# order-rows-by-column]][#order-rows-by-column-note order rows by column]||sortrows(people, 'ht')||people[order(people$ht), ]||people.sort(['ht'])|| ||
+||[[# order-rows-by-multiple-columns]][#order-rows-by-multiple-columns-note order rows by multiple columns]||sortrows(people, {'sx', 'ht'})||people[order(people$sx, people$ht), ]||people.sort(['sx', 'ht'])|| ||
+||[[# order-rows-descending-order]][#order-rows-descending-order-note order rows in descending order]||sortrows(people, 'ht', 'descend')||people[order(-people$ht), ]||people.sort('ht', ascending=[False])|| ||
 ||[[# limit-rows]][#limit-rows-note limit rows] _
-@<&nbsp;>@||people(1:3, :)||people[seq(1, 3), ]|| ||
+@<&nbsp;>@||people(1:3, :)||people[seq(1, 3), ]||people[0:3]|| ||
 ||[[# offset-rows]][#offset-rows-note offset rows] _
-@<&nbsp;>@||people(4:6, :)||people[seq(4, 6), ]|| ||
+@<&nbsp;>@||people(4:6, :)||people[seq(4, 6), ]||people[3:]|| ||
 ||[[# reshape-table]][#reshape-table-note reshape]|| ||people$couple = c(1, 2, 3, 1, 2, 3) _
 reshape(people, idvar="couple", direction="wide", _
-@<&nbsp;&nbsp;>@timevar="sx", v.names=c("ht", "wt"))|| ||
-||[[# rm-rows-with-null-fields]][#rm-rows-with-null-fields-note remove rows with null fields]|| ||df = na.omit(df)|| ||
+@<&nbsp;&nbsp;>@timevar="sx", v.names=c("ht", "wt"))|| || ||
+||[[# rm-rows-with-null-fields]][#rm-rows-with-null-fields-note remove rows with null fields]|| ||sx = c('F', 'F', 'M', 'M') _
+wt = c(120, NA, 150, 170) _
+ _
+df = data.frame(sx, wt) _
+df2 = na.omit(df)|| || ||
 ||[[# attach-columns]][#attach-columns-note attach columns]|| ||##gray|# put columns ht, wt, and sx _
 # in variable name search path:## _
 attach(people) _
@@ -1258,24 +1451,24 @@ sum(ht) _
  _
 ##gray|# alternative which doesn't put columns in _
 # search path:## _
-with(people, sum(ht))||##gray|//none//##||
+with(people, sum(ht))||##gray|//none//##|| ||
 ||[[# detach-columns]][#detach-columns-note detach columns] _
-@<&nbsp;>@|| ||detach(people)||##gray|//none//##||
+@<&nbsp;>@|| ||detach(people)||##gray|//none//##|| ||
 ||[[# spreadsheet-editor]][#spreadsheet-editor-note spreadsheet editor]|| ||##gray|//can edit data, in which case return value of// edit //must be saved//## _
-people = edit(people)||##gray|//none//##||
-||||||||~ [[# import-export]][#import-export-note import and export]||
-||~ ||~ ||~ [#r r]||~ [#numpy numpy]||
+people = edit(people)||##gray|//none//##|| ||
+||||||||||~ [[# import-export]][#import-export-note import and export]||
+||~ ||~ ||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# import-tab-delimited]][#import-tab-delimited-note import tab delimited]||##gray|# first row defines variable names:## _
 readtable('/tmp/password.txt', 'Delimiter', '\t') _
  _
 ##gray|# file suffix must be .txt, .dat, or .csv##||##gray|# first row defines variable names:## _
 df = read.delim('/path/to.tab', stringsAsFactors=F, quote=NULL)||##gray|# first row defines column names:## _
-df = pd.read_table('/path/to.tab')||
+df = pd.read_table('/path/to.tab')|| ||
 ||[[# import-csv]][#import-csv-note import csv] _
 @<&nbsp;>@||##gray|% first row defines variable names:## _
 df = readtable('/path/to.csv')||##gray|# first row defines variable names:## _
 df = read.csv('/path/to.csv', stringsAsFactors=F)||##gray|# first row defines column names:## _
-df = pd.read_csv('/path/to.csv')||
+df = pd.read_csv('/path/to.csv')|| ||
 ||[[# set-column-separator]][#set-column-separator-note set column separator]||df = readtable('/etc/passwd', _
 @<&nbsp;&nbsp;>@'Delimiter', ':', _
 @<&nbsp;&nbsp;>@'ReadVariableNames', 0, _
@@ -1284,8 +1477,8 @@ df = pd.read_csv('/path/to.csv')||
 @<&nbsp;&nbsp;>@header=FALSE, _
 @<&nbsp;&nbsp;>@comment.char='#')||##gray|# $ grep -v '^#' /etc/passwd > /tmp/passwd## _
  _
-df = pd.read_table('/tmp/passwd', sep=':', header=None)||
-||[[# set-column-separator-whitesp]][#set-column-separator-whitesp-note set column separator to whitespace]|| ||df = read.delim('/path/to.txt', sep='')||df = read_table('/path/to.txt', sep='\s+')||
+df = pd.read_table('/tmp/passwd', sep=':', header=None)|| ||
+||[[# set-column-separator-whitesp]][#set-column-separator-whitesp-note set column separator to whitespace]|| ||df = read.delim('/path/to.txt', sep='')||df = read_table('/path/to.txt', sep='\s+')|| ||
 ||[[# set-quote-char]][#set-quote-char-note set quote character]|| ||##gray|# default quote character for both read.csv and read.delim _
 # is double quotes.  The quote character is escaped by doubling it.## _
  _
@@ -1293,7 +1486,7 @@ df = pd.read_table('/tmp/passwd', sep=':', header=None)||
 df = read.csv('/path/to/single-quote.csv', quote="'") _
  _
 ##gray|# no quote character:## _
-df = read.csv('/path/to/no-quote.csv', quote="")||##gray|//Both// read_table //and// read_csv //use double quotes as the quote character and there is no way to change it.  A double quote can be escaped by doubling it.//##||
+df = read.csv('/path/to/no-quote.csv', quote="")||##gray|//Both// read_table //and// read_csv //use double quotes as the quote character and there is no way to change it.  A double quote can be escaped by doubling it.//##|| ||
 ||[[# import-file-without-header]][#import-file-without-header-note import file w/o header]|| ||##gray|# column names are V1, V2, ...## _
 read.delim('/etc/passwd', _
 @<&nbsp;&nbsp;>@sep=':', _
@@ -1301,14 +1494,14 @@ read.delim('/etc/passwd', _
 @<&nbsp;&nbsp;>@comment.char='#')||##gray|# $ grep -v '^#' /etc/passwd > /tmp/passwd## _
 ##gray|# ## _
 ##gray|# column names are X0, X1, ...## _
-df = pd.read_table('/tmp/passwd', sep=':', header=None)||
+df = pd.read_table('/tmp/passwd', sep=':', header=None)|| ||
 ||[[# set-column-names]][#set-column-names-note set column names]||df = readtable('/path/to/no-header.csv', _
 @<&nbsp;&nbsp;>@'ReadVariableNames', 0) _
  _
 df.Properties.VariableNames = {'ht', 'wt', 'age'}||df = read.csv('/path/to/no-header.csv', _
 @<&nbsp;&nbsp;>@header=FALSE, _
 @<&nbsp;&nbsp;>@col.names=c('ht', 'wt', 'age'))||df = pd.read_csv('/path/to/no-header.csv', _
-@<&nbsp;&nbsp;>@names=['ht', 'wt', 'age'])||
+@<&nbsp;&nbsp;>@names=['ht', 'wt', 'age'])|| ||
 ||[[# set-column-types]][#set-column-types-note set column types]|| ||##gray|# possible values: NA, 'logical', 'integer', 'numeric', _
 # 'complex', 'character', 'raw', 'factor', 'Date', _
 # 'POSIXct' _
@@ -1317,54 +1510,54 @@ df.Properties.VariableNames = {'ht', 'wt', 'age'}||df = read.csv('/path/to/no-he
 # 'logical', 'integer', 'numeric', 'complex', or 'factor' _
 # ## _
 df = read.csv('/path/to/data.csv', _
-@<&nbsp;&nbsp;>@colClasses=c('integer', 'numeric', 'character'))|| ||
+@<&nbsp;&nbsp;>@colClasses=c('integer', 'numeric', 'character'))|| || ||
 ||[[# recognize-null-values]][#recognize-null-values-note recognize null values]|| ||df = read.csv('/path/to/data.csv', _
 @<&nbsp;&nbsp;>@colClasses=c('integer', 'logical', 'character'), _
 @<&nbsp;&nbsp;>@na.strings=c('nil'))||df = read_csv('/path/to/data.csv', _
-@<&nbsp;&nbsp;>@na_values=['nil'])||
-||[[# change-decimal-mark]][#change-decimal-mark-note change decimal mark]|| ||df = read.csv('/path/to.csv', dec=',')|| ||
-||[[# recognize-thousands-separator]][#recognize-thousands-separator-note recognize thousands separator]|| ||##gray|//none//##||df = read_csv('/path/to.csv', thousands='.')||
+@<&nbsp;&nbsp;>@na_values=['nil'])|| ||
+||[[# change-decimal-mark]][#change-decimal-mark-note change decimal mark]|| ||df = read.csv('/path/to.csv', dec=',')|| || ||
+||[[# recognize-thousands-separator]][#recognize-thousands-separator-note recognize thousands separator]|| ||##gray|//none//##||df = read_csv('/path/to.csv', thousands='.')|| ||
 ||[[# unequal-row-length-behavior]][#unequal-row-length-behavior-note unequal row length behavior]|| ||##gray|//Missing fields will be set to NA unless// fill //is set to// FALSE.  //If the column is of type character then the fill value is an empty string ''. _
  _
-If there are extra fields they will be parsed as an extra row unless// flush //is set to// FALSE##|| ||
+If there are extra fields they will be parsed as an extra row unless// flush //is set to// FALSE##|| || ||
 ||[[# skip-comment-lines]][#skip-comment-lines-note skip comment lines]|| ||df = read.delim('/etc/passwd', _
 @<&nbsp;&nbsp;>@sep=':', _
 @<&nbsp;&nbsp;>@header=FALSE, _
-@<&nbsp;&nbsp;>@comment.char='#')||##gray|//none//##||
+@<&nbsp;&nbsp;>@comment.char='#')||##gray|//none//##|| ||
 ||[[# skip-rows]][#skip-rows-note skip rows]||def = readtable('/path/to/data.csv', _
 @<&nbsp;&nbsp;>@'HeaderLines', 4)||df = read.csv('/path/to/data.csv', skip=4)||df = read_csv('/path/to/data.csv', skiprows=4) _
  _
 ##gray|# rows to skip can be specified individually:## _
-df = read_csv('/path/to/data.csv', skiprows=range(0, 4))||
-||[[# max-rows-to-read]][#max-rows-to-read-note max rows to read]|| ||df = read.csv('/path/to/data.csv', nrows=4)||df = read_csv('/path/to/data.csv', nrows=4)||
+df = read_csv('/path/to/data.csv', skiprows=range(0, 4))|| ||
+||[[# max-rows-to-read]][#max-rows-to-read-note max rows to read]|| ||df = read.csv('/path/to/data.csv', nrows=4)||df = read_csv('/path/to/data.csv', nrows=4)|| ||
 ||[[# index-column]][#index-column-note index column]|| ||##gray|//none//##||df = pd.read_csv('/path/to.csv', index_col='key_col') _
  _
 ##gray|# hierarchical index:## _
-df = pd.read_csv('/path/to.csv', index_col=['col1', 'col2'])||
-||[[# export-tab-delimited]][#export-tab-delimited-note export tab delimited]|| ||write.table(df, '/tmp/data.tab', sep='\t')|| ||
+df = pd.read_csv('/path/to.csv', index_col=['col1', 'col2'])|| ||
+||[[# export-tab-delimited]][#export-tab-delimited-note export tab delimited]|| ||write.table(df, '/tmp/data.tab', sep='\t')|| || ||
 ||[[# export-csv]][#export-csv-note export csv] _
 @<&nbsp;>@|| ||##gray|# first column contains row names unless row.names _
 # set to FALSE## _
-write.csv(df, '/path/to.csv', row.names=F)|| ||
-||||||||~ [[# relational-algebra]][#relational-algebra-note relational algebra]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
-||project columns by name||people(:, {'sx', 'ht'})||people[c('sx', 'ht')]||people[['sx', 'ht']]||
-||project columns by position||people(:, [1 2])||people[c(1, 2)]|| ||
+write.csv(df, '/path/to.csv', row.names=F)|| || ||
+||||||||||~ [[# relational-algebra]][#relational-algebra-note relational algebra]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
+||project columns by name||people(:, {'sx', 'ht'})||people[c('sx', 'ht')]||people[['sx', 'ht']]|| ||
+||project columns by position||people(:, [1 2])||people[c(1, 2)]|| || ||
 ||project expression|| ||##gray|# convert to cm and kg:## _
-transform(people, ht=2.54*ht, wt=wt/2.2)|| ||
-||project all columns||people(people.ht > 66, :)||people[people$ht > 66, ]|| ||
-||rename columns|| ||colnames(people) = c('gender', 'height', 'weight')|| ||
+transform(people, ht=2.54*ht, wt=wt/2.2)|| || ||
+||project all columns||people(people.ht > 66, :)||people[people$ht > 66, ]|| || ||
+||rename columns|| ||colnames(people) = c('gender', 'height', 'weight')|| || ||
 ||[[# access-sub-data-set]][#access-sub-data-set-note access sub data frame]|| ||##gray|# data frame of first 3 rows with _
 # ht and wt columns reversed:## _
-people[1:3, c(1, 3, 2)]|| ||
+people[1:3, c(1, 3, 2)]|| || ||
 ||[[# data-set-filter]][#data-set-filter-note select rows]||people(people.ht > 66, :)||subset(people, ht > 66) _
-people[people$ht > 66, ]||people[people['ht'] > 66]||
-||select distinct rows||unique(people(:,{'sx'}))||unique(people[c('sx')])|| ||
+people[people$ht > 66, ]||people[people['ht'] > 66]|| ||
+||select distinct rows||unique(people(:,{'sx'}))||unique(people[c('sx')])|| || ||
 ||split rows|| ||##gray|# class(x) is list:## _
 x = split(people, people$sx == 'F') _
  _
 ##gray|# data.frame only containing females:## _
-x$T|| ||
+x$T|| || ||
 ||inner join|| ||pw = read.delim('/etc/passwd', _
 @<&nbsp;&nbsp;>@sep=':', _
 @<&nbsp;&nbsp;>@header=F, _
@@ -1385,36 +1578,37 @@ pw = pd.read_table('/tmp/passwd', sep=':', header=None, names=['name', 'passwd',
  _
 grp = pd.read_table('/tmp/group', sep=':', header=None, names=['name', 'passwd', 'gid', 'members']) _
  _
-pd.merge(pw, grp, left_on='gid', right_on='gid')||
-||nulls as join values|| || || ||
-||left join|| ||merge(pw, grp, by.x='gid', by.y='gid', all.x=T)||pd.merge(pw, grp, left_on='gid', right_on='gid', how='left')||
-||full join|| ||merge(pw, grp, by.x='gid', by.y='gid', all=T)||pd.merge(pw, grp, left_on='gid', right_on='gid', how='outer')||
-||antijoin|| ||pw[!(pw$gid %in% grp$gid), ]|| ||
-||cross join|| ||merge(pw, grp, by=c())|| ||
-||||||||~ [[# aggregation]][#aggregation-note aggregation]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+pd.merge(pw, grp, left_on='gid', right_on='gid')|| ||
+||nulls as join values|| || || || ||
+||left join|| ||merge(pw, grp, by.x='gid', by.y='gid', all.x=T)||pd.merge(pw, grp, left_on='gid', right_on='gid', how='left')|| ||
+||full join|| ||merge(pw, grp, by.x='gid', by.y='gid', all=T)||pd.merge(pw, grp, left_on='gid', right_on='gid', how='outer')|| ||
+||antijoin|| ||pw[!(pw$gid %in% grp$gid), ]|| || ||
+||cross join|| ||merge(pw, grp, by=c())|| || ||
+||||||||||~ [[# aggregation]][#aggregation-note aggregation]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||group by column|| || ||grouped = people.groupby('sx') _
-grouped.aggregate(np.max)['ht']||
+grouped.aggregate(np.max)['ht']|| ||
 ||multiple aggregated values|| || ||grouped = people.groupby('sx') _
-grouped.aggregate(np.max)[['ht', 'wt']]||
-||group by multiple columns|| || || ||
-||aggregation functions|| || || ||
-||nulls and aggregation functions|| || || ||
-||||||||~ [[# vectors]][#vectors-note vectors]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
-||[#vector-literal vector literal]||##gray|//same as array//##||##gray|//same as array//##||##gray|//same as array//##||
-||[#vector-element-wise element-wise arithmetic operators]||+ - .* ./||+ - * /||+ - * /||
-||[#vector-length-mismatch result of vector length mismatch]||##gray|//raises error//##||##gray|//values in shorter vector are recycled; warning if one vector is not a multiple length of the other//##||##gray|//raises// ValueError##||
+grouped.aggregate(np.max)[['ht', 'wt']]|| ||
+||group by multiple columns|| || || || ||
+||aggregation functions|| || || || ||
+||nulls and aggregation functions|| || || || ||
+||||||||||~ [[# vectors]][#vectors-note vectors]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
+||[#vector-literal vector literal] _
+@<&nbsp;>@||##gray|//same as array//##||##gray|//same as array//##||##gray|//same as array//##|| ||
+||[#vector-element-wise element-wise arithmetic operators]||+ - .* ./||+ - * /||+ - * /|| ||
+||[#vector-length-mismatch result of vector length mismatch]||##gray|//raises error//##||##gray|//values in shorter vector are recycled; warning if one vector is not a multiple length of the other//##||##gray|//raises// ValueError##|| ||
 ||[#vector-scalar scalar multiplication]||3 * [1, 2, 3] _
 [1, 2, 3] * 3||3 * c(1, 2, 3) _
 c(1, 2, 3) * 3||3 * np.array([1, 2, 3]) _
-np.array([1, 2, 3]) * 3||
+np.array([1, 2, 3]) * 3|| ||
 ||[#vector-dot dot product]||dot([1, 1, 1], [2, 2, 2])||c(1, 1, 1) %*% c(2, 2, 2)||v1 = np.array([1, 1, 1]) _
 v2 = np.array([2, 2, 2]) _
-np.dot(v1, v2)||
+np.dot(v1, v2)|| ||
 ||[#vector-cross cross product]||cross([1, 0, 0], [0, 1, 0])|| ||v1 = np.array([1, 0, 0]) _
 v2 = np.array([0, 1, 0]) _
-np.cross(v1, v2)||
+np.cross(v1, v2)|| ||
 ||[#vector-norms norms]||norm([1, 2, 3], 1) _
 norm([1, 2, 3], 2) _
 norm([1, 2, 3], Inf)||vnorm = function(x, t) { _
@@ -1426,69 +1620,80 @@ vnorm(c(1, 2, 3), "E") _
 vnorm(c(1, 2, 3), "I")||v = np.array([1, 2, 3]) _
 np.linalg.norm(v, 1) _
 np.linalg.norm(v, 2) _
-np.linalg.norm(v, np.inf)||
-||||||||~ [[# matrices]][#matrices-note matrices]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+np.linalg.norm(v, np.inf)|| ||
+||||||||||~ [[# matrices]][#matrices-note matrices]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# matrix-literal-constructor]][#matrix-literal-constructor-note literal or constructor]||##gray|% row-major order:## _
 A = [1, 2; 3, 4] _
 B = [4 3 _
 @<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@2 1]||##gray|# column-major order:## _
 A = matrix(c(1, 3, 2, 4), 2, 2) _
-B = matrix(c(4, 2, 3, 1), nrow=2)||##gray|# row-major order:## _
+B = matrix(c(4, 2, 3, 1), nrow=2) _
+ _
+##gray|# row-major order:## _
+A = matrix(c(1, 2, 3, 4), nrow=2, byrow=T)||##gray|# row-major order:## _
 A = np.matrix([[1, 2], [3, 4]]) _
-B = np.matrix([[4, 3], [2, 1]])||
+B = np.matrix([[4, 3], [2, 1]])|| ||
 ||[[# constant-matrices]][#constant-matrices-note constant matrices] _
 ##gray|//all zeros, all ones//##||zeros(3, 3) ##gray|//or//## zeros(3) _
 ones(3, 3) ##gray|//or//## ones(3)||matrix(0, 3, 3) _
 matrix(1, 3, 3)||np.matrix(np.ones([3, 3])) _
-np.matrix(np.zeros([3, 3]))||
+np.matrix(np.zeros([3, 3]))||zeros(Float64, (3, 3)) _
+ones(Float64, (3, 3))||
 ||[[# diagonal-matrices]][#diagonal-matrices-note diagonal matrices] _
 ##gray|//and identity//##||diag([1, 2, 3]) _
 ##gray|% 3x3 identity:## _
 eye(3)||diag(c(1, 2, 3) _
 ##gray|# 3x3 identity:## _
 diag(3)||np.diag([1, 2, 3]) _
-np.identity(3)||
+np.identity(3)|| ||
 ||[[# matrix-dim]][#matrix-dim-note dimensions]||rows(A) _
 columns(A)||dim(A)[1] _
-dim(A)[2]||nrows, ncols = A.shape||
-||[#matrix-access element access]||A(1, 1)||A[1, 1]||A[0, 0]||
-||[#matrix-row-access row access]||A(1, 1:2)||A[1, ]||A[0]||
-||[#matrix-column-access column access]||A(1:2, 1)||A[, 1]|| ||
+dim(A)[2]||nrows, ncols = A.shape|| ||
+||[#matrix-access element access] _
+@<&nbsp;>@||A(1, 1)||A[1, 1]||A[0, 0]|| ||
+||[#matrix-row-access row access] _
+@<&nbsp;>@||A(1, 1:2)||A[1, ]||A[0]|| ||
+||[#matrix-column-access column access] _
+@<&nbsp;>@||A(1:2, 1)||A[, 1]||A[:, 0]|| ||
 ||[#submatrix-access submatrix access]||C = [1, 2, 3; 4, 5, 6; 7, 8, 9] _
 C(1:2, 1:2)||C = matrix(seq(1, 9), 3, 3, byrow=T) _
-C[1:2, 1:2]|| ||
+C[1:2, 1:2]||A = np.matrix(range(1, 10)).reshape(3, 3) _
+A[:2, :2]|| ||
 ||[#matrix-scalar-multiplication scalar multiplication]||3 * A _
 A * 3 _
 ##gray|//also://## _
 3 .* A _
 A .* 3||3 * A _
 A * 3||3 * A _
-A * 3||
-||[#matrix-element-wise-operators element-wise operators]||.+ .- .* ./||+ - * /||+ - np.multiply() np.divide()||
-||[#matrix-multiplication multiplication]||A * B||A %*% B||A * B||
+A * 3|| ||
+||[#matrix-element-wise-operators element-wise operators]||.+ .- .* ./||+ - * /||+ - np.multiply() np.divide()|| ||
+||[#matrix-multiplication multiplication] _
+@<&nbsp;>@||A * B||A %*% B||A * B|| ||
 ||[#matrix-power power]||A ^ 3 _
  _
 ##gray|% power of each entry:## _
-A .^ 3|| ||A ** 3||
-||[#kronecker-product kronecker product]||kron(A, B)||kronecker(A, B)||np.kron(A, B)||
-||[#matrix-comparison comparison]|| all(all(A==B)) _
-any(any(A!=A))||all(A==B) _
-any(A!=B)|| ||
+A .^ 3|| ||A ** 3|| ||
+||[#kronecker-product kronecker product]||kron(A, B)||kronecker(A, B)||np.kron(A, B)|| ||
+||[#matrix-comparison comparison]|| all(all(A == B)) _
+any(any(A != B))||all(A == B) _
+any(A != B)||np.all(A == B) _
+np.any(A != B)|| ||
 ||[#matrix-norms norms]||norm(A, 1) _
 norm(A, 2) _
 norm(A, Inf) _
 norm(A, 'fro')||norm(A, "1") _
 ##gray|//??//## _
 norm(A, "I") _
-norm(A, "F")|| ||
+norm(A, "F")|| || ||
 ||[#matrix-transpose transpose]||transpose(A) _
-A'||t(A)||A.transpose()||
+A'||t(A)||A.transpose()|| ||
 ||[#matrix-conjugate-transpose conjugate transpose]|| A = [1i, 2i; 3i, 4i] _
 A'||A = matrix(c(1i, 2i, 3i, 4i), nrow=2, byrow=T) _
 Conj(t(A))||A = np.matrix([[1j, 2j], [3j, 4j]]) _
-A.conj().transpose()||
-||[#matrix-inverse inverse]||inv(A)||solve(A)||np.linalg.inv(A)||
+A.conj().transpose()|| ||
+||[#matrix-inverse inverse] _
+@<&nbsp;>@||inv(A)||solve(A)||np.linalg.inv(A)|| ||
 ||[[# pseudoinverse]][#pseudoinverse-note pseudoinverse]||A = [0 1; 0 0] _
  _
 pinv(A)||install.packages('corpcor') _
@@ -1497,14 +1702,17 @@ library(corpcor) _
 A = matrix(c(0, 0, 1, 0), nrow=2) _
 pseudoinverse(A)||A = np.matrix([[0, 1], [0, 0]]) _
  _
-np.linalg.pinv(A)||
-||[#matrix-determinant determinant]||det(A)||det(A)||np.linalg.det(A)||
-||[#matrix-trace trace]||trace(A)||sum(diag(A))||A.trace()||
-||[#matrix-eigenvalues eigenvalues]||eig(A)||eigen(A)$values||np.linalg.eigvals(A)||
+np.linalg.pinv(A)|| ||
+||[#matrix-determinant determinant] _
+@<&nbsp;>@||det(A)||det(A)||np.linalg.det(A)|| ||
+||[#matrix-trace trace] _
+@<&nbsp;>@||trace(A)||sum(diag(A))||A.trace()|| ||
+||[#matrix-eigenvalues eigenvalues] _
+@<&nbsp;>@||eig(A)||eigen(A)$values||np.linalg.eigvals(A)|| ||
 ||[#matrix-eigenvectors eigenvectors]||[evec, eval] = eig(A) _
-evec(1:2) _
-evec(3:4)||eigen(A)$vectors||np.linalg.eig(A)[1]||
-||[[# svd]][#svd-note singular value decomposition]||X = randn(100) _
+##gray|% each column of evec is an eigenvector## _
+##gray|% eval is a diagonal matrix of eigenvalues##||eigen(A)$vectors||np.linalg.eig(A)[1]|| ||
+||[[# svd]][#svd-note singular value decomposition]||X = randn(10) _
  _
 [u, d, v] = svd(X)||X = matrix(rnorm(100), nrow=10) _
 result = svd(X) _
@@ -1516,19 +1724,31 @@ result$d _
 result$u _
  _
 ##gray|# unitary matrix:## _
-result$v|| ||
-||[#matrix-solution solve system of equations]|| A \ [2;3]||solve(A, c(2, 3))||np.linalg.solve(A, [2, 3])||
+result$v||np.linalg.svd(np.random.randn(100).reshape(10, 10))|| ||
+||[#matrix-solution solve system of equations]|| A \ [2;3]||solve(A, c(2, 3))||np.linalg.solve(A, [2, 3])|| ||
+||||||||||~ [[# sparse-matrices]][#sparse-matrices-note sparse matrices]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# sparse-matrix-construction]][#sparse-matrix-construction-note sparse matrix construction]||##gray|% 100x100 matrix with 5 at (1, 1) and 4 at (2, 2):## _
-X = sparse([1 2], [1 2], [5 4], 100, 100)||X = spMatrix(100, 100, c(1, 2), c(1, 2), c(5, 4))|| ||
+X = sparse([1 2], [1 2], [5 4], 100, 100)||X = spMatrix(100, 100, c(1, 2), c(1, 2), c(5, 4))||import scipy.sparse as sparse _
+ _
+row, col, val = [5, 4], [1, 2], [1, 2] _
+X = sparse.coo_matrix((val, (row, col)), shape=(100, 100))|| ||
 ||[[# sparse-matrix-decomposition]][#sparse-matrix-decomposition-note sparse matrix decomposition]||[rows, cols, vals] = find(X) _
  _
 ##gray|% just the values:## _
-nonzeros(X)|| || ||
+nonzeros(X)|| || || ||
 ||[[# sparse-identity-matrix]][#sparse-identity-matrix-note sparse identity matrix]||##gray|% 100x100 identity:## _
-speye(100)|| || ||
+speye(100)|| ||sparse.identity(100) _
+ _
+##gray|# not square; ones on diagonal:## _
+sparse.eye(100, 200)|| ||
 ||[[# dense-matrix-to-sparse-matrix]][#dense-matrix-to-sparse-matrix-note dense matrix to sparse matrix] _
 ##gray|//and back//##||X = sparse([1 0 0; 0 0 0; 0 0 0]) _
-X2 = full(X)|| || ||
+X2 = full(X)|| ||imoprt scipy.sparse as sparse _
+ _
+A = np.array([[1, 0, 0], [0, 0, 0], [0, 0, 0]]) _
+X = sparse.coo_matrix(A) _
+X2 = X.todense()|| ||
 ||[[# sparse-matrix-storage]][#sparse-matrix-storage-note sparse matrix storage]||##gray|% is storage sparse:## _
 issparse(X) _
  _
@@ -1537,22 +1757,24 @@ nzmax(X) _
  _
 ##gray|% number of nonzero entries:## _
 nnz(X)||##gray|# memory allocation in bytes:## _
-object.size(X)|| ||
-||||||||~ [[# optimization]][#optimization-note optimization]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+object.size(X)||import scipy.sparse as sparse _
+ _
+sparse.issparse(X)|| ||
+||||||||||~ [[# optimization]][#optimization-note optimization]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# minimize-linear-prob]][#minimize-linear-prob-note linear minimization]||##gray|% minimize c * x subject to the constraint that A * x <= b## _
  _
-linprog(c, A, b)|| || ||
+linprog(c, A, b)|| || || ||
 ||[[# minimize-linear-prob-decision-var-bounds]][#minimize-linear-prob-decision-var-bounds-note linear minimization with bounds on decision variables]||##gray|% also impose constraints Lb <= x <= Ub## _
  _
-linprog(c, A, b, [], [], Lb, Ub)|| || ||
+linprog(c, A, b, [], [], Lb, Ub)|| || || ||
 ||[[# minimize-linear-prob-equality-constraints]][#minimize-linear-prob-equality-constraints-note linear minimization with equality constraints]||##gray|% also impose constraints Aeq * x == beq## _
  _
-lingprog(c, A, b, Aeq, beq)|| || ||
-||[[# minimize-quadratic-prob]][#minimize-quadratic-prob-note quadratic minimization]||quadprog()|| || ||
-||[[# minimize-int-linear-prob]][#minimize-int-linear-prob-note integer linear minimization]||intlinprog()|| || ||
-||||||||~ [[# polynomials]][#polynomials-note polynomials]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+lingprog(c, A, b, Aeq, beq)|| || || ||
+||[[# minimize-quadratic-prob]][#minimize-quadratic-prob-note quadratic minimization]||quadprog()|| || || ||
+||[[# minimize-int-linear-prob]][#minimize-int-linear-prob-note integer linear minimization]||intlinprog()|| || || ||
+||||||||||~ [[# polynomials]][#polynomials-note polynomials]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||exact polynomial fit||x = [1 2 3 4] _
 y = [3 9 2 1] _
 ##gray|% polynomial coefficient array:## _
@@ -1561,20 +1783,20 @@ p = polyfit(x, y, 3) _
 ##gray|% plot polynomial:## _
 xx = -10:.1:10 _
 yy = polyval(p, xx) _
-plot(xx, yy)|| ||
-||exact polynomial fit with derivative values|| || || ||
-||piecewise polynomial fit|| || || ||
+plot(xx, yy)|| || || ||
+||exact polynomial fit with derivative values|| || || || ||
+||piecewise polynomial fit|| || || || ||
 ||[[image http://farm6.static.flickr.com/5049/5268229340_0b96b5e223_s.jpg]] _
 [[# cubic-spline]][#cubic-spline-note cubic spline]||f = spline(1:20, normrnd(0, 1, 1, 20)) _
 x = 1:.1:20 _
 plot(x, ppval(f, x))||f = splinefun(rnorm(20)) _
 x = seq(1, 20, .1) _
-plot(x, f(x), type="l")|| ||
-||underdetermined polynomail fit|| || || ||
-||overdetermined polynomial fit|| || || ||
-||multivariate polynomial fit|| || || ||
-||||||||~ [[# descriptive-statistics]][#descriptive-statistics-note descriptive statistics]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+plot(x, f(x), type="l")|| || ||
+||underdetermined polynomail fit|| || || || ||
+||overdetermined polynomial fit|| || || || ||
+||multivariate polynomial fit|| || || || ||
+||||||||||~ [[# descriptive-statistics]][#descriptive-statistics-note descriptive statistics]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# first-moment-stats]][#first-moment-stats-note first moment statistics]||x = [1 2 3 8 12 19] _
  _
 sum(x) _
@@ -1584,29 +1806,33 @@ sum(x) _
 mean(x)||x = [1,2,3,8,12,19] _
  _
 sp.sum(x) _
-sp.mean(x)||
+sp.mean(x)||x = [1 2 3 8 12 19] _
+ _
+sum(x) _
+mean(x)||
 ||[[# second-moment-stats]][#second-moment-stats-note second moment statistics]||std(x, 1) _
 var(x, 1)||n = length(x) _
  _
 sd(x) * sqrt((n-1)/n) _
 var(x) * (n-1)/n||sp.std(x) _
-sp.var(x)||
+sp.var(x)|| ||
 ||[[# second-moment-stats-sample]][#second-moment-stats-sample-note second moment statistics for samples]||std(x) _
 var(x)||sd(x) _
 var(x)||n = float(len(x)) _
  _
 sp.std(x) * math.sqrt(n/(n-1)) _
-sp.var(x) * n/(n-1)||
+sp.var(x) * n/(n-1)||std(x) _
+var(x)||
 ||[[# skewness]][#skewness-note skewness]||##gray|//Octave uses sample standard deviation to compute skewness://## _
 skewness(x)||install.packages('moments') _
 library('moments') _
  _
-skewness(x)||stats.skew(x)||
+skewness(x)||stats.skew(x)|| ||
 ||[[# kurtosis]][#kurtosis-note kurtosis]||##gray|//Octave uses sample standard deviation to compute kurtosis://## _
 kurtosis(x)||install.packages('moments') _
 library('moments') _
  _
-kurtosis(x) - 3||stats.kurtosis(x)||
+kurtosis(x) - 3||stats.kurtosis(x)|| ||
 ||[[# nth-moment]][#nth-moment-note nth moment and nth central moment]||n = 5 _
  _
 moment(x, n) _
@@ -1618,14 +1844,14 @@ moment(x, n) _
 moment(x, n, central=T)||n = 5 _
  _
 ##gray|//??//## _
-stats.moment(x, n)||
+stats.moment(x, n)|| ||
 ||[[# mode]][#mode-note mode]||mode([1 2 2 2 3 3 4])||samp = c(1,2,2,2,3,3,4) _
-names(sort(-table(samp)))[1]||stats.mode([1,2,2,2,3,3,4])[0][0]||
+names(sort(-table(samp)))[1]||stats.mode([1,2,2,2,3,3,4])[0][0]|| ||
 ||[[# quantile-stats]][#quantile-stats-note quantile statistics]||min(x) _
 median(x) _
 max(x) _
 iqr(x) _
-##gray|//?//##||min(x) _
+quantile(x, .90)||min(x) _
 median(x) _
 max(x) _
 IQR(x) _
@@ -1633,7 +1859,7 @@ quantile(x, prob=.90)||min(x) _
 sp.median(x) _
 max(x) _
 ##gray|//??//## _
-stats.scoreatpercentile(x, 90.0)||
+stats.scoreatpercentile(x, 90.0)|| ||
 ||[[# bivariate-stats]][#bivariate-stats-note bivariate statistiscs] _
 ##gray|//correlation, covariance//##||x = [1 2 3] _
 y = [2 4 7] _
@@ -1647,7 +1873,7 @@ cov(x, y)||x = [1,2,3] _
 y = [2,4,7] _
  _
 stats.linregress(x, y)[2] _
-##gray|//??//##||
+##gray|//??//##|| ||
 ||[[# correlation-matrix]][#correlation-matrix-note correlation matrix]||x1 = randn(100, 1) _
 x2 = 0.5 * x1 + randn(100, 1) _
 x3 = 0.1 * x1 + 0.1 * x2 + 0.1 * randn(100, 1) _
@@ -1656,17 +1882,17 @@ corr([x1 x2 x3])||x1 = rnorm(100) _
 x2 = x1 + 0.5 * rnorm(100) _
 x3 = 0.3 * x1 + 0.1 * 2 + 0.1 * rnorm(100) _
  _
-cor(cbind(x1, x2, x3))|| ||
+cor(cbind(x1, x2, x3))|| || ||
 ||[[# freq-table]][#freq-table-note data set to frequency table]|| ||x = c(1,2,1,1,2,5,1,2,7) _
-tab = table(x)|| ||
+tab = table(x)|| || ||
 ||[[# invert-freq-table]][#invert-freq-table-note frequency table to data set]|| ||rep(as.integer(names(tab)), _
-@<&nbsp;&nbsp;>@unname(tab))|| ||
+@<&nbsp;&nbsp;>@unname(tab))|| || ||
 ||[[# bin]][#bin-note bin]|| ||x = c(1.1, 3.7, 8.9, 1.2, 1.9, 4.1) _
 xf = cut(x, breaks=c(0, 3, 6, 9)) _
 ##gray|# bins are (0, 3], (3, 6], and (6, 9]:## _
-bins = tapply(x, xf, length)|| ||
-||||||||~ [[# distributions]][#distribution-note distributions]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+bins = tapply(x, xf, length)|| || ||
+||||||||||~ [[# distributions]][#distribution-note distributions]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# binomial]][#binomial-note binomial] _
 ##gray|//density, cumulative, quantile, _
 sample of 10//##||binopdf(x, ##gray|//n//##, ##gray|//p//##) _
@@ -1678,7 +1904,7 @@ qbinom(y, ##gray|//n//##, ##gray|//p//##) _
 rbinom(10, ##gray|//n//##, ##gray|//p//##)||stats.binom.pmf(x, ##gray|//n//##, ##gray|//p//##) _
 stats.binom.cdf(x, ##gray|//n//##, ##gray|//p//##) _
 stats.binom.ppf(y, ##gray|//n//##, ##gray|//p//##) _
-stats.binom.rvs(##gray|//n//##, ##gray|//p//##)||
+stats.binom.rvs(##gray|//n//##, ##gray|//p//##)|| ||
 ||[[# poisson]][#poisson-note poisson] _
 ##gray|//density, cumulative, quantile, _
 sample of 10//##||poisspdf(x, ##gray|//lambda//##) _
@@ -1690,7 +1916,7 @@ qpois(y, ##gray|//lambda//##) _
 rpois(10, ##gray|//lambda//##)||stats.poisson.pmf(x, ##gray|//lambda//##) _
 stats.poisson.cdf(x, ##gray|//lambda//##) _
 stats.poisson.ppf(y, ##gray|//lambda//##) _
-stats.poisson.rvs(##gray|//lambda//##, size=1)||
+stats.poisson.rvs(##gray|//lambda//##, size=1)|| ||
 ||[[# normal]][#normal-note normal] _
 ##gray|//density, cumulative, quantile, _
 sample of 10//##||normpdf(x, ##gray|//mu//##, ##gray|//sigma//##) _
@@ -1702,7 +1928,7 @@ qnorm(y, ##gray|//mu//##, ##gray|//sigma//##) _
 rnorm(10, ##gray|//mu//##, ##gray|//sigma//##)||stats.norm.pdf(x, ##gray|//mu//##, ##gray|//sigma//##) _
 stats.norm.cdf(x, ##gray|//mu//##, ##gray|//sigma//##) _
 stats.norm.ppf(y, ##gray|//mu//##, ##gray|//sigma//##) _
-stats.norm.rvs(##gray|//mu//##, ##gray|//sigma//##)||
+stats.norm.rvs(##gray|//mu//##, ##gray|//sigma//##)|| ||
 ||[[# gamma]][#gamma-note gamma] _
 ##gray|//density, cumulative, quantile, _
 sample of 10//##||gampdf(x, ##gray|//k//##, ##gray|//theta//##) _
@@ -1714,7 +1940,7 @@ qgamma(y, ##gray|//k//##, scale=##gray|//theta//##) _
 rgamma(10, ##gray|//k//##, scale=##gray|//theta//##)||stats.gamma.pdf(x, ##gray|//k//##, scale=##gray|//theta//##) _
 stats.gamma.cdf(x, ##gray|//k//##, scale=##gray|//theta//##) _
 stats.gamma.ppf(y, ##gray|//k//##, scale=##gray|//theta//##) _
-stats.gamma.rvs(##gray|//k//##, scale=##gray|//theta//##)||
+stats.gamma.rvs(##gray|//k//##, scale=##gray|//theta//##)|| ||
 ||[[# exponential]][#exponential-note exponential] _
 ##gray|//density, cumulative, quantile, _
 sample of 10//##||exppdf(x, ##gray|//lambda//##) _
@@ -1726,7 +1952,7 @@ qexp(y, ##gray|//lambda//##) _
 rexp(10, ##gray|//lambda//##)||stats.expon.pdf(x, scale=1.0/##gray|//lambda//##) _
 stats.expon.cdf(x, scale=1.0/##gray|//lambda//##) _
 stats.expon.ppf(x, scale=1.0/##gray|//lambda//##) _
-stats.expon.rvs(scale=1.0/##gray|//lambda//##)||
+stats.expon.rvs(scale=1.0/##gray|//lambda//##)|| ||
 ||[[# chi-squared]][#chi-squared-note chi-squared] _
 ##gray|//density, cumulative, quantile, _
 sample of 10//##||chi2pdf(x, ##gray|//nu//##) _
@@ -1738,7 +1964,7 @@ qchisq(y, ##gray|//nu//##) _
 rchisq(10, ##gray|//nu//##)||stats.chi2.pdf(x, ##gray|//nu//##) _
 stats.chi2.cdf(x, ##gray|//nu//##) _
 stats.chi2.ppf(y, ##gray|//nu//##) _
-stats.chi2.rvs(##gray|//nu//##)||
+stats.chi2.rvs(##gray|//nu//##)|| ||
 ||[[# beta]][#beta-note beta] _
 ##gray|//density, cumulative, quantile, _
 sample of 10//##||betapdf(x, ##gray|//alpha//##, ##gray|//beta//##) _
@@ -1750,7 +1976,7 @@ qbeta(y, ##gray|//alpha//##, ##gray|//beta//##) _
 rbeta(10, ##gray|//alpha//##, ##gray|//beta//##)||stats.beta.pdf(x, ##gray|//alpha//##, ##gray|//beta//##) _
 stats.beta.cdf(x, ##gray|//alpha//##, ##gray|//beta//##) _
 stats.beta.ppf(y, ##gray|//alpha//##, ##gray|//beta//##) _
-stats.beta.pvs(##gray|//alpha//##, ##gray|//beta//##)||
+stats.beta.pvs(##gray|//alpha//##, ##gray|//beta//##)|| ||
 ||[[# uniform]][#uniform-note uniform] _
 ##gray|//density, cumulative, quantile, _
 sample of 10//##||unifpdf(x, ##gray|//a//##, ##gray|//b//##) _
@@ -1762,7 +1988,7 @@ qunif(y, ##gray|//a//##, ##gray|//b//##) _
 runif(10, ##gray|//a//##, ##gray|//b//##)||stats.uniform.pdf(x, ##gray|//a//##, ##gray|//b//##) _
 stats.uniform.cdf(x, ##gray|//a//##, ##gray|//b//##) _
 stats.uniform.ppf(y, ##gray|//a//##, ##gray|//b//##) _
-stats.unifrom.rvs(##gray|//a//##, ##gray|//b//##)||
+stats.unifrom.rvs(##gray|//a//##, ##gray|//b//##)|| ||
 ||[[# students-t]][#students-t-note Student's t] _
 ##gray|//density, cumulative, quantile, _
 sample of 10//##||tpdf(x, ##gray|//nu//##) _
@@ -1774,7 +2000,7 @@ qt(y, ##gray|//nu//##) _
 rt(10, ##gray|//nu//##)||stats.t.pdf(x, ##gray|//nu//##) _
 stats.t.cdf(x, ##gray|//nu//##) _
 stats.t.ppf(y, ##gray|//nu//##) _
-stats.t.rvs(##gray|//nu//##)||
+stats.t.rvs(##gray|//nu//##)|| ||
 ||[[# snedecors-f]][#snedecors-f-note Snedecor's F] _
 ##gray|//density, cumulative, quantile, _
 sample of 10//##||fpdf(x, ##gray|//d1//##, ##gray|//d2//##) _
@@ -1786,20 +2012,20 @@ qf(y, ##gray|//d1//##, ##gray|//d2//##) _
 rf(10, ##gray|//d1//##, ##gray|//d2//##)||stats.f.pdf(x, ##gray|//d1//##, ##gray|//d2//##) _
 stats.f.cdf(x, ##gray|//d1//##, ##gray|//d2//##) _
 stats.f.ppf(y, ##gray|//d1//##, ##gray|//d2//##) _
-stats.f.rvs(##gray|//d1//##, ##gray|//d2//##)||
+stats.f.rvs(##gray|//d1//##, ##gray|//d2//##)|| ||
 ||[[# empirical-density-func]][#empirical-density-func-note empirical density function]||##gray|% $ apt-get install octave-econometrics## _
  _
 x = (-3:.05:3)' _
 y = kernel_density(x, normrnd(0, 1, 100, 1))||dfunc = density(rnorm(100)) _
  _
 dfunc$x _
-dfunc$y|| ||
+dfunc$y|| || ||
 ||[[# empirical-cumulative-distribution]][#empirical-cumulative-distribution-note empirical cumulative distribution]|| ||##gray|//F is a right-continuous step function://## _
-F = ecdf(rnorm(100))|| ||
+F = ecdf(rnorm(100))|| || ||
 ||[[# empirical-quantile-func]][#empirical-quantile-func-note empirical quantile function]|| ||F = ecdf(rnorm(100)) _
-Finv = ecdf(F(seq(0, 1, .01)))|| ||
-||||||||~ [[# linear-regression]][#linear-regression-note linear regression]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+Finv = ecdf(F(seq(0, 1, .01)))|| || ||
+||||||||||~ [[# linear-regression]][#linear-regression-note linear regression]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# simple-linear-regression]][#simple-linear-regression-note simple linear regression] _
 ##gray|//coefficient, intercept, and residuals//##||x = [1 2 3] _
 y = [2 4 7] _
@@ -1824,7 +2050,7 @@ y = np.array([2,4,7]) _
 lsq = stats.linregress(x, y) _
 a = lsq[0] _
 b = lsq[1] _
-y - (a*x+b)||
+y - (a*x+b)|| ||
 ||[[# linear-regression-no-intercept]][#linear-regression-no-intercept-note no intercept]|| ||x = seq(10) _
 y = 2 * x + 1 + rnorm(10) _
  _
@@ -1832,13 +2058,13 @@ fit = lm(y ~ x + 0) _
 summary(fit) _
  _
 ##gray|# y = ax:## _
-a = fit$coefficients[1]|| ||
+a = fit$coefficients[1]|| || ||
 ||[[# multiple-linear-regression]][#multiple-linear-regression-note multiple linear regression]|| ||x1 = rnorm(100) _
 x2 = rnorm(100) _
 y = 2 * x2 + rnorm(100) _
  _
 fit = lm(y ~ x1 + x2) _
-summary(fit)|| ||
+summary(fit)|| || ||
 ||[[# linear-regression-interaction]][#linear-regression-interaction-note interaction]|| ||x1 = rnorm(100) _
 x2 = rnorm(100) _
 y = 2 * x1 + x2 + 3 * x1 * x2 + rnorm(100) _
@@ -1848,15 +2074,15 @@ fit = lm(y ~ x1 * x2) _
 summary(fit) _
  _
 ##gray|# just x1*x2 as predictor:## _
-fit2 = lm(Y ~ x1:x2)|| ||
+fit2 = lm(Y ~ x1:x2)|| || ||
 ||[[# logistic-regression]][#logistic-regression-note logistic regression]|| ||y = round(runif(100)) _
 x1 = round(runif(100)) _
 x2 = y + rnorm(100) _
  _
 fit = glm(y ~ x1 + x2, family="binomial") _
-summary(fit)|| ||
-||||||||~ [[# statistical-tests]][#statistical-tests-note statistical tests]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+summary(fit)|| || ||
+||||||||||~ [[# statistical-tests]][#statistical-tests-note statistical tests]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# wilcoxon]][#wilcoxon-note wilcoxon signed-rank test] _
 ##gray|//variable is symmetric around zero//##||x = unifrnd(-0.5, 0.5, 100, 1) _
  _
@@ -1868,7 +2094,7 @@ wilcoxon_test(x + 1.0, zeros(100, 1))||##gray|# null hypothesis is true:## _
 wilcox.test(runif(100) - 0.5) _
  _
 ##gray|alternative hypothesis is true:## _
-wilcox.test(runif(100) + 0.5)||stats.wilcoxon()||
+wilcox.test(runif(100) + 0.5)||stats.wilcoxon()|| ||
 ||[[# kruskal]][#kruskal-note kruskal-wallis rank sum test] _
 ##gray|//variables have same location parameter//##||x = unifrnd(0, 1, 200, 1) _
  _
@@ -1880,7 +2106,7 @@ kruskal_wallis_test(randn(100, 1), x)||##gray|# null hypothesis is true:## _
 kruskal.test(list(rnorm(100), rnorm(200))) _
  _
 ##gray|# alternative hypothesis is true:## _
-kruskal.test(list(rnorm(100), runif(200)))||stats.kruskal()||
+kruskal.test(list(rnorm(100), runif(200)))||stats.kruskal()|| ||
 ||[[# kolmogorov-smirnov-test]][#kolmogorov-smirnov-test-note kolmogorov-smirnov test] _
 ##gray|//variables have same distribution//##||x = randn(100, 1) _
 y1 = randn(100, 1) _
@@ -1894,7 +2120,7 @@ kolmogorov_smirnov_test_2(x, y2)||##gray|# null hypothesis is true:## _
 ks.test(rnorm(100), rnorm(100)) _
  _
 ##gray|# alternative hypothesis is true:## _
-ks.test(rnorm(100), runif(100) - 0.5)||stats.ks_2samp()||
+ks.test(rnorm(100), runif(100) - 0.5)||stats.ks_2samp()|| ||
 ||[[# one-sample-t-test]][#one-sample-t-test-note one-sample t-test] _
 ##gray|//mean of normal variable with unknown variance is zero//##||x1 = 3 * randn(100, 1) _
 x2 = 3 * randn(100, 1) + 3 _
@@ -1907,7 +2133,7 @@ t_test(x2, 0)||##gray|# null hypothesis is true:## _
 t.test(rnorm(100, 0, 3)) _
  _
 ##gray|# alternative hypothesis is true:## _
-t.test(rnorm(100, 3, 3))||stats.ttest_1samp()||
+t.test(rnorm(100, 3, 3))||stats.ttest_1samp()|| ||
 ||[[# independent-two-sample-t-test]][#independent-two-sample-t-test-note independent two-sample t-test] _
 ##gray|//two normal variables have same mean//##||x = randn(100, 1) _
 y1 = randn(100, 1) _
@@ -1921,7 +2147,7 @@ t_test_2(x, y2)||##gray|# null hypothesis is true:## _
 t.test(rnorm(100), rnorm(100)) _
  _
 ##gray|# alternative hypothesis is true:## _
-t.test(rnorm(100), rnorm(100, 3))||stats.ttest_ind()||
+t.test(rnorm(100), rnorm(100, 3))||stats.ttest_ind()|| ||
 ||[[# one-sample-binomial-test]][#one-sample-binomial-test-note one-sample binomial test] _
 ##gray|//binomial variable parameter is as given//##|| ||n = 100 _
 x = rbinom(1, n, 0.5) _
@@ -1930,7 +2156,7 @@ x = rbinom(1, n, 0.5) _
 binom.test(x, n) _
  _
 ##gray|# alternative hypothesis is true:## _
-binom.test(x, n, p=0.3)||stats.binom_test()||
+binom.test(x, n, p=0.3)||stats.binom_test()|| ||
 ||[[# two-sample-binomial-test]][#two-sample-binomial-test-note two-sample binomial test] _
 ##gray|//parameters of two binomial variables are equal//##||prop_test_2()||n = 100 _
 x1 = rbinom(1, n, 0.5) _
@@ -1941,7 +2167,7 @@ prop.test(c(x1, x2), c(n, n)) _
  _
 y = rbinom(1, n, 0.3) _
 ##gray|# alternative hypothesis is true:## _
-prop.test(c(x1, y), c(n, n))|| ||
+prop.test(c(x1, y), c(n, n))|| || ||
 ||[[# chi-squared-test]][#chi-squared-test-note chi-squared test] _
 ##gray|//parameters of multinomial variable are all equal//##||chisquare_test_independence()||fair = floor(6 * runif(100)) + 1 _
 loaded = floor(7 * runif(100)) + 1 _
@@ -1951,13 +2177,13 @@ loaded[which(loaded > 6)] = 6 _
 chisq.test(table(fair)) _
  _
 ##gray|# alternative hypothesis is true:## _
-chisq.test(table(loaded))||stats.chisquare()||
+chisq.test(table(loaded))||stats.chisquare()|| ||
 ||[[# poisson-test]][#poisson-test-note poisson test] _
 ##gray|//parameter of poisson variable is as given//##|| ||##gray|# null hypothesis is true:## _
 poisson.test(rpois(1, 100), r=100) _
  _
 ##gray|# alternative test is true:## _
-poisson.test(rpois(1, 150), r=100)|| ||
+poisson.test(rpois(1, 150), r=100)|| || ||
 ||[[# f-test]][#f-test-note F test] _
 ##gray|//ratio of variance of normal variables is as given//##||var_test()||x = rnorm(100) _
 y = rnorm(100, 0, sd=sqrt(3)) _
@@ -1966,7 +2192,7 @@ y = rnorm(100, 0, sd=sqrt(3)) _
 var.test(y, x, ratio=3) _
  _
 ##gray|# alternative hypothesis is true:## _
-var.test(y, x, ratio=1)|| ||
+var.test(y, x, ratio=1)|| || ||
 ||[[# pearson-product-moment-test]][#pearson-product-moment-test-note pearson product moment test] _
 ##gray|//normal variables are not correlated//##||cor_test()||x1 = rnorm(100) _
 x2 = rnorm(100) _
@@ -1976,13 +2202,13 @@ y = x2 + rnorm(100) _
 cor.test(y, x1) _
  _
 ##gray|# alternative hypothesis is true:## _
-cor.test(y, x2)||stats.pearsonr()||
+cor.test(y, x2)||stats.pearsonr()|| ||
 ||[[# shapiro-wilk-test]][#shapiro-wilk-test-note shapiro-wilk test] _
 ##gray|//variable has normal distribution//##|| ||##gray|# null hypothesis is true:## _
 shapiro.test(rnorm(1000)) _
  _
 ##gray|# alternative hypothesis is true:## _
-shapiro.test(runif(1000))||stats.shapiro()||
+shapiro.test(runif(1000))||stats.shapiro()|| ||
 ||[[# bartletts-test]][#bartletts-test-note bartlett's test] _
 ##gray|//two or more normal variables have same variance//##||bartlett_test()||x = rnorm(100) _
 y1 = rnorm(100) _
@@ -1992,7 +2218,7 @@ y2 = 0.1 * rnorm(100) _
 bartlett.test(list(x, y1)) _
  _
 ##gray|# alternative hypothesis is true:## _
-bartlett.test(list(x, y))||stats.bartlett()||
+bartlett.test(list(x, y))||stats.bartlett()|| ||
 ||[[# levene-test]][#levene-test-note levene's test] _
 ##gray|//two or more variables have same variance//##|| ||install.packages('reshape', 'car') _
 library(reshape)  _
@@ -2008,7 +2234,7 @@ leveneTest(df$value, df$variable) _
  _
 ##gray|# alternative hypothesis is true:## _
 df = melt(data.frame(x, y2)) _
-leveneTest(df$value, df$variable)||stats.levene()||
+leveneTest(df$value, df$variable)||stats.levene()|| ||
 ||[[# one-way-anova]][#one-way-anova-note one-way anova] _
 ##gray|//two or more normal variables have same mean//##||x1 = randn(100, 1) _
 x2 = randn(100, 1)  _
@@ -2033,9 +2259,9 @@ x3 = rnorm(100) _
  _
 df = melt(data.frame(x1, x2, x3)) _
 fit = lm(df$value ~ df$variable) _
-anova(fit)||stats.f_oneway()||
-||||||||~ [[# time-series]][#time-series-note time series]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||
+anova(fit)||stats.f_oneway()|| ||
+||||||||||~ [[# time-series]][#time-series-note time series]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# time-series-construction]][#time-series-construction-note time series]|| ||##gray|# first observation time is 1:## _
 y = ts(rnorm(100)) _
  _
@@ -2048,7 +2274,7 @@ y = pd.Series(randn(100)) _
 ##gray|# first observation time is 1:## _
 y2 = pd.Series(randn(100), index=range(1,101)) _
  _
-y.plot()||
+y.plot()|| ||
 ||[[# monthly-time-series]][#monthly-time-series-note monthly time series]|| ||##gray|# monthly observations 1993-1997:## _
 y = ts(rnorm(60), frequency=12, start=1993) _
  _
@@ -2061,17 +2287,17 @@ y = pd.Series(randn(60), index=idx) _
  _
 dt2 = pd.datetime(2013, 10, 1) _
 idx2 = pd.date_range(dt2, periods=60, freq='M') _
-y2 = pd.Series(randn(60), index=idx2)||
+y2 = pd.Series(randn(60), index=idx2)|| ||
 ||[[# time-series-lookup-time]][#time-series-lookup-time-note lookup by time]|| ||start = tsp(y2)[1] _
 end = tsp(y2)[2] _
 freq = tsp(y2)[3] _
  _
 ##gray|# value for Jan 1994:## _
-y2[(1994 - start) * freq + 1]||y2[pd.datetime(2014, 1, 31)]||
+y2[(1994 - start) * freq + 1]||y2[pd.datetime(2014, 1, 31)]|| ||
 ||[[# time-series-lookup-position]][#time-series-lookup-position-note lookup by position in series]|| ||for (i in 1:length(y)) { _
 @<&nbsp;&nbsp;>@print(y[i]) _
 }||for i in range(0, len(y)): _
-@<&nbsp;&nbsp;>@y.ix[i]||
+@<&nbsp;&nbsp;>@y.ix[i]|| ||
 ||[[# aligned-arithmetic]][#aligned-arithmetic-note aligned arithmetic]|| ||y = ts(rnorm(10), start=0) _
 y2 = ts(rnorm(10), start=5) _
  _
@@ -2081,8 +2307,12 @@ y2 = pd.Series(randn(10), index=range(5, 15)) _
  _
 ##gray|# time series with 15 data points; 10 of _
 # which are NaN:## _
-# y3 = y + y2||
-||[[# lagged-difference]][#lagged-difference-note lagged difference]|| ||delta = diff(y, lag=1)||delta = y.diff(1)||
+# y3 = y + y2|| ||
+||[[# lag-operator]][#lag-operator-note lag operator]|| ||x = ts(rnorm(100)) _
+y = x + lag(x, 1)||x = pd.Series(randn(100)) _
+y = x + x.shift(-1)|| ||
+||[[# lagged-difference]][#lagged-difference-note lagged difference] _
+@<&nbsp;>@|| ||delta = diff(y, lag=1)||delta = y.diff(1)|| ||
 ||[[# simple-moving-avg]][#simple-moving-avg-note simple moving average]|| ||install.packages('TTR') _
 library('TTR') _
  _
@@ -2092,14 +2322,14 @@ plot(y) _
 lines(ma, col='red')||y = pd.Series(randn(50)) _
 ma = pd.rolling_mean(y, 4) _
  _
-plot(y, 'k', ma, 'r')||
+plot(y, 'k', ma, 'r')|| ||
 ||[[# weighted-moving-avg]][#weighted-moving-avg-note weighted moving average]|| ||install.packages('TTR') _
 library('TTR') _
  _
 ma = WMA(y, n=4, wts=c(1, 2, 3, 4)) _
  _
 plot(y) _
-lines(ma, col='red')|| ||
+lines(ma, col='red')|| || ||
 ||[[# exponential-smoothing]][#exponential-smoothing-note exponential smoothing]|| ||x = rnorm(100) _
 fit = HoltWinters(x, alpha=0.5, beta=F, gamma=F) _
  _
@@ -2108,12 +2338,12 @@ plot(fit)||alpha = 0.5 _
 span = (2 / alpha) - 1 _
 fit = pd.ewma(y, span=span, adjust=False) _
  _
-fit.plot()||
+fit.plot()|| ||
 ||[[# least-squares-exponential-smoothing]][#least-squares-exponential-smoothing-note exponential smoothing with best least squares fit]|| ||x = rnorm(100) _
 fit = HoltWinters(x, beta=F, gamma=F) _
  _
 alpha = fit$a _
-plot(fit)|| ||
+plot(fit)|| || ||
 ||[[# decompose-seasonal-trend]][#decompose-seasonal-trend-note decompose into seasonal and trend]|| ||raw = seq(1,100) + rnorm(100) + rep(seq(1,10), 10) _
 y = ts(raw, frequency=10) _
  _
@@ -2126,53 +2356,75 @@ yd$random _
 plot(yd) _
  _
 ##gray|# multiplicative model: t * s * r:## _
-yd2 = decompose(y, type="multiplicative")|| ||
+yd2 = decompose(y, type="multiplicative")|| || ||
 ||[[# correlogram]][#correlogram-note correlogram]|| ||x = rnorm(100) _
 x2 = append(x[4:100], x[1:3]) _
  _
 acf(x, lag.max=20) _
-acf(x + x2, lag.max=20)|| ||
-||test for stationarity|| || || ||
-||[[# arma]][#arma-note arma]|| || || ||
-||[[# arima]][#arima-note arima]|| || || ||
-||[[# automatic-arima]][#arima-note arima with automatic model selection]|| || || ||
-||||||||~ [[# fast-fourier-transform]][#fast-fourier-transform-note fast fourier transform]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy matplotlib]||
+acf(x + x2, lag.max=20)|| || ||
+||test for stationarity|| || || || ||
+||[[# arma]][#arma-note arma]|| || || || ||
+||[[# arima]][#arima-note arima]|| || || || ||
+||[[# automatic-arima]][#arima-note arima with automatic model selection]|| || || || ||
+||||||||||~ [[# fast-fourier-transform]][#fast-fourier-transform-note fast fourier transform]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# fft]][#fft-note fft]||x = 3 * sin(1:100) + sin(3 * (1:100)) + randn(1, 100) _
  _
-dft = fft(x)|| || ||
-||[[# ifft]][#ifft-note inverse fft]|| || || ||
-||[[# fftshift]][#fftshift-note shift constant component to center]|| || || ||
-||[[# fft2]][#fft2-note two-dimensional fft]|| || || ||
-||[[# fftn]][#fftn-note n-dimensional fft]|| || || ||
-||||||||~ [[# univariate-charts]][#univariate-chart-note univariate charts]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy matplotlib]||
+dft = fft(x)|| || || ||
+||[[# ifft]][#ifft-note inverse fft]|| || || || ||
+||[[# fftshift]][#fftshift-note shift constant component to center]|| || || || ||
+||[[# fft2]][#fft2-note two-dimensional fft]|| || || || ||
+||[[# fftn]][#fftn-note n-dimensional fft]|| || || || ||
+||||||||||~ [[# clustering]][#clustering-note clustering]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
+||distance matrix||pts = [1 1; 1 2; 2 1; 2 3; 3 4; 4 4] _
+ _
+##gray|% value at (i, j) is distance between i-th _
+% and j-th observation## _
+dm = squareform(pdist(pts, 'euclidean'))|| || || ||
+||distance options||##gray|'euclidean' _
+'seuclidian' _
+'cityblock' _
+'minkowski' _
+'chebychev' _
+'mahalanobis' _
+'cosine' _
+'correlation' _
+'spearman' _
+'hamming' _
+'jaccard'##|| || || ||
+||hierarchical clusters|| || || || ||
+||dendogram|| || || || ||
+||silhouette plot|| || || || ||
+||k-means|| || || || ||
+||||||||||~ [[# univariate-charts]][#univariate-chart-note univariate charts]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[image http://farm5.static.flickr.com/4090/5039793334_f76edece33_m.jpg]] [[# bar-chart]][#bar-chart-note vertical bar chart]||bar([7 3 8 5 5])||cnts = c(7,3,8,5,5) _
 names(cnts) = c("a","b","c","d","e") _
 barplot(cnts) _
  _
 x = floor(6*runif(100)) _
 barplot(table(x))||cnts = [7,3,8,5,5] _
-plt.bar(range(0,len(cnts)), cnts)||
+plt.bar(range(0,len(cnts)), cnts)|| ||
 ||[[image http://farm5.static.flickr.com/4092/5039776078_cc38a4ff5f_m.jpg]] _
 [[# horizontal-bar-chart]][#horizontal-bar-chart-note horizontal bar chart]||barh([7 3 8 5 5])||cnts = c(7,3,8,5,5) _
 names(cnts) = c("a","b","c","d","e") _
 barplot(cnts, horiz=T)||cnts = [7,3,8,5,5] _
-plt.barh(range(0,len(cnts)), cnts)||
+plt.barh(range(0,len(cnts)), cnts)|| ||
 ||[[image http://farm5.static.flickr.com/4145/5037819710_d932767cd5_m.jpg]] _
 [[# pie-chart]][#pie-chart-note pie chart]||labels = {'a','b','c','d','e'} _
 pie([7 3 8 5 5], labels)||cnts = c(7,3,8,5,5) _
 names(cnts) = c("a","b","c","d","e") _
 pie(cnts)||cnts = [7,3,8,5,5] _
 labs = ['a','b','c','d','e'] _
-plt.pie(cnts, labels=labs)||
+plt.pie(cnts, labels=labs)|| ||
 ||[[image http://farm5.static.flickr.com/4089/5037399669_13c8e585e0_m.jpg]] _
 [[# stem-leaf-plot]][#stem-leaf-plot-note stem-and-leaf plot]||##gray|//none//##||##gray|//generates an ascii chart://## _
  _
-stem(20*rnorm(100))||##gray|//none//##||
+stem(20*rnorm(100))||##gray|//none//##|| ||
 ||[[image http://farm5.static.flickr.com/4106/5037415497_4c6fbfcab2_m.jpg]] _
 [[# histogram]][#histogram-note histogram]||hist(randn(1, 100), 10)||hist(rnorm(100), breaks=10)||plt.hist(sp.randn(100), _
-@<&nbsp;&nbsp;>@bins=range(-5,5))||
+@<&nbsp;&nbsp;>@bins=range(-5,5))|| ||
 ||[[image http://farm5.static.flickr.com/4106/5037525393_7ac86e81c3_m.jpg]] _
 [[# box-plot]][#box-plot-note box plot]||boxplot(randn(1, 100)) _
  _
@@ -2186,13 +2438,13 @@ boxplot(rnorm(100), _
  _
 plt.boxplot([sp.randn(100), _
 @<&nbsp;&nbsp;>@np.random.uniform(size=100), _
-@<&nbsp;&nbsp;>@np.random.exponential(size=100)])||
+@<&nbsp;&nbsp;>@np.random.exponential(size=100)])|| ||
 ||[[# chart-title]][#chart-title-note chart title]||bar([7 3 8 5 5]) _
 title('bar chart example')||##gray|//all chart functions except for// stem //accept a// main //parameter://## _
 boxplot(rnorm(100), _
 @<&nbsp;&nbsp;>@main="boxplot example", _
 @<&nbsp;&nbsp;>@sub="to illustrate options")||plt.boxplot(sp.randn(100)) _
-plt.title('boxplot example')||
+plt.title('boxplot example')|| ||
 ||[[# subplot-grid]][#subplot-grid-note grid of subplots][[image http://farm8.staticflickr.com/7551/15816199467_a0a0f159d0_t.jpg]]||##gray|% 3rd arg refers to the subplot; _
 % subplots are numbered in row-major order.## _
 for i = 1:4 _
@@ -2202,22 +2454,22 @@ end||for (i in split.screen(c(2, 2))) { _
 @<&nbsp;&nbsp;>@hist(rnorm(100)) _
 }||for i in [1, 2, 3, 4]: _
 @<&nbsp;&nbsp;>@plt.subplot(2, 2, i) _
-@<&nbsp;&nbsp;>@plt.hist(sp.randn(100), bins=range(-5,5))||
+@<&nbsp;&nbsp;>@plt.hist(sp.randn(100), bins=range(-5,5))|| ||
 ||[[# new-plot-window]][#new-plot-window-note open new plot window]||open new plot _
 figure _
 open new plot||hist(rnorm(100)) _
 dev.new() _
-hist(rnorm(100))|| ||
-||[[# close-plot-windows]][#close-plot-windows-note close all plot windows]||close all||graphics.off()|| ||
+hist(rnorm(100))|| || ||
+||[[# close-plot-windows]][#close-plot-windows-note close all plot windows]||close all||graphics.off()|| || ||
 ||[[# save-plot-as-png]][#save-plot-as-png-note save plot as png]|| f = figure _
 hist(randn(100)) _
 print(f, '-dpng', 'histogram.png')||png('hist.png') _
 hist(rnorm(100)) _
 dev.off()||y = randn(50) _
 plot(y) _
-savefig('line-plot.png')||
-||||||||~ [[# bivariate-charts]][#bivariate-chart-note bivariate charts]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy matplotlib]||
+savefig('line-plot.png')|| ||
+||||||||||~ [[# bivariate-charts]][#bivariate-chart-note bivariate charts]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[image http://farm5.static.flickr.com/4154/5039126187_e340b3f4aa_m.jpg]] _
 [[# stacked-bar-chart]][#stacked-bar-chart-note stacked bar chart]||d = [7 1; 3 2; 8 1; 5 3; 5 1] _
 bar(d, 'stacked')||d = matrix(c(7,1,3,2,8,1,5,3,5,1), _
@@ -2226,16 +2478,15 @@ labels = c("a","b","c","d","e") _
 barplot(d,names.arg=labels)||a1 = [7,3,8,5,5] _
 a2 = [1,2,1,3,1] _
 plt.bar(range(0,5), a1, color='r') _
-plt.bar(range(0,5), a2, color='b')||
+plt.bar(range(0,5), a2, color='b')|| ||
 ||[[image http://farm8.staticflickr.com/7490/15814685770_09478e1222_t.jpg]] _
 [[# grouped-bar-chart]][#grouped-bar-chart-note grouped bar chart]||d = [7 1; 3 2; 8 1; 5 3; 5 1] _
 bar(d)||d = matrix(c(7,1,3,2,8,1,5,3,5,1), _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@nrow=2) _
 labels = c("a","b","c","d","e") _
-barplot(d,names.arg=labels,beside=TRUE)|| ||
+barplot(d,names.arg=labels,beside=TRUE)|| || ||
 ||[[image http://farm6.static.flickr.com/5044/5267212089_a7749bbe3e_s.jpg]] _
-[[# scatter-plot]][#scatter-plot-note scatter plot]||plot(randn(1,50),randn(1,50),'+')||plot(rnorm(50), rnorm(50))||plt.scatter(sp.randn(50), _
-@<&nbsp;&nbsp;>@sp.randn(50))||
+[[# scatter-plot]][#scatter-plot-note scatter plot]||plot(randn(1,50),randn(1,50),'+')||plot(rnorm(50), rnorm(50))||plt.scatter(sp.randn(50), sp.randn(50), marker='x')|| ||
 ||[[# point-types]][#point-types-note point types]||##gray|'.': point _
 'o': circle _
 'x': x-mark _
@@ -2248,7 +2499,7 @@ barplot(d,names.arg=labels,beside=TRUE)|| ||
 '<': triangle (left) _
 '>': traingle (right) _
 'p': pentagram _
-'h': hexagram##||##gray|//Integer values for// pch //parameter: _
+'h': hexagram##||##gray|//Integer values for// pch //parameter:// _
  _
 0: open square _
 1: open circle _
@@ -2260,7 +2511,31 @@ barplot(d,names.arg=labels,beside=TRUE)|| ||
 15: solid square _
 16: solid circle _
 17: solid triangle, points up _
-18: solid diamond//##|| ||
+18: solid diamond##||##gray|marker //parameter takes these string values://## _
+ _
+##gray|'.': point _
+',': pixel _
+'o': circle _
+'v': triangle_down _
+'^': triangle_up _
+'<': triangle_left _
+'>': triangle_right _
+'1': tri_down _
+'2': tri_up _
+'3': tri_left _
+'4': tri_right _
+'8': octagon _
+'s': square _
+'p': pentagon _
+'*': star _
+'h': hexagon1 _
+'H': hexagon2 _
+'+': plus _
+'x': x _
+'D': diamond _
+'d': thin_diamond _
+'|': vline _
+'_': hline##|| ||
 ||[[image http://farm9.staticflickr.com/8568/16001259452_55e23d1303_t.jpg]] _
 [[# hexbin]][#hexbin-note hexagonal binning]|| ||install.packages('hexbin') _
 library('hexbin') _
@@ -2269,7 +2544,7 @@ plot(hexbin(rnorm(1000), _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@rnorm(1000), _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@xbins=12))||hexbin(randn(1000), _
 @<&nbsp;&nbsp;>@randn(1000), _
-@<&nbsp;&nbsp;>@gridsize=12)||
+@<&nbsp;&nbsp;>@gridsize=12)|| ||
 ||[[image http://farm6.static.flickr.com/5089/5267975488_2216ae147e_s.jpg]] _
 [[# linear-regression-line]][#linear-regression-line-note linear regression line]|| ||x = 0:20 _
 y = 2 * x + rnorm(21)*10 _
@@ -2285,15 +2560,15 @@ A = np.vstack([x,np.ones(len(x))]).T _
 m, c = np.linalg.lstsq(A, y)[0] _
  _
 plt.scatter(x, y) _
-plt.plot(x, [m*i + c for i in x])||
+plt.plot(x, [m*i + c for i in x])|| ||
 ||[[image http://farm6.static.flickr.com/5125/5267434941_f8537c9d26_s.jpg]] _
-[[# polygonal-plot]][#polygonal-plot-note polygonal line plot]||plot(1:20,randn(1,20))||plot(1:20, rnorm(20), type="l")||plot(range(0,20), randn(20))||
+[[# polygonal-plot]][#polygonal-plot-note polygonal line plot]||plot(1:20,randn(1,20))||plot(1:20, rnorm(20), type="l")||plt.plot(range(0,20), sp.randn(20), '-')|| ||
 ||[[# line-types]][#line-types-note line types]||##gray|//Optional 3rd argument to plot:// _
  _
 '-': solid _
 ':': dotted _
 '-.': dashdot _
-'--': dashed##||##gray|//Integer or string values for// lty //parameter: _
+'--': dashed##||##gray|//Integer or string values for// lty //parameter:// _
  _
 0: 'blank' _
 1: 'solid' (default) _
@@ -2301,21 +2576,55 @@ plt.plot(x, [m*i + c for i in x])||
 3: 'dotted' _
 4: 'dotdash' _
 5: 'longdash' _
-6: 'twodash'//##|| ||
+6: 'twodash'##||##gray|//Optional 3rd argument to plot://## _
+ _
+##gray|'-': solid line _
+@@'--'@@: dashed line _
+'-.': dash-dot line _
+':': dotted line _
+'.': point _
+',': pixel _
+'o': circle _
+'v': triangle_down _
+'^': triangle_up _
+'<': triangle_left _
+'>': triangle_right _
+'1': tri_down _
+'2': tri_up _
+'3': tri_left _
+'4': tri_right _
+'s': square _
+'p': pentagon _
+'*': star _
+'h': hexagon1 _
+'H': hexagon2 _
+'+': plus _
+'x': x _
+'D': diamond _
+'d': thin_diamond _
+'|': vline _
+'_': hline##|| ||
 ||[[image http://farm6.static.flickr.com/5204/5268208606_b745646ea6_s.jpg]] _
 [[# function-plot]][#function-plot-note function plot]||fplot(@sin, [-4 4])||x = seq(-4, 4, .01) _
-plot(sin(x), type="l")|| ||
+plot(sin(x), type="l")||x = [i * .01 for i in range(-400, 400)] _
+plt.plot(x, sin(x), '-')|| ||
 ||[[image http://farm6.static.flickr.com/5048/5267567389_27a19429e4_s.jpg]] _
-[[# qq-plot]][#qq-plot-note quantile-quantile plot]|| ||qqplot(runif(50),rnorm(50)) _
-lines(c(-9,9), c(-9,9), col="red")|| ||
+[[# qq-plot]][#qq-plot-note quantile-quantile plot]|| ||qqplot(runif(50), rnorm(50)) _
+lines(c(-9,9), c(-9,9), col="red")|| || ||
 ||[[# axis-labels]][#axis-labels-note axis labels]||plot( 1:20, (1:20) .** 2) _
 xlabel('x') _
 ylabel('x squared')||plot(1:20, (1:20)^2, _
-@<&nbsp;&nbsp;>@xlab="x", ylab="x squared")|| ||
+@<&nbsp;&nbsp;>@xlab="x", ylab="x squared")||x = range(0, 20) _
+plt.plot(x, [i * i for i in x], '-') _
+plt.xlabel('x') _
+plt.ylabel('x squared')|| ||
 ||[[# axis-limits]][#axis-limits-note axis limits]||plot( 1:20, (1:20) .** 2) _
 ##gray|% [xmin, xmax, ymin, ymax]:## _
 axis([1 20 -200 500])||plot(1:20, (1:20)^2, _
-@<&nbsp;&nbsp;>@xlim=c(0, 20), ylim=c(-200,500))|| ||
+@<&nbsp;&nbsp;>@xlim=c(0, 20), ylim=c(-200,500))||x = range(0, 20) _
+plt.plot(x, [i * i for i in x], '-') _
+plt.xlim([0, 20]) _
+plt.ylim([-200, 500])|| ||
 ||[[# logarithmic-y-axis]][#logarithmic-y-axis-note logarithmic y-axis]||semilogy(x, x .** 2, _
 @<&nbsp;&nbsp;>@x, x .** 3, _
 @<&nbsp;&nbsp;>@x, x .** 4, _
@@ -2329,9 +2638,9 @@ for i in [2,3,4,5]: _
 @<&nbsp;&nbsp;>@y.append([j**i for j in x]) _
  _
 for i in [0,1,2,3]: _
-@<&nbsp;&nbsp;>@semilogy(x, y[i])||
-||||||||~ [[# multivariate-charts]][#multivariate-chart-note multivariate charts]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy matplotlib]||
+@<&nbsp;&nbsp;>@semilogy(x, y[i])|| ||
+||||||||||~ [[# multivariate-charts]][#multivariate-chart-note multivariate charts]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# additional-line]][[image http://farm6.static.flickr.com/5245/5268191292_a75a367c39_s.jpg]] _
 [#additional-line-note additional line set]||plot(1:20, randn(1, 20), _
 @<&nbsp;&nbsp;>@1:20, randn(1, 20)) _
@@ -2340,7 +2649,7 @@ for i in [0,1,2,3]: _
 plot(1:20, randn(1, 20)) _
 hold on _
 plot(1:20, randn(1, 20))||plot(1:20, rnorm(20), type="l") _
-lines(1:20, rnorm(20), col="red")|| ||
+lines(1:20, rnorm(20), col="red")|| || ||
 ||[[# colors]][#colors-note colors]||##gray|//Use color letters by themselves for colored lines.  Use '.r' for red dots.// _
  _
 'b': blue _
@@ -2357,7 +2666,7 @@ lines(1:20, rnorm(20), col="red")|| ||
 # names for colors.## _
  _
 plot(rnorm(10), col='red') _
-plot(rnorm(10), col='#FF0000')|| ||
+plot(rnorm(10), col='#FF0000')|| || ||
 ||[[# superimposed-plots]][#superimposed-plots-note superimposed plots with different y-axis scales]|| ||x <- 1:10 _
 y <- rnorm(10) _
 z <- rnorm(10) * 1000 _
@@ -2368,7 +2677,7 @@ plot(x, z, col='red', type='l', axes=F, _
 @<&nbsp;&nbsp;>@xlab='', ylab='') _
 axis(side=4, col='red', col.axis='red', _
 @<&nbsp;&nbsp;>@at=pretty(range(z))) _
-mtext('z', side=4, line=3, col='red')|| ||
+mtext('z', side=4, line=3, col='red')|| || ||
 ||[[# legend]][[image http://farm8.staticflickr.com/7461/15382318933_b4ba583034_t.jpg]] _
 [#legend-note legend]|| ||x = (1:20) _
 y = x + rnorm(20) _
@@ -2378,11 +2687,11 @@ plot(x, y, type="l", col="black") _
 lines(x, y2, type="l", col="red") _
 legend('topleft', c('first', 'second'), _
 @<&nbsp;&nbsp;>@lty=c(1,1), lwd=c(2.5, 2.5), _
-@<&nbsp;&nbsp;>@col=c('black', 'red'))|| ||
+@<&nbsp;&nbsp;>@col=c('black', 'red'))|| || ||
 ||[[# additional-point]][[image http://farm9.staticflickr.com/8600/15814685890_69b3f21697_t.jpg]] _
 [#additional-point-note additional point set]||plot(randn(20), randn(20), '.k', randn(20), randn(20), '.r')||plot(rnorm(20), rnorm(20)) _
 points(rnorm(20), rnorm(20), _
-@<&nbsp;&nbsp;>@col='red')|| ||
+@<&nbsp;&nbsp;>@col='red')|| || ||
 ||[[# area-chart]][[image http://farm6.static.flickr.com/5041/5268071368_75c3aee42e_t.jpg]] _
 [#area-chart-note stacked area chart]|| ||install.packages('ggplot2') _
 library('ggplot2') _
@@ -2395,7 +2704,7 @@ df = data.frame(x, y, letter) _
 p = ggplot(df, aes(x=x, y=y, _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@group=letter, _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@fill=letter)) _
-p + geom_area(position='stack')|| ||
+p + geom_area(position='stack')|| || ||
 ||[[# overlapping-area-chart]][[image http://farm8.staticflickr.com/7557/15815944099_9b56eb2af4_t.jpg]] _
 [#overlapping-area-chart-note overlapping area chart]|| ||install.packages('ggplot2') _
 library('ggplot2') _
@@ -2409,13 +2718,13 @@ alpha = rep(I(2/10), each=15) _
 p = ggplot(df, aes(x=x, ymin=0, ymax=y, _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@group=letter, fill=letter, _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@alpha=alpha)) _
-p + geom_ribbon()|| ||
+p + geom_ribbon()|| || ||
 ||[[# 3d-scatter-plot]][[image http://farm9.staticflickr.com/8611/15814558578_f6b4f8d3b0_t.jpg]] _
 [#3d-scatter-plot-note 3d scatter plot]|| ||install.packages('scatterplot3d') _
 library('scatterplot3d') _
  _
 scatterplot3d(rnorm(50), rnorm(50), _
-@<&nbsp;&nbsp;>@rnorm(50), type="h")|| ||
+@<&nbsp;&nbsp;>@rnorm(50), type="h")|| || ||
 ||[[# bubble-chart]][[image http://farm9.staticflickr.com/8591/15999976481_b2082d7d5b_t.jpg]] _
 [#bubble-chart-note bubble chart]|| ||install.packages('ggplot2') _
 library('ggplot2') _
@@ -2424,7 +2733,7 @@ df = data.frame(x=rnorm(20), _
 @<&nbsp;&nbsp;>@y=rnorm(20), z=rnorm(20)) _
  _
 p = ggplot(df, aes(x=x, y=y, size=z)) _
-p + geom_point()|| ||
+p + geom_point()|| || ||
 ||[[# scatter-plot-matrix]][[image http://farm8.staticflickr.com/7521/15976165976_636a08e4e8_t.jpg]] _
 [#scatter-plot-matrix-note scatter plot matrix]|| ||x = rnorm(20) _
 y = rnorm(20) _
@@ -2432,7 +2741,7 @@ z = x + 3*y _
 w = y + 0.1*rnorm(20) _
 df = data.frame(x, y, z, w) _
  _
-pairs(df)|| ||
+pairs(df)|| || ||
 ||[[# contour-plot]][[image http://farm8.staticflickr.com/7496/15814558718_3f63b8e371_t.jpg]] _
 [#contour-plot-note contour plot]|| ||m = matrix(0, 100, 100) _
 for (i in 2:100) { _
@@ -2442,8 +2751,9 @@ for (i in 2:100) { _
 @<&nbsp;&nbsp;>@} _
 } _
  _
-filled.contour(1:100, 1:100, m)|| ||
-||~ ||~ ##EFEFEF|@@________________________________________________________________@@##||~ ##EFEFEF|@@________________________________________________________________@@##||~ ##EFEFEF|@@________________________________________________________________@@##||
+filled.contour(1:100, 1:100, m)|| || ||
+||~ ||~ ##EFEFEF|@@__________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________@@##||
+
 
 [[# general-note]]
 + [#top General]
@@ -2993,12 +3303,12 @@ How to build a date/time value from the year, month, day, hour, minute, and seco
 How to convert a date value to a string using the default format for the locale.
 
 [[# strptime-note]]
-++ [#strptime strptime]
+++ [#strptime parse datetime]
 
 How to parse a date/time value from a string in the manner of strptime from the C standard library.
 
 [[# strftime-note]]
-++ [#strftime strftime]
+++ [#strftime format datetime]
 
 How to write a date/time value to a string in the manner of strftime from the C standard library.
 
@@ -3986,6 +4296,9 @@ How to compute the 1-norm, the 2-norm, the infinity norm, and the frobenius norm
 
 //norm(A)// is the same as //norm(A,2)//.
 
+[[# sparse-matrices-note]]
++ [#sparse-matrices Sparse Matrices]
+
 [[# sparse-matrix-construction-note]]
 ++ [#sparse-matrix-construction sparse matrix construction]
 
@@ -4598,6 +4911,9 @@ How to get a data point in a time series by its ordinal position.
 [[# fftn-note]]
 ++ [#fftn n-dimensional fft]
 
+[[# clustering-note]]
++ [#clustering Clustering]
+
 [[# univariate-chart-note]]
 + [#univariate-charts Univariate Charts]
 
@@ -4769,6 +5085,10 @@ A quantile-quantile plot is a scatter plot created from two data sets.  Each poi
 
 If the data sets are drawn from the same distribution then most of the points should be close to the line y = x.  If the data sets are drawn from distributions which have a linear relation then the Q-Q plot should also be close to linear.
 
+If the two data sets have the same number of elements, one can simply sort them and create the scatterplot.
+
+If the number of elements is different, one a set of quantiles (such as percentiles) for each set.  The {{quantile}} function of MATLAB and R is convenient for this.  With Python, one can use {{scipy.stats.scoreatpercentile}}.
+
 [[# axis-labels-note]]
 ++ [#axis-labels axis labels]
 
@@ -4879,11 +5199,11 @@ The basic data type of MATLAB is a matrix of floats.    There is no distinction 
 
 Floats are by default double precision; single precision can be specified with the //single// constructor.  MATLAB has convenient matrix literal notation: commas or spaces can be used to separate row entries, and semicolons or newlines can be used to separate rows.
 
-Arrays and vectors are implemented as single-row (1xn) matrices.  As a result an //n//-element vector must be transposed before it can be multiplied on the right of a //mxn// matrix.  
+Arrays and vectors are implemented as single-row ({{1xn}}) matrices.  As a result an //n//-element vector must be transposed before it can be multiplied on the right of a {{mxn}} matrix.  
 
 Numeric literals that lack a decimal point such as //17// and //-34// create floats, in contrast to most other programming languages.  To create an integer, an integer constructor which specifies the size such as //int8// and //uint16// must be used.  Matrices of integers are supported, but the entries in a given matrix must all have the same numeric type.  
 
-Strings are implemented as single-row (1xn) matrices of characters, and as a result matrices cannot contain strings.  If a string is put in matrix literal, each character in the string becomes an entry in the resulting matrix.  This is consistent with how matrices are treated if they are nested inside another matrix.  The following literals all yield the same string or 1xn matrix of characters:
+Strings are implemented as single-row ({{1xn}}) matrices of characters. Matrices cannot contain strings.  If a string is put in matrix literal, each character in the string becomes an entry in the resulting matrix.  This is consistent with how matrices are treated if they are nested inside another matrix.  The following literals all yield the same string or {{1xn}} matrix of characters:
 
 [[code]]
 'foo'
@@ -4903,7 +5223,7 @@ MATLAB has a tuple type (in MATLAB terminology, a cell array) which can be used 
 [http://adv-r.had.co.nz/ Advanced R Programming]
 [http://cran.r-project.org/ The Comprehensive R Archive Network]
 
-The basic data types of R are vectors of floats, vectors of strings, and vectors of booleans.  There is no distinction between a scalar and a vector with one entry in it.  Functions and operators which accept a scalar argument will typically accept a vector argument, returning a vector of the same size with the scalar operation performed on each the entries of the original vector.
+The primitive data types of R are vectors of floats, vectors of strings, and vectors of booleans.  There is no distinction between a scalar and a vector with one entry in it.  Functions and operators which accept a scalar argument will typically accept a vector argument, returning a vector of the same size with the scalar operation performed on each the entries of the original vector.
 
 The scalars in a vector must all be of the same type, but R also provides a //list// data type which can be used as a tuple (entries accessed by index), record (entries accessed by name), or even as a dictionary.
 
@@ -4928,3 +5248,8 @@ In the reference sheet the [#array array section] covers the vanilla Python {{li
 //List the NumPy primitive types//
 
 SciPy, Matplotlib, and Pandas are libraries which depend on Numpy.
+
+[[# julia]]
++ [#top Julia]
+
+http://julialang.org/

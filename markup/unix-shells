@@ -496,7 +496,7 @@ ${foo:a}|| ||
 ${foo:h}||foo=/etc/hosts _
 dirname $foo||
 ||basename|| || || || ||foo=/etc/hosts _
-${foo:t}}||foo=/etc/hosts _
+${foo:t}||foo=/etc/hosts _
 basename $foo||
 ||extension|| || || || ||foo=index.html _
 ${foo:e}|| ||

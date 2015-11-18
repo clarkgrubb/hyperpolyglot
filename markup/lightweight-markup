@@ -6,25 +6,27 @@
 ||sandbox||[http://daringfireball.net/projects/markdown/dingus daringfireball.net/projects/markdown/dingus] _
  _
 [http://johnmacfarlane.net/pandoc/try johnmacfarlane.net/pandoc/try]||[http://rst.ninjs.org/ rst.ninjs.org]||[http://en.wikipedia.org/wiki/Wikipedia:Sandbox en.wikipedia.org/wiki/Wikipedia:Sandbox]||[http://asciidoc.wikia.com/wiki/Template:Sandbox asciidoc.wiki.com/wiki/Template:Sandbox]|| ||
-||command line tool||$ apt-get install markdown _
+||command line tool||$ apt install markdown _
 $ markdown foo.txt > foo.html _
  _
-$ apt-get install pandoc _
+$ apt install pandoc _
 $ pandoc foo.txt -o foo.html||$ pip install rst2html5 _
  _
 $ rst2html5 foo.rst > foo.html||##gray|//run at root of MediaWiki source tree://## _
  _
 $ php maintenance/parse.php foo.txt \ _
-@<&nbsp;&nbsp;>@> foo.html||$ apt-get install asciidoc _
+@<&nbsp;&nbsp;>@> foo.html||$ apt install asciidoc _
 $ asciidoc foo.txt|| ||
-||autolinks url?||##gray|//no//##||##gray|//yes//##||##gray|//yes//##||##gray|//yes//##||##gray|//yes//##||
+||autolinks url? _
+@<&nbsp;>@||##gray|//no//##||##gray|//yes//##||##gray|//yes//##||##gray|//yes//##||##gray|//yes//##||
 ||can use html entities?||##gray|//yes; they are passed to output html//##||##gray|//no, the ampersand will be html entity escaped//##||##gray|//yes; they are replaced by UTF-8//##||##gray|//yes; they are passed to output html//##|| ||
 ||encoding||##gray|markdown //and// pandoc //assume UTF-8 for input and output.//##||##gray|//default output is UTF-8; default input is system dependent//## _
  _
 $ rst2html5 @@--@@input-encoding=utf-8 \ _
 @<&nbsp;&nbsp;>@@@--@@output-encoding=iso8859-1 \ _
 @<&nbsp;&nbsp;>@< foo.rst > foo.html||##gray|MediaWiki //specifies UTF-8 in the response header and the HTML document.  It handles UTF-8 POST requests, and may handle other encodings correctly.//##||##gray|//assumes UTF-8 for input and output//##|| ||
-||link offsite||[Website](@@http://website.com@@) ||@@`Website <http://website.com>`_@@||@@[http://website.com Website]@@||@@http://website.com@@[Website]||@@[[http://www.google.com][Google]]@@||
+||link offsite _
+@<&nbsp;>@||[Website](@@http://website.com@@) ||@@`Website <http://website.com>`_@@||@@[http://website.com Website]@@||@@http://website.com@@[Website]||@@[[http://www.google.com][Google]]@@||
 ||link with url in footnote||##gray|//link://## _
 [Website][u1] _
  _
@@ -79,7 +81,9 @@ small caps text _
 ||font size||<font size=16>foo</font>|| ||<font size="16">foo</font>|| || ||
 ||span w/ class||<span class="foo"> _
 ##gray|//text//## _
-</span>|| ||<span class="foo"> _
+</span>||.. role:: foo _
+ _
+:foo:@@`@@##gray|//text//##@@`@@||<span class="foo"> _
 ##gray|//text//## _
 </span>|| || ||
 ||||||||||||~ [[# grouping-alignment]]grouping and alignment||
@@ -110,9 +114,16 @@ document title _
  _
 document title _
 ==============|| ||
-||document subtitle|| || || || || ||
-||document author|| || || || || ||
-||document date|| || || || || ||
+||document header||% ##gray|//document title//## _
+% John Doe; Jane Roe _
+% August 16, 2001 _
+||:Date: 2001-08-16 _
+:Version: 1 _
+:Authors: - John Doe _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@- Jane Roe|| ||##gray|//document title//## _
+============== _
+John Doe _
+August 16, 2001|| ||
 ||section header||##gray|//pandoc requires blank line before header, markdown doesn't://## _
 # section header _
  _
@@ -247,7 +258,8 @@ years ago... _
 </div>|| || ||
 ||||||||||||~ [[# images]]images||
 ||~ ||~ [#markdown markdown]||~ [#restructured-text restructured text]||~ [#mediawiki mediawiki]||~ [#asciidoc asciidoc]||~ [#org-mode org-mode]||
-||image||<img src="foo.jpg">||.. image:: foo.jpg||[[File:foo.jpg]]||image:foo.jpg[]||@@[[foo.jpg]]@@||
+||image _
+@<&nbsp;>@||<img src="foo.jpg">||.. image:: foo.jpg||[[File:foo.jpg]]||image:foo.jpg[]||@@[[foo.jpg]]@@||
 ||image link||<a href="@@http://foo.com@@">![](foo.jpg)</a>||.. image:: foo.jpg _
 @<&nbsp;&nbsp;&nbsp;>@:target: @@http://foo\.com@@||[[File:foo.jpg|link=@@http://foo.com@@]]||image:foo.jpg[link="@@http://foo.com@@"]|| ||
 ||image with alt||![Foo](foo.jpg)||.. image:: foo.jpg _
@@ -322,7 +334,11 @@ A@<&nbsp;&nbsp;>@B _
 ||multiple column cell||<table> _
 <tr><th colspan=2>title _
 <tr><td>1<td>2 _
-</table>|| ||{|border="1" _
+</table>||@@+-------+@@ _
+| title | _
++===+===+ _
+| 1 | 2 | _
+@@+---+---+@@||{|border="1" _
 !colspan="2"|title _
 |- _
 @@|1||2@@ _
@@ -375,7 +391,12 @@ int add(int a, int b) { _
 int add(int a, int b) { _
 @<&nbsp;&nbsp;>@return (a+b); _
 } _
-~~~||##gray|//none//##||<source lang=c> _
+~~~||##gray|//add classes, but a style sheet is necessary to get the colors://## _
+.. code-block:: c _
+ _
+@<&nbsp;&nbsp;>@int add(int a, int b) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return (a+b); _
+@<&nbsp;&nbsp;>@}||<source lang=c> _
 int add(int a, int b) { _
 @<&nbsp;&nbsp;>@return (a+b); _
 } _
@@ -387,12 +408,12 @@ int add(int a, int b) { _
 } _
 @@----@@|| ||
 ||languages which can be highlighted||##gray|//lists the supported languages://## _
-$ pandoc @@--@@version|| ||[http://www.mediawiki.org/wiki/Extension:SyntaxHighlight_GeSHi 100+ languages]||[http://www.gnu.org/software/src-highlite/source-highlight.html#Supported-languages 150+ languages]|| ||
-||inline math||##gray|//none//##|| ||<math> _
-\int_0^\infty \frac{1}{x^2} dx _
-<\math>|| || ||
-||block math||##gray|//none//##|| || || || ||
-||numbered equation|| || || || || ||
+$ pandoc @@--@@version||$ pygmentize -L lexers ||[http://www.mediawiki.org/wiki/Extension:SyntaxHighlight_GeSHi 100+ languages]||[http://www.gnu.org/software/src-highlite/source-highlight.html#Supported-languages 150+ languages]|| ||
+||latex math||##gray|//pandoc extension://## _
+ _
+$ \int_0^\pi \cos (x) dx $||.. math:: _
+ _
+\int_0^\pi \cos (x) dx||<math>\int_0^\pi \cos (x) dx</math>|| || ||
 ||~ ##EFEFEF|@@________________@@##||~ ##EFEFEF|@@______________________________________________@@##||~ ##EFEFEF|@@___________________________________________@@##||~ ##EFEFEF|@@___________________________________________@@##||~ ##EFEFEF|@@___________________________________________@@##||~ ##EFEFEF|@@___________________________________________@@##||
 
 [[# markdown]]
@@ -405,10 +426,8 @@ Markdown was developed in 2004, initially in Perl.  It is used by Tumblr, Stacko
 On Ubuntu you can install a script which converts Markdown to HTML with the following command:
 
 [[code]]
-sudo apt-get install markdown
+sudo apt install markdown
 [[/code]]
-
-It is a Perl script.  If you copy it over to a Mac it will probably work as long as the necessary Perl module (Text::Markdown) is installed.
 
 The command line script converts Markdown to HTML.  Invoke it like this:
 
@@ -425,7 +444,7 @@ $ markdown foo.md > foo.html
 There are installers for [http://code.google.com/p/pandoc/downloads/list Windows and Mac].  On Ubuntu Pandoc can be installed with
 
 [[code]]
-sudo apt-get install pandoc
+sudo apt install pandoc
 [[/code]]
 
 Pandoc can read Markdown, LaTeX, HTML, and a few other formats.  It can output HTML, RTF, MediaWiki Syntax, groff man page format, Emacs Org-Mode, AsciiDoc, EPub, GNU Texinfo, Word docx, Slidy, and some other formats.
@@ -585,7 +604,7 @@ UseModWiki had a feature called "free links" which was attractive to the founder
 AsciiDoc can be installed by a variety of package managers.  On Ubuntu:
 
 [[code]]
-sudo apt-get install asciidoc
+sudo apt install asciidoc
 [[/code]]
 
 On a Mac with MacPorts:
