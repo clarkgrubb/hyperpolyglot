@@ -96,7 +96,7 @@
 [[/row]]
 
 [[row]]
-[[cell]]**Build Tools:**[[/cell]][[cell]][[[build|Make, Rake, Ant, MSBuild]]][[/cell]]
+[[cell]]**Build Tools:**[[/cell]][[cell]][[[build|Make, Rake, Ant, Sbt]]][[/cell]]
 [[/row]]
 
 [[row]]

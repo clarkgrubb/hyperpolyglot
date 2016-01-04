@@ -1,13 +1,16 @@
-[[# top]][#invocation invocation] | [#var variables] | [#var-func variable functions] | [#targets-prerequisites targets and prerequisites] | [#recipes recipes] | [#rules rules] | [#file-dir files and directories] _
-[#repo repositories] | [#lib libraries and namespaces] | [#recursion recursion]
+[[# top]][#invocation invocation] | [#var variables] | [#var-func variable functions] | [#targets-prerequisites targets and prerequisites] | [#recipes recipes] | [#rules rules] | [#file-dir files and directories] | [#compilation compilation] | [#templates templates] | [#repo maven repositories] | [#lib libraries and namespaces] | [#recursion recursion] _
+ _
+**maven:** [#maven-std-dir-layout standard directory layout] | [#maven-artifact-repository artifacts and repositories] | [#maven-targets maven targets] | [#pom-xml pom.xml]
+ _
+**windows:** [#nmake nmake] | [#msbuild msbuild] _
 
-||~ ||~ [#make make]||~ [#rake rake]||~ [#ant ant]||~ [#msbuild msbuild]||
+||~ ||~ [#make make]||~ [#rake rake]||~ [#ant ant]||~ [#sbt sbt]||
 ||[[# version-used]][#version-used-note version used] _
-@<&nbsp;>@||##gray|//GNU Make 3.81//##||##gray|//0.8//##||##gray|//1.8//##||##gray|//12.0//##||
+@<&nbsp;>@||##gray|//GNU Make 3.81//##||##gray|//0.8//##||##gray|//1.8//##||##gray|//0.13//##||
 ||[[# show-version]][#show-version-note show version] _
-@<&nbsp;>@||make @@--@@version||$ rake @@--@@version||$ ant -version||@@>@@ msbuild /version||
+@<&nbsp;>@||make @@--@@version||$ rake @@--@@version||$ ant -version||$ sbt about||
 ||[[# build-file-name]][#build-file-name-note name of build file] _
-@<&nbsp;>@||Makefile||Rakefile||build.xml||##gray|//foo//##.proj||
+@<&nbsp;>@||Makefile||Rakefile||build.xml||build.sbt||
 ||[[# hello-world]][#hello-world-note hello world]||$ cat > Makefile _
 hello: _
 @<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@@echo Hello, World! _
@@ -24,14 +27,11 @@ $ rake hello||$ cat > build.xml _
 @<&nbsp;&nbsp;>@</target> _
 </project> _
  _
-$ ant hello||@@>@@ type hello.proj _
-<Project xmlns="@@http://schemas.microsoft.com/developer/msbuild/2003@@"> _
-@<&nbsp;&nbsp;>@<Target Name="Build"> _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@<Message Text="Hello, World!" /> _
-@<&nbsp;&nbsp;>@</Target> _
-</Project> _
+$ ant hello||$ cat > build.sbt _
+TaskKey[Unit]("hello") := _
+@<&nbsp;&nbsp;>@println("Hello, World!") _
  _
-@@>@@ msbuild||
+$ sbt hello||
 ||[[# build-hello-world]][#build-hello-world-note build hello world]||$ cat > Makefile _
 hello: _
 @<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@gcc -o $@ $@.c _
@@ -86,37 +86,48 @@ public class Hello { _
 $ ant _
  _
 $ java Hello _
-Hello, World!|| ||
+Hello, World!||$ cat > Hello.scala _
+object Hello { _
+@<&nbsp;&nbsp;>@def main(args: Array[String]) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@println("Hello, World!") _
+@<&nbsp;&nbsp;>@} _
+} _
+ _
+$ sbt compile _
+ _
+$ sbt run _
+Hello, World!||
 ||[[# stmt-separator]][#stmt-separator-note statement separator]||##gray|//Variable definition terminated by newline unless escaped with a preceding backslash. _
  _
 Target definition terminated by the first subsequent line without a leading tab. _
  _
 Within recipes statements are terminated by newline unless escaped with a preceding backslash.//##||##gray|//newline or ; _
  _
-newlines not separators inside (), [], {}, triple quote literals, or after backslash: \//##||##gray|//A statement is delimited by an XML start tag and its matching end tag.//##||##gray|//A statement is delimited by an XML start tag and its matching end tag.//##||
+newlines not separators inside (), [], {}, triple quote literals, or after backslash: \//##||##gray|//A statement is delimited by an XML start tag and its matching end tag.//##||##gray|//newline or ; _
+ _
+Newlines are not separates inside () or [].  Also not separators if previous statement is not complete, or if following token cannot start a statement.//##||
 ||[[# comment]][#comment-note comment] _
-@<&nbsp;>@||# ##gray|//comment//##||# ##gray|//comment//##||<!@@--@@ ##gray|//comment//## @@--@@>||<!@@--@@ ##gray|//comment//## @@--@@>||
+@<&nbsp;>@||# ##gray|//comment//##||# ##gray|//comment//##||<!@@--@@ ##gray|//comment//## @@--@@>||# ##gray|//comment//## _
+ _
+/* ##gray|//comment//## */||
 ||||||||||~ [[# invocation]][#invocation-note invocation]||
-||~ ||~ make||~ rake||~ ant||~ msbuild||
+||~ ||~ make||~ rake||~ ant||~ sbt||
 ||[[# specify-build-file]][#specify-build-file-note specify build file]||$ make -f ##gray|PATH [TARGET]## _
 $ make @@--@@makefile ##gray|PATH [TARGET]##||$ rake -f ##gray|PATH## ##gray|[TARGET] @@...@@## _
 $ rake @@--@@rakefile ##gray|PATH## ##gray|[TARGET] @@...@@##||$ ant -f ##gray|PATH## ##gray|[TARGET] @@...@@## _
-$ ant -buildfile ##gray|PATH## ##gray|[TARGET] @@...@@##||@@>@@ msbuild ##gray|[##/t:##gray|TARGETS]## ##gray|PATH## _
- _
-##gray|//use commas or semicolons to separate multiple targets//##||
+$ ant -buildfile ##gray|PATH## ##gray|[TARGET] @@...@@##||##gray|//All files with// .sbt //suffix in working directory are used.//##||
 ||[[# dry-run]][#dry-run-note dry run] _
 @<&nbsp;>@||$ make -n ##gray|[TARGET] @@...@@## _
 $ make @@--@@dry-run ##gray|[TARGET] @@...@@##||$ rake -n ##gray|[TARGET] @@...@@## _
-$ rake @@--@@dry-run ##gray|[TARGET] @@...@@##||##gray|//none//##||##gray|//none//##||
+$ rake @@--@@dry-run ##gray|[TARGET] @@...@@##||##gray|//none//##|| ||
 ||[[# keep-going-after-errors]][#keep-going-after-errors-note keep going after errors]||$ make -k ##gray|[TARGET] @@...@@## _
 $ make @@--@@keep-going ##gray|[TARGET] @@...@@##||##gray|//none//##||$ ant -k ##gray|[TARGET] @@...@@## _
 $ ant -keep-going ##gray|[TARGET] @@...@@##|| ||
 ||[[# run-jobs-in-parallel]][#run-jobs-in-parallel-note run jobs in parallel]||$ make -j 10 ##gray|[TARGET] @@...@@## _
-$ make @@--@@jobs=10 ##gray|[TARGET] @@...@@##||##gray|//none//##||##gray|//none//##||$ msbuild /m:10 ##gray|[TARGET]## _
-$ msbuild /maxcpucount:10||
+$ make @@--@@jobs=10 ##gray|[TARGET] @@...@@##||##gray|//none//##||##gray|//none//##|| ||
 ||[[# list-targets]][#list-targets-note list targets]||$ env -i make -nRrp | grep -v '^#'||$ rake -T _
 $ rake @@--@@tasks||$ ant -p _
-$ ant -projecthelp|| ||
+$ ant -projecthelp||$ sbt tasks||
 ||[[# touch-targets]][#touch-targets-note touch targets]||$ make -t ##gray|[TARGET] @@...@@## _
 $ make @@--@@touch ##gray|[TARGET] @@...@@##||##gray|//none//##||##gray|//none//##|| ||
 ||[[# always-rebuild]][#always-rebuild-note always rebuild]||$ make -B ##gray|[TARGET] @@...@@## _
@@ -124,7 +135,7 @@ $ make @@--@@always-make ##gray|[TARGET] @@...@@##||##gray|//none//##||##gray|//
 ||[[# up-to-date-test]][#up-to-date-test-note up-to-date test]||$ make -q ##gray|[TARGET] @@...@@## _
 $ make @@--@@question ##gray|[TARGET] @@...@@##||##gray|//none//##||##gray|//none//##|| ||
 ||||||||||~ [[# var]][#var-note variables]||
-||~ ||~ make||~ rake||~ ant||~ msbuild||
+||~ ||~ make||~ rake||~ ant||~ sbt||
 ||[[# set-use-var]][#set-use-var-note set and access variable]||msg := hello _
  _
 say_hello: _
@@ -140,13 +151,7 @@ end||<property name="msg" value="hello"/> _
  _
 <target name="say_hello"> _
 @<&nbsp;&nbsp;>@<echo>${msg}</echo> _
-</target>||<PropertyGroup> _
-@<&nbsp;&nbsp;>@<Msg>Hello, World</Msg> _
-</PropertyGroup> _
- _
-<Target Name="Build"> _
-@<&nbsp;&nbsp;>@<Message Text="$(Msg)" /> _
-</Target>||
+</target>|| ||
 ||[[# undefined-var]][#undefined-var-note undefined variable access]||##gray|//evaluates as empty string//##||##gray|//raises// NameError##||##gray|//no variable name substitution occurs; i.e. the variable name itself with the dollar sign and the braces appear in the string//##|| ||
 ||[[# redefine-var]][#redefine-var-note redefine variable]||##gray|//last definition overwrites previous definition//##||##gray|//last definition overwrites previous definition//##||##gray|//later definitions are ignored; use// var //for a mutable variable//##|| ||
 ||[[# append-var]][#append-var-note append to variable]||src_files := foo.c _
@@ -181,9 +186,7 @@ end||<property environment="env"/> _
 ||[[# env-var]][#env-var-note environment variable]||invoker := $(USER)||invoker = ENV['USER']||<property environment="env"/> _
  _
 <property name="invoker" _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@value="${env.USER}"/>||<PropertyGroup> _
-@<&nbsp;&nbsp;>@<Invoker>$(USERNAME)</Invoker> _
-</PropertyGroup>||
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@value="${env.USER}"/>|| ||
 ||[[# set-var-if-not-exists]][#set-var-if-not-exists-note set variable if doesn't exist]||database ?= dev_db||database = dev_db if database.nil?||<condition property="database" value="dev_db"> _
 @<&nbsp;&nbsp;>@<not><isset property="database"/></not> _
 </condition>|| ||
@@ -195,7 +198,7 @@ $(warning ACCOUNT not set; setting to $(USER)) _
 ACCOUNT := $(USER) _
 endif|| || || ||
 ||||||||||~ [[# var-func]][#var-func-note variable functions]||
-||~ ||~ make||~ rake||~ ant||~ msbuild||
+||~ ||~ make||~ rake||~ ant||~ sbt||
 ||[[# glob-filenames]][#glob-filenames-note glob filenames] _
 @<&nbsp;>@||src := $(wildcard *.c)||src = Dir.glob('*.rb') _
  _
@@ -287,7 +290,7 @@ EMPTY := $(worldlist 1,0,$(NAMES))|| || || ||
 FOO := $(firstword $(NAMES)) _
 BAZ := $(lastword $(NAMES))|| || || ||
 ||||||||||~ [[# targets-prerequisites]][#targets-prerequisites-note targets and prerequisites]||
-||~ ||~ make||~ rake||~ ant||~ msbuild||
+||~ ||~ make||~ rake||~ ant||~ sbt||
 ||[[# file-target]][#file-target-note file target]||foo: _
 @<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@touch $@||file :foo do _
 @<&nbsp;&nbsp;>@touch "foo" _
@@ -330,7 +333,7 @@ end||<target name="clean"> _
 # or lib/foo.c exist:## _
 foo: foo.c _
 @<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@gcc -o $@ $<|| ||<project default="hello" basedir="src"> _
-@<&nbsp;&nbsp;>@##gray|<!-- paths relative to ./src -->## _
+@<&nbsp;&nbsp;>@##gray|<!@@--@@ paths relative to ./src @@--@@>## _
 </project>|| ||
 ||[[# phony-target-prerequisite]][#phony-target-prerequisite-note phony target with prerequisites]|| || || || ||
 ||[[# parallelizable-prerequisites]][#parallelizable-prerequisites-note phony target with parallelizable prerequisites]|| ||multitask||<parallel>@@...@@</parallel>|| ||
@@ -364,7 +367,7 @@ endif _
  _
 ##gray|# also ifneq##|| || || ||
 ||||||||||~ [[# recipes]][#recipes-note recipes]||
-||~ ||~ make||~ rake||~ ant||~ msbuild||
+||~ ||~ make||~ rake||~ ant||~ sbt||
 ||[[# shared-recipe]][#shared-recipe-note shared recipe]||##gray|# if run as 'make frobnicate', $@ contains _
 # 'frobnicate'## _
 frobnicate twiddle: _
@@ -447,63 +450,235 @@ end||<target name="foo"> _
 @<&nbsp;&nbsp;>@<fail message="foo not implemented"/> _
 </target>|| ||
 ||||||||||~ [[# rules]][#rules-note rules]||
-||~ ||~ make||~ rake||~ ant||~ msbuild||
+||~ ||~ make||~ rake||~ ant||~ sbt||
 ||pattern rule||%.o: %.c _
 @<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@$(CC) -o $@ $<||rule '.o' => '.c' do |t| _
 @<&nbsp;&nbsp;>@sh "gcc -c -o #{t.name} #{t.source}" _
 end|| || ||
 ||multiple target rule||%.tab.cpp %.tab.hpp: %.ypp _
 @<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@bison -d $<|| || || ||
-||built-in rules||##gray|# make behaves as if the following rules are _
-# defined:## _
+||built-in rules||##gray|# make behaves as if the following _
+# rules are defined:## _
 %.o: %.c _
 @<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@$(CC) $(CPPFLAGS) $(CFLAGS) -c $<|| || || ||
 ||don't use built-in rules||$ make -r ##gray|[TARGET] @@...@@##|| || || ||
-||javac|| || ||<javac srcdir="${src}" destdir="${build}"/>|| ||
 ||||||||||~ [[# file-dir]][#file-dir-note files and directories]||
-||~ ||~ make||~ rake||~ ant||~ msbuild||
-||rm||rm *.o||rm||<delete file="foo"/>|| ||
-||rm -rf||rm -rf build||rm_rf||<delete dir="foo"/>|| ||
-||cp||cp -n bar baz _
-cp bar baz _
-cp bar /tmp||cp||<copy file="bar" tofile="baz"/> _
-<copy file="bar" tofile="baz" overwrite="true"/> _
-<copy file="bar" todir="/tmp"/>|| ||
-||cp -R||cp -R foodir bardir||cp_r|| || ||
-||mv||mv -n bar baz _
-mv bar baz _
-mv bar /tmp||mv||<move file="bar" tofile="baz"/> _
-<move file="bar" tofile="baz" overwrite="true"/> _
-<move file="bar" todir="/tmp"/>|| ||
-||mkdir||mkdir foodir||mkdir||##gray|//none//##|| ||
-||mkdir -p||mkdir -p foo/bar/bazdir||mkdir_p||<mkdir dir="foo/bar/bazdir"/>|| ||
-||ln -s||ln -s foo altfoo||ln_s|| || ||
-||rsync||rsync -ur bar/* baz|| || || ||
-||tar|| || || || ||
-||jar|| || ||<jar jarfile="${dist}/lib/MyProject-${DSTAMP}.jar" basedir="${build}"/>|| ||
-||patch|| || || || ||
+||~ ||~ make||~ rake||~ ant||~ sbt||
+||[[# rm]][#rm-note delete file]||clean: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@rm foo.o||task :clean do _
+@<&nbsp;&nbsp;>@rm "foo.o" _
+end||<target name="clean"> _
+@<&nbsp;&nbsp;>@<delete file="foo.o"/> _
+</target>||import java.io.File _
+ _
+TaskKey[Unit]("clean") := _
+@<&nbsp;&nbsp;>@(new File("foo.o")).delete||
+||[[# rm-star]][#rm-star-note delete files matching pattern]||clean: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@rm *.o||objects = Rake::FileList["*.o"] _
+ _
+task :clean do _
+@<&nbsp;&nbsp;>@rm objects _
+end||<target name="clean"> _
+@<&nbsp;&nbsp;>@<delete> _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@<fileset dir="."> _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@<include name="*.o"/> _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@</fileset> _
+@<&nbsp;&nbsp;>@</delete> _
+</target>|| ||
+||[[# rm-rf]][#rm-rf-note delete directory and contents]||clean: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@rm -rf build||task :clean do _
+@<&nbsp;&nbsp;>@rm_rf "build" _
+end||<target name="clean"> _
+@<&nbsp;&nbsp;>@<delete dir="build"/> _
+</target>|| ||
+||[[# cp]][#cp-note copy file] _
+ _
+##gray|//don't overwrite, overwrite, to directory//##||copy_example: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@cp -n bar baz _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@cp bar baz _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@cp bar /tmp||task :copy_example do _
+@<&nbsp;&nbsp;>@sh "cp -n bar baz" _
+@<&nbsp;&nbsp;>@cp("bar", "quux") _
+@<&nbsp;&nbsp;>@cp("bar", "/tmp") _
+end||<target name="copy-example"> _
+@<&nbsp;&nbsp;>@<copy file="bar" tofile="baz"/> _
+@<&nbsp;&nbsp;>@<copy file="bar" tofile="baz" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@overwrite="true"/> _
+@<&nbsp;&nbsp;>@<copy file="bar" todir="/tmp"/> _
+</target>|| ||
+||[[# cp-R]][#cp-R-note copy directory and contents]||copy_example: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@cp -R foo.d bar.d||task :copy_example _
+@<&nbsp;&nbsp;>@cp_r("foo.d", "bar.d") _
+end||<target name="copy-example"> _
+@<&nbsp;&nbsp;>@<copy todir="bar.d"> _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@<fileset dir="foo.d"/> _
+@<&nbsp;&nbsp;>@</copy> _
+</target>|| ||
+||[[# mv]][#mv-note move file]||move_example: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@mv -n bar baz _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@mv bar2 quux _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@mv bar3 /tmp||task :move_example do _
+@<&nbsp;&nbsp;>@sh "mv -n bar baz" _
+@<&nbsp;&nbsp;>@mv("bar2", "quux") _
+@<&nbsp;&nbsp;>@mv("bar3", "/tmp") _
+end||<target name="move-example"> _
+@<&nbsp;&nbsp;>@<move file="bar" tofile="baz"/> _
+@<&nbsp;&nbsp;>@<move file="bar" tofile="baz" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@overwrite="true"/> _
+@<&nbsp;&nbsp;>@<move file="bar" todir="/tmp"/> _
+</target>|| ||
+||[[# mkdir]][#mkdir-note make directory]||##gray|# fails if foo.d exists:## _
+foo.d: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@mkdir $@||##gray|# fails if foo.d exists:## _
+task :foo_d do _
+@<&nbsp;&nbsp;>@mkdir "foo.d" _
+end||##gray|<!@@--@@ succeeds if foo.d exists @@--@@>## _
+<target name="foo-dir"> _
+@<&nbsp;&nbsp;>@<mkdir dir="foo.d"/> _
+</target>|| ||
+||[[# mkdir-p]][#mkdir-p-note make directory and parents]||foo/bar/baz.d: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@mkdir -p $@||task :bar_dir do _
+@<&nbsp;&nbsp;>@mkdir_p("foo/bar/baz.d") _
+end||<target name="baz-dir"> _
+@<&nbsp;&nbsp;>@<mkdir dir="foo/bar/baz.d"/> _
+</target>|| ||
+||[[# ln-s]][#ln-s-note symbolic link]||altfoo: foo _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@ln -s $< $@||task :altfoo do _
+@<&nbsp;&nbsp;>@ln_s("foo", "altfoo") _
+end||<target name="altfoo"> _
+@<&nbsp;&nbsp;>@<symlink link="altfoo" resource="foo"/> _
+</target>|| ||
+||synchronize directories||backup_foo: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@mkdir -p backups _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@rsync -ur @@--@@delete foo backups||task :backup_foo do _
+@<&nbsp;&nbsp;>@mkdir_p "backups" _
+@<&nbsp;&nbsp;>@sh "rsync -ur --delete foo backups" _
+end||<target name="backup-foo"> _
+@<&nbsp;&nbsp;>@<sync todir="backups/foo"> _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@<fileset dir="foo"/> _
+@<&nbsp;&nbsp;>@</sync> _
+</target>|| ||
+||extract from tarball||stuff: stuff.tar.gz _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@tar xf $<|| || || ||
+||create tarball||stuff.tar.gz: stuff _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@tar cfz $@ $<|| || || ||
+||create jar file||class.list: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@find target -name '*.class' _
+ _
+example.jar: class.list _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@jar cf $@ @class.list|| ||<jar jarfile="${dist}/lib/MyProject-${DSTAMP}.jar" basedir="${build}"/>|| ||
+||apply patch||patch.foo: foo.diff foo _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@patch -p0 < $<|| || || ||
 ||gzip||gzip test.tar|| ||<gzip src="test.tar" destfile="test.tar.gz"/>|| ||
 ||gunzip||gunzip test.tar.gz|| ||<gunzip src="test.tar.gz"/>|| ||
+||zip|| || || || ||
 ||chmod|| ||chmod|| || ||
 ||chown|| || || || ||
 ||chgrp|| || || || ||
 ||mktemp|| || || || ||
+||mktemp -d|| || || || ||
 ||touch||touch foo||file :foo _
 @<&nbsp;&nbsp;>@touch :foo _
 end|| || ||
-||wget|| || || || ||
-||file test||test -e|| ||<available>|| ||
-||regular file test||test -f|| ||<available type="file">|| ||
-||directory test||test -d|| ||<available type="dir">|| ||
-||readable test|| || || || ||
-||writable test|| || || || ||
-||executable test|| || || || ||
-||||||||||~ [[# repo]][#repo-note repositories]||
-||~ ||~ make||~ rake||~ ant||~ msbuild||
-||package dependency|| || || || ||
+||wget||url := @@http://www.google.com@@ _
+ _
+robots.txt: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@wget $(url)/$@|| || || ||
+||curl||url := @@http://www.google.com@@ _
+ _
+robots.txt: _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@curl $(url)/$@ > $@|| || || ||
+||test -e||test -e|| ||<available>|| ||
+||test -f||test -f|| ||<available type="file">|| ||
+||test d||test -d|| ||<available type="dir">|| ||
+||test -L|| || || || ||
+||test -r|| || || || ||
+||test -w|| || || || ||
+||text -x|| || || || ||
+||||||||||~ [[# compilation]][#compilation-note compilation]||
+||~ ||~ make||~ rake||~ ant||~ sbt||
+||javac|| || ||<javac srcdir="${src}" destdir="${build}"/>|| ||
+||create dependencies|| || || || ||
+||flex|| || || || ||
+||bison|| || || || ||
+||||||||||~ [[# templates]][#templates-note templates]||
+||~ ||~ make||~ rake||~ ant||~ sbt||
+||[[# create-file-from-template]][#create-file-from-template-note create file from template]||$ cat Makefile _
+all: example.txt _
+ _
+%.txt: %.m4 _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@m4 -Dyear=2000 < $< > $@ _
+ _
+$ cat example.m4 _
+Replace @@`year'@@ with year. _
+ _
+$ make _
+ _
+$ cat example.txt _
+Replace year with 2000.||$ cat Rakefile _
+require 'erb' _
+ _
+file "example.txt" => ["example.erb"] do _
+year = '2000' _
+@<&nbsp;&nbsp;>@template = ERB.new(File.open("example.erb").read, nil, '-') _
+@<&nbsp;&nbsp;>@File.open("example.txt", 'w') do |f| _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@f.puts template.result(binding) _
+@<&nbsp;&nbsp;>@end _
+end _
+ _
+$ cat example.erb _
+Replace <%%= year -%> with <%= year -%>. _
+ _
+$ rake example.txt _
+ _
+$ cat example.txt _
+Replace <%= year -%> with 2000.||$ cat build.xml _
+<project> _
+@<&nbsp;&nbsp;>@<target name="example"> _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@<filter token="year" value="2000"/> _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@<copy todir="output" filtering="true"> _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@<fileset file="example.txt"/> _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@</copy> _
+@<&nbsp;&nbsp;>@</target> _
+</project> _
+ _
+$ cat example.txt _
+Replace @<@@year@@>@ with @year@. _
+ _
+$ ant example _
+ _
+$ cat output/example.txt _
+Replace @2000@ with 2000.|| ||
+||||||||||~ [[# repo]][#repo-note maven repositories]||
+||~ ||~ make||~ rake||~ ant||~ sbt||
+||build file with artifact dependency|| || ||##gray|//download Apache Ivy JAR and put it in// ~/.ant/lib## _
+ _
+$ cat ivy.xml _
+<ivy-module version="2.0"> _
+@<&nbsp;&nbsp;>@<info organisation="org.example" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@module="example"/> _
+@<&nbsp;&nbsp;>@<dependencies> _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@<dependency org="commons-io" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@name="commons-io" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@rev="1.3.2"/> _
+@<&nbsp;&nbsp;>@</dependencies> _
+</ivy-module> _
+ _
+$ cat build.xml _
+<project xmlns:ivy="antlib:org.apache.ivy.ant" _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;&nbsp;>@name="example"> _
+@<&nbsp;&nbsp;>@<target name="resolve"> _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@<ivy:retrieve /> _
+@<&nbsp;&nbsp;>@</target> _
+@<&nbsp;&nbsp;>@<ivy:cachepath pathid="example.classpath"/> _
+@<&nbsp;&nbsp;>@<target name="compile" depends="resolve"> _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@<javac srcdir="." _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;&nbsp;>@classpathref="example.classpath"/> _
+@<&nbsp;&nbsp;>@</target> _
+</project>|| ||
 ||set repository|| || || || ||
 ||||||||||~ [[# lib]][#lib-note libraries and namespaces]||
-||~ ||~ make||~ rake||~ ant||~ msbuild||
+||~ ||~ make||~ rake||~ ant||~ sbt||
 ||[[# include]][#include-note include]||include ./Makefile.common||load './Rakefile.common'||<import file="./common.xml"/> _
 ##gray|//also <include>//##|| ||
 ||include if exists||-include ./Makefile.optional||rakefile_lib = './Rakefile.optional' _
@@ -529,13 +704,13 @@ bar _
 $ rake foo:bar _
 foo:bar|| || ||
 ||||||||||~ [[# recursion]][#recursion-note recursion]||
-||~ ||~ make||~ rake||~ ant||~ msbuild||
+||~ ||~ make||~ rake||~ ant||~ sbt||
 ||[[# recursive-invocation]][#recursive-invocation-note recursive invocation]||foo: _
 @<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@$(MAKE) -C subdir $@|| || || ||
 ||export variable||export foo||##gray|//none//##|| || ||
 ||export all variables||export||##gray|//none//##|| || ||
 ||unexport variable||unexport foo||##gray|//none//##|| || ||
-||~ ##EFEFEF|@@_____________@@##||~ ##EFEFEF|@@__________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________@@##||
+||~ ##EFEFEF|@@_____________@@##||~ ##EFEFEF|@@________________________________________________@@##||~ ##EFEFEF|@@________________________________________________@@##||~ ##EFEFEF|@@________________________________________________@@##||~ ##EFEFEF|@@________________________________________________@@##||
 
 
 [[# version-used-note]]
@@ -842,8 +1017,46 @@ Many of the variables have an accompanying variables for setting flags:
 [[# file-dir-note]]
 + [#file-dir Files and Directories]
 
+[[# rm-note]]
+++ [#rm delete file]
+
+[[# rm-star-note]]
+++ [#rm-star delete files matching pattern]
+
+[[# rm-rf-note]]
+++ [#rm-rf delete directory and contents]
+
+[[# cp-note]]
+++ [#cp copy file]
+
+[[# cp-R-note]]
+++ [#cp-R copy directory and contents]
+
+[[# mv-note]]
+++ [#mv move file]
+
+[[# mkdir-note]]
+++ [#mkdir make directory]
+
+[[# mkdir-p-note]]
+++ [#mkdir-p make directory and parents]
+
+[[# ln-s-note]]
+++ [#ln-s symbolic link]
+
+[[# compilation-note]]
++ [#compilation Compilation]
+
+[[# templates-note]]
++ [#templates Templates]
+
+[[# create-file-from-template-note]]
+++ [#create-file-from-template create file from template]
+
+How to generate a file from a template with macro expansion.
+
 [[# repo-note]]
-+ [#repo Repositories]
++ [#repo Maven Repositories]
 
 [[# lib-note]]
 + [#lib Libraries and Namespaces]
@@ -862,20 +1075,6 @@ How to invoke the build tool on a build file in a subdirectory.
 **make:**
 
 Using {{$(MAKE)}} instead of {{make}} guarantees that the same version of {{make}} is used and passes along command line options from the original invocation.
-
-[[# terminology]]
-+ [#top Terminology]
-
-* variable
-* variable function
-* target
-* prerequisite
-* recipe
-* build
-* job
-* job slot
-* rule
-* built-in rule
 
 [[# doc]][[# make]]
 + [#top Make]
@@ -936,8 +1135,232 @@ Here is an example of how to define a suffix rule.  In the recipe {{$@}} refers 
 
 [http://ant.apache.org/manual/index.html Apache Ant Manual]
 
+[[# sbt]]
++ [#top Sbt]
+
+[http://www.scala-sbt.org/documentation.html Sbt]
+
+[[# maven-std-dir-layout]]
++ [#top Maven Standard Directory Layout]
+
+[https://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html Introduction to the Standard Directory Layout]
+[http://www.scala-sbt.org/0.13/tutorial/Directories.html Sbt Directory Structure]
+
+The Maven Standard Directory Layout prescribes the following directory structure for JVM projects:
+
+* src/main/java
+* src/main/##gray|//language//##
+* src/main/resources
+* src/main/filters
+* src/test/java
+* src/test/##gray|//language//##
+* src/test/resources
+* src/test/filters
+* target
+* README.txt
+* pom.xml
+* build.xml
+
+Source code goes into {{src}}. Java source code, other than tests, goes into {{src/main/java}}.  Class files and other files generated by the build system go into {{target}}.  Build files are in the root directory.
+
+Sbt uses the standard directory layout.  It uses these additional directories and files:
+
+* src/main/scala
+* src/test/scala
+* project
+* build.sbt
+
+The {{project}} directory contains additional {{.sbt}} and {{.scala}} files which are part of the build system.
+
+[[# maven-artifact-repository]]
++ [#top Maven Artifacts and Repositories]
+
+Maven repositories call the entities which they make available //artifacts//.  Usually they are JAR files.  Each artifact is identified by a //groupId//, //artifactId// and //version//.  The //groupId// is sometimes the reversed domain name of the organization that produced the artifact.
+
+An organization may set up its own repository, but there is a widely used public repository called the [http://search.maven.org/ Central Repository] which has a web site for browsing the available artifacts.
+
+[[# maven-targets]]
++ [#top Maven Targets]
+
+||validate|| ||
+||compile|| ||
+||test|| ||
+||package||create JAR file||
+||integration-test|| ||
+||verify|| ||
+||install||copy package to local repository||
+||deploy||copy package to remote repository||
+||clean|| ||
+||site||create documentation||
+
+[[# pom-xml]]
++ [# pom.xml]
+
+Create the file {{src/main/java/Example.java}} to be compiled:
+
+[[code]]
+import java.io.File;
+import java.io.IOException;
+import org.apache.commons.io.FileUtils;
+
+public class Example {
+    public static void main(String[] arg) {
+        File f = new File("/tmp/foo/bar/baz");
+        try {
+            FileUtils.deleteDirectory(f);
+        }
+        catch (IOException e) {
+
+        }
+    }
+}
+[[/code]]
+
+Create a {{pom.xml}} file:
+
+[[code]]
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+ 
+  <groupId>org.example</groupId>
+  <artifactId>example</artifactId>
+  <version>1.0</version>
+  <packaging>jar</packaging>
+ 
+  <name>Maven Example</name>
+  <url>http://example.org</url>
+ 
+  <dependencies>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>1.3.2</version>
+    </dependency>
+  </dependencies>
+</project>
+[[/code]]
+
+Compile the code and package it in a JAR:
+
+[[code]]
+$ mvn compile
+$ mvn package
+[[/code]]
+
+[[# nmake]]
++ [#top NMAKE]
+
+[http://msdn.microsoft.com/en-us/library/dd9y37ha.aspx NMAKE Reference]
+
+Visual Studio includes two tools for building on Windows: NMAKE and MSBuild.
+
+NMAKE is similar to Unix make.  Recipes use the Windows command prompt instead of a Unix shell.
+
 [[# msbuild]]
 + [#top MSBuild]
 
 [http://msdn.microsoft.com/en-us/library/0k6kkbsd.aspx MSBuild Reference]
-[http://msdn.microsoft.com/en-us/library/dd9y37ha.aspx NMAKE Reference]
+
+MSBuild is similar to Ant.  It uses an XML file to configure the build.  The XML file has a {{.proj}} suffix.
+
+To get the version of MSBuild that is installed:
+
+[[code]]
+>  msbuild /version
+[[/code]]
+
+To run an MSBuild file which echoes "Hello, World!":
+
+[[code]]
+> type hello.proj
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="Build">
+    <Message Text="Hello, World!" />
+  </Target>
+</Project>
+
+> msbuild
+[[/code]]
+
+If the working directory contains multiple {{.proj}} files, we must specify which one to use:
+
+[[code]]
+> msbuild hello.proj
+[[/code]]
+
+If a project contains multiple targets, we can use the {{/t}} switch to specify the target.  We can specify multiple targets if we separate them by commas or semicolons:
+
+[[code]]
+> type two.proj
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="foo">
+    <Message Text="foo" />
+  </Target>
+
+  <Target Name="bar">
+    <Message Text="bar" />
+  </Target>
+</Project>
+
+> msbuild /t:foo two.proj
+
+> msbuild /t:bar two.proj
+
+> msbuild /t:foo,bar two.proj
+[[/code]]
+
+A build file can specify the default target to be run using the {{DefaultTargets}} attribute of the {{Project}} element.  Separate the names of multiple targets with semicolons:
+
+[[code]]
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+         DefaultTargets="foo;bar">
+  <Target Name="foo">
+    <Message Text="foo" />
+  </Target>
+
+  <Target Name="bar">
+    <Message Text="bar" />
+  </Target>
+</Project>
+[[/code]]
+
+If there is no default target and no {{/t}} switch, the first target in the build file is invoked.
+
+If there are tasks which can be run in parallel, we can instruct MSBuild to use multiple cores.  The {{/m}} switch is similar to the {{-j}} flag of {{make}}:
+
+[[code]]
+> msbuild /m:10
+[[/code]]
+
+We can define properties (like in Ant) at the top of a build file and later use them in targets:
+
+[[code]]
+> type hello2.proj
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Msg>Hello, World!</Msg>
+  </PropertyGroup>
+
+  <Target Name="Build">
+    <Message Text="$(Msg)" />
+  </Target>
+</Project>
+
+> msbuild hello2.proj
+[[/code]]
+
+We can override the value of a property when we invoke MSbuild:
+
+[[code]]
+> msbuild /p:Msg="Goodbye, World!" hello2.proj
+[[/code]]
+
+We can define a property containing the value of an environment variable:
+
+[[code]]
+<PropertyGroup>
+  <Invoker>$(USERNAME)</Invoker>
+</PropertyGroup>
+[[/code]]

@@ -2,7 +2,7 @@
 
 [#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#resizable-arrays resizable arrays] | [#arith-seq arithmetic sequences] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#file-handles file handles] | [#libraries-namespaces libraries and namespaces] |  [#reflection reflection]
  
-[#vectors vectors] | [#matrices matrices] | [#symbolic-expr symbolic expressions] | [#calculus calculus] | [#equations-unknowns equations and unknowns] | [#optimization optimization] | [#combinatorics combinatorics] | [#number-theory number theory] | [#elliptic-curves elliptic curves] | [#algebraic-numbers algebraic numbers] | [#polynomials polynomials] | [#power-series power series] | [#special-functions special functions] | [#permutations permutations] | [#groups groups] | [#subgroups subgroups] | [#group-homomorphisms group homomorphisms] | [#actions actions] | [#descriptive-statistics descriptive statistics] | [#distributions distributions] 
+[#vectors vectors] | [#matrices matrices] | [#symbolic-expr symbolic expressions] | [#calculus calculus] | [#equations-unknowns equations and unknowns] | [#optimization optimization] | [#combinatorics combinatorics] | [#number-theory number theory] | [#elliptic-curves elliptic curves] | [#rational-algebraic-numbers rational and algebraic numbers] | [#polynomials polynomials] | [#power-series power series] | [#special-functions special functions] | [#permutations permutations] | [#groups groups] | [#subgroups subgroups] | [#group-homomorphisms group homomorphisms] | [#actions actions] | [#descriptive-statistics descriptive statistics] | [#distributions distributions] 
 
 [#univariate-charts univariate charts] | [#bivariate-charts bivariate charts] | [#trivariate-charts trivariate charts]
 
@@ -10,9 +10,10 @@
 ||[[# version-used]][#version-used-note version used] _
 @<&nbsp;>@||##gray|//10.0//##||##gray|//Python 2.7; SymPy 0.7//##||##gray|//4.7//##||##gray|//2.7//##||
 ||[[# show-version]][#show-version-note show version] _
-@<&nbsp;>@||##gray|//select// About Mathematica //in// Mathematica //menu//##||@@sympy.__version__@@||$ gap.sh -h||$ gp @@--@@version||
+@<&nbsp;>@||##gray|//select// About Mathematica //in// Mathematica //menu//##||@@sympy.__version__@@||$ gap -h||$ gp @@--@@version||
 ||[[# implicit-prologue]][#implicit-prologue-note implicit prologue]|| ||import sympy _
  _
+##gray|# enable LaTeX rendering in Jupyter notebook:## _
 sympy.init_printing()|| || ||
 ||||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
 ||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
@@ -26,7 +27,7 @@ $ gp -q hello.gp _
 Hello, World!||
 ||[[# repl]][#repl-note repl] _
 @<&nbsp;>@||$ MathKernel||$ python _
-@@>>>@@ import sympy||$ gap.sh||$ gp||
+@@>>>@@ import sympy||$ gap||$ gp||
 ||[[# block-delimiters]][#block-delimiters-note block delimiters] _
 @<&nbsp;>@||( ##gray|//stmt//##; ##gray|//...//##)||: ##gray|//and offside rule//##||function( ) ##gray|//...//## end _
 if then ##gray|//...//## elif then ##gray|//...//##  else ##gray|//...//## fi _
@@ -54,7 +55,7 @@ for do ##gray|//...//## od||{ ##gray|//...//## } _
 ||[[# assignment]][#assignment-note assignment]||a = 3 _
 Set[a, 3] _
  _
-##gray|(* delayed assignment: *)## _
+##gray|(* rhs evaluated each time a is accessed: *)## _
 a := x + 3 _
 SetDelayed[a, x + 3]||a = 3||a := 3;||x = 3.14||
 ||[[# parallel-assignment]][#parallel-assignment-note parallel assignment]||{a, b} = {3, 4} _
@@ -69,8 +70,8 @@ Increment[x] Decrement[x]||##gray|//none//##||##gray|//none//##||##gray|//postmo
 x++ x@@--@@||
 ||[[# non-referential-id]][#non-referential-id-note non-referential identifier]||##gray|//any unassigned identifier is non-referential//##||x, y, z, w = sympy.symbols('x y z w')||##gray|//none//##||##gray|//any unassigned identifier is non-referential//##||
 ||[[# id-as-val]][#id-as-val-note identifier as value]||x = 3 _
-x // HoldForm|| || ||x = 3 _
-'x||
+y = HoldForm[x]|| || ||x = 3 _
+y = 'x||
 ||[[# global-var]][#global-var-note global variable]||##gray|//variables are global by default//##||g1, g2 = 7, 8 _
  _
 def swap_globals(): _
@@ -133,7 +134,7 @@ Indeterminate _
 ComplexInfinity|| ||##gray|//error//##||##gray|//error//##||
 ||[[# float-div]][#float-div-note float division]||##gray|//exact division://## _
 a / b|| ||##gray|//depending upon the types of a and b, the value can be an exact rational, a machine float, or an arbitrary precision float://## _
-a / b||7 /3||
+a / b||7 / 3||
 ||[[# float-div-zero]][#float-div-zero-note float division by zero]||##gray|//dividend is zero://## _
 Indeterminate _
 ##gray|//otherwise://## _
@@ -229,28 +230,43 @@ getrand()||
 ||[[# radix]][#radix-note radix]||BaseForm[42, 7] _
 BaseForm[7^^60, 10]|| ||##gray|//none//##||##gray|@@\\@@ 42 as powers of 7 up to 9th power:## _
 42 + O(7^10)||
+||[[# to-array-of-digits]][#to-array-of-digits-note to array of digits]||##gray|(* base 10: *)## _
+IntegerDigits[1234] _
+##gray|(* base 2: *)## _
+IntegerDigits[1234, 2]|| ||ListOfDigits(1234); _
+ _
+##gray|# other bases?##||##gray|@@\\@@ base 10:## _
+digits(1234) _
+##gray|@@\\@@ base 2:## _
+digits(1234, 2) _
+##gray|@@\\@@ number of digits in base 10:## _
+sizedigits(1234)||
 ||||||||||~ [[# strings]][#strings-note strings]||
 ||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
-||[#string-literals string literals]||"don't say \"no\""||##gray|//use//## [[[scripting#strings|Python strings]]]||"don't say \"no\""||"don't say \"no\""||
-||[#string-newline newline in literal]||##gray|//yes//##|| ||##gray|//no//##||##gray|//no; use \n escape//##||
-||[#string-escapes string literal escapes]||\\ \" \b \f \n \r \t \##gray|//ooo//##|| ||\b \c \n \r \" \' \\ \##gray|//ooo//## _
+||[[# str-literal]][#str-literal-note string literal] _
+@<&nbsp;>@||"don't say \"no\""||##gray|//use//## [[[scripting#strings|Python strings]]]||"don't say \"no\""||"don't say \"no\""||
+||[[# newline-in-str-literal]][#newline-in-str-literal-note newline in literal] _
+@<&nbsp;>@||##gray|//yes//##|| ||##gray|//no//##||##gray|//no; use \n escape//##||
+||[[# str-literal-esc]][#str-literal-esc-note literal escapes]||\\ \" \b \f \n \r \t \##gray|//ooo//##|| ||\b \c \n \r \" \' \\ \##gray|//ooo//## _
  _
 ##gray|//when writing to a buffered output stream, encountering a// \c //causes a flush of output.//##||\n \t \" \\||
-||[#character-access character access]||Characters["hello"][[1]]|| ||s := "hello"; _
-##gray|# the character 'h':## _
-s[1]; _
- _
-##gray|# cannot use index notation on string literal##|| ||
-||[#string-length length]||StringLength["hello"]|| ||Length("hello");||length("hello")||
-||[#string-concatenate concatenate]||"one " <> "two " <> "three"|| ||Concatenation("one", "two", "three");||Str("one", "two", "three")||
-||[#index-substring index of substring]||StringPosition["hello", "el"][[1]][[1]] _
-##gray|StringPosition //returns an array of pairs, one for each occurrence of the substring.  Each pair contains the index of the first and last character of the occurrence.//##|| || || ||
-||[#extract-substring extract substring]||StringTake["hello", {1, 4}]|| ||s := "hello"; _
-s{[2..3]};|| ||
-||[#split split]||StringSplit["foo,bar,baz", ","]|| ||SplitString("foo,bar,baz", ",");|| ||
-||[#join join]||StringJoin[Riffle[{"foo", "bar", "baz"}, ","]]|| ||a := ["foo", "bar", "baz"]; _
+||[[# str-concat]][#str-concat-note concatenate] _
+@<&nbsp;>@||"one " <> "two " <> "three"|| ||Concatenation("one", "two", "three");||Str("one", "two", "three")||
+||[[# translate-case]][#translate-case-note translate case]||ToUpperCase["foo"] _
+ToLowerCase["FOO"]|| ||UppercaseString("foo"); _
+LowercaseString("FOO");|| ||
+||[[# trim]][#trim-note trim] _
+@<&nbsp;>@||StringTrim[" foo "]|| ||##gray|//none//##|| ||
+||[[# num-to-str]][#num-to-str-note number to string] _
+@<&nbsp;>@||"value: " <> ToString[8]|| ||Concatenation("value: ", String(8));|| ||
+||[[# str-to-num]][#str-to-num-note string to number]||7 + ToExpression["12"] _
+73.9 + ToExpression[".037"]|| ||7 + Int("12"); _
+73.9 + Float(".037");|| ||
+||[[# str-join]][#str-join-note string join]||StringJoin[Riffle[{"foo", "bar", "baz"}, ","]]|| ||a := ["foo", "bar", "baz"]; _
 JoinStringsWithSeparator(a, ","); || ||
-||[#str-substitute substitution]||s = "do re mi mi" _
+||[[# split]][#split-note split] _
+@<&nbsp;>@||StringSplit["foo,bar,baz", ","]|| ||SplitString("foo,bar,baz", ",");|| ||
+||[[# str-subst]][#str-subst-note substitute]||s = "do re mi mi" _
 re = RegularExpression["mi"] _
  _
 ##gray|(* replace first occurrence: *)## _
@@ -258,19 +274,29 @@ StringReplace[s, re -> "ma", 1] _
 ##gray|(* replace all occurrences: *)## _
 StringReplace[s, re -> "ma"]|| ||##gray|# replace all occurrences:## _
 ReplacedString("do re mi mi", "mi", "ma");|| ||
-||[#trim trim]||StringTrim[" foo "]|| ||##gray|//none//##|| ||
-||[[# num-to-str]][#num-to-str-note number to string]||"value: " <> ToString[8]|| ||Concatenation("value: ", String(8));|| ||
-||[[# str-to-num]][#str-to-num-note string to number]||7 + ToExpression["12"] _
-73.9 + ToExpression[".037"]|| ||7 + Int("12"); _
-73.9 + Float(".037");|| ||
-||[#case-manipulation case manipulation]||ToUpperCase["foo"] _
-ToLowerCase["FOO"]|| ||UppercaseString("foo"); _
-LowercaseString("FOO");|| ||
-||[[# char-literal]][#char-literal-note character literal]|| || ||'h'|| ||
-||[#chr-ord chr and ord]||FromCharacterCode[{65}] _
+||[[# str-len]][#str-len-note length] _
+@<&nbsp;>@||StringLength["hello"]|| ||Length("hello");||length("hello")||
+||[[# index-substr]][#index-substr-note index of substring]||StringPosition["hello", "el"][[1]][[1]] _
+ _
+##gray|(* The index of the first character is 1.*)## _
+ _
+##gray|(* StringPosition returns an array of pairs, one for each occurrence of the substring.  Each pair contains the index of the first and last character of the occurrence. *)##|| || || ||
+||[[# extract-substr]][#extract-substr-note extract substring]||##gray|(* "el": *)## _
+StringTake["hello", {2, 3}]|| ||s := "hello"; _
+s{[2..3]};|| ||
+||[[# char-literal]][#char-literal-note character literal] _
+@<&nbsp;>@||##gray|//none//##|| ||'h'|| ||
+||[[# lookup-char]][#lookup-char-note character lookup]||Characters["hello"][[1]]|| ||s := "hello"; _
+##gray|# the character 'h':## _
+s[1]; _
+ _
+##gray|# cannot use index notation on string literal##|| ||
+||[[# chr-ord]][#chr-ord-note chr and ord]||FromCharacterCode[{65}] _
 ToCharacterCode["A"][[1]]|| ||CharInt(65) _
 IntChar('A')|| ||
-||[[# delete-chars]][#delete-chars-note delete characters]|| || ||s := "disemvowel me"; _
+||[[# delete-char]][#delete-char-note delete characters]||rules = {"a" -> "", "e" -> "", "i" -> "", _
+@<&nbsp;&nbsp;>@"o" -> "", "u" -> ""} _
+StringReplace["disemvowel me", rules]|| ||s := "disemvowel me"; _
 ##gray|# no retval; modifies s in place:## _
 RemoveCharacters(s, "aeiou"); || ||
 ||||||||||~ [[# resizable-arrays]][#resizable-arrays-note resizable arrays]||
@@ -359,7 +385,8 @@ Unique([1, 2, 2, 3]);||Set([1, 2, 2, 3])||
 @<&nbsp;>@||MemberQ[{1, 2, 3}, 2]|| ||2 in [1, 2, 3]||##gray|@@\\@@ returns 1-based index of first occurrence _
 @@\\@@ or 0 if not found:## _
 setsearch([1, 2, 3], 2)||
-||[[# intersection]][#intersection-note intersection]||Intersect[{1, 2}, {2, 3, 4}]|| ||Intersection(Set([1, 2]), Set([2, 3, 4]));||setintersect([1, 2], [2, 3, 4])||
+||[[# intersection]][#intersection-note intersection] _
+@<&nbsp;>@||Intersect[{1, 2}, {2, 3, 4}]|| ||Intersection(Set([1, 2]), Set([2, 3, 4]));||setintersect([1, 2], [2, 3, 4])||
 ||[[# union]][#union-note union] _
 @<&nbsp;>@||Union[{1, 2}, {2, 3, 4}]|| ||Union(Set([1, 2]), Set([2, 3, 4]));||setunion([1, 2], [2, 3, 4])||
 ||[[# set-diff]][#set-diff-note relative complement, symmetric difference]||Complement[{1, 2, 3}, {2}] _
@@ -378,7 +405,8 @@ sqr[{1, 2, 3, 4}]|| ||A := [1, 2, 3]; _
 Apply(A, x -> x * x);|| ||
 ||[[# filter]][#filter-note filter] _
 @<&nbsp;>@||Select[{1, 2, 3}, # > 2 &]|| || || ||
-||[[# reduce]][#reduce-note reduce]||Fold[Plus, 0, {1, 2, 3}]|| || || ||
+||[[# reduce]][#reduce-note reduce] _
+@<&nbsp;>@||Fold[Plus, 0, {1, 2, 3}]|| || || ||
 ||[[# universal-existential-test]][#universal-existential-test-note universal and existential tests]||##gray|//none//##|| || || ||
 ||[[# min-max-elem]][#min-max-elem-note min and max element]||Min[{1, 2, 3}] _
 Max[{1, 2, 3}]|| ||Minimum([1, 2, 3]) _
@@ -399,7 +427,7 @@ Inner[List, {1, 2, 3}, {"a", "b", "c"}, List] _
  _
 ##gray|(* same as Dot[{1, 2, 3}, {2, 3, 4}]: *)## _
 Inner[Times, {1, 2, 3}, {2, 3, 4}, Plus]|| || || ||
-||[[# cartesian-product]][#cartesian-prodct-note cartesian product]||Outer[List, {1, 2, 3}, {"a", "b", "c"}]|| ||Cartesian([1, 2, 3], ["a", "b", "c"])|| ||
+||[[# cartesian-product]][#cartesian-product-note cartesian product]||Outer[List, {1, 2, 3}, {"a", "b", "c"}]|| ||Cartesian([1, 2, 3], ["a", "b", "c"])|| ||
 ||||||||||~ [[# arith-seq]][#arith-seq-note arithmetic sequences]||
 ||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
 ||[#range unit difference]||Range[1, 100]||range(1, 101)||[1 .. 100]||vector(100, i, i)||
@@ -413,28 +441,54 @@ Inner[Times, {1, 2, 3}, {2, 3, 4}, Plus]|| || || ||
 ##gray|(* or convert list of rules: *)## _
 d = Association[{"t" -> 1, "f" -> 0}] _
 ##gray|(* and back to list of rules: *)## _
-Normal[d]||##gray|//use//## [[[scripting#dictionaries|Python dictionaries]]]|| || ||
+Normal[d]||##gray|//use//## [[[scripting#dictionaries|Python dictionaries]]]||##gray|# dictionary constructor; type of keys derived _
+# from first arg:## _
+d := NewDictionary("", true); _
+AddDictionary(d, "t", 1); _
+AddDictionary(d, "f", 0); _
+ _
+##gray|# record literal with identifier keys: ## _
+r := rec(t := 1, f := 0); _
+ _
+##gray|# record literal with string keys:## _
+r2 := rec(("t") := 1, ("f") := 0);|| ||
 ||[[# dict-size]][#dict-size-note size] _
-@<&nbsp;>@||Length[Keys[d]]|| || || ||
+@<&nbsp;>@||Length[Keys[d]]|| ||##gray|# no way to get size of dictionary?## _
+  _
+Length(RecNames(r));|| ||
 ||[[# dict-lookup]][#dict-lookup-note lookup] _
-@<&nbsp;>@||d["t"]|| || || ||
-||[[# dict-update]][#dict-update-note update]||d["f"] = -1|| || || ||
+@<&nbsp;>@||d["t"]|| ||LookupDictionary(d, "t"); _
+ _
+##gray|# the same key can be looked up with identifier _
+# or string notation:## _
+r.t; _
+r.("t");|| ||
+||[[# dict-update]][#dict-update-note update]||d["f"] = -1|| ||AddDictionary(d, "f", -1); _
+ _
+r.f := -1; _
+r2.("f") := -1;|| ||
 ||[[# dict-missing-key]][#dict-missing-key-note missing key behavior] _
 @<&nbsp;>@||##gray|//Returns a symbolic expression with head "Missing".  If the lookup key was "x", the expression is:// _
  _
-@<&nbsp;&nbsp;>@Missing["KeyAbsent", "x"]##|| || || ||
+@<&nbsp;&nbsp;>@Missing["KeyAbsent", "x"]##|| ||##gray|# returns special object "fail":## _
+LookupDictionary(d, "not_a_key"); _
+ _
+##gray|# raises an error:## _
+r.not_a_key;|| ||
 ||[[# dict-key-check]][#dict-key-check-note is key present] _
-@<&nbsp;>@||KeyExistsQ[d, "t"]|| || || ||
-||[[# dict-delete]][#dict-delete-note delete]|| || || || ||
-||[[# dict-assoc-array]][#dict-assoc-array-note from array of pairs, from even length array]|| || || || ||
-||[[# dict-merge]][#dict-merge-note merge]|| || || || ||
-||[[# dict-invert]][#dict-invert-note invert]|| || || || ||
+@<&nbsp;>@||KeyExistsQ[d, "t"]|| ||KnowsDictionary(d, "t"); _
+ _
+##gray|# RecNames returns keys as strings:## _
+"t" in RecNames(r);|| ||
 ||[[# dict-iter]][#dict-iter-note iterate] _
-@<&nbsp;>@|| || || || ||
+@<&nbsp;>@|| || ||##gray|# no way to iterate over dictionary?## _
+ _
+for i in RecNames(r) do _
+@<&nbsp;&nbsp;>@Print(r.(i)); _
+od;|| ||
 ||[[# dict-key-val]][#dict-key-val-note keys and values as arrays]||Keys[d] _
-Values[d]|| || || ||
+Values[d]|| ||RecNames(r);|| ||
 ||[[# dict-sort-values]][#dict-sort-values-note sort by values]||Sort[d]|| || || ||
-||[[# dict-default-val]][#dict-default-val-note default value, computed value]|| || || || ||
 ||||||||||~ [[# functions]][#functions-note functions]||
 ||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
 ||[#function-definition define function]||Add[a_, b_] := a + b _
@@ -740,6 +794,11 @@ M.adjoint()|| || ||
 matsolve(A, [2, 3]~)||
 ||||||||||~ [[# symbolic-expr]][#symbolic-expr-note symbolic expressions]||
 ||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
+||apply rule||##gray|(* {3, 3}: *)## _
+ReplaceAll[{x, x}, x -> 3] _
+ _
+##gray|(* {3, 3}: *)## _
+{x, x} /. x -> 3|| || || ||
 ||replace head||Apply[Times, Plus[x, 3]] _
 Times @<@@>@ Plus[x, 3] _
 Times @<@@>@ (x + 3)|| || || ||
@@ -786,16 +845,70 @@ c > 0 && c < 10, _
 {a, b, c}, Integers]|| || || ||
 ||||||||||~ [[# optimization]][#optimization-note optimization]||
 ||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
-||minimize||Minimize[x^2 + 1, x]|| || || ||
-||minimize subject to constraint|| || || || ||
+||[[# minimize]][#minimize-note minimize]||##gray|(* returns list of two items: min value and rule _
+@<&nbsp;&nbsp;&nbsp;>@transforming x to argmin *)## _
+Minimize[x^2 + 1, x] _
+ _
+##gray|(* 2 ways to get min value: *)## _
+Minimize[x^2 + 1, x][[1]] _
+MinValue(x^2 + 1, x] _
+ _
+##gray|(* 2 ways to get argmin: *)## _
+x /. Minimize[x^2 + 1, x][[2]] _
+ArgMin[x^2 + 1, x]|| || || ||
+||[[# maximize]][#maximize-note maximize]||Maximize[-x^4 + 3 x^3, x] _
+ _
+Maxvalue[-x^4 + 3 x^3, x] _
+ArgMax[-x^4 + 3 x^3, x]|| || || ||
+||[[# optimize-unknown-param]][#optimize-unknown-param-note objective with unknown parameter]||##gray|(* minval and argmin are expressions _
+@<&nbsp;&nbsp;&nbsp;>@containing a: *)## _
+Minimize[(x - a)^2 + x, x]|| || || ||
+||[[# unbounded-behavior]][#unbounded-behavior-note unbounded behavior]||##gray|(* MaxValue will be Infinity; MinValue will be _
+@<&nbsp;&nbsp;&nbsp;>@-Infinity; ArgMax or ArgMin will be _
+@<&nbsp;&nbsp;&nbsp;>@Indeterminate *)##|| || || ||
+||[[# optimize-multiple-var]][#optimize-multiple-var-note multiple variables]||Minimize[x^4 - 2 x^2 + 2 y^4 - 3 y^2, {x, y}]|| || || ||
+||[[# optimize-constraints]][#optimize-constraints-note constraints]||Minimize[{-x - 2 y^2, y^2 <= 17, 2 x + y <= 5}, _
+@<&nbsp;&nbsp;>@{x, y}]|| || || ||
+||[[# infeasible-behavior]][#infeasible-behavior-note infeasible behavior]||##gray|(* MaxValue will be -Infinity; MinValue will be _
+@<&nbsp;&nbsp;&nbsp;>@Infinity; ArgMax or ArgMin will be _
+@<&nbsp;&nbsp;&nbsp;>@Indeterminate *)##|| || || ||
+||[[# optimize-int-var]][#optimize-int-var-note integer variables]||Maximize[{x^2 + 2*y, _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@x >= 0, y >= 0, _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@2 x + Pi * y <= 4}, _
+@<&nbsp;&nbsp;>@{x, y}, Integers]|| || || ||
+||[[# numerical-opt]][#numerical-opt-note numerical optimization]||NMinimize[(x^2 - 3)^2, x _
+@<&nbsp;&nbsp;>@MaxIterations -> 100, _
+@<&nbsp;&nbsp;>@AccuracyGoal -> 16, _
+@<&nbsp;&nbsp;>@PrecisionGoal -> 8, _
+@<&nbsp;&nbsp;>@Method -> "NelderMead"] _
+ _
+##gray|(* precision: total significant digits _
+@<&nbsp;&nbsp;&nbsp;>@accuracy: digits right of decimal point *)## _
+ _
+##gray|(* other methods: "DifferentialEvolution", _
+@<&nbsp;&nbsp;&nbsp;>@"SimulatedAnnealing", "RandomSearch" *)##|| || || ||
+||[[# local-opt-near-point]][#local-opt-near-point-note local optimum near point]||FindMinimum[x Cos[x], {x, 2} _
+@<&nbsp;&nbsp;>@AccuracyGoal -> 16, _
+@<&nbsp;&nbsp;>@PrecisionGoal -> 8, _
+@<&nbsp;&nbsp;>@Method -> "ConjugateGradient"] _
+ _
+##gray|(* other method: "PrincipalAxis*)##|| || || ||
 ||||||||||~ [[# combinatorics]][#combinatorics-note combinatorics]||
 ||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
 ||[[# factorial]][#factorial-note factorial]||10! _
-Factorial[10]||factorial(10)|| ||10!||
+Factorial[10]||factorial(10)||Factorial(10);||10!||
 ||falling factorial||FactorialPower[10, 3]|| || ||10! / (10 - 3)!||
-||binomial coefficient||Binomial[10, 3]||binomial(10, 3)|| ||binomial(10, 3)||
+||binomial coefficient||Binomial[10, 3]||binomial(10, 3)||Binomial(10, 3);||binomial(10, 3)||
 ||multinomial coefficient||Multinomial[3, 4, 5]|| || || ||
-||integer partitions||IntegerPartitions[10]|| || ||partitions(10)||
+||integer partitions _
+ _
+##gray|//and count//##||IntegerPartitions[10] _
+ _
+Length[IntegerPartitions[10]]|| ||Partitions(10); _
+ _
+NrPartitions(10);||partitions(10) _
+ _
+length(partitions(10))||
 ||set partitions _
  _
 ##gray|//and Bell number//##||StirlingS2[10, 3] _
@@ -812,64 +925,92 @@ LucasL[10]|| || ||fibonacci(10) _
 ||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
 ||[[# pseudoprime-test]][#pseudoprime-test-note pseudoprime test]||PrimeQ[7]||sympy.ntheory.primetest.isprime(7) _
 sympy.ntheory.primetest.mr(7, [2, 3])||IsPrimeInt(7);||ispseudoprime(7)||
-||[[# true-prime-test]][#true-prime-test-note true prime test]|| || || ||isprime(7)||
+||[[# true-prime-test]][#true-prime-test-note true prime test] _
+@<&nbsp;>@|| || || ||isprime(7)||
 ||[[# divisors]][#divisors-note divisors]||##gray|(* {1, 2, 4, 5, 10, 20, 25, 50, 100}: *)## _
-Divisors[100]||sympy.ntheory.divisors(100)|| ||divisors(100)||
+Divisors[100]||sympy.ntheory.divisors(100)||DivisorsInt(100);||divisors(100)||
 ||[[# prime-factors]][#prime-factors prime factors]||##gray|(* returns @<{{>@2, 2}, {3, 1}, {7, 1}} *)## _
 FactorInteger[84]||##gray|# {2: 2, 3: 1, 7: 1}:## _
-sympy.ntheory.factorint(84)|| ||##gray|@@\\@@ [2,2; 3,1; 7,1]:## _
+sympy.ntheory.factorint(84)||##gray|# [ 2, 2, 3, 7 ]:## _
+FactorsInt(84);||##gray|@@\\@@ [2,2; 3,1; 7,1]:## _
 factor(84)||
 ||[[# next-prime]][#next-prime-note next prime] _
  _
 ##gray|//and preceding//##||NextPrime[1000] _
 NextPrime[1000, -1]||sympy.ntheory.generate.nextprime(1000) _
-sympy.ntheory.generate.prevprime(1000)|| ||nextprime(1000) _
+sympy.ntheory.generate.prevprime(1000)||NextPrimeInt(1000); _
+PrevPrimeInt(1000);||nextprime(1000) _
 precprime(1000)||
 ||[[# nth-prime]][#nth-prime-note nth prime]||##gray|(* 541: *)## _
 Prime[100]||sympy.ntheory.generate.prime(100)|| ||##gray|@@\\@@ first 100 primes: primes(100)## _
 primes(100)[100]||
 ||[[# prime-counting-func]][#prime-counting-func-note prime counting function]||##gray|(* 25: *)## _
-PrimePi[100]||sympy.ntheory.generate.primepi(100)|| || ||
-||[[# divmod]][#divmod-note divmod]||QuotientRemainder[7, 3]||divmod(7, 3)|| ||divrem(7, 3)||
+PrimePi[100]||sympy.ntheory.generate.primepi(100)|| ||primepi(100)||
+||[[# divmod]][#divmod-note divmod] _
+@<&nbsp;>@||QuotientRemainder[7, 3]||divmod(7, 3)|| ||divrem(7, 3)||
 ||[[# gcd]][#gcd-note greatest common divisor] _
  _
-##gray|//and coprime test//##||GCD[14, 21] _
+##gray|//and relatively prime test//##||GCD[14, 21] _
+GCD[14, 21, 777] _
  _
-CoprimeQ[14, 21]||sympy.gcd(14, 21)|| ||gcd(14, 21)||
-||[[# lcm]][#lcm-note least common multiple]||LCM[14, 21]||sympy.lcm(14, 21)|| ||lcm(14, 21)||
-||integer residues|| || || ||##gray|@@\\@@ (2 + 3) % 5:## _
-Mod(2, 5) + Mod(3, 5)||
-||chinese remainder theorem|| || || ||chinese(Mod(3, 17), Mod(8, 11))|||
-||lift integer residue to integer|| || || ||##gray|@@\\@@ 7:## _
+CoprimeQ[14, 21]||sympy.gcd(14, 21) _
+sympy.gcd(sympy.gcd(14, 21), 777)||GcdInt(14, 21); _
+GcdInt(GcdInt(14, 21), 777);||gcd(14, 21) _
+gcd(gcd(14, 21), 777)||
+||[[# extended-euclidean-algorithm]][#extended-euclidean-algorithm-note extended euclidean algorithm]||##gray|(* {1, {2, -1}}: *)## _
+ExtendedGCD[3, 5]||import sympy.ntheory.modular _
+ _
+##gray|# (2, -1, 1):## _
+sympy.ntheory.modular.igcdex(3, 5)||ret := Gcdex(3, 5); _
+ _
+##gray|# 2:## _
+ret.coeff1; _
+##gray|# -1:## _
+ret.coeff2; _
+##gray|# 1:## _
+ret.gcd;||##gray|@@\\@@ [2, -1, 1]:## _
+gcdext(3, 5)||
+||[[# lcm]][#lcm-note least common multiple]||LCM[14, 21]||sympy.lcm(14, 21)||LcmInt(14, 21);||lcm(14, 21)||
+||[[# int-residues]][#int-residues-note integer residues]|| || ||r := ZmodnZ(5); _
+fam := ElementsFamily(FamilyObj(r));; _
+ _
+ZmodnZObj(fam, 2) + ZmodnZObj(fam, 3);||Mod(2, 5) + Mod(3, 5) _
+Mod(2, 5) - Mod(3, 5) _
+Mod(2, 5) * Mod(3, 5) _
+Mod(2, 5)^2||
+||[[# mult-inverse]][#mult-inverse-note multiplicative inverse]|| || ||r := ZmodnZ(7); _
+fam := ElementsFamily(FamilyObj(r));; _
+ _
+ZmodnZObj(2, 7)^-1;||Mod(2, 7)^-1 _
+ _
+##gray|@@\\@@ raises error:## _
+Mod(2, 4)^-1||
+||[[# chinese-remainder-thm]][#chinese-remainder-thm-note chinese remainder theorem]|| || ||##gray|# 173:## _
+ChineseRem([17, 11], [3, 8]);||##gray|@@\\@@ Mod(173, 187):## _
+chinese(Mod(3, 17), Mod(8, 11))|||
+||[[# lift-int-residue]][#lift-int-residue-note lift integer residue]|| || || ||##gray|@@\\@@ 7:## _
 lift(-17, 12) _
 ##gray|@@\\@@ -5:## _
 centerlift(-17, 12)||
-||p-adic number|| || || ||##gray|@@\\@@ p is 2 and precision in powers of 2 is 100:## _
-1/2 + O(2^100)||
-||lift p-adic to rational|| || || ||lift(1/2 + O(2^100)||
-||gaussian integer norm|| || || ||norm(1 + I)||
-||[[# euler-totient]][#euler-totient-note Euler totient]||EulerPhi[256]||sympy.ntheory.totient(256)||Phi(256);||eulerphi(256)||
-||jacobi symbol _
+||[[# euler-totient]][#euler-totient-note euler totient] _
+@<&nbsp;>@||EulerPhi[256]||sympy.ntheory.totient(256)||Phi(256);||eulerphi(256)||
+||[[# mult-order]][#mult-order-note multiplicative order]||MultiplicativeOrder[7, 108]|| ||OrderMod(7, 108);||znorder(Mod(7, 108))||
+||[[# primitive-roots]][#primitive-roots-note primitive roots]||PrimitiveRoot[11] _
  _
-##gray|//and kronecker symbol//##||JacobiSymbol[3, 5] _
-KroneckerSymbol[3, 5]|| || ||##gray|//??//## _
-kronecker(3, 5)||
-||dirichlet character||Table[DirichletCharacter[2, 1, i], {i, 100}]|| || || ||
-||moebius function||MoebiusMu[11]|| || ||moebius(11)||
-||mangoldt lambda||MangoldtLambda[11]|| || || ||
-||digits||##gray|(* base 10: *)## _
-IntegerDigits[1234] _
-##gray|(* base 2: *)## _
-IntegerDigits[1234, 2]|| || ||##gray|@@\\@@ base 10:## _
-digits(1234) _
-##gray|@@\\@@ base 2:## _
-digits(1234, 2) _
-##gray|@@\\@@ number of digits in base 10:## _
-sizedigits(1234)||
-||to continued fraction||cf = ContinuedFraction[Pi, 100]|| || ||\p 100 _
-contfrac(Pi)||
-||from continued fraction||##gray|(* rational approx. of π: *)## _
-FromContinuedFraction[cf]|| || || ||
+##gray|(* all primitive roots: *)## _
+PrimitiveRootList[11]|| ||PrimitiveRootMod(11);||znprimroot(11)||
+||[[# discrete-log]][#discrete-log-note discrete logarithm]|| || ||##gray|# arg: 10, base: 2, modulus: 11## _
+LogMod(10, 2, 11);||znlog(10, Mod(2, 11)) _
+znlog(Mod(10, 11), Mod(2, 11))||
+||[[# carmichael-func]][#carmichael-func-note carmichael function]||CarmichaelLambda[561]|| ||Lambda(561);|| ||
+||[[# kronecker-symbol]][#kronecker-symbol-note kronecker symbol] _
+ _
+##gray|//and jacobi symbol//##||KroneckerSymbol[3, 5] _
+JacobiSymbol[3, 5]|| ||Jacobi(3, 5);||kronecker(3, 5)||
+||[[# moebius-func]][#moebius-func-note moebius function]||MoebiusMu[11]|| ||MoebiusMu(11);||moebius(11)||
+||[[# riemann-zeta-func]][#riemann-zeta-func-note riemann zeta function]||Zeta[2]||sympy.mpmath.zeta(2)|| ||zeta(2)||
+||[[# mangoldt-lambda]][#mangoldt-lambda-note mangoldt lambda]||MangoldtLambda[11]|| || || ||
+||[[# dirichlet-char]][#dirichlet-char-note dirichlet character]||Table[DirichletCharacter[2, 1, i], {i, 100}]|| || || ||
 ||||||||||~ [[# elliptic-curves]][#elliptic-curves-note elliptic curves]||
 ||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
 ||elliptic curve from coefficients|| || || ||##gray|@@\\@@ ellinit([a, b, c, d, e]) where _
@@ -930,8 +1071,16 @@ b = ellL1(e, a)||
 ellak(e, 10) _
 ##gray|@@\\@@ first ten coefficients:## _
 ellan(e, 10)||
-||||||||||~ [[# algebraic-numbers]][#algebraic-numbers-note algebraic numbers]||
+||||||||||~ [[# rational-algebraic-numbers]][#rational-algebraic-numbers-note rational and algebraic numbers]||
 ||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
+||to continued fraction||cf = ContinuedFraction[Pi, 100]|| || ||\p 100 _
+contfrac(Pi)||
+||from continued fraction||##gray|(* rational approx. of π: *)## _
+FromContinuedFraction[cf]|| || || ||
+||p-adic number|| || || ||##gray|@@\\@@ p is 2 and precision in powers of 2 is 100:## _
+1/2 + O(2^100)||
+||lift p-adic to rational|| || || ||lift(1/2 + O(2^100))||
+||gaussian integer norm|| || || ||norm(1 + I)||
 ||quadratic extension|| || || ||##gray|@@\\@@ make w equal to sqrt(D)/4:## _
 D = -4 _
 w = quadgen(D)||
@@ -1023,8 +1172,8 @@ PermutationReplace[1, p]||p(0)||1 ^ p; _
 ##gray|# preimage of 1 under p:## _
 1 / p;|| ||
 ||act on list||##gray|(* if list is too big, extra elements retain _
-their positions; if list is too small, _
-expression is left unevaluated. *)## _
+@<&nbsp;&nbsp;&nbsp;>@their positions; if list is too small, _
+@<&nbsp;&nbsp;&nbsp;>@expression is left unevaluated. *)## _
 Permute[{a, b, c, d}, p12n34]||a, b, c, d = sympy.symbols('a b c d') _
   _
 p = combinatorics.Permutation(0, 1)(2, 3) _
@@ -1406,10 +1555,6 @@ How to determine the version of an installation.
 
 Code assumed to have been executed by the examples in the sheet.
 
-**sympy:**
-
-
-
 [[# grammar-invocation-note]]
 + [#grammar-invocation Grammar and Invocation]
 
@@ -1449,6 +1594,8 @@ Character used to start a comment that goes to the end of the line.
 [[# multiple-line-comment-note]]
 ++ [#multiple-line-comment multiple line comment]
 
+The syntax for a delimited comment which can span lines.
+
 [[# var-expr-note]]
 + [#var-expr Variables and Expressions]
 
@@ -1457,11 +1604,19 @@ Character used to start a comment that goes to the end of the line.
 
 How to perform assignment.
 
-In all three languages an assignment is an expression that evaluates to the right side of the expression.  Assignments can be chained to assign the same value to multiple variables.
+Mathematica, Sympy, and Pari/GP support the chaining of assignments.  For example, in Mathematica one can assign the value 3 to {{x}} and {{y}} with:
 
-**mathematica:**
+[[code]]
+x = y = 3
+[[/code]]
 
-The {{Set}} function behaves identically to assignment and can be nested:
+In Mathematica and Pari/GP, assignments are expressions.  In Mathematica, the following code is legal and evaluates to 7:
+
+[[code]]
+(x = 3) + 4
+[[/code]]
+
+In Mathematica, the {{Set}} function behaves identically to assignment and can be nested:
 
 [[code]]
 Set[a, Set[b, 3]]
@@ -1493,6 +1648,28 @@ The compound assignment operators.
 [[# incr-decr-note]]
 ++ [#incr-decr increment and decrement]
 
+Increment and decrement operators which can be used in expressions.
+
+[[# non-referential-id-note]]
+++ [#non-referential-id non-referential identifier]
+
+An identifier which does not refer to a value.
+
+A non-referential identifier will usually print as a string containing its name.
+
+Expressions containing non-referential identifiers will not be evaluated, though they may be simplified.
+
+Non-referential identifiers represent "unknowns" or "parameters" when performing algebraic derivations.
+
+[[# id-as-val-note]]
+++ [#id-as-val identifier as value]
+
+How to get a value referring to an identifier.
+
+The identifier may be the name of a variable containing a value.  But the value referring to the identifier is distinct from the value in the variable.
+
+One may manipulate a value referring to an identifier even if it is not the name of a variable.
+
 [[# global-var-note]]
 ++ [#global-var global variable]
 
@@ -1512,6 +1689,8 @@ There is {{my}} for declaring a local variable with lexical scope and {{local}} 
 [[# null-note]]
 ++ [#null null]
 
+The null literal.
+
 [[# null-test-note]]
 ++ [#null-test null test]
 
@@ -1519,6 +1698,8 @@ How to test if a value is null.
 
 [[# undef-var-note]]
 ++ [#undef-var undefined variable access]
+
+What happens when an undefined variable is used in an expression.
 
 [[# rm-var-binding-note]]
 ++ [#rm-var-binding remove variable binding]
@@ -1717,53 +1898,110 @@ Binary, octal, and hex integer literals.
 
 The notation works for any base from 2 to 36.
 
+[[# radix-note]]
+++ [#radix radix]
+
+Convert a number to a representation using a given radix.
+
+[[# to-array-of-digits-note]]
+++ [#to-array-of-digits to array of digits]
+
+Convert a number to an array of digits representing the number.
+
 [[# strings-note]]
 + [#strings Strings]
 
-[[# string-literals]]
-++ string literals
+[[# str-literal-note]]
+++ [#str-literal string literal]
 
-[[# string-newline]]
-++ newline in literal
+The syntax for a string literal.
 
-[[# character-access]]
-++ character access
+[[# newline-in-str-literal-note]]
+++ [#newline-in-str-literal newline in literal]
 
-[[# chr-ord]]
-++ chr and ord
+Are newlines permitted in string literals.
 
-[[# string-length]]
-++ length
+[[# str-literal-esc-note]]
+++ [#str-literal-esc literal escapes]
 
-[[# string-concatenate]]
-++ concatenate
+Escape sequences for putting unusual characters in string literals.
 
-[[# index-substring]]
-++ index of substring
+[[# str-concat-note]]
+++ [#str-concat concatenate]
 
-[[# extract-substring]]
-++ extract substring
+How to concatenate strings.
 
-[[# split]]
-++ split
+[[# translate-case-note]]
+++ [#translate-case translate case]
 
-[[# number-string-conversion]]
-++ convert from string, to string
+How to convert a string to all lower case letters or all upper case letters.
 
-How to convert strings to numbers and vice versa.
+[[# trim-note]]
+++ [#trim trim]
 
+How to remove whitespace from the beginning or the end of string.
 
-[[# join]]
-++ join
+[[# num-to-str-note]]
+++ [#num-to-str number to string]
 
-[[# trim]]
-++ trim
+How to convert a number to a string.
 
-[[# case-manipulation]]
-++ case manipulation
+[[# str-to-num-note]]
+++ [#str-to-num string to number]
 
-[[# sprintf]]
-++ sprintf
+How to parse a number from a string.
+
+[[# str-join-note]]
+++ [#str-join string join]
+
+How to join an array of strings into a single string, possibly separated by a delimiter.
+
+[[# split-note]]
+++ [#split split]
+
+How to split a string in to an array of strings.  How to specify the delimiter.
+
+[[# str-subst-note]]
+++ [#str-subst substitute]
+
+How to substitute one or all occurrences of substring with another.
+
+[[# str-len-note]]
+++ [#str-len length]
+
+How to get the length of a string in characters.
+
+[[# index-substr-note]]
+++ [#index-substr index of substring]
+
+How to get the index of the first occurrence of a substring.
+
+[[# extract-substr-note]]
+++ [#extract-substr extract substring]
+
+How to get a substring from a string using character indices.
+
+[[# char-literal-note]]
+++ [#char-literal character literal]
+
+The syntax for a character literal.
+
+[[# lookup-char-note]]
+++ [#lookup-char character lookup]
+
+How to get a character from a string by index.
+
+[[# chr-ord-note]]
+++ [#chr-ord chr and ord]
+
+Convert a character code point to a character or a single character string.
+
+Get the character code point for a character or single character string.
+
+[[# delete-char-note]]
+++ [#delete-char delete characters]
+
+Delete all occurrences of a set of characters from a string.
 
 [[# resizable-arrays-note]]
 + [#resizable-arrays Resizable Arrays]
@@ -1884,10 +2122,17 @@ How to find all elements in one list which are not in another; how to find all e
 
 How to shuffle an array. How to extract a random sample from an array without replacement.
 
+[[# flatten-note]]
+++ [#flatten flatten]
+
 [[# zip-note]]
 ++ [#zip zip]
 
 How to interleave two arrays.
+
+[[# cartesian-product-note]]
+++ [#cartesian-product cartesian product]
+
 [[# arith-seq-note]]
 + [#arith-seq Arithmetic Sequences]
 
@@ -2140,6 +2385,64 @@ How to compute the 1-norm, the 2-norm, the infinity norm, and the frobenius norm
 [[# optimization-note]]
 + [#optimization Optimization]
 
+An optimization problem consists of a real-valued function called the //objective function//.
+
+The objective function takes one or more //input variables//.  In the case of a maximization problem, the goal is to find the value for the input variables where the objective function achieves its maximum value.  Similarly for a minimization function one looks for the values for which the objective function achieves its minimum value.
+
+[[# minimize-note]]
+++ [#minimize minimize]
+
+How to solve a minimization problem in one variable.
+
+[[# maximize-note]]
+++ [#maximize maximize]
+
+How to solve a maximization problem.
+
+If we have a function which solves minimization problems, then we can use it to solve maximization problems by negating the objective function.  The downside is we might forget the minimum value returned is the negation of the maximum value we seek.
+
+[[# optimize-unknown-param-note]]
+++ [#optimize-unknown-param objective with unknown parameter]
+
+How to solve an optimization when the objective function contains unknown parameters.
+
+[[# unbounded-behavior-note]]
+++ [#unbounded-behavior unbounded behavior]
+
+What happens when attempting to solve an unbounded optimization problem.
+
+[[# optimize-multiple-var-note]]
+++ [#optimize-multiple-var multiple variables]
+
+How to solve an optimization problem with more than one input variable.
+
+[[# optimize-constraints-note]]
+++ [#optimize-constraints constraints]
+
+How to solve an optimization with constraints on the input variable.  The constrains are represented by inequalities.
+
+[[# infeasible-behavior-note]]
+++ [#infeasible-behavior infeasible behavior]
+
+What happens when attempting to solve an optimization problem when the solution set for the constraints is empty.
+
+[[# optimize-int-var-note]]
+++ [#optimize-int-var integer variables]
+
+How to solve an optimization problem when the input variables are constrained to linear values.
+
+[[# numerical-opt-note]]
+++ [#numerical-opt numerical optimization]
+
+Alternatives for finding optima which use numerical methods instead of exact methods.
+
+The techniques use heuristics for finding global optima which may not work in some cases.
+
+[[# local-opt-near-point-note]]
+++ [#local-opt-near-point local optimum near point]
+
+Numerical methods for finding a local optima near a specified point.
+
 [[# combinatorics-note]]
 + [#combinatorics Combinatorics]
 
@@ -2151,41 +2454,41 @@ How to compute the 1-norm, the 2-norm, the infinity norm, and the frobenius norm
 
 A fast primality test.
 
-A number of primality tests exists which give occasional false positives.  The simplest of these use Fermat's Little Theorem, in which for prime {{p}} and {{a}} in {{ {1, ..., p - 1} }}:
+A number of primality tests exists which give occasional false positives.  The simplest of these use Fermat's Little Theorem, in which for prime //p// and //a// in [[$ \{1, ..., p - 1\} $]]:
 
 [[math]]
-a^{p-1} \equiv 1 \bmod p
+a^{p-1} \equiv 1 \;(\text{mod}\; p)
 [[/math]]
 
-The test for a candidate prime {{p}} is to randomly choose several values for {{a}} in {{ {1, ..., p - 1} }} and evaluate
+The test for a candidate prime //p// is to randomly choose several values for //a// in  [[$ \{1, ..., p - 1\} $]] and evaluate
 
 [[math]]
-a^{p-1} \bmod p
+a^{p-1} \;(\text{mod}\; p)
 [[/math]]
 
-If any of them are not equivalent to 1, then the test shows that p is not prime.  Unfortunately, there are composite numbers {{n}}, the [Carmichael numbers https://oeis.org/A002997], for which
+If any of them are not equivalent to 1, then the test shows that p is not prime.  Unfortunately, there are composite numbers //n//, the [https://oeis.org/A002997 Carmichael numbers], for which
 
 [[math]]
-a^{n-1} \equiv 1 \bmod n
+a^{n-1} \equiv 1 \;(\text{mod}\; n)
 [[/math]]
 
-holds for all {{a}} in {{ {1, ..., n - 1} }}.
+holds for all //a// in [[$ \{1, ..., n - 1\} $]].
 
-A stronger test is the Miller-Rabin primality test.  Given a candidate prime {{n}}, we factor {{n - 1}} as {{2^^r^^ ⋅ d}} where {{d}} is odd.  If {{n}} is prime, then one of the following must be true:
+A stronger test is the Miller-Rabin primality test.  Given a candidate prime //n//, we factor //n - 1// as 2^^r^^ ⋅ //d// where //d// is odd.  If //n// is prime, then one of the following must be true:
 
 [[math]]
-a^d \equiv 1 \bmod n
+a^d \equiv 1 \;(\text{mod}\;n)
 [[/math]]
 
 [[math]]
-a^{2^r \cdot d} \equiv -1 \bmod n
+a^{2^r \cdot d} \equiv -1 \;(\text{mod}\;n)
 [[/math]]
 
 
 [[# true-prime-test-note]]
 ++ [#true-prime-test true prime test]
 
-Pseuodoprime tests are known for which there are no known counterexamples, and which are correct for for all integers up to a very large size.  Since conclusively showing that a number is prime is a slow operation for larger integers, a true prime test is often not practical.
+Pseuodoprime tests are known for which there are no known counterexamples, and which are correct for all integers up to a very large size.  Since conclusively showing that a number is prime is a slow operation for larger integers, a true prime test is often not practical.
 
 [[# divisors-note]]
 ++ [#divisors divisors]
@@ -2207,13 +2510,202 @@ The smallest prime number greater than an integer.  Also the greatest prime numb
 
 The n-th prime number.
 
-++ prime counting function
+[[# prime-counting-func-note]]
+++ [#prime-counting-func prime counting function]
 
-++ divmod
+The number of primes less than or equal to a value.
 
-++ greatest common divisor
+According to the prime number theorem:
 
-++ least common multiple
+[[math]]
+\lim_{n \rightarrow \infty} \frac{\pi(n)}{n/\log n} = 1
+[[/math]]
+
+[[# divmod-note]]
+++ [#divmod divmod]
+
+The quotient and remainder.
+
+If the divisor is positive, then the remainder is non-negative.
+
+[[# gcd-note]]
+++ [#gcd greatest common divisor]
+
+The greatest common divisor of a pair of integers.  The divisor is always positive.
+
+Two integers are relatively prime if their greatest common divisor is one.
+
+[[# extended-euclidean-algorithm-note]]
+++ [#extended-euclidean-algorithm extended euclidean algorithm]
+
+How to express a greatest common divisor as a linear combination of the integers it is a GCD of.
+
+The functions described return the GCD in addition to the coefficients.
+
+[[# lcm-note]]
+++ [#lcm least common multiple]
+
+The least common multiple of a pair of integers.
+
+The LCM can be calculated from the GCD using this formula:
+
+[[math]]
+\text{lcm}(m, n) = \frac{|m\cdot n|}{\text{gcd}(m, n)}
+[[/math]]
+
+[[# int-residues-note]]
+++ [#int-residues integer residues]
+
+The integer residues or integers modulo //n// are the equivalence classes formed by the relation
+
+[[math]]
+a\;(\text{mod}\;n) = b\; (\text{mod}\;n)
+[[/math]]
+
+An element in of these equivalence classes is called a representative.  We can extend addition and multiplication to the residues by performing integer addition or multiplication on representatives.  This is well-defined in the sense that it does not depend on the representatives chosen.  Addition and multiplication defined this way turn the integer residues into commutative rings with identity.
+
+[[# mult-inverse-note]]
+++ [#mult-inverse multiplicative inverse]
+
+How to get the multiplicative inverse for a residue.
+
+If the representative for a residue is relatively prime to the modulus, then the residue has a multiplicative inverse.  For that matter, if the modulus //n// is a prime, then the ring of residues is a field.
+
+Note that we cannot in general find the inverse using a representative, since the only units in the integers are -1 and 1.
+
+By Euler's theorem, we can find a multiplicative inverse by raising it to the power [[$ \phi(n) - 1 $]]:
+
+[[math]]
+a^{\phi(n) - 1} \cdot a = a^{\phi(n)} \equiv 1 \;(\text{mod}\;n)
+[[/math]]
+
+When //a// doesn't have a multiplicative inverse, then we cannot cancel it from both sides of a congruence.  The following is true, however:
+
+[[math]]
+az \equiv az' \;(\text{mod}\; n) \iff z \equiv z' \;\left(\text{mod}\; \frac{n}{\text{gcd}(a, n)}\right)
+[[/math]]
+
+[[# chinese-remainder-thm-note]]
+++ [#chinese-remainder-thm chinese remainder theorem]
+
+A function which finds a solution to a system of congruences.
+
+The Chinese remainder theorem asserts that there is a solution //x// to the system of  //k//  congruences
+
+[[math]]
+x \equiv a_i \;(\text{mod}\;n_i)
+[[/math]]
+
+provided that the //n,,i,,// are pairwise relative prime.  In this case there are an infinite number of solutions, all which are equal modulo [[$ N = n_1 \cdots n_k $]].  For this reason the solution is returned as a residue modulo //N//.
+
+[[# lift-int-residue-note]]
+++ [#lift-int-residue lift integer residue]
+
+How to get a representative from the equivalence class of integers modulo //n//.
+
+Typically an integer in [[$ \{0, ..., n - 1\} $]] is chosen.  A centered lift chooses a representative //x// such that [[$ -n/2 < x \leq n/2 $]].
+
+[[# euler-totient-note]]
+++ [#euler-totient euler totient]
+
+The Euler totient function is defined for any positive integer //n// as:
+
+[[math]]
+\phi(n) = n \prod_{p | n} \frac{p - 1}{p}
+[[/math]]
+
+Note that the product is over the primes that divide //n//.
+
+The Euler totient is the number of integers in [[$ \{1, ..., n - 1\} $]] which are relatively prime to //n//.  It is thus the size of the multiplicative group of integers modulo //n//.
+
+The Euler totient appears in Euler's theorem:
+
+[[math]]
+a^{\phi(n)} \equiv 1 \;(\text{mod}\;n)
+[[/math]]
+
+[[# mult-order-note]]
+++ [#mult-order multiplicative order]
+
+The multiplicative order of a residue //a// is the smallest exponent //k// such that
+
+[[math]]
+a^k \equiv 1\;(\text{mod}\;n)
+[[/math]]
+
+In older literature, it is sometimes said that //a// belongs to the exponent //k// modulo //n//.
+
+[[# primitive-roots-note]]
+++ [#primitive-roots primitive roots]
+
+A primitive root is a residue module //n// with multiplicative order //φ(n)//.
+
+The multiplicative group is not necessarily cyclic, though it is when //n// is prime.  If it is not cyclic, then there are no primitive roots.
+
+Any primitive root is a generator for the multiplicative root, so it can be used to find the other primitive roots.
+
+[[# discrete-log-note]]
+++ [#discrete-log discrete logarithm]
+
+For a residue //x// and a base residue //b//, find a positive integer such that:
+
+[[math]]
+b^k \equiv x\;(\text{mod}\; n)
+[[/math]]
+
+[[# carmichael-func-note]]
+++ [#carmichael-func carmichael function]
+
+The smallest number //k// such that //a^^k^^ ≡ 1 (//mod //n)// for all residues //a//.
+
+The Carmichael function λ(n) is less that or equal to the Euler totient function φ(n).  The functions are equal when there are primitive roots modulo //n//.
+
+[[# kronecker-symbol-note]]
+++ [#kronecker-symbol kronecker symbol]
+
+A quadratic residue is a non-zero residue //a// which has a square root modulo //p//.  That is, there is //x// such that
+
+[[math]]
+x^2 \equiv a \;(\text{mod}\;p)
+[[/math]]
+
+If //a// is non-zero and doesn't have a square root, then it is a quadratic non-residue.
+
+The Legendre symbol is used to indicate whether a number is a quadratic residue and is defined as follows:
+
+[[math]]
+\left( \frac{a}{p} \right)  = \begin{cases} \;\; 1 \;\;\; a \; \text{is a quadratic residue} \\ \;\; 0 \;\;\; p \mid a \\ -1 \;\;\; a \; \text{is a quadratic nonresidue} \end{cases}
+[[/math]]
+
+The Legendre symbol is only defined when //p// is prime, but if //n// is a positive integer with prime factorization
+
+[[math]]
+p_1^{\alpha_1} \ldots p_n^{\alpha_n}
+[[/math]]
+
+then the Jacobi symbol is defined as
+
+[[math]]
+\left( \frac{a}{n} \right) = \left( \frac{a}{p_1} \right)^{\alpha_1} \ldots \left( \frac{a}{p_n} \right)^{\alpha_n}
+[[/math]]
+
+[[# moebius-func-note]]
+++ [#moebius-func moebius function]
+
+The Möbius function //μ(n)// is 1, -1, or 0 depending upon when //n// is a square-free integer with an even number of prime factors, a square-free integer with an odd number of prime factors, or an integer which is divisible by //p^^2^^// for some prime //p//.
+
+The Möbius function is multiplicative: when //a// and //b// are relatively prime, //μ(a)μ(b) = μ(ab)//.
+
+//Möbius inversion formula//
+
+[[# riemann-zeta-func-note]]
+++ [#riemann-zeta-func riemann zeta function]
+
+[[# dirichelt-char-note]]
+++ [#dirichlet-char dirichlet character]
+
+[[# mangoldt-lambda-note]]
+++ [#mangoldt-lambda mangoldt lambda]
 
 [[# elliptic-curves-note]]
 + [#elliptic-curves Elliptic Curves]
@@ -2248,8 +2740,8 @@ An elliptic curve is said to be singular if the discriminant is non-zero.  Geome
 
 A line will intersect a non-singular elliptic curve at three points in projective space.  One can thus use the elliptic curve to define an abelian group in the following manner.  Given points P and Q, define {{P * Q}} as the third point of intersection on the curve of the line defined by P and Q.  Define {{P + Q}} as the third point of intersection of the line defined by {{P * Q}} and the point {{O}} at infinity.  Note that {{+}} and not {{*}} is the group operator.  To add a point P to itself, we use the tangent line of the elliptic curve at P.  We define {{P * P}} as the third point of intersection of the tangent line with the curve, and {{P + P}} as the third point of intersection of the line defined by {{P * P}} and the point at infinity {{O}}.
 
-[[# algebraic-numbers-note]]
-+ [#algebraic-numbers Algebraic Numbers]
+[[# rational-algebraic-numbers-note]]
++ [#rational-algebraic-numbers Rational and Algebraic Numbers]
 
 [[# polynomials-note]]
 + [#polynomials Polynomials]

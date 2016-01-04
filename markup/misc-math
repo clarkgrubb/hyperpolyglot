@@ -1,6 +1,8 @@
-[[# top]][#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#dates-time dates and time] | [#arrays arrays] | [#multidimensional-arrays multidimensional arrays] | [#sets sets] | [#functions functions] | [#execution-control execution control] | [#file-handles file handles] | [#libraries-namespaces libraries and namespaces] | [#processes-environment processes and environment] | [#reflection reflection] _
+[[# top]][#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#dates-time dates and time] | [#multidimensional-arrays multidimensional arrays] | [#sets sets] | [#functions functions] | [#execution-control execution control] | [#file-handles file handles] | [#directories directories] | [#libraries-namespaces libraries and namespaces] | [#processes-environment processes and environment] _
  _
-[#tables tables] | [#import-export import and export] | [#optimization optimization] | [#univariate-charts univariate charts] | [#bivariate-charts bivariate charts] | [#trivariate-charts trivariate charts]
+[#optimization optimization] | [#linear-regression linear regression] _
+ _
+[#univariate-charts univariate charts] | [#bivariate-charts bivariate charts] | [#trivariate-charts trivariate charts]
 
 ||~ ||~ [#gnuplot gnuplot]||~ [#glpk glpk]||
 ||[[# version-used]][#version-used-note version used] _
@@ -42,7 +44,7 @@ Hello, World!||
 ||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
 ||~ ||~ gnuplot||~ glpk||
 ||[[# assignment]][#assignment-note assignment]||x = 3.14||##gray|# parameters are write once:## _
-param x, := 3.14||
+param pi := 3.14;||
 ||[[# null]][#null-note null] _
 @<&nbsp;>@||##gray|//none//##||##gray|//none//##||
 ||[[# null-test]][#null-test-note null test] _
@@ -177,37 +179,6 @@ t = strptime('%Y-%m-%d %H:%M:%S', s)||str2time("2014-12-01 19:38:09", "%Y-%m-%d 
  _
 ##gray|# with message:## _
 pause 10 'sleeping 10s@@...@@'||##gray|//none//##||
-||||||~ [[# arrays]][#arrays-note arrays]||
-||~ ||~ gnuplot||~ glpk||
-||[[# array-literal]][#array-literal-note literal]|| || ||
-||[[# array-size]][#array-size-note size] _
-@<&nbsp;>@|| || ||
-||[[# array-lookup]][#array-lookup-note lookup]|| || ||
-||[[# array-update]][#array-update-note update] _
-@<&nbsp;>@|| || ||
-||[[# array-out-of-bounds]][#array-out-of-bounds-note out-of-bounds behavior]|| || ||
-||[[# array-element-index]][#array-element-index-note element index]|| || ||
-||[[# array-slice]][#array-slice-note slice] _
-@<&nbsp;>@|| || ||
-||[[# array-of-integers-as-index]][#array-of-integers-as-index-note array of integers as index]|| || ||
-||[[# array-back]][#array-back-note manipulate back]|| || ||
-||[[# array-front]][#array-front-note manipulate front]|| || ||
-||[[# array-head]][#array-head-note head] _
-@<&nbsp;>@|| || ||
-||[[# array-tail]][#array-tail-note tail] _
-@<&nbsp;>@|| || ||
-||[[# array-cons]][#array-cons-note cons]|| || ||
-||[[# array-concatenate]][#array-concatenate-note concatenate] _
-@<&nbsp;>@|| || ||
-||[[# array-replicate]][#array-replicate-note replicate] _
-@<&nbsp;>@|| || ||
-||[[# copy-array]][#copy-array-note copy] _
-@<&nbsp;>@|| || ||
-||[[# iterate-over-array]][#iterate-over-array-note iterate] _
-@<&nbsp;>@|| || ||
-||[[# reverse-array]][#reverse-array-note reverse] _
-@<&nbsp;>@|| || ||
-||[[# sort-array]][#sort-array-note sort]|| || ||
 ||||||~ [[# multidimensional-arrays]][#multidimensional-arrays-note multidimensional arrays]||
 ||~ ||~ gnuplot||~ glpk||
 ||2d literal||##gray|//in separate file; one line for each data point; whitespace delimited://## _
@@ -301,7 +272,7 @@ while (i < 10) { _
 ||raise exception|| || ||
 ||||||~ [[# file-handles]][#file-handles-note file handles]||
 ||~ ||~ gnuplot||~ glpk||
-||write line to stdout|| ||printf "Hello, World!\n";||
+||write line to stdout||print "Hello, World!"||printf "Hello, World!\n";||
 ||write formatted string to stdout|| ||printf "%d %.2f %s", 7, 3.1415, 'foo';||
 ||write to file|| ||##gray|# overwrites contents of /tmp/foo.txt:## _
 printf "lorem ispum" > "/tmp/foo.txt";||
@@ -313,6 +284,12 @@ param str symbolic := 'lorem ispum'; _
 display "set: ", s, _
 @<&nbsp;&nbsp;>@"param: ", x, _
 @<&nbsp;&nbsp;>@"string: ", str;||
+||||||~ [[# directories]][#directories-note directories]||
+||~ ||~ gnuplot||~ glpk||
+||working directory||##gray|# writes working dir to stdout:## _
+pwd _
+ _
+cd "/tmp"||##gray|//none//##||
 ||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
 ||~ ||~ gnuplot||~ glpk||
 ||[#load load]||$ cat foo.gnuplot _
@@ -321,7 +298,7 @@ print "loaded!" _
 $ cat main.gnuplot _
 load 'foo.gnuplot' _
  _
-$ gnuplog main.gnuplot _
+$ gnuplot main.gnuplot _
 loaded!||##gray|//none//##||
 ||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
 ||~ ||~ gnuplot||~ glpk||
@@ -336,26 +313,86 @@ exit _
 ##gray|# or:## _
 quit||##gray|//none//##||
 ||[[# cmd-subst]][#cmd-subst-note command substitution]||ls_output = system("ls")||##gray|//none//##||
-||||||~ [[# reflection]][#reflection-note reflection]||
-||~ ||~ gnuplot||~ glpk||
-||[#list-function-documentation list function documentation]|| || ||
-||[#function-documentation get function documentation]|| || ||
-||[#grep-documentation grep documentation]|| || ||
-||[#data-type query data type]|| || ||
-||[#list-variables list variables in scope]|| || ||
-||remove declarations and definitions|| || ||
-||show interpretation of binary operator|| || ||
-||show what is in a scope|| || ||
-||||||~ [[# tables]][#tables-note tables]||
-||~ ||~ gnuplot||~ glpk||
-||||||~ [[# import-export]][#import-export-note import and export]||
-||~ ||~ gnuplot||~ glpk||
 ||||||~ [[# optimization]][#optimization-note optimization]||
 ||~ ||~ gnuplot||~ glpk||
-||objective function|| || ||
-||constraints|| || ||
-||solve|| || ||
-||||||~ [[# univariate-charts]][#univariate-chart-note univariate charts]||
+||linear minimization|| ||var x1; _
+var x2; _
+var x3; _
+ _
+minimize obj: x1 + x2 + x3; _
+ _
+c1: x1 + x2 >= 1; _
+c2: x2 + x3 >= 1; _
+c3: x1 + x3 >= 1; _
+ _
+solve; _
+display obj, x1, x2, x3; _
+end;||
+||array of input variables|| ||set I := {1 .. 3}; _
+var x{I}; _
+ _
+minimize obj: sum{i in I} x[i]; _
+ _
+c1: x[1] + x[2] >= 1; _
+c2: x[2] + x[3] >= 1; _
+c3: x[1] + x[3] >= 1; _
+ _
+solve; _
+display obj, x; _
+end;||
+||linear maximization|| ||set I := {1 .. 3}; _
+var x{I}; _
+ _
+maximize obj: sum{i in I} x[i]; _
+ _
+c1: x[1] + x[2] <= 1; _
+c2: x[2] + x[3] <= 1; _
+c3: x[1] + x[3] <= 1; _
+ _
+solve; _
+display obj, x; _
+end;||
+||variable constraints|| ||set I := {1 .. 3}; _
+var x{I} >= 0; _
+ _
+minimize obj: sum{i in I} x[i]; _
+ _
+c1: -x[1] + x[2] >= 1; _
+c2: x[2] + x[3] >= 1; _
+c3: -x[1] + x[3] >= 1; _
+ _
+solve; _
+display obj, x; _
+end;||
+||unbounded behavior|| ||##gray|# Stops execution after solve statement with "LP HAS UNBOUNDED PRIMAL SOLUTION" message.##||
+||infeasible behavior|| ||##gray|# Stops execution after solve statement with "LP HAS NO PRIMAL FEASIBLE SOLUTION" message.##||
+||integer variables|| ||set I := {1 .. 3}; _
+var x{I} integer; _
+ _
+minimize obj: sum{i in I} x[i]; _
+ _
+c1: x[1] + x[2] >= 1; _
+c2: x[2] + x[3] >= 1; _
+c3: x[1] + x[3] >= 1; _
+ _
+solve; _
+display obj, x; _
+end;||
+||binary variables|| ||set I := {1 .. 3}; _
+var x{I} binary; _
+ _
+minimize obj: sum{i in I} x[i]; _
+ _
+c1: x[1] + x[2] >= 1; _
+c2: x[2] + x[3] >= 1; _
+c3: x[1] + x[3] >= 1; _
+ _
+solve; _
+display obj, x; _
+end;||
+||||||~ [[# linear-regression]][#linear-regression-note linear regression]||
+||~ ||~ gnuplot||~ glpk||
+||||||~ [[# univariate-charts]][#univariate-charts-note univariate charts]||
 ||~ ||~ gnuplot||~ glpk||
 ||[[image http://farm5.static.flickr.com/4090/5039793334_f76edece33_m.jpg]] [#bar-chart vertical bar chart]||##gray|# echo $'7\n3\n8\n5\n5' > data.txt## _
  _
@@ -391,7 +428,7 @@ plot [0.5:1.5] [0.0:1.1] "data.txt" \ _
 @<&nbsp;&nbsp;>@using (1.0):1:(0.3) notitle|| ||
 ||[#univariate-title set chart title]||set title "a plot" _
 plot "data.txt"|| ||
-||||||~ [[# bivariate-charts]][#bivariate-chart-note bivariate charts]||
+||||||~ [[# bivariate-charts]][#bivariate-charts-note bivariate charts]||
 ||~ ||~ gnuplot||~ glpk||
 ||[[image http://farm5.static.flickr.com/4154/5039126187_e340b3f4aa_m.jpg]] _
 [#stacked-bar-chart stacked bar chart]|| || ||
@@ -422,7 +459,7 @@ plot [-4:4] sin(x)|| ||
 ||axis limits|| || ||
 ||grid lines|| || ||
 ||[#logarithmic-y-axis logarithmic y-axis]|| || ||
-||||||~ [[# trivariate-charts]][#trivariate-chart-note trivariate charts]||
+||||||~ [[# trivariate-charts]][#trivariate-charts-note trivariate charts]||
 ||~ ||~ gnuplot||~ glpk||
 ||[#3d-scatter-plot 3d scatter plot]|| || ||
 ||[[image http://farm6.static.flickr.com/5245/5268191292_a75a367c39_s.jpg]] [#additional-data additional data set]||##gray|# seq 1 20 | awk '{print rand() + rand(), rand() + rand()}' \ _
@@ -454,6 +491,21 @@ show colors|| ||
 ||contour plot|| || ||
 ||~ ||~ ##EFEFEF|@@___________________________________________________________________@@##||~ ##EFEFEF|@@___________________________________________________________________@@##||
 
+[[# general-note]]
++ [#general General]
+
+[[# version-used-note]]
+++ [#version-used version used]
+
+The version used to test examples in this sheet.
+
+[[# show-version-note]]
+++ [#show-version show version]
+
+How to determine the version.
+
+[[# grammar-invocation-note]]
++ [#grammar-invocation Grammar and Invocation]
 
 [[# interpreter-note]]
 ++ [#interpreter interpreter]
@@ -473,6 +525,48 @@ print("Hello, World!")
 
 quit
 [[/code]]
+
+[[# var-expr-note]]
++ [#var-expr Variables and Expressions]
+
+[[# arithmetic-logic-note]]
++ [#arithmetic-logic Arithmetic and Logic]
+
+[[# strings-note]]
++ [#strings Strings]
+
+[[# dates-time-note]]
++ [#dates-time Dates and Time]
+
+[[# multidimensional-arrays-note]]
++ [#multidimensional-arrays Multidimensional Arrays]
+
+[[# sets-note]]
++ [#sets Sets]
+
+[[# functions-note]]
++ [#functions Functions]
+
+[[# execution-control-note]]
++ [#execution-control Execution Control]
+
+[[# file-handles-note]]
++ [#file-handles File Handles]
+
+[[# directories-note]]
++ [#directories Directories]
+
+[[# libraries-namespaces-note]]
++ [#libraries-namespaces Libraries and Namespaces]
+
+[[# processes-environment-note]]
++ [#processes-environment Processes and Environment]
+
+[[# optimization-note]]
++ [#optimization Optimization]
+
+[[# linear-regression-note]]
++ [#linear-regression Linear Regression]
 
 [[# univariate-charts-note]]
 + [#univariate-charts Univariate Charts]
@@ -510,6 +604,11 @@ unset key
 plot x with lines lc rgb "#ffffff"
 [[/code]]
 
+[[# bivariate-charts-note]]
++ [#bivariate-charts Bivariate Charts]
+
+[[# trivariate-charts-note]]
++ [#trivariate-charts Trivariate Charts]
 
 [[# gnuplot]]
 + [#top Gnuplot]

@@ -1,14 +1,16 @@
-[#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#dates-time dates and time] | [#fixed-length-arrays fixed-length-arrays] | [#resizable-arrays resizable-arrays] | [#lists lists] | [#tuples tuples] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#concurrency concurrency] | [#file-handles file handles] | [#files files] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#user-defined-types user-defined types] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#net-web net and web] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling] | [#repl repl]
+[#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#dates-time dates and time] | [#fixed-length-arrays fixed-length arrays] | [#resizable-arrays resizable arrays] | [#lists lists] | [#tuples tuples] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#concurrency concurrency] | [#file-handles file handles] | [#files files] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#user-defined-types user-defined types] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling] | [#repl repl]
 
 ||~ ||~ [#rust rust]||~ [#swift swift]||~ [#scala scala]||
 ||[[# version-used]][#version-used-note version used] _
-@<&nbsp;>@||##gray|//0.11//##||##gray|//1.1//##||##gray|//2.11//##||
+@<&nbsp;>@||##gray|//0.11//##||##gray|//2.1//##||##gray|//2.11//##||
 ||[[# version]][#version-note show version] _
 @<&nbsp;>@||$ rustc @@--@@version||$ swift @@--@@version||$ scala -version||
 ||[[# implicit-prologue]][#implicit-prologue-note implicit prologue]||##gray|//none//##||import Foundation||##gray|//none; but these libraries always available:// _
  _
 @<&nbsp;&nbsp;>@java.lang _
-@<&nbsp;&nbsp;>@scala##||
+@<&nbsp;&nbsp;>@scala _
+ _
+//as are methods in// Predef##||
 ||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
 ||~ ||~ rust||~ swift||~ scala||
 ||[[# interpreter]][#interpreter-note interpreter] _
@@ -24,7 +26,7 @@ $ rustc hello.rs _
  _
 $ ./hello _
 Hello, world!||$ cat hello.swift _
-println("Hello, World!") _
+print("Hello, World!") _
  _
 $ swift hello.swift _
  _
@@ -40,11 +42,16 @@ $ scalac Hello.scala _
 $ scala Hello||
 ||[[# statement-terminator]][#statement-terminator-note statement terminator]|| ||; ##gray|//or sometimes newline _
  _
-a new line does not terminate a statement when: _
+A newline does not terminate a statement when: _
 @<&nbsp;&nbsp;>@(1) inside [ ] of an array literal, _
 @<&nbsp;&nbsp;>@(2) inside of ( ) parens, _
 @<&nbsp;&nbsp;>@(3) after a binary operator, _
-@<&nbsp;&nbsp;>@(4) other situations?//##||; ##gray|//or sometimes newline//##||
+@<&nbsp;&nbsp;>@(4) other situations?//##||; ##gray|//or sometimes newline//## _
+ _
+##gray|//A newline does not terminate a statement: _
+@<&nbsp;&nbsp;>@(1) inside ( ) or [ ], _
+@<&nbsp;&nbsp;>@(2) if the preceding line is not a complete statement, _
+@<&nbsp;&nbsp;>@(3) if following token not legal at start of a statement.//##||
 ||[[# blocks]][#blocks-note block delimiters] _
 @<&nbsp;>@||{ }||{ }||{ }||
 ||[[# end-of-line-comment]][#end-of-line-comment-note end-of-line comment] _
@@ -60,15 +67,18 @@ a new line does not terminate a statement when: _
 ||||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
 ||~ ||~ rust||~ swift||~ scala||
 ||[[# value]][#value-note write-once variable] _
-@<&nbsp;>@||let pi: f64 = 3.14;||let Pi = 3.14||##gray|@@//@@ evaluates 1 + 2 once:## _
-val n = 1 + 2 _
+@<&nbsp;>@||let pi: f64 = 3.14;||let Pi = 3.14||##gray|@@//@@ evaluates 1 + p immediately:## _
+val n = 1 + p _
  _
-##gray|@@//@@ evaluates 1 + 2 each time n is used:## _
-def n = 1 + 2||
+##gray|@@//@@ evaluated first time n is accessed:## _
+lazy val n = 1 + p||
 ||[[# variable]][#variable-note modifiable variable]||let mut n: int = 3; _
 n = 4;||var n = 3 _
 n = 4||var n = 3 _
-n = 4 ||
+n = 4 _
+ _
+##gray|@@//@@ evaluates 1 + 2 each time n is used:## _
+def n = 1 + 2||
 ||[[# assignment]][#assignment-note assignment]|| ||var i = 0 _
  _
 i = 3|| ||
@@ -122,7 +132,7 @@ nil||null||
 @<&nbsp;>@||bool||Bool||Boolean||
 ||[[# true-false]][#true-false-note true and false] _
 @<&nbsp;>@||true false||true false||true false||
-||[[# falsehoods]][#falsehoods-note falsehoods]||false||false|| ||
+||[[# falsehoods]][#falsehoods-note falsehoods]||false||false||false||
 ||[[# logical-op]][#logical-op-note logical operators]||@@&& || !@@||@@&& || !@@||&& @@||@@ !||
 ||[[# relational-op]][#relational-op-note relational operators]||== != < > <= >=||== != < > <= >=||== != < > <= >=||
 ||[[# min-max]][#min-max-note min and max]|| || ||math.min 1 2 _
@@ -180,7 +190,7 @@ inf, Nan, or -inf||##gray|@@//@@ these are float values but not literals:## _
 num::pow(2i, 32u) _
 num::pow(2.0f32, 32u)||pow(2.0, 32.0)||math.pow(2, 32)||
 ||[[# sqrt]][#sqrt-note sqrt] _
-@<&nbsp;>@|| ||sqrt(2)||math.sqrt(2)||
+@<&nbsp;>@|| ||sqrt(2.0)||math.sqrt(2)||
 ||[[# sqrt-negative-one]][#sqrt-negative-one-note sqrt -1]|| ||##gray|// NaN:## _
 sqrt(-1)||##gray|math.sqrt(-1) //evaluates to// NaN, //a value which has no literal//##||
 ||[[# transcendental-func]][#transcendental-func-note transcendental functions]|| ||exp log log2 log10 _
@@ -217,14 +227,6 @@ n < m _
 n < m _
 n <= m _
 n >= m||
-||[[# rational-type]][#rational-type-note rational type]|| || || ||
-||[[# rational-construction]][#rational-construction-note rational construction]|| || || ||
-||[[# rational-decomposition]][#rational-decomposition-note rational decomposition]|| || || ||
-||[[# complex-type]][#complex-type-note complex type]|| || || ||
-||[[# complex-const]][#complex-const-note complex constants]|| || || ||
-||[[# complex-op]][#complex-op-note complex operators]|| || || ||
-||[[# complex-construction]][#complex-construction-note complex construction]|| || || ||
-||[[# complex-decomposition]][#complex-decomposition-note complex decomposition]|| || || ||
 ||[[# random-num]][#random-num-note random number] _
 ##gray|//uniform int, uniform float, normal float//##||use std::rand; _
  _
@@ -275,7 +277,11 @@ second line";||##gray|//no//##||##gray|//in triple quote literal only//##||
 \x##gray|//hh//## \u##gray|//hhhh//## \U##gray|//hhhhhhhh//##||\b \f \n \r \t \" \' _
 \u##gray|//hhhh//## \##gray|//o//## \##gray|//oo//## \##gray|//ooo//##||
 ||[[# format-str]][#format-str-note format string]||let s = format!("foo {} {} {}", "bar", 7i, 3.14f32);||let n = 3, m = 5 _
-let msg =  "\(n) + \(m) is \(n + m)"||"foo %s %d %.2f".format("bar", 7, 3.1415)||
+let msg =  "\(n) + \(m) is \(n + m)"||"foo %s %d %.2f".format("bar", 7, 3.1415) _
+ _
+val n = 3 _
+val m = 5 _
+val msg = s"$n + $m is ${n + m}"||
 ||[[# str-concat]][#str-concat-note concatenate] _
 @<&nbsp;>@|| ||"hello" + " world"||"Hello" + ", " + "World!"||
 ||[[# str-replicate]][#str-replicate-note replicate] _
@@ -322,9 +328,50 @@ let x = String(17.3)||"two: " + 2.toString _
 97.toChar||
 ||||||||~ [[# dates-time]][#dates-time-note dates and time]||
 ||~ ||~ rust||~ swift||~ scala||
-||[[# dates-time-types]][#dates-time-types-note date and time types]|| || || ||
-||[[# current-date-time]][#current-date-time-note current date and time]|| || || ||
-||[[# current-unix-epoch]][#current-unix-epoch-note current unix epoch]|| || || ||
+||[[# dates-time-types]][#dates-time-types-note date and time types]|| || ||java.util.Date||
+||[[# current-date-time]][#current-date-time-note current date and time]|| || ||import java.util.Date _
+ _
+val dt = new Date()||
+||[[# current-unix-epoch]][#current-unix-epoch-note current unix epoch]|| || ||dt.getTime / 1000||
+||to unix epoch, from unix epoch|| || ||dt.getTime / 1000 _
+ _
+val dt2 = new Date(1451600610 * 1000)||
+||format date|| || ||import java.text.SimpleDateFormat _
+ _
+val fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss") _
+val s = fmt.format(dt)||
+||parse date|| || ||import java.text.SimpleDateFormat _
+ _
+val fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss") _
+val dt = fmt.parse("2011-05-03 17:00:00")||
+||date subtraction|| || ||##gray|@@//@@ difference in milliseconds as Long:## _
+dt2.getTime - dt.getTime||
+||add duration|| || ||##gray|@@//@@ add one day:## _
+val dt2 = new Date(dt.getTime + 86400 * 1000)||
+||date parts|| || ||import java.util.Date _
+import java.util.Calendar _
+import java.util.GregorianCalendar _
+ _
+al cal = new GregorianCalendar _
+cal.setTime(new Date) _
+ _
+cal.get(Calendar.YEAR) _
+cal.get(Calendar.MONTH) + 1 _
+cal.get(Calendar.DAY_OF_MONTH)||
+||time parts|| || ||import java.util.Date _
+import java.util.Calendar _
+import java.util.GregorianCalendar _
+ _
+al cal = new GregorianCalendar _
+cal.setTime(new Date) _
+ _
+cal.get(Calendar.HOUR_OF_DAY) _
+cal.get(Calendar.MINUTE) _
+cal.get(Calendar.SECOND)||
+||build broken-down datetime|| || ||import java.util.GregorianCalendar _
+ _
+val cal = new GregorianCalendar(2015, 12, 31, 23, 59, 59) _
+val dt = cal.getTime||
 ||||||||~ [[# fixed-length-arrays]][#fixed-length-arrays-note fixed-length arrays]||
 ||~ ||~ rust||~ swift||~ scala||
 ||[[# array-literal]][#array-literal-note literal]||let nums = [1i, 2i, 3i];|| ||val a = Array(1, 2, 3)||
@@ -343,30 +390,59 @@ let a2: Int[] = []|| ||
 ||[[# free-array-on-heap]][#free-array-on-heap-note free heap] _
 @<&nbsp;>@|| ||##gray|//none; garbage collected//##|| ||
 ||[[# array-literal]][#array-literal-note literal]|| ||##gray|@@//@@ array is mutable; variable is not:## _
-let a = [1, 2, 3]|| ||
-||[[# array-size]][#array-size-note size]|| ||a.count|| ||
-||[[# array-lookup]][#array-lookup-note lookup]|| ||a[0]|| ||
-||[[# array-update]][#array-update-note update]|| ||a[0] = 4|| ||
-||[[# array-out-of-bounds]][#array-out-of-bounds-notes out-of-bounds]|| ||##gray|//raises// SIGILL##|| ||
-||[[# array-element-index]][#array-element-index-note element index]|| || || ||
+let a = [1, 2, 3]||import scala.collection.mutable.ArrayBuffer _
+ _
+val a = ArrayBuffer(1, 2, 3)||
+||[[# array-size]][#array-size-note size]|| ||a.count||a.length||
+||[[# array-lookup]][#array-lookup-note lookup]|| ||a[0]||a(0)||
+||[[# array-update]][#array-update-note update]|| ||a[0] = 4||a(0) = 4||
+||[[# array-out-of-bounds]][#array-out-of-bounds-notes out-of-bounds]|| ||##gray|//raises// SIGILL##||##gray|//raises// java.lang.ArrayIndexOutOfBoundsException##||
+||[[# array-element-index]][#array-element-index-note element index]|| || ||a.indexOf(3)||
 ||[[# slice-array]][#slice-array-note slice]|| ||var a = ["a", "b", "c", "d", "e"] _
  _
 ##gray|@@//@@ ["c", "d"]:## _
 a[2@@...@@3] _
-a[2..4]|| ||
-||[[# slice-array-to-end]][#slice-array-to-end-note slice to end]|| || || ||
+a[2..4]||val a = ArrayBuffer("a", "b", "c", "d", "e") _
+ _
+##gray|@@//@@ ArrayBuffer("c", "d"):## _
+a.slice(2, 4)||
+||[[# slice-array-to-end]][#slice-array-to-end-note slice to end]|| || ||##gray|@@//@@ ArrayBuffer("c", "d", "e"):## _
+a.drop(2)||
 ||[[# array-back]][#array-back-note manipulate back]|| ||let a = [1, 2, 3] _
 a.append(4) _
 ##gray|@@//@@ sets num to 4:## _
-let num = a.removeLast()|| ||
+let num = a.removeLast()||##gray|@@//@@ two ways to append:## _
+a.append(4) _
+a += 4 _
+ _
+##gray|@@//@@ inspect last item:## _
+val x = a.last _
+ _
+##gray|@@//@@ pop last item:## _
+val y = a.remove(a.length - 1)||
 ||[[# array-front]][#array-front-note manipulate front]|| ||let a = [1, 2, 3] _
 a.insert(0, atIndex: 0) _
 ##gray|@@//@@ sets num to 0:## _
-let num = a.removeAtIndex(0)|| ||
+let num = a.removeAtIndex(0)||val a = ArrayBuffer(7, 8, 9) _
+ _
+a.insert(0, 6) _
+ _
+##gray|@@//@@ inspect first element:## _
+val x = a.first _
+ _
+##gray|@@//@@ pop first element:## _
+val y = a.remove(0)||
 ||[[# concatenate-array]][#concatenate-array-note concatenate]|| ||let a = [1, 2, 3] _
 a += [4, 5, 6] _
  _
-let a3 = [1, 2, 3] + [4, 5, 6]|| ||
+let a3 = [1, 2, 3] + [4, 5, 6]||val a1 = ArrayBuffer(1, 2, 3) _
+val a2 = ArrayBuffer(4, 5, 6) _
+ _
+##gray|@@//@@ new ArrayBuffer:## _
+val a2 = a1 ++ a2 _
+ _
+##gray|@@//@@ add elements to a1:## _
+a1 ++= a2||
 ||[[# copy-array]][#copy-array-note copy]|| ||let a = [1, 2, 3] _
  _
 let a2 = a _
@@ -375,18 +451,49 @@ a2[0] = 4 _
  _
 a3 = Array(a) _
 ##gray|@@//@@ a[0] remains 4:## _
-a3[0] = 5|| ||
-||[[# iterate-over-array]][#iterate-over-array-note iterate over elements]|| || || ||
-||[[# iterate-indices-elem]][#iterate-indices-elem-note iterate over indices and elements]|| || || ||
+a3[0] = 5||val a = ArrayBuffer(1, 2, 3) _
+val a2 = ArrayBuffer[Int]() _
+a2 ++= a||
+||[[# iterate-over-array]][#iterate-over-array-note iterate over elements]|| || ||for (n <- a) _
+@<&nbsp;&nbsp;>@println(n)||
+||[[# iterate-indices-elem]][#iterate-indices-elem-note iterate over indices and elements]|| || ||for ((n, i) <- a.zipWithIndex) { _
+@<&nbsp;&nbsp;>@println(s"item: $n is at: $i") _
+}||
 ||[[# reverse-array]][#reverse-array-note reverse]|| ||let a = [1, 2, 3] _
-let a2 = a.reverse()|| ||
+let a2 = a.reverse()||val a2 = a.reverse||
 ||[[# sort-array]][#sort-array-note sort]|| ||let a = [1, 3, 2, 4] _
  _
 ##gray|@@//@@ modifies a in-place and returns it:## _
-sort(a)|| ||
-||[[# map]][#map-note map]|| || || ||
-||[[# filter]][#filter-note filter]|| || || ||
-||[[# reduce]][#reduce-note reduce]|| || || ||
+sort(a)||val a = ArrayBuffer(3, 1, 4, 2) _
+val a2 = a.sortWith(_ < _)||
+||dedupe|| || ||ArrayBuffer(1, 2, 3, 3).distinct _
+ _
+##gray|@@//@@ scala.collection.immutable.Set[Int]:## _
+val set = a.toSet||
+||membership|| || ||ArrayBuffer(1, 2, 3).contains(7)||
+||intersection|| || ||val a1 = ArrayBuffer(1, 2) _
+val a2 = ArrayBuffer(2, 3, 4) _
+##gray|@@//@@ multiset intersection:## _
+a1.intersect(a2)||
+||union|| || ||val a1 = ArrayBuffer(1, 2) _
+val a2 = ArrayBuffer(2, 3, 4) _
+##gray|@@//@@ multiset union:## _
+a1.union(a2)||
+||relative complement|| || ||val a1 = ArrayBuffer(1, 2) _
+val a2 = ArrayBuffer(2, 3, 4) _
+##gray|@@//@@ multiset difference:## _
+a1.diff(a2)||
+||[[# map]][#map-note map]|| || ||a.map(x => x * x)||
+||[[# filter]][#filter-note filter]|| || ||a.filter(_ > 2)||
+||fold left|| || ||##gray|@@//@@ -6:## _
+ArrayBuffer(1, 2, 3).foldLeft(0)(_ - _)||
+||fold right|| || ||##gray|@@//@@ -2:## _
+ArrayBuffer(1, 2, 3).foldRight(0)(_ - _)||
+||shuffle|| || ||val rand = scala.util.Random _
+val a = rand.shuffle(ArrayBuffer(1, 2, 3, 4))||
+||flatten|| || ||val a = ArrayBuffer(ArrayBuffer(1, 2), ArrayBuffer(3, 4)) _
+val a2 = a.flatten||
+||zip|| || ||ArrayBuffer(1, 2, 3).zip(ArrayBuffer("a", "b", "c"))||
 ||||||||~ [[# lists]][#lists-note lists]||
 ||~ ||~ rust||~ swift||~ scala||
 ||[[# list-literal]][#list-literal-note literal]|| || ||##gray|@@//@@ none; use constructor:## _
@@ -456,7 +563,7 @@ List(1, 2, 3).foldLeft(0)((x, y) => x + y)||
 @<&nbsp;>@|| || ||List(1, 2, 3).forall(_ > 2)||
 ||[[# existential-test-list]][#existential-test-list-note existential test] _
 @<&nbsp;>@|| || ||List(1, 2, 3).exists(_ > 2)||
-||[[# zip-list]][#zip-list-note zip lists]|| || || ||
+||[[# zip-list]][#zip-list-note zip lists]|| || ||List(1, 2, 3).zip(List("a", "b", "c"))||
 ||||||||~ [[# tuples]][#tuples-note tuples]||
 ||~ ||~ rust||~ swift||~ scala||
 ||[#tuple tuple]||(1, "hello", true)|| ||(1, "hello", true)||
@@ -466,24 +573,42 @@ List(1, 2, 3).foldLeft(0)((x, y) => x + y)||
 (12, "December")._2||
 ||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
 ||~ ||~ rust||~ swift||~ scala||
-||[[# declare-dict]][#declare-dict-note declare]|| ||let dict = Dictionary<String, Int>()|| ||
-||[[# dict-literal]][#dict-literal-note literal]|| ||let dict = ["t": 1, "f": 0]|| ||
-||[[# dict-size]][#dict-size-note size]|| ||dict.count|| ||
-||[[# dict-lookup]][#dict-lookup-note lookup]|| ||dict["t"]|| ||
-||[[# dict-update]][#dict-update-note update]|| ||dict["t"] = 2|| ||
-||[[# dict-out-of-bounds]][#dict-out-of-bounds-note out-of-bounds behavior]|| ||##gray|//returns//## nil|| ||
+||[[# declare-dict]][#declare-dict-note declare]|| ||let dict = Dictionary<String, Int>()||import scala.collection.mutable _
+ _
+val dict = mutable.Map.empty[String, Int]||
+||[[# dict-literal]][#dict-literal-note literal]|| ||let dict = ["t": 1, "f": 0]||##gray|@@//@@ scala.collection.immutable.Map[String,Int]:## _
+val dict = Map("t" -> 1, "f" -> 0)||
+||[[# dict-size]][#dict-size-note size] _
+@<&nbsp;>@|| ||dict.count||dict.size||
+||[[# dict-lookup]][#dict-lookup-note lookup]|| ||dict["t"]||dict["f"] _
+ _
+##gray|@@//@@ returns Option[Int]:## _
+dict.get("f")||
+||[[# dict-update]][#dict-update-note update]|| ||dict["t"] = 2||##gray|@@//@@ mutable.Map only:## _
+dict("t") = 2||
+||[[# dict-out-of-bounds]][#dict-out-of-bounds-note out-of-bounds behavior] _
+@<&nbsp;>@|| ||##gray|//returns//## nil||##gray|//raises// java.util.NoSuchElementException##||
 ||[[# dict-is-key-present]][#dict-is-key-present-note is key present]|| ||if dict["y"] { _
 @<&nbsp;&nbsp;>@println("key found") _
 } else { _
 @<&nbsp;&nbsp;>@println("no such key") _
-}|| ||
-||[[# dict-delete]][#dict-delete-note delete]|| ||dict.removeValueForKey("t")|| ||
+}||dict.exists(kv  => kv._1 == "t")||
+||[[# dict-delete]][#dict-delete-note delete]|| ||dict.removeValueForKey("t")||##gray|@@//@@ mutable.Map only:## _
+dict.delete("t")||
 ||[[# dict-iterate]][#dict-iterate-note iterate]|| ||for (k, v) in dict { _
 @<&nbsp;&nbsp;>@println("\(k): \(v)") _
-}|| ||
+}||for (kv <- dict) { _
+@<&nbsp;&nbsp;>@println(kv._1) _
+@<&nbsp;&nbsp;>@println(kv._2) _
+}||
 ||[[# dict-key-val]][#dict-key-val-note keys and values as arrays]|| ||##gray|@@//@@ dict.keys and dict.values are iterable:## _
 Array(dict.keys) _
-Array(dict.values)|| ||
+Array(dict.values)||##gray|@@//@@ Iterable[String]:## _
+dict.keys _
+##gray|@@//@@ Array[String]:## _
+dict.keys.toArray _
+dict.values _
+dict.values.toArray||
 ||||||||~ [[# functions]][#functions-note functions]||
 ||~ ||~ rust||~ swift||~ scala||
 ||[[# def-func]][#def-func-note define function]||fn add(x: f64, y: f64) -> f64 { _
@@ -563,10 +688,12 @@ logarithm(10, base = 2)||
 @<&nbsp;&nbsp;>@} _
 @<&nbsp;&nbsp;>@return retval _
 }|| ||
-||[[# retval]][#retval-note return value]||##gray|return //arg; otherwise last expression evaluated and not followed by semicolon; otherwise unit ()//##||##gray|return //arg//##|| ||
-||[[# no-retval]][#no-retval-note no return value]|| ||func print_err(err: String) { _
-@<&nbsp;&nbsp;>@println(err) _
+||overload function|| ||func add(a: String, b: String) -> String { _
+@<&nbsp;&nbsp;>@return a + b _
 }|| ||
+||[[# retval]][#retval-note return value]||##gray|return //arg; otherwise last expression evaluated and not followed by semicolon; otherwise unit ()//##||##gray|return //arg//##||##gray|//if function body is preceded by// = // the return value is the// return //arg or last expression evaluated.//## _
+ _
+##gray|//If function body not preceded by// = //the return value is// Unit.##||
 ||[[# multiple-retval]][#multiple-retval-note multiple return values]|| ||func divmod(dividend: Int, divisor: Int) -> (Int, Int) { _
 @<&nbsp;&nbsp;>@return (dividend / divisor, dividend % divisor) _
 }|| ||
@@ -645,9 +772,19 @@ for var i = 1; i <= 10; i++ { _
 @<&nbsp;&nbsp;>@println(i)||
 ||[[# infinite-loop]][#infinite-loop-note infinite loop]||loop { _
  _
-}|| ||##gray|//none//##||
+}|| ||while (true) { _
+ _
+}||
 ||[[# break-continue]][#break-continue-note break and continue] _
-@<&nbsp;>@||break continue|| || ||
+@<&nbsp;>@||break continue|| ||import scala.util.control.Breaks.break _
+ _
+for (i <- 1 to 10) _
+@<&nbsp;&nbsp;>@if (i > 5) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@break _
+@<&nbsp;&nbsp;>@else _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@println(i) _
+ _
+##gray|@@//@@ there is no continue statement##||
 ||||||||~ [[# exceptions]][#exceptions-note exceptions]||
 ||~ ||~ rust||~ swift||~ scala||
 ||[#raise-error raise error]|| || ||throw new Exception("bam!")||
@@ -659,6 +796,7 @@ val x = try { _
 catch { _
 @<&nbsp;&nbsp;>@case e: ArithmeticException => 0 _
 }||
+||finally|| || || ||
 ||[#exception-type type of exceptions]|| || || ||
 ||[#user-exception user defined exception]|| || || ||
 ||[#standard-exceptions standard exceptions]|| || || ||
@@ -688,7 +826,7 @@ let i = 17 _
 let x = 3.14156 _
 let fmtx = NSString(format: "%.2f", x) _
  _
-println("\(s) \(i) \(fmtx)")|| ||
+print("\(s) \(i) \(fmtx)")|| ||
 ||open file for reading|| ||import scala.io.Source _
  _
 val path = "/etc/hosts" _
@@ -751,14 +889,50 @@ f.seekToFileOffset(0)|| ||
 ||generate unused file name|| || || ||
 ||||||||~ [[# directories]][#directories-note directories]||
 ||~ ||~ rust||~ swift||~ scala||
-||build pathname|| || || ||
-||dirname and basename|| || || ||
-||iterate over directory by file|| || || ||
-||make directory|| || || ||
-||remove empty directory|| || || ||
-||remove directory and contents|| || || ||
-||directory test|| || || ||
-||temporary directory|| || || ||
+||build pathname|| || ||import java.io.File _
+ _
+val root = File.listRoots()(0) _
+val hosts = new File(new File(root, "etc"), "hosts") _
+val path = hosts.getPath||
+||dirname and basename|| || ||import java.io.File _
+ _
+val f = new File("/etc/hosts") _
+val dirn = f.getParent _
+val basen = f.getName||
+||iterate over directory by file|| || ||import java.io.File _
+ _
+val dir = new File("/etc") _
+ _
+##gray|@@//@@ Array[String]:## _
+dir.list _
+ _
+##gray|@@//@@ Array[java.io.File]:## _
+dir.listFiles||
+||make directory|| || ||import java.io.File _
+ _
+val dir = new File("/tmp/foo/dir") _
+dir.mkdirs||
+||remove empty directory|| || ||import java.io.File _
+ _
+val dir = new File("/tmp/foodir") _
+dir.delete||
+||remove directory and contents|| || ||@@//@@ libraryDependencies += "commons-io" % "commons-io" % "2.4" _
+import org.apache.commons.io.FileUtils _
+import java.io.File _
+ _
+FileUtils.deleteDirectory(new File("/tmp/foo"))||
+||directory test|| || ||import java.io.File _
+ _
+val f = new File("/etc") _
+f.isDirectory||
+||temporary directory|| || ||import java.nio.file.Files _
+ _
+val dir = Files.createTempDirectory(null) _
+##gray|@@//@@ path as string:## _
+dir.toString _
+ _
+##gray|@@//@@ arrange for directory to be deleted:## _
+dir.toFile.deleteOnExit||
 ||||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
 ||~ ||~ rust||~ swift||~ scala||
 ||[#command-line-arg command line arguments]|| || ||object Test { _
@@ -768,57 +942,167 @@ f.seekToFileOffset(0)|| ||
 @<&nbsp;&nbsp;>@} _
 }||
 ||[[# program-name]][#program-name-note program name] _
-@<&nbsp;>@|| || || ||
-||[[# getopt]][#getopt-note getopt]|| || || ||
-||[[# env-var]][#env-var-note get and set environment variable] _
-@<&nbsp;>@|| || || ||
-||[[# pid]][#pid-note get pid, parent pid]|| || || ||
-||[[# user-id-name]][#user-id-name-note get user id and name]|| || || ||
-||[[# exit]][#exit-note exit] _
-@<&nbsp;>@|| || || ||
-||[[# signal-handler]][#signal-handler-note set signal handler] _
-@<&nbsp;>@|| || || ||
-||[[# external-cmd]][#external-cmd-note external command] _
-@<&nbsp;>@|| || || ||
-||[[# escaped-external-cmd]][#escaped-external-cmd-note escaped external command] _
-@<&nbsp;>@|| || || ||
-||[[# backticks]][#backticks-note backticks] _
-@<&nbsp;>@|| || || ||
-||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
-||~ ||~ rust||~ swift||~ scala||
-||[#namespace-example namespace example]|| || ||##gray|//Baz.scala//## _
-package Foo.Bar; _
+@<&nbsp;>@|| || ||##gray|//A scala program is run as// _
  _
-class Baz { _
-@<&nbsp;&nbsp;>@def say() { println("hello"); } _
+@<&nbsp;&nbsp;>@scala CLASS [ARG ...] _
+ _
+//The VM then searches// CLASSPATH //for// CLASS.  CLASS //is the nearest analog to the program name and can be determined statically.//##||
+||[[# getopt]][#getopt-note getopt]|| || ||##gray|@@//@@ built.sbt: _
+@@//@@ _
+@@//@@@<&nbsp;&nbsp;&nbsp;>@libraryDependencies += "com.github.scopt" %% "scopt" % "3.3.0" _
+@@//@@@<&nbsp;&nbsp;&nbsp;>@resolvers += Resolver.sonatypeRepo("public")## _
+ _
+case class Config( _
+@<&nbsp;&nbsp;>@foo: Int = 0, _
+@<&nbsp;&nbsp;>@bar: String = "" _
+) _
+ _
+val parser = new scopt.OptionParser[Config]("scopt") { _
+@<&nbsp;&nbsp;>@opt[Int]('f', "foo") action { (x, c) => _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@c.copy(foo = x) } text("foo is integer") _
+@<&nbsp;&nbsp;>@opt[String]('b', "bar") action{ (x, c) => _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@c.copy(bar = x) } text("bar is string") _
 } _
  _
-##gray|//Main.scala//## _
-import Foo.Bar.Baz; _
+parser.parse(args, Config()) match { _
+@<&nbsp;&nbsp;>@case Some(config) => _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@println(config.foo) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@println(config.bar) _
+@<&nbsp;&nbsp;>@case None => _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|@@//@@ bad args; usage was displayed## _
+}||
+||[[# env-var]][#env-var-note get and set environment variable] _
+@<&nbsp;>@|| || ||##gray|@@//@@ java.util.NoSuchElementException if not defined:## _
+sys.env("HOME") _
  _
-object Main { _
-@<&nbsp;&nbsp;>@def main(args : Array[String]) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@val baz = new Baz; _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@baz.say(); _
+##gray|@@//@@ returns Option[String]:## _
+sys.env.get("HOME") _
+ _
+##gray|@@//@@ Environment variables are read only, but new values can be _
+@@//@@ set when creating child processes.##||
+||[[# pid]][#pid-note get pid, parent pid] _
+@<&nbsp;>@|| || ||##gray|@@//@@ no portable technique##||
+||[[# user-id-name]][#user-id-name-note get user id and name]|| || ||System.getProperty("user.name") _
+ _
+##gray|@@//@@ no property for uid##||
+||[[# exit]][#exit-note exit] _
+@<&nbsp;>@|| || ||System.exit(1)||
+||[[# signal-handler]][#signal-handler-note set signal handler] _
+@<&nbsp;>@|| || ||import sun.misc._ _
+ _
+Signal.handle(new Signal("INT"), new SignalHandler() { _
+@<&nbsp;&nbsp;>@val start = System.nanoTime() _
+@<&nbsp;&nbsp;>@def handle(sig: Signal) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@val end = System.nanoTime() _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@println(s"\n${(end - start) / 1e9f} seconds") _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@System.exit(0) _
+@<&nbsp;&nbsp;>@} _
+})||
+||[[# external-cmd]][#external-cmd-note external command] _
+@<&nbsp;>@|| || ||import scala.sys.process._ _
+ _
+val exitCode = "ls /tmp".!||
+||[[# escaped-external-cmd]][#escaped-external-cmd-note escaped external command] _
+@<&nbsp;>@|| || ||import scala.sys.process._ _
+import java.io.File _
+ _
+##gray|@@//@@ if args contain spaces, use List():## _
+val exitCode = List("touch", "/tmp/some file").! _
+ _
+##gray|@@//@@ there are operators for shell @@&&, ||, and |@@:## _
+(( "ls /tmp" #@@&&@@ "ls /etc") #| "grep ssh").! _
+ _
+##gray|@@//@@ redirection example:## _
+("ls" #> new File("/tmp/ls.out")).!||
+||[[# backticks]][#backticks-note backticks] _
+@<&nbsp;>@|| || ||import scala.sys.process._ _
+ _
+val s = "ls".@@!!@@||
+||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
+||~ ||~ rust||~ swift||~ scala||
+||define namespace|| || ||package foo { _
+@<&nbsp;&nbsp;>@class A _
+@<&nbsp;&nbsp;>@class B _
+} _
+ _
+##gray|@@//@@ Alternate syntax; must be first statement in file; _
+@@//@@ declares entire file to be in namespace## _
+package foo||
+||define child namespace|| || ||package foo.bar { _
+@<&nbsp;&nbsp;>@class A _
+} _
+ _
+##gray|@@//@@ Alternate nested syntax:## _
+package foo { _
+@<&nbsp;&nbsp;>@package bar { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@class A _
 @<&nbsp;&nbsp;>@} _
 } _
  _
-##gray|//to compile and run//## _
-$ scalac Baz.scala _
-$ scalac Main.scala _
-$ scala Main _
-hello||
-||[#namespaces namespaces]|| || || ||
-||[#file-name file name restrictions]|| || ||##gray|//none//##||
-||[#import namespace]|| || || ||
-||[#namespace-creation namespace creation]|| || || ||
-||[#namespace-alias namespace alias]|| || || ||
-||[#namespace-separator namespace separator]|| || || ||
-||[#subnamespace subnamespace]|| || || ||
-||[[# pkg-manager-setup]][#pkg-manager-setup-note package manager setup]|| || || ||
-||[[# pkg-manager]][#pkg-manager-note package manager] _
-##gray|//search; install; list installed//##|| || || ||
-||[[# pkg-compile]][#pkg-compile-note compile app using package]|| || || ||
+##gray|@@//@@ Alternate syntax; must be first statement in file:## _
+package foo.bar||
+||reference identifier in another file|| || ||##gray|@@//@@ no import needed if identifier is fully qualified:## _
+val a = new foo.bar.A||
+||import definitions|| || ||import foo.A _
+ _
+val a = new A _
+ _
+##gray|@@//@@ imports A and B:## _
+import foo.{A, B} _
+ _
+##gray|@@//@@ Import statements can appear after or inside class definitions, _
+@@//@@ or inside methods.##||
+||import all definitions in namespace|| || ||import foo._ _
+ _
+val a = new A _
+val b = new B||
+||import namespace|| || ||import foo.bar _
+ _
+val a = new bar.A _
+val b = new bar.B||
+||shadow avoidance|| || ||import foo.bar.{A => LetterA} _
+ _
+val a = new LetterA||
+||library path environment variable|| || ||$ cat src/foo/bar/A.scala _
+package foo.bar _
+ _
+object A { _
+@<&nbsp;&nbsp;>@def main(args: Array[String]) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@println("Hello, World!") _
+@<&nbsp;&nbsp;>@} _
+} _
+ _
+$ scalac src/foo/bar/A.scala _
+ _
+$ dir=$(pwd) _
+ _
+$ cd / _
+ _
+$ CLASSPATH=$dir scala foo.bar.A _
+ _
+##gray|//The default CLASSPATH is the current directory.  Directories are separated by colons : on Unix and semicolons ; on Windows.  Jar files can also be put in the CLASSPATH.//##||
+||create package|| || ||$ cat src/foo/bar/A.scala _
+package foo.bar _
+ _
+object A { _
+@<&nbsp;&nbsp;>@def main(args: Array[String]) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@println("Hello, World!") _
+@<&nbsp;&nbsp;>@} _
+} _
+ _
+$ mkdir target _
+ _
+$ scalac -d target src/foo/bar/A.scala _
+ _
+$ find target -name '*.class' | xargs jar cf App.jar _
+ _
+$ CLASSPATH=App.jar scala foo.bar.A||
+||inspect package|| || ||$ jar tf App.jar||
+||install package|| || ||$ cat build.sbt _
+libraryDependencies += "commons-io" % "commons-io" % "2.4" _
+ _
+$ sbt package||
+||list installed packages|| || ||$ find ~/.ivy2/cache -name '*.jar'||
 ||||||||~ [[# user-defined-types]][#user-defined-types-note user-defined types]||
 ||~ ||~ rust||~ swift||~ scala||
 ||[[# type-synonym]]|| ||typealias CustomerId = Int _
@@ -849,7 +1133,8 @@ val p = new IntPair(7, 11)||
 ||record product type|| ||struct MedalCount { _
 @<&nbsp;&nbsp;>@var country: String _
 @<&nbsp;&nbsp;>@var gold: Int, _
-@<&nbsp;&nbsp;>@silver: Int, bronze: Int _
+@<&nbsp;&nbsp;>@silver: Int, _
+@<&nbsp;&nbsp;>@bronze: Int _
 }||case class Customer( _
 @<&nbsp;&nbsp;>@id: Int, _
 @<&nbsp;&nbsp;>@name: String, _
@@ -890,39 +1175,78 @@ c match { case Red => "red"; case Green => "green"; case Blue => "blue" }||
 c match { case Red => "red"; case _ => "not red" }||
 ||||||||~ [[# objects]][#objects-note objects]||
 ||~ ||~ rust||~ swift||~ scala||
-||[#class-definition class definition]|| || ||class Counter { _
-@<&nbsp;&nbsp;>@private var n = 0 _
-@<&nbsp;&nbsp;>@def incr(): Unit = { n = n+1 } _
-@<&nbsp;&nbsp;>@def get(): Int = { n } _
+||define class|| || ||##gray|@@//@@ Constructor takes optional  param of type Int. _
+@@//@@ _
+@@//@@ Precede param name by val or var _
+@@//@@ to implicit define an instance variable## _
+class Counter(n: Int = 0) { _
+@<&nbsp;&nbsp;>@##gray|@@//@@ Executes when object is created. _
+@<&nbsp;&nbsp;>@@@//@@ _
+@<&nbsp;&nbsp;>@@@//@@ java.lang.IllegalArgumentException if false.## _
+@<&nbsp;&nbsp;>@require(n >= 0) _
+ _
+@<&nbsp;&nbsp;>@##gray|@@//@@ Instance variables public by default## _
+@<&nbsp;&nbsp;>@private var _n = n _
+ _
+@<&nbsp;&nbsp;>@##gray|@@//@@ Getter:## _
+@<&nbsp;&nbsp;>@def value = _n _
+ _
+@<&nbsp;&nbsp;>@##gray|@@//@@ Setter:## _
+@<&nbsp;&nbsp;>@def value_=(n: Int) { _n = n } _
+ _
+@<&nbsp;&nbsp;>@##gray|@@//@@ Object-mutating method:## _
+@<&nbsp;&nbsp;>@def incr { _n += 1 } _
 }||
-||[#object-creation object creation]|| || ||val c = new Counter||
-||[#method-invocation method invocation]|| || ||c.incr _
-c.get||
-||[#field-access field access]|| || || ||
+||create object|| || ||val c = new Counter _
+val c2 = new Counter(1)||
+||invoke method|| || ||c.incr _
+c.value = c.value + 1||
+||define class variable and method|| || ||##gray|@@//@@ Define singleton object outside of class body:## _
+object Counter { _
+@<&nbsp;&nbsp;>@##gray|@@//@@ Class variables can be declared private; Counter constructor _
+@<&nbsp;&nbsp;>@@@//@@ and instance methods stil have access:## _
+@<&nbsp;&nbsp;>@var instances = 0 _
+ _
+@<&nbsp;&nbsp;>@def incrInstances { instances += 1 } _
+}||
+||invoke class method|| || ||Counter.incrInstances||
 ||||||||~ [[# inheritance-polymorphism]][#inheritance-polymorphism-note inheritance and polymorphism]||
 ||~ ||~ rust||~ swift||~ scala||
-||overload function|| ||func add(a: String, b: String) -> String { _
-@<&nbsp;&nbsp;>@return a + b _
-}|| ||
-||[#inheritance inheritance]|| || || ||
-||||||||~ [[# net-web]][#net-web-note net and web]||
-||~ ||~ rust||~ swift||~ scala||
+||subclass|| || ||class Base { _
+@<&nbsp;&nbsp;>@println("instantiating Base") _
+@<&nbsp;&nbsp;>@ _
+@<&nbsp;&nbsp;>@def name = { "Base" } _
+} _
+ _
+class Derived extends Base { _
+@<&nbsp;&nbsp;>@println("instantiating Derived after Base") _
+@<&nbsp;&nbsp;>@ _
+@<&nbsp;&nbsp;>@##gray|@@//@@ Compilation error if override omitted or _
+@<&nbsp;&nbsp;>@@@//@@ if method with same name not defined in base class.## _
+@<&nbsp;&nbsp;>@override def name = { "Derived" } _
+}||
+||abstract base class|| || ||abstract class Base { _
+@<&nbsp;&nbsp;>@##gray|@@//@@ compilation error if derived class does not define name:## _
+@<&nbsp;&nbsp;>@def name: String _
+}||
+||mixin|| || || ||
 ||||||||~ [[# unit-tests]][#unit-tests-note unit test]||
 ||~ ||~ rust||~ swift||~ scala||
 ||||||||~ [[# debugging-profiling]][#debugging-profiling-note debugging and profiling]||
 ||~ ||~ rust||~ swift||~ scala||
+||lint|| || ||$ brew install scalastyle _
+$ scalastyle Hello.scala||
+||run debugger|| || ||##gray|//Scala IDE for Eclipse has a debugger//##||
+||profile code|| || ||##gray|//Runs app under a sampling profiler.  Profiling info is written to stdout.  HotSpot VM only.//## _
+$ JAVA_OPTS=-Xprof scala SomeApp||
+||memory tool|| || ||$ JAVA_OPTS=-XX:+PrintGCDetails scala SomeApp||
 ||||||||~ [[# repl]][#repl-note repl]||
 ||~ ||~ rust||~ swift||~ scala||
 ||[#invoke-repl invoke repl]|| ||$ swift||$ scala||
 ||[#repl-previous-values previous values]|| ||$R0, $R1, ...||res0, res1, ...||
 ||[#help help]|| ||:help||:help||
-||[#quit quit]|| ||:quit|| ||
+||[#quit quit]|| ||:quit||:quit||
 ||[#inspect-type inspect type]|| || ||##gray|//repl displays the type of any expression entered//##||
-||[#inspect-namespace inspect namespace]|| || || ||
-||[#load-source load source file]|| || || ||
-||[#load-pkg-note load package]|| || || ||
-||[#search-path search path]|| || || ||
-||[#search-path-command-line set search path on command line]|| || || ||
 ||~ ||~ ##EFEFEF|@@________________________________________________________________@@##||~ ##EFEFEF|@@_________________________________________________________________@@##||~ ##EFEFEF|@@_________________________________________________________________@@##||
 
 [[# version-used-note]]

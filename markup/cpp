@@ -1534,7 +1534,7 @@ f3.renameTo(new File("/tmp/bar"));|| ||
  _
 File root = File.listRoots()[0]; _
 File etc = new File(root, "etc"); _
-File hosts = newFile(etc, "hosts"); _
+File hosts = new File(etc, "hosts"); _
 String path = hosts.getPath();|| ||
 ||[[# dirname-basename]][#dirname-basename-note dirname and basename]||#include <libgen.h> _
  _

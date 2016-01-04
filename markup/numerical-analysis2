@@ -1,0 +1,2713 @@
+[[# top]]//a side-by-side reference sheet//
+
+**[[[numerical-analysis|sheet one:]]]** [[[numerical-analysis#grammar-invocation|grammar and invocation]]] | [[[numerical-analysis#var-expr|variables and expressions]]] | [[[numerical-analysis#arithmetic-logic|arithmetic and logic]]] | [[[numerical-analysis#strings|strings]]] | [[[numerical-analysis#regexes|regexes]]] | [[[numerical-analysis#dates-time|dates and time]]] | [[[numerical-analysis#tuples|tuples]]] | [[[numerical-analysis#arrays|arrays]]] | [[[numerical-analysis#arithmetic-sequences|arithmetic sequences]]] | [[[numerical-analysis#two-d-arrays|2d arrays]]] | [[[numerical-analysis#three-d-arrays|3d arrays]]] | [[[numerical-analysis#dictionaries|dictionaries]]] | [[[numerical-analysis#functions|functions]]] | [[[numerical-analysis#execution-control|execution control]]] | [[[numerical-analysis#file-handle|file handles]]] | [[[numerical-analysis#directories|directories]]] | [[[numerical-analysis#processes-environment|processes and environment]]] | [[[numerical-analysis#libraries-namespaces|libraries and namespaces]]] | [[[numerical-analysis#reflection|reflection]]]
+
+**sheet two:** [#tables tables] | [#import-export import and export] | [#relational-algebra relational algebra] | [#aggregation aggregation]
+
+[#vectors vectors] | [#matrices matrices] | [#sparse-matrices sparse matrices] | [#optimization optimization] | [#polynomials polynomials] | [#descriptive-statistics descriptive statistics] | [#distributions distributions] | [#linear-regression linear regression] | [#statistical-tests statistical tests] | [#time-series time series] | [#fast-fourier-transform fast fourier transform] | [#clustering clustering]
+
+[#univariate-charts univariate charts] | [#bivariate-charts bivariate charts] | [#multivariate-charts multivariate charts]
+
+||||||||||~ [[# tables]][#tables-note tables]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
+||[[# construct-from-column-arrays]][#construct-from-column-arrays-note construct from column arrays]||sx = {'F' 'F' 'F' 'M' 'M' 'M'} _
+ht = [69 64 67 68 72 71] _
+wt = [148 132 142 149 167 165] _
+cols = {'sx', 'ht', 'wt'} _
+people = table(sx', ht', wt', 'VariableNames', cols)||##gray|# gender, height, weight of some people _
+# in inches and lbs:## _
+sx = c("F", "F", "F", "M", "M", "M") _
+ht = c(69, 64, 67, 68, 72, 71) _
+wt = c(148, 132, 142, 149, 167, 165) _
+people = data.frame(sx, ht, wt)||sx = ['F', 'F', 'F', 'F', 'M', 'M'] _
+ht = [69, 64, 67, 66, 72, 70] _
+wt = [150, 132, 142, 139, 167, 165] _
+people = pd.DataFrame({'sx': sx, 'ht': ht, 'wt': wt})|| ||
+||[[# construct-from-row-dictionaries]][#construct-from-row-dictionaries-note construct from row dictionaries]|| || ||rows = [ _
+@<&nbsp;&nbsp;>@{'sx': 'F', 'ht': 69, 'wt': 150}, _
+@<&nbsp;&nbsp;>@{'sx': 'F', 'ht': 64, 'wt': 132}, _
+@<&nbsp;&nbsp;>@{'sx': 'F', 'ht': 67, 'wt': 142}, _
+@<&nbsp;&nbsp;>@{'sx': 'F', 'ht': 66, 'wt': 139}, _
+@<&nbsp;&nbsp;>@{'sx': 'M', 'ht': 72, 'wt': 167}, _
+@<&nbsp;&nbsp;>@{'sx': 'M', 'ht': 70, 'wt': 165}] _
+people = pd.DataFrame(rows)|| ||
+||[[# table-size]][#table-size-note size]||height(people) _
+width(people)||nrow(people) _
+ncol(people) _
+ _
+##gray|# number of rows and cols in 2-element vector:## _
+dim(people)||len(people) _
+len(people.columns)|| ||
+||[[# column-names-as-array]][#column-names-as-array-note column names as array]||people.Properties.VariableNames||names(people) _
+colnames(people)||##gray|//returns// Index //object://## _
+people.columns|| ||
+||[[# access-column-as-array]][#access-column-as-array-note access column as array]||people.ht _
+people.(2)||##gray|# vectors:## _
+people$ht _
+people[,2] _
+people[['ht']] _
+people[[2]] _
+##gray|# 1 column data frame:## _
+people[2]||people['ht'] _
+ _
+##gray|# if name does not conflict with any DataFrame attributes:## _
+people.ht|| ||
+||[[# access-row-as-tuple]][#access-row-as-tuple-note access row as tuple]||people(1,:)||##gray|# 1 row data frame:## _
+people[1, ] _
+##gray|# list:## _
+as.list(people[1, ])||people.ix[0]|| ||
+||[[# access-datum]][#access-datum-note access datum]||##gray|% height of 1st person:## _
+people(1,2)||##gray|# height of 1st person:## _
+people[1,2]||people.get_value(0, 'ht')|| ||
+||[[# order-rows-by-column]][#order-rows-by-column-note order rows by column]||sortrows(people, 'ht')||people[order(people$ht), ]||people.sort(['ht'])|| ||
+||[[# order-rows-by-multiple-columns]][#order-rows-by-multiple-columns-note order rows by multiple columns]||sortrows(people, {'sx', 'ht'})||people[order(people$sx, people$ht), ]||people.sort(['sx', 'ht'])|| ||
+||[[# order-rows-descending-order]][#order-rows-descending-order-note order rows in descending order]||sortrows(people, 'ht', 'descend')||people[order(-people$ht), ]||people.sort('ht', ascending=[False])|| ||
+||[[# limit-rows]][#limit-rows-note limit rows] _
+@<&nbsp;>@||people(1:3, :)||people[seq(1, 3), ]||people[0:3]|| ||
+||[[# offset-rows]][#offset-rows-note offset rows] _
+@<&nbsp;>@||people(4:6, :)||people[seq(4, 6), ]||people[3:]|| ||
+||[[# reshape-table]][#reshape-table-note reshape]|| ||people$couple = c(1, 2, 3, 1, 2, 3) _
+reshape(people, idvar="couple", direction="wide", _
+@<&nbsp;&nbsp;>@timevar="sx", v.names=c("ht", "wt"))|| || ||
+||[[# rm-rows-with-null-fields]][#rm-rows-with-null-fields-note remove rows with null fields]|| ||sx = c('F', 'F', 'M', 'M') _
+wt = c(120, NA, 150, 170) _
+ _
+df = data.frame(sx, wt) _
+df2 = na.omit(df)|| || ||
+||[[# attach-columns]][#attach-columns-note attach columns]|| ||##gray|# put columns ht, wt, and sx _
+# in variable name search path:## _
+attach(people) _
+sum(ht) _
+ _
+##gray|# alternative which doesn't put columns in _
+# search path:## _
+with(people, sum(ht))||##gray|//none//##|| ||
+||[[# detach-columns]][#detach-columns-note detach columns] _
+@<&nbsp;>@|| ||detach(people)||##gray|//none//##|| ||
+||[[# spreadsheet-editor]][#spreadsheet-editor-note spreadsheet editor]|| ||##gray|//can edit data, in which case return value of// edit //must be saved//## _
+people = edit(people)||##gray|//none//##|| ||
+||||||||||~ [[# import-export]][#import-export-note import and export]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
+||[[# import-tab-delimited]][#import-tab-delimited-note import tab delimited]||##gray|# first row defines variable names:## _
+readtable('/tmp/password.txt', 'Delimiter', '\t') _
+ _
+##gray|# file suffix must be .txt, .dat, or .csv##||##gray|# first row defines variable names:## _
+df = read.delim('/path/to.tab', stringsAsFactors=F, quote=NULL)||##gray|# first row defines column names:## _
+df = pd.read_table('/path/to.tab')|| ||
+||[[# import-csv]][#import-csv-note import csv] _
+@<&nbsp;>@||##gray|% first row defines variable names:## _
+df = readtable('/path/to.csv')||##gray|# first row defines variable names:## _
+df = read.csv('/path/to.csv', stringsAsFactors=F)||##gray|# first row defines column names:## _
+df = pd.read_csv('/path/to.csv')|| ||
+||[[# set-column-separator]][#set-column-separator-note set column separator]||df = readtable('/etc/passwd', _
+@<&nbsp;&nbsp;>@'Delimiter', ':', _
+@<&nbsp;&nbsp;>@'ReadVariableNames', 0, _
+@<&nbsp;&nbsp;>@'HeaderLines', 10)||df = read.delim('/etc/passwd', _
+@<&nbsp;&nbsp;>@sep=':', _
+@<&nbsp;&nbsp;>@header=FALSE, _
+@<&nbsp;&nbsp;>@comment.char='#')||##gray|# $ grep -v '^#' /etc/passwd > /tmp/passwd## _
+ _
+df = pd.read_table('/tmp/passwd', sep=':', header=None)|| ||
+||[[# set-column-separator-whitesp]][#set-column-separator-whitesp-note set column separator to whitespace]|| ||df = read.delim('/path/to.txt', sep='')||df = read_table('/path/to.txt', sep='\s+')|| ||
+||[[# set-quote-char]][#set-quote-char-note set quote character]|| ||##gray|# default quote character for both read.csv and read.delim _
+# is double quotes.  The quote character is escaped by doubling it.## _
+ _
+##gray|# use single quote as quote character:## _
+df = read.csv('/path/to/single-quote.csv', quote="'") _
+ _
+##gray|# no quote character:## _
+df = read.csv('/path/to/no-quote.csv', quote="")||##gray|//Both// read_table //and// read_csv //use double quotes as the quote character and there is no way to change it.  A double quote can be escaped by doubling it.//##|| ||
+||[[# import-file-without-header]][#import-file-without-header-note import file w/o header]|| ||##gray|# column names are V1, V2, ...## _
+read.delim('/etc/passwd', _
+@<&nbsp;&nbsp;>@sep=':', _
+@<&nbsp;&nbsp;>@header=FALSE, _
+@<&nbsp;&nbsp;>@comment.char='#')||##gray|# $ grep -v '^#' /etc/passwd > /tmp/passwd## _
+##gray|# ## _
+##gray|# column names are X0, X1, ...## _
+df = pd.read_table('/tmp/passwd', sep=':', header=None)|| ||
+||[[# set-column-names]][#set-column-names-note set column names]||df = readtable('/path/to/no-header.csv', _
+@<&nbsp;&nbsp;>@'ReadVariableNames', 0) _
+ _
+df.Properties.VariableNames = {'ht', 'wt', 'age'}||df = read.csv('/path/to/no-header.csv', _
+@<&nbsp;&nbsp;>@header=FALSE, _
+@<&nbsp;&nbsp;>@col.names=c('ht', 'wt', 'age'))||df = pd.read_csv('/path/to/no-header.csv', _
+@<&nbsp;&nbsp;>@names=['ht', 'wt', 'age'])|| ||
+||[[# set-column-types]][#set-column-types-note set column types]|| ||##gray|# possible values: NA, 'logical', 'integer', 'numeric', _
+# 'complex', 'character', 'raw', 'factor', 'Date', _
+# 'POSIXct' _
+# _
+# If type is set to NA, actual type will be inferred to be _
+# 'logical', 'integer', 'numeric', 'complex', or 'factor' _
+# ## _
+df = read.csv('/path/to/data.csv', _
+@<&nbsp;&nbsp;>@colClasses=c('integer', 'numeric', 'character'))|| || ||
+||[[# recognize-null-values]][#recognize-null-values-note recognize null values]|| ||df = read.csv('/path/to/data.csv', _
+@<&nbsp;&nbsp;>@colClasses=c('integer', 'logical', 'character'), _
+@<&nbsp;&nbsp;>@na.strings=c('nil'))||df = read_csv('/path/to/data.csv', _
+@<&nbsp;&nbsp;>@na_values=['nil'])|| ||
+||[[# change-decimal-mark]][#change-decimal-mark-note change decimal mark]|| ||df = read.csv('/path/to.csv', dec=',')|| || ||
+||[[# recognize-thousands-separator]][#recognize-thousands-separator-note recognize thousands separator]|| ||##gray|//none//##||df = read_csv('/path/to.csv', thousands='.')|| ||
+||[[# unequal-row-length-behavior]][#unequal-row-length-behavior-note unequal row length behavior]|| ||##gray|//Missing fields will be set to NA unless// fill //is set to// FALSE.  //If the column is of type character then the fill value is an empty string ''. _
+ _
+If there are extra fields they will be parsed as an extra row unless// flush //is set to// FALSE##|| || ||
+||[[# skip-comment-lines]][#skip-comment-lines-note skip comment lines]|| ||df = read.delim('/etc/passwd', _
+@<&nbsp;&nbsp;>@sep=':', _
+@<&nbsp;&nbsp;>@header=FALSE, _
+@<&nbsp;&nbsp;>@comment.char='#')||##gray|//none//##|| ||
+||[[# skip-rows]][#skip-rows-note skip rows]||def = readtable('/path/to/data.csv', _
+@<&nbsp;&nbsp;>@'HeaderLines', 4)||df = read.csv('/path/to/data.csv', skip=4)||df = read_csv('/path/to/data.csv', skiprows=4) _
+ _
+##gray|# rows to skip can be specified individually:## _
+df = read_csv('/path/to/data.csv', skiprows=range(0, 4))|| ||
+||[[# max-rows-to-read]][#max-rows-to-read-note max rows to read]|| ||df = read.csv('/path/to/data.csv', nrows=4)||df = read_csv('/path/to/data.csv', nrows=4)|| ||
+||[[# index-column]][#index-column-note index column]|| ||##gray|//none//##||df = pd.read_csv('/path/to.csv', index_col='key_col') _
+ _
+##gray|# hierarchical index:## _
+df = pd.read_csv('/path/to.csv', index_col=['col1', 'col2'])|| ||
+||[[# export-tab-delimited]][#export-tab-delimited-note export tab delimited]|| ||write.table(df, '/tmp/data.tab', sep='\t')|| || ||
+||[[# export-csv]][#export-csv-note export csv] _
+@<&nbsp;>@|| ||##gray|# first column contains row names unless row.names _
+# set to FALSE## _
+write.csv(df, '/path/to.csv', row.names=F)|| || ||
+||||||||||~ [[# relational-algebra]][#relational-algebra-note relational algebra]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
+||project columns by name||people(:, {'sx', 'ht'})||people[c('sx', 'ht')]||people[['sx', 'ht']]|| ||
+||project columns by position||people(:, [1 2])||people[c(1, 2)]|| || ||
+||project expression|| ||##gray|# convert to cm and kg:## _
+transform(people, ht=2.54*ht, wt=wt/2.2)|| || ||
+||project all columns||people(people.ht > 66, :)||people[people$ht > 66, ]|| || ||
+||rename columns|| ||colnames(people) = c('gender', 'height', 'weight')|| || ||
+||[[# access-sub-data-set]][#access-sub-data-set-note access sub data frame]|| ||##gray|# data frame of first 3 rows with _
+# ht and wt columns reversed:## _
+people[1:3, c(1, 3, 2)]|| || ||
+||[[# data-set-filter]][#data-set-filter-note select rows]||people(people.ht > 66, :)||subset(people, ht > 66) _
+people[people$ht > 66, ]||people[people['ht'] > 66]|| ||
+||select distinct rows||unique(people(:,{'sx'}))||unique(people[c('sx')])|| || ||
+||split rows|| ||##gray|# class(x) is list:## _
+x = split(people, people$sx == 'F') _
+ _
+##gray|# data.frame only containing females:## _
+x$T|| || ||
+||inner join|| ||pw = read.delim('/etc/passwd', _
+@<&nbsp;&nbsp;>@sep=':', _
+@<&nbsp;&nbsp;>@header=F, _
+@<&nbsp;&nbsp;>@comment.char='#', _
+@<&nbsp;&nbsp;>@col.names=c('name', 'passwd', 'uid', 'gid', 'gecos', _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@'home', 'shell')) _
+ _
+grp = read.delim('/etc/group', _
+@<&nbsp;&nbsp;>@sep=':', _
+@<&nbsp;&nbsp;>@header=F, _
+@<&nbsp;&nbsp;>@comment.char='#', _
+@<&nbsp;&nbsp;>@col.names=c('name', 'passwd', 'gid', 'members')) _
+ _
+merge(pw, grp, by.x='gid', by.y='gid')||##gray|# $ grep -v '^#' /etc/passwd > /tmp/passwd _
+# $ grep -v '^#' /etc/group > /tmp/group## _
+ _
+pw = pd.read_table('/tmp/passwd', sep=':', header=None, names=['name', 'passwd', 'uid', 'gid', 'gecos', 'home', 'shell']) _
+ _
+grp = pd.read_table('/tmp/group', sep=':', header=None, names=['name', 'passwd', 'gid', 'members']) _
+ _
+pd.merge(pw, grp, left_on='gid', right_on='gid')|| ||
+||nulls as join values|| || || || ||
+||left join|| ||merge(pw, grp, by.x='gid', by.y='gid', all.x=T)||pd.merge(pw, grp, left_on='gid', right_on='gid', how='left')|| ||
+||full join|| ||merge(pw, grp, by.x='gid', by.y='gid', all=T)||pd.merge(pw, grp, left_on='gid', right_on='gid', how='outer')|| ||
+||antijoin|| ||pw[!(pw$gid %in% grp$gid), ]|| || ||
+||cross join|| ||merge(pw, grp, by=c())|| || ||
+||||||||||~ [[# aggregation]][#aggregation-note aggregation]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
+||group by column|| || ||grouped = people.groupby('sx') _
+grouped.aggregate(np.max)['ht']|| ||
+||multiple aggregated values|| || ||grouped = people.groupby('sx') _
+grouped.aggregate(np.max)[['ht', 'wt']]|| ||
+||group by multiple columns|| || || || ||
+||aggregation functions|| || || || ||
+||nulls and aggregation functions|| || || || ||
+||||||||||~ [[# vectors]][#vectors-note vectors]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
+||[#vector-literal vector literal] _
+@<&nbsp;>@||##gray|//same as array//##||##gray|//same as array//##||##gray|//same as array//##|| ||
+||[#vector-element-wise element-wise arithmetic operators]||+ - .* ./||+ - * /||+ - * /|| ||
+||[#vector-length-mismatch result of vector length mismatch]||##gray|//raises error//##||##gray|//values in shorter vector are recycled; warning if one vector is not a multiple length of the other//##||##gray|//raises// ValueError##|| ||
+||[#vector-scalar scalar multiplication]||3 * [1, 2, 3] _
+[1, 2, 3] * 3||3 * c(1, 2, 3) _
+c(1, 2, 3) * 3||3 * np.array([1, 2, 3]) _
+np.array([1, 2, 3]) * 3|| ||
+||[#vector-dot dot product]||dot([1, 1, 1], [2, 2, 2])||c(1, 1, 1) %*% c(2, 2, 2)||v1 = np.array([1, 1, 1]) _
+v2 = np.array([2, 2, 2]) _
+np.dot(v1, v2)|| ||
+||[#vector-cross cross product]||cross([1, 0, 0], [0, 1, 0])|| ||v1 = np.array([1, 0, 0]) _
+v2 = np.array([0, 1, 0]) _
+np.cross(v1, v2)|| ||
+||[#vector-norms norms]||norm([1, 2, 3], 1) _
+norm([1, 2, 3], 2) _
+norm([1, 2, 3], Inf)||vnorm = function(x, t) { _
+@<&nbsp;&nbsp;>@norm(matrix(x, ncol=1), t) _
+} _
+ _
+vnorm(c(1, 2, 3), "1") _
+vnorm(c(1, 2, 3), "E") _
+vnorm(c(1, 2, 3), "I")||v = np.array([1, 2, 3]) _
+np.linalg.norm(v, 1) _
+np.linalg.norm(v, 2) _
+np.linalg.norm(v, np.inf)|| ||
+||||||||||~ [[# matrices]][#matrices-note matrices]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
+||[[# matrix-literal-constructor]][#matrix-literal-constructor-note literal or constructor]||##gray|% row-major order:## _
+A = [1, 2; 3, 4] _
+B = [4 3 _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@2 1]||##gray|# column-major order:## _
+A = matrix(c(1, 3, 2, 4), 2, 2) _
+B = matrix(c(4, 2, 3, 1), nrow=2) _
+ _
+##gray|# row-major order:## _
+A = matrix(c(1, 2, 3, 4), nrow=2, byrow=T)||##gray|# row-major order:## _
+A = np.matrix([[1, 2], [3, 4]]) _
+B = np.matrix([[4, 3], [2, 1]])|| ||
+||[[# constant-matrices]][#constant-matrices-note constant matrices] _
+##gray|//all zeros, all ones//##||zeros(3, 3) ##gray|//or//## zeros(3) _
+ones(3, 3) ##gray|//or//## ones(3)||matrix(0, 3, 3) _
+matrix(1, 3, 3)||np.matrix(np.ones([3, 3])) _
+np.matrix(np.zeros([3, 3]))||zeros(Float64, (3, 3)) _
+ones(Float64, (3, 3))||
+||[[# diagonal-matrices]][#diagonal-matrices-note diagonal matrices] _
+##gray|//and identity//##||diag([1, 2, 3]) _
+##gray|% 3x3 identity:## _
+eye(3)||diag(c(1, 2, 3) _
+##gray|# 3x3 identity:## _
+diag(3)||np.diag([1, 2, 3]) _
+np.identity(3)|| ||
+||[[# matrix-dim]][#matrix-dim-note dimensions]||rows(A) _
+columns(A)||dim(A)[1] _
+dim(A)[2]||nrows, ncols = A.shape|| ||
+||[#matrix-access element access] _
+@<&nbsp;>@||A(1, 1)||A[1, 1]||A[0, 0]|| ||
+||[#matrix-row-access row access] _
+@<&nbsp;>@||A(1, 1:2)||A[1, ]||A[0]|| ||
+||[#matrix-column-access column access] _
+@<&nbsp;>@||A(1:2, 1)||A[, 1]||A[:, 0]|| ||
+||[#submatrix-access submatrix access]||C = [1, 2, 3; 4, 5, 6; 7, 8, 9] _
+C(1:2, 1:2)||C = matrix(seq(1, 9), 3, 3, byrow=T) _
+C[1:2, 1:2]||A = np.matrix(range(1, 10)).reshape(3, 3) _
+A[:2, :2]|| ||
+||[#matrix-scalar-multiplication scalar multiplication]||3 * A _
+A * 3 _
+##gray|//also://## _
+3 .* A _
+A .* 3||3 * A _
+A * 3||3 * A _
+A * 3|| ||
+||[#matrix-element-wise-operators element-wise operators]||.+ .- .* ./||+ - * /||+ - np.multiply() np.divide()|| ||
+||[#matrix-multiplication multiplication] _
+@<&nbsp;>@||A * B||A %*% B||A * B|| ||
+||[#matrix-power power]||A ^ 3 _
+ _
+##gray|% power of each entry:## _
+A .^ 3|| ||A ** 3|| ||
+||[#kronecker-product kronecker product]||kron(A, B)||kronecker(A, B)||np.kron(A, B)|| ||
+||[#matrix-comparison comparison]|| all(all(A == B)) _
+any(any(A != B))||all(A == B) _
+any(A != B)||np.all(A == B) _
+np.any(A != B)|| ||
+||[#matrix-norms norms]||norm(A, 1) _
+norm(A, 2) _
+norm(A, Inf) _
+norm(A, 'fro')||norm(A, "1") _
+##gray|//??//## _
+norm(A, "I") _
+norm(A, "F")|| || ||
+||[#matrix-transpose transpose]||transpose(A) _
+A'||t(A)||A.transpose()|| ||
+||[#matrix-conjugate-transpose conjugate transpose]|| A = [1i, 2i; 3i, 4i] _
+A'||A = matrix(c(1i, 2i, 3i, 4i), nrow=2, byrow=T) _
+Conj(t(A))||A = np.matrix([[1j, 2j], [3j, 4j]]) _
+A.conj().transpose()|| ||
+||[#matrix-inverse inverse] _
+@<&nbsp;>@||inv(A)||solve(A)||np.linalg.inv(A)|| ||
+||[[# pseudoinverse]][#pseudoinverse-note pseudoinverse]||A = [0 1; 0 0] _
+ _
+pinv(A)||install.packages('corpcor') _
+library(corpcor) _
+ _
+A = matrix(c(0, 0, 1, 0), nrow=2) _
+pseudoinverse(A)||A = np.matrix([[0, 1], [0, 0]]) _
+ _
+np.linalg.pinv(A)|| ||
+||[#matrix-determinant determinant] _
+@<&nbsp;>@||det(A)||det(A)||np.linalg.det(A)|| ||
+||[#matrix-trace trace] _
+@<&nbsp;>@||trace(A)||sum(diag(A))||A.trace()|| ||
+||[#matrix-eigenvalues eigenvalues] _
+@<&nbsp;>@||eig(A)||eigen(A)$values||np.linalg.eigvals(A)|| ||
+||[#matrix-eigenvectors eigenvectors]||[evec, eval] = eig(A) _
+##gray|% each column of evec is an eigenvector## _
+##gray|% eval is a diagonal matrix of eigenvalues##||eigen(A)$vectors||np.linalg.eig(A)[1]|| ||
+||[[# svd]][#svd-note singular value decomposition]||X = randn(10) _
+ _
+[u, d, v] = svd(X)||X = matrix(rnorm(100), nrow=10) _
+result = svd(X) _
+ _
+##gray|# singular values:## _
+result$d _
+ _
+##gray|# matrix of eigenvectors:## _
+result$u _
+ _
+##gray|# unitary matrix:## _
+result$v||np.linalg.svd(np.random.randn(100).reshape(10, 10))|| ||
+||[#matrix-solution solve system of equations]|| A \ [2;3]||solve(A, c(2, 3))||np.linalg.solve(A, [2, 3])|| ||
+||||||||||~ [[# sparse-matrices]][#sparse-matrices-note sparse matrices]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
+||[[# sparse-matrix-construction]][#sparse-matrix-construction-note sparse matrix construction]||##gray|% 100x100 matrix with 5 at (1, 1) and 4 at (2, 2):## _
+X = sparse([1 2], [1 2], [5 4], 100, 100)||X = spMatrix(100, 100, c(1, 2), c(1, 2), c(5, 4))||import scipy.sparse as sparse _
+ _
+row, col, val = [5, 4], [1, 2], [1, 2] _
+X = sparse.coo_matrix((val, (row, col)), shape=(100, 100))|| ||
+||[[# sparse-matrix-decomposition]][#sparse-matrix-decomposition-note sparse matrix decomposition]||[rows, cols, vals] = find(X) _
+ _
+##gray|% just the values:## _
+nonzeros(X)|| || || ||
+||[[# sparse-identity-matrix]][#sparse-identity-matrix-note sparse identity matrix]||##gray|% 100x100 identity:## _
+speye(100)|| ||sparse.identity(100) _
+ _
+##gray|# not square; ones on diagonal:## _
+sparse.eye(100, 200)|| ||
+||[[# dense-matrix-to-sparse-matrix]][#dense-matrix-to-sparse-matrix-note dense matrix to sparse matrix] _
+##gray|//and back//##||X = sparse([1 0 0; 0 0 0; 0 0 0]) _
+X2 = full(X)|| ||imoprt scipy.sparse as sparse _
+ _
+A = np.array([[1, 0, 0], [0, 0, 0], [0, 0, 0]]) _
+X = sparse.coo_matrix(A) _
+X2 = X.todense()|| ||
+||[[# sparse-matrix-storage]][#sparse-matrix-storage-note sparse matrix storage]||##gray|% is storage sparse:## _
+issparse(X) _
+ _
+##gray|% memory allocation in bytes:## _
+nzmax(X) _
+ _
+##gray|% number of nonzero entries:## _
+nnz(X)||##gray|# memory allocation in bytes:## _
+object.size(X)||import scipy.sparse as sparse _
+ _
+sparse.issparse(X)|| ||
+||||||||||~ [[# optimization]][#optimization-note optimization]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
+||[[# minimize-linear-prob]][#minimize-linear-prob-note linear minimization]||##gray|% download and install cvx:## _
+cvx_begin _
+@<&nbsp;&nbsp;>@variables x1, x2, x3; _
+@<&nbsp;&nbsp;>@minimize x1 + x2 + x3; _
+@<&nbsp;&nbsp;>@subject to _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@x1 + x2 >= 1; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@x2 + x3 >= 1; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@x1 + x3 >= 1; _
+cvx_end; _
+ _
+##gray|% argmin in x1, x2, x3## _
+##gray|% minval in cvx_optval##|| || || ||
+||array of input variables||cvx_begin _
+@<&nbsp;&nbsp;>@variable x(3); _
+@<&nbsp;&nbsp;>@minimize sum(x); _
+@<&nbsp;&nbsp;>@subject to _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@x(1) + x(2) >= 1; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@x(2) + x(3) >= 1; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@x(1) + x(3) >= 1; _
+cvx_end;|| || || ||
+||multidimensional array of input variables|| || || || ||
+||linear maximization|| || || || ||
+||variable constraints|| || || || ||
+||unbounded behavior|| || || || ||
+||infeasible behavior|| || || || ||
+||complex variables|| || || || ||
+||integer variables|| || || || ||
+||binary variables|| || || || ||
+||||||||||~ [[# polynomials]][#polynomials-note polynomials]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
+||exact polynomial fit||x = [1 2 3 4] _
+y = [3 9 2 1] _
+##gray|% polynomial coefficient array:## _
+p = polyfit(x, y, 3) _
+ _
+##gray|% plot polynomial:## _
+xx = -10:.1:10 _
+yy = polyval(p, xx) _
+plot(xx, yy)|| || || ||
+||exact polynomial fit with derivative values|| || || || ||
+||piecewise polynomial fit|| || || || ||
+||[[image http://farm6.static.flickr.com/5049/5268229340_0b96b5e223_s.jpg]] _
+[[# cubic-spline]][#cubic-spline-note cubic spline]||f = spline(1:20, normrnd(0, 1, 1, 20)) _
+x = 1:.1:20 _
+plot(x, ppval(f, x))||f = splinefun(rnorm(20)) _
+x = seq(1, 20, .1) _
+plot(x, f(x), type="l")|| || ||
+||underdetermined polynomail fit|| || || || ||
+||overdetermined polynomial fit|| || || || ||
+||multivariate polynomial fit|| || || || ||
+||||||||||~ [[# descriptive-statistics]][#descriptive-statistics-note descriptive statistics]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
+||[[# first-moment-stats]][#first-moment-stats-note first moment statistics]||x = [1 2 3 8 12 19] _
+ _
+sum(x) _
+mean(x)||x = c(1,2,3,8,12,19) _
+ _
+sum(x) _
+mean(x)||x = [1,2,3,8,12,19] _
+ _
+sp.sum(x) _
+sp.mean(x)||x = [1 2 3 8 12 19] _
+ _
+sum(x) _
+mean(x)||
+||[[# second-moment-stats]][#second-moment-stats-note second moment statistics]||std(x, 1) _
+var(x, 1)||n = length(x) _
+ _
+sd(x) * sqrt((n-1)/n) _
+var(x) * (n-1)/n||sp.std(x) _
+sp.var(x)|| ||
+||[[# second-moment-stats-sample]][#second-moment-stats-sample-note second moment statistics for samples]||std(x) _
+var(x)||sd(x) _
+var(x)||n = float(len(x)) _
+ _
+sp.std(x) * math.sqrt(n/(n-1)) _
+sp.var(x) * n/(n-1)||std(x) _
+var(x)||
+||[[# skewness]][#skewness-note skewness]||##gray|//Octave uses sample standard deviation to compute skewness://## _
+skewness(x)||install.packages('moments') _
+library('moments') _
+ _
+skewness(x)||stats.skew(x)|| ||
+||[[# kurtosis]][#kurtosis-note kurtosis]||##gray|//Octave uses sample standard deviation to compute kurtosis://## _
+kurtosis(x)||install.packages('moments') _
+library('moments') _
+ _
+kurtosis(x) - 3||stats.kurtosis(x)|| ||
+||[[# nth-moment]][#nth-moment-note nth moment and nth central moment]||n = 5 _
+ _
+moment(x, n) _
+moment(x, n, "c")||install.packages('moments') _
+library('moments') _
+ _
+n = 5 _
+moment(x, n) _
+moment(x, n, central=T)||n = 5 _
+ _
+##gray|//??//## _
+stats.moment(x, n)|| ||
+||[[# mode]][#mode-note mode]||mode([1 2 2 2 3 3 4])||samp = c(1,2,2,2,3,3,4) _
+names(sort(-table(samp)))[1]||stats.mode([1,2,2,2,3,3,4])[0][0]|| ||
+||[[# quantile-stats]][#quantile-stats-note quantile statistics]||min(x) _
+median(x) _
+max(x) _
+iqr(x) _
+quantile(x, .90)||min(x) _
+median(x) _
+max(x) _
+IQR(x) _
+quantile(x, prob=.90)||min(x) _
+sp.median(x) _
+max(x) _
+##gray|//??//## _
+stats.scoreatpercentile(x, 90.0)|| ||
+||[[# bivariate-stats]][#bivariate-stats-note bivariate statistiscs] _
+##gray|//correlation, covariance//##||x = [1 2 3] _
+y = [2 4 7] _
+ _
+cor(x, y) _
+cov(x, y)||x = c(1,2,3) _
+y = c(2,4,7) _
+ _
+cor(x, y) _
+cov(x, y)||x = [1,2,3] _
+y = [2,4,7] _
+ _
+stats.linregress(x, y)[2] _
+##gray|//??//##|| ||
+||[[# correlation-matrix]][#correlation-matrix-note correlation matrix]||x1 = randn(100, 1) _
+x2 = 0.5 * x1 + randn(100, 1) _
+x3 = 0.1 * x1 + 0.1 * x2 + 0.1 * randn(100, 1) _
+ _
+corr([x1 x2 x3])||x1 = rnorm(100) _
+x2 = x1 + 0.5 * rnorm(100) _
+x3 = 0.3 * x1 + 0.1 * 2 + 0.1 * rnorm(100) _
+ _
+cor(cbind(x1, x2, x3))|| || ||
+||[[# freq-table]][#freq-table-note data set to frequency table]|| ||x = c(1,2,1,1,2,5,1,2,7) _
+tab = table(x)|| || ||
+||[[# invert-freq-table]][#invert-freq-table-note frequency table to data set]|| ||rep(as.integer(names(tab)), _
+@<&nbsp;&nbsp;>@unname(tab))|| || ||
+||[[# bin]][#bin-note bin]|| ||x = c(1.1, 3.7, 8.9, 1.2, 1.9, 4.1) _
+xf = cut(x, breaks=c(0, 3, 6, 9)) _
+##gray|# bins are (0, 3], (3, 6], and (6, 9]:## _
+bins = tapply(x, xf, length)|| || ||
+||||||||||~ [[# distributions]][#distribution-note distributions]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
+||[[# binomial]][#binomial-note binomial] _
+##gray|//density, cumulative, quantile, _
+sample of 10//##||binopdf(x, ##gray|//n//##, ##gray|//p//##) _
+binocdf(x, ##gray|//n//##, ##gray|//p//##) _
+binoinv(y, ##gray|//n//##, ##gray|//p//##) _
+binornd(##gray|//n//##, ##gray|//p//##, 1, 10)||dbinom(x, ##gray|//n//##, ##gray|//p//##) _
+pbinom(x, ##gray|//n//##, ##gray|//p//##) _
+qbinom(y, ##gray|//n//##, ##gray|//p//##) _
+rbinom(10, ##gray|//n//##, ##gray|//p//##)||stats.binom.pmf(x, ##gray|//n//##, ##gray|//p//##) _
+stats.binom.cdf(x, ##gray|//n//##, ##gray|//p//##) _
+stats.binom.ppf(y, ##gray|//n//##, ##gray|//p//##) _
+stats.binom.rvs(##gray|//n//##, ##gray|//p//##)|| ||
+||[[# poisson]][#poisson-note poisson] _
+##gray|//density, cumulative, quantile, _
+sample of 10//##||poisspdf(x, ##gray|//lambda//##) _
+poisscdf(x, ##gray|//lambda//##) _
+poissinv(y, ##gray|//lambda//##) _
+poissrnd(##gray|//lambda//##, 1, 10)||dpois(x, ##gray|//lambda//##) _
+ppois(x, ##gray|//lambda//##) _
+qpois(y, ##gray|//lambda//##) _
+rpois(10, ##gray|//lambda//##)||stats.poisson.pmf(x, ##gray|//lambda//##) _
+stats.poisson.cdf(x, ##gray|//lambda//##) _
+stats.poisson.ppf(y, ##gray|//lambda//##) _
+stats.poisson.rvs(##gray|//lambda//##, size=1)|| ||
+||[[# normal]][#normal-note normal] _
+##gray|//density, cumulative, quantile, _
+sample of 10//##||normpdf(x, ##gray|//mu//##, ##gray|//sigma//##) _
+normcdf(x, ##gray|//mu//##, ##gray|//sigma//##) _
+norminv(y, ##gray|//mu//##, ##gray|//sigma//##) _
+normrnd(##gray|//mu//##, ##gray|//sigma//##, 1, 10)||dnorm(x, ##gray|//mu//##, ##gray|//sigma//##) _
+pnorm(x, ##gray|//mu//##, ##gray|//sigma//##) _
+qnorm(y, ##gray|//mu//##, ##gray|//sigma//##) _
+rnorm(10, ##gray|//mu//##, ##gray|//sigma//##)||stats.norm.pdf(x, ##gray|//mu//##, ##gray|//sigma//##) _
+stats.norm.cdf(x, ##gray|//mu//##, ##gray|//sigma//##) _
+stats.norm.ppf(y, ##gray|//mu//##, ##gray|//sigma//##) _
+stats.norm.rvs(##gray|//mu//##, ##gray|//sigma//##)|| ||
+||[[# gamma]][#gamma-note gamma] _
+##gray|//density, cumulative, quantile, _
+sample of 10//##||gampdf(x, ##gray|//k//##, ##gray|//theta//##) _
+gamcdf(x, ##gray|//k//##, ##gray|//theta//##) _
+gaminv(y, ##gray|//k//##, ##gray|//theta//##) _
+gamrnd(##gray|//k//##, ##gray|//theta//##, 1, 10)||dgamma(x, ##gray|//k//##, scale=##gray|//theta//##) _
+pgamma(x, ##gray|//k//##, scale=##gray|//theta//##) _
+qgamma(y, ##gray|//k//##, scale=##gray|//theta//##) _
+rgamma(10, ##gray|//k//##, scale=##gray|//theta//##)||stats.gamma.pdf(x, ##gray|//k//##, scale=##gray|//theta//##) _
+stats.gamma.cdf(x, ##gray|//k//##, scale=##gray|//theta//##) _
+stats.gamma.ppf(y, ##gray|//k//##, scale=##gray|//theta//##) _
+stats.gamma.rvs(##gray|//k//##, scale=##gray|//theta//##)|| ||
+||[[# exponential]][#exponential-note exponential] _
+##gray|//density, cumulative, quantile, _
+sample of 10//##||exppdf(x, ##gray|//lambda//##) _
+expcdf(x, ##gray|//lambda//##) _
+expinv(y, ##gray|//lambda//##) _
+exprnd(##gray|//lambda//##, 1, 10)||dexp(x, ##gray|//lambda//##) _
+pexp(x, ##gray|//lambda//##) _
+qexp(y, ##gray|//lambda//##) _
+rexp(10, ##gray|//lambda//##)||stats.expon.pdf(x, scale=1.0/##gray|//lambda//##) _
+stats.expon.cdf(x, scale=1.0/##gray|//lambda//##) _
+stats.expon.ppf(x, scale=1.0/##gray|//lambda//##) _
+stats.expon.rvs(scale=1.0/##gray|//lambda//##)|| ||
+||[[# chi-squared]][#chi-squared-note chi-squared] _
+##gray|//density, cumulative, quantile, _
+sample of 10//##||chi2pdf(x, ##gray|//nu//##) _
+chi2cdf(x, ##gray|//nu//##) _
+chi2inv(y, ##gray|//nu//##) _
+chi2rnd(##gray|//nu//##, 1, 10)||dchisq(x, ##gray|//nu//##) _
+pchisq(x, ##gray|//nu//##) _
+qchisq(y, ##gray|//nu//##) _
+rchisq(10, ##gray|//nu//##)||stats.chi2.pdf(x, ##gray|//nu//##) _
+stats.chi2.cdf(x, ##gray|//nu//##) _
+stats.chi2.ppf(y, ##gray|//nu//##) _
+stats.chi2.rvs(##gray|//nu//##)|| ||
+||[[# beta]][#beta-note beta] _
+##gray|//density, cumulative, quantile, _
+sample of 10//##||betapdf(x, ##gray|//alpha//##, ##gray|//beta//##) _
+betacdf(x, ##gray|//alpha//##, ##gray|//beta//##) _
+betainvf(y, ##gray|//alpha//##, ##gray|//beta//##) _
+betarnd(##gray|//alpha//##, ##gray|//beta//##, 1, 10)||dbeta(x, ##gray|//alpha//##, ##gray|//beta//##) _
+pbeta(x, ##gray|//alpha//##, ##gray|//beta//##) _
+qbeta(y, ##gray|//alpha//##, ##gray|//beta//##) _
+rbeta(10, ##gray|//alpha//##, ##gray|//beta//##)||stats.beta.pdf(x, ##gray|//alpha//##, ##gray|//beta//##) _
+stats.beta.cdf(x, ##gray|//alpha//##, ##gray|//beta//##) _
+stats.beta.ppf(y, ##gray|//alpha//##, ##gray|//beta//##) _
+stats.beta.pvs(##gray|//alpha//##, ##gray|//beta//##)|| ||
+||[[# uniform]][#uniform-note uniform] _
+##gray|//density, cumulative, quantile, _
+sample of 10//##||unifpdf(x, ##gray|//a//##, ##gray|//b//##) _
+unifcdf(x, ##gray|//a//##, ##gray|//b//##) _
+unifinv(y, ##gray|//a//##, ##gray|//b//##) _
+unifrnd(##gray|//a//##, ##gray|//b//##, 1, 10)||dunif(x, ##gray|//a//##, ##gray|//b//##) _
+punif(x, ##gray|//a//##, ##gray|//b//##) _
+qunif(y, ##gray|//a//##, ##gray|//b//##) _
+runif(10, ##gray|//a//##, ##gray|//b//##)||stats.uniform.pdf(x, ##gray|//a//##, ##gray|//b//##) _
+stats.uniform.cdf(x, ##gray|//a//##, ##gray|//b//##) _
+stats.uniform.ppf(y, ##gray|//a//##, ##gray|//b//##) _
+stats.unifrom.rvs(##gray|//a//##, ##gray|//b//##)|| ||
+||[[# students-t]][#students-t-note Student's t] _
+##gray|//density, cumulative, quantile, _
+sample of 10//##||tpdf(x, ##gray|//nu//##) _
+tcdf(x, ##gray|//nu//##) _
+tinv(y, ##gray|//nu//##) _
+trnd(##gray|//nu//##, 1, 10)||dt(x, ##gray|//nu//##) _
+pt(x, ##gray|//nu//##) _
+qt(y, ##gray|//nu//##) _
+rt(10, ##gray|//nu//##)||stats.t.pdf(x, ##gray|//nu//##) _
+stats.t.cdf(x, ##gray|//nu//##) _
+stats.t.ppf(y, ##gray|//nu//##) _
+stats.t.rvs(##gray|//nu//##)|| ||
+||[[# snedecors-f]][#snedecors-f-note Snedecor's F] _
+##gray|//density, cumulative, quantile, _
+sample of 10//##||fpdf(x, ##gray|//d1//##, ##gray|//d2//##) _
+fcdf(x, ##gray|//d1//##, ##gray|//d2//##) _
+finv(y, ##gray|//d1//##, ##gray|//d2//##) _
+frnd(##gray|//d1//##, ##gray|//d2//##, 1, 10)||df(x, ##gray|//d1//##, ##gray|//d2//##) _
+pf(x, ##gray|//d1//##, ##gray|//d2//##) _
+qf(y, ##gray|//d1//##, ##gray|//d2//##) _
+rf(10, ##gray|//d1//##, ##gray|//d2//##)||stats.f.pdf(x, ##gray|//d1//##, ##gray|//d2//##) _
+stats.f.cdf(x, ##gray|//d1//##, ##gray|//d2//##) _
+stats.f.ppf(y, ##gray|//d1//##, ##gray|//d2//##) _
+stats.f.rvs(##gray|//d1//##, ##gray|//d2//##)|| ||
+||[[# empirical-density-func]][#empirical-density-func-note empirical density function]||##gray|% $ apt-get install octave-econometrics## _
+ _
+x = (-3:.05:3)' _
+y = kernel_density(x, normrnd(0, 1, 100, 1))||dfunc = density(rnorm(100)) _
+ _
+dfunc$x _
+dfunc$y|| || ||
+||[[# empirical-cumulative-distribution]][#empirical-cumulative-distribution-note empirical cumulative distribution]|| ||##gray|//F is a right-continuous step function://## _
+F = ecdf(rnorm(100))|| || ||
+||[[# empirical-quantile-func]][#empirical-quantile-func-note empirical quantile function]|| ||F = ecdf(rnorm(100)) _
+Finv = ecdf(F(seq(0, 1, .01)))|| || ||
+||||||||||~ [[# linear-regression]][#linear-regression-note linear regression]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
+||[[# simple-linear-regression]][#simple-linear-regression-note simple linear regression] _
+##gray|//coefficient, intercept, and residuals//##||x = [1 2 3] _
+y = [2 4 7] _
+ _
+[lsq, res] = polyfit(x, y, 1) _
+a = lsq(1) _
+b = lsq(2) _
+y - (a*x+b)||x = seq(10) _
+y = 2 * x + 1 + rnorm(10) _
+ _
+fit = lm(y ~ x) _
+summary(fit) _
+ _
+##gray|# yhat = ax + b:## _
+a = fit$coefficients[2] _
+b = fit$coefficients[1] _
+ _
+##gray|# y - (ax + b):## _
+fit$residuals||x = np.array([1,2,3]) _
+y = np.array([2,4,7]) _
+ _
+lsq = stats.linregress(x, y) _
+a = lsq[0] _
+b = lsq[1] _
+y - (a*x+b)|| ||
+||[[# linear-regression-no-intercept]][#linear-regression-no-intercept-note no intercept]|| ||x = seq(10) _
+y = 2 * x + 1 + rnorm(10) _
+ _
+fit = lm(y ~ x + 0) _
+summary(fit) _
+ _
+##gray|# y = ax:## _
+a = fit$coefficients[1]|| || ||
+||[[# multiple-linear-regression]][#multiple-linear-regression-note multiple linear regression]|| ||x1 = rnorm(100) _
+x2 = rnorm(100) _
+y = 2 * x2 + rnorm(100) _
+ _
+fit = lm(y ~ x1 + x2) _
+summary(fit)|| || ||
+||[[# linear-regression-interaction]][#linear-regression-interaction-note interaction]|| ||x1 = rnorm(100) _
+x2 = rnorm(100) _
+y = 2 * x1 + x2 + 3 * x1 * x2 + rnorm(100) _
+ _
+##gray|# x1, x2, and x1*x2 as predictors:## _
+fit = lm(y ~ x1 * x2) _
+summary(fit) _
+ _
+##gray|# just x1*x2 as predictor:## _
+fit2 = lm(Y ~ x1:x2)|| || ||
+||[[# logistic-regression]][#logistic-regression-note logistic regression]|| ||y = round(runif(100)) _
+x1 = round(runif(100)) _
+x2 = y + rnorm(100) _
+ _
+fit = glm(y ~ x1 + x2, family="binomial") _
+summary(fit)|| || ||
+||||||||||~ [[# statistical-tests]][#statistical-tests-note statistical tests]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
+||[[# wilcoxon]][#wilcoxon-note wilcoxon signed-rank test] _
+##gray|//variable is symmetric around zero//##||x = unifrnd(-0.5, 0.5, 100, 1) _
+ _
+##gray|% null hypothesis is true:## _
+wilcoxon_test(x, zeros(100, 1)) _
+ _
+##gray|% alternative hypothesis is true:## _
+wilcoxon_test(x + 1.0, zeros(100, 1))||##gray|# null hypothesis is true:## _
+wilcox.test(runif(100) - 0.5) _
+ _
+##gray|alternative hypothesis is true:## _
+wilcox.test(runif(100) + 0.5)||stats.wilcoxon()|| ||
+||[[# kruskal]][#kruskal-note kruskal-wallis rank sum test] _
+##gray|//variables have same location parameter//##||x = unifrnd(0, 1, 200, 1) _
+ _
+##gray|% null hypothesis is true:## _
+kruskal_wallis_test(randn(100, 1), randn(200, 1)) _
+ _
+##gray|% alternative hypothesis is true:## _
+kruskal_wallis_test(randn(100, 1), x)||##gray|# null hypothesis is true:## _
+kruskal.test(list(rnorm(100), rnorm(200))) _
+ _
+##gray|# alternative hypothesis is true:## _
+kruskal.test(list(rnorm(100), runif(200)))||stats.kruskal()|| ||
+||[[# kolmogorov-smirnov-test]][#kolmogorov-smirnov-test-note kolmogorov-smirnov test] _
+##gray|//variables have same distribution//##||x = randn(100, 1) _
+y1 = randn(100, 1) _
+y2 = unifrnd(-0.5, 0.5, 100, 1) _
+ _
+##gray|% null hypothesis is true:## _
+kolmogorov_smirnov_test_2(x, y1) _
+ _
+##gray|% alternative hypothesis is true:## _
+kolmogorov_smirnov_test_2(x, y2)||##gray|# null hypothesis is true:## _
+ks.test(rnorm(100), rnorm(100)) _
+ _
+##gray|# alternative hypothesis is true:## _
+ks.test(rnorm(100), runif(100) - 0.5)||stats.ks_2samp()|| ||
+||[[# one-sample-t-test]][#one-sample-t-test-note one-sample t-test] _
+##gray|//mean of normal variable with unknown variance is zero//##||x1 = 3 * randn(100, 1) _
+x2 = 3 * randn(100, 1) + 3 _
+ _
+##gray|% null hypothesis is true:## _
+t_test(x1, 0) _
+ _
+##gray|% alternative hypothesis is true:## _
+t_test(x2, 0)||##gray|# null hypothesis is true:## _
+t.test(rnorm(100, 0, 3)) _
+ _
+##gray|# alternative hypothesis is true:## _
+t.test(rnorm(100, 3, 3))||stats.ttest_1samp()|| ||
+||[[# independent-two-sample-t-test]][#independent-two-sample-t-test-note independent two-sample t-test] _
+##gray|//two normal variables have same mean//##||x = randn(100, 1) _
+y1 = randn(100, 1) _
+y2 = randn(100, 1) + 1.5 _
+ _
+##gray|% null hypothesis is true:## _
+t_test_2(x, y1) _
+ _
+##gray|% alternative hypothesis is true:## _
+t_test_2(x, y2)||##gray|# null hypothesis is true:## _
+t.test(rnorm(100), rnorm(100)) _
+ _
+##gray|# alternative hypothesis is true:## _
+t.test(rnorm(100), rnorm(100, 3))||stats.ttest_ind()|| ||
+||[[# one-sample-binomial-test]][#one-sample-binomial-test-note one-sample binomial test] _
+##gray|//binomial variable parameter is as given//##|| ||n = 100 _
+x = rbinom(1, n, 0.5) _
+ _
+##gray|# null hypothesis that p=0.5 is true:## _
+binom.test(x, n) _
+ _
+##gray|# alternative hypothesis is true:## _
+binom.test(x, n, p=0.3)||stats.binom_test()|| ||
+||[[# two-sample-binomial-test]][#two-sample-binomial-test-note two-sample binomial test] _
+##gray|//parameters of two binomial variables are equal//##||prop_test_2()||n = 100 _
+x1 = rbinom(1, n, 0.5) _
+x2 = rbinom(1, n, 0.5) _
+ _
+##gray|# null hypothesis that p=0.5 is true:## _
+prop.test(c(x1, x2), c(n, n)) _
+ _
+y = rbinom(1, n, 0.3) _
+##gray|# alternative hypothesis is true:## _
+prop.test(c(x1, y), c(n, n))|| || ||
+||[[# chi-squared-test]][#chi-squared-test-note chi-squared test] _
+##gray|//parameters of multinomial variable are all equal//##||chisquare_test_independence()||fair = floor(6 * runif(100)) + 1 _
+loaded = floor(7 * runif(100)) + 1 _
+loaded[which(loaded > 6)] = 6 _
+ _
+##gray|# null hypothesis is true:## _
+chisq.test(table(fair)) _
+ _
+##gray|# alternative hypothesis is true:## _
+chisq.test(table(loaded))||stats.chisquare()|| ||
+||[[# poisson-test]][#poisson-test-note poisson test] _
+##gray|//parameter of poisson variable is as given//##|| ||##gray|# null hypothesis is true:## _
+poisson.test(rpois(1, 100), r=100) _
+ _
+##gray|# alternative test is true:## _
+poisson.test(rpois(1, 150), r=100)|| || ||
+||[[# f-test]][#f-test-note F test] _
+##gray|//ratio of variance of normal variables is as given//##||var_test()||x = rnorm(100) _
+y = rnorm(100, 0, sd=sqrt(3)) _
+ _
+##gray|# null hypothesis is true:## _
+var.test(y, x, ratio=3) _
+ _
+##gray|# alternative hypothesis is true:## _
+var.test(y, x, ratio=1)|| || ||
+||[[# pearson-product-moment-test]][#pearson-product-moment-test-note pearson product moment test] _
+##gray|//normal variables are not correlated//##||cor_test()||x1 = rnorm(100) _
+x2 = rnorm(100) _
+y = x2 + rnorm(100) _
+ _
+##gray|# null hypothesis is true:## _
+cor.test(y, x1) _
+ _
+##gray|# alternative hypothesis is true:## _
+cor.test(y, x2)||stats.pearsonr()|| ||
+||[[# shapiro-wilk-test]][#shapiro-wilk-test-note shapiro-wilk test] _
+##gray|//variable has normal distribution//##|| ||##gray|# null hypothesis is true:## _
+shapiro.test(rnorm(1000)) _
+ _
+##gray|# alternative hypothesis is true:## _
+shapiro.test(runif(1000))||stats.shapiro()|| ||
+||[[# bartletts-test]][#bartletts-test-note bartlett's test] _
+##gray|//two or more normal variables have same variance//##||bartlett_test()||x = rnorm(100) _
+y1 = rnorm(100) _
+y2 = 0.1 * rnorm(100) _
+ _
+##gray|# null hypothesis is true:## _
+bartlett.test(list(x, y1)) _
+ _
+##gray|# alternative hypothesis is true:## _
+bartlett.test(list(x, y))||stats.bartlett()|| ||
+||[[# levene-test]][#levene-test-note levene's test] _
+##gray|//two or more variables have same variance//##|| ||install.packages('reshape', 'car') _
+library(reshape)  _
+library(car) _
+ _
+x = rnorm(100) _
+y1 = rnorm(100) _
+y2 = 0.1 * rnorm(100) _
+ _
+##gray|# null hypothesis is true:## _
+df = melt(data.frame(x, y1)) _
+leveneTest(df$value, df$variable) _
+ _
+##gray|# alternative hypothesis is true:## _
+df = melt(data.frame(x, y2)) _
+leveneTest(df$value, df$variable)||stats.levene()|| ||
+||[[# one-way-anova]][#one-way-anova-note one-way anova] _
+##gray|//two or more normal variables have same mean//##||x1 = randn(100, 1) _
+x2 = randn(100, 1)  _
+x3 = randn(100, 1) _
+x = [x1; x2; x3] _
+y = [x1; x2; x3 + 0.5] _
+units = ones(100, 1) _
+grp = [units; 2 * units; 3 * units] _
+ _
+##gray|% null hypothesis is true:## _
+anova(x, grp) _
+ _
+##gray|% alternative hypothesis is true:## _
+anova(y, grp)||install.packages('reshape') _
+library(reshape) _
+ _
+##gray|# null hypothesis that all means are the same _
+# is true:## _
+x1 = rnorm(100) _
+x2 = rnorm(100) _
+x3 = rnorm(100) _
+ _
+df = melt(data.frame(x1, x2, x3)) _
+fit = lm(df$value ~ df$variable) _
+anova(fit)||stats.f_oneway()|| ||
+||||||||||~ [[# time-series]][#time-series-note time series]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
+||[[# time-series-construction]][#time-series-construction-note time series]|| ||##gray|# first observation time is 1:## _
+y = ts(rnorm(100)) _
+ _
+##gray|# first observation time is 0:## _
+y2 = ts(rnorm(100), start=0) _
+ _
+plot(y)||##gray|# first observation time is 0:## _
+y = pd.Series(randn(100)) _
+ _
+##gray|# first observation time is 1:## _
+y2 = pd.Series(randn(100), index=range(1,101)) _
+ _
+y.plot()|| ||
+||[[# monthly-time-series]][#monthly-time-series-note monthly time series]|| ||##gray|# monthly observations 1993-1997:## _
+y = ts(rnorm(60), frequency=12, start=1993) _
+ _
+##gray|# monthly observations from Oct 1993:## _
+y2 = ts(rnorm(60), frequency=12, start=c(1993, 10)) _
+ _
+plot(y)||dt = pd.datetime(2013, 1, 1) _
+idx = pd.date_range(dt, periods=60, freq='M') _
+y = pd.Series(randn(60), index=idx) _
+ _
+dt2 = pd.datetime(2013, 10, 1) _
+idx2 = pd.date_range(dt2, periods=60, freq='M') _
+y2 = pd.Series(randn(60), index=idx2)|| ||
+||[[# time-series-lookup-time]][#time-series-lookup-time-note lookup by time]|| ||start = tsp(y2)[1] _
+end = tsp(y2)[2] _
+freq = tsp(y2)[3] _
+ _
+##gray|# value for Jan 1994:## _
+y2[(1994 - start) * freq + 1]||y2[pd.datetime(2014, 1, 31)]|| ||
+||[[# time-series-lookup-position]][#time-series-lookup-position-note lookup by position in series]|| ||for (i in 1:length(y)) { _
+@<&nbsp;&nbsp;>@print(y[i]) _
+}||for i in range(0, len(y)): _
+@<&nbsp;&nbsp;>@y.ix[i]|| ||
+||[[# aligned-arithmetic]][#aligned-arithmetic-note aligned arithmetic]|| ||y = ts(rnorm(10), start=0) _
+y2 = ts(rnorm(10), start=5) _
+ _
+##gray|# time series with 5 data points:## _
+y3 = y + y2||y = pd.Series(randn(10)) _
+y2 = pd.Series(randn(10), index=range(5, 15)) _
+ _
+##gray|# time series with 15 data points; 10 of _
+# which are NaN:## _
+# y3 = y + y2|| ||
+||[[# lag-operator]][#lag-operator-note lag operator]|| ||x = ts(rnorm(100)) _
+y = x + lag(x, 1)||x = pd.Series(randn(100)) _
+y = x + x.shift(-1)|| ||
+||[[# lagged-difference]][#lagged-difference-note lagged difference] _
+@<&nbsp;>@|| ||delta = diff(y, lag=1)||delta = y.diff(1)|| ||
+||[[# simple-moving-avg]][#simple-moving-avg-note simple moving average]|| ||install.packages('TTR') _
+library('TTR') _
+ _
+ma = SMA(y, n=4) _
+ _
+plot(y) _
+lines(ma, col='red')||y = pd.Series(randn(50)) _
+ma = pd.rolling_mean(y, 4) _
+ _
+plot(y, 'k', ma, 'r')|| ||
+||[[# weighted-moving-avg]][#weighted-moving-avg-note weighted moving average]|| ||install.packages('TTR') _
+library('TTR') _
+ _
+ma = WMA(y, n=4, wts=c(1, 2, 3, 4)) _
+ _
+plot(y) _
+lines(ma, col='red')|| || ||
+||[[# exponential-smoothing]][#exponential-smoothing-note exponential smoothing]|| ||x = rnorm(100) _
+fit = HoltWinters(x, alpha=0.5, beta=F, gamma=F) _
+ _
+values = fit$fitted _
+plot(fit)||alpha = 0.5 _
+span = (2 / alpha) - 1 _
+fit = pd.ewma(y, span=span, adjust=False) _
+ _
+fit.plot()|| ||
+||[[# least-squares-exponential-smoothing]][#least-squares-exponential-smoothing-note exponential smoothing with best least squares fit]|| ||x = rnorm(100) _
+fit = HoltWinters(x, beta=F, gamma=F) _
+ _
+alpha = fit$a _
+plot(fit)|| || ||
+||[[# decompose-seasonal-trend]][#decompose-seasonal-trend-note decompose into seasonal and trend]|| ||raw = seq(1,100) + rnorm(100) + rep(seq(1,10), 10) _
+y = ts(raw, frequency=10) _
+ _
+##gray|# additive model: t + s + r:## _
+yd = decompose(y) _
+yd$trend _
+yd$seasonal _
+yd$random _
+ _
+plot(yd) _
+ _
+##gray|# multiplicative model: t * s * r:## _
+yd2 = decompose(y, type="multiplicative")|| || ||
+||[[# correlogram]][#correlogram-note correlogram]|| ||x = rnorm(100) _
+x2 = append(x[4:100], x[1:3]) _
+ _
+acf(x, lag.max=20) _
+acf(x + x2, lag.max=20)|| || ||
+||test for stationarity|| || || || ||
+||[[# arma]][#arma-note arma]|| || || || ||
+||[[# arima]][#arima-note arima]|| || || || ||
+||[[# automatic-arima]][#arima-note arima with automatic model selection]|| || || || ||
+||||||||||~ [[# fast-fourier-transform]][#fast-fourier-transform-note fast fourier transform]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
+||[[# fft]][#fft-note fft]||x = 3 * sin(1:100) + sin(3 * (1:100)) + randn(1, 100) _
+ _
+dft = fft(x)|| || || ||
+||[[# ifft]][#ifft-note inverse fft]|| || || || ||
+||[[# fftshift]][#fftshift-note shift constant component to center]|| || || || ||
+||[[# fft2]][#fft2-note two-dimensional fft]|| || || || ||
+||[[# fftn]][#fftn-note n-dimensional fft]|| || || || ||
+||||||||||~ [[# clustering]][#clustering-note clustering]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
+||distance matrix||pts = [1 1; 1 2; 2 1; 2 3; 3 4; 4 4] _
+ _
+##gray|% value at (i, j) is distance between i-th _
+% and j-th observation## _
+dm = squareform(pdist(pts, 'euclidean'))|| || || ||
+||distance options||##gray|'euclidean' _
+'seuclidian' _
+'cityblock' _
+'minkowski' _
+'chebychev' _
+'mahalanobis' _
+'cosine' _
+'correlation' _
+'spearman' _
+'hamming' _
+'jaccard'##|| || || ||
+||hierarchical clusters|| || || || ||
+||dendogram|| || || || ||
+||silhouette plot|| || || || ||
+||k-means|| || || || ||
+||||||||||~ [[# univariate-charts]][#univariate-chart-note univariate charts]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
+||[[image http://farm5.static.flickr.com/4090/5039793334_f76edece33_m.jpg]] [[# bar-chart]][#bar-chart-note vertical bar chart]||bar([7 3 8 5 5])||cnts = c(7,3,8,5,5) _
+names(cnts) = c("a","b","c","d","e") _
+barplot(cnts) _
+ _
+x = floor(6*runif(100)) _
+barplot(table(x))||cnts = [7,3,8,5,5] _
+plt.bar(range(0,len(cnts)), cnts)|| ||
+||[[image http://farm5.static.flickr.com/4092/5039776078_cc38a4ff5f_m.jpg]] _
+[[# horizontal-bar-chart]][#horizontal-bar-chart-note horizontal bar chart]||barh([7 3 8 5 5])||cnts = c(7,3,8,5,5) _
+names(cnts) = c("a","b","c","d","e") _
+barplot(cnts, horiz=T)||cnts = [7,3,8,5,5] _
+plt.barh(range(0,len(cnts)), cnts)|| ||
+||[[image http://farm5.static.flickr.com/4145/5037819710_d932767cd5_m.jpg]] _
+[[# pie-chart]][#pie-chart-note pie chart]||labels = {'a','b','c','d','e'} _
+pie([7 3 8 5 5], labels)||cnts = c(7,3,8,5,5) _
+names(cnts) = c("a","b","c","d","e") _
+pie(cnts)||cnts = [7,3,8,5,5] _
+labs = ['a','b','c','d','e'] _
+plt.pie(cnts, labels=labs)|| ||
+||[[image http://farm5.static.flickr.com/4089/5037399669_13c8e585e0_m.jpg]] _
+[[# stem-leaf-plot]][#stem-leaf-plot-note stem-and-leaf plot]||##gray|//none//##||##gray|//generates an ascii chart://## _
+ _
+stem(20*rnorm(100))||##gray|//none//##|| ||
+||[[image http://farm5.static.flickr.com/4106/5037415497_4c6fbfcab2_m.jpg]] _
+[[# histogram]][#histogram-note histogram]||hist(randn(1, 100), 10)||hist(rnorm(100), breaks=10)||plt.hist(sp.randn(100), _
+@<&nbsp;&nbsp;>@bins=range(-5,5))|| ||
+||[[image http://farm5.static.flickr.com/4106/5037525393_7ac86e81c3_m.jpg]] _
+[[# box-plot]][#box-plot-note box plot]||boxplot(randn(1, 100)) _
+ _
+boxplot([randn(1, 100) _
+@<&nbsp;&nbsp;>@exprnd(1, 1, 100) _
+@<&nbsp;&nbsp;>@unifrnd(0, 1, 1, 100)]')||boxplot(rnorm(100)) _
+ _
+boxplot(rnorm(100), _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@rexp(100), _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@runif(100))||plt.boxplot(sp.randn(100)) _
+ _
+plt.boxplot([sp.randn(100), _
+@<&nbsp;&nbsp;>@np.random.uniform(size=100), _
+@<&nbsp;&nbsp;>@np.random.exponential(size=100)])|| ||
+||[[# chart-title]][#chart-title-note chart title]||bar([7 3 8 5 5]) _
+title('bar chart example')||##gray|//all chart functions except for// stem //accept a// main //parameter://## _
+boxplot(rnorm(100), _
+@<&nbsp;&nbsp;>@main="boxplot example", _
+@<&nbsp;&nbsp;>@sub="to illustrate options")||plt.boxplot(sp.randn(100)) _
+plt.title('boxplot example')|| ||
+||[[# subplot-grid]][#subplot-grid-note grid of subplots][[image http://farm8.staticflickr.com/7551/15816199467_a0a0f159d0_t.jpg]]||##gray|% 3rd arg refers to the subplot; _
+% subplots are numbered in row-major order.## _
+for i = 1:4 _
+@<&nbsp;&nbsp;>@subplot(2, 2, i), hist(randn(50)) _
+end||for (i in split.screen(c(2, 2))) { _
+@<&nbsp;&nbsp;>@screen(n=i) _
+@<&nbsp;&nbsp;>@hist(rnorm(100)) _
+}||for i in [1, 2, 3, 4]: _
+@<&nbsp;&nbsp;>@plt.subplot(2, 2, i) _
+@<&nbsp;&nbsp;>@plt.hist(sp.randn(100), bins=range(-5,5))|| ||
+||[[# new-plot-window]][#new-plot-window-note open new plot window]||open new plot _
+figure _
+open new plot||hist(rnorm(100)) _
+dev.new() _
+hist(rnorm(100))|| || ||
+||[[# close-plot-windows]][#close-plot-windows-note close all plot windows]||close all||graphics.off()|| || ||
+||[[# save-plot-as-png]][#save-plot-as-png-note save plot as png]|| f = figure _
+hist(randn(100)) _
+print(f, '-dpng', 'histogram.png')||png('hist.png') _
+hist(rnorm(100)) _
+dev.off()||y = randn(50) _
+plot(y) _
+savefig('line-plot.png')|| ||
+||||||||||~ [[# bivariate-charts]][#bivariate-chart-note bivariate charts]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
+||[[image http://farm5.static.flickr.com/4154/5039126187_e340b3f4aa_m.jpg]] _
+[[# stacked-bar-chart]][#stacked-bar-chart-note stacked bar chart]||d = [7 1; 3 2; 8 1; 5 3; 5 1] _
+bar(d, 'stacked')||d = matrix(c(7,1,3,2,8,1,5,3,5,1), _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@nrow=2) _
+labels = c("a","b","c","d","e") _
+barplot(d,names.arg=labels)||a1 = [7,3,8,5,5] _
+a2 = [1,2,1,3,1] _
+plt.bar(range(0,5), a1, color='r') _
+plt.bar(range(0,5), a2, color='b')|| ||
+||[[image http://farm8.staticflickr.com/7490/15814685770_09478e1222_t.jpg]] _
+[[# grouped-bar-chart]][#grouped-bar-chart-note grouped bar chart]||d = [7 1; 3 2; 8 1; 5 3; 5 1] _
+bar(d)||d = matrix(c(7,1,3,2,8,1,5,3,5,1), _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@nrow=2) _
+labels = c("a","b","c","d","e") _
+barplot(d,names.arg=labels,beside=TRUE)|| || ||
+||[[image http://farm6.static.flickr.com/5044/5267212089_a7749bbe3e_s.jpg]] _
+[[# scatter-plot]][#scatter-plot-note scatter plot]||plot(randn(1,50),randn(1,50),'+')||plot(rnorm(50), rnorm(50))||plt.scatter(sp.randn(50), sp.randn(50), marker='x')|| ||
+||[[# point-types]][#point-types-note point types]||##gray|'.': point _
+'o': circle _
+'x': x-mark _
+'+': plus _
+'*': star _
+'s': square _
+'d': diamond _
+'v': triangle (down) _
+'^': triangle (up) _
+'<': triangle (left) _
+'>': traingle (right) _
+'p': pentagram _
+'h': hexagram##||##gray|//Integer values for// pch //parameter:// _
+ _
+0: open square _
+1: open circle _
+2: open triangle, points up _
+3: cross _
+4: x _
+5: open diamond _
+6: open triangle, points down _
+15: solid square _
+16: solid circle _
+17: solid triangle, points up _
+18: solid diamond##||##gray|marker //parameter takes these string values://## _
+ _
+##gray|'.': point _
+',': pixel _
+'o': circle _
+'v': triangle_down _
+'^': triangle_up _
+'<': triangle_left _
+'>': triangle_right _
+'1': tri_down _
+'2': tri_up _
+'3': tri_left _
+'4': tri_right _
+'8': octagon _
+'s': square _
+'p': pentagon _
+'*': star _
+'h': hexagon1 _
+'H': hexagon2 _
+'+': plus _
+'x': x _
+'D': diamond _
+'d': thin_diamond _
+'|': vline _
+'_': hline##|| ||
+||[[image http://farm9.staticflickr.com/8568/16001259452_55e23d1303_t.jpg]] _
+[[# hexbin]][#hexbin-note hexagonal binning]|| ||install.packages('hexbin') _
+library('hexbin') _
+ _
+plot(hexbin(rnorm(1000), _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@rnorm(1000), _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@xbins=12))||hexbin(randn(1000), _
+@<&nbsp;&nbsp;>@randn(1000), _
+@<&nbsp;&nbsp;>@gridsize=12)|| ||
+||[[image http://farm6.static.flickr.com/5089/5267975488_2216ae147e_s.jpg]] _
+[[# linear-regression-line]][#linear-regression-line-note linear regression line]|| ||x = 0:20 _
+y = 2 * x + rnorm(21)*10 _
+ _
+fit = lm(y ~ x) _
+ _
+plot(y) _
+lines(x, fit$fitted.values, type='l')||x = range(0,20) _
+err = sp.randn(20)*10 _
+y = [2*i for i in x] + err _
+ _
+A = np.vstack([x,np.ones(len(x))]).T _
+m, c = np.linalg.lstsq(A, y)[0] _
+ _
+plt.scatter(x, y) _
+plt.plot(x, [m*i + c for i in x])|| ||
+||[[image http://farm6.static.flickr.com/5125/5267434941_f8537c9d26_s.jpg]] _
+[[# polygonal-plot]][#polygonal-plot-note polygonal line plot]||plot(1:20,randn(1,20))||plot(1:20, rnorm(20), type="l")||plt.plot(range(0,20), sp.randn(20), '-')|| ||
+||[[# line-types]][#line-types-note line types]||##gray|//Optional 3rd argument to plot:// _
+ _
+'-': solid _
+':': dotted _
+'-.': dashdot _
+'--': dashed##||##gray|//Integer or string values for// lty //parameter:// _
+ _
+0: 'blank' _
+1: 'solid' (default) _
+2: 'dashed' _
+3: 'dotted' _
+4: 'dotdash' _
+5: 'longdash' _
+6: 'twodash'##||##gray|//Optional 3rd argument to plot://## _
+ _
+##gray|'-': solid line _
+@@'--'@@: dashed line _
+'-.': dash-dot line _
+':': dotted line _
+'.': point _
+',': pixel _
+'o': circle _
+'v': triangle_down _
+'^': triangle_up _
+'<': triangle_left _
+'>': triangle_right _
+'1': tri_down _
+'2': tri_up _
+'3': tri_left _
+'4': tri_right _
+'s': square _
+'p': pentagon _
+'*': star _
+'h': hexagon1 _
+'H': hexagon2 _
+'+': plus _
+'x': x _
+'D': diamond _
+'d': thin_diamond _
+'|': vline _
+'_': hline##|| ||
+||[[image http://farm6.static.flickr.com/5204/5268208606_b745646ea6_s.jpg]] _
+[[# function-plot]][#function-plot-note function plot]||fplot(@sin, [-4 4])||x = seq(-4, 4, .01) _
+plot(sin(x), type="l")||x = [i * .01 for i in range(-400, 400)] _
+plt.plot(x, sin(x), '-')|| ||
+||[[image http://farm6.static.flickr.com/5048/5267567389_27a19429e4_s.jpg]] _
+[[# qq-plot]][#qq-plot-note quantile-quantile plot]|| ||qqplot(runif(50), rnorm(50)) _
+lines(c(-9,9), c(-9,9), col="red")|| || ||
+||[[# axis-labels]][#axis-labels-note axis labels]||plot( 1:20, (1:20) .** 2) _
+xlabel('x') _
+ylabel('x squared')||plot(1:20, (1:20)^2, _
+@<&nbsp;&nbsp;>@xlab="x", ylab="x squared")||x = range(0, 20) _
+plt.plot(x, [i * i for i in x], '-') _
+plt.xlabel('x') _
+plt.ylabel('x squared')|| ||
+||[[# axis-limits]][#axis-limits-note axis limits]||plot( 1:20, (1:20) .** 2) _
+##gray|% [xmin, xmax, ymin, ymax]:## _
+axis([1 20 -200 500])||plot(1:20, (1:20)^2, _
+@<&nbsp;&nbsp;>@xlim=c(0, 20), ylim=c(-200,500))||x = range(0, 20) _
+plt.plot(x, [i * i for i in x], '-') _
+plt.xlim([0, 20]) _
+plt.ylim([-200, 500])|| ||
+||[[# logarithmic-y-axis]][#logarithmic-y-axis-note logarithmic y-axis]||semilogy(x, x .** 2, _
+@<&nbsp;&nbsp;>@x, x .** 3, _
+@<&nbsp;&nbsp;>@x, x .** 4, _
+@<&nbsp;&nbsp;>@x, x .** 5)||x = 0:20 _
+plot(x, x^2, log="y",type="l") _
+lines(x, x^3, col="blue") _
+lines(x, x^4, col="green") _
+lines(x, x^5, col="red")||x = range(0, 20) _
+ _
+for i in [2,3,4,5]: _
+@<&nbsp;&nbsp;>@y.append([j**i for j in x]) _
+ _
+for i in [0,1,2,3]: _
+@<&nbsp;&nbsp;>@semilogy(x, y[i])|| ||
+||||||||||~ [[# multivariate-charts]][#multivariate-chart-note multivariate charts]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
+||[[# additional-line]][[image http://farm6.static.flickr.com/5245/5268191292_a75a367c39_s.jpg]] _
+[#additional-line-note additional line set]||plot(1:20, randn(1, 20), _
+@<&nbsp;&nbsp;>@1:20, randn(1, 20)) _
+ _
+##gray|//optional method://## _
+plot(1:20, randn(1, 20)) _
+hold on _
+plot(1:20, randn(1, 20))||plot(1:20, rnorm(20), type="l") _
+lines(1:20, rnorm(20), col="red")|| || ||
+||[[# colors]][#colors-note colors]||##gray|//Use color letters by themselves for colored lines.  Use '.r' for red dots.// _
+ _
+'b': blue _
+'g': green _
+'r': red _
+'c': cyan _
+'m': magenta _
+'y': yellow _
+'k': black _
+'w': white##||##gray|# Use the col parameter to specify the color of points _
+# and lines. _
+# _
+# The colors() function returns a list of recognized _
+# names for colors.## _
+ _
+plot(rnorm(10), col='red') _
+plot(rnorm(10), col='#FF0000')|| || ||
+||[[# superimposed-plots]][#superimposed-plots-note superimposed plots with different y-axis scales]|| ||x <- 1:10 _
+y <- rnorm(10) _
+z <- rnorm(10) * 1000 _
+par(mar = c(5, 4, 4, 4) + 0.3) _
+plot(x, y, type='l') _
+par(new=T) _
+plot(x, z, col='red', type='l', axes=F, _
+@<&nbsp;&nbsp;>@xlab='', ylab='') _
+axis(side=4, col='red', col.axis='red', _
+@<&nbsp;&nbsp;>@at=pretty(range(z))) _
+mtext('z', side=4, line=3, col='red')|| || ||
+||[[# legend]][[image http://farm8.staticflickr.com/7461/15382318933_b4ba583034_t.jpg]] _
+[#legend-note legend]|| ||x = (1:20) _
+y = x + rnorm(20) _
+y2 = x - 2 + rnorm(20) _
+ _
+plot(x, y, type="l", col="black") _
+lines(x, y2, type="l", col="red") _
+legend('topleft', c('first', 'second'), _
+@<&nbsp;&nbsp;>@lty=c(1,1), lwd=c(2.5, 2.5), _
+@<&nbsp;&nbsp;>@col=c('black', 'red'))|| || ||
+||[[# additional-point]][[image http://farm9.staticflickr.com/8600/15814685890_69b3f21697_t.jpg]] _
+[#additional-point-note additional point set]||plot(randn(20), randn(20), '.k', randn(20), randn(20), '.r')||plot(rnorm(20), rnorm(20)) _
+points(rnorm(20), rnorm(20), _
+@<&nbsp;&nbsp;>@col='red')|| || ||
+||[[# area-chart]][[image http://farm6.static.flickr.com/5041/5268071368_75c3aee42e_t.jpg]] _
+[#area-chart-note stacked area chart]|| ||install.packages('ggplot2') _
+library('ggplot2') _
+ _
+x = rep(0:4, each=3) _
+y = round(5 * runif(15)) _
+letter = rep(LETTERS[1:3], 5) _
+df = data.frame(x, y, letter) _
+ _
+p = ggplot(df, aes(x=x, y=y, _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@group=letter, _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@fill=letter)) _
+p + geom_area(position='stack')|| || ||
+||[[# overlapping-area-chart]][[image http://farm8.staticflickr.com/7557/15815944099_9b56eb2af4_t.jpg]] _
+[#overlapping-area-chart-note overlapping area chart]|| ||install.packages('ggplot2') _
+library('ggplot2') _
+ _
+x = rep(0:4, each=3) _
+y = round(5 * runif(15)) _
+letter = rep(LETTERS[1:3], 5) _
+df = data.frame(x, y, letter) _
+alpha = rep(I(2/10), each=15) _
+ _
+p = ggplot(df, aes(x=x, ymin=0, ymax=y, _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@group=letter, fill=letter, _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@alpha=alpha)) _
+p + geom_ribbon()|| || ||
+||[[# 3d-scatter-plot]][[image http://farm9.staticflickr.com/8611/15814558578_f6b4f8d3b0_t.jpg]] _
+[#3d-scatter-plot-note 3d scatter plot]|| ||install.packages('scatterplot3d') _
+library('scatterplot3d') _
+ _
+scatterplot3d(rnorm(50), rnorm(50), _
+@<&nbsp;&nbsp;>@rnorm(50), type="h")|| || ||
+||[[# bubble-chart]][[image http://farm9.staticflickr.com/8591/15999976481_b2082d7d5b_t.jpg]] _
+[#bubble-chart-note bubble chart]|| ||install.packages('ggplot2') _
+library('ggplot2') _
+ _
+df = data.frame(x=rnorm(20), _
+@<&nbsp;&nbsp;>@y=rnorm(20), z=rnorm(20)) _
+ _
+p = ggplot(df, aes(x=x, y=y, size=z)) _
+p + geom_point()|| || ||
+||[[# scatter-plot-matrix]][[image http://farm8.staticflickr.com/7521/15976165976_636a08e4e8_t.jpg]] _
+[#scatter-plot-matrix-note scatter plot matrix]|| ||x = rnorm(20) _
+y = rnorm(20) _
+z = x + 3*y _
+w = y + 0.1*rnorm(20) _
+df = data.frame(x, y, z, w) _
+ _
+pairs(df)|| || ||
+||[[# contour-plot]][[image http://farm8.staticflickr.com/7496/15814558718_3f63b8e371_t.jpg]] _
+[#contour-plot-note contour plot]|| ||m = matrix(0, 100, 100) _
+for (i in 2:100) { _
+@<&nbsp;&nbsp;>@for (j in 2:100) {  _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@m[i,j] = (m[i-1,j] + m[i,j-1])/2 + _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@runif(1) - 0.5 _
+@<&nbsp;&nbsp;>@} _
+} _
+ _
+filled.contour(1:100, 1:100, m)|| || ||
+||~ ||~ ##EFEFEF|@@__________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________@@##||
+
+
+[[# tables-note]]
++ [#tables Tables]
+
+Tables are a data type which correspond to the tables of relational databases.  In R this data type is called a //data frame//.  The Python library Pandas provides a table data type called //DataFrame//.
+
+A table is an array of tuples, each of the same length and type.  If the type of the first element of the first type is integer, then all the tuples in the table must have first elements which are integers.  The type of the tuples corresponds to the schema of a relational database table.
+
+A table can also be 
+
+Pandas types: Series(), DataFrame(), Index()
+
+[[# construct-from-column-arrays-note]]
+++ [#construct-from-column-arrays construct from column arrays]
+
+How to construct a data frame from a set of arrays representing the columns.
+
+**octave:**
+
+Octave does not have the {{table}} data type.
+
+[[# table-size-note]]
+++ [#table-size size]
+
+How to get the number of columns and number of rows in a table.
+
+[[# construct-from-row-tuples-note]]
+++ [#construct-from-row-tuples construct from row tuples]
+
+[[# column-names-as-array-note]]
+++ [#column-names-as-array column names as array]
+
+How to show the names of the columns.
+
+[[# access-column-as-array-note]]
+++ [#access-column-as-array access column as array]
+
+How to access a column in a data frame.
+
+[[# access-row-as-tuple-note]]
+++ [#access-row-as-tuple access row as tuple]
+
+How to access a row in a data frame.
+
+**r:**
+
+//people[1, ]// returns the 1st row from the data frame //people// as a new data frame with one row.  This can be converted to a list using the function //as.list//.  There is often no need because lists and one row data frames have nearly the same behavior.
+
+[[# access-datum-note]]
+++ [#access-datum access datum]
+
+How to access a single datum in a data frame; i.e. the value in a column of a single row.
+
+[[# order-rows-by-column-note]]
+++ [#order-rows-by-column order rows by column]
+
+How to sort the rows in a data frame according to the values in a specified column.
+
+[[# order-rows-by-multiple-columns-note]]
+++ [#order-rows-by-multiple-columns order rows by multiple columns]
+
+[[# order-rows-descending-order-note]]
+++ [#order-rows-descending-order order rows in descending order]
+
+How to sort the rows in descending order according to the values in a specified column.
+
+[[# limit-rows-note]]
+++ [#limit-rows limit rows]
+
+How to select the first //n// rows according to some ordering.
+
+[[# offset-rows-note]]
+++ [#offset-rows offset rows]
+
+How to select rows starting at offset //n// according to some ordering.
+
+[[# attach-columns-note]]
+++ [#attach-columns attach columns]
+
+How to make column name a variable in the current scope which refers to the column as an array.
+
+**r:**
+
+Each column of the data frame is copies into a variable named after the column containing the column as a vector.  Modifying the data in the variable does not alter the original data frame.
+
+[[# detach-columns-note]]
+++ [#detach-columns detach columns]
+
+How to remove attached column names from the current scope.
+
+[[# spreadsheet-editor-note]]
+++ [#spreadsheet-editor spreadsheet editor]
+
+How to view and edit the data frame in a spreadsheet.
+
+[[# import-export-note]]
++ [#import-export Import and Export]
+
+[[# import-tab-delimited-note]]
+++ [#import-tab-delimited import tab delimited file]
+
+Load a data frame from a tab delimited file.
+
+**r:**
+
+By default strings are converted to factors.  In older versions of R, this could reduce the amount of memory required to load the data frame; this is no longer true in newer versions.
+
+[[# import-csv-note]]
+++ [#import-csv import comma-separated values file]
+
+Load a data frame from a CSV file.
+
+[[# column-separator-note]]
+++ [#column-separator set column separator]
+
+How to set the column separator when importing a delimited file.
+
+[[# quote-char-note]]
+++ [#quote-char set quote character]
+
+How to change the quote character.  Quoting is used when strings contain the column separator or the line terminator.
+
+[[# no-header-note]]
+++ [#no-header import file w/o header]
+
+How to import a file that lacks a header.
+
+[[# set-column-names-note]]
+++ [#set-column-names set column names]
+
+How to set the column names.
+
+[[# set-column-types-note]]
+++ [#set-column-types set column types]
+
+How to indicate the type of the columns.
+
+**r:**
+
+If the column types are not set or if the type is set to NA or NULL, then the type will be set to logical, integer, numeric, complex, or factor.
+
+[[# recognize-null-values-note]]
+++ [#recognize-null-values recognize null values]
+
+Specify the input values which should be converted to null values.
+
+[[# unequal-row-length-note]]
+++ [#unequal-row-length unequal row length behavior]
+
+What happen when a row of input has less than or more than the expected number of columns.
+
+[[# skip-comment-lines-note]]
+++ [#skip-comment-lines skip comment lines]
+
+How to skip comment lines.
+
+[[# skip-rows-note]]
+++ [#skip-rows skip rows]
+
+[[# max-rows-to-read-note]]
+++ [#max-rows-to-read maximum rows to read]
+
+[[# index-column-note]]
+++ [#index-column index column]
+
+[[# export-tab-delimited-note]]
+++ [#export-tab-delimited export tab delimited file]
+
+[[# export-csv-note]]
+++ [#export-csv export comma-separated values file]
+
+Save a data frame to a CSV file.
+
+**r:**
+
+If row.names is not set to F, the initial column will be the row number as a string starting from "1".
+
+[[# relational-algebra-note]]
++ [#relational-algebra Relational Algebra]
+
+[[# data-frame-map-note]]
+++ [#data-frame-map map data frame]
+
+How to apply a mapping transformation to the rows of a data set.
+
+[[# data-set-filter-note]]
+++ [#data-set-filter filter data set]
+
+How to select the rows of a data set that satisfy a predicate.
+
+
+[[# aggregation-note]]
++ [#aggregation Aggregation]
+
+
+[[# vectors-note]]
++ [#vectors Vectors]
+
+A vector is a one dimensional array which supports these operations:
+
+* addition on vectors of the same length
+* scalar multiplication
+* a dot product
+* a norm
+
+The languages in this reference sheet provide the above operations for all one dimensional arrays which contain numeric values.
+
+[[# vector-literal]]
+++ vector literal
+
+
+[[# vector-element-wise]]
+++ element-wise arithmetic operators
+
+[[# vector-scalar]]
+++ scalar multiplication
+
+[[# vector-dot]]
+++ dot product
+
+[[# vector-cross]]
+++ cross product
+
+[[# vector-norms]]
+++ norms
+
+**matlab:**
+
+The //norm// function returns the p-norm, where the second argument is //p//.  If no second argument is provided, the 2-norm is returned.
+
+[[# matrices-note]]
++ [#matrices Matrices]
+
+[[# matrix-literal-constructor-note]]
+++ [#matrix-literal-constructor literal or constructor]
+
+Literal syntax or constructor for creating a matrix.
+
+The elements of a matrix must be specified in a linear order.  If the elements of each row of the matrix are adjacent to other elements of the same row in the linear order we say the order is //row-major//.  If the elements of each column are adjacent to other elements of the same column we say the order is //column-major//.
+
+**matlab:**
+
+Square brackets are used for matrix literals.  Semicolons are used to separate rows, and commas separate row elements.  Optionally, newlines can be used to separate rows and whitespace to separate row elements.
+
+**r:**
+
+Matrices are created by passing a vector containing all of the elements, as well as the number of rows and columns, to the //matrix// constructor.
+
+If there are not enough elements in the data vector, the values will be recycled.  If there are too many extra values will be ignored.  However, the number of elements in the data vector must be a factor or a multiple of the number of elements in the final matrix or an error results.
+
+When consuming the elements in the data vector, R will normally fill by column.  To change this behavior pass a //byrow=T// argument to the //matrix// constructor:
+
+[[code]]
+A = matrix(c(1,2,3,4),nrow=2,byrow=T)
+[[/code]]
+
+[[# constant-matrices-note]]
+++ [#constant-matrices constant matrices]
+
+How to create a matrices with zeros for entries or with ones for entries.
+
+[[# diagonal-matrices-note]]
+++ [#diagonal-matrices diagonal matrices]
+
+How to create diagonal matrices including the identity matrix.
+
+A matrix is diagonal if and only if {{a,,ij,, = 0}} for all {{i ≠ j}}.
+
+[[# matrix-dim-note]]
+++ [#matrix-dim dimensions]
+
+How to get the dimensions of a matrix.
+
+[[# matrix-access]]
+++ element access
+
+How to access an element of a matrix.  All languages described here follow the convention from mathematics of specifying the row index before the column index.
+
+**matlab:**
+
+Rows and columns are indexed from one.
+
+**r:**
+
+Rows and columns are indexed from one.
+
+[[# matrix-row-access]]
+++ row access
+
+How to access a row.
+
+[[# matrix-column-access]]
+++ column access
+
+How to access a column.
+
+[[# submatrix-access]]
+++ submatrix access
+
+How to access a submatrix.
+
+[[# matrix-scalar-multiplication]]
+++ scalar multiplication
+
+How to multiply a matrix by a scalar.
+
+[[# matrix-element-wise-operators]]
+++ element-wise operators
+
+Operators which act on two identically sized matrices element by element.  Note that element-wise multiplication of two matrices is used less frequently in mathematics than matrix multiplication.
+
+
+[[code]]
+from numpy import array
+matrix(array(A) * array(B))
+matrix(array(A) / array(B))
+[[/code]]
+
+[[# matrix-multiplication]]
+++ multiplication
+
+How to multiply matrices.  Matrix multiplication should not be confused with element-wise multiplication of matrices.  Matrix multiplication in non-commutative and only requires that the number of columns of the matrix on the left match the number of rows of the matrix.  Element-wise multiplication, by contrast, is commutative and requires that the dimensions of the two matrices be equal.
+
+[[# kronecker-product]]
+++ kronecker product
+
+The [http://en.wikipedia.org/wiki/Kronecker_product Kronecker product] is a non-commutative operation defined on any two matrices.  If A is m x n and B is p x q, then the Kronecker product is a matrix with dimensions mp x nq.
+
+[[# matrix-comparison]]
+++ comparison
+
+How to test two matrices for equality.
+
+**matlab:**
+
+== and != perform entry-wise comparison.  The result of using either operator on two matrices is a matrix of boolean values.
+
+~= is a synonym for !=.
+
+**r:**
+
+== and != perform entry-wise comparison.  The result  of using either operator on two matrices is a matrix of boolean values.
+
+[[# matrix-norms]]
+++ norms
+
+How to compute the 1-norm, the 2-norm, the infinity norm, and the frobenius norm.
+
+
+**matlab:**
+
+//norm(A)// is the same as //norm(A,2)//.
+
+[[# sparse-matrices-note]]
++ [#sparse-matrices Sparse Matrices]
+
+[[# sparse-matrix-construction-note]]
+++ [#sparse-matrix-construction sparse matrix construction]
+
+How to construct a sparse matrix using coordinate format.
+
+Coordinate format specifies a matrix with three arrays: the row indices, the the column indices, and the values.
+
+[[# sparse-matrix-decomposition-note]]
+++ [#sparse-matrix-decomposition sparse matrix decomposition]
+
+[[# sparse-identity-matrix-note]]
+++ [#sparse-identity-matrix sparse identity matrix]
+
+[[# dense-matrix-to-sparse-matrix-note]]
+++ [#dense-matrix-to-sparse-matrix dense matrix to sparse matrix]
+
+[[# sparse-matrix-storage-note]]
+++ [#sparse-matrix-storage sparse matrix storage]
+
+[[# optimization-note]]
++ [#optimization Optimization]
+
+A linear program is an optimization problem in which one tries to minimize or maximize a linear function called the //objective function// subject to linear inequality constraints.
+
+The unknowns in the objective function and the constraints are called the decision variables.
+
+[[# minimize-linear-prob-note]]
+++ [#minimize-linear-prob linear minimization]
+
+How to solve a linear program where the objective function is minimized.
+
+If we have a maximization problem {{c * x}}, then we can find the solution by minimizing {{-c * x}}; that is, replacing {{c}} with {{-c}}.
+
+**matlab:**
+
+{{linprog}} is part of the Optimization toolbox.
+
+The function {{linprog}} minimizes {{c * x}} subject to the constraint that {{A * x <= b}}.  {{A * x}} and {{b}} are vectors, and when we say that {{A * x <= b}}, we mean that each component of {{A * x}} must be less than or equal to the corresponding component of {{b}}.
+
+When formulating constraints in the form {{A * x <= b}}, we may find that we have some greater-than constraints of the form: {{a,,i1,, x,,1,, + ... + a,,in,, x,,n,, >= b,,i,,}}.  We convert each such constraint to a less-than constraint by multiplying it by {{-1}}.  We use the values {{-a,,i1,,}}, ..., {{-a,,in,,}} in {{A}} and {{-b,,i,,}} in {{b}}.
+
+[[# minimize-linear-prob-decision-var-bounds-note]]
+++ [#minimize-linear-prob-decision-var-bounds linear minimization with bounds on decision variables]
+
+How to solve a linear program where the objective function is minimized and with extra constraints on the decision variables of the form {{L,,i,, <= x,,i,, <= U,,i,,}}.
+
+
+
+[[# minimize-linear-prob-equality-constraints-note]]
+++ [#minimize-linear-prob-equality-constraints linear minimization with equality constraints]
+
+[[# minimize-quadratic-prob-note]]
+++ [#minimize-quadratic-prob quadratic minimization]
+
+[[# minimize-int-linear-prob-note]]
+++ [#minimize-int-linear-prob integer linear minimization]
+
+[[# polynomials-note]]
++ [#polynomials Polynomials]
+
+++ exact polynomial fit
+
+[[# cubic-spline-note]]
+++ [#cubic-spline cubic spline]
+
+How to connect the dots of a data set with a line which has a continuous 2nd derivative.
+
+[[# descriptive-statistics-note]]
++ [#descriptive-statistics Descriptive Statistics]
+
+A statistic is a single number which summarizes a population of data.  The most familiar example is the mean or average.  Statistics defined for discrete populations can often be meaningfully extended to continuous distributions by replacing summations with integration.
+
+An important class of statistics are the nth moments.  The nth moment [[$ \mu'_n $]] of a population of //k// values //x,,i,,// with mean //@<&mu;>@// is:
+
+[[math]]
+\mu'_n = \sum_{i=1}^k x_i^n
+[[/math]]
+
+The nth central moment //@<&mu;>@,,n,,// of the same population is:
+
+[[math]]
+\mu_n = \sum_{i=1}^k (x_i - \mu)^n
+[[/math]]
+
+[[# first-moment-stats-note]]
+++ [#first-moment-stats first moment statistics]
+
+The sum and the mean.
+
+The mean is the first moment.  It is one definition of the center of the population.  The median and the mode are also used to define the center.  In most populations they will be close to but not identical to the mean.
+
+[[# second-moment-stats-note]]
+++ [#second-moment-stats second moment statistics]
+
+The variance and the standard deviation.  The variance is the second central moment.  It is a measure of the spread or width of the population.
+
+The standard deviation is the square root of the variance.  It is also a measurement of population spread.  The standard deviation has the same units of measurement as the data in the population.
+
+[[# second-moment-stats-sample-note]]
+++ [#second-moment-stats-sample second moment statistics for samples]
+
+The sample variance and sample standard deviation.
+
+[[# skewness-note]]
+++ [#skewness skewness]
+
+The skewness of a population.
+
+The skewness measures the asymmetricality of the population.  The skewness will be negative, positive, or zero when the population is more spread out on the left, more spread out on the right,  or similarly spread out on both sides, respectively.
+
+The skewness can be calculated from the third moment and the standard deviation:
+
+
+[[math]]
+\gamma_1 = E\Big[\Big(\frac{x - \mu}{\sigma}\Big)^3\Big] = \frac{\mu_3}{\sigma^3}
+[[/math]]
+
+When estimating the population skewness from a sample a correction factor is often used, yielding the sample skewness:
+
+[[math]]
+\frac{(n(n-1))^{\frac{1}{2}}}{n-2} \gamma_1
+[[/math]]
+
+**octave and matlab:**
+
+Octave uses the sample standard deviation to compute skewness.  This behavior is different from Matlab and should possibly be regarded as a bug.
+
+Matlab, but not Octave, will take a flag as a second parameter.  When set to zero Matlab returns the sample skewness:
+
+[[code]]
+skewness(x, 0)
+[[/code]]
+
+**numpy:**
+
+Set the named parameter {{bias}} to {{False}} to get the sample skewness:
+
+[[code]]
+stats.skew(x, bias=False)
+[[/code]]
+
+[[# kurtosis-note]]
+++ [#kurtosis kurtosis]
+
+The kurtosis of a population.
+
+The formula for kurtosis is:
+
+[[math]]
+\gamma_2 = \frac{\mu_4}{\sigma^4} - 3
+[[/math]]
+
+When kurtosis is negative the sides of a distribution tend to be more convex than when the kurtosis is is positive.  A negative kurtosis distribution tends to have a wide, flat peak and narrow tails.  Such a distribution is called platykurtic.  A positive kurtosis distribution tends to have a narrow, sharp peak and long tails.  Such a distribution is called leptokurtic.
+
+The fourth standardized moment is
+
+[[math]]
+\beta_2 = \frac{\mu_4}{\sigma^4}
+[[/math]]
+
+The fourth standardized moment is sometimes taken as the definition of kurtosis in older literature.  The reason the modern definition is preferred is because it assigns the normal distribution a kurtosis of zero.
+
+**matlab:**
+
+Octave uses the sample standard deviation when computing kurtosis.  This should probably be regarded as a bug.
+
+**r:**
+
+R uses the older fourth standardized moment definition of kurtosis.
+
+[[# nth-moment-note]]
+++ [#nth-moment nth moment and nth central moment]
+
+How to compute the nth moment (also called the nth absolute moment) and the nth central moment for arbitrary //n//.
+
+[[# mode-note]]
+++ [#mode mode]
+
+The mode is the most common value in the sample.
+
+The mode is a measure of central tendency like the mean and the median.  A problem with the mean is that it can produce values not found in the data.  For example the mean number of persons in an American household was 2.6 in 2009. 
+
+The mode might not be unique.  If there are two modes the sample is said to be bimodal, and in general if there is more than one mode the sample is said to be multimodal.
+
+[[# quantile-stats-note]]
+++ [#quantile-stats quantile statistics]
+
+If the data is sorted from smallest to largest, the //minimum// is the first value, the //median// is the middle value, and the //maximum// is the last value.  If there are an even number of data points, the median is the average of the two middle points. The median divides the population into two halves.
+
+When the population is divided into four parts the division markers are called the first, second, and third //quartiles//.  The //interquartile range// (IQR) is the difference between the 3rd and 1st quartiles.
+
+When the population is divided into ten parts the division markers are called //deciles//.
+
+When the population is divided into a hundred parts the division markers are called //percentiles//.
+
+If the population is divided into //n// parts the markers are called the 1st, 2nd, ..., (n-1)th n-//quantiles//.
+
+[[# bivariate-stats-note]]
+++ [#bivariate-stats bivariate statistics]
+
+The correlation and the covariance.
+
+The correlation is a number from -1 to 1.  It is a measure of the linearity of the data, with values of -1 and 1 representing indicating a perfectly linear relationship.  When the correlation is positive the quantities tend to increase together and when the correlation is negative one quantity will tend to increase as the other decreases.
+
+A variable can be completely dependent on another and yet the two variables can have zero correlation.  This happens for Y = X^^2^^ where uniform X on the interval [-1, 1].  [http://en.wikipedia.org/wiki/Anscombe's_quartet Anscombe's quartet]  gives four examples of data sets each with the same fairly high correlation 0.816 and yet which show significant qualitative differences when plotted.
+
+The covariance is defined by 
+
+[[math]]
+E[X -\mu_X)(Y- \mu_Y)]
+[[/math]]
+
+The correlation is the normalized version of the covariance.  It is defined by
+
+[[math]]
+\frac{E[X -\mu_X)(Y- \mu_Y)]}{\sigma_X \sigma_Y}
+[[/math]]
+
+[[# correlation-matrix-note]]
+++ [#correlation-matrix correlation matrix]
+
+[[# freq-table-note]]
+++ [#freq-table data set to frequency table]
+
+How to compute the frequency table for a data set.   A frequency table counts how often each value occurs in the data set.
+
+**r:**
+
+The {{table}} function returns an object of type {{table}}.
+
+[[# invert-freq-table-note]]
+++ [#invert-freq-table frequency table to data set]
+
+How to convert a frequency table back into the original data set.
+
+The order of the original data set is not preserved.
+
+
+[[# bin-note]]
+++ [#bin bin]
+
+How to bin a data set.  The result is a frequency table where each frequency represents the number of samples from the data set for an interval.
+
+**r:**
+
+The {{cut}} function returns a {{factor}}.
+
+A {{labels}} parameter can be provided with a vector argument to assign the bins names.  Otherwise bin names are constructed from the breaks using "[0.0,1.0)" style notation.
+
+The {{hist}} function can be used to bin a data set:
+
+[[code]]
+x = c(1.1, 3.7, 8.9, 1.2, 1.9, 4.1)
+hist(x, breaks=c(0, 3, 6, 9), plot=FALSE)
+[[/code]]
+
+{{hist}} returns an object of type {{histogram}}.  The counts are in the {{$counts}} attribute.
+
+
+[[# distribution-note]]
++ [#distributions Distributions]
+
+A distribution density function //f(x)// is a non-negative function which, when integrated over its entire domain is equal to one.  The distributions described in this sheet have as their domain the real numbers.  The support of a distribution is the part of the domain on which the density function is non-zero.
+
+A distribution density function can be used to describe the values one is likely to see when drawing an example from a population.  Values in areas where the density function is large are more likely than values in areas where the density function is small.  Values where there density function is zero do not occur.  Thus it can be useful to plot the density function.
+
+To derive probabilities from a density function one must integrate or use the associated cumulative density function
+
+[[math]]
+F(x) = \int_{-\infty}^x f(t) dt
+[[/math]]
+
+which gives the probability of seeing a value less than or equal to //x//.  As probabilities are non-negative and no greater than one, //F// is a function from (-@<&infin;>@, @<&infin;>@) to [0,1].  The inverse of F is called the inverse cumulative distribution function or the quantile function for the distribution.
+
+For each distribution statistical software will generally provide four functions: the density, the cumulative distribution, the quantile, and a function which returns random numbers in frequencies that match the distribution.  If the software does not provide a random number generating function for the distribution, the quantile function can be composed with the built-in random number generator that most languages have as long as it returns uniformly distributed floats from the interval [0, 1].
+
+||density _
+probability density _
+probability mass||cumulative density _
+cumulative distribution _
+distribution||inverse cumulative density _
+inverse cumulative distribution _
+quantile _
+percentile _
+percent point||random variate||
+
+Discrete distributions such as the binomial and the poisson do not have density functions in the normal sense.  Instead they have probability mass functions which assign probabilities which sum up to one to the integers.  In R warnings will be given if non integer values are provided to the mass functions {{dbinom}} and {{dpoiss}}.
+
+The cumulative distribution function of a discrete distribution can still be defined on the reals.  Such a function is constant except at the integers where it may have jump discontinuities.
+
+Most well known distributions are in fact parametrized families of distributions.  [[[distributions|This table]]] lists some of them with their parameters and properties.
+
+The information entropy of a continuous distribution with density //f(x)// is defined as:
+
+[[math]]
+-\int_\mathbb{R} f(x) \; \log(f(x)) \; dx
+[[/math]]
+
+In Bayesian analysis the distribution with the greatest entropy, subject to the known facts about the distribution, is called the maximum entropy probability distribution.  It is considered the best distribution for modeling the current state of knowledge.
+
+[[# binomial-note]]
+++ [#binomial binomial]
+
+The probability mass, cumulative distribution, quantile, and random number generating functions for the binomial distribution.
+
+The binomial distribution is a discrete distribution. It models the number of successful trails when //n// is the number of trials and //p// is the chance of success for each trial.  An example is the number of heads when flipping a coin 100 times.  If the coin is fair then //p// is 0.50.
+
+**numpy:**
+
+Random numbers in a binomial distribution can also be generated with:
+
+[[code]]
+np.random.binomial(n, p)
+[[/code]]
+
+[[# poisson-note]]
+++ [#poisson poisson]
+
+The probability mass, cumulative distribution, quantile, and random number generating functions for the Poisson distribution.
+
+The Poisson distribution is a discrete distribution.  It is described by a parameter //lam// which is the mean value for the distribution. The Poisson distribution is used to model events which happen at a specified average rate and independently of each other.  Under these circumstances the time between successive events will be described by an exponential distribution and the events are said to be described by a poisson process.
+
+**numpy:**
+
+Random numbers in a Poisson distribution can also be generated with:
+
+[[code]]
+np.random.poisson(lam, size=1)
+[[/code]]
+
+[[# normal-note]]
+++ [#normal normal]
+
+The probability density, cumulative distribution, quantile, and random number generating functions for the normal distribution.
+
+The parameters are the mean @<&mu;>@ and the standard deviation @<&sigma;>@.  The standard normal distribution has @<&mu;>@ of 0 and @<&sigma;>@ of 1.
+
+The normal distribution is the maximum entropy distribution for a given mean and variance.  According to the central limit theorem, if {X,,1,,, ..., X,,n,,} are any independent and identically distributed random variables with mean @<&mu;>@ and variance @<&sigma;>@^^2^^, then S,,n,, := @<&Sigma;>@ X,,i,, / n converges to a normal distribution with mean @<&mu;>@ and variance @<&sigma;>@^^2^^/n.  
+
+**numpy:**
+
+Random numbers in a normal distribution can also be generated with:
+
+[[code]]
+np.random.randn()
+[[/code]]
+
+[[# gamma-note]]
+++ [#gamma gamma]
+
+The probability density, cumulative distribution, quantile, and random number generating functions for the gamma distribution.
+
+The parameter //k// is called the shape parameter and @<&theta;>@ is called the scale parameter.  The rate of the distribution is @<&beta;>@ = 1/@<&theta;>@.
+
+If X,,i,, are //n// independent random variables with @<&Gamma;>@(k,,i,,, @<&theta;>@) distribution, then @<&Sigma;>@ X,,i,, has distribution @<&Gamma;>@(@<&Sigma;>@ k,,i,,, @<&theta;>@).
+
+If X has @<&Gamma;>@(k, @<&theta;>@) distribution, then @<&alpha;>@X has  @<&Gamma;>@(k, @<&alpha;>@@<&theta;>@) distribution.
+
+[[# exponential-note]]
+++ [#exponential exponential]
+
+The probability density, cumulative distribution, quantile, and random number generating functions for the exponential distribution.
+
+[[# chi-squared-note]]
+++ [#chi-squared chi-squared]
+
+The probability density, cumulative distribution, quantile, and random number generating functions for the chi-squared distribution.
+
+[[# beta-note]]
+++ [#beta beta]
+
+The probability density, cumulative distribution, quantile, and random number generating functions for the beta distribution.
+
+[[# uniform-note]]
+++ [#uniform uniform]
+
+The probability density, cumulative distribution, quantile, and random number generating functions for the uniform distribution.
+
+The uniform distribution is described by the parameters //a// and //b// which delimit the interval on which the density function is nonzero.
+
+The uniform distribution the is maximum entropy probability distribution with support //[a, b]//.  
+
+Consider the uniform distribution on //[0, b]//.  Suppose that we take //k// samples from it, and //m// is the largest of the samples. The minimum variance unbiased estimator for //b// is
+
+[[math]]
+\frac{k+1}{k}m
+[[/math]]
+
+**octave, r, numpy:**
+
+//a// and //b// are optional parameters and default to 0 and 1 respectively.
+
+[[# students-t-note]]
+++ [#students-t Student's t]
+
+The probability density, cumulative distribution, quantile, and random number generating functions for Student's t distribution.
+
+[[# snedecors-f-note]]
+++ [#snedecors-f Snedecor's F]
+
+The probability density, cumulative distribution, quantile, and random number generating functions for Snedecor's F distribution.
+
+[[# empirical-density-func-note]]
+++ [#empirical-density-func empirical density function]
+
+How to construct a density function from a sample.
+
+[[# empirical-cumulative-distribution-note]]
+++ [#empirical-cumulative-distribution empirical cumulative distribution]
+
+[[# empirical-quantile-func-note]]
+++ [#empirical-quantile-func empirical quantile function]
+
+[[# linear-regression-note]]
++ [#linear-regression Linear Regression]
+
+[[# simple-linear-regression-note]]
+++ [#simple-linear-regression simple linear regression]
+
+How to get the slope //a// and intercept //b// for a line which best approximates the data.  How to get the residuals.
+
+If there are more than two data points, then the system is overdetermined and in general there is no solution for the slope and the intercept.  Linear regression looks for line that fits the points as best as possible.  The least squares solution is the line that minimizes the sum of the square of the distances of the points from the line.
+
+The residuals are the difference between the actual values of //y// and the calculated values using //ax + b//.  The norm of the residuals can be used as a measure of the goodness of fit.
+
+[[# linear-regression-no-intercept-note]]
+++ [#linear-regression-no-intercept no intercept]
+
+[[# multiple-linear-regression-note]]
+++ [#multiple-linear-regression multiple linear regression]
+
+[[# linear-regression-interaction-note]]
+++ [#linear-regression-interaction interaction]
+
+[[# logistic-regression-note]]
+++ [#logistic-regression logistic regression]
+
+[[# statistical-tests-note]]
++ [#statistical-tests Statistical Tests]
+
+A selection of statistical tests.  For each test the null hypothesis of the test is stated in the left column.
+
+In a null hypothesis test one considers the //p-value//, which is the chance of getting data which is as or more extreme than the observed data if the null hypothesis is true.  The null hypothesis is usually a supposition that the data is drawn from a distribution with certain parameters.
+
+The extremeness of the data is determined by comparing the expected value of a parameter according to the null hypothesis to the estimated value from the data.  Usually the parameter is a mean or variance.  In a //one-tailed test// the p-value is the chance the difference is greater than the observed amount; in a //two-tailed test// the p-value is the chance the absolute value of the difference is greater than the observed amount. 
+
+Octave and MATLAB have different names for the statistical test functions.  The sheet shows the Octave functions; the corresponding MATLAB functions are:
+
+||~ octave||~ matlab||
+||wilcoxon_test||ranksum||
+||kruskal_wallis_test||kruskalwallis||
+||kolmogorov_smirnov_test||kstest||
+||kolmogorov_smirnov_test_2||kstest2||
+||t_test||ttest||
+||t_test_2||ttest2||
+
+[[# wilcoxon-note]]
+++ [#wilcoxon wilcoxon signed-rank test]
+
+**matlab**
+
+{{wilcoxon_test()}} is an Octave function.  The MATLAB function is {{ranksum()}}.
+
+[[# kruskal-note]]
+++ [#kruskal kruskal-wallis rank sum test]
+
+[[# kolmogorov-smirnov-test-note]]
+++ [#kolmogorov-smirnov-test kolmogorov-smirnov test]
+
+Test whether two samples are drawn from the same distribution.
+
+**matlab:**
+
+{{kolmogorov_smirnov_test_2()}} and {{kolmogorov_smirnov_test()}} are Octave functions.  The corresponding MATLAB functions are {{kstest2()}} and {{kstest()}}.
+
+{{kolmogorov_smirnov_test()}} is a one sample test; it tests whether a sample is drawn from one of the standard continuous distributions.  A one sample KS test gives a repeatable p-value; generating a sample and using a two sample KS test does not.
+
+[[code]]
+x = randn(100, 1)
+
+% null hypothesis is true:
+kolmogorov_smirnov_test(x, "norm", 0, 1)
+
+% alternative hypothesis is true:
+kolmogorov_smirnov_test(x, "unif", -0.5, 0.5)
+[[/code]]
+
+**r:**
+
+
+[[# one-sample-t-test-note]]
+++ [#one-sample-t-test one-sample t-test]
+
+[[# independent-two-sample-t-test-note]]
+++ [#independent-two-sample-t-test independent two-sample t-test]
+
+Test whether two normal variables have same mean.
+
+**r:**
+
+If the normal variables are known to have the same variance, the variance can be pooled to estimate standard error:
+
+[[code]]
+t.test(x, y, var.equal=T)
+[[/code]]
+
+If the variance cannot be pooled, then Welch's t-test is used.  This uses a lower (often non-integral) degrees-of-freedom value, which in turn results in a higher p-value.
+
+[[# one-sample-binomial-test-note]]
+++ [#one-sample-binomial-test one-sample binomial test]
+
+[[# two-sample-binomial-test-note]]
+++ [#two-sample-binomial-test two-sample binomial test]
+
+[[# chi-squared-test-note]]
+++ [#chi-squared-test chi-squared test]
+
+[[# poisson-test-note]]
+++ [#poisson-test poisson test]
+
+[[# f-test-note]]
+++ [#f-test F test]
+
+[[# pearson-product-moment-test-note]]
+++ [#pearson-product-moment-test pearson product moment test]
+
+[[# shapiro-wilk-test-note]]
+++ [#shapiro-wilk-test shapiro-wilk test]
+
+[[# bartletts-test-note]]
+++ [#bartletts-test bartlett's test]
+
+A test whether variables are drawn from normal distributions with the same variance.
+
+[[# levene-test-note]]
+++ [#levene-test levene's test]
+
+A test whether variables are drawn from distributions with the same variance.
+
+[[# one-way-anova-note]]
+++ [#one-way-anova one-way anova]
+
+[[# time-series-note]]
++ [#time-series Time Series]
+
+A //time series// is a sequence of data points collected repeatedly on a uniform time interval.
+
+A time series can be represented by a dictionary which maps timestamps to the type of the data points.  A more efficient implementation exploits the fact that the time interval is uniform and stores the data points in an array.  To recover the timestamps of the data points, the timestamp of the first data point and the length of the time interval are also stored.
+
+[[# time-series-construction-note]]
+++ [#time-series-construction time series]
+
+How to create a time series from an array.
+
+[[# monthly-time-series-note]]
+++ [#monthly-time-series monthly time series]
+
+How to create a time series with one data point per month.
+
+[[# time-series-lookup-time-note]]
+++ [#time-series-lookup-time lookup by time]
+
+How to get to a data point in a time series by when the data point was collected.
+
+[[# time-series-lookup-position-note]]
+++ [#time-series-lookup-position lookup by position in series]
+
+How to get a data point in a time series by its ordinal position.
+
+[[# aligned-arithmetic-note]]
+++ [#aligned-arithmetic aligned arithmetic]
+
+[[# lagged-difference-note]]
+++ [#lagged-difference lagged difference]
+
+[[# simple-moving-avg-note]]
+++ [#simple-moving-avg simple moving average]
+
+[[# weighted-moving-avg-note]]
+++ [#weighted-moving-avg weighted moving average]
+
+[[# exponential-smoothing-note]]
+++ [#exponential-smoothing exponential smoothing]
+
+[[# decompose-seasonal-trend-note]]
+++ [#decompose-seasonal-trend decompose into seasonal and trend]
+
+[[# correlogram-note]]
+++ [#correlogram correlogram]
+
+
+[[# arima-note]]
+++ [#arima arima]
+
+[[# fast-fourier-transform-note]]
++ [#fast-fourier-transform Fast Fourier Transform]
+
+[[# fft-note]]
+++ [[# fft fft]
+
+[[# ifft-note]]
+++ [#ifft inverse fft]
+
+[[# fftshift-note]]
+++ [#fftshift shift constant component to center]
+
+[[# fft2-note]]
+++ [#fft2 two-dimensional fft]
+
+[[# fftn-note]]
+++ [#fftn n-dimensional fft]
+
+[[# clustering-note]]
++ [#clustering Clustering]
+
+[[# univariate-chart-note]]
++ [#univariate-charts Univariate Charts]
+
+[[# bar-chart-note]]
+++ [#bar-chart vertical bar chart]
+
+A chart in which numerical values are represented by horizontal bars.  The bars are aligned at the bottom.
+
+**r:**
+
+How to produce a bar chart using ggplot2:
+
+[[code]]
+cnts = c(7,3,8,5,5)
+names = c("a","b","c","d","e")
+df = data.frame(names, cnts)
+qplot(names, data=df, geom="bar", weight=cnts)
+[[/code]]
+
+[[# horizontal-bar-chart-note]]
+++ [#horizontal-bar-chart horizontal bar chart]
+
+A bar chart with horizontal bars which are aligned on the left.
+
+[[# pie-chart-note]]
+++ [#pie-chart pie chart]
+
+A pie chart displays values using the areas of circular sectors or equivalently the lengths of the arcs of those sectors.
+
+A pie chart implies that the values are percentages of a whole.
+
+[[# stem-leaf-plot-note]]
+++ [#stem-leaf-plot stem-and-leaf plot]
+
+A stem-and-leaf plot is a concise way of storing a small set of numbers which makes their distribution visually evident.
+
+The original set of numbers can be recovered with some loss of accuracy by appending the number on the left with each of the digits on the right.    In the example below the original data set contained -43, -42, -41, -39, -38, -35, ..., 35, 44, 46, 50, 58. 
+
+[[code]]
+> stem(20*rnorm(100))
+
+  The decimal point is 1 digit(s) to the right of the |
+
+  -4 | 321
+  -2 | 98544054310
+  -0 | 8864333111009998776444332222110
+   0 | 0001122333333466667778899122334555666789
+   2 | 00023669025
+   4 | 4608
+[[/code]]
+
+[[# histogram-note]]
+++ [#histogram histogram]
+
+A histogram is a bar chart where each bar represents a range of values that the data points can fall in.  The data is tabulated to find out how often data points fall in each of the bins and in the final chart the length of the bars corresponds to the frequency.
+
+A common method for choosing the number of bins using the number of data points is Sturges' formula:
+
+[[math]]
+\lceil \log_2{x} + 1 \rceil
+[[/math]]
+
+**r:**
+
+How to make a histogram with the {{ggplot2}} library:
+
+[[code]]
+qplot(rnorm(50), geom="histogram", binwidth=binwidth)
+binwidth = (max(x)-min(x))/10
+qplot(rnorm(50), geom="histogram", binwidth=binwidth)
+[[/code]]
+
+[[# box-plot-note]]
+++ [#box-plot box plot]
+
+Also called a box-and-whisker plot.
+
+The box shows the locations of the 1st quartile, median, and 3rd quartile.  These are the same as the 25th percentile, 50th percentile, and 75th percentile.  
+
+The whiskers are sometimes used to show the maximum and minimum values of the data set.  Outliers are sometimes shown explicitly with dots, in which case all remaining data points occur inside the whiskers.
+
+**r:**
+
+How to create a box plot with {{ggplot2}}:
+
+[[code]]
+qplot(x="rnorm", y=rnorm(50), geom="boxplot")
+
+qplot(x=c("rnorm", "rexp", "runif"), y=c(rnorm(50), rexp(50), runif(50)), geom="boxplot")
+[[/code]]
+
+[[# chart-title-note]]
+++ [#chart-title chart title]
+
+How to set the chart title.
+
+**r:**
+
+The {{qplot}} commands supports the {{main}} options for setting the title:
+
+[[code]]
+qplot(x="rnorm", y=rnorm(50), geom="boxplot", main="boxplot example")
+[[/code]]
+
+[[# bivariate-chart-note]]
++ [#bivariate-charts Bivariate Charts]
+
+[[# stacked-bar-chart-note]]
+++ [#stacked-bar-chart stacked bar chart]
+
+Two or more data sets with a common set of labels can be charted with a stacked bar chart.  This makes the sum of the data sets for each label readily apparent.
+
+[[# grouped-bar-chart-note]]
+++ [#grouped-bar-chart grouped bar chart]
+
+Optionally data sets with a common set of labels can be charted with a grouped bar chart which clusters the bars for each label.  The grouped bar chart makes it easier to perform comparisons between labels for each data set.
+
+[[# scatter-plot-note]]
+++ [#scatter-plot scatter plot]
+
+A scatter plot can be used to determine if two variables are correlated.
+
+**r:**
+
+How to make a scatter plot with {{ggplot}}:
+
+[[code]]
+x = rnorm(50)
+y = rnorm(50)
+p = ggplot(data.frame(x, y), aes(x, y))
+p = p + layer(geom="point")
+p
+[[/code]]
+
+[[# point-types-note]]
+++ [#point-types point types]
+
+[[# hexbin-note]]
+++ [#hexbin hexagonal binning]
+
+A hexagonal binning is the two-dimensional analog of a histogram.  The number of data points in each hexagon is tabulated, and then color or grayscale is used to show the frequency.
+
+A hexagonal binning is superior to a scatter-plot when the number of data points is high because most scatter-plot software doesn't indicate when points are occur on top of each other.
+
+[[# linear-regression-line-note]]
+++ [#linear-regression-line linear regression line]
+
+How to plot a line determined by linear regression on top of a scatter plot.
+
+[[# polygonal-plot-note]]
+++ [#polygonal-plot polygonal line plot]
+
+How to connect the dots of a data set with a polygonal line.
+
+[[# line-types-note]]
+++ [#line-types line types]
+
+[[# function-plot-note]]
+++ [#function-plot function plot]
+
+How to plot a function.
+
+[[# qq-plot-note]]
+++ [#qq-plot quantile-quantile plot]
+
+Also called a Q-Q plot.
+
+A quantile-quantile plot is a scatter plot created from two data sets.  Each point depicts the quantile of the first data set with its x position and the corresponding quantile of the second data set with its y position.
+
+If the data sets are drawn from the same distribution then most of the points should be close to the line y = x.  If the data sets are drawn from distributions which have a linear relation then the Q-Q plot should also be close to linear.
+
+If the two data sets have the same number of elements, one can simply sort them and create the scatterplot.
+
+If the number of elements is different, one a set of quantiles (such as percentiles) for each set.  The {{quantile}} function of MATLAB and R is convenient for this.  With Python, one can use {{scipy.stats.scoreatpercentile}}.
+
+[[# axis-labels-note]]
+++ [#axis-labels axis labels]
+
+How to label the x and y axes.
+
+**r:**
+
+How to label the axes with ggplot2:
+
+[[code]]
+x = rnorm(20)
+y = x^2
+
+p = ggplot(data.frame(x, y), aes(x, y))
+p + layer(geom="point") + xlab('x') + ylab('x squared')
+[[/code]]
+
+[[# axis-limits-note]]
+++ [#axis-limits axis limits]
+
+How to manually set the range of values displayed by an axis.
+
+[[# logarithmic-y-axis-note]]
+++ [#logarithmic-y-axis logarithmic y-axis]
+
+[[# multivariate-chart-note]]
++ [#multivariate-charts Multivariate Charts]
+
+[[# additional-line-note]]
+++ [#additional-line additional line set]
+
+How to add another line to a plot.
+
+[[# colors-note]]
+++ [#colors colors]
+
+How to set the color of points and lines.
+
+[[# superimposed-plots-note]]
+++ [#superimposed-plots superimposed plots with different y-axis scales]
+
+How to superimpose two plots with different y-axis scales.
+
+To minimize the risk that the reader will read off an incorrect y-value for a data point, the example uses the same color for the y-axis as it does for the corresponding data set.
+
+[[# legend-note]]
+++ [#legend legend]
+
+How to put a legend on a chart.
+
+**r:**
+
+These strings can be used as the first argument to control the legend position:
+
+* "bottomright"
+* "bottom"
+* "bottomleft"
+* "left"
+* "topleft"
+* "top"
+* "topright"
+* "right"
+* "center"
+
+The named parameter {{lwd}} is the line width.  It is roughly the width in pixels, though the exact interpretation is device specific.
+
+The named parameter {{lty}} specifies the line type.  The value can be either an integer or a string:
+
+||~ number||~ string||
+||0||'blank'||
+||1||'solid'||
+||2||'dashed'||
+||3||'dotted'||
+||4||'dotdash'||
+||5||'longdash'||
+||6||'twodash'||
+
+[[# additional-point-note]]
+++ [#additional-point additional point set]
+
+[[# area-chart-note]]
+++ [#area-chart stacked area chart]
+
+[[# overlapping-area-chart-note]]
+++ [#overlapping-area-chart overlapping area chart]
+
+[[# 3d-scatter-plot-note]]
+++ [#3d-scatter-plot 3d scatter plot]
+
+[[# bubble-chart-note]]
+++ [#bubble-chart bubble chart]
+
+[[# scatter-plot-matrix-note]]
+++ [#scatter-plot-matrix scatter plot matrix]
+
+[[# contour-plot-note]]
+++ [#contour-plot contour plot]
+
+[[# matlab]]
++ [#top MATLAB]
+
+[http://www.gnu.org/software/octave/doc/interpreter/ Octave Manual]
+[http://www.mathworks.com/help/techdoc/ MATLAB Documentation]
+[http://en.wikibooks.org/wiki/MATLAB_Programming/Differences_between_Octave_and_MATLAB Differences between Octave and MATLAB]
+[http://octave.sourceforge.net/packages.php Octave-Forge Packages]
+
+The basic data type of MATLAB is a matrix of floats.    There is no distinction between a scalar and a 1x1 matrix, and functions that work on scalars typically work on matrices as well by performing the scalar function on each entry in the matrix and returning the results in a matrix with the same dimensions.  Operators such as the logical operators ('&' '|' '!'), relational operators ('==', '!=', '<', '>'), and arithmetic operators ('+', '-') all work this way.  However the multiplication '*' and division '/' operators perform matrix multiplication and matrix division, respectively.  The {{.*}} and {{./}}  operators are available if entry-wise multiplication or division is desired.
+
+Floats are by default double precision; single precision can be specified with the //single// constructor.  MATLAB has convenient matrix literal notation: commas or spaces can be used to separate row entries, and semicolons or newlines can be used to separate rows.
+
+Arrays and vectors are implemented as single-row ({{1xn}}) matrices.  As a result an //n//-element vector must be transposed before it can be multiplied on the right of a {{mxn}} matrix.  
+
+Numeric literals that lack a decimal point such as //17// and //-34// create floats, in contrast to most other programming languages.  To create an integer, an integer constructor which specifies the size such as //int8// and //uint16// must be used.  Matrices of integers are supported, but the entries in a given matrix must all have the same numeric type.  
+
+Strings are implemented as single-row ({{1xn}}) matrices of characters. Matrices cannot contain strings.  If a string is put in matrix literal, each character in the string becomes an entry in the resulting matrix.  This is consistent with how matrices are treated if they are nested inside another matrix.  The following literals all yield the same string or {{1xn}} matrix of characters:
+
+[[code]]
+'foo'
+[ 'f' 'o' 'o' ]
+[ 'foo' ]
+[ [ 'f' 'o' 'o' ] ]
+[[/code]]
+
+//true// and //false// are functions which return matrices of ones and zeros.  The ones and zeros have type //logical// instead of //double//, which is created by the literals 1 and 0.  Other than having a different class, the 0 and 1 of type //logical// behave the same as the 0 and 1 of type //double//.
+
+MATLAB has a tuple type (in MATLAB terminology, a cell array) which can be used to hold multiple strings.  It can also hold values with different types.
+
+[[# r]]
++ [#top R]
+
+[http://cran.r-project.org/doc/manuals/R-intro.html An Introduction to R]
+[http://adv-r.had.co.nz/ Advanced R Programming]
+[http://cran.r-project.org/ The Comprehensive R Archive Network]
+
+The primitive data types of R are vectors of floats, vectors of strings, and vectors of booleans.  There is no distinction between a scalar and a vector with one entry in it.  Functions and operators which accept a scalar argument will typically accept a vector argument, returning a vector of the same size with the scalar operation performed on each the entries of the original vector.
+
+The scalars in a vector must all be of the same type, but R also provides a //list// data type which can be used as a tuple (entries accessed by index), record (entries accessed by name), or even as a dictionary.
+
+In addition R provides a //data frame// type which is a list (in R terminology) of vectors all of the same length.   Data frames are equivalent to the data sets of other statistical analysis packages.
+
+[[# numpy]]
++ [#top NumPy]
+
+[http://docs.scipy.org/doc/ NumPy and SciPy Documentation]
+[http://matplotlib.sourceforge.net/ matplotlib intro]
+[http://www.scipy.org/NumPy_for_Matlab_Users NumPy for Matlab Users]
+[http://pandas.pydata.org/pandas-docs/stable/ Pandas Documentation]
+[http://pandas.pydata.org/pandas-docs/dev/genindex.html Pandas Method/Attribute Index]
+
+NumPy is a Python library which provides a data type called {{array}}.  It differs from the Python {{list}} data type in the following ways:
+
+* N-dimensional.  Although the {{list}} type can be nested to hold higher dimension data, the {{array}} can hold higher dimension data in a space efficient manner without using indirection.
+* homogeneous.  The elements of an {{array}} are restricted to be of a specified type.  The NumPy library introduces new primitive types not available in vanilla Python.  However, the element type of an array can be {{object}} which permits storing anything in the array.
+
+In the reference sheet the [#array array section] covers the vanilla Python {{list}} and the [#multidimensional-array multidimensional array section] covers the NumPy {{array}}.
+
+//List the NumPy primitive types//
+
+SciPy, Matplotlib, and Pandas are libraries which depend on Numpy.
+
+[[# julia]]
++ [#top Julia]
+
+http://julialang.org/

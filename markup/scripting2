@@ -790,13 +790,13 @@ var i2 = new Int(7);||$##peru|i## = ##purple|new## ##green|Int##(); _
 $##peru|i2## = ##purple|new## ##green|Int##(7);||##peru|i## = Int() _
 ##peru|i2## = Int(7)||i = ##green|Int##.new _
 i2 = ##green|Int##.new(7)||
-||[[# instance-var]][#instance-var-note instance variable visibility]||##gray|//public//##||##gray|//visibility must be declared//##||##gray|//public; attributes starting with underscore private by convention//##||##gray|//private by default; use// attr_reader, attr_writer, attr_accessor //to make public//##||
 ||[[# getter-setter]][#getter-setter-note get and set instance variable] _
 @<&nbsp;>@||var v = i.value; _
 i.value = v + 1;||$##peru|v## = $##peru|i##->##peru|value##; _
 $##peru|i##->##peru|value## = $##peru|v## + 1;||##peru|v## = i.value _
 i.value = v + 1||v = i.value _
 i.value = v + 1||
+||[[# instance-var]][#instance-var-note instance variable visibility]||##gray|//public//##||##gray|//visibility must be declared//##||##gray|//public; attributes starting with underscore private by convention//##||##gray|//private by default; use// attr_reader, attr_writer, attr_accessor //to make public//##||
 ||[[# def-method]][#def-method-note define method] _
 @<&nbsp;>@||##gray|@@//@@ inside constructor:## _
 this.plus = function(v) { _
