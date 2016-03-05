@@ -2,7 +2,7 @@
 
 ||~ ||~ [#rust rust]||~ [#swift swift]||~ [#scala scala]||
 ||[[# version-used]][#version-used-note version used] _
-@<&nbsp;>@||##gray|//0.11//##||##gray|//2.1//##||##gray|//2.11//##||
+@<&nbsp;>@||##gray|//1.5//##||##gray|//2.1//##||##gray|//2.11//##||
 ||[[# version]][#version-note show version] _
 @<&nbsp;>@||$ rustc @@--@@version||$ swift @@--@@version||$ scala -version||
 ||[[# implicit-prologue]][#implicit-prologue-note implicit prologue]||##gray|//none//##||import Foundation||##gray|//none; but these libraries always available:// _
@@ -72,10 +72,10 @@ val n = 1 + p _
  _
 ##gray|@@//@@ evaluated first time n is accessed:## _
 lazy val n = 1 + p||
-||[[# variable]][#variable-note modifiable variable]||let mut n: int = 3; _
-n = 4;||var n = 3 _
-n = 4||var n = 3 _
-n = 4 _
+||[[# variable]][#variable-note modifiable variable]||let mut n: i32 = 3; _
+n += 1;||var n = 3 _
+n +=  1||var n = 3 _
+n += 1 _
  _
 ##gray|@@//@@ evaluates 1 + 2 each time n is used:## _
 def n = 1 + 2||
@@ -99,11 +99,6 @@ i = 3|| ||
  _
 ##gray|//bit://## _
 @@<<= >>= &= |= ^=@@||
-||[[# incr-decr]][#incr-decr-note increment and decrement]|| ||##gray|//premodifiers://## _
-++i @@--@@i _
- _
-##gray|//postmodifiers://## _
-i++ i@@--@@|| ||
 ||[[# unit]][#unit-note unit type and value]|| ||Void _
 ()||Unit _
 ()||
@@ -137,8 +132,7 @@ nil||null||
 ||[[# relational-op]][#relational-op-note relational operators]||== != < > <= >=||== != < > <= >=||== != < > <= >=||
 ||[[# min-max]][#min-max-note min and max]|| || ||math.min 1 2 _
 math.max 1 2||
-||[[# int-type]][#int-type-note integer type]||int ##gray|//machine dependent size//## _
-i8 _
+||[[# int-type]][#int-type-note integer type]||i8 _
 i16 _
 i32 _
 i64||Int8 _
@@ -150,18 +144,17 @@ Int _
 Byte Short Long _
 ##gray|//arbitrary precision type://## _
 BigInt||
-||[[# unsigned-int-type]][#unsigned-int-type-note unsigned integer type]||uint ##gray|//machine dependent size//## _
-u8 _
+||[[# unsigned-int-type]][#unsigned-int-type-note unsigned integer type]||u8 _
 u16 _
 u32 _
 u64||UInt8 _
 UInt16 _
 UInt32 _
 UInt64 (UInt)|| ||
-||[[# int-literal]][#int-literal-note integer literal]||-4i _
+||[[# int-literal]][#int-literal-note integer literal]||-4 _
  _
 ##gray|@@//@@ specify size:## _
--4i32|| ||-4||
+-4_i32|| ||-4||
 ||[[# float-type]][#float-type-note float type]||f32 _
 f64||Float _
 Double||##gray|//type of float literals://## _
@@ -169,29 +162,30 @@ Double _
 ##gray|//other types://## _
 Float||
 ||[[# arith-op]][#arith-op-note arithmetic operators]||+ - * / %||+ - * / %||+ - * / %||
-||[[# add-int-float]][#add-int-float-note add integer and float]||use std::num; _
- _
-let n: f32 = num::cast(3i).unwrap(); _
- _
-n + 7.0f32|| ||3 + 7.0||
+||[[# add-int-float]][#add-int-float-note add integer and float]||let n: i32 = 3; _
+let x = n as f64; _
+let y = x + 0.5;|| ||3 + 7.0||
 ||[[# int-div]][#int-div-note integer division] _
-##gray|//and remainder//##||7i / 3i _
-7i % 3i||7 / 3 _
+##gray|//and remainder//##||7 / 3 _
+7 % 3||7 / 3 _
 7 % 3||7 / 3 _
 7 % 3||
 ||[[# int-div-zero]][#int-div-zero-note integer division by zero]||##gray|//runtime error//##||##gray|//process sent a// SIGILL //signal//##||java.lang.ArithmeticException||
 ||[[# float-div]][#float-div-note float division] _
-@<&nbsp;>@||7f64 / 3f64||Double(7) / 3||(7: Double) / 3||
+@<&nbsp;>@||7_f64 / 3_f64||Double(7) / 3||(7: Double) / 3||
 ||[[# float-div-zero]][#float-div-zero-note float division by zero]||##gray|@@//@@ these are float values but not literals:## _
 inf, Nan, or -inf||##gray|@@//@@ these are float values but not literals:## _
 +Inf, NaN, ##gray|//or//## -Inf||##gray|//evaluates to// Infinity, NaN, //or// -Infinity, //values which do not have literals//##||
-||[[# power]][#power-note power]||use std::num; _
- _
-num::pow(2i, 32u) _
-num::pow(2.0f32, 32u)||pow(2.0, 32.0)||math.pow(2, 32)||
+||[[# power]][#power-note power]||let n = 2_i64.pow(32_u32); _
+let x1 = 3.14_f64.powi(32_i32); _
+let x2 = 3.14_f64.powf(3.5_f64);||pow(2.0, 32.0)||math.pow(2, 32)||
 ||[[# sqrt]][#sqrt-note sqrt] _
-@<&nbsp;>@|| ||sqrt(2.0)||math.sqrt(2)||
-||[[# sqrt-negative-one]][#sqrt-negative-one-note sqrt -1]|| ||##gray|// NaN:## _
+@<&nbsp;>@||let x = 2_f64.sqrt();||sqrt(2.0)||math.sqrt(2)||
+||[[# sqrt-negative-one]][#sqrt-negative-one-note sqrt -1]||let x = (-1_f64).sqrt(); _
+ _
+##gray|@@//@@ No negative literals and unary negation has lower _
+@@//@@ precedence that a method, so this is -1:## _
+let y = -1_f64.sqrt();||##gray|// NaN:## _
 sqrt(-1)||##gray|math.sqrt(-1) //evaluates to// NaN, //a value which has no literal//##||
 ||[[# transcendental-func]][#transcendental-func-note transcendental functions]|| ||exp log log2 log10 _
 sin cos tan _
@@ -276,7 +270,7 @@ second line";||##gray|//no//##||##gray|//in triple quote literal only//##||
 \x##gray|//hh//## \u##gray|//hhhh//## \U##gray|//hhhhhhhh//##||\0 \\ \t \n \r \" \' _
 \x##gray|//hh//## \u##gray|//hhhh//## \U##gray|//hhhhhhhh//##||\b \f \n \r \t \" \' _
 \u##gray|//hhhh//## \##gray|//o//## \##gray|//oo//## \##gray|//ooo//##||
-||[[# format-str]][#format-str-note format string]||let s = format!("foo {} {} {}", "bar", 7i, 3.14f32);||let n = 3, m = 5 _
+||[[# format-str]][#format-str-note format string]||let s = format!("foo {} {} {}", "bar", 7, 3.14_f32);||let n = 3, m = 5 _
 let msg =  "\(n) + \(m) is \(n + m)"||"foo %s %d %.2f".format("bar", 7, 3.1415) _
  _
 val n = 3 _
@@ -566,11 +560,27 @@ List(1, 2, 3).foldLeft(0)((x, y) => x + y)||
 ||[[# zip-list]][#zip-list-note zip lists]|| || ||List(1, 2, 3).zip(List("a", "b", "c"))||
 ||||||||~ [[# tuples]][#tuples-note tuples]||
 ||~ ||~ rust||~ swift||~ scala||
-||[#tuple tuple]||(1, "hello", true)|| ||(1, "hello", true)||
-||tuple type||(int, &str, bool)|| || ||
-||[#tuple-element tuple element access]|| || ||(1, "hello", true)._1||
-||[#pair-element pair element access]|| || ||(12, "December")._1 _
-(12, "December")._2||
+||[[# tuple-literal]][#tuple-literal-note literal] _
+@<&nbsp;>@||(1, "hello", true)||(1, "hello", true)||(1, "hello", true)||
+||[[# tuple-type]][#tuple-type-note type] _
+@<&nbsp;>@|| let tup: (i32, &str, bool) = (1, "hello", true);||let tup: (Int, String, Bool) = (1, "hello", true)||val tup: (Int, String, Boolean) = (7, "foo", true)||
+||[[# tuple-lookup]][#tuple-lookup-note lookup]||let tup = (1, "hello", true); _
+let n: i32 = tup.0||let tup = (1, "hello", true) _
+let n: Int = tup.0||val tup = (1, "hello", true) _
+val n: Int = tup._1||
+||[[# deconstruct-tuple]][#deconstruct-tuple-note deconstruct]||let tup = (1, "hello", true); _
+let (n, s, b) = tup; _
+ _
+##gray|@@//@@ use underscores for unneeded elements:## _
+let (n, _, _) = tup;||let tup = (1, "hello", true) _
+let (n, s, b) = tup _
+ _
+##gray|@@//@@ use underscores for unneeded elements:## _
+let (n, _, _) = tup||val tup = (1, "hello", true) _
+tup match { _
+@<&nbsp;&nbsp;>@case (_, s, _) => println(s) _
+@<&nbsp;&nbsp;>@case _ => throw new Exception("bad tuple") _
+}||
 ||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
 ||~ ||~ rust||~ swift||~ scala||
 ||[[# declare-dict]][#declare-dict-note declare]|| ||let dict = Dictionary<String, Int>()||import scala.collection.mutable _
@@ -725,7 +735,7 @@ arg1(7, 1 / 0)||
 ||[#strict-evaluation strict evaluation]|| || ||##gray|//default behavior//##||
 ||||||||~ [[# execution-control]][#execution-control-note execution control]||
 ||~ ||~ rust||~ swift||~ scala||
-||[[# if]][#if-note if]||let signum: int; _
+||[[# if]][#if-note if]||let signum: i32; _
  _
 if i > 0 { _
 @<&nbsp;&nbsp;>@signum = 1 _
@@ -747,20 +757,20 @@ else if (x < 0) _
 @<&nbsp;&nbsp;>@println("neg") _
 else _
 @<&nbsp;&nbsp;>@println("zero")||
-||[[# while]][#while-note while]||let mut i: int = 0; _
+||[[# while]][#while-note while]||let mut i: i32 = 0; _
  _
 while i < 10 { _
 @<&nbsp;&nbsp;>@i += 1 _
 }||var i = 0 _
  _
 while i < 10 { _
-@<&nbsp;&nbsp;>@++i _
+@<&nbsp;&nbsp;>@i += 1 _
 }||var i = 0 _
 while (i<10) { _
 @<&nbsp;&nbsp;>@printf("%d\n", i) _
 @<&nbsp;&nbsp;>@i = i+1 _
 }||
-||[[# for]][#for-note for]||let mut n: int = 1; _
+||[[# for]][#for-note for]||let mut n: i32 = 1; _
  _
 for i in range(1i, 11i) { _
 @<&nbsp;&nbsp;>@n *= i; _
@@ -799,7 +809,28 @@ catch { _
 ||finally|| || || ||
 ||[#exception-type type of exceptions]|| || || ||
 ||[#user-exception user defined exception]|| || || ||
-||[#standard-exceptions standard exceptions]|| || || ||
+||[#standard-exceptions standard exceptions]|| || ||##gray|//defined in// java.lang:## _
+ _
+Throwable _
+@<&nbsp;&nbsp;>@Error _
+@<&nbsp;&nbsp;>@Exception _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@IOException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@EOFException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@FileNotFoundException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@MalformedURLException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@UnknownHostException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@ClassNotFoundException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@CloneNotSupportedException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@RuntimeException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@ArithmeticException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@ClassCastException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@IllegalArgumentException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@IllegalStateException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@IndexOutOfBoundsException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@NoSuchElementException _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@NullPointerException _
+ _
+##gray|Error, RuntimeException, //and subclasses theoreof are normally unrecoverable//##||
 ||[#assert assert]|| || ||assert(1 == 0)||
 ||||||||~ [[# concurrency]][#concurrency-note concurrency]||
 ||~ ||~ rust||~ swift||~ scala||
@@ -814,19 +845,27 @@ io::stderr||let stdin = _
 let stdout = _
 @<&nbsp;&nbsp;>@NSFileHandle.fileHandleWithStandardOutput() _
 let stderr _
-@<&nbsp;&nbsp;>@NSFileHandle.fileHandleWithStandardError()||System.in System.out System.err||
+@<&nbsp;&nbsp;>@NSFileHandle.fileHandleWithStandardError()||System.in _
+System.out _
+System.err||
 ||read line from stdin||use std::io; _
  _
-let s = io::stdin().read_line().ok().expect("Failed to read line");||##gray|//none//##||val line = readLine()||
-||end-of-file behavior|| || || ||
-||chomp|| || || ||
-||[#write-line-stdout write line to stdout]|| ||println("Hello, World!")||println("lorem ipsum")||
+let s = io::stdin().read_line().ok().expect("Failed to read line");||##gray|//none//##||import scala.io.StdIn.readLine _
+ _
+##gray|@@//@@ newline is removed:## _
+val s = readLine()||
+||[#write-line-stdout write line to stdout]||println!("Hello, World!"); _
+ _
+##gray|@@//@@ argument of println! must be a literal. _
+@@//@@ To print a variable:## _
+let s = "Hello, World!"; _
+println!("{}", s);||print("Hello, World!")||println("lorem ipsum")||
 ||write formatted string to stdout|| ||let s = "Spain" _
 let i = 17 _
-let x = 3.14156 _
+let x = 3.1415 _
 let fmtx = NSString(format: "%.2f", x) _
  _
-print("\(s) \(i) \(fmtx)")|| ||
+print("\(s) \(i) \(fmtx)")||printf("%s %d %.2f", "Spain", 17, 3.1415)||
 ||open file for reading|| ||import scala.io.Source _
  _
 val path = "/etc/hosts" _
@@ -857,7 +896,6 @@ f.close||
 @<&nbsp;&nbsp;>@} _
 } _
 var defer = Defer({()->() in f.closeFile()})|| ||
-||i/o errors|| || || ||
 ||[#read-line read line]|| ||##gray|//none//##||import scala.io.Source _
 val src = Source.fromFile("/etc/passwd") _
 for (line <- src.getLines) _
@@ -875,18 +913,64 @@ let s = NSString( _
 out.write("hello out\n") _
 out.close||
 ||flush file handle|| ||f.synchronizeFile()|| ||
-||end-of-file test|| || || ||
 ||get and set filehandle position|| ||let pos = f.offsetInFile _
 f.seekToFileOffset(0)|| ||
 ||||||||~ [[# files]][#files-note files]||
 ||~ ||~ rust||~ swift||~ scala||
-||file test, regular file test|| || || ||
-||file size|| || || ||
-||is file readable, writable, executable|| || || ||
-||set file permissions|| || || ||
-||copy file, remove file, rename file|| || || ||
-||create symlink, symlink test, readlink|| || || ||
-||generate unused file name|| || || ||
+||file test, regular file test|| || ||import java.io.File _
+ _
+val f = new File("/etc/hosts") _
+f.exists _
+f.isFile||
+||file size|| || ||import java.io.File _
+ _
+val f = new File("/etc/hosts") _
+f.length||
+||is file readable, writable, executable|| || ||import java.io.File _
+ _
+val f = new File("/etc/hosts") _
+f.canRead _
+f.canWrite _
+f.canExecute||
+||set file permissions|| || ||mport java.io.File _
+ _
+val f = new File("/tmp/foo") _
+ _
+##gray|// sets owner perms; to turn perms off _
+// set arg to false:## _
+f.setReadable(true) _
+f.setWritable(true) _
+f.setExecutable(true) _
+ _
+##gray|// if 2nd arg is false, perms are _
+// for owner, group, and other:## _
+f.setReadable(true, false) _
+f.setWritable(true, false) _
+f.setExecutable(true, false)||
+||copy file, remove file, rename file|| || ||import java.nio.file.Files _
+import java.nio.file.Paths _
+ _
+val path = Paths.get("/tmp/foo") _
+##gray|@@//@@ possible java.nio.file.FileAlreadyExistsException:## _
+Files.copy(path, Paths.get("/tmp/bar")) _
+ _
+Files.deleteIfExists(path) _
+##gray|@@//@@ possible java.nio.file.NoSuchFileException:## _
+Files.delete(path) _
+ _
+Files.move(Paths.get("/tmp/bar", path)||
+||create symlink, symlink test, readlink|| || ||import java.nio.file.Files _
+import java.nio.file.Paths _
+ _
+val target = Paths.get("/etc/hosts") _
+val path = Paths.get("/tmp/hosts") _
+##gray|@@//@@ Possible java.nio.file.FileAlreadyExistsException:## _
+Files.createSymbolicLink(path, target) _
+Files.isSymbolicLink(path) _
+Files.readSymbolicLink(path)||
+||generate unused file name|| || ||import java.nio.file.Files _
+ _
+ val path = Files.createTempFile("foo", ".txt")||
 ||||||||~ [[# directories]][#directories-note directories]||
 ||~ ||~ rust||~ swift||~ scala||
 ||build pathname|| || ||import java.io.File _
@@ -916,7 +1000,7 @@ dir.mkdirs||
  _
 val dir = new File("/tmp/foodir") _
 dir.delete||
-||remove directory and contents|| || ||@@//@@ libraryDependencies += "commons-io" % "commons-io" % "2.4" _
+||remove directory and contents|| || ||##gray|@@//@@ libraryDependencies += "commons-io" % "commons-io" % "2.4"## _
 import org.apache.commons.io.FileUtils _
 import java.io.File _
  _
@@ -949,8 +1033,7 @@ dir.toFile.deleteOnExit||
 //The VM then searches// CLASSPATH //for// CLASS.  CLASS //is the nearest analog to the program name and can be determined statically.//##||
 ||[[# getopt]][#getopt-note getopt]|| || ||##gray|@@//@@ built.sbt: _
 @@//@@ _
-@@//@@@<&nbsp;&nbsp;&nbsp;>@libraryDependencies += "com.github.scopt" %% "scopt" % "3.3.0" _
-@@//@@@<&nbsp;&nbsp;&nbsp;>@resolvers += Resolver.sonatypeRepo("public")## _
+@@//@@@<&nbsp;&nbsp;&nbsp;>@libraryDependencies += "com.github.scopt" %% "scopt" % "3.3.0"## _
  _
 case class Config( _
 @<&nbsp;&nbsp;>@foo: Int = 0, _
@@ -1232,6 +1315,49 @@ class Derived extends Base { _
 ||mixin|| || || ||
 ||||||||~ [[# unit-tests]][#unit-tests-note unit test]||
 ||~ ||~ rust||~ swift||~ scala||
+||test class|| || ||import org.scalatest.FunSuite _
+ _
+class FooSuite extends FunSuite { _
+@<&nbsp;&nbsp;>@test("a simple test") { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@assert(0 == 0, "zero not equal to itself") _
+@<&nbsp;&nbsp;>@} _
+}||
+||run all tests, run test suite|| || ||$ cat build.sbt _
+libraryDependencies += _
+@<&nbsp;&nbsp;>@"org.scalatest" %% "scalatest" % "3.0.0-SNAP13" _
+ _
+$ sbt test _
+ _
+$ sbt _
+@@>@@ testOnly FooSuite||
+||exception assertion|| || ||intercept[IndexOutOfBoundsException] { _
+@<&nbsp;&nbsp;>@"val a = List(1, 2, 3) _
+@<&nbsp;&nbsp;>@"val n = a(4) _
+}||
+||setup|| || ||import org.scalatest.FunSuite _
+import org.scalatest.BeforeAndAfter _
+ _
+class FooSuite extends FunSuite with BeforeAndAfter { _
+@<&nbsp;&nbsp;>@before { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print("before called\n") _
+@<&nbsp;&nbsp;>@} _
+ _
+@<&nbsp;&nbsp;>@test("zero equals self") { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@assert(0 == 0) _
+@<&nbsp;&nbsp;>@} _
+}||
+||teardown|| || ||import org.scalatest.FunSuite _
+import org.scalatest.BeforeAndAfter _
+ _
+class FooSuite extends FunSuite with BeforeAndAfter { _
+@<&nbsp;&nbsp;>@test("zero equals self") { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@assert(0 == 0) _
+@<&nbsp;&nbsp;>@} _
+ _
+@<&nbsp;&nbsp;>@after { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print("after called\n"); _
+@<&nbsp;&nbsp;>@} _
+}||
 ||||||||~ [[# debugging-profiling]][#debugging-profiling-note debugging and profiling]||
 ||~ ||~ rust||~ swift||~ scala||
 ||lint|| || ||$ brew install scalastyle _
@@ -1531,11 +1657,25 @@ Supports //List.tl// (with a warning) to be compatible with OCaml.
 [[# tuples-note]]
 + [#tuples Tuples]
 
-[[# tuple]]
-++ tuple
+[[# tuple-literal-note]]
+++ [#tuple-literal literal]
 
-[[# tuple-element]]
-++ tuple element
+The syntax for a tuple literal.
+
+[[# tuple-type-note]]
+++ [#tuple-type type]
+
+How to declare a variable with a tuple type.
+
+[[# tuple-lookup-note]]
+++ [#tuple-lookup lookup]
+
+How to lookup an element in a tuple.
+
+[[# deconstruct-tuple-note]]
+++ [#deconstruct-tuple deconstruct]
+
+How to extract all the elements in a tuple.
 
 [[# dictionaries-note]]
 + [#dictionaries Dictionaries]
