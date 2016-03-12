@@ -226,19 +226,20 @@ grouped.aggregate(np.max)[['ht', 'wt']]|| ||
 ||||||||||~ [[# vectors]][#vectors-note vectors]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[#vector-literal vector literal] _
-@<&nbsp;>@||##gray|//same as array//##||##gray|//same as array//##||##gray|//same as array//##|| ||
-||[#vector-element-wise element-wise arithmetic operators]||+ - .* ./||+ - * /||+ - * /|| ||
-||[#vector-length-mismatch result of vector length mismatch]||##gray|//raises error//##||##gray|//values in shorter vector are recycled; warning if one vector is not a multiple length of the other//##||##gray|//raises// ValueError##|| ||
+@<&nbsp;>@||##gray|//same as array//##||##gray|//same as array//##||##gray|//same as array//##||##gray|//same as array//##||
+||[#vector-element-wise element-wise arithmetic operators]||+ - .* ./||+ - * /||+ - * /||+ - .* ./||
+||[#vector-length-mismatch result of vector length mismatch]||##gray|//raises error//##||##gray|//values in shorter vector are recycled; warning if one vector is not a multiple length of the other//##||##gray|//raises// ValueError##||##gray|DimensionMismatch##||
 ||[#vector-scalar scalar multiplication]||3 * [1, 2, 3] _
 [1, 2, 3] * 3||3 * c(1, 2, 3) _
 c(1, 2, 3) * 3||3 * np.array([1, 2, 3]) _
-np.array([1, 2, 3]) * 3|| ||
+np.array([1, 2, 3]) * 3||3 * [1, 2, 3] _
+[1, 2, 3] * 3||
 ||[#vector-dot dot product]||dot([1, 1, 1], [2, 2, 2])||c(1, 1, 1) %*% c(2, 2, 2)||v1 = np.array([1, 1, 1]) _
 v2 = np.array([2, 2, 2]) _
-np.dot(v1, v2)|| ||
+np.dot(v1, v2)||dot([1, 1, 1], [2, 2, 2])||
 ||[#vector-cross cross product]||cross([1, 0, 0], [0, 1, 0])|| ||v1 = np.array([1, 0, 0]) _
 v2 = np.array([0, 1, 0]) _
-np.cross(v1, v2)|| ||
+np.cross(v1, v2)||cross([1, 0, 0], [0, 1, 0])||
 ||[#vector-norms norms]||norm([1, 2, 3], 1) _
 norm([1, 2, 3], 2) _
 norm([1, 2, 3], Inf)||vnorm = function(x, t) { _
@@ -250,7 +251,11 @@ vnorm(c(1, 2, 3), "E") _
 vnorm(c(1, 2, 3), "I")||v = np.array([1, 2, 3]) _
 np.linalg.norm(v, 1) _
 np.linalg.norm(v, 2) _
-np.linalg.norm(v, np.inf)|| ||
+np.linalg.norm(v, np.inf)||v = [1, 2, 3] _
+ _
+norm(v, 1) _
+norm(v, 2) _
+norm(v, Inf)||
 ||||||||||~ [[# matrices]][#matrices-note matrices]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# matrix-literal-constructor]][#matrix-literal-constructor-note literal or constructor]||##gray|% row-major order:## _
@@ -263,7 +268,8 @@ B = matrix(c(4, 2, 3, 1), nrow=2) _
 ##gray|# row-major order:## _
 A = matrix(c(1, 2, 3, 4), nrow=2, byrow=T)||##gray|# row-major order:## _
 A = np.matrix([[1, 2], [3, 4]]) _
-B = np.matrix([[4, 3], [2, 1]])|| ||
+B = np.matrix([[4, 3], [2, 1]])||A = [1 2; 3 4] _
+B = [4 3; 2 1]||
 ||[[# constant-matrices]][#constant-matrices-note constant matrices] _
 ##gray|//all zeros, all ones//##||zeros(3, 3) ##gray|//or//## zeros(3) _
 ones(3, 3) ##gray|//or//## ones(3)||matrix(0, 3, 3) _
@@ -276,54 +282,66 @@ ones(Float64, (3, 3))||
 eye(3)||diag(c(1, 2, 3) _
 ##gray|# 3x3 identity:## _
 diag(3)||np.diag([1, 2, 3]) _
-np.identity(3)|| ||
+np.identity(3)||diagm([1, 2, 3]) _
+eye(3)||
 ||[[# matrix-dim]][#matrix-dim-note dimensions]||rows(A) _
 columns(A)||dim(A)[1] _
-dim(A)[2]||nrows, ncols = A.shape|| ||
+dim(A)[2]||nrows, ncols = A.shape||nrows, ncols = size([1 2 3; 4 5 6])||
 ||[#matrix-access element access] _
-@<&nbsp;>@||A(1, 1)||A[1, 1]||A[0, 0]|| ||
+@<&nbsp;>@||A(1, 1)||A[1, 1]||A[0, 0]||A[1, 1]||
 ||[#matrix-row-access row access] _
-@<&nbsp;>@||A(1, 1:2)||A[1, ]||A[0]|| ||
+@<&nbsp;>@||A(1, 1:2)||A[1, ]||A[0]||A[1, :]||
 ||[#matrix-column-access column access] _
-@<&nbsp;>@||A(1:2, 1)||A[, 1]||A[:, 0]|| ||
+@<&nbsp;>@||A(1:2, 1)||A[, 1]||A[:, 0]||A[:, 1]||
 ||[#submatrix-access submatrix access]||C = [1, 2, 3; 4, 5, 6; 7, 8, 9] _
 C(1:2, 1:2)||C = matrix(seq(1, 9), 3, 3, byrow=T) _
 C[1:2, 1:2]||A = np.matrix(range(1, 10)).reshape(3, 3) _
-A[:2, :2]|| ||
+A[:2, :2]||reshape(1:9, 3, 3)[1:2, 1:2]||
 ||[#matrix-scalar-multiplication scalar multiplication]||3 * A _
 A * 3 _
 ##gray|//also://## _
 3 .* A _
 A .* 3||3 * A _
 A * 3||3 * A _
-A * 3|| ||
-||[#matrix-element-wise-operators element-wise operators]||.+ .- .* ./||+ - * /||+ - np.multiply() np.divide()|| ||
+A * 3||3 * [1 2; 3 4] _
+[1 2; 3 4] * 3||
+||[#matrix-element-wise-operators element-wise operators]||.+ .- .* ./||+ - * /||+ - np.multiply() np.divide()||+ - .* ./||
 ||[#matrix-multiplication multiplication] _
-@<&nbsp;>@||A * B||A %*% B||A * B|| ||
+@<&nbsp;>@||A * B||A %*% B||A * B||A * B||
 ||[#matrix-power power]||A ^ 3 _
  _
 ##gray|% power of each entry:## _
-A .^ 3|| ||A ** 3|| ||
-||[#kronecker-product kronecker product]||kron(A, B)||kronecker(A, B)||np.kron(A, B)|| ||
+A .^ 3|| ||A ** 3||A ^ 3 _
+ _
+##gray|# power of each entry:## _
+A .^ 3||
+||[#kronecker-product kronecker product] _
+@<&nbsp;>@||kron(A, B)||kronecker(A, B)||np.kron(A, B)||kron(A, B)||
 ||[#matrix-comparison comparison]|| all(all(A == B)) _
-any(any(A != B))||all(A == B) _
+any(any(A ~= B))||all(A == B) _
 any(A != B)||np.all(A == B) _
-np.any(A != B)|| ||
+np.any(A != B)||A == B _
+A != B||
 ||[#matrix-norms norms]||norm(A, 1) _
 norm(A, 2) _
 norm(A, Inf) _
 norm(A, 'fro')||norm(A, "1") _
 ##gray|//??//## _
 norm(A, "I") _
-norm(A, "F")|| || ||
-||[#matrix-transpose transpose]||transpose(A) _
-A'||t(A)||A.transpose()|| ||
+norm(A, "F")|| ||norm(A, 1) _
+norm(A, 2) _
+norm(A, Inf) _
+##gray|# Froebenius norm:## _
+vecnorm(A, 2)||
+||[#matrix-transpose transpose] _
+@<&nbsp;>@||transpose(A)||t(A)||A.transpose()||transpose([1 2; 3 4])||
 ||[#matrix-conjugate-transpose conjugate transpose]|| A = [1i, 2i; 3i, 4i] _
 A'||A = matrix(c(1i, 2i, 3i, 4i), nrow=2, byrow=T) _
 Conj(t(A))||A = np.matrix([[1j, 2j], [3j, 4j]]) _
-A.conj().transpose()|| ||
+A.conj().transpose()||[1im 2im; 3im 4im]' _
+ctranspose([1im 2im; 3im 4im])||
 ||[#matrix-inverse inverse] _
-@<&nbsp;>@||inv(A)||solve(A)||np.linalg.inv(A)|| ||
+@<&nbsp;>@||inv(A)||solve(A)||np.linalg.inv(A)||inv([1 2; 3 4])||
 ||[[# pseudoinverse]][#pseudoinverse-note pseudoinverse]||A = [0 1; 0 0] _
  _
 pinv(A)||install.packages('corpcor') _
@@ -332,16 +350,16 @@ library(corpcor) _
 A = matrix(c(0, 0, 1, 0), nrow=2) _
 pseudoinverse(A)||A = np.matrix([[0, 1], [0, 0]]) _
  _
-np.linalg.pinv(A)|| ||
+np.linalg.pinv(A)||pinv([0 1; 0 0])||
 ||[#matrix-determinant determinant] _
-@<&nbsp;>@||det(A)||det(A)||np.linalg.det(A)|| ||
+@<&nbsp;>@||det(A)||det(A)||np.linalg.det(A)||det(1 2; 3 4])||
 ||[#matrix-trace trace] _
-@<&nbsp;>@||trace(A)||sum(diag(A))||A.trace()|| ||
+@<&nbsp;>@||trace(A)||sum(diag(A))||A.trace()||trace([1 2; 3 4])||
 ||[#matrix-eigenvalues eigenvalues] _
-@<&nbsp;>@||eig(A)||eigen(A)$values||np.linalg.eigvals(A)|| ||
+@<&nbsp;>@||eig(A)||eigen(A)$values||np.linalg.eigvals(A)||eigvals(A)||
 ||[#matrix-eigenvectors eigenvectors]||[evec, eval] = eig(A) _
 ##gray|% each column of evec is an eigenvector## _
-##gray|% eval is a diagonal matrix of eigenvalues##||eigen(A)$vectors||np.linalg.eig(A)[1]|| ||
+##gray|% eval is a diagonal matrix of eigenvalues##||eigen(A)$vectors||np.linalg.eig(A)[1]||eigvecs(A)||
 ||[[# svd]][#svd-note singular value decomposition]||X = randn(10) _
  _
 [u, d, v] = svd(X)||X = matrix(rnorm(100), nrow=10) _
@@ -354,8 +372,10 @@ result$d _
 result$u _
  _
 ##gray|# unitary matrix:## _
-result$v||np.linalg.svd(np.random.randn(100).reshape(10, 10))|| ||
-||[#matrix-solution solve system of equations]|| A \ [2;3]||solve(A, c(2, 3))||np.linalg.solve(A, [2, 3])|| ||
+result$v||np.linalg.svd(np.random.randn(100).reshape(10, 10))||X = randn(10, 10) _
+ _
+u, s, v = svds(X)||
+||[#matrix-solution solve system of equations]|| A \ [2;3]||solve(A, c(2, 3))||np.linalg.solve(A, [2, 3])||[1 2; 3 4] \ [2; 3]||
 ||||||||||~ [[# sparse-matrices]][#sparse-matrices-note sparse matrices]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# sparse-matrix-construction]][#sparse-matrix-construction-note sparse matrix construction]||##gray|% 100x100 matrix with 5 at (1, 1) and 4 at (2, 2):## _

@@ -1,13 +1,13 @@
 [#version version] | [#grammar-execution grammar and execution] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#resizable-arrays resizable arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#streams streams] | [#files files] | [#file-fmt file formats] | [#directories directories ] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#user-defined-types user-defined types] | [#generic-types generic types] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#reflection reflection] | [#net-web net and web] | [#debugging-profiling debugging and profiling]
 
-||||||||~ [[# version]][#version-note version]||
-||~ ||~ [#typescript typescript]||~ [#dart dart]||~ [#hack hack]||
+||||||~ [[# version]][#version-note version]||
+||~ ||~ [#typescript typescript]||~ [#dart dart]||
 ||[[# version-used]][#version-used-note version used] _
-@<&nbsp;>@||##gray|//1.5//##||##gray|//1.10//##||##gray|//3.7//##||
+@<&nbsp;>@||##gray|//1.5//##||##gray|//1.10//##||
 ||[[# version]][#version-note show version] _
-@<&nbsp;>@||$ tsc @@--@@version||$ dart @@--@@version||$ hhvm @@--@@version||
-||||||||~ [[# grammar-execution]][#grammar-execution-note grammar and execution]||
-||~  ||~ typescript||~ dart||~ hack||
+@<&nbsp;>@||$ tsc @@--@@version||$ dart @@--@@version||
+||||||~ [[# grammar-execution]][#grammar-execution-note grammar and execution]||
+||~  ||~ typescript||~ dart||
 ||[[# hello-world]][#hello-world-note hello world]||$ cat hello.ts _
 console.log("Hello, World!"); _
  _
@@ -25,39 +25,27 @@ Hello, World! _
 $ dart2js hello.dart _
  _
 $ node out.js _
-Hello, World!||$ cat hello.hh _
-<?hh _
- _
-echo "Hello, World!\n"; _
- _
-$ touch .hhconfig _
-$ hh_client . _
-$ hhvm hello.hh _
 Hello, World!||
 ||[[# file-suffixes]][#file-suffixes-note file suffixes] _
-##gray|//source, header, object file//##||.ts .d.ts .js||.dart ##gray|//none//## .js||.hh||
+##gray|//source, header, object file//##||.ts .d.ts .js||.dart ##gray|//none//## .js||
 ||[[# interpreter]][#interpreter-note interpreter] _
-@<&nbsp;>@||##gray|//none//##||$ dart foo.dart||$ hhvm foo.php||
+@<&nbsp;>@||##gray|//none//##||$ dart foo.dart||
 ||[[# block-delimiters]][#block-delimiters-note block delimiters] _
-@<&nbsp;>@||{}||{ ##gray|//...//## }||{}||
+@<&nbsp;>@||{}||{ ##gray|//...//## }||
 ||[[# statement-separator]][#statement-separator-note statement separator] _
 @<&nbsp;>@||##gray|//; or newline _
  _
 newline not separator inside (), [], {}, "", '', or after binary operator _
  _
-newline sometimes not separator when following line would not parse as a valid statement//##||;||; _
- _
-##gray|//statements must be semicolon terminated inside {}//##||
+newline sometimes not separator when following line would not parse as a valid statement//##||;||
 ||[[# eol-comment]][#eol-comment-note end-of-line comment] _
-@<&nbsp;>@||##gray|@@//@@ comment##||@@//@@ ##gray|//comment//##|| ##gray|@@//@@ comment _
-# comment##||
+@<&nbsp;>@||##gray|@@//@@ comment##||@@//@@ ##gray|//comment//##||
 ||[[# multiple-line-comment]][#multiple-line-comment-note multiple line comment] _
 @<&nbsp;>@||##gray|/* line _
 another line */##||/* ##gray|//comment line//## _
-##gray|//another line//## /* ##gray|//nested comment//## */ */||##gray|/* comment line _
-another line */##||
-||||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
-||~  ||~ typescript||~ dart||~ hack||
+##gray|//another line//## /* ##gray|//nested comment//## */ */||
+||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
+||~  ||~ typescript||~ dart||
 ||[[# local-var]][#local-var-note local variable] _
 @<&nbsp;>@||var x: number = 1; _
 var y: number = 2, z: number = 3; _
@@ -69,13 +57,7 @@ int j = 3, k = 4; _
  _
 ##gray|@@//@@ type is inferred:## _
 var x = 1; _
-var y = 2, z = 3;||##gray|# type is always inferred; _
-# no way to explicitly declare variable type:## _
-$v = NULL; _
-$a = []; _
-$d = []; _
-$x = 1; _
-list($y, $z) = [2, 3];||
+var y = 2, z = 3;||
 ||[[# local-scope-regions]][#local-scope-regions-note regions which define lexical scope]||##gray|//top level: _
 @<&nbsp;&nbsp;>@html page _
  _
@@ -84,39 +66,22 @@ nestable: _
 @<&nbsp;&nbsp;>@file _
  _
 nestable: _
-@<&nbsp;&nbsp;>@block//##||##gray|//top level: _
-@<&nbsp;&nbsp;>@function or method body _
- _
-nestable (with use clause): _
-@<&nbsp;&nbsp;>@anonymous function body//##||
+@<&nbsp;&nbsp;>@block//##||
 ||[[# global-var]][#global-var-note global variable]||##gray|@@//@@ no globals in TypeScript; if global is defined _
 @@//@@ in JavaScript it can be declared.  _
 @@//@@ Run time ReferenceError if not found:## _
-declare var g;|| ||list($g1, $g2) = [7, 8]; _
- _
-function swap_globals() { _
-@<&nbsp;&nbsp;>@global $g1, $g2; _
-@<&nbsp;&nbsp;>@list($g1, $g2) = [$g2, $g1]; _
-}||
+declare var g;|| ||
 ||[[# uninitialized-var]][#uninitialized-var-note uninitialized variable] _
-@<&nbsp;>@||##gray|//set to// undefined##||##gray|//set to// null##||##gray|//compilation error//##||
+@<&nbsp;>@||##gray|//set to// undefined##||##gray|//set to// null##||
 ||[[# immutable-var]][#immutable-var-note immutable variable]|| ||import 'dart:math'; _
  _
-final x = (new Random()).nextDouble();|| ||
+final x = (new Random()).nextDouble();||
 ||[[# const]][#const-note constant] _
-@<&nbsp;>@||##gray|//none//##||const double pi = 3.14;||define("PI", 3.14); _
- _
-const PI = 3.14;||
+@<&nbsp;>@||##gray|//none//##||const double pi = 3.14;||
 ||[[# assignment]][#assignment-note assignment] _
-@<&nbsp;>@||x = 1;||i = 3;||$v = 1;||
+@<&nbsp;>@||x = 1;||i = 3;||
 ||[[# parallel-assignment]][#parallel-assignment-note parallel assignment] _
-@<&nbsp;>@||##gray|//none//##||##gray|//none//##||list($x, $y, $z) = [1 ,2, 3]; _
- _
-##gray|# 3 is discarded:## _
-list($x, $y) = [1, 2, 3]; _
- _
-##gray|# $z set to NULL with warning:## _
-list($x, $y, $z) = [1, 2];||
+@<&nbsp;>@||##gray|//none//##||##gray|//none//##||
 ||[[# swap]][#swap-note swap] _
 @<&nbsp;>@||var tmp = x; _
 x = y; _
@@ -124,7 +89,7 @@ y = tmp;||int x = 1, y = 2, tmp; _
  _
 tmp = x; _
 x = y; _
-y = tmp;||list($x, $y) = [$y, $x];||
+y = tmp;||
 ||[[# compound-assignment]][#compound-assignment-note compound assignment] _
 ##gray|//arithmetic, string, logical, bit//##||+= -= *= /= ##gray|//none//## %= _
 += _
@@ -136,10 +101,7 @@ y = tmp;||list($x, $y) = [$y, $x];||
 += *= _
  _
 ##gray|//bit://## _
-@@<<= >>= &= ^= |=@@||+= -= *= ##gray|//none//## /= %= @@**@@= _
-.= ##gray|//none//## _
-&= |= ##gray|//none//## _
-@@<<= >>= @@&= |= ^=||
+@@<<= >>= &= ^= |=@@||
 ||[[# incr-decr]][#incr-decr-note increment and decrement] _
 @<&nbsp;>@||var x = 1; _
 var y = ++x; _
@@ -147,92 +109,78 @@ var z = @@--@@y;||##gray|//premodifiers://## _
 ++i @@--@@i _
  _
 ##gray|//postmodifiers://## _
-i++ i@@--@@||$x = 1; _
-$y = ++$x; _
-$z = @@--@@$y;||
+i++ i@@--@@||
 ||[[# null]][#null-note null] _
-@<&nbsp;>@||null||null||NULL ##gray|# case insensitive##||
+@<&nbsp;>@||null||null||
 ||[[# null-test]][#null-test-note null test] _
-@<&nbsp;>@||v === null||x == null||is_null($v) _
-! isset($v)||
-||[[# option-type]][#option-type-note option type]|| || ||##gray|# prefix with question mark:## _
-?int||
+@<&nbsp;>@||v === null||x == null||
+||[[# option-type]][#option-type-note option type]|| || ||
 ||[[# undef-var]][#undef-var-note undefined variable] _
-@<&nbsp;>@||undefined|| ||NULL||
+@<&nbsp;>@||undefined|| ||
 ||[[# conditional-expr]][#conditional-expr-note conditional expression] _
-@<&nbsp;>@||x > 0 ? x : -x||x > 0 ? x : -x||$x > 0 ? $x : -$x||
-||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
-||~  ||~ typescript||~ dart||~ hack||
+@<&nbsp;>@||x > 0 ? x : -x||x > 0 ? x : -x||
+||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
+||~  ||~ typescript||~ dart||
 ||[[# boolean-type]][#boolean-type-note boolean type] _
-@<&nbsp;>@||var x: boolean = true;||bool||bool||
+@<&nbsp;>@||var x: boolean = true;||bool||
 ||[[# true-false]][#true-false-note true and false] _
-@<&nbsp;>@||true false||true false||TRUE FALSE ##gray|# case insensitive##||
+@<&nbsp;>@||true false||true false||
 ||[[# falsehoods]][#falsehoods-note falsehoods] _
-@<&nbsp;>@||false null undefined "" 0 NaN||##gray|//everything except for the boolean//## true||FALSE NULL 0 0.0 "" "0" []||
+@<&nbsp;>@||false null undefined "" 0 NaN||##gray|//everything except for the boolean//## true||
 ||[[# logical-op]][#logical-op-note logical operators] _
-@<&nbsp;>@||@@&& ||@@ !||&& @@||@@ !||&& @@||@@ ! _
-##gray|//lower precedence://## _
-and or xor||
+@<&nbsp;>@||@@&& ||@@ !||&& @@||@@ !||
 ||[[# relational-op]][#relational-op-note relational operators] _
 @<&nbsp;>@||@@===@@ !== < > >= <= _
  _
 ##gray|//perform type coercion://## _
-@@==@@ !=||== != < > <= >=||== != ##gray|//or//## <> > < >= <= _
-##gray|//no conversion://## === !==||
+@@==@@ !=||== != < > <= >=||
 ||[[# min-max]][#min-max-note min and max] _
 @<&nbsp;>@||Math.min(1, 2, 3) _
 Math.max(1, 2, 3) _
  _
 Math.min.apply(Math, [1, 2, 3]) _
-Math.max.apply(Math, [1, 2, 3])|| ||min(1, 2, 3) _
-max(1, 2, 3) _
-$a = [1, 2, 3] _
-min($a) _
-max($a)||
+Math.max.apply(Math, [1, 2, 3])|| ||
 ||[[# int-type]][#int-type-note integer type] _
-@<&nbsp;>@||##gray|//none; use// number##||int||int||
-||[[# float-type]][#float-type-note float type]||var x: number = 3.14;||double||float _
- _
-##gray|# numeric literal must contain a decimal point; _
-# no implicit conversion of int to float##||
+@<&nbsp;>@||##gray|//none; use// number##||int||
+||[[# float-type]][#float-type-note float type]||var x: number = 3.14;||double||
 ||[[# arith-op]][#arith-op-note arithmetic operators] _
-##gray|//addition, subtraction, multiplication, float division, quotient, remainder//##||+ - * / ##gray|//none//## %||@@+@@ - * / %||+ - * / ##gray|//none//## %||
+##gray|//addition, subtraction, multiplication, float division, quotient, remainder//##||+ - * / ##gray|//none//## %||@@+@@ - * / %||
 ||[[# int-div]][#int-div-note integer division] _
-@<&nbsp;>@||Math.floor(x / y)||3 ~/ 7||(##green|int##)(13 / 5) ||
+@<&nbsp;>@||Math.floor(x / y)||3 ~/ 7||
 ||[[# int-div-zero]][#int-div-zero-note integer division by zero] _
 @<&nbsp;>@||##gray|//returns assignable value Infinity, NaN, or -Infinity depending upon whether dividend is positive, zero, or negative. _
  _
-There are literals for Infinity and NaN.//##||IntegerDivisionByZeroException||##gray|//returns// FALSE //with warning//##||
+There are literals for Infinity and NaN.//##||IntegerDivisionByZeroException||
 ||[[# float-div]][#float-div-note float division] _
-@<&nbsp;>@||13 / 5||3 / 7||13 / 5||
+@<&nbsp;>@||13 / 5||3 / 7||
 ||[[# float-div-zero]][#float-div-zero-note float division by zero] _
 @<&nbsp;>@||##gray|//same behavior as for integers//##||##gray|@@//@@ not literals:## _
-Infinity, NaN, ##gray|//or//## -Infinity||##gray|//returns// FALSE //with warning//##||
+Infinity, NaN, ##gray|//or//## -Infinity||
 ||[[# power]][#power-note power] _
 @<&nbsp;>@||Math.pow(2, 32)||import 'dart:math' as math; _
  _
-math.pow(2.0, 3.0)||pow(2, 32)||
+math.pow(2.0, 3.0)||
 ||[[# sqrt]][#sqrt-note sqrt]||Math.sqrt(2)||import 'dart:math' as math; _
  _
-math.sqrt(2)||sqrt(2)||
+math.sqrt(2)||
 ||[[# sqrt-negative-one]][#sqrt-negative-one-note sqrt -1] _
 @<&nbsp;>@||NaN||import 'dart:math' as math; _
  _
 ##gray|@@//@@ NaN:## _
-math.sqrt(-1)||NaN||
+math.sqrt(-1)||
 ||[[# transcendental-func]][#transcendental-func-note transcendental functions] _
 @<&nbsp;>@||Math.exp Math.log Math.sin Math.cos Math.tan Math.asin Math.acos Math.atan Math.atan2||import 'dart:math' as math; _
  _
 math.log ##gray|//none//## ##gray|//none//## _
 math.sin math.cos math.tan _
 math.asin math.acos math.atan _
-math.atan2||exp log sin cos tan asin acos atan atan2||
+math.atan2||
 ||[[# transcendental-const]][#transcendental-const-note transcendental constants] _
 ##gray|//π and e//##||Math.PI _
 Math.E||import 'dart:math' as math; _
  _
 math.PI _
-math.E||M_PI M_E||
+math.E||
 ||[[# float-truncation]][#float-truncation-note float truncation] _
 @<&nbsp;>@||##gray|//none//## _
 Math.round(3.1) _
@@ -242,16 +190,13 @@ Math.ceil(3.1)||3.14.truncate() _
 3.14.floor() _
 3.14.ceil() _
  _
-##gray|@@//@@ (-3.14).floor() is -4 but -3.14.floor() is -3.##||(int)$x _
-round($x) _
-ceil($x) _
-floor($x)||
+##gray|@@//@@ (-3.14).floor() is -4 but -3.14.floor() is -3.##||
 ||[[# abs-val]][#abs-val-note absolute value] _
-@<&nbsp;>@||Math.abs(-3)||(-7.77).abs()||abs($x)||
+@<&nbsp;>@||Math.abs(-3)||(-7.77).abs()||
 ||[[# int-overflow]][#int-overflow-note integer overflow] _
-@<&nbsp;>@||##gray|//all numbers are floats//##|| ||##gray|//converted to float//##||
+@<&nbsp;>@||##gray|//all numbers are floats//##|| ||
 ||[[# float-overflow]][#float-overflow-note float overflow] _
-@<&nbsp;>@||Infinity|| ||INF||
+@<&nbsp;>@||Infinity|| ||
 ||[[# random-num]][#random-num-note random number] _
 ##gray|//uniform integer, uniform float, normal float//##||Math.floor(Math.random() * 100) _
 Math.random() _
@@ -259,30 +204,23 @@ Math.random() _
  _
 var rnd = new Random(); _
 int n = rnd.nextInt(100); _
-int x = rnd.nextDouble();||rand(0,99) _
-lcg_value() _
-##gray|//none//##||
+int x = rnd.nextDouble();||
 ||[[# random-seed]][#random-seed-note random seed] _
 ##gray|//set, get, restore//##||##gray|//none//##||import 'dart:math'; _
  _
-var rnd = new Random(17);||srand(17); _
- _
-##gray|//none//##||
+var rnd = new Random(17);||
 ||[[# bit-op]][#bit-op-note bit operators] _
-@<&nbsp;>@||@<<< >> & | ^ ~>@||@@ << >> & | ^ ~ @@||@<<< >> & | ^ ~>@||
+@<&nbsp;>@||@<<< >> & | ^ ~>@||@@ << >> & | ^ ~ @@||
 ||[[# binary-octal-hex-literals]][#binary-octal-hex-literals-note binary, octal, and hex literals]||##gray|//none//## _
 052 ##gray|@@//@@ deprecated## _
-0x2a|| ||0b101010 _
-052 _
-0x2a||
+0x2a|| ||
 ||[[# radix]][#radix-note radix] _
 ##gray|//convert integer to and from string with radix//##||(42).toString(7) _
-##gray|//??//##|| ||base_convert("42", 10, 7); _
-base_convert("60", 7, 10);||
-||||||||~ [[# strings]][#strings-note strings]||
-||~  ||~ typescript||~ dart||~ hack||
+##gray|//??//##|| ||
+||||||~ [[# strings]][#strings-note strings]||
+||~  ||~ typescript||~ dart||
 ||[[# str-type]][#str-type-note string type] _
-@<&nbsp;>@||var s: string = "lorem ipsum";||String||string||
+@<&nbsp;>@||var s: string = "lorem ipsum";||String||
 ||[[# str-literal]][#str-literal-note string literal] _
 @<&nbsp;>@||"don't say \"no\"" _
 'don\'t say "no"'||var s = 'don\'t say "no"'; _
@@ -290,89 +228,62 @@ var s2 = "don't say \"no\""; _
 var s3 = '''don't say "no"' _
 var s4 = """don't say "no\"""" _
  _
-##gray|//raw string literals://## r'foo' r"foo"||##maroon|"don't say \"no\""## _
-##maroon|'don\'t say "no"'##||
+##gray|//raw string literals://## r'foo' r"foo"||
 ||[[# newline-in-str-literal]][#newline-in-str-literal-note newline in literal] _
 @<&nbsp;>@||##gray|//yes//##||##gray|@@//@@ triple quote literals only:## _
 var s = '''first line _
 second line'''; _
  _
 var s2 = """first line _
-second line"""||##maroon|'first line _
-second line' _
- _
-"first line _
-second line"##||
+second line"""||
 ||[[# str-literal-esc]][#str-literal-esc-note literal escapes] _
 @<&nbsp;>@||##gray|//single and double quotes://## _
 \b \f \n \r \t \v \uhhhh \xhh \" \' \\||\b \f \n \r \t \v \" \' \$ \\ _
-\x##gray|//hh//## \u##gray|//hhhh//## \u{##gray|//h...//##}||##gray|//double quoted://## _
-\f \n \r \t \v \x##gray|//hh//## \$ \" \\ \##gray|//ooo//## _
- _
-##gray|//single quoted://## _
-\' \\||
+\x##gray|//hh//## \u##gray|//hhhh//## \u{##gray|//h...//##}||
 ||[[# here-doc]][#here-doc-note here document] _
-@<&nbsp;>@||##gray|//none//##|| ||$##peru|word## = ##maroon|"amet"##; _
- _
-$##peru|s## = ##maroon|@@<<<@@EOF _
-lorem ipsum _
-dolor sit $word _
-EOF##;||
+@<&nbsp;>@||##gray|//none//##|| ||
 ||[[# var-interpolation]][#var-interpolation-note variable interpolation] _
 @<&nbsp;>@||##gray|@@//@@ None; use string concatenation. _
 @@//@@ Both of these expressions are '11':## _
 1 + "1" _
-"1" + 1|| ||$##peru|count## = 3; _
-$##peru|item## = ##maroon|"ball"##; _
-##purple|echo## ##maroon|"$count ${item}s\n"##;||
+"1" + 1|| ||
 ||[[# expr-interpolation]][#expr-interpolation-note expression interpolation]||##gray|//none//##||var count = 3; _
 var item = "BALL"; _
  _
 ##gray|@@//@@ 3 balls## _
-print('$count ${item.toLowerCase()}s');||##gray|//none//##||
+print('$count ${item.toLowerCase()}s');||
 ||[[# format-str]][#format-str-note format string] _
 @<&nbsp;>@||##gray|@@//@@ None; use string concatenation. _
 @@//@@ Evaluates to "12.35":## _
-12.3456.toFixed(2)|| ||$##peru|fmt## = ##maroon|"lorem %s %d %f"##; _
-sprintf($##peru|fmt##, ##maroon|"ipsum"##, 13, 3.7);||
-||[[# mutable-str]][#mutable-str-note are strings mutable?]||##gray|//no//##|| ||$##peru|s## = ##maroon|"bar"##; _
-$##peru|s2## = $##peru|s##; _
-##gray|# sets s to "baz"; s2 is unchanged:## _
-$##peru|s##[2] = ##maroon|"z"##;||
+12.3456.toFixed(2)|| ||
+||[[# mutable-str]][#mutable-str-note are strings mutable?]||##gray|//no//##|| ||
 ||[[# compare-str]][#compare-str-note compare strings]||"hello" === "world" _
 "hello" < "world"||"hello" == "world" _
-"hello".compareTo("world") < 0|| ||
-||[[# copy-str]][#copy-str-note copy string]||##gray|//none//##|| ||$##peru|s2## = $##peru|s##;||
+"hello".compareTo("world") < 0||
+||[[# copy-str]][#copy-str-note copy string]||##gray|//none//##|| ||
 ||[[# str-concat]][#str-concat-note concatenate] _
-@<&nbsp;>@||s = "Hello, " + "World!";||"hello" + " world"||$##peru|s## = ##maroon|"Hello, "##; _
-$##peru|s2## = $##peru|s## . ##maroon|"World!"##;||
+@<&nbsp;>@||s = "Hello, " + "World!";||"hello" + " world"||
 ||[[# str-replicate]][#str-replicate-note replicate] _
-@<&nbsp;>@||var hbar = Array(80).join("-");||var hbar = "-" * 80;||$##peru|hbar## = str_repeat(##maroon|"-"##, 80);||
+@<&nbsp;>@||var hbar = Array(80).join("-");||var hbar = "-" * 80;||
 ||[[# translate-case]][#translate-case-note translate case] _
 ##gray|//to upper, to lower//##||"lorem".toUpperCase() _
 "LOREM".toLowerCase()||"hello".toUpperCase() _
-"HELLO".toLowerCase()||strtoupper(##maroon|"lorem"##) _
-strtolower(##maroon|"LOREM"##)||
+"HELLO".toLowerCase()||
 ||[[# capitalize]][#capitalize-note capitalize] _
-##gray|//string, words//##||##gray|//none//##|| ||ucfirst(##maroon|"lorem"##) _
-ucwords(##maroon|"lorem ipsum"##)||
+##gray|//string, words//##||##gray|//none//##|| ||
 ||[[# trim]][#trim-note trim] _
 ##gray|//both sides, left, right//##||" lorem ".trim() _
 ##gray|# some browsers:## _
 " lorem".trimLeft() _
 "lorem ".trimRight()||" lorem ".trim() _
 " lorem ".trimLeft() _
-" lorem ".trimRight()||trim(##maroon|" lorem "##) _
-ltrim(##maroon|" lorem"##) _
-rtrim(##maroon|"lorem "##)||
+" lorem ".trimRight()||
 ||[[# pad]][#pad-note pad] _
 ##gray|//on right, on left, centered//##||##gray|//none//##||"lorem".padRight(10, " ") _
-"lorem".padLeft(10, " ")||str_pad(##maroon|"lorem"##, 10) _
-str_pad(##maroon|"lorem"##, 10, ##maroon|" "##, ##teal|STR_PAD_LEFT##) _
-str_pad(##maroon|"lorem"##, 10, ##maroon|" "##, ##teal|STR_PAD_BOTH##)||
+"lorem".padLeft(10, " ")||
 ||[[# num-to-str]][#num-to-str-note number to string] _
 @<&nbsp;>@||"value: " + 8||3.14.toString() _
-7.toString()||##maroon|"value: "## . 8||
+7.toString()||
 ||[[# str-to-num]][#str-to-num-note string to number] _
 @<&nbsp;>@||7 + parseInt("12", 10) _
 73.9 + parseFloat(".037") _
@@ -381,81 +292,54 @@ str_pad(##maroon|"lorem"##, 10, ##maroon|" "##, ##teal|STR_PAD_BOTH##)||
 parseInt("12A") _
 ##gray|@@//@@ NaN:## _
 parseInt("A")||var n = int.parse("17"); _
-  var x = double.parse("3.14");||7 + ##maroon|"12"## _
-73.9 + ##maroon|".037"## _
- _
-##gray|# 12:## _
-0 + ##maroon|"12A"## _
-##gray|# 0:## _
-0 + ##maroon|"A"##||
+  var x = double.parse("3.14");||
 ||[[# str-join]][#str-join-note string join] _
-@<&nbsp;>@||["do", "re", "mi"].join(" ")||['foo', 'bar', 'baz'].join(' ')||$##peru|a## = [##maroon|"do"##, ##maroon|"re"##, ##maroon|"mi"##, ##maroon|"fa"##]; _
-implode(##maroon|" "##, $##peru|a##)||
+@<&nbsp;>@||["do", "re", "mi"].join(" ")||['foo', 'bar', 'baz'].join(' ')||
 ||[[# split]][#split-note split] _
 @<&nbsp;>@||##gray|@@//@@ [ "do", "re", "", "mi", "" ]:## _
 "do re@<&nbsp;&nbsp;>@mi ".split(" ") _
  _
 ##gray|@@//@@ [ "do", "re", "mi", "" ]:## _
-"do re@<&nbsp;&nbsp;>@mi ".split(/\s+/)||var a = "foo bar bar".split(' ');||##gray|# [ "do", "re", "", "mi", "" ]:## _
-explode(##maroon|" "##, ##maroon|"do re@<&nbsp;&nbsp;>@mi "##) _
- _
-##gray|# [ "do", "re", "mi", "" ]:## _
-preg_split('/\s+/', "do re@<&nbsp;&nbsp;>@mi ")||
+"do re@<&nbsp;&nbsp;>@mi ".split(/\s+/)||var a = "foo bar bar".split(' ');||
 ||[[# split-in-two]][#split-in-two-note split in two] _
-@<&nbsp;>@||##gray|//none//##|| ||preg_split(##maroon|'/\s+/'##, ##maroon|"do re mi fa"##, 2)||
-||[[# split-keep-delimiters]][#split-keep-delimiters-note split and keep delimiters]||##gray|//none//##|| ||preg_split(##maroon|'/(\s+)/'##, ##maroon|"do re mi fa"##, _
-@<&nbsp;&nbsp;>@##teal|NULL##, ##teal|PREG_SPLIT_DELIM_CAPTURE##)||
+@<&nbsp;>@||##gray|//none//##|| ||
+||[[# split-keep-delimiters]][#split-keep-delimiters-note split and keep delimiters]||##gray|//none//##|| ||
 ||[[# prefix-suffix-test]][#prefix-suffix-test-note prefix and suffix test]||"foobar".startsWith("foo") _
-"foobar".endsWith("bar")|| || ||
+"foobar".endsWith("bar")|| ||
 ||[[# str-len]][#str-len-note length] _
 @<&nbsp;>@||"lorem".length||##gray|@@//@@ number of 16 bit runes:## _
-"hello".length||strlen(##maroon|"lorem"##)||
+"hello".length||
 ||[[# index-substr]][#index-substr-note index of substring] _
 ##gray|//first, last//##||##gray|@@//@@ returns -1 if not found:## _
-"lorem ipsum".indexOf("ipsum")||"hello".indexOf("ll")||##gray|# returns FALSE if not found:## _
-strpos(##maroon|"do re re"##, ##maroon|"re"##) _
-strrpos(##maroon|"do re re"##, ##maroon|"re"##)||
+"lorem ipsum".indexOf("ipsum")||"hello".indexOf("ll")||
 ||[[# extract-substr]][#extract-substr-note extract substring] _
 ##gray|//by start and length, by start and end, by successive starts//##||"lorem ipsum".substr(6, 5) _
-"lorem ipsum".substring(6, 11)||"hello".substring(2, 4)||substr(##maroon|"lorem ipsum"##, 6, 5) _
-##gray|//none//## _
-##gray|//none//##||
+"lorem ipsum".substring(6, 11)||"hello".substring(2, 4)||
 ||[[# char-type]][#char-type-note character type]|| ||##gray|@@//@@ 16 bits:## _
-rune|| ||
-||[[# lookup-char]][#lookup-char-note character lookup]||"lorem ipsum"[6]|| ||##gray|# syntax error to use index notation _
-# directly on string literal:## _
-$##peru|s## = ##maroon|"lorem ipsum"##; _
-$##peru|s##[6];||
+rune||
+||[[# lookup-char]][#lookup-char-note character lookup]||"lorem ipsum"[6]|| ||
 ||[[# chr-ord]][#chr-ord-note chr and ord] _
 @<&nbsp;>@||String.fromCharCode(65) _
 "A".charCodeAt(0)||new String.fromCharCodes([65]) _
 "A".codeUnitAt(0) _
  _
 ##gray|@@//@@ for Unicode points above U+FFFF codeUnitAt will _
-@@//@@ return part of a surrogate pair##||chr(65) _
-ord(##maroon|"A"##)||
+@@//@@ return part of a surrogate pair##||
 ||[[# str-to-char-array]][#str-to-char-array-note to array of characters] _
-@<&nbsp;>@||"abcd".split("")|| ||str_split(##maroon|"abcd"##)||
+@<&nbsp;>@||"abcd".split("")|| ||
 ||[[# translate-char]][#translate-char-note translate characters] _
-@<&nbsp;>@||##gray|//none//##|| ||$##peru|ins## = implode(range(##maroon|"a"##, ##maroon|"z"##)); _
-$##peru|outs## = substr($##peru|ins##, 13, 13) . _
-@<&nbsp;&nbsp;>@substr($##peru|ins##, 0, 13); _
-strtr(##maroon|"hello"##, $##peru|ins##, $##peru|outs##)||
-||[[# delete-char]][#delete-char-note delete characters]||##gray|//none//##|| ||$##peru|vowels## = str_split(##maroon|"aeiou"##); _
-$##peru|s## = ##maroon|"disemvowel me"##; _
-$##peru|s## = str_replace($##peru|vowels##, ##maroon|""##, $##peru|s##);||
-||[[# squeeze-char]][#squeeze-char-note squeeze characters]||##gray|//none//##|| ||$##peru|s## = ##maroon|"too@<&nbsp;&nbsp;>@much@<&nbsp;&nbsp;>@space"##; _
-$##peru|s## = = preg_replace(##maroon|'/(\s)+/'##, ##maroon|'\1'##, $##peru|s##);||
-||||||||~ [[# regexes]][#regexes-note regular expressions]||
-||~  ||~ typescript||~ dart||~ hack||
-||[[# regex-literal]][#regex-literal-note literal, custom delimited literal]||/lorem|ipsum/|| ||##maroon|'/lorem|ipsum/'## _
-##maroon|'(/etc/hosts)'##||
+@<&nbsp;>@||##gray|//none//##|| ||
+||[[# delete-char]][#delete-char-note delete characters]||##gray|//none//##|| ||
+||[[# squeeze-char]][#squeeze-char-note squeeze characters]||##gray|//none//##|| ||
+||||||~ [[# regexes]][#regexes-note regular expressions]||
+||~  ||~ typescript||~ dart||
+||[[# regex-literal]][#regex-literal-note literal, custom delimited literal]||/lorem|ipsum/|| ||
 ||[[# regex-metachar]][#regex-metachar-note metacharacters]|| ||. [ ] \ ( ) * + ? { } | ^ $ _
  _
-##gray|//use raw string (i.e. with r prefix) literals to avoid having to escape backslashes.//##|| ||
-||[[# char-class-abbrev]][#char-class-abbrev-note character class abbreviations]||. \d \D \s \S \w \W||. \d \D \s \S \w \W||. \d \D \h \H \s \S \v \V \w \W||
+##gray|//use raw string (i.e. with r prefix) literals to avoid having to escape backslashes.//##||
+||[[# char-class-abbrev]][#char-class-abbrev-note character class abbreviations]||. \d \D \s \S \w \W||. \d \D \s \S \w \W||
 ||[[# regex-anchors]][#regex-anchors-note anchors] _
-@<&nbsp;>@||^ $ \b \B||^ $ \b \B||^ $ \A \b \B \z \Z||
+@<&nbsp;>@||^ $ \b \B||^ $ \b \B||
 ||[[# regex-test]][#regex-test-note match test] _
 @<&nbsp;>@||if (s.match(/1999/)) { _
 @<&nbsp;&nbsp;>@alert("party!"); _
@@ -464,31 +348,28 @@ String s = "It's 1999"; _
  _
 if (rx.hasMatch(s)) { _
 @<&nbsp;&nbsp;>@print("Party!"); _
-}||if (preg_match(##maroon|'/1999/'##, $##peru|s##)) { _
-@<&nbsp;&nbsp;>@echo ##maroon|"party!\n"##; _
 }||
 ||[[# case-insensitive-regex]][#case-insensitive-regex-note case insensitive match test]||"Lorem".match(/lorem/i)||RegExp rx = new RegExp(r"lorem", caseSensitive: false); _
 String s = "Lorem Ipsum"; _
  _
 if (rx.hasMatch(s)) { _
 @<&nbsp;&nbsp;>@print("case insensitive match"); _
-}||preg_match(##maroon|'/lorem/i'##, ##maroon|"Lorem"##)||
+}||
 ||[[# regex-modifiers]][#regex-modifiers-note modifiers] _
 @<&nbsp;>@||g i m||##gray|RegExp //constructor takes two optional boolean named parameters://## _
  _
 multiLine _
-caseSensitive||e i m s x||
+caseSensitive||
 ||[[# subst]][#subst-note substitution] _
 @<&nbsp;>@||s = "do re mi mi mi"; _
 s.replace(/mi/g, "ma");||RegExp re = new RegExp(r'mi'); _
-print("do re mi mi mi".replaceAll(re, "ma"));||$##peru|s## = ##maroon|"do re mi mi mi"##; _
-$##peru|s## = preg_replace(##maroon|'/mi/'##, ##maroon|"ma"##, $##peru|s##);||
+print("do re mi mi mi".replaceAll(re, "ma"));||
 ||[[# match-prematch-postmatch]][#match-prematch-postmatch-note match, prematch, postmatch] _
 @<&nbsp;>@||##per|m## = /\d{4}/.exec(s); _
 if (m) { _
 @<&nbsp;&nbsp;>@match = m[0]; _
 @<&nbsp;&nbsp;>@##gray|# no prematch or postmatch## _
-}|| ||##gray|//none//##||
+}|| ||
 ||[[# group-capture]][#group-capture-note group capture] _
 @<&nbsp;>@||rx = /^(\d{4})-(\d{2})-(\d{2})$/; _
 m = rx.exec('2009-06-03'); _
@@ -502,65 +383,39 @@ if (md != null) { _
 @<&nbsp;&nbsp;>@var mm = md.group(2); _
 @<&nbsp;&nbsp;>@var dd = md.group(3); _
 @<&nbsp;&nbsp;>@print("year: $yyyy month: $mm day: $dd"); _
-}||$##peru|s## = ##maroon|"2010-06-03"##; _
-$##peru|rx## = ##maroon|'/(\d{4})-(\d{2})-(\d{2})/'##; _
-preg_match($##peru|rx##, $##peru|s##, $##peru|m##); _
-list($_, $##peru|yr##, $##peru|mo##, $##peru|dy##) = $##peru|m##;||
-||[[# named-group-capture]][#named-group-capture-note named group capture]||##gray|//none//##|| ||$##peru|s## = ##maroon|"foo.txt"##; _
-$##peru|rx## = ##maroon|'/^(?P<file>.+)\.(?P<suffix>.+)$/'##; _
-preg_match($##peru|rx##, $##peru|s##, $##peru|m##); _
- _
-$##peru|m##[##maroon|"file"##] _
-$##peru|m##[##maroon|"suffix"##]||
+}||
+||[[# named-group-capture]][#named-group-capture-note named group capture]||##gray|//none//##|| ||
 ||[[# scan]][#scan-note scan] _
-@<&nbsp;>@||var a = "dolor sit amet".match(/\w+/g);|| ||$##peru|s## = ##maroon|"dolor sit amet"##; _
-preg_match_all(##maroon|'/\w+/'##, $##peru|s##, $##peru|m##); _
-$##peru|a## = $##peru|m##[0];||
+@<&nbsp;>@||var a = "dolor sit amet".match(/\w+/g);|| ||
 ||[[# backreference]][#backreference-note backreference in match and substitution]||/(\w+) \1/.exec("do do") _
  _
-"do re".replace(/(\w+) (\w+)/, '$2 $1')|| ||preg_match(##maroon|'/(\w+) \1/'##, ##maroon|"do do"##) _
- _
-$##peru|s## = ##maroon|"do re"##; _
-$##peru|rx## = ##maroon|'/(\w+) (\w+)/'##; _
-$##peru|s## = preg_replace($##peru|rx##, ##maroon|'\2 \1'##, $##peru|s##);||
+"do re".replace(/(\w+) (\w+)/, '$2 $1')|| ||
 ||[[# recursive-regex]][#recursive-regex-note recursive regex] _
-@<&nbsp;>@||##gray|//none//##|| ||##maroon|'/\(([^()]*|($R))\)/'##||
-||||||||~ [[# dates-time]][#dates-time-note dates and time]||
-||~  ||~ typescript||~ dart||~ hack||
+@<&nbsp;>@||##gray|//none//##|| ||
+||||||~ [[# dates-time]][#dates-time-note dates and time]||
+||~  ||~ typescript||~ dart||
 ||[[# broken-down-datetime-type]][#broken-down-datetime-type-note broken-down datetime type] _
-@<&nbsp;>@||##green|Date##||DateTime||##green|DateTime##||
-||[[# current-datetime]][#current-datetime-note current datetime]||##purple|var## ##peru|t## = ##purple|new## ##green|Date##();||var dt = new DateTime.now();||$##peru|t## = ##purple|new## ##green|DateTime##(##maroon|"now"##); _
-$##peru|utc_tmz## = ##purple|new## ##green|DateTimeZone##(##maroon|"UTC"##); _
-$##peru|utc## = ##purple|new## ##green|DateTime##(##maroon|"now"##, $##peru|utc_tmz##);||
-||[[# current-unix-epoch]][#current-unix-epoch-note current unix epoch]||(##purple|new## ##green|Date##()).getTime() / 1000|| ||$##peru|epoch## = time();||
-||[[# broken-down-datetime-to-unix-epoch]][#broken-down-datetime-to-unix-epoch-note broken-down datetime to unix epoch]||Math.round(t.getTime() / 1000)||dt.millisecondsSinceEpoch ~/ 1000||$##peru|epoch## = $##peru|t##->getTimestamp();||
+@<&nbsp;>@||##green|Date##||DateTime||
+||[[# current-datetime]][#current-datetime-note current datetime]||##purple|var## ##peru|t## = ##purple|new## ##green|Date##();||var dt = new DateTime.now();||
+||[[# current-unix-epoch]][#current-unix-epoch-note current unix epoch]||(##purple|new## ##green|Date##()).getTime() / 1000|| ||
+||[[# broken-down-datetime-to-unix-epoch]][#broken-down-datetime-to-unix-epoch-note broken-down datetime to unix epoch]||Math.round(t.getTime() / 1000)||dt.millisecondsSinceEpoch ~/ 1000||
 ||[[# unix-epoch-to-broken-down-datetime]][#unix-epoch-to-broken-down-datetime-note unix epoch to broken-down datetime]||##purple|var## ##peru|epoch## = 1315716177; _
 ##purple|var## ##peru|t2## = ##purple|new## ##green|Date##(epoch * 1000);||int t = 1422021432; _
  _
- var dt =  new DateTime.fromMillisecondsSinceEpoch(t * 1000);||$##peru|t2## = ##purple|new## ##green|DateTime##(); _
-$##peru|t2##->setTimestamp(1304442000);||
-||[[# fmt-datetime]][#fmt-datetime-note format datetime]||##gray|//none//##|| ||strftime(##maroon|"%Y-%m-%d %H:%M:%S"##, $##peru|epoch##); _
-date(##maroon|"Y-m-d H:i:s"##, $##peru|epoch##); _
-$##peru|t##->format(##maroon|"Y-m-d H:i:s"##);||
-||[[# parse-datetime]][#parse-datetime-note parse datetime]||##gray|//none//##|| ||$##peru|fmt## = ##maroon|"Y-m-d H:i:s"##; _
-$##peru|s## = ##maroon|"2011-05-03 10:00:00"##; _
-$##peru|t## = ##green|DateTime##::createFromFormat($##peru|fmt##, _
-@<&nbsp;&nbsp;>@$##peru|s##);||
-||[[# parse-datetime-without-fmt]][#parse-datetime-without-fmt-note parse datetime w/o format]||##purple|var## ##peru|t## = ##purple|new## ##green|Date##(##maroon|"July 7, 1999"##);|| ||$##peru|epoch## = strtotime(##maroon|"July 7, 1999"##);||
+ var dt =  new DateTime.fromMillisecondsSinceEpoch(t * 1000);||
+||[[# fmt-datetime]][#fmt-datetime-note format datetime]||##gray|//none//##|| ||
+||[[# parse-datetime]][#parse-datetime-note parse datetime]||##gray|//none//##|| ||
+||[[# parse-datetime-without-fmt]][#parse-datetime-without-fmt-note parse datetime w/o format]||##purple|var## ##peru|t## = ##purple|new## ##green|Date##(##maroon|"July 7, 1999"##);|| ||
 ||[[# date-parts]][#date-parts-note date parts]||t.getFullYear() _
 t.getMonth() + 1 _
 t.getDate() ##gray|# getDay() is day of week##||int yr = dt.year; _
 int mo = dt.month; _
-int dy = dt.day;||(##green|int##)$##peru|t##->format(##maroon|"Y"##) _
-(##green|int##)$##peru|t##->format(##maroon|"m"##) _
-(##green|int##)$##peru|t##->format(##maroon|"d"##)||
+int dy = dt.day;||
 ||[[# time-parts]][#time-parts-note time parts]||t.getHours() _
 t.getMinutes() _
 t.getSeconds()||int hr = dt.hour; _
 int mi = dt.minute; _
-int ss = dt.second;||(##green|int##)$##peru|t##->format(##maroon|"H"##) _
-(##green|int##)$##peru|t##->format(##maroon|"i"##) _
-(##green|int##)$##peru|t##->format(##maroon|"s"##)||
+int ss = dt.second;||
 ||[[# build-datetime]][#build-datetime-note build broken-down datetime]||##purple|var## ##peru|yr## = 1999; _
 ##purple|var## ##peru|mo## = 9; _
 ##purple|var## ##peru|dy## = 10; _
@@ -569,13 +424,8 @@ int ss = dt.second;||(##green|int##)$##peru|t##->format(##maroon|"H"##) _
 ##purple|var## ##peru|ss## = 0; _
 ##purple|var## ##peru|t## = ##purple|new## ##green|Date##(yr, mo - 1, dy, hr, mi, ss);||var dt = new DateTime(1999, 9, 10, 23, 30, 0); _
  _
-var dt_utc = new DateTime.utc(1999, 9, 10, 23, 30, 0);|| ||
-||[[# datetime-subtraction]][#datetime-subtraction-note datetime subtraction]||##gray|number //containing time difference in milliseconds//##||Duration delta = dt.difference(dt2);||##gray|# DateInterval object if diff method used:## _
-$##peru|fmt## = ##maroon|"Y-m-d H:i:s"##; _
-$##peru|s## = ##maroon|"2011-05-03 10:00:00"##; _
-$##peru|then## = ##green|DateTime##::createFromFormat($##peru|fmt##, $##peru|s##); _
-$##peru|now##  = ##purple|new## ##green|DateTime##(##maroon|"now"##); _
-$##peru|interval## = $##peru|now##->diff($##peru|then##);||
+var dt_utc = new DateTime.utc(1999, 9, 10, 23, 30, 0);||
+||[[# datetime-subtraction]][#datetime-subtraction-note datetime subtraction]||##gray|number //containing time difference in milliseconds//##||Duration delta = dt.difference(dt2);||
 ||[[# add-duration]][#add-duration-note add duration]||##purple|var## ##peru|t1## = ##purple|new## ##green|Date##(); _
 ##purple|var## ##peru|delta## = (10 * 60 + 3) * 1000; _
 ##purple|var## ##peru|t2## = ##purple|new## ##green|Date##(t1.getTime() + delta);||Duration delta1 = const Duration(seconds: 1000); _
@@ -583,65 +433,39 @@ Duration delta2 = const Duration(hours: 1000); _
 Duration delta3 = const Duration(days: 1000); _
  _
 var dt2 = dt.add(delta1); _
-var dt3 = dt.subtract(delta3);||$##peru|now## = ##purple|new## ##green|DateTime##(##maroon|"now"##); _
-$##peru|now##->add(##purple|new## ##green|DateInterval##(##maroon|"PT10M3S"##);||
-||[[# local-tmz-determination]][#local-tmz-determination-note local time zone determination]|| || ||##gray|# DateTime objects can be instantiated without _
-# specifying the time zone if a default is set:## _
-$##peru|s## = ##maroon|"America/Los_Angeles"##; _
-date_default_timezone_set($##peru|s##);||
+var dt3 = dt.subtract(delta3);||
+||[[# local-tmz-determination]][#local-tmz-determination-note local time zone determination]|| || ||
 ||[[# tmz-info]][#tmz-info-note time zone info] _
  _
-##gray|//name and UTC offset//##|| || ||$##peru|tmz## = date_timezone_get($##peru|t##); _
- _
-timezone_name_get($##peru|tmz##); _
-date_offset_get($##peru|t##) / 3600;||
-||[[# daylight-savings-test]][#daylight-savings-test-note daylight savings test]|| || ||$##peru|t##->format(##maroon|"I"##);||
-||[[# microseconds]][#microseconds-note microseconds]|| || ||list($##peru|frac##, $##peru|sec##) = explode(##maroon|" "##, microtime()); _
-$##peru|usec## = $##peru|frac## * 1000 * 1000;||
-||[[# sleep]][#sleep-note sleep]||##gray|//none//##|| ||##gray|# a float argument will be truncated _
-# to an integer:## _
-sleep(1);||
-||||||||~ [[# resizable-arrays]][#resizable-arrays-note resizable arrays]||
-||~  ||~ typescript||~ dart||~ hack||
+##gray|//name and UTC offset//##|| || ||
+||[[# daylight-savings-test]][#daylight-savings-test-note daylight savings test]|| || ||
+||[[# microseconds]][#microseconds-note microseconds]|| || ||
+||[[# sleep]][#sleep-note sleep]||##gray|//none//##|| ||
+||||||~ [[# resizable-arrays]][#resizable-arrays-note resizable arrays]||
+||~  ||~ typescript||~ dart||
 ||[[# array-literal]][#array-literal-note literal] _
 @<&nbsp;>@||var a = [1, 2, 3, 4]; _
  _
 ##gray|@@//@@ two ways to declare type:## _
 var a: number[] = [1, 2, 3, 4]; _
-var a: Array<number> = [1, 2, 3, 4];||var a = [1, 2, 3, 4];||$##peru|a## = [1, 2, 3, 4]; _
- _
-##gray|# older syntax:## _
-$##peru|a## = array(1, 2, 3, 4);||
+var a: Array<number> = [1, 2, 3, 4];||var a = [1, 2, 3, 4];||
 ||[[# array-size]][#array-size-note size] _
-@<&nbsp;>@||a.length||a.length||count($##peru|a##)||
+@<&nbsp;>@||a.length||a.length||
 ||[[# array-empty]][#array-empty-note empty test] _
 @<&nbsp;>@||##gray|@@//@@ TypeError if a is null or undefined:## _
-a.length === 0||a.isEmpty||##gray|# NULL tests as empty:## _
-!$##peru|a##||
+a.length === 0||a.isEmpty||
 ||[[# array-lookup]][#array-lookup-note lookup] _
-@<&nbsp;>@||a[0]||a[0]||$##peru|a##[0] _
- _
-##gray|# PHP uses the same type for arrays and _
-# dictionaries; indices can be negative _
-# integers or strings##||
+@<&nbsp;>@||a[0]||a[0]||
 ||[[# array-update]][#array-update-note update] _
-@<&nbsp;>@||a[0] = "lorem"||a[0] = "lorem";||$##peru|a##[0] = ##maroon|"lorem"##;||
-||[[# array-out-of-bounds]][#array-out-of-bounds-note out-of-bounds behavior]||##gray|//returns// undefined##||##gray|//lookups and updates raise// RangeError##||$##peru|a## = []; _
-##gray|# evaluates as NULL:## _
-$##peru|a##[10]; _
-##gray|# increases array size to one:## _
-$##peru|a##[10] = ##maroon|"lorem"##;||
+@<&nbsp;>@||a[0] = "lorem"||a[0] = "lorem";||
+||[[# array-out-of-bounds]][#array-out-of-bounds-note out-of-bounds behavior]||##gray|//returns// undefined##||##gray|//lookups and updates raise// RangeError##||
 ||[[# array-element-index]][#array-element-index-note element index] _
  _
 ##gray|//first and last occurrence//##||##gray|@@//@@ returns -1 if not found:## _
 [6, 7, 7, 8].indexOf(7) _
 [6, 7, 7, 8].lastIndexOf(7)||##gray|@@//@@ returns -1 if not found:## _
 [6, 7, 7, 8].indexOf(7) _
-[6, 7, 7, 8].lastIndexOf(7)||$##peru|a## = [##maroon|"x"##, ##maroon|"y"##, ##maroon|"y"##, ##maroon|"z"##]; _
- _
-##gray|# returns FALSE if not found:## _
-$##peru|i## = array_search(##maroon|"y"##, $##peru|a##, ##teal|TRUE##); _
-##gray|//none//##||
+[6, 7, 7, 8].lastIndexOf(7)||
 ||[[# array-slice]][#array-slice-note slice] _
 ##gray|//by endpoints, by length//## _
 @<&nbsp;>@||##gray|@@//@@ select 3rd and 4th elements:## _
@@ -649,44 +473,32 @@ $##peru|i## = array_search(##maroon|"y"##, $##peru|a##, ##teal|TRUE##); _
 ##gray|//none//##||var a = ["a", "b", "c", "d", "e"]; _
  _
 ##gray|@@//@@ ["c", "d"]:## _
-List a2 = a.getRange(2, 4);||##gray|# select 3rd and 4th elements:## _
-##gray|//none//## _
-array_slice($##peru|a##, 2, 2)||
+List a2 = a.getRange(2, 4);||
 ||[[# array-slice-to-end]][#array-slice-to-end-note slice to end] _
-@<&nbsp;>@||["a", "b", "c", "d"].slice(1)||["a", "b", "c", "d"].skip(1)||array_slice($##peru|a##, 1)||
+@<&nbsp;>@||["a", "b", "c", "d"].slice(1)||["a", "b", "c", "d"].skip(1)||
 ||[[# array-back]][#array-back-note manipulate back] _
 @<&nbsp;>@||a = [6, 7, 8]; _
 a.push(9); _
 i = a.pop();||a.add(4); _
-var v = a.removeLast();||$##peru|a## = [6, 7, 8]; _
-array_push($##peru|a##, 9); _
-$##peru|a##[] = 9; ##gray|# same as array_push## _
-array_pop($##peru|a##);||
+var v = a.removeLast();||
 ||[[# array-front]][#array-front-note manipulate front] _
 @<&nbsp;>@||a = [6, 7, 8]; _
 a.unshift(5); _
 i = a.shift();||var a = [6, 7, 8]; _
 a.insertAt(0, 5); _
-var i = a.removeAt(0);||$##peru|a## = [6, 7, 8]; _
-array_unshift($##peru|a##, 5); _
-array_shift($##peru|a##);||
+var i = a.removeAt(0);||
 ||[[# array-concatenation]][#array-concatenation-note concatenate]||a = [1, 2, 3].concat([4, 5, 6]);||var a = [1, 2, 3]; _
-a.addAll([4, 5, 6]);||$##peru|a## = [1, 2, 3]; _
-$##peru|a2## = array_merge($##peru|a##, [4, 5, 6]); _
-$##peru|a## = array_merge($##peru|a##, [4, 5, 6]);||
+a.addAll([4, 5, 6]);||
 ||[[# replicate-array]][#replicate-array-note replicate] _
-@<&nbsp;>@||##gray|//none//##||var a = new List.filled(10, 0);||$##peru|a## = array_fill(0, 10, ##green|NULL##);||
+@<&nbsp;>@||##gray|//none//##||var a = new List.filled(10, 0);||
 ||[[# array-copy]][#array-copy-note copy] _
 ##gray|//address copy, shallow copy, deep copy//##||a = [1, 2, [3, 4]]; _
 a2 = a; _
 a3 = a.slice(0); _
 a4 = JSON.parse(JSON.stringify(a));||var a = ["a", "b"]; _
  _
-List a2 = new List<String>.from(a);||$##peru|a## = [1, 2, [3, 4]]; _
-$##peru|a2## =& $##peru|a##; _
-##gray|//none//## _
-$##peru|a4## = $##peru|a##;||
-||[[# array-as-func-arg]][#array-as-func-arg-note array as function argument]||##gray|//parameter contains address copy//##||##gray|//parameter contains address copy//##||##gray|//parameter contains deep copy//##||
+List a2 = new List<String>.from(a);||
+||[[# array-as-func-arg]][#array-as-func-arg-note array as function argument]||##gray|//parameter contains address copy//##||##gray|//parameter contains address copy//##||
 ||[[# iterate-over-array]][#iterate-over-array-note iterate over elements] _
 @<&nbsp;>@||[1, 2, 3].forEach(function(n) { _
 @<&nbsp;&nbsp;>@alert(n); _
@@ -694,88 +506,59 @@ $##peru|a4## = $##peru|a##;||
 @<&nbsp;&nbsp;>@print(i); _
 } _
  _
-[1, 2, 3].forEach((i) => print(i));||##purple|foreach## ([1, 2, 3] ##purple|as## $##peru|i##) { _
-@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"$i\n"##; _
-}||
+[1, 2, 3].forEach((i) => print(i));||
 ||[[# indexed-array-iteration]][#indexed-array-iteration-note iterate over indices and elements]||var len = a.length; _
 for (var i = 0; i < len; i++ ) { _
 @<&nbsp;&nbsp;>@alert(a[i]); _
-}|| ||$##peru|a## = [##maroon|"do"##, ##maroon|"re"##, ##maroon|"mi"## ##maroon|"fa"##]; _
-##purple|foreach## ($##peru|a## as $##peru|i## => $##peru|s##) { _
-@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"$s at index $i\n"##; _
-}||
-||[[# range-array]][#range-array-note instantiate range as array]|| || ||$##peru|a## = range(1, 10);||
+}|| ||
+||[[# range-array]][#range-array-note instantiate range as array]|| || ||
 ||[[# array-reverse]][#array-reverse-note reverse] _
 ##gray|//non-destructive, in-place//##||var a = [1, 2, 3]; _
 a.reverse();||var a = ["a", "b", "c"]; _
  _
-List a2 = new List<String>.from(a.reversed);||$##peru|a## = [1, 2, 3]; _
- _
-array_reverse($##peru|a##); _
-$##peru|a## = array_reverse($##peru|a##);||
+List a2 = new List<String>.from(a.reversed);||
 ||[[# array-sort]][#array-sort-note sort] _
 ##gray|//non-destructive, _
 in-place, _
 custom comparision//##||var a = [3, 1, 4, 2]; _
 a.sort();||var a = [3, 1, 4, 2]; _
-a.sort();||$##peru|a## = [##maroon|"b"##, ##maroon|"A"##, ##maroon|"a"##, ##maroon|"B"##]; _
- _
-##gray|//none//## _
-sort($##peru|a##); _
-##gray|//none, but// usort //sorts in place//##||
+a.sort();||
 ||[[# array-dedupe]][#array-dedupe-note dedupe] _
 ##gray|//non-destructive, in-place//##|| ||var a = [1, 2, 2, 3]; _
 var set = new Set.from(a); _
-var a2 = new List.from(set);||$##peru|a## = [1, 2, 2, 3]; _
- _
-$##peru|a2## = array_unique($##peru|a##); _
-$##peru|a## = array_unique($##peru|a##);||
+var a2 = new List.from(set);||
 ||[[# membership]][#membership-note membership] _
-@<&nbsp;>@|| ||[1, 2, 3].contains(7)||in_array(7, $##peru|a##)||
+@<&nbsp;>@|| ||[1, 2, 3].contains(7)||
 ||[[# intersection]][#intersection-note intersection] _
 @<&nbsp;>@|| ||var set1 = new Set.from([1, 2]); _
 var set2 = new Set.from([2, 3, 4]); _
  _
-set1.intersection(set2);|| $##peru|a## = [1, 2]; _
-$##peru|b## = [2, 3, 4] _
-array_intersect($##peru|a##, $##peru|b##)||
+set1.intersection(set2);||
 ||[[# union]][#union-note union] _
 @<&nbsp;>@|| ||var set1 = new Set.from([1, 2]); _
 var set2 = new Set.from([2, 3, 4]); _
  _
-set1.union(set2);||$##peru|a1## = [1, 2]; _
-$##peru|a2## = [2, 3, 4]; _
-array_unique(array_merge($##peru|a1##, $##peru|a2##))||
+set1.union(set2);||
 ||[[# set-diff]][#set-diff-note relative complement]|| ||var set1 = new Set.from([1, 2]); _
 var set2 = new Set.from([2, 3, 4]); _
  _
-set1.difference(set2);||$##peru|a1## = [1, 2, 3]; _
-$##peru|a2## = [2]; _
-array_values(array_diff($##peru|a1##, $##peru|a2##))||
+set1.difference(set2);||
 ||[[# map]][#map-note map] _
 @<&nbsp;>@||##gray|@@//@@ callback gets 3 args: _
 @@//@@ value, index, array## _
 a.map(function(x) { return x * x })||var a = [1, 2, 3]; _
  _
-var a2 = new List.from(a.map((n) => n * n));||array_map(function ($##peru|x##) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|return## $##peru|x## * $##peru|x##; _
-@<&nbsp;&nbsp;>@}, [1, 2, 3])||
+var a2 = new List.from(a.map((n) => n * n));||
 ||[[# filter]][#filter-note filter] _
 @<&nbsp;>@||a.filter(function(x) { return x > 1 }) 	||var a = [1, 2, 3]; _
  _
-var a2 = new List.from(a.where((n) => n > 1));||array_filter([1, 2, 3], _
-@<&nbsp;&nbsp;>@function ($##peru|x##) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|return## $##peru|x##>1; _
-@<&nbsp;&nbsp;>@})||
+var a2 = new List.from(a.where((n) => n > 1));||
 ||[[# reduce]][#reduce-note reduce] _
 @<&nbsp;>@||a.reduce(function(m, o) { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return m + o; _
 @<&nbsp;&nbsp;>@}, 0)||var a = [1, 2, 3]; _
  _
-var sum = a.reduce((v, e) => v + e);||array_reduce([1, 2, 3], _
-@<&nbsp;&nbsp;>@function($##peru|x##,$##peru|y##) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|return## $##peru|x## + $##peru|y##; _
-@<&nbsp;&nbsp;>@}, 0)||
+var sum = a.reduce((v, e) => v + e);||
 ||[[# universal-existential-test]][#universal-existential-test-note universal  and existential tests] _
 @<&nbsp;>@||var a = [1, 2, 3, 4]; _
 var even = function(x) { _
@@ -784,20 +567,16 @@ var even = function(x) { _
  _
 a.every(even) _
 a.some(even)||[1, 2, 3, 4].every((x) => x % 2 == 0) _
-[1, 2, 3, 4].any((x) => x % 2 == 0)||##gray|//use array_filter//##||
+[1, 2, 3, 4].any((x) => x % 2 == 0)||
 ||[[# shuffle-sample]][#shuffle-sample-note shuffle and sample]|| ||var a = [1, 2, 3, 4]; _
 a.shuffle(); _
-var samp = a.take(2);||$##peru|a## = [1, 2, 3, 4]; _
-shuffle($##peru|a##); _
-$##peru|samp## = array_rand(|[1, 2, 3, 4], 2);||
+var samp = a.take(2);||
 ||[[# flatten]][#flatten-note flatten] _
-##gray|//one level, completely//##|| || ||##gray|//none//##||
+##gray|//one level, completely//##|| || ||
 ||[[# zip]][#zip-note zip] _
-@<&nbsp;>@|| || ||$##peru|a## = array_map(##teal|NULL##, _
-@<&nbsp;&nbsp;>@[1, 2, 3], _
-@<&nbsp;&nbsp;>@[##maroon|"a"##, ##maroon|"b"##, ##maroon|"c"##]);||
-||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
-||~  ||~ typescript||~ dart||~ hack||
+@<&nbsp;>@|| || ||
+||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
+||~  ||~ typescript||~ dart||
 ||[[# dict-literal]][#dict-literal-note literal] _
 @<&nbsp;>@||d = {"t": 1, "f": 0}; _
 ##gray|@@//@@ keys do not need to be quoted if they _
@@ -805,47 +584,36 @@ $##peru|samp## = array_rand(|[1, 2, 3, 4], 2);||
 @@//@@and not a reserved word## _
  _
 ##gray|@@//@@ declare type:## _
-var d: {[idx: string]: number} = {t: 1, f: 0}||var d = {"t": 1, "f": 0};||$##peru|d## = [##maroon|"t"## => 1, ##maroon|"f"## => 0]; _
-  _
-##gray|# older syntax:## _
-$##peru|d## = array(##maroon|"t"## => 1, ##maroon|"f"## => 0);||
+var d: {[idx: string]: number} = {t: 1, f: 0}||var d = {"t": 1, "f": 0};||
 ||[[# dict-size]][#dict-size-note size] _
 @<&nbsp;>@||var size = 0; _
 for (var k in d) { _
 @<&nbsp;&nbsp;>@if (d.hasOwnProperty(k)) size++; _
-}||d.length||count($##peru|d##)||
+}||d.length||
 ||[[# dict-lookup]][#dict-lookup-note lookup] _
 @<&nbsp;>@||d.hasOwnProperty("t") ? d["t"] : undefined _
  _
 ##gray|@@//@@ if type of d not declared:## _
-d.hasOwnProperty("t") ? d.t : undefined||d["t"]||$##peru|d##[##maroon|"t"##]||
+d.hasOwnProperty("t") ? d.t : undefined||d["t"]||
 ||[[# dict-update]][#dict-update-note update]||d["t"] = 2; _
  _
 ##gray|@@//@@ if type of d not declared:## _
-d.t = 2;||d["t"] = 2;||$##peru|d##[##maroon|"t"##] = 2;||
+d.t = 2;||d["t"] = 2;||
 ||[[# dict-missing-key]][#dict-missing-key-note missing key behavior] _
 @<&nbsp;>@||var d = {}; _
 ##gray|@@//@@ sets s to undefined:## _
 var s = d["lorem"]; _
 ##gray|@@//@@ adds key/value pair:## _
-d["lorem"] = "ipsum"; ||##gray|//returns//## null||$##peru|d## = []; _
-##gray|# sets $s to NULL:## _
-$##peru|s## = $##peru|d##[##maroon|"lorem"##]; _
-##gray|# adds key/value pair:## _
-$##peru|d##[##maroon|"lorem"##] = ##maroon|"ipsum"##;||
+d["lorem"] = "ipsum"; ||##gray|//returns//## null||
 ||[[# dict-key-check]][#dict-key-check-note is key present] _
-@<&nbsp;>@||d.hasOwnProperty("t");||d.containsKey("y")||array_key_exists(##maroon|"y"##, $##peru|d##);||
+@<&nbsp;>@||d.hasOwnProperty("t");||d.containsKey("y")||
 ||[[# dict-delete]][#dict-delete-note delete]||delete d["t"]; _
  _
 ##gray|@@//@@ if type of d not declared:## _
-delete d.t;||d.remove("f");||$##peru|d## = [1 => ##maroon|"t"##, 0 => ##maroon|"f"##]; _
-unset($##peru|d##[1]);||
-||[[# dict-assoc-array]][#dict-assoc-array-note from array of pairs, from even length array]|| || || ||
-||[[# dict-merge]][#dict-merge-note merge]|| || ||$##peru|d1## = [##maroon|"a"## => 1, ##maroon|"b"## => 2]; _
-$##peru|d2## = [##maroon|"b"## => 3, ##maroon|"c"## => 4]; _
-$##peru|d1## = array_merge($##peru|d1##, $##peru|d2##);||
-||[[# dict-invert]][#dict-invert-note invert]|| || ||$##peru|to_num## = [##maroon|"t"## => 1, ##maroon|"f"## => 0]; _
-$##peru|to_let## = array_flip($##peru|to_num##);||
+delete d.t;||d.remove("f");||
+||[[# dict-assoc-array]][#dict-assoc-array-note from array of pairs, from even length array]|| || ||
+||[[# dict-merge]][#dict-merge-note merge]|| || ||
+||[[# dict-invert]][#dict-invert-note invert]|| || ||
 ||[[# dict-iter]][#dict-iter-note iterate] _
 @<&nbsp;>@||for (var k in d) { _
 @<&nbsp;&nbsp;>@if (d.hasOwnProperty(k)) { _
@@ -854,12 +622,9 @@ $##peru|to_let## = array_flip($##peru|to_num##);||
 }||d.forEach((k, v) { _
 @<&nbsp;&nbsp;>@print(k); _
 @<&nbsp;&nbsp;>@print(v); _
-});||##purple|foreach## ($##peru|d## as $##peru|k## => $##peru|v##) { _
-@<&nbsp;&nbsp;>@##gray|//code//## _
-}||
+});||
 ||[[# dict-key-val]][#dict-key-val-note keys and values as arrays]|| ||List keys = d.keys; _
-List vals = d.values;||array_keys($##peru|d##) _
-array_values($##peru|d##)||
+List vals = d.values;||
 ||[[# dict-sort-values]][#dict-sort-values-note sort by values]||function cmp2(a, b) { _
 @<&nbsp;&nbsp;>@if (a[1] < b[1]) { return -1; } _
 @<&nbsp;&nbsp;>@if (a[1] > b[1]) { return 1; } _
@@ -868,18 +633,10 @@ array_values($##peru|d##)||
  _
 for (p in _.pairs(d).sort(cmp2)) { _
 @<&nbsp;&nbsp;>@alert(p[0] + ": " + p[1]); _
-}|| ||asort($##peru|d##); _
- _
-##purple|foreach## ($##peru|d## ##purple|as## $##peru|k## => $##peru|v##) { _
-@<&nbsp;&nbsp;>@##purple|print## ##maroon|"$k: $v\n"##; _
-}||
-||[[# dict-default-val]][#dict-default-val-note default value, computed value]||##gray|//none//##|| ||$##peru|counts## = []; _
-$##peru|counts##[##maroon|'foo'##] += 1; _
- _
-##gray|# Extend ArrayObject for computed values _
-# and defaults other than zero or empty string.##||
-||||||||~ [[# functions]][#functions-note functions]||
-||~  ||~ typescript||~ dart||~ hack||
+}|| ||
+||[[# dict-default-val]][#dict-default-val-note default value, computed value]||##gray|//none//##|| ||
+||||||~ [[# functions]][#functions-note functions]||
+||~  ||~ typescript||~ dart||
 ||[[# def-func]][#def-func-note define] _
 @<&nbsp;>@||function add(x: number, y: number): number { _
 @<&nbsp;&nbsp;>@return x + y; _
@@ -898,35 +655,23 @@ add(n, m) { _
 } _
  _
 ##gray|@@//@@ expression body shorthand:## _
-num add(num n, num m) => n + m;||function add(int $x1, int $x2,): int _
-{ _
-@<&nbsp;&nbsp;>@return $x1 + $x2; _
-} _
- _
-##gray|# parameter and return types optional:## _
-function add($x1, $x2,) _
-{ _
-@<&nbsp;&nbsp;>@return $x1 + $x2; _
-}||
-||[[# invoke-func]][#invoke-func-note invoke]||add(1, 2)||add(1, 2)||add(1, 2); _
- _
-##gray|# function names are case insensitive:## _
-ADD(1, 2);||
+num add(num n, num m) => n + m;||
+||[[# invoke-func]][#invoke-func-note invoke]||add(1, 2)||add(1, 2)||
 ||[[# overload-func]][#overload-func-note overload]||function to_number(x: string): number; _
 function to_number(x: number): number; _
 function to_number(x): number { _
 @<&nbsp;&nbsp;>@if (typeof(x) == "string") { return parseFloat(x); } _
 @<&nbsp;&nbsp;>@if (typeof(x) == "number") { return x; } _
-}||##gray|//none//##|| ||
+}||##gray|//none//##||
 ||[[# missing-arg]][#missing-arg-note missing argument behavior] _
 @<&nbsp;>@||##gray|@@//@@ compilation error unless arg declared optional.## _
  _
 ##gray|@@//@@ how to declare arg optional:## _
 function safe_length(s?: string): number { _
 @<&nbsp;&nbsp;>@return s === undefined ? -1 : s.length; _
-}||##gray|//compilation error//##||##gray|//set to// NULL //with warning//##||
+}||##gray|//compilation error//##||
 ||[[# extra-arg]][#extra-arg-note extra argument behavior] _
-@<&nbsp;>@||##gray|//compilation error//##||##gray|//compilation error//##||##gray|//ignored//##||
+@<&nbsp;>@||##gray|//compilation error//##||##gray|//compilation error//##||
 ||[[# default-arg]][#default-arg-note default argument] _
 @<&nbsp;>@||function my_log(x: number, base: number = 10) { _
 @<&nbsp;&nbsp;>@return Math.log(x) / Math.log(base); _
@@ -945,41 +690,20 @@ num my_log(num expt, [num base]) { _
 @<&nbsp;&nbsp;>@else { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return math.log(expt) / math.log(base); _
 @<&nbsp;&nbsp;>@} _
-}||function my_log($x, $base=10) _
-{ _
-@<&nbsp;&nbsp;>@return log($x) / log($base); _
-} _
- _
-my_log(42); _
-my_log(42, M_E);||
+}||
 ||[[# variadic-func]][#variadic-func-note variadic function]||function ends(s: string, ...rest: string[]): void { _
 @<&nbsp;&nbsp;>@console.log(s); _
 @<&nbsp;&nbsp;>@if (rest.length) _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@console.log(rest[rest.length - 1]); _
-}||##gray|//none//##||function first_and_last() _
-{ _
- _
-@<&nbsp;&nbsp;>@$arg_cnt = func_num_args(); _
- _
-@<&nbsp;&nbsp;>@if ($arg_cnt >= 1) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@$n = func_get_arg(0); _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@echo "first: " . $n . "\n"; _
-@<&nbsp;&nbsp;>@} _
- _
-@<&nbsp;&nbsp;>@if ($arg_cnt >= 2) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@$a = func_get_args(); _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@$n = $a[$arg_cnt-1]; _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@echo "last: " . $n . "\n"; _
-@<&nbsp;&nbsp;>@} _
-}||
+}||##gray|//none//##||
 ||[[# named-param]][#named-param-note named parameters] _
 @<&nbsp;>@||##gray|//none//##||num divide({num dividend, num divisor}) { _
   return dividend / divisor; _
 } _
  _
-divide(divisor: 3, dividend: 9);||##gray|//none//##||
+divide(divisor: 3, dividend: 9);||
 ||[[# retval]][#retval-note return value] _
-@<&nbsp;>@||return ##gray|//arg or//## undefined. ##gray|//If invoked with//## new ##gray|//and return value not an object, returns//## this||##gray|return //arg or// null##||##gray|return //arg or// NULL##||
+@<&nbsp;>@||return ##gray|//arg or//## undefined. ##gray|//If invoked with//## new ##gray|//and return value not an object, returns//## this||##gray|return //arg or// null##||
 ||[[# anonymous-func-literal]][#anonymous-func-literal-note anonymous function literal] _
 @<&nbsp;>@||var sqr: (x: number) => number = function(x) { _
 @<&nbsp;&nbsp;>@return x * x; _
@@ -989,34 +713,16 @@ divide(divisor: 3, dividend: 9);||##gray|//none//##||
 @@//@@ to global object:## _
 var sqr2: (x: number) => number = (x) => { _
 @<&nbsp;&nbsp;>@return x * x; _
-}||Function sqr = (num x) => x * x;||##gray|# expression body:## _
-$sqr = $x ==> $x * $x; _
- _
-##gray|# multiple parameters:## _
-$mult = ($x, $y) ==> $x * $y; _
- _
-##gray|# block body:## _
-$sqr = $x ==> { $y = $x * $x; return $y; }; _
- _
-##gray|# PHP style:## _
-$sqr = function ($x) { _
-@<&nbsp;&nbsp;>@return $x * $x; _
-};||
+}||Function sqr = (num x) => x * x;||
 ||[[# invoke-anonymous-func]][#invoke-anonymous-func-note invoke anonymous function] _
-@<&nbsp;>@||sqr(2)||((num x) => x * x)(5)||$sqr(2)||
+@<&nbsp;>@||sqr(2)||((num x) => x * x)(5)||
 ||[[# func-as-val]][#func-as-val-note function as value] _
 @<&nbsp;>@||var func = add;||apply(Function fn, arg) { _
 @<&nbsp;&nbsp;>@fn(arg); _
 } _
  _
-apply(print, "lorem ipsum");||$func = "add";||
-||[[# func-with-state]][#func-with-state-note function with state]|| ||##gray|//Use a variable defined outside the function; the scope of the variable is the containing file.//##||function counter() _
-{ _
-@<&nbsp;&nbsp;>@static $i = 0; _
-@<&nbsp;&nbsp;>@return ++$i; _
-} _
- _
-echo counter();||
+apply(print, "lorem ipsum");||
+||[[# func-with-state]][#func-with-state-note function with state]|| ||##gray|//Use a variable defined outside the function; the scope of the variable is the containing file.//##||
 ||[[# closure]][#closure-note closure]||function make_counter(): () => number { _
 @<&nbsp;&nbsp;>@var i = 0; _
  _
@@ -1027,35 +733,10 @@ echo counter();||
 }||Function make_counter() { _
 @<&nbsp;&nbsp;>@num i = 0; _
 @<&nbsp;&nbsp;>@return () => ++i; _
-}||##gray|# ==> style anonymous functions are read-only _
-# closures; PHP-style anonymous functions must _
-# explicitly declare captured variables and use _
-# & syntax to make them writable## _
-function make_counter() _
-{ _
-@<&nbsp;&nbsp;>@$i = 0; _
-@<&nbsp;&nbsp;>@return function () use (&$i) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return ++$i; _
-@<&nbsp;&nbsp;>@}; _
-} _
- _
-$nays = make_counter(); _
-echo $nays();||
-||[[# generator]][#generator-note generator]|| || ||function make_counter() { _
-@<&nbsp;&nbsp;>@$i = 0; _
-@<&nbsp;&nbsp;>@while (1) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@yield ++$i; _
-@<&nbsp;&nbsp;>@} _
-} _
- _
-$nays = make_counter(); _
-##gray|# does not return a value:## _
-$nays->next(); _
-##gray|# runs generator if generator has not _
-# yet yielded:## _
-echo $nays->current();||
-||||||||~ [[# execution-control]][#execution-control-note execution control]||
-||~  ||~ typescript||~ dart||~ hack||
+}||
+||[[# generator]][#generator-note generator]|| || ||
+||||||~ [[# execution-control]][#execution-control-note execution control]||
+||~  ||~ typescript||~ dart||
 ||[[# if]][#if-note if] _
 @<&nbsp;>@||if (0 == n) { _
 @<&nbsp;&nbsp;>@alert("no hits"); _
@@ -1071,12 +752,6 @@ if (i > 0) { _
 @<&nbsp;&nbsp;>@signum = 0; _
 } else { _
 @<&nbsp;&nbsp;>@signum = -1; _
-}||if ( 0 == $n ) { _
-@<&nbsp;&nbsp;>@echo "no hits\n"; _
-} elseif ( 1 == $n ) { _
-@<&nbsp;&nbsp;>@echo "one hit\n"; _
-} else { _
-@<&nbsp;&nbsp;>@echo "$n hits\n"; _
 }||
 ||[[# switch]][#switch-note switch]||switch (n) { _
 case 0: _
@@ -1099,16 +774,7 @@ switch (i) { _
 } _
  _
 ##gray|@@//@@ Falling through not permitted; exception if last _
-@@//@@ statement not break, continue, throw, or return.##||switch ($n) { _
-case 0: _
-@<&nbsp;&nbsp;>@echo "no hits\n"; _
-@<&nbsp;&nbsp;>@break; _
-case 1: _
-@<&nbsp;&nbsp;>@echo "one hit\n"; _
-@<&nbsp;&nbsp;>@break; _
-default: _
-@<&nbsp;&nbsp;>@echo "$n hits\n"; _
-}||
+@@//@@ statement not break, continue, throw, or return.##||
 ||[[# while]][#while-note while] _
 @<&nbsp;>@||while (i < 100) { _
 @<&nbsp;&nbsp;>@i += 1; _
@@ -1116,7 +782,7 @@ default: _
  _
 while (i < 10) { _
 @<&nbsp;&nbsp;>@++i; _
-}||while ( $i < 100 ) { $i++; }||
+}||
 ||[[# for]][#for-note for] _
 @<&nbsp;>@||for (var i = 0; i < 10; i++) { _
 @<&nbsp;&nbsp;>@alert(i); _
@@ -1127,27 +793,25 @@ while (i < 10) { _
 n = 1; _
 for (i = 1; i <= 10; ++i) { _
 @<&nbsp;&nbsp;>@n *= i; _
-}||for ($i = 1; $i <= 10; $i++) { _
-@<&nbsp;&nbsp;>@echo "$i\n"; _
 }||
 ||[[# break]][#break-note break] _
-@<&nbsp;>@||break||break||break||
+@<&nbsp;>@||break||break||
 ||[[# continue]][#continue-note continue] _
-@<&nbsp;>@||continue||continue||continue||
+@<&nbsp;>@||continue||continue||
 ||[[# for-local-scope]][#for-local-scope-note for with local scope]|| ||int n = 1; _
  _
 for (int i = 1; i <= 10; ++i) { _
 @<&nbsp;&nbsp;>@n *= i; _
 } _
  _
-##gray|@@//@@ is no longer in scope##|| ||
+##gray|@@//@@ is no longer in scope##||
 ||[[# infinite-loop]][#infinite-loop-note infinite loop]|| ||for (;;) { _
 @<&nbsp;&nbsp;>@##gray|@@//@@ code## _
 } _
  _
 while (1) { _
 @<&nbsp;&nbsp;>@##gray|@@//@@ code## _
-}|| ||
+}||
 ||[[# break-from-nested-loops]][#break-from-nested-loops-note break from nested loops]|| ||int a, b, c; _
  _
 outer: _
@@ -1158,12 +822,12 @@ for (a = 1; ; ++a) { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@break outer; _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@} _
 @<&nbsp;&nbsp;>@} _
-}|| ||
+}||
 ||[[# single-stmt-branch-loop]][#single-stmt-branch-loop-note single statement branches and loops]|| ||while (n % 17 == 0) _
 @<&nbsp;&nbsp;>@++n; _
  _
 if (n < 0) _
-@<&nbsp;&nbsp;>@print("negative");|| ||
+@<&nbsp;&nbsp;>@print("negative");||
 ||[[# dangling-else]][#dangling-else-note dangling else]|| ||int a = 1, b = -3, c; _
  _
 ##gray|@@//@@ indentation shows how ambiguity is resolved## _
@@ -1171,13 +835,13 @@ if (a > 0) _
 @<&nbsp;&nbsp;>@if (b > 0) _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@c = 1; _
 @<&nbsp;&nbsp;>@else _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@c = 2;|| ||
-||||||||~ [[# exceptions]][#exceptions-note exceptions]||
-||~  ||~ typescript||~ dart||~ hack||
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@c = 2;||
+||||||~ [[# exceptions]][#exceptions-note exceptions]||
+||~  ||~ typescript||~ dart||
 ||[[# base-exc]][#base-exc-note base exception]||##gray|//Any value can be thrown.//##||Exception _
 Error _
  _
-##gray|//Any non-null value can be thrown.//##||Exception||
+##gray|//Any non-null value can be thrown.//##||
 ||[[# predefined-exc]][#predefined-exc-note predefined exceptions]||Error _
 @<&nbsp;&nbsp;>@EvalError _
 @<&nbsp;&nbsp;>@RangeError _
@@ -1208,22 +872,9 @@ Error _
 ##gray|//intended to be caught://## _
 Exception _
 @<&nbsp;&nbsp;>@FormatException _
-@<&nbsp;&nbsp;>@IntegerDivisionByZeroException||Exception _
-@<&nbsp;&nbsp;>@LogicException _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@BadFunctionCallException _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@BadMethodCallException _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@DomainException _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@InvalidArgumentException _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@LengthException _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@OutOfRangeException _
-@<&nbsp;&nbsp;>@RuntimeException _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@OutOfBoundsException _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@OverflowException _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@RangeException _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@UnderflowException _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@UnexpectedValueException||
+@<&nbsp;&nbsp;>@IntegerDivisionByZeroException||
 ||[[# raise-exc]][#raise-exc-note raise exception] _
-@<&nbsp;>@||throw new Error("bad arg");||throw new Exception("bad arg");||throw new Exception("bad arg");||
+@<&nbsp;>@||throw new Error("bad arg");||throw new Exception("bad arg");||
 ||[[# catch-all-handler]][#catch-all-handler-note catch-all handler] _
 @<&nbsp;>@||try { _
 @<&nbsp;&nbsp;>@risky(); _
@@ -1235,11 +886,6 @@ catch (e) { _
 } _
 catch (e) { _
 @<&nbsp;&nbsp;>@print("risky failed"); _
-}||##purple|try## { _
-@<&nbsp;&nbsp;>@risky(); _
-} ##purple|catch## (##green|Exception## $##peru|e##) { _
-@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"risky failed: "##,  _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@$##peru|e##->getMessage(), ##maroon|"\n"##; _
 }||
 ||[[# re-raise-exc]][#re-raise-exc-note re-raise exception]||try { _
 @<&nbsp;&nbsp;>@throw new Error("bam!"); _
@@ -1253,7 +899,7 @@ catch (e) { _
 catch (e) { _
 @<&nbsp;&nbsp;>@print("re-raising..."); _
 @<&nbsp;&nbsp;>@rethrow; _
-}|| ||
+}||
 ||[[# def-exc]][#def-exc-note define exception]||function Bam(msg) { _
 @<&nbsp;&nbsp;>@this.message = msg; _
 } _
@@ -1261,12 +907,6 @@ catch (e) { _
 Bam.prototype = new Error;||class Bam implements Exception { _
 @<&nbsp;&nbsp;>@String msg; _
 @<&nbsp;&nbsp;>@Bam(this.msg); _
-}||##purple|class## ##green|Bam## ##purple|extends## ##green|Exception## _
-{ _
-@<&nbsp;&nbsp;>@##purple|function## ##0000CD|@@__@@construct##() _
-@<&nbsp;&nbsp;>@{ _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##teal|parent##::@@__@@construct(##maroon|"bam!"##); _
-@<&nbsp;&nbsp;>@} _
 }||
 ||[[# handle-exc]][#handle-exc-note handle exception]||try { _
 @<&nbsp;&nbsp;>@throw new Bam("bam!"); _
@@ -1283,10 +923,6 @@ catch (e) { _
 } _
 on Bam catch (e) { _
 @<&nbsp;&nbsp;>@print(e.msg); _
-}||##purple|try## { _
-@<&nbsp;&nbsp;>@##purple|throw new## ##green|Bam##; _
-} ##purple|catch## (##green|Bam## $##peru|e##) { _
-@<&nbsp;&nbsp;>@##purple|echo## $##peru|e##->getMessage(), ##maroon|"\n"##; _
 }||
 ||[[# finally-block]][#finally-block-note finally block] _
 @<&nbsp;>@||acquire_resource(); _
@@ -1301,53 +937,42 @@ try { _
 } _
 finally { _
 @<&nbsp;&nbsp;>@release_resource(); _
-}||##gray|//PHP 5.5://## _
-acquire_resource(); _
-try { _
-@<&nbsp;&nbsp;>@risky(); _
-} _
-finally { _
-@<&nbsp;&nbsp;>@release_resource(); _
 }||
-||||||||~ [[# streams]][#streams-note streams]||
-||~  ||~ node||~ dart||~ hack||
+||||||~ [[# streams]][#streams-note streams]||
+||~  ||~ node||~ dart||
 ||[[# std-file-handles]][#std-file-handles-note standard file handles]||process.stdin _
 process.stdout _
 process.stderr||import 'dart:io' as io; _
  _
-io.stdin io.stdout io.stderr||##gray|//only set by CLI; not set when reading script from stdin://## _
-##teal|STDIN STDOUT STDERR##||
+io.stdin io.stdout io.stderr||
 ||[[# read-line-stdin]][#read-line-stdin-note read line from stdin] _
-@<&nbsp;>@|| || ||$##peru|line## = fgets(##teal|STDIN##);||
-||[[# eof]][#eof-note end-of-file behavior]|| || ||##gray|//returns string without newline or// FALSE##||
+@<&nbsp;>@|| || ||
+||[[# eof]][#eof-note end-of-file behavior]|| || ||
 ||[[# chomp]][#chomp-note chomp] _
-@<&nbsp;>@|| || ||chop($##peru|line##);||
+@<&nbsp;>@|| || ||
 ||[[# write-line-stdout]][#write-line-stdout-note write line to stdout] _
 @<&nbsp;>@||console.log("Hello, World");||import 'dart:io' as io; _
  _
 print('Hello, World!'); _
  _
-io.stdout.writeln('Hello, World!');||##purple|echo## ##maroon|"Hello, World!\n"##;||
-||[[# printf]][#printf-note write formatted string to stdout]|| || ||printf(##maroon|"%.2f\n"##, ##teal|M_PI##);||
+io.stdout.writeln('Hello, World!');||
+||[[# printf]][#printf-note write formatted string to stdout]|| || ||
 ||[[# open-file]][#open-file-note open file for reading] _
-@<&nbsp;>@|| || ||$##peru|f## = fopen(##maroon|"/etc/hosts"##, ##maroon|"r"##);||
+@<&nbsp;>@|| || ||
 ||[[# open-file-write]][#open-file-write-note open file for writing] _
-@<&nbsp;>@||var f = fs.openSync("/tmp/test", "w");|| ||$##peru|f## = fopen(##maroon|"/tmp/test"##, ##maroon|"w"##);||
-||[[# file-encoding]][#file-encoding-note set file handle encoding]|| || || ||
-||[[# open-file-append]][#open-file-append-note open file for appending]|| || ||$##peru|f## = fopen(##maroon|"/tmp/test"##, ##maroon|"a"##);||
+@<&nbsp;>@||var f = fs.openSync("/tmp/test", "w");|| ||
+||[[# file-encoding]][#file-encoding-note set file handle encoding]|| || ||
+||[[# open-file-append]][#open-file-append-note open file for appending]|| || ||
 ||[[# close-file]][#close-file-note close file] _
-@<&nbsp;>@|| || ||fclose($##peru|f##);||
-||[[# close-file-implicitly]][#close-file-implicitly-note close file implicitly]|| || ||##gray|//none//##||
-||[[# io-err]][#io-err-note i/o error]|| || ||##gray|//return false value and write warning to stderr//##||
-||[[# encoding-err]][#encoding-err-note encoding error]|| || || ||
+@<&nbsp;>@|| || ||
+||[[# close-file-implicitly]][#close-file-implicitly-note close file implicitly]|| || ||
+||[[# io-err]][#io-err-note i/o error]|| || ||
+||[[# encoding-err]][#encoding-err-note encoding error]|| || ||
 ||[[# read-line]][#read-line-note read line] _
-@<&nbsp;>@|| || ||$##peru|line## = fgets($##peru|f##);||
+@<&nbsp;>@|| || ||
 ||[[# file-iterate]][#file-iterate-note iterate over file by line] _
-@<&nbsp;>@|| || ||##purple|while## (!feof($##peru|f##)) { _
-@<&nbsp;&nbsp;>@$##peru|line## = fgets($##peru|f##); _
-@<&nbsp;&nbsp;>@##purple|echo## $##peru|line##; _
-}||
-||[[# read-file-array]][#read-file-array-note read file into array of strings]|| || ||$##peru|a## = file(##maroon|"/etc/hosts"##);||
+@<&nbsp;>@|| || ||
+||[[# read-file-array]][#read-file-array-note read file into array of strings]|| || ||
 ||[[# read-file-str]][#read-file-str-note read file into string]||var fs = require('fs'); _
  _
 var s = fs.readFileSync('/etc/hosts', 'utf8');||import 'dart:io' as io; _
@@ -1355,38 +980,22 @@ var s = fs.readFileSync('/etc/hosts', 'utf8');||import 'dart:io' as io; _
 File f = new io.File('/etc/hosts'); _
 f.readAsString().then((String s) { _
 @<&nbsp;&nbsp;>@print('length: ${s.length}'); _
-});||$##peru|s## = file_get_contents( _
-@<&nbsp;&nbsp;>@##maroon|"/etc/hosts"##);||
+});||
 ||[[# write-str]][#write-str-note write string] _
-@<&nbsp;>@|| || ||fwrite($##peru|f##, ##maroon|"lorem ipsum"##); ||
+@<&nbsp;>@|| || ||
 ||[[# write-line]][#write-line-note write line] _
-@<&nbsp;>@|| || ||fwrite($##peru|f##, ##maroon|"lorem ipsum\n"##);||
+@<&nbsp;>@|| || ||
 ||[[# flush]][#flush-note flush file handle] _
-@<&nbsp;>@|| || ||##gray|//CLI output isn't buffered//## _
-fflush($##peru|f##);||
+@<&nbsp;>@|| || ||
 ||[[# eof-test]][#eof-test-note end-of-file test] _
-@<&nbsp;>@|| || ||feof($##peru|f##)||
+@<&nbsp;>@|| || ||
 ||[[# seek]][#seek-note file handle position] _
  _
-##gray|//get, set//##|| || ||ftell($##peru|f##) _
-fseek($##peru|f##, 0);||
-||[[# tmp-file]][#tmp-file-note open temporary file]|| || ||$##peru|f## = tmpfile(); _
- _
-fwrite($##peru|f##, ##maroon|"lorem ipsum\n"##); _
- _
-##gray|# no way to get file name## _
- _
-fclose($##peru|f##); _
- _
-##gray|//file is removed when file handle is closed//##||
-||[[# stringio]][#stringio-note in memory file]|| || ||$##peru|meg## = 1024 * 1024; _
-$##peru|mem## = ##maroon|"php:@@//@@temp/maxmemory:$meg"##; _
-$##peru|f## = fopen($##peru|mem##, ##maroon|"r+"##); _
-fputs($##peru|f##, ##maroon|"lorem ipsum"##); _
-rewind($##peru|f##); _
-$##peru|s## = fread($##peru|f##, $##peru|meg##);||
-||||||||~ [[# files]][#files-note files]||
-||~  ||~ node||~ dart||~ hack||
+##gray|//get, set//##|| || ||
+||[[# tmp-file]][#tmp-file-note open temporary file]|| || ||
+||[[# stringio]][#stringio-note in memory file]|| || ||
+||||||~ [[# files]][#files-note files]||
+||~  ||~ node||~ dart||
 ||[[# file-test]][#file-test-note file exists test, file regular test] _
 @<&nbsp;>@||var fs = require('fs'); _
  _
@@ -1401,33 +1010,25 @@ File f = new io.File("/tmp/foo"); _
  _
 if (f.existsSync()) { _
 @<&nbsp;&nbsp;>@print("is a regular file\n"); _
-}||file_exists(##maroon|"/etc/hosts"##) _
-is_file(##maroon|"/etc/hosts"##)||
+}||
 ||[[# file-size]][#file-size-note file size] _
 @<&nbsp;>@||var fs = require('fs'); _
  _
 var stat = fs.statSync('/etc/hosts'); _
-var sz = stat.size;||f.lengthSync()||filesize(##maroon|"/etc/hosts"##)||
-||[[# readable-writable-executable]][#readable-writable-executable-note is file readable, writable, executable]|| || ||is_readable(##maroon|"/etc/hosts"##) _
-is_writable(##maroon|"/etc/hosts"##) _
-is_executable(##maroon|"/etc/hosts"##)||
+var sz = stat.size;||f.lengthSync()||
+||[[# readable-writable-executable]][#readable-writable-executable-note is file readable, writable, executable]|| || ||
 ||[[# chmod]][#chmod-note set file permissions] _
 @<&nbsp;>@||var fs = require('fs'); _
  _
 fs.chmodSync('/tmp/foo', _
-@<&nbsp;&nbsp;>@parseInt('755', 8));|| ||chmod(##maroon|"/tmp/foo"##, 0755);||
+@<&nbsp;&nbsp;>@parseInt('755', 8));|| ||
 ||[[# last-modification-time]][#last-modification-time-note last modification time]||var fs = require('fs'); _
  _
 var stat = fs.statSync('/etc/hosts'); _
 var dt = stat.mtime;||import 'dart:io" as io; _
  _
 File f = new io.File("/etc/hosts"); _
-print(f.lastModifiedSync());||##gray|# unix epoch:## _
-$##peru|t## = stat(##maroon|'/etc/passwd'##)[##maroon|'mtime'##]; _
- _
-##gray|# DateTime object:## _
-$##peru|t2## = ##purple|new## ##green|DateTime##(##maroon|'UTC'##); _
-$##peru|t2##->setTimestamp($##peru|t##);||
+print(f.lastModifiedSync());||
 ||[[# file-cp-rm-mv]][#file-cp-rm-mv-note copy file, remove file, rename file]||##gray|# npm install fs-extra## _
 var fs = require('fs-extra'); _
  _
@@ -1439,9 +1040,7 @@ File f = new io.File("/tmp/foo"); _
 f.copySync("/tmp/bar"); _
 f.deleteSync(); _
 File f2 = new io.File("/tmp/bar"); _
-f2.renameSync("/tmp/foo");||copy(##maroon|"/tmp/foo"##, ##maroon|"/tmp/bar"##); _
-unlink(##maroon|"/tmp/foo"##); _
-rename(##maroon|"/tmp/bar"##, ##maroon|"/tmp/foo"##);||
+f2.renameSync("/tmp/foo");||
 ||[[# symlink]][#symlink-note create symlink, symlink test, readlink]||var fs = require('fs'); _
  _
 fs.symlinkSync('/etc/hosts', _
@@ -1449,23 +1048,17 @@ fs.symlinkSync('/etc/hosts', _
 var stat = fs.statSync('/tmp/hosts'); _
 stat.isSymbolicLink(); _
 var path = fs.readlinkSync( _
-@<&nbsp;&nbsp;>@'/tmp/hosts');|| ||symlink(##maroon|"/etc/hosts"##, ##maroon|"/tmp/hosts"##); _
-is_link(##maroon|"/etc/hosts"##) _
-readlink(##maroon|"/tmp/hosts"##)||
-||[[# unused-file-name]][#unused-file-name-note generate unused file name]|| || ||$##peru|path## = tempnam(##maroon|"/tmp"##, ##maroon|"foo"##); _
-$##peru|f## = fopen($##peru|path##, ##maroon|"w"##);||
-||||||||~ [[# file-fmt]][#file-fmt-note file formats]||
-||~  ||~ node||~ dart||~ hack||
+@<&nbsp;&nbsp;>@'/tmp/hosts');|| ||
+||[[# unused-file-name]][#unused-file-name-note generate unused file name]|| || ||
+||||||~ [[# file-fmt]][#file-fmt-note file formats]||
+||~  ||~ node||~ dart||
 ||[[# parse-csv]][#parse-csv-note parse csv]||var fs = require('fs'); _
 ##gray|# npm install csv## _
 var csv = require('csv'); _
  _
 var s = fs.readFileSync('no-header.csv'); _
 var a; _
-csv().from.string(s).to.array(function(d) { a = d });|| ||$##peru|f## = fopen(##maroon|"no-header.csv"##, ##maroon|"r"##); _
-##purple|while## (($##peru|row## = fgetcsv($##peru|f##)) != ##teal|FALSE##) { _
-@<&nbsp;&nbsp;>@##purple|echo## implode(##maroon|"\t"##, $##peru|row##) . ##maroon|"\n"##; _
-}||
+csv().from.string(s).to.array(function(d) { a = d });|| ||
 ||[[# generate-csv]][#generate-csv-note generate csv]||##gray|# npm install csv## _
 var csv = require('csv'); _
  _
@@ -1473,15 +1066,13 @@ var a = [['one', 'une', 'uno'], _
 ['two', 'deux', 'dos']]; _
  _
 var s; _
-csv().from.array(a).to.string(function (o) { s = o; });|| || ||
+csv().from.array(a).to.string(function (o) { s = o; });|| ||
 ||[[# parse-json]][#parse-json-note parse json]||var s1 = '{"t":1,"f":0}'; _
-var d1 = JSON.parse(s1);|| ||$##peru|s1## = ##maroon|'{"t":1,"f":0}'##; _
-$##peru|a1## = json_decode($##peru|s1##, ##teal|TRUE##);||
+var d1 = JSON.parse(s1);|| ||
 ||[[# generate-json]][#generate-json-note generate json]||var d2 = {'t': 1, 'f': 0}; _
-var s2 = JSON.stringify(d1);|| ||$##CD853F|a2## = array(##maroon|"t"## => 1, ##maroon|"f"## => 0); _
-$##CD853F|s2## = json_encode($##CD853F|a2##);||
-||[[# parse-yaml]][#parse-yaml-note parse yaml]|| || || ||
-||[[# generate-yaml]][#generate-yaml-note generate yaml]|| || || ||
+var s2 = JSON.stringify(d1);|| ||
+||[[# parse-yaml]][#parse-yaml-note parse yaml]|| || ||
+||[[# generate-yaml]][#generate-yaml-note generate yaml]|| || ||
 ||[[# parse-xml]][#parse-xml-note parse xml] _
 ##gray|//all nodes matching xpath query; first node matching xpath query//##||##gray|# npm install xmldom xpath## _
 var dom = require('xmldom').DOMParser; _
@@ -1491,73 +1082,31 @@ var xml = '<a><b><c ref="3">foo</c></b></a>'; _
 var doc = new dom().parseFromString(xml); _
 var nodes = xpath.select('/a/b/c', doc); _
 nodes.length; _
-nodes[0].firstChild.data;|| ||$##CD853F|xml## = ##maroon|"<a><b><c ref='3'>foo</c></b></a>"##; _
- _
-##gray|# returns NULL and emits warning if not _
-# well-formed:## _
-$##CD853F|doc## = simplexml_load_string($##CD853F|xml##); _
- _
-$##CD853F|nodes## = $##CD853F|doc##->xpath(##maroon|"/a/b/c"##); _
-##purple|echo## count($##peru|nodes##); _
-##purple|echo## $##CD853F|nodes##[0]; _
- _
-$##peru|node## = $##peru|nodes##[0]; _
-##purple|echo## $##peru|node##; _
-##purple|echo## $##peru|node##[##maroon|"ref"##];||
+nodes[0].firstChild.data;|| ||
 ||[[# generate-xml]][#generate-xml-note generate xml]||##gray|# npm install xmlbuilder## _
 var builder = require('xmlbuilder'); _
  _
-var xml = builder.create('a').ele('b', {id: 123}, 'foo').end();|| ||$##CD853F|xml## = ##maroon|"<a></a>"##; _
-$##CD853F|sxe## = ##purple|new## ##green|SimpleXMLElement##($##CD853F|xml##); _
-$b = $##CD853F|sxe##->addChild(##maroon|"b"##, ##maroon|"foo"##); _
-$b->addAttribute("id", "123"); _
- _
-##gray|# <a><b id="123">foo</b></a>:## _
-##purple|echo## $##CD853F|sxe##->asXML();||
-||[[# parse-html]][#parse-html-note parse html]|| || ||$##peru|html## = file_get_contents(##maroon|"foo.html"##); _
-$##peru|doc## = ##purple|new## ##green|DOMDocument##; _
-$##peru|doc##->loadHTML($##peru|html##); _
-$##peru|xpath## = ##purple|new## ##green|DOMXPath##($##peru|doc##); _
- _
-$##peru|nodes## = $##peru|xpath##->query(##maroon|"@@//@@a/@href"##); _
-##purple|foreach##($##peru|nodes## ##purple|as## $##peru|href##) { _
-@<&nbsp;&nbsp;>@##purple|echo## $##peru|href##->##peru|nodeValue##; _
-}||
-||||||||~ [[# directories]][#directories-note directories]||
-||~  ||~ node||~ dart||~ hack||
+var xml = builder.create('a').ele('b', {id: 123}, 'foo').end();|| ||
+||[[# parse-html]][#parse-html-note parse html]|| || ||
+||||||~ [[# directories]][#directories-note directories]||
+||~  ||~ node||~ dart||
 ||[[# working-dir]][#working-dir-note working directory]||var old_dir = process.cwd(); _
  _
-process.chdir("/tmp");|| ||$##peru|old_dir## = getcwd(); _
- _
-chdir(##maroon|"/tmp"##);||
-||[[# build-pathname]][#build-pathname-note build pathname]|| || ||##maroon|"/etc"## . ##teal|DIRECTORY_SEPARATOR## . ##maroon|"hosts"##||
-||[[# dirname-basename]][#dirname-basename-note dirname and basename]|| || ||dirname(##maroon|"/etc/hosts"##) _
-basename(##maroon|"/etc/hosts"##)||
+process.chdir("/tmp");|| ||
+||[[# build-pathname]][#build-pathname-note build pathname]|| || ||
+||[[# dirname-basename]][#dirname-basename-note dirname and basename]|| || ||
 ||[[# absolute-pathname]][#absolute-pathname-note absolute pathname] _
-##gray|//and tilde expansion//##|| || ||##gray|# file must exist; symbolic links are _
-# resolved: ## _
-realpath(##maroon|"foo"##)  _
-realpath(##maroon|"/foo"##)  _
-realpath(##maroon|"../foo"##) _
-realpath(##maroon|"./foo"##) _
-##gray|# no function for tilde expansion##||
+##gray|//and tilde expansion//##|| || ||
 ||[[# dir-iterate]][#dir-iterate-note iterate over directory by file]||var fs = require('fs'); _
  _
 fs.readdirSync('/etc').forEach( _
 @<&nbsp;&nbsp;>@function(s) { console.log(s); } _
-);|| ||if ($##peru|dir## = opendir(##maroon|"/etc"##)) { _
-@<&nbsp;&nbsp;>@##purple|while## ($##peru|file## = readdir($##peru|dir##)) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"$file\n"##; _
-@<&nbsp;&nbsp;>@} _
-@<&nbsp;&nbsp;>@closedir($##peru|dir##); _
-}||
-||[[# glob]][#glob-note glob paths]|| || ||##purple|foreach## (glob(##maroon|"/etc/*"##) ##purple|as## $##peru|file##) { _
-@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"$file\n"##; _
-}||
-||[[# mkdir]][#mkdir-note make directory]|| || ||mkdir(##maroon|"/tmp/foo/bar"##, 0755, ##teal|TRUE##);||
-||[[# recursive-cp]][#recursive-cp-note recursive copy]|| || ||##gray|//none//##||
-||[[# rmdir]][#rmdir-note remove empty directory]|| || ||rmdir(##maroon|"/tmp/foodir"##);||
-||[[# rm-rf]][#rm-rf-note remove directory and contents]|| || ||##gray|//none//##||
+);|| ||
+||[[# glob]][#glob-note glob paths]|| || ||
+||[[# mkdir]][#mkdir-note make directory]|| || ||
+||[[# recursive-cp]][#recursive-cp-note recursive copy]|| || ||
+||[[# rmdir]][#rmdir-note remove empty directory]|| || ||
+||[[# rm-rf]][#rm-rf-note remove directory and contents]|| || ||
 ||[[# dir-test]][#dir-test-note directory test] _
 @<&nbsp;>@|| ||import 'dart:io' as io; _
  _
@@ -1569,35 +1118,29 @@ io.FileSystemEntity.isDirectory('/tmp').then((isDir) { _
 @<&nbsp;&nbsp;>@} else { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print('not a directory'); _
 @<&nbsp;&nbsp;>@} _
-});||is_dir(##maroon|"/tmp"##)||
-||[[# unused-dir]][#unused-dir-note generate unused directory]|| || || ||
-||[[# system-tmp-dir]][#system-tmp-dir-note system temporary file directory]|| || ||sys_get_temp_dir()||
-||||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
-||~  ||~ node||~ dart||~ hack||
+});||
+||[[# unused-dir]][#unused-dir-note generate unused directory]|| || ||
+||[[# system-tmp-dir]][#system-tmp-dir-note system temporary file directory]|| || ||
+||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
+||~  ||~ node||~ dart||
 ||[[# cmd-line-arg]][#cmd-line-arg-note command line arguments] _
 ##gray|//and script name//##||process.argv.slice(2) _
 process.argv[1] _
-##gray|@@//@@ process.argv[0] contains "node"##|| ||$##peru|argv## _
-$##teal|_SERVER##[##maroon|"SCRIPT_NAME"##]||
+##gray|@@//@@ process.argv[0] contains "node"##|| ||
 ||[[# env-var]][#env-var-note environment variable] _
  _
 ##gray|//get, set//##||process.env["HOME"] _
  _
-process.env["PATH"] = "/bin";|| ||getenv(##maroon|"HOME"##) _
- _
-putenv(##maroon|"PATH=/bin"##);||
+process.env["PATH"] = "/bin";|| ||
 ||[[# pid]][#pid-note get pid, parent pid]||process.pid _
-##gray|//none//##|| ||posix_getpid() _
-posix_getppid()||
-||[[# user-id-name]][#user-id-name-note user id and name]|| || ||$##peru|uid## = posix_getuid(); _
-$##peru|uinfo## = posix_getpwuid($##peru|uid##); _
-$##peru|username## = $##peru|uinfo##[##maroon|"name"##];||
+##gray|//none//##|| ||
+||[[# user-id-name]][#user-id-name-note user id and name]|| || ||
 ||[[# exit]][#exit-note exit] _
-@<&nbsp;>@||process.exit(0);|| ||##purple|exit##(0);||
+@<&nbsp;>@||process.exit(0);|| ||
 ||[[# signal-handler]][#signal-handler-note set signal handler] _
-@<&nbsp;>@|| || || ||
+@<&nbsp;>@|| || ||
 ||[[# executable-test]][#executable-test-note executable test] _
-@<&nbsp;>@|| || || is_executable(##maroon|"/bin/ls"##)||
+@<&nbsp;>@|| || ||
 ||[[# external-cmd]][#external-cmd-note external command] _
 @<&nbsp;>@|| ||import 'dart:io' as io; _
  _
@@ -1605,21 +1148,13 @@ io.Process.start('ls', ['-l', '/tmp']).then((process) { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@io.stdout.addStream(process.stdout); _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@io.stderr.addStream(process.stderr); _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@process.exitCode.then(print); _
-@<&nbsp;&nbsp;>@});||system(##maroon|"ls -l /tmp"##, $##peru|retval##); _
-##purple|if## ($##peru|retval##) { _
-@<&nbsp;&nbsp;>@##purple|throw## ##purple|new## ##green|Exception##(##maroon|"ls failed"##); _
-}||
+@<&nbsp;&nbsp;>@});||
 ||[[# shell-esc-external-cmd]][#shell-esc-external-cmd-note shell-escaped external command] _
-@<&nbsp;>@|| || ||$##peru|path## = chop(fgets(##teal|STDIN##)); _
-$##peru|safe## = escapeshellarg($##peru|path##); _
-system("ls -l " . $##peru|safe##, $##peru|retval##); _
-##purple|if## ($##peru|retval##) { _
-@<&nbsp;&nbsp;>@##purple|throw## ##purple|new## ##green|Exception##(##maroon|"ls failed"##); _
-}||
+@<&nbsp;>@|| || ||
 ||[[# cmd-subst]][#cmd-subst-note command substitution] _
-@<&nbsp;>@|| || ||$##peru|files## = ##maroon|@@`@@ls -l /tmp@@`@@##;||
-||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
-||~  ||~ node||~ dart||~ hack||
+@<&nbsp;>@|| || ||
+||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
+||~  ||~ node||~ dart||
 ||[[# load-lib]][#load-lib-note load library] _
 @<&nbsp;>@|| ||##gray|@@//@@ load ./foo.dart:## _
 import 'foo.dart' as foo; _
@@ -1628,50 +1163,47 @@ import 'foo.dart' as foo; _
 import 'dart:io' as io; _
  _
 ##gray|@@//@@ library installed by package manager:## _
-import 'package:foo/foo.dart' as foo;||##purple|require_once##(##maroon|"foo.php"##);||
-||[[# load-lib-subdir]][#load-lib-subdir-note load library in subdirectory]|| ||import 'lib/foo.dart' as foo;||##purple|require_once##(##maroon|'foo/bar.php'##);||
+import 'package:foo/foo.dart' as foo;||
+||[[# load-lib-subdir]][#load-lib-subdir-note load library in subdirectory]|| ||import 'lib/foo.dart' as foo;||
 ||[[# hot-patch]][#hot-patch-note hot patch] _
-@<&nbsp;>@|| || ||##purple|require##(##maroon|"foo.php"##);||
-||[[# load-err]][#load-err-note load error]|| || ||##gray|require //and// require_once //raise fatal error if library not found;// include //and// include_once emit warnings##||
-||[[# main-in-lib]][#main-in-lib-note main routine in library]|| || ||##gray|//none//##||
-||[[# lib-path]][#lib-path-note library path]|| || ||$##peru|libpath## = ini_get(##maroon|"include_path"##); _
- _
-ini_set(##maroon|"include_path"##, _
-@<&nbsp;&nbsp;>@$##peru|libpath## . ##maroon|":/some/path"##);||
-||[[# lib-path-env]][#lib-path-env-note library path environment variable]|| || ||##gray|//none//##||
-||[[# lib-path-cmd-line]][#lib-path-cmd-line-note library path command line option]|| || ||##gray|//none//##||
-||[[# simple-global-identifiers]][#simple-global-identifiers-note simple global identifiers]|| || ||##gray|//variables defined outside of functions or with// global //keyword//##||
-||[[# multiple-label-identifiers]][#multiple-label-identifiers-note multiple label identifiers]|| || ||##gray|//classes, interfaces, functions, and constants//##||
+@<&nbsp;>@|| || ||
+||[[# load-err]][#load-err-note load error]|| || ||
+||[[# main-in-lib]][#main-in-lib-note main routine in library]|| || ||
+||[[# lib-path]][#lib-path-note library path]|| || ||
+||[[# lib-path-env]][#lib-path-env-note library path environment variable]|| || ||
+||[[# lib-path-cmd-line]][#lib-path-cmd-line-note library path command line option]|| || ||
+||[[# simple-global-identifiers]][#simple-global-identifiers-note simple global identifiers]|| || ||
+||[[# multiple-label-identifiers]][#multiple-label-identifiers-note multiple label identifiers]|| || ||
 ||[[# label-separator]][#label-separator-note label separator] _
-@<&nbsp;>@|| || ||\Foo\Bar\baz();||
-||[[# root-namespace]][#root-namespace-note root namespace definition]|| || ||\foo||
+@<&nbsp;>@|| || ||
+||[[# root-namespace]][#root-namespace-note root namespace definition]|| || ||
 ||[[# namespace-decl]][#namespace-decl-note namespace declaration] _
 @<&nbsp;>@|| ||##gray|@@//@@ not required in file containing main():## _
-library foo;||namespace Foo;||
-||[[# child-namespace-decl]][#child-namespace-decl-note child namespace declaration]|| || ||namespace Foo\Bar;||
+library foo;||
+||[[# child-namespace-decl]][#child-namespace-decl-note child namespace declaration]|| || ||
 ||[[# import-def]][#import-def-note import definitions] _
-@<&nbsp;>@|| ||import 'foo' show bar, baz;||##gray|//only class names can be imported//##||
+@<&nbsp;>@|| ||import 'foo' show bar, baz;||
 ||[[# import-namespace]][#import-namespace-note import all definitions in namespace] _
-@<&nbsp;>@|| ||import 'foo';||##gray|//none//##||
-||[[# import-all-subnamespaces]][#import-all-subnamespaces-note import all subnamespaces]|| || || ||
-||[[# shadow-avoidance]][#shadow-avoidance-note shadow avoidance]|| ||import 'foo' as fu;||use Foo as Fu;||
-||||||||~ [[# user-defined-types]][#user-defined-types-note user-defined-types]||
-||~  ||~ typescript||~ dart||~ hack||
+@<&nbsp;>@|| ||import 'foo';||
+||[[# import-all-subnamespaces]][#import-all-subnamespaces-note import all subnamespaces]|| || ||
+||[[# shadow-avoidance]][#shadow-avoidance-note shadow avoidance]|| ||import 'foo' as fu;||
+||||||~ [[# user-defined-types]][#user-defined-types-note user-defined-types]||
+||~  ||~ typescript||~ dart||
 ||[[# enumerated-type]][#enumerated-type-note enumerated type]||enum Color {Red, Green, Blue}; _
 ##gray|@@//@@ assigns c the value 1:## _
 var c: Color = Color.Green;||enum Color {red, green, blue} _
  _
-Color col = Color.green;|| ||
+Color col = Color.green;||
 ||[[# struct-def]][#struct-def-note struct definition]||interface Medals { _
 @<&nbsp;&nbsp;>@country: string, _
 @<&nbsp;&nbsp;>@gold: number, _
 @<&nbsp;&nbsp;>@silver: number, _
 @<&nbsp;&nbsp;>@bronze: number _
-};|| || ||
+};|| ||
 ||[[# optional-struct-member]][#optional-struct-member-note optional struct member]||interface Person { _
 @<&nbsp;&nbsp;>@name: string, _
 @<&nbsp;&nbsp;>@alma_mater?: string _
-}|| || ||
+}|| ||
 ||[[# struct-literal]][#struct-literal-note struct literal]||var france: Medals = {country: "France", _
 @<&nbsp;&nbsp;>@gold: 8, _
 @<&nbsp;&nbsp;>@silver: 7, _
@@ -1679,12 +1211,12 @@ Color col = Color.green;|| ||
 }; _
  _
 ##gray|@@//@@ not an error for the literal to contain members _
-@@//@@ not in the struct definition##|| || ||
-||[[# struct-lookup]][#struct-lookup-note struct lookup]||france.gold|| || ||
+@@//@@ not in the struct definition##|| ||
+||[[# struct-lookup]][#struct-lookup-note struct lookup]||france.gold|| ||
 ||[[# struct-update]][#struct-update-note struct update]||france.gold = 9; _
  _
 ##gray|@@//@@ assignment to members not in struct definition _
-@@//@@ is permitted##|| || ||
+@@//@@ is permitted##|| ||
 ||[[# type-alias]][#type-alias-note type alias]||##gray|@@//@@ function:## _
 interface BinaryOp { _
 @<&nbsp;&nbsp;>@(x: number, y: number): number _
@@ -1698,22 +1230,22 @@ interface NumberSeq { _
 } _
  _
 var primes: NumberSeq = [2, 3, 5, 7, 11];||##gray|@@//@@ function types only:## _
-typedef num BinaryOp(num x, num y);|| ||
-||||||||~ [[# generic-types]][#generic-types-note generic types]||
-||~  ||~ typescript||~ dart||~ hack||
+typedef num BinaryOp(num x, num y);||
+||||||~ [[# generic-types]][#generic-types-note generic types]||
+||~  ||~ typescript||~ dart||
 ||[[# generic-func]][#generic-func-note generic function]||function identity<T>(arg: T): T { _
 @<&nbsp;&nbsp;>@return arg; _
 } _
  _
-console.log(identity("lorem ipsum"));|| || ||
+console.log(identity("lorem ipsum"));|| ||
 ||[[# generic-class]][#generic-class-note generic class]||class Holder<T> { _
 @<&nbsp;&nbsp;>@constructor(public value: T) {} _
 } _
  _
 var holder = new Holder<number>(3); _
-console.log(holder.value);|| || ||
-||||||||~ [[# objects]][#objects-note objects]||
-||~  ||~ typescript||~ dart||~ hack||
+console.log(holder.value);|| ||
+||||||~ [[# objects]][#objects-note objects]||
+||~  ||~ typescript||~ dart||
 ||[[# def-class]][#def-class-note define class] _
 @<&nbsp;>@||class Int { _
 @<&nbsp;&nbsp;>@public value: number; _
@@ -1731,25 +1263,16 @@ class Int { _
 @<&nbsp;&nbsp;>@Int(int n) { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@this.value = n; _
 @<&nbsp;&nbsp;>@} _
-}||class Int _
-{ _
-@<&nbsp;&nbsp;>@public $value; _
-@<&nbsp;&nbsp;>@function __construct($int=0) _
-@<&nbsp;&nbsp;>@{ _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@$this->value = $int; _
-@<&nbsp;&nbsp;>@} _
 }||
 ||[[# create-obj]][#create-obj-note create object] _
 @<&nbsp;>@||var i = new Int(0); _
-var i2 = new Int(7);||Int i = new Int(7);||$i = new Int(); _
-$i2 = new Int(7);||
-||[[# instance-var]][#instance-var-note instance variable visibility]|| || ||##gray|//visibility must be declared//##||
+var i2 = new Int(7);||Int i = new Int(7);||
+||[[# instance-var]][#instance-var-note instance variable visibility]|| || ||
 ||[[# getter-setter]][#getter-setter-note get and set instance variable] _
 @<&nbsp;>@||i.value = i.value + 1;||i.value = i.value + 1; _
  _
 ##gray|@@//@@ inside method:## _
-this.value = this.value + 1;||$v = $i->value; _
-$i->value = $v + 1;||
+this.value = this.value + 1;||
 ||[[# def-method]][#def-method-note define method] _
 @<&nbsp;>@||class Int { _
 @<&nbsp;&nbsp;>@constructor(public value: number) {} _
@@ -1764,12 +1287,9 @@ $i->value = $v + 1;||
 @<&nbsp;&nbsp;>@void plus(num v) { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@this.value += v; _
 @<&nbsp;&nbsp;>@} _
-}||function plus($i) _
-{ _
-@<&nbsp;&nbsp;>@return $this->value + $i; _
 }||
 ||[[# invoke-method]][#invoke-method-note invoke method] _
-@<&nbsp;>@||i.plus(3);||i.plus(3);||$i->plus(7)||
+@<&nbsp;>@||i.plus(3);||i.plus(3);||
 ||[[# def-class-method]][#def-class-method-note define class method]||class Int { _
 @<&nbsp;&nbsp;>@static getInstances() { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return Int.instances; _
@@ -1778,9 +1298,9 @@ $i->value = $v + 1;||
 @<&nbsp;&nbsp;>@static int getInstances() { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return instances; _
 @<&nbsp;&nbsp;>@} _
-}|| ||
+}||
 ||[[# invoke-class-method]][#invoke-class-method-note invoke class method] _
-@<&nbsp;>@||Int.getInstances()||Int.getInstances()||Counter::getInstances()||
+@<&nbsp;>@||Int.getInstances()||Int.getInstances()||
 ||[[# def-classs-var]][#def-class-var-note define class variable]||class Int { _
 @<&nbsp;&nbsp;>@static instances: number = 0; _
 @<&nbsp;&nbsp;>@constructor(public value: number) { _
@@ -1793,26 +1313,18 @@ $i->value = $v + 1;||
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@this.value = n; _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@instances += 1; _
 @<&nbsp;&nbsp;>@} _
-}|| ||
+}||
 ||[[# class-var-getter-setter]][#class-var-getter-setter-note get and set class variable]||Int.instances = Int.instances + 1;||##gray|@@//@@ inside class:## _
 instances = instances + 1; _
  _
 ##gray|@@//@@ outside class:## _
-Int.instances = Int.instances + 1;|| ||
+Int.instances = Int.instances + 1;||
 ||[[# method-missing]][#method-missing-note handle undefined method invocation] _
-@<&nbsp;>@|| || ||function @@__@@call($name, $args) _
-{ _
-@<&nbsp;&nbsp;>@$argc = count($args); _
-@<&nbsp;&nbsp;>@echo "no def: $name " . _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@"arity: $argc\n"; _
-}||
+@<&nbsp;>@|| || ||
 ||[[# destructor]][#destructor-note destructor] _
-@<&nbsp;>@|| || ||function @@__@@destruct() _
-{ _
-@<&nbsp;&nbsp;>@echo "bye, $this->value\n"; _
-}||
-||||||||~ [[# inheritance-polymorphism]][#inheritance-polymorphism-note inheritance and polymorphism]||
-||~  ||~ typescript||~ dart||~ hack||
+@<&nbsp;>@|| || ||
+||||||~ [[# inheritance-polymorphism]][#inheritance-polymorphism-note inheritance and polymorphism]||
+||~  ||~ typescript||~ dart||
 ||[[# inheritance]][#inheritance-note subclass] _
 @<&nbsp;>@||class Counter extends Int { _
 @<&nbsp;&nbsp;>@constructor(v: number) { _
@@ -1821,27 +1333,11 @@ Int.instances = Int.instances + 1;|| ||
 @<&nbsp;&nbsp;>@incr() { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@this.value += 1; _
 @<&nbsp;&nbsp;>@} _
-}|| ||class Counter extends Int _
-{ _
-@<&nbsp;&nbsp;>@private static $instances = 0; _
-@<&nbsp;&nbsp;>@function @@__@@construct($int=0) _
-@<&nbsp;&nbsp;>@{ _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Counter::$instances += 1; _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@parent::@@__@@construct($int); _
-@<&nbsp;&nbsp;>@} _
-@<&nbsp;&nbsp;>@function incr() _
-@<&nbsp;&nbsp;>@{ _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@$this->value++; _
-@<&nbsp;&nbsp;>@} _
-@<&nbsp;&nbsp;>@static function getInstances() _
-@<&nbsp;&nbsp;>@{ _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return $instances; _
-@<&nbsp;&nbsp;>@} _
-}||
-||||||||~ [[# reflection]][#reflection-note reflection]||
-||~  ||~ typescript||~ dart||~ hack||
+}|| ||
+||||||~ [[# reflection]][#reflection-note reflection]||
+||~  ||~ typescript||~ dart||
 ||[[# object-id]][#object-id-note object id] _
-@<&nbsp;>@||##gray|//none//##|| || ||
+@<&nbsp;>@||##gray|//none//##|| ||
 ||[[# inspect-type]][#inspect-type-note inspect type] _
 @<&nbsp;>@||typeof([]) === 'object'||var n = 3; _
 if (n is int) { _
@@ -1850,9 +1346,7 @@ if (n is int) { _
  _
 if (n is! String) { _
 @<&nbsp;&nbsp;>@n += "s"; _
-}||gettype(array()) == ##maroon|"array"## _
- _
-##gray|//returns// object //for objects//##||
+}||
 ||[[# types]][#types-note basic types]||number _
 string _
 boolean _
@@ -1864,54 +1358,33 @@ object _
 typeof(null) _
 typeof([]) _
 typeof({})||dynamic _
-num||NULL _
-boolean _
-integer _
-double _
-string _
-array _
-object _
-resource _
-unknown type||
+num||
 ||[[# inspect-class]][#inspect-class-note inspect class]||##gray|@@//@@ returns prototype object:## _
-Object.getPrototypeOf(o)|| ||##gray|//returns// FALSE //if not an object://## _
-get_class($##peru|o##) == ##maroon|"Foo"##||
+Object.getPrototypeOf(o)|| ||
 ||[[# inspect-class-hierarchy]][#inspect-class-hierarchy-note inspect class hierarchy]||var pa = Object.getPrototypeOf(o) _
 ##gray|@@//@@prototype's of prototype object:## _
-var grandpa = Object.getPrototypeOf(pa)|| ||get_parent_class($##peru|o##)||
+var grandpa = Object.getPrototypeOf(pa)|| ||
 ||[[# has-method]][#has-method-note has method?] _
-@<&nbsp;>@||o.reverse && typeof(o.reverse) === 'function'|| ||method_exists($##peru|o##, ##maroon|"reverse"##)||
+@<&nbsp;>@||o.reverse && typeof(o.reverse) === 'function'|| ||
 ||[[# msg-passing]][#msg-passing-note message passing] _
-@<&nbsp;>@||##gray|//not a standard feature//##|| ||##purple|for## ($##peru|i## = 1; $##peru|i## <= 10; $##peru|i##++) { _
-@<&nbsp;&nbsp;>@call_user_func(array($##peru|o##, _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##maroon|"phone$i"##), ##teal|NULL##); _
-}||
+@<&nbsp;>@||##gray|//not a standard feature//##|| ||
 ||[[# eval]][#eval-note eval] _
-@<&nbsp;>@||eval('1 + 1')|| ||##gray|eval //evaluates to argument of// return //statement or// NULL:## _
-##purple|while## ($##peru|line## = fgets(##teal|STDIN##)) { _
-@<&nbsp;&nbsp;>@##purple|echo## eval($##peru|line##) . ##maroon|"\n"##; _
-}||
+@<&nbsp;>@||eval('1 + 1')|| ||
 ||[[# list-obj-methods]][#list-obj-methods-note list object methods] _
-@<&nbsp;>@|| || ||get_class_methods($##peru|o##)||
+@<&nbsp;>@|| || ||
 ||[[# list-obj-attr]][#list-obj-attr-note list object attributes] _
-@<&nbsp;>@|| || ||get_object_vars($##peru|o##)||
-||[[# list-loaded-lib]][#list-loaded-lib-note list loaded libraries]|| || || ||
-||[[# list-loaded-namespaces]][#list-loaded-namespaces-note list loaded namespaces]|| || || ||
-||[[# inspect-namespace]][#inspect-namespace-note inspect namespace]|| || || ||
+@<&nbsp;>@|| || ||
+||[[# list-loaded-lib]][#list-loaded-lib-note list loaded libraries]|| || ||
+||[[# list-loaded-namespaces]][#list-loaded-namespaces-note list loaded namespaces]|| || ||
+||[[# inspect-namespace]][#inspect-namespace-note inspect namespace]|| || ||
 ||[[# pretty-print]][#pretty-print-note pretty-print] _
 @<&nbsp;>@||var d = {"lorem": 1, "ipsum": [2, 3]}; _
-console.log(JSON.stringify(d, null, 2));|| ||$##peru|d## = array(##maroon|"lorem"##=>1, _
-@<&nbsp;&nbsp;>@##maroon|"ipsum"##=>array(2,3)); _
- _
-print_r($##peru|d##);||
-||[[# src-line-file]][#src-line-file-note source line number and file name]|| || ||##teal|@@__LINE__@@ _
-@@__FILE__@@##||
-||[[# cmd-line-doc]][#cmd-line-doc-note command line documentation]|| || ||##gray|//none//##||
-||||||||~ [[# net-web]][#net-web-note net and web]||
-||~  ||~ typescript||~ dart||~ hack||
-||[[# hostname-ip]][#hostname-ip-note get local hostname, dns lookup, reverse dns lookup]|| || ||$##peru|host## = gethostname(); _
-$##peru|ip## = gethostbyname($##peru|host##); _
-$##peru|host2## = gethostbyaddr($##peru|ip##);||
+console.log(JSON.stringify(d, null, 2));|| ||
+||[[# src-line-file]][#src-line-file-note source line number and file name]|| || ||
+||[[# cmd-line-doc]][#cmd-line-doc-note command line documentation]|| || ||
+||||||~ [[# net-web]][#net-web-note net and web]||
+||~  ||~ typescript||~ dart||
+||[[# hostname-ip]][#hostname-ip-note get local hostname, dns lookup, reverse dns lookup]|| || ||
 ||[[# http-get]][#http-get-note http get] _
 @<&nbsp;>@||##gray|@@//@@ npm install request## _
 var request = require('request'); _
@@ -1922,46 +1395,25 @@ request('@@http://www.google.com@@', _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@console.log(body); _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@} _
 @<&nbsp;&nbsp;>@} _
-);|| ||$##CD853F|url## = ##maroon|'@@http://www.google.com@@'##; _
-$##peru|s## = file_get_contents($##peru|url##);||
+);|| ||
 ||[[# http-post]][#http-post-note http post] _
-@<&nbsp;>@|| || || ||
-||[[# serve-pwd]][#serve-pwd-note serve working directory]|| || ||$ php -S localhost:8000||
+@<&nbsp;>@|| || ||
+||[[# serve-pwd]][#serve-pwd-note serve working directory]|| || ||
 ||[[# absolute-url]][#absolute-url-note absolute url] _
-##gray|//from base and relative url//##|| || ||##gray|//none//##||
-||[[# parse-url]][#parse-url-note parse url]|| || ||$##peru|url## = ##maroon|@@"http://google.com:80/foo?q=3#bar"@@##; _
-$##peru|up## = parse_url($##peru|url##); _
- _
-$##peru|protocol## = $##peru|up##[##maroon|"scheme"##]; _
-$##peru|hostname## = $##peru|up##[##maroon|"host"##]; _
-$##peru|port## = $##peru|up##[##maroon|"port"##]; _
-$##peru|path## = $##peru|up##[##maroon|"path"##]; _
-$##peru|query_str## = $##peru|up##[##maroon|"query"##]; _
-$##peru|fragment## = $##peru|up##[##maroon|"fragment"##]; _
- _
-##gray|# $params is associative array; if keys _
-# are reused, later values overwrite _
-# earlier values## _
-parse_str($##peru|query_str##, $##peru|params##);||
+##gray|//from base and relative url//##|| || ||
+||[[# parse-url]][#parse-url-note parse url]|| || ||
 ||[[# url-encode]][#url-encode-note url encode/decode] _
-@<&nbsp;>@|| || ||urlencode(##maroon|"lorem ipsum?"##) _
-urldecode(##maroon|"lorem+ipsum%3F"##)||
+@<&nbsp;>@|| || ||
 ||[[# html-escape]][#html-escape-note html escape] _
-##gray|//escape character data, escape attribute value, unescape html entities//##|| || ||$s = htmlspecialchars("<>&"); _
- _
-$s2 = htmlspecialchars("<>&\"'", _
-@<&nbsp;&nbsp;>@ENT_NOQUOTES | ENT_QUOTES); _
- _
-$s3 = htmlspecialchars_decode($s2);||
-||[[# base64]][#base64-note base64 encode/decode]|| || ||$##peru|s## = file_get_contents(##maroon|"foo.png"##); _
-$##peru|b64## = base64_encode($##peru|s##); _
-$##peru|s2## = base64_decode($##peru|b64##);||
-||||||||~ [[# debugging-profiling]][#debugging-profiling-note debugging and profiling]||
-||~  ||~ node||~ dart||~ hack||
-||[[# check-syntax]][#check-syntax-note check syntax]||$ tsc @@--@@noEmit foo.ts|| || ||
+##gray|//escape character data, escape attribute value, unescape html entities//##|| || ||
+||[[# base64]][#base64-note base64 encode/decode]|| || ||
+||||||~ [[# debugging-profiling]][#debugging-profiling-note debugging and profiling]||
+||~  ||~ node||~ dart||
+||[[# check-syntax]][#check-syntax-note check syntax]||$ tsc @@--@@noEmit foo.ts|| ||
 ||[[# lint]][#lint-note lint]||$ npm install -g tslint _
-$ tslint -c ~/.tslint.json -f foo.ts|| || ||
-||~ ||~ ##EFEFEF|@@____________________________________________@@##||~ ##EFEFEF|@@____________________________________________@@##||~ ##EFEFEF|@@____________________________________________@@##||
+$ tslint -c ~/.tslint.json -f foo.ts|| ||
+||~ ||~ ##EFEFEF|@@____________________________________________@@##||~ ##EFEFEF|@@____________________________________________@@##||
+
 
 [[# version-note]]
 + [#version Version]
@@ -2064,14 +1516,3 @@ $ curl https://github.com/palantir/tslint/blob/master/docs/sample.tslint.json > 
 
 [https://www.dartlang.org/docs/ Programmer's Guide]
 [https://api.dartlang.org/apidocs/channels/stable/dartdoc-viewer/home API Reference]
-
-[[# hack]]
-+ [#top Hack]
-
-[http://docs.hhvm.com/manual/en/index.php HHVM and Hack Manual]
-
-How to set HHVM to run at start up on ubuntu:
-
-[[code]]
-$ sudo update-rc.d hhvm defaults
-[[/code]]

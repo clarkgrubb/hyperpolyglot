@@ -104,6 +104,11 @@ np.isnan(np.nan) _
 ifelse(x > 0, x, -x)||x if x > 0 else -x||x > 0 ? x : -x||
 ||||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
+||[[# boolean-type]][#boolean-type-note boolean type]|| || ||##gray|# Python:## _
+bool _
+ _
+##gray|# NumPy:## _
+bool_||Bool||
 ||[[# true-false]][#true-false-note true and false] _
 @<&nbsp;>@||1 0 true false||TRUE FALSE T F||True False||true false||
 ||[[# falsehoods]][#falsehoods-note falsehoods]||false 0 0.0 _
@@ -119,14 +124,22 @@ ifelse(x > 0, x, -x)||x if x > 0 else -x||x > 0 ? x : -x||
 ##gray|& //and// | //can operate on and return vectors, but// @@&&@@ //and// @@||@@ //return scalars//##||and or not||@@&& || !@@||
 ||[[# relational-op]][#relational-op-note relational operators] _
 @<&nbsp;>@||== ~= > < >= <=||== != > < >= <=||== != > < >= <=||== != > < >= <=||
-||[[# int-type]][#int-type-note integer type]|| || || ||Int8 Int16 Int32 Int64 Int128 _
+||[[# int-type]][#int-type-note integer type]|| || ||##gray|# Python:## _
+int _
+ _
+##gray|# NumPy:## _
+int8 int16 int32 int64||Int8 Int16 Int32 Int64 Int128 _
  _
 Int ##gray|//is either 32 or 64 bits, depending on//## WORD_SIZE||
-||[[# unsigned-type]][#unsigned-type-note unsigned type]|| || || ||UInt8 UInt16 UInt32 UInt64 UInt128 _
+||[[# unsigned-type]][#unsigned-type-note unsigned type]|| || ||uint8 uint16 uint32 uint64||UInt8 UInt16 UInt32 UInt64 UInt128 _
  _
 UInt ##gray|//is either 32 or 64 bits, depending on//## WORD_SIZE||
 ||[[# float-type]][#float-type-note float type] _
-@<&nbsp;>@|| || || ||Float16 Float32 Float64||
+@<&nbsp;>@|| || ||##gray|# Python:## _
+float _
+ _
+##gray|# NumPy:## _
+float16 float32 float64||Float16 Float32 Float64||
 ||[[# arith-op]][#arith-op-note arithmetic operators] _
 ##gray|//add, sub, mult, div, quot, rem//##||+ - * / ##gray|//none//## mod(##gray|//n//##, ##gray|//divisor//##)||+ - * / %/% %%||+ - * / // %||+ - * / div(##gray|//n//##, ##gray|//divisor//##) rem(##gray|//n//##, ##gray|//divisor//##) _
  _
@@ -209,6 +222,7 @@ np.finfo(np.float64).min|| ||
 ||[[# rational-construction]][#rational-construction-note rational construction]|| || || ||22 @@//@@ 7||
 ||[[# rational-decomposition]][#rational-decomposition-note rational decomposition]|| || || ||num(22 @@//@@ 7) _
 den(22 @@//@@ 7)||
+||[[# complex-types]][#complex-types-note complex types]|| || ||complex64 complex128||Complex32 Complex64 Complex128||
 ||[[# complex-construction]][#complex-construction-note complex construction] _
 @<&nbsp;>@||1 + 3i||1 + 3i||1 + 3j||1 + 3im _
 complex(1, 3)||
@@ -728,28 +742,47 @@ end||
 a = list(range(1, 11))||a = Array(1:10)||
 ||||||||||~ [[# two-d-arrays]][#two-d-arrays-note two dimensional arrays]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
-||[[# array-2d-elem-type]][#array-2d-elem-type-note element type]||##gray|//always numeric//##||A = array(c(1, 2, 3)) _
+||[[# array-2d-elem-type]][#array-2d-elem-type-note element type]||##gray|//always numeric//##||A = array(c(1, 2, 3, 4), dim=c(2, 2)) _
  _
 ##gray|# "array":## _
 class(A) _
  _
 ##gray|# "boolean", "numeric", or "string":## _
-class(c(A))||np.array([1, 2, 3]).dtype _
+class(c(A))||np.array([[1, 2], [3, 4]]).dtype _
  _
-##gray|# possible values: np.bool, np.int64, np.float64, _
-# np.complex128, @@...@@##|| ||
+##gray|# possible values: np.bool, np.int64, _
+# np.float64, np.complex128, @@...@@##||A = [1 2; 3 4] _
+  _
+eltype(A)||
 ||[[# array-2d-literal]][#array-2d-literal-note literal]||[1, 2; 3, 4] _
  _
 ##gray|% commas optional; newlines can replace semicolons::## _
 [1 2 _
-@<&nbsp;>@3 4]||##gray|//none//##||##gray|//none//##|| ||
-||[[# array-2d-construct-seq]][#array-2d-construct-seq-note construct from sequence]||reshape([1 2 3 4], 2, 2)||array(c(1, 2, 3, 4), dim=c(2, 2))||np.array([1, 2, 3, 4]).reshape(2, 2)|| ||
+@<&nbsp;>@3 4]||##gray|//none//##||##gray|//none//##||[1 2; 3 4] _
+ _
+##gray|# A 1-d array created with commas is a _
+# n×1 array.  If commas are used in a literal, _
+# then semicolons and spaces as delimiters.## _
+ _
+[1 2 _
+@<&nbsp;>@3 4]||
+||[[# array-2d-construct-seq]][#array-2d-construct-seq-note construct from sequence]||reshape([1 2 3 4], 2, 2)||array(c(1, 2, 3, 4), dim=c(2, 2))||A = np.array([1, 2, 3, 4]).reshape(2, 2) _
+ _
+##gray|# convert to nested Python lists:## _
+A.tolist()||reshape([1, 2, 3, 4], 2, 2)||
 ||[[# array-2d-construct-rows]][#array-2d-construct-rows-note construct from rows]||row1 = [1 2 3] _
 row2 = [4 5 6] _
  _
-A = [row1; row2]||rbind(c(1, 2, 3), c(4, 5, 6))||np.vstack((np.array([1, 2, 3]), np.array([4, 5, 6]))) _
+A = [row1; row2]||rbind(c(1, 2, 3), c(4, 5, 6))||row1 = np.array([1, 2, 3]) _
+row2 = np.array([4, 5, 6]) _
  _
-np.array([[1, 2], [3, 4]])|| ||
+np.vstack((row1, row2)) _
+ _
+np.array([[1, 2], [3, 4]])||vcat([1 2 3], [4 5 6]) _
+ _
+row1 = [1 2 3] _
+row2 = [4 5 6] _
+[row1; row2]||
 ||[[# array-2d-construct-columns]][#array-2d-construct-columns-note construct from columns]||col1 = [1; 4] _
 col2 = [2; 5] _
 col3 = [3; 6] _
@@ -760,7 +793,12 @@ A = [col1, col2, col3]||cbind(c(1, 4), c(2, 5), c(3, 6))||cols = ( _
 @<&nbsp;&nbsp;>@np.array([2, 5]), _
 @<&nbsp;&nbsp;>@np.array([3, 6]) _
 ) _
-np.vstack(cols).transpose()|| ||
+np.vstack(cols).transpose()||hcat([1, 4], [2, 5], [3, 6]) _
+ _
+col1 = [1, 4] _
+col2 = [2, 5] _
+col3 = [3, 6] _
+[col1 col2 col3]||
 ||[[# array-2d-construct-subarrays]][#array-2d-construct-subarrays-note construct from subarrays]||A = [1 3; 2 4] _
  _
 A4_by_2 = [A; A] _
@@ -768,7 +806,10 @@ A2_by_4 = [A A]||A = matrix(c(1, 2, 3, 4), nrow=2) _
 A4_by_2 = rbind(A, A) _
 A2_by_4 = cbind(A, A)||A = np.array([[1, 2], [3, 4]]) _
 A2_by_4 = np.hstack([A, A]) _
-A4_by_2 = np.vstack([A, A])|| ||
+A4_by_2 = np.vstack([A, A])||A = [1 2; 3 4] _
+A4_by_2 = [A; A] _
+A2_by_4 = [A A ]||
+||[[# array-2d-cast]][#array-2d-cast-note cast element type]|| || || || ||
 ||[[# array-2d-size]][#array-2d-size-note size] _
 ##gray|//number of elements, number of dimensions, dimension lengths//##||numel(A) _
 ndims(A) _
@@ -796,7 +837,8 @@ A[1, 1]||##gray|# indices start at zero:## _
 A = np.array([[1, 2], [3, 4]]) _
  _
 A[0][0] ##gray|//or//## _
-A[0, 0]|| ||
+A[0, 0]||##gray|# indices start at one:## _
+A[1, 1]||
 ||[[# array-2d-1d-lookup]][#array-2d-1d-lookup-note 1d lookup]||A = [2 4; 6 8] _
 ##gray|% returns 8:## _
 A(4) _
@@ -811,7 +853,10 @@ A[4]||A = np.array([[2, 4], [6, 8]]) _
 A[1] _
  _
 ##gray|# returns 8:## _
-A.reshape(4)[3]|| ||
+A.reshape(4)[3]||A = [2 4; 6 8] _
+ _
+##gray|# returns 8:## _
+A[4]||
 ||[[# array-2d-slice]][#array-2d-slice-note lookup row or column]||A = [1 2 3; 4 5 6; 7 8 9] _
  _
 ##gray|% 2nd row:## _
@@ -830,11 +875,18 @@ A[, 2]||A = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]]) _
 A[1, :] _
  _
 ##gray|# 2nd column:## _
-A[:, 1]|| ||
+A[:, 1]|| A = [1 2 3; 4 5 6; 7 8 9] _
+ _
+##gray|# 2nd row:## _
+A[2, :] _
+ _
+##gray|# 2nd column:## _
+A[:, 2]||
 ||[[# array-2d-update]][#array-2d-update-note update]||A = [2 4; 6 8] _
 A(1, 1) = 3||A = array(c(2, 4, 6, 8), dim=c(2, 2)) _
 A[1, 1] = 3||A = np.array([[2, 4], [6, 8]]) _
-A[0, 0] = 3|| ||
+A[0, 0] = 3||A = [2 4; 6 8] _
+A[1, 1] = 3||
 ||[[# array-2d-update-row-col]][#array-2d-update-row-col-note update row or column]||A = [1 2; 3 4] _
  _
 ##gray|% [2 1; 3 4]:## _
@@ -850,7 +902,10 @@ A[0, :] = [2, 1] _
 ##gray|# or## _
 A[0] = [2, 1] _
  _
-A[:, 0] = [3, 2]|| ||
+A[:, 0] = [3, 2]||A = [1 2; 3 4] _
+ _
+A[1, :] = [2 1] _
+A[:, 1] = [3; 2]||
 ||[[# array-2d-update-subarray]][#array-2d-update-subarray-note update subarray]||A = ones(3, 3) _
 A(1:2, 1:2) = 2 * ones(2, 2) _
 ##gray|% or just:## _
@@ -858,14 +913,15 @@ A(1:2, 1:2) = 2||A = array(1, dim=c(3, 3)) _
 A[1:2, 1:2] = array(2, dim=c(2, 2)) _
 ##gray|# or just:## _
 A[1:2, 1:2] = 2||A = np.ones([3, 3]) _
-A[0:2, 0:2] = 2 * np.ones([2, 2])|| ||
+A[0:2, 0:2] = 2 * np.ones([2, 2])||A = ones(3, 3) _
+A[1:2, 1:2] = 2 * ones(2, 2)||
 ||[[# array-2d-out-of-bounds]][#array-2d-out-of-bounds-note out-of-bounds behavior]||A = [2 4; 6 8] _
  _
 ##gray|% error:## _
 x = A(3, 1) _
  _
 ##gray|% becomes 3x2 array with zero at (3, 2):## _
-A(3, 1) = 9||##gray|//Lookups and updates both cause subscript out of bounds error.//##||##gray|//Lookups and updates both raise an// IndexError //exception.//##|| ||
+A(3, 1) = 9||##gray|//Lookups and updates both cause subscript out of bounds error.//##||##gray|//Lookups and updates both raise an// IndexError //exception.//##||##gray|BoundsError##||
 ||[[# array-2d-slice-subarray]][#array-2d-slice-subarray-note slice subarray]||A = reshape(1:16, 4, 4)' _
  _
 ##gray|% top left 2x2 subarray:## _
@@ -891,14 +947,19 @@ A[c(1, 4), c(1, 4)]||A = np.array(range(1, 17)).reshape(4, 4) _
 A[0:2, 0:2] _
  _
 ##gray|# bottom right 2x2 subarray:## _
-A[2:, 2:]|| ||
+A[2:, 2:]||A = reshape(1:16, 4, 4) _
+ _
+A[1:2, 1:2] _
+ _
+A[3:4, 3:4]||
 ||[[# array-2d-transpose]][#array-2d-transpose-note transpose]||A = [1 2; 3 4] _
  _
-A' _
 transpose(A)||A = array(c(1, 2, 3, 4), dim=c(2, 2)) _
 t(A)||A = np.array([[1, 2], [3, 4]]) _
 A.transpose() _
-A.T|| ||
+A.T||A = [1 2; 3 4] _
+ _
+transpose(A)||
 ||[[# array-2d-flip]][#array-2d-flip-note flip]||##gray|% [ 2 1; 4 3]:## _
 fliplr([1 2; 3 4]) _
  _
@@ -912,7 +973,11 @@ fliplr(A) _
 flipud(A)||A = np.array([[1, 2], [3, 4]]) _
  _
 np.fliplr(A) _
-np.flipud(A)|| ||
+np.flipud(A)||##gray|# [2 1; 4 3]:## _
+flipdim([1 2; 3 4], 2) _
+ _
+##gray|# [3 4; 1 2]:## _
+flipdim([1 2; 3 4], 1)||
 ||[[# array-2d-circular-shift]][#array-2d-circular-shift-note circular shift] _
  _
 ##gray|//along columns, along rows//##||A = [1 2; 3, 4] _
@@ -933,7 +998,8 @@ circshift(A, c(1, 0)) _
 circshift(A, c(0, 1))||A = np.array([[1, 2], [3, 4]]) _
  _
 np.roll(A, 1, axis=0) _
-np.roll(A, 1, axis=1)|| ||
+np.roll(A, 1, axis=1)||circshift([1 2; 3 4], [1, 0]) _
+circshift([1 2; 3 4], [0, 1])||
 ||[[# array-2d-rotate]][#array-2d-rotate-note rotate] _
 ##gray|//clockwise, counter-clockwise//##||A = [1 2; 3 4] _
  _
@@ -954,7 +1020,11 @@ rot90(A, 2)||A = np.array([[1, 2], [3, 4]]) _
  _
 np.rot90(A) _
 np.rot90(A, -1) _
-np.rot90(A, 2)|| ||
+np.rot90(A, 2)||A = [1 2; 3 4] _
+ _
+rotr90(A) _
+rotl90(A) _
+rotr90(A, 2)||
 ||[[# array-2d-reduce]][#array-2d-reduce-note reduce] _
 ##gray|//rows, columns//##||M = [1 2; 3 4] _
  _
@@ -978,13 +1048,21 @@ np.add.reduce(A, 0) _
  _
 ##gray|# np.add is a built-in universal function.  All universal functions have a reduce method.## _
  _
-##gray|# np.sum(A, 1,) and np.sum(A, 0) also sum rows and columns##|| ||
+##gray|# np.sum(A, 1,) and np.sum(A, 0) also sum rows and columns##||A = [1 2; 3 4] _
+ _
+##gray|[3; 7]:## _
+reducedim(+, A, [2], 0) _
+ _
+##gray|[4 6]:## _
+reducedim(+, A, [1], 0)||
 ||||||||||~ [[# three-d-arrays]][#three-d-arrays-note three dimensional arrays]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
-||[[# array-3d-construct-seq]][#array-3d-construct-seq-note construct from sequence]||reshape([1 2 3 4 5 6 7 8], 2, 2, 2)||array(c(1, 2, 3, 4, 5, 6, 7, 8), dim=c(2, 2, 2))||np.array([1, 2, 3, 4, 5, 6, 7, 8]).reshape(2, 2, 2)|| ||
+||[[# array-3d-construct-seq]][#array-3d-construct-seq-note construct from sequence]||reshape([1 2 3 4 5 6 7 8], 2, 2, 2)||array(seq(1, 8), dim=c(2, 2, 2))||np.array(range(1, 9)).reshape(2, 2, 2)||reshape(1:8, 2, 2, 2)||
 ||[[# array-3d-construct-nested-seq]][#array-3d-construct-nested-seq-note construct from nested sequences]||##gray|//none//##||##gray|//none//##||np.array([[[1, 2], [3, 4]], [[5, 6], [7, 8]]])|| ||
 ||[[# array-3d-construct-2d-arrays]][#array-3d-construct-2d-arrays-note construct 3d array from 2d arrays]||A = [1, 2; 3, 4] _
-A(:,:,2) = [5, 6; 7, 8]|| || || ||
+A(:,:,2) = [5, 6; 7, 8]|| || ||A = Array{Float64}(2, 2, 2) _
+A[:, :, 1] = [1 2; 3 4] _
+A[:, :, 2] = [5 6; 7 8]||
 ||[[# array-3d-permute-axes]][#array-3d-permute-axes-note permute axes]||A = reshape([1 2 3 4 5 6 7 8], 2, 2, 2) _
  _
 ##gray|% swap 2nd and 3rd axes:## _
@@ -994,16 +1072,23 @@ permute(A, [1 3 2])||A = array(1:8, dim=c(2, 2, 2)) _
 aperm(A, perm=c(1, 3, 2))||A = np.array(range(1, 9)).reshape(2, 2, 2) _
  _
 ##gray|# swap 2nd and 3rd axes:## _
-A.transpose((0, 2, 1))|| ||
+A.transpose((0, 2, 1))||A = reshape(1:8, 2, 2, 2) _
+ _
+##gray|# swap 2nd and 3rd axes:## _
+reshape(A, [1, 3, 2])||
 ||[[# array-3d-flip]][#array-3d-flip-note flip]||A = reshape([1 2 3 4 5 6 7 8], 2, 2, 2)  _
  _
-flipdim(A, 3)||##gray|//none//##||##gray|//none//##|| ||
+flipdim(A, 3)||##gray|//none//##||##gray|//none//##||A = reshape(1:8, 2, 2, 2) _
+ _
+flipdim(A, 3)||
 ||[[# array-3d-circular-shift]][#array-3d-circular-shift-note circular shift]||A = reshape([1 2 3 4 5 6 7 8], 2, 2, 2) _
  _
 ##gray|% 3rd arg specifies axis:## _
-circshift(A, 1, 3)||##gray|//none//##||A = np.array([1, 2, 3, 4, 5, 6, 7, 8]).reshape(2, 2, 2) _
+circshift(A, 1, 3)||##gray|//none//##||A = np.array(range(1, 9)).reshape(2, 2, 2) _
  _
-np.roll(A, 1, axis=2)|| ||
+np.roll(A, 1, axis=2)||A = reshape(1:8, 2, 2, 2) _
+ _
+circshift(A, [0, 0, 1])||
 ||||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# dict-literal]][#dict-literal-note literal] _
