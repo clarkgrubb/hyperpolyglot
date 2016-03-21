@@ -82,14 +82,14 @@ int x = 7; _
 extern int x;||##gray|@@//@@ foo.go:## _
 package foo _
  _
-##gray|@@//@@ capitalized top-level identifiers are global:## _
+##gray|@@//@@ capitalized top-level identifiers are exported:## _
 var X = 7 _
  _
 ##gray|@@//@@ bar.go:## _
 package bar _
 import foo _
  _
-##gray|@@//@@ file scope:## _
+##gray|@@//@@ package scope:## _
 var y = 3 _
  _
 func baz() { _

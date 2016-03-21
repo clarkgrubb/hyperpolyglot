@@ -1,426 +1,401 @@
 //a side-by-side reference sheet//
 
-[#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#resizable-arrays resizable arrays] | [#arith-seq arithmetic sequences] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#streams streams] | [#files files] | [#directories directories] | [#libraries-namespaces libraries and namespaces] |  [#reflection reflection]
+[#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#arrays arrays] | [#sets sets] | [#arith-seq arithmetic sequences] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#streams streams] | [#files files] | [#directories directories] | [#libraries-namespaces libraries and namespaces] |  [#reflection reflection]
  
-[#vectors vectors] | [#matrices matrices] | [#symbolic-expr symbolic expressions] | [#calculus calculus] | [#equations-unknowns equations and unknowns] | [#optimization optimization] | [#combinatorics combinatorics] | [#number-theory number theory] | [#elliptic-curves elliptic curves] | [#rational-algebraic-numbers rational and algebraic numbers] | [#polynomials polynomials] | [#trigonometry trigonometry] | [#special-functions special functions] | [#permutations permutations] | [#groups groups] | [#subgroups subgroups] | [#group-homomorphisms group homomorphisms] | [#actions actions] | [#descriptive-statistics descriptive statistics] | [#distributions distributions] 
+[#symbolic-expr symbolic expressions] | [#calculus calculus] | [#equations-unknowns equations and unknowns] | [#optimization optimization] | [#vectors vectors] | [#matrices matrices] | [#combinatorics combinatorics] | [#number-theory number theory] | [#rational-algebraic-numbers rational and algebraic numbers] | [#polynomials polynomials] | [#trigonometry trigonometry] | [#special-functions special functions] | [#permutations permutations] | [#groups groups] | [#subgroups subgroups] | [#group-homomorphisms group homomorphisms] | [#actions actions] | [#descriptive-statistics descriptive statistics] | [#distributions distributions] 
 
 [#univariate-charts univariate charts] | [#bivariate-charts bivariate charts] | [#trivariate-charts trivariate charts]
 
-||~ ||~ [#mathematica mathematica]||~ [#sympy sympy]||~ [#gap gap]||~ [#pari-gp pari/gp]||
+||~ ||~ [#mathematica mathematica]||~ [#maple maple]||~ [#maxima maxima]||~ [#sympy sympy]||
 ||[[# version-used]][#version-used-note version used] _
-@<&nbsp;>@||##gray|//10.0//##||##gray|//Python 2.7; SymPy 0.7//##||##gray|//4.7//##||##gray|//2.7//##||
+@<&nbsp;>@||##gray|//10.0//##||##gray|//2016//##||##gray|//5.37//##||##gray|//Python 2.7; SymPy 0.7//##||
 ||[[# show-version]][#show-version-note show version] _
-@<&nbsp;>@||##gray|//select// About Mathematica //in// Mathematica //menu//##||@@sympy.__version__@@||$ gap -h||$ gp @@--@@version||
-||[[# implicit-prologue]][#implicit-prologue-note implicit prologue]|| ||import sympy _
+@<&nbsp;>@||##gray|//select// About Mathematica //in// Mathematica //menu//##||##gray|//select// About Maple //in// Maple //menu//##||$ maxima @@--@@version||@@sympy.__version__@@||
+||[[# implicit-prologue]][#implicit-prologue-note implicit prologue]|| || || ||import sympy _
  _
 ##gray|# enable LaTeX rendering in Jupyter notebook:## _
-sympy.init_printing()|| || ||
+sympy.init_printing()||
 ||||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[[# interpreter]][#interpreter-note interpreter] _
 @<&nbsp;>@||$ cat @@>>@@ hello.m _
 Print["Hello, World!"] _
  _
-$  MathKernel -script hello.m||##gray|//if// foo.py //imports sympy://## _
-$ python ##gray|//foo//##.py|| ||$ cat hello.gp _
-print("Hello, World!") _
-quit _
+$  MathKernel -script hello.m|| ||$ cat @@>>@@ hello.max _
+print("Hello, world!"); _
  _
-$ gp -q hello.gp _
-Hello, World!||
+$ maxima -b hello.maxima||##gray|//if// foo.py //imports sympy://## _
+$ python ##gray|//foo//##.py||
 ||[[# repl]][#repl-note repl] _
-@<&nbsp;>@||$ MathKernel||$ python _
-@@>>>@@ import sympy||$ gap||$ gp||
+@<&nbsp;>@||$ MathKernel||$ maple||$ maxima||$ python _
+@@>>>@@ import sympy||
 ||[[# block-delimiters]][#block-delimiters-note block delimiters] _
-@<&nbsp;>@||( ##gray|//stmt//##; ##gray|//...//##)||: ##gray|//and offside rule//##||function( ) ##gray|//...//## end _
-if then ##gray|//...//## elif then ##gray|//...//##  else ##gray|//...//## fi _
-while do ##gray|//...//## od _
-for do ##gray|//...//## od||{ ##gray|//...//## } _
+@<&nbsp;>@||( ##gray|//stmt//##; ##gray|//...//##)|| ||block([x: 3, y: 4], x + y); _
  _
-##gray|//braces cannot be nested//##||
+##gray|/* Multiple stmts are separated by commas; a list of assignments can be used to set variables local to the block. */##||: ##gray|//and offside rule//##||
 ||[[# stmt-separator]][#stmt-separator-note statement separator]||; ##gray|//or sometimes newline//## _
  _
-##gray|//A semicolon suppresses echoing value of previous expression.//##||##gray|//newline or//## ; _
+##gray|//A semicolon suppresses echoing value of previous expression.//##||; ##gray|//or//## : _
  _
-##gray|//newlines not separators inside (), [], {}, triple quote literals, or after backslash: @@\@@//##||; _
+##gray|//The colon// : //suppresses output.//## _
  _
-##gray|//Two trailing semicolons// ;;  //suppress echoing value of previous expression.//##||##gray|//newline or//## ; _
+##gray|//In the worksheet, typing// RETURN //causes a cell to be evaluated.  The expression in the cell does not have to end with a semicolon.  To enter a newline in a cell, use// SHIFT + RETURN. _
  _
-##gray|//Newlines don't separate statements inside braces.//## _
+//In the command line REPL, a statement is terminated by a semicolon.//##||; ##gray|//or//## $ _
  _
-##gray|//A semicolon suppresses echoing value of previous expression.//##||
+##gray|//The dollar sign// $ //suppresses output.//##||##gray|//newline or//## ; _
+ _
+##gray|//newlines not separators inside (), [], {}, triple quote literals, or after backslash: @@\@@//##||
 ||[[# eol-comment]][#eol-comment-note end-of-line comment] _
-@<&nbsp;>@||##gray|//none//##||1 + 1 ##gray|# addition##||1 + 1; ##gray|# addition##||1 + 1 ##gray|\\ addition##||
+@<&nbsp;>@||##gray|//none//##||1 + 1; ##gray|# addition##|| ||1 + 1 ##gray|# addition##||
 ||[[# multiple-line-comment]][#multiple-line-comment-note multiple line comment] _
-@<&nbsp;>@||1 + ##gray|(* addition *)## 1||##gray|//none//##||##gray|//none//##||1 + ##gray|/* addition */## 1||
+@<&nbsp;>@||1 + ##gray|(* addition *)## 1||1 + ##gray|(* addition *)## 1;||1 + ##gray|/* addition */## 1;||##gray|//none//##||
 ||||||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[[# assignment]][#assignment-note assignment]||a = 3 _
 Set[a, 3] _
  _
 ##gray|(* rhs evaluated each time a is accessed: *)## _
 a := x + 3 _
-SetDelayed[a, x + 3]||a = 3||a := 3;||x = 3.14||
+SetDelayed[a, x + 3]||a := 3; _
+ _
+##gray|# rhs evaluated each time a is accessed:## _
+a := 'x + 3';||a: 3;||a = 3||
 ||[[# parallel-assignment]][#parallel-assignment-note parallel assignment]||{a, b} = {3, 4} _
-Set[{a, b}, {3, 4}]||a, b = 3, 4||##gray|//none//##||[a, b] = [3, 4]||
+Set[{a, b}, {3, 4}]||a, b := 3, 4;||[a, b]: [3, 4]||a, b = 3, 4||
 ||[[# compound-assignment]][#compound-assignment-note compound assignment]||+= -= *= /= _
 ##gray|//corresponding functions://## _
-AddTo SubtractFrom TimeBy DivideBy||+= -= *= /= @@//=@@ %= @@**=@@||##gray|//none//##||+= -= *= /= \= \/= %= _
- _
-##gray|@@\\@@ bit operations:## _
-@@<<= >>=@@||
+AddTo SubtractFrom TimeBy DivideBy|| || ||+= -= *= /= @@//=@@ %= @@**=@@||
 ||[[# incr-decr]][#incr-decr-note increment and decrement]||++x @@--@@x _
 PreIncrement[x] PreDecrement[x] _
 x++ x@@--@@ _
-Increment[x] Decrement[x]||##gray|//none//##||##gray|//none//##||##gray|//postmodifiers://## _
-x++ x@@--@@||
-||[[# non-referential-id]][#non-referential-id-note non-referential identifier]||##gray|//any unassigned identifier is non-referential//##||x, y, z, w = sympy.symbols('x y z w')||##gray|//none//##||##gray|//any unassigned identifier is non-referential//##||
+Increment[x] Decrement[x]|| || ||##gray|//none//##||
+||[[# non-referential-id]][#non-referential-id-note non-referential identifier]||##gray|//any unassigned identifier is non-referential//##||##gray|//any unassigned identifier is non-referential//##||##gray|//any unassigned identifier is non-referential//##||x, y, z, w = sympy.symbols('x y z w')||
 ||[[# id-as-val]][#id-as-val-note identifier as value]||x = 3 _
-y = HoldForm[x]|| || ||x = 3 _
-y = 'x||
-||[[# global-var]][#global-var-note global variable]||##gray|//variables are global by default//##||g1, g2 = 7, 8 _
+y = HoldForm[x]|| || || ||
+||[[# global-var]][#global-var-note global variable]||##gray|//variables are global by default//##|| || ||g1, g2 = 7, 8 _
  _
 def swap_globals(): _
 @<&nbsp;&nbsp;>@global g1, g2 _
-@<&nbsp;&nbsp;>@g1, g2 = g2, g1|| ||##gray|//variables are global by default//##||
+@<&nbsp;&nbsp;>@g1, g2 = g2, g1||
 ||[[# local-var]][#local-var-note local variable]||Module[{x = 3, y = 4}, Print[x + y]] _
  _
 ##gray|(* makes x and y read-only: *)## _
 With[{x = 3, y = 4}, Print[x + y]] _
  _
-##gray|(* Block[ ] declares dynamic scope *)##||##gray|//assignments inside functions are to local variables by default//##|| ||tmp = 19 _
- _
-add(x, y, z) = { _
-@<&nbsp;&nbsp;>@##gray|@@\\@@ don't overwrite global tmp:## _
-@<&nbsp;&nbsp;>@my(tmp = x + y); _
-@<&nbsp;&nbsp;>@tmp + z _
-} _
- _
-##gray|@@\\@@ local keyword declares dynamic scope##||
+##gray|(* Block[ ] declares dynamic scope *)##|| || ||##gray|//assignments inside functions are to local variables by default//##||
 ||[[# null]][#null-note null] _
-@<&nbsp;>@||Null||None|| ||##gray|//none//##||
+@<&nbsp;>@||Null|| || ||None||
 ||[[# null-test]][#null-test-note null test] _
-@<&nbsp;>@||x == Null||x is None|| ||##gray|//none//##||
+@<&nbsp;>@||x == Null|| || ||x is None||
 ||[[# undef-var]][#undef-var-note undefined variable access] _
-@<&nbsp;>@||##gray|//treated as an unknown number//##||##gray|//raises// NameError##||##gray|//error//##||##gray|//treated as an unknown number//##||
+@<&nbsp;>@||##gray|//treated as an unknown number//##|| || ||##gray|//raises// NameError##||
 ||[[# rm-var-binding]][#rm-var-binding-note remove variable binding]||Clear[x] _
-Remove[x]||del x|| ||kill(x)||
+Remove[x]||x := 'x'||kill(x);||del x||
 ||[[# cond-expr]][#cond-expr-note conditional expression] _
-@<&nbsp;>@||If[x > 0, x, -x]||x if x > 0 else -x|| ||if(x > 0, x, -x)||
+@<&nbsp;>@||If[x > 0, x, -x]||if x < 0 then -x else x end if;||if x < 0 then -x else x;||x if x > 0 else -x||
 ||||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[[# true-false]][#true-false-note true and false] _
-@<&nbsp;>@||True False||True False||true false||1 0||
+@<&nbsp;>@||True False||true false||true false||True False||
 ||[[# falsehoods]][#falsehoods-note falsehoods] _
-@<&nbsp;>@||False||False 0 0.0||false||0 _
-0.0 _
-Mod(0, 5) _
-Pol([0]) _
-[0, 0, 0] _
-[0, 0; 0, 0] _
-[[0, 0], 0]||
+@<&nbsp;>@||False|| || ||False 0 0.0||
 ||[[# logical-op]][#logical-op-note logical operators]||! True @@||@@ (True && False) _
-Or[Not[True], And[True, False]]||sympy.Or(sympy.Not(True), sympy.And(True, False)) _
+Or[Not[True], And[True, False]]||and or not||and or not||sympy.Or(sympy.Not(True), sympy.And(True, False)) _
  _
 ##gray|# when arguments are symbols:## _
-@@~ x | (y & z)@@||not true or (true and false)||@@&& || !@@||
+@@~ x | (y & z)@@||
+||[[# relational-expr]][#relational-expr-note relational expression]||1 < 2||evalb(1 < 2);||is(1 < 2);|| ||
 ||[[# relational-op]][#relational-op-note relational operators]||== != > < >= <= _
 ##gray|//corresponding functions://## _
-Equal Unequal Greater Less GreaterEqual LessEqual||sympy.Eq sympy.Ne sympy.Gt sympy.Lt sympy.Ge sympy.Le _
+Equal Unequal Greater Less GreaterEqual LessEqual||@@=@@ != > < >= <=||@@=@@ # > < >= <=||sympy.Eq sympy.Ne sympy.Gt sympy.Lt sympy.Ge sympy.Le _
  _
 ##gray|# when arguments are symbols:## _
-== != > < >= <=||@@=@@ <> < > <= >=||== != > < >= <=||
+== != > < >= <=||
 ||[[# arith-op]][#arith-op-note arithmetic operators]||+ - * / Quotient Mod _
 ##gray|//adjacent terms are multiplied, so * is not necessary.// Quotient //and// Mod //are functions, not binary infix operators.  These functions are also available://## _
-Plus Subtract Times Divide||+ - * / ##gray|//??//## % _
+Plus Subtract Times Divide||+ - * / iquo mod _
+ _
+##gray|iquo //and// mod //are functions//##||+ - * / quotitent() mod() _
+ _
+##gray|quotient //and// mod //are functions, not binary infix operators.//##||+ - * / ##gray|//??//## % _
  _
 ##gray|//if an expression contains a symbol, then the above operators are rewritten using the following classes://## _
-sympy.Add sympy.Mul sympy.Pow sympy.Mod||+ - * / mod _
- _
-##gray|//the operators// + - * / //are overloaded for integers, rationals, and floats; other arithmetic functions aren't and there are no implicit conversions; use constructors to convert://## _
-Rat(3.1) _
-Float(3) _
-Float(31/10)||+ - * / %||
+sympy.Add sympy.Mul sympy.Pow sympy.Mod||
 ||[[# int-div]][#int-div-note integer division] _
-@<&nbsp;>@||Quotient[a, b]|| ||QuoInt(a, b);||a \ b _
-divrem(a, b)[1] _
- _
-##gray|@@\\@@ rounded integer division:## _
-a \/ b||
+@<&nbsp;>@||Quotient[a, b]||iquo(7, 3);||quotient(7, 3);|| ||
 ||[[# int-div-zero]][#int-div-zero-note integer division by zero]||##gray|//dividend is zero://## _
 Indeterminate _
 ##gray|//otherwise://## _
-ComplexInfinity|| ||##gray|//error//##||##gray|//error//##||
+ComplexInfinity||##gray|//error, numeric exception//##||##gray|//error//##|| ||
 ||[[# float-div]][#float-div-note float division]||##gray|//exact division://## _
-a / b|| ||##gray|//depending upon the types of a and b, the value can be an exact rational, a machine float, or an arbitrary precision float://## _
-a / b||7 / 3||
+a / b||##gray|# exact division:## _
+a / b; _
+ _
+##gray|# float division:## _
+a * 1.0 / b;||a / b|| ||
 ||[[# float-div-zero]][#float-div-zero-note float division by zero]||##gray|//dividend is zero://## _
 Indeterminate _
 ##gray|//otherwise://## _
-ComplexInfinity|| ||##gray|//error//##||##gray|//error//##||
+ComplexInfinity||float(infinity) _
+float(undefined) _
+-float(infinity)||##gray|//error//##|| ||
 ||[[# power]][#power-note power]||2 ^ 32 _
-Power[2, 32]||2 ** 32 _
-sympy.Pow(2, 32)||2 ^ 32||2 ^ 32||
+Power[2, 32]||2 ^ 32 _
+ _
+##gray|//The worksheet rewrites the expression using a superscript.  Do not put spaces around the operator.//##||2 ^ 32; _
+2 @@**@@ 32;||2 @@**@@ 32 _
+sympy.Pow(2, 32)||
 ||[[# sqrt]][#sqrt-note sqrt]||##gray|//returns symbolic expression://## _
-Sqrt[2]||sympy.sqrt(2)||2.0 ^ 0.5||sqrt(2)||
+Sqrt[2]||sqrt(2)||sqrt(2);||sympy.sqrt(2)||
 ||[[# sqrt-negative-one]][#sqrt-negative-one-note sqrt -1] _
-@<&nbsp;>@||I||sympy.I||##gray|-1.0 ^ 0.5 //evaluates to// -1.##||1.000 * I||
+@<&nbsp;>@||I||I||%i||sympy.I||
 ||[[# transcendental-func]][#transcendental-func-note transcendental functions]||Exp Log _
 Sin Cos Tan _
 ArcSin ArcCos ArcTan _
 ArcTan _
-##gray|ArcTan //accepts 1 or 2 arguments//##||symp.exp sympy.log _
-sympy.sin sympy.cos sympy.tan _
-sympy.asin sympy.acos sympy.atan _
-sympy.atan2||##gray|//arguments must be floats; no implicit conversion of integers to floats://## _
-Exp Log _
-Sin Cos Tan _
-Asin Acos Atan _
-Atan2(##gray|//y//##, ##gray|//x//##)||exp log ##gray|//none//## _
+##gray|ArcTan //accepts 1 or 2 arguments//##||exp log _
+sin cos tan _
+arcsin arccos _
+arctan(##gray|//y//##, ##gray|//x//##)||exp log _
 sin cos tan _
 asin acos atan _
-##gray|//none//##||
+atan2||symp.exp sympy.log _
+sympy.sin sympy.cos sympy.tan _
+sympy.asin sympy.acos sympy.atan _
+sympy.atan2||
 ||[[# transcendental-const]][#transcendental-const-note transcendental constants] _
-##gray|//π and Euler's number//##||Pi E||sympy.pi sympy.E||FLOAT.PI FLOAT.E||Pi exp(1)||
+##gray|//π and Euler's number//##||Pi E EulerGamma||Pi exp(1) gamma||%pi %e %gamma||sympy.pi sympy.E||
 ||[[# float-truncation]][#float-truncation-note float truncation] _
-##gray|//round towards zero, round to nearest integer, round down, round up//##||IntegerPart Round Floor Ceiling||sympy.floor _
-sympy.ceiling||Trunc Round Floor Ceil||truncate(x) _
-round(x) _
-floor(x) _
-ceil(x)||
+##gray|//round towards zero, round to nearest integer, round down, round up//##||IntegerPart Round Floor Ceiling||trunc round floor ceil||truncate _
+round _
+floor _
+ceiling||sympy.floor _
+sympy.ceiling||
 ||[[# absolute-val]][#absolute-val-note absolute value] _
-##gray|//and signum//##||Abs Sign||sympy.Abs sympy.sign||AbsInt _
-##gray|//no absolute value for floats?//## _
-SignInt _
-SignFloat||abs(x) _
-sign(x)||
+##gray|//and signum//##||Abs Sign||abs sign||abs sign _
+ _
+##gray|sign //returns// pos, neg, //or// zero##||sympy.Abs sympy.sign||
 ||[[# int-overflow]][#int-overflow-note integer overflow] _
 @<&nbsp;>@||##gray|//none, has arbitrary length integer type//##||##gray|//none, has arbitrary length integer type//##||##gray|//none, has arbitrary length integer type//##||##gray|//none, has arbitrary length integer type//##||
 ||[[# float-overflow]][#float-overflow-note float overflow] _
-@<&nbsp;>@||##gray|//none//##|| ||##gray|# prints as inf:## _
-FLOAT.INFINTY||##gray|//error//##||
-||[[# rational-construction]][#rational-construction-note rational construction]||2 / 7||sympy.Mul(2, sympy.Pow(7, -1))||2 / 7||2 / 7||
+@<&nbsp;>@||##gray|//none//##|| ||##gray|//none//##|| ||
+||[[# rational-construction]][#rational-construction-note rational construction]||2 / 7||2 / 7||2 / 7||sympy.Mul(2, sympy.Pow(7, -1))||
 ||[[# rational-decomposition]][#rational-decomposition-note rational decomposition] _
 @<&nbsp;>@||Numerator[x/y] _
-Denominator[x/y]||numer, denom = sympy.fraction(x, y)||x := 2 / 7; _
-NumeratorRat(x); _
-DenominatorRat(x);||x = 2 / 7 _
-numerator(x) _
-denominator(x)||
+Denominator[x/y]||numer(2 / 7) _
+denom(2 / 7)||num(2 / 7); _
+denom(2 / 7);||numer, denom = sympy.fraction(x, y)||
 ||[[# decimal-approx]][#decimal-approx-note decimal approximation]||N[2 / 7] _
 2 / 7 + 0. _
 2 / 7 @@//@@ N _
-N[2 / 7, 100]||sympy.N(sympy.Rational(2, 7)) _
-sympy.N(sympy.Rational(2, 7), 100)|| ||2 / 7 + 0. _
+N[2 / 7, 100]||evalf(2 / 7) _
+2 / 7 + 0.0 _
+evalf[100](2 / 7) _
  _
-##gray|@@\\@@ change precision to 100:## _
-\p 100 _
-2 / 7 + 0.||
+##gray|# use hardware floats:## _
+evalhf(2 / 7);||2 / 7, numer;||sympy.N(sympy.Rational(2, 7)) _
+sympy.N(sympy.Rational(2, 7), 100)||
 ||[[# complex-construction]][#complex-construction-note complex construction] _
-@<&nbsp;>@||1 + 3I||1 + 3 * sympy.I||##gray|//none//##||1 + 3 * I||
+@<&nbsp;>@||1 + 3I||1 + 3I||1 + 3 * %i;||1 + 3 * sympy.I||
 ||[[# complex-decomposition]][#complex-decomposition-note complex decomposition] _
 ##gray|//real and imaginary part, argument and modulus, conjugate//##||Re Im _
 Arg Abs _
-Conjugate||sympy.re sympy.im _
+Conjugate||Re Im _
+argument abs _
+conjugate||realpart imagpart _
+cabs carg _
+conjugate||sympy.re sympy.im _
 sympy.Abs sympy.arg _
-sympy.conjugate||##gray|//none//##||real(z) imag(z) _
-arg(z) abs(z) _
-conj(z)||
+sympy.conjugate||
 ||[[# random-num]][#random-num-note random number] _
 ##gray|//uniform integer, uniform float//##||RandomInteger[{0, 99}] _
-RandomReal[]|| ||rs := RandomSource(IsMersenneTwister); _
-Random(rs, 0, 99); _
-##gray|//??//##||random(100) _
-random(1.0)||
+RandomReal[]|| ||random(100); _
+random(1.0);|| ||
 ||[[# random-seed]][#random-seed-note random seed] _
 ##gray|//set, get//##||SeedRandom[17] _
-##gray|//??//##|| ||rs := RandomSource(IsMersenneTwister, 17); _
-State(rs);||setrand(17) _
-getrand()||
+##gray|//??//##|| ||set_random_state(make_random_state(17)); _
+##gray|//??//##|| ||
 ||[[# bit-op]][#bit-op-note bit operators]||BitAnd[5, 1] _
 BitOr[5, 1] _
 BitXor[5, 1] _
 BitNot[5] _
 BitShiftLeft[5, 1] _
-BitShiftRight[5, 1]|| ||##gray|//none//##||##gray|@@\\@@ left shift:## _
-5 @@<<@@ 1 _
-##gray|@@\\@@ right shift:## _
-5 @@>>@@ 1||
+BitShiftRight[5, 1]||with(Bits): _
+ _
+And(5, 1) _
+Or(5, 1) _
+Xor(5, 1) _
+Not(1, bits=32) _
+Join([0, op(Split(5))]) _
+Join(subsop(1 = NULL, Split(5)))|| || ||
 ||[[# binary-octal-hex-literals]][#binary-octal-hex-literals-note binary, octal, and hex literals]||2@@^^@@101010 _
 8@@^^@@52 _
-16@@^^@@2a|| ||##gray|//none//##|| ||
+16@@^^@@2a|| || || ||
 ||[[# radix]][#radix-note radix]||BaseForm[42, 7] _
-BaseForm[7^^60, 10]|| ||##gray|//none//##||##gray|@@\\@@ 42 as powers of 7 up to 9th power:## _
-42 + O(7^10)||
+BaseForm[7^^60, 10]||##gray|# [0, 6]:## _
+convert(42, base, 7)|| || ||
 ||[[# to-array-of-digits]][#to-array-of-digits-note to array of digits]||##gray|(* base 10: *)## _
 IntegerDigits[1234] _
 ##gray|(* base 2: *)## _
-IntegerDigits[1234, 2]|| ||ListOfDigits(1234); _
- _
-##gray|# other bases?##||##gray|@@\\@@ base 10:## _
-digits(1234) _
-##gray|@@\\@@ base 2:## _
-digits(1234, 2) _
-##gray|@@\\@@ number of digits in base 10:## _
-sizedigits(1234)||
+IntegerDigits[1234, 2]||convert(1234, base, 10) _
+convert(1234, base, 2)|| || ||
 ||||||||||~ [[# strings]][#strings-note strings]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[[# str-literal]][#str-literal-note string literal] _
-@<&nbsp;>@||"don't say \"no\""||##gray|//use//## [[[scripting#strings|Python strings]]]||"don't say \"no\""||"don't say \"no\""||
+@<&nbsp;>@||"don't say \"no\""||"don't say \"no\""||"don't say \"no\""||##gray|//use//## [[[scripting#strings|Python strings]]]||
 ||[[# newline-in-str-literal]][#newline-in-str-literal-note newline in literal] _
-@<&nbsp;>@||##gray|//yes//##|| ||##gray|//no//##||##gray|//no; use \n escape//##||
-||[[# str-literal-esc]][#str-literal-esc-note literal escapes]||\\ \" \b \f \n \r \t \##gray|//ooo//##|| ||\b \c \n \r \" \' \\ \##gray|//ooo//## _
- _
-##gray|//when writing to a buffered output stream, encountering a// \c //causes a flush of output.//##||\n \t \" \\||
+@<&nbsp;>@||##gray|//yes//##||##gray|//Yes.  String literals separated only by spaces or linebreaks are merged into a single literal.//##||##gray|//Newlines are inserted into strings by continuing the string on the next line.  However, if the last character on a line inside a string is a backslash, the backslash and the following newline are omitted.//##|| ||
+||[[# str-literal-esc]][#str-literal-esc-note literal escapes]||\\ \" \b \f \n \r \t \##gray|//ooo//##|| ||\" \\|| ||
 ||[[# str-concat]][#str-concat-note concatenate] _
-@<&nbsp;>@||"one " <> "two " <> "three"|| ||Concatenation("one ", "two ", "three");||Str("one ", "two ", "three") _
-concat("one ", "two ", "three")||
+@<&nbsp;>@||"one " <> "two " <> "three"||"one "@@||@@"two "@@||@@"three"; _
+cat("one ", "two ", "three");||concat("one ", "two ", "three");|| ||
 ||[[# translate-case]][#translate-case-note translate case]||ToUpperCase["foo"] _
-ToLowerCase["FOO"]|| ||UppercaseString("foo"); _
-LowercaseString("FOO");|| ||
-||[[# trim]][#trim-note trim] _
-@<&nbsp;>@||StringTrim[" foo "]|| ||##gray|//none//##|| ||
-||[[# num-to-str]][#num-to-str-note number to string] _
-@<&nbsp;>@||"value: " <> ToString[8]|| ||Concatenation("value: ", String(8));||Str(8) _
+ToLowerCase["FOO"]||with(StringTools): _
  _
-##gray|@@\\@@ implicit conversion to string:## _
-concat("value: ", 8)||
+UpperCase("foo"); _
+LowerCase("FOO");||supcase("foo"); _
+sdowncase("FOO");|| ||
+||[[# trim]][#trim-note trim] _
+@<&nbsp;>@||StringTrim[" foo "]||with(StringTools): _
+ _
+Trim(" foo ");||strim(" ", " foo ");|| ||
+||[[# num-to-str]][#num-to-str-note number to string] _
+@<&nbsp;>@||"value: " <> ToString[8]||cat("value: ", 8);||concat("value: ", 8);|| ||
 ||[[# str-to-num]][#str-to-num-note string to number]||7 + ToExpression["12"] _
-73.9 + ToExpression[".037"]|| ||7 + Int("12"); _
-73.9 + Float(".037");||7 + eval("12") _
-73.9 + eval(".037")||
-||[[# str-join]][#str-join-note string join]||StringJoin[Riffle[{"foo", "bar", "baz"}, ","]]|| ||a := ["foo", "bar", "baz"]; _
-JoinStringsWithSeparator(a, ","); || ||
+73.9 + ToExpression[".037"]||7 + parse("12"); _
+73.9 + parse(".037");||7 + parse_string("12"); _
+73.9 + parse_string(".037"); _
+ _
+##gray|/* parse_string raises error if the string does _
+not contain valid Maxima code.  Use numberp _
+predicate to verify that the return value is _
+numeric. */##|| ||
+||[[# str-join]][#str-join-note string join]||StringJoin[Riffle[{"foo", "bar", "baz"}, ","]]||with(StringTools): _
+ _
+Join(["foo", "bar", "baz"], ",");||simplode(["foo", "bar", "baz"], ",");|| ||
 ||[[# split]][#split-note split] _
-@<&nbsp;>@||StringSplit["foo,bar,baz", ","]|| ||SplitString("foo,bar,baz", ",");|| ||
-||[[# str-subst]][#str-subst-note substitute]||s = "do re mi mi" _
+@<&nbsp;>@||StringSplit["foo,bar,baz", ","]||with(StringTools): _
+ _
+Split("foo,bar,baz", ",");||split("foo,bar,baz", ",");|| ||
+||[[# str-subst]][#str-subst-note substitute] _
+ _
+##gray|//first occurrence, all occurences//## ||s = "do re mi mi" _
 re = RegularExpression["mi"] _
  _
-##gray|(* replace first occurrence: *)## _
 StringReplace[s, re -> "ma", 1] _
-##gray|(* replace all occurrences: *)## _
-StringReplace[s, re -> "ma"]|| ||##gray|# replace all occurrences:## _
-ReplacedString("do re mi mi", "mi", "ma");|| ||
+StringReplace[s, re -> "ma"]||with(StringTools): _
+ _
+Substitute("do re mi mi mi", "mi", "ma"); _
+SubstituteAll("do re mi mi mi", "mi", "ma"); _
+ _
+##gray|# supports regexes:## _
+RegSubs("mi"="ma", "do re mi mi mi");||ssubst("mi", "ma", "do re mi mi mi"); _
+ssubstfirst("mi", "ma", "do re mi mi mi");|| ||
 ||[[# str-len]][#str-len-note length] _
-@<&nbsp;>@||StringLength["hello"]|| ||Length("hello");||length("hello") _
-#"hello"||
+@<&nbsp;>@||StringLength["hello"]||length("hello");||slength("hello");|| ||
 ||[[# index-substr]][#index-substr-note index of substring]||StringPosition["hello", "el"][[1]][[1]] _
  _
 ##gray|(* The index of the first character is 1.*)## _
  _
-##gray|(* StringPosition returns an array of pairs, one for each occurrence of the substring.  Each pair contains the index of the first and last character of the occurrence. *)##|| || || ||
-||[[# extract-substr]][#extract-substr-note extract substring]||##gray|(* "el": *)## _
-StringTake["hello", {2, 3}]|| ||s := "hello"; _
-s{[2..3]};|| ||
-||[[# char-literal]][#char-literal-note character literal] _
-@<&nbsp;>@||##gray|//none//##|| ||'h'|| ||
-||[[# lookup-char]][#lookup-char-note character lookup]||Characters["hello"][[1]]|| ||s := "hello"; _
-##gray|# the character 'h':## _
-s[1]; _
+##gray|(* StringPosition returns an array of pairs, one for each occurrence of the substring.  Each pair contains the index of the first and last character of the occurrence. *)##||searchtext("el", "hello"); _
  _
-##gray|# cannot use index notation on string literal##|| ||
+##gray|# Index of first character is 1. _
+# Returns 0 if not found.##||ssearch("el", "hello"); _
+ _
+##gray|/* 1 is index of first character; _
+returns false if substring not found */## _|| ||
+||[[# extract-substr]][#extract-substr-note extract substring]||##gray|(* "el": *)## _
+StringTake["hello", {2, 3}]||substring("hello", 2..3);||substring("hello", 2, 4);|| ||
+||[[# char-literal]][#char-literal-note character literal] _
+@<&nbsp;>@||##gray|//none//##||##gray|//none//##||##gray|//none//##|| ||
+||[[# lookup-char]][#lookup-char-note character lookup]||Characters["hello"][[1]]||##gray|# string of length 1:## _
+"hello"[1]|| || ||
 ||[[# chr-ord]][#chr-ord-note chr and ord]||FromCharacterCode[{65}] _
-ToCharacterCode["A"][[1]]|| ||CharInt(65) _
-IntChar('A')||Strchr([65]) _
-Vecsmall("A")||
+ToCharacterCode["A"][[1]]||with(StringTools): _
+ _
+Char(65); _
+Ord("A")||ascii(65); _
+cint("A");|| ||
 ||[[# delete-char]][#delete-char-note delete characters]||rules = {"a" -> "", "e" -> "", "i" -> "", _
 @<&nbsp;&nbsp;>@"o" -> "", "u" -> ""} _
-StringReplace["disemvowel me", rules]|| ||s := "disemvowel me"; _
-##gray|# no retval; modifies s in place:## _
-RemoveCharacters(s, "aeiou"); || ||
-||||||||||~ [[# resizable-arrays]][#resizable-arrays-note resizable arrays]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
+StringReplace["disemvowel me", rules]||with(StringTools): _
+ _
+Remove(IsVowel, "disemvowel me");|| || ||
+||||||||||~ [[# arrays]][#arrays-note arrays]||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[[# array-literal]][#array-literal-note literal]||{1, 2, 3} _
  _
-List[1, 2, 3]||##gray|//use//## [[[scripting#arrays|Python lists]]]||[1, 2, 3]; _
- _
-##gray|# creates array with gap at fourth index; _
-# reading a[4] causes an error:## _
-a := [1, 2, 3, , 5];||##gray|\\ [1, 2, 3] is a vector literal:## _
-List([1, 2, 3])||
+List[1, 2, 3]||a := [1, 2, 3];||[1, 2, 3];||##gray|//use//## [[[scripting#arrays|Python lists]]]||
 ||[[# array-size]][#array-size-note size] _
-@<&nbsp;>@||Length[{1, 2, 3}]|| ||Length([1, 2, 3]);||length(List([1, 2, 3])) _
-#List([1, 2, 3])||
+@<&nbsp;>@||Length[{1, 2, 3}]||numelems([1, 2, 3]);||length([1, 2, 3]);|| ||
 ||[[# array-lookup]][#array-lookup-note lookup]||##gray|(* access time is O(1) *)## _
 ##gray|(* indices start at one: *)## _
 {1, 2, 3}[[1]] _
  _
-Part[{1, 2, 3}, 1]|| ||##gray|# indices start at one:## _
-a := [1, 2, 3]; _
-a[1];||##gray|\\ access time is O(1).## _
-##gray|\\ indices start at one:## _
-List([1, 2, 3])[1]||
+Part[{1, 2, 3}, 1]||a := [6, 7, 8]; _
+a[1];||a: [6, 7, 8]; _
+a[1];|| ||
 ||[[# array-update]][#array-update-note update] _
-@<&nbsp;>@||a[[1]] = 7|| ||a[1] := 7;||listput(a, 7, 1)||
-||[[# array-out-of-bounds]][#array-out-of-bounds-note out-of-bounds behavior]||##gray|//left as unevaluated// Part[] //expression//##|| ||##gray|//Lookups result in errors; arrays can have gaps which also cause lookup errors. _
- _
-An update will expand the array, possibly creating gaps.//##||##gray|//out of allowed range error//##||
+@<&nbsp;>@||a[[1]] = 7||a[1] := 7;||a[1]: 7;|| ||
+||[[# array-out-of-bounds]][#array-out-of-bounds-note out-of-bounds behavior]||##gray|//left as unevaluated// Part[] //expression//##||##gray|//Error for both lookup and update.//##||##gray|//Error for both lookup and update.//##|| ||
 ||[[# array-element-index]][#array-element-index-note element index]||##gray|(* Position returns list of all positions: *)## _
-First /@ Position[{7, 8, 9, 9}, 9]|| ||##gray|# returns 3:## _
-Position([7, 8, 9, 9], 9); _
+First /@ Position[{7, 8, 9, 9}, 9]||with(ListTools): _
  _
-##gray|# returns [3, 4]:## _
-Positions([7, 8, 9, 9], 9);||##gray|//none//##||
+Search(9, [7, 8, 9]); _
+ _
+##gray|# SearchAll returns all positions##|| || ||
 ||[[# array-slice]][#array-slice-note slice] _
-@<&nbsp;>@||{1, 2, 3}[[1 ;; 2]]|| || ||##gray|//none//##||
+@<&nbsp;>@||{1, 2, 3}[[1 ;; 2]]|| || || ||
 ||[[# array-of-integers-as-index]][#array-of-integers-as-index-note array of integers as index]||##gray|(* evaluates to {7, 9, 9} *)## _
-{7, 8, 9}[[{1, 3, 3}]]|| || ||##gray|//none//##||
+{7, 8, 9}[[{1, 3, 3}]]|| || || ||
 ||[[# array-back]][#array-back-note manipulate back]||a = {6,7,8} _
 AppendTo[a, 9] _
 elem = a[[Length[a]]] _
 a = Delete[a, Length[a]] _
-elem|| ||a = [6, 7, 8]; _
-Add(a, 9); _
-elem := Remove(a);||a = List([6, 7, 8]) _
-listput(a, 9) _
-elem = listpop(a)||
+elem|| || || ||
 ||[[# array-front]][#array-front-note manipulate front]||a = {6,7,8} _
 PrependTo[a, 5] _
 elem = a[[1]] _
 a = Delete[a, 1] _
-elem|| || ||a = List([6, 7, 8]); _
-listinsert(a, 5, 1); _
-elem = a[1]; _
-listpop(a, 1);||
+elem|| || || ||
 ||[[# array-head]][#array-head-note head] _
-@<&nbsp;>@||First[{1, 2, 3}]|| || ||List([1, 2, 3])[1]||
+@<&nbsp;>@||First[{1, 2, 3}]|| || || ||
 ||[[# array-tail]][#array-tail-note tail] _
-@<&nbsp;>@||Rest[{1, 2, 3}]|| || ||##gray|//none//##||
+@<&nbsp;>@||Rest[{1, 2, 3}]|| || || ||
 ||[[# array-cons]][#array-cons-note cons]||##gray|(* first arg must be an array *)## _
-Prepend[{2, 3}, 1]|| || ||a = List([1, 2, 3]); _
-listinsert(a, 1, 1);||
+Prepend[{2, 3}, 1]|| || || ||
 ||[[# array-concatenate]][#array-concatenate-note concatenate] _
-@<&nbsp;>@||Join[{1, 2, 3}, {4, 5, 6}]|| ||Concatenation([1, 2, 3], [4, 5, 6]);||concat(List([1, 2, 3]), List([4, 5, 6]))||
+@<&nbsp;>@||Join[{1, 2, 3}, {4, 5, 6}]|| || || ||
 ||[[# array-replicate]][#array-replicate-note replicate] _
 @<&nbsp;>@||ten_zeros = Table[0, {i, 0, 9}]|| || || ||
 ||[[# copy-array]][#copy-array-note copy] _
-@<&nbsp;>@||a2 = a|| || ||a2 = a||
+@<&nbsp;>@||a2 = a|| || || ||
 ||[[# iterate-over-array]][#iterate-over-array-note iterate] _
-@<&nbsp;>@||Function[x, Print[x]] /@ {1, 2, 3}|| ||Perform([1, 2, 3], function(x) Print(x); Print("\n"); end);||a = List([1, 2, 3]) _
- _
-for(i=1, length(a), print(a[i]))||
+@<&nbsp;>@||Function[x, Print[x]] /@ {1, 2, 3}||for i in [1, 2, 3] do _
+@<&nbsp;&nbsp;>@print(i); _
+end do;||for i in [1, 2, 3] do print(i);|| ||
 ||[[# reverse-array]][#reverse-array-note reverse] _
-@<&nbsp;>@||Reverse[{1, 2, 3}]|| ||Reversed([1, 2, 3])||a = List([1, 2, 3]) _
-a2 = listcreate() _
-while(i > 0, listput(a2, a[i]); i--)||
-||[[# sort-array]][#sort-array-note sort]||Sort[{3, 1, 4, 2}]|| ||A := [3, 1, 4, 2] _
-Sort(A);||a = List([3,1,4,2]) _
-listsort(a) _
-a||
+@<&nbsp;>@||Reverse[{1, 2, 3}]||with(ListTools): _
+ _
+Reverse([1, 2, 3]);|| || ||
+||[[# sort-array]][#sort-array-note sort]||##gray|(* original list not modified: *)## _
+a = Sort[{3, 1, 4, 2}]||##gray|# original list not modified:## _
+a := sort([3, 1, 4, 2]);|| || ||
 ||[[# dedupe-array]][#dedupe-array-note dedupe] _
-@<&nbsp;>@||DeleteDuplicates[{1, 2, 2, 3}]|| ||Set([1, 2, 2, 3]); _
-Unique([1, 2, 2, 3]);||Set([1, 2, 2, 3])||
+@<&nbsp;>@||DeleteDuplicates[{1, 2, 2, 3}]||with(ListTools): _
+ _
+##gray|# original list not modified:## _
+a := MakeUnique([1, 1, 2, 3]);|| || ||
 ||[[# membership]][#membership-note membership] _
-@<&nbsp;>@||MemberQ[{1, 2, 3}, 2]|| ||2 in [1, 2, 3]||##gray|@@\\@@ returns 1-based index of first occurrence _
-@@\\@@ or 0 if not found:## _
-setsearch([1, 2, 3], 2)||
+@<&nbsp;>@||MemberQ[{1, 2, 3}, 2]||evalb(2 in [1, 2, 3]); _
+member(2, [1, 2, 3]);|| || ||
 ||[[# intersection]][#intersection-note intersection] _
-@<&nbsp;>@||Intersect[{1, 2}, {2, 3, 4}]|| ||Intersection(Set([1, 2]), Set([2, 3, 4]));||setintersect([1, 2], [2, 3, 4])||
+@<&nbsp;>@||Intersect[{1, 2}, {2, 3, 4}]|| || || ||
 ||[[# union]][#union-note union] _
-@<&nbsp;>@||Union[{1, 2}, {2, 3, 4}]|| ||Union(Set([1, 2]), Set([2, 3, 4]));||setunion([1, 2], [2, 3, 4])||
+@<&nbsp;>@||Union[{1, 2}, {2, 3, 4}]|| || || ||
 ||[[# set-diff]][#set-diff-note relative complement, symmetric difference]||Complement[{1, 2, 3}, {2}] _
-##gray|//none//##|| || ||setminus([1, 2, 3], [2]) _
-##gray|//??//##||
+##gray|//none//##|| || || ||
 ||[[# map]][#map-note map]||Map[Function[x, x x], {1, 2, 3}] _
  _
 Function[x, x x] /@ {1, 2, 3} _
@@ -428,27 +403,27 @@ Function[x, x x] /@ {1, 2, 3} _
 ##gray|(* if function has Listable attribute, Map is unnecessary: *)## _
 sqr[x_] := x * x _
 SetAttributes[sqr, Listable] _
-sqr[{1, 2, 3, 4}]|| ||A := [1, 2, 3]; _
- _
-##gray|# modifies A:## _
-Apply(A, x -> x * x);||apply(x -> x * x, [1, 2, 3])||
+sqr[{1, 2, 3, 4}]|| || || ||
 ||[[# filter]][#filter-note filter] _
-@<&nbsp;>@||Select[{1, 2, 3}, # > 2 &]|| || ||select(x -> x > 2, [1, 2, 3])||
+@<&nbsp;>@||Select[{1, 2, 3}, # > 2 &]|| || || ||
 ||[[# reduce]][#reduce-note reduce] _
 @<&nbsp;>@||Fold[Plus, 0, {1, 2, 3}]|| || || ||
 ||[[# universal-existential-test]][#universal-existential-test-note universal and existential tests]||##gray|//none//##|| || || ||
-||[[# min-max-elem]][#min-max-elem-note min and max element]||Min[{1, 2, 3}] _
-Max[{1, 2, 3}]|| ||Minimum([1, 2, 3]) _
-Maximum([1, 2, 3])||vecmin([1, 2, 3]) _
-vecmax([1, 2, 3])||
+||[[# min-max-elem]][#min-max-elem-note min and max element]||Min[{6, 7, 8}] _
+Max[{6, 7, 8}]||with(ListTools): _
+ _
+FindMinimalElement([6, 7, 8]); _
+FindMaximalElement([6, 7, 8]);|| || ||
 ||[[# shuffle-sample]][#shuffle-sample-note shuffle and sample]||x = {3, 7, 5, 12, 19, 8, 4} _
  _
 RandomSample[x] _
-RandomSample[x, 3]|| ||Shuffle([1, 2, 3, 4])|| ||
+RandomSample[x, 3]|| || || ||
 ||[[# flatten]][#flatten-note flatten] _
 ##gray|//one level, completely//##||Flatten[{1, {2, {3, 4}}}, 1] _
-Flatten[{1, {2, {3, 4}}}]|| ||##gray|# completely:## _
-Flat([1, [2, [3, 4]]])|| ||
+Flatten[{1, {2, {3, 4}}}]||with(ListTools): _
+ _
+FlattenOnce([1, [2, [3, 4]]]); _
+Flatten([1, [2, [3, 4]]]);|| || ||
 ||[[# zip]][#zip-note zip]||##gray|(* list of six elements: *)## _
 Riffle[{1, 2, 3}, {"a", "b", "c"}] _
  _
@@ -456,104 +431,92 @@ Riffle[{1, 2, 3}, {"a", "b", "c"}] _
 Inner[List, {1, 2, 3}, {"a", "b", "c"}, List] _
  _
 ##gray|(* same as Dot[{1, 2, 3}, {2, 3, 4}]: *)## _
-Inner[Times, {1, 2, 3}, {2, 3, 4}, Plus]|| || || ||
-||[[# cartesian-product]][#cartesian-product-note cartesian product]||Outer[List, {1, 2, 3}, {"a", "b", "c"}]|| ||Cartesian([1, 2, 3], ["a", "b", "c"])|| ||
+Inner[Times, {1, 2, 3}, {2, 3, 4}, Plus]||with(ListTools): _
+ _
+##gray|# list of six elements:## _
+Interleave([1, 2, 3], ["a", "b", "c"]); _
+ _
+##gray|# list of lists with two elements:## _
+zip(@@`[]`@@, [1, 2, 3], ["a", "b", "c"]); _
+ _
+##gray|# same as DotProduct([1, 2, 3], [2, 3, 4]):## _
+add(zip(@@`*`@@, [1, 2, 3], [2, 3, 4]))|| || ||
+||[[# cartesian-product]][#cartesian-product-note cartesian product]||Outer[List, {1, 2, 3}, {"a", "b", "c"}]|| || || ||
+||||||||||~ [[# sets]][#sets-note sets]||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
+||literal|| || || || ||
+||list to set|| || || || ||
+||set to list|| || || || ||
+||union|| || || || ||
+||[[# set-membership]][#set-membership-note membership] _
+@<&nbsp;>@|| || || || ||
+||[[# set-intersection]][#set-intersection-note intersection] _
+@<&nbsp;>@|| || || || ||
+||[[# set-union]][#set-union-note union] _
+@<&nbsp;>@|| || || || ||
+||[[# set-diff]][#set-diff-note relative complement, symmetric difference]|| || || || ||
 ||||||||||~ [[# arith-seq]][#arith-seq-note arithmetic sequences]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
-||[#range unit difference]||Range[1, 100]||range(1, 101)||[1 .. 100]||[1 .. 100] _
-vector(100, i, i)||
-||[#arithmetic-sequence-integer difference of 10]||Range[1, 100, 10]||range(1, 100, 10)||[1,11 .. 91]||vector(10, i, 10 * i  - 9)||
-||[#airthmetic-sequence-float difference of 0.1]||Range[1, 100, .1]|| ||##gray|//none//##||vector(1000 - 9, i, i / 10 + 9 / 10)||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
+||[#range unit difference] _
+@<&nbsp;>@||Range[1, 100]||i $ i = 1..100;|| ||range(1, 101)||
+||[#arithmetic-sequence-integer difference of 10] _
+@<&nbsp;>@||Range[1, 100, 10]||10 * i + 1 $ i = 1..9;|| ||range(1, 100, 10)||
+||[#airthmetic-sequence-float difference of 0.1] _
+@<&nbsp;>@||Range[1, 100, .1]||1 + .1 * i $ i = 0..990|| || ||
 ||||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[[# dict-literal]][#dict-literal-note literal] _
 @<&nbsp;>@||d = <|"t" -> 1, "f" -> 0|> _
  _
 ##gray|(* or convert list of rules: *)## _
 d = Association[{"t" -> 1, "f" -> 0}] _
 ##gray|(* and back to list of rules: *)## _
-Normal[d]||##gray|//use//## [[[scripting#dictionaries|Python dictionaries]]]||##gray|# dictionary constructor; type of keys derived _
-# from first arg:## _
-d := NewDictionary("", true); _
-AddDictionary(d, "t", 1); _
-AddDictionary(d, "f", 0); _
- _
-##gray|# record literal with identifier keys: ## _
-r := rec(t := 1, f := 0); _
- _
-##gray|# record literal with string keys:## _
-r2 := rec(("t") := 1, ("f") := 0);|| ||
+Normal[d]||d := table(["t"=1, "f"=0]);|| ||##gray|//use//## [[[scripting#dictionaries|Python dictionaries]]]||
 ||[[# dict-size]][#dict-size-note size] _
-@<&nbsp;>@||Length[Keys[d]]|| ||##gray|# no way to get size of dictionary?## _
-  _
-Length(RecNames(r));|| ||
+@<&nbsp;>@||Length[Keys[d]]||numelems(d);|| || ||
 ||[[# dict-lookup]][#dict-lookup-note lookup] _
-@<&nbsp;>@||d["t"]|| ||LookupDictionary(d, "t"); _
- _
-##gray|# the same key can be looked up with identifier _
-# or string notation:## _
-r.t; _
-r.("t");|| ||
-||[[# dict-update]][#dict-update-note update]||d["f"] = -1|| ||AddDictionary(d, "f", -1); _
- _
-r.f := -1; _
-r2.("f") := -1;|| ||
+@<&nbsp;>@||d["t"]||d["t"]|| || ||
+||[[# dict-update]][#dict-update-note update]||d["f"] = -1||d["f"] := -1;|| || ||
 ||[[# dict-missing-key]][#dict-missing-key-note missing key behavior] _
 @<&nbsp;>@||##gray|//Returns a symbolic expression with head "Missing".  If the lookup key was "x", the expression is:// _
  _
-@<&nbsp;&nbsp;>@Missing["KeyAbsent", "x"]##|| ||##gray|# returns special object "fail":## _
-LookupDictionary(d, "not_a_key"); _
- _
-##gray|# raises an error:## _
-r.not_a_key;|| ||
+@<&nbsp;&nbsp;>@Missing["KeyAbsent", "x"]##||##gray|//Returns unevaluated expression.//##|| || ||
 ||[[# dict-key-check]][#dict-key-check-note is key present] _
-@<&nbsp;>@||KeyExistsQ[d, "t"]|| ||KnowsDictionary(d, "t"); _
- _
-##gray|# RecNames returns keys as strings:## _
-"t" in RecNames(r);|| ||
+@<&nbsp;>@||KeyExistsQ[d, "t"]|| || || ||
 ||[[# dict-iter]][#dict-iter-note iterate] _
-@<&nbsp;>@|| || ||##gray|# no way to iterate over dictionary?## _
- _
-for i in RecNames(r) do _
-@<&nbsp;&nbsp;>@Print(r.(i)); _
-od;|| ||
+@<&nbsp;>@|| || || || ||
 ||[[# dict-key-val]][#dict-key-val-note keys and values as arrays]||Keys[d] _
-Values[d]|| ||RecNames(r);|| ||
+Values[d]||with(ListTools): _
+ _
+FlattenOnce(indices(d)); _
+FlattenOnce(entries(d));|| || ||
 ||[[# dict-sort-values]][#dict-sort-values-note sort by values]||Sort[d]|| || || ||
 ||||||||||~ [[# functions]][#functions-note functions]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[#function-definition define function]||Add[a_, b_] := a + b _
  _
 ##gray|(* alternate syntax: *)## _
-Add = Function[{a, b}, a + b]|| ||add := function(x, y) _
-@<&nbsp;&nbsp;>@return x + y; _
-end;||add(x, y) = x + y _
+Add = Function[{a, b}, a + b]||add2 := (a, b) -> a + b _
  _
-##gray|@@\\@@ function body w/ sequence of statements:## _
-say(s1, s2, s3) = print(s1); print(s2); print(s3) _
- _
-##gray|@@\\@@ function body w/ newlines:## _
-dire(s1, s2, s3) = { _
-@<&nbsp;&nbsp;>@print(s1); _
-@<&nbsp;&nbsp;>@print(s2); _
-@<&nbsp;&nbsp;>@print(s3); _
-}||
+add2 := proc(a, b) _
+@<&nbsp;&nbsp;>@a + b _
+end proc;||add(a, b) := a + b;|| ||
 ||[#function-invocation invoke function]||Add[3, 7] _
  _
 Add @<@@>@ {3, 7} _
  _
 ##gray|(* syntax for unary functions: *)## _
-2 @@//@@ Log|| ||add(3, 7);||add(3, 7)||
+2 @@//@@ Log||add2(3, 7)||add(3, 7);|| ||
 ||[[# boolean-func-attr]][#boolean-func-attr-note boolean function attributes] _
 ##gray|//list, set, clear//##||Attributes[add] _
 SetAttributes[add, {Orderless, Flat, Listable}] _
 ClearAtttibutes[add, Listable]|| || || ||
-||[[# undef-func]][#undef-func-note undefine function]||Clear[Add]|| || ||kill(add)||
-||[[# redefine-func]][#redefine-func-note redefine function]||Add[a_, b_] := b + a|| || ||add(x, y, z) = x + y + z||
-||[[# overload-func]][#overload-func-note overload function]|| || || ||##gray|//none//##||
-||[[# missing-func]][#missing-func-note missing function behavior]||##gray|//The expression is left unevaluated.  The head is the function name as a symbol, and the parts are the arguments.//##|| || ||##gray|//"not a function" error//##||
-||[[# missing-arg]][#missing-arg-note missing argument behavior]||##gray|//The expression is left unevaluated.  The head is the function name as a symbol, and the parts are the arguments.//##|| || ||##gray|//set to zero//##||
-||[[# extra-arg]][#extra-arg-note extra argument behavior]||##gray|//The expression is left unevaluated.  The head is the function name as a symbol, and the parts are the arguments.//##|| || ||##gray|//"too many parameters" error//##||
+||[[# undef-func]][#undef-func-note undefine function]||Clear[Add]||add2 := 'add2';|| || ||
+||[[# redefine-func]][#redefine-func-note redefine function]||Add[a_, b_] := b + a||add2 := (a, b) -> b + a;|| || ||
+||[[# overload-func]][#overload-func-note overload function]|| || || || ||
+||[[# missing-func]][#missing-func-note missing function behavior]||##gray|//The expression is left unevaluated.  The head is the function name as a symbol, and the parts are the arguments.//##||##gray|//The expression is left unevaluated.//##|| || ||
+||[[# missing-arg]][#missing-arg-note missing argument behavior]||##gray|//The expression is left unevaluated.  The head is the function name as a symbol, and the parts are the arguments.//##||##gray|//Invalid input error.//##|| || ||
+||[[# extra-arg]][#extra-arg-note extra argument behavior]||##gray|//The expression is left unevaluated.  The head is the function name as a symbol, and the parts are the arguments.//##||##gray|//Extra arguments are ignored.//##|| || ||
 ||[[# default-arg]][#default-arg-note default argument]||Options[myLog] = {base -> 10} _
 myLog[x_, OptionsPattern[]] := _
 @<&nbsp;&nbsp;>@N[Log[x]/Log[OptionValue[base]]] _
@@ -562,26 +525,11 @@ myLog[x_, OptionsPattern[]] := _
 myLog[100] _
  _
 ##gray|(* override default: *)## _
-myLog[100, base -> E]|| || ||mylog(x = 1, base = 10) = log(x) / log(base) _
- _
-##gray|@@\\@@ log10(3):## _
-mylog(3) _
-##gray|@@\\@@ ln(3):## _
-mylog(3, exp(1)) _
-##gray|@@\\@@ ln(1):## _
-mylog(, exp(1)) _
- _
-##gray|@@\\@@ If neither caller nor function definition _
-@@\\@@ provide a value, zero is used.##||
+myLog[100, base -> E]|| || || ||
 ||[[# retval]][#retval-note return value]||##gray|//last expression evaluated, or argument of// Return[]##|| || || ||
 ||[#anonymous-function anonymous function]||Function[{a, b}, a + b] _
  _
-(#1 + #2) &|| ||##gray|# unary functions only?## _
-f := x -> x * x; _
- _
-f2 := function(x, y) return 2 * x + 3 * y; end;||f = (x, y) -> x + y _
- _
-f(1, 2)||
+(#1 + #2) &|| || || ||
 ||[#variable-number-arguments variable number of arguments]||##gray|(* one or more arguments: *)## _
 add[a@@__@@] := Plus[a] _
  _
@@ -589,55 +537,37 @@ add[a@@__@@] := Plus[a] _
 add[a@@___@@] := Plus[a]|| || || ||
 ||[[# expand-array]][#expand-array-note pass array elements as separate arguments]||Apply[f, {a, b, c}] _
  _
-f @<@@>@ {x, y, z}||a = [x, y, z] _
-f(*a)|| || ||
+f @<@@>@ {x, y, z}|| || ||a = [x, y, z] _
+f(*a)||
 ||||||||||~ [[# execution-control]][#execution-control-note execution control]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[#if if]||If[x > 0, _
 @<&nbsp;&nbsp;>@Print["positive"], _
 @<&nbsp;&nbsp;>@If[x < 0, _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Print["negative"], _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Print["zero"]]]||##gray|//use//## [http://hyperpolyglot.org/scripting#execution-control Python execution control]||if x > 0 then _
-@<&nbsp;&nbsp;>@Print("positive\n"); _
-elif x < 0 then _
-@<&nbsp;&nbsp;>@Print("negative\n"); _
-else _
-@<&nbsp;&nbsp;>@Print("zero\n"); _
-fi;||if(x > 0, \ _
-@<&nbsp;&nbsp;>@print("positive"), \ _
-@<&nbsp;&nbsp;>@if(x < 0, \ _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print("negative"), \ _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print("zero")))||
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Print["zero"]]]|| ||if x > 0 _
+@<&nbsp;&nbsp;>@then print("positive") _
+@<&nbsp;&nbsp;>@else if x < 0 _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@then print("negative") _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@else print("zero");||##gray|//use//## [http://hyperpolyglot.org/scripting#execution-control Python execution control]||
 ||[#while while]||i = 0 _
-While[i < 10, Print[i]; i++]|| ||i := 0; _
-while i < 10 do _
-@<&nbsp;&nbsp;>@Print(i, "\n"); _
-@<&nbsp;&nbsp;>@i := i + 1; _
-od;||i = 0 _
-while(i < 10, print(i); i++)||
-||[#for for]||For[i = 0, i < 10, i++, Print[i]]|| ||for i in [0..9] do _
-@<&nbsp;&nbsp;>@Print(i, "\n"); _
-od;||for(i = 0, 9, print(i))||
-||[#break break]||Break[]|| ||break||break||
-||[#continue continue]||Continue[]|| ||continue||next||
+While[i < 10, Print[i]; i++]|| ||for i: 0 step 1 while i < 10 do print(i);|| ||
+||[#for for]||For[i = 0, i < 10, i++, Print[i]]|| ||for i: 1 step 1 thru 10 do print(i);|| ||
+||[#break break]||Break[]|| || || ||
+||[#continue continue]||Continue[]|| || || ||
 ||||||||||~ [[# exceptions]][#exceptions-note exceptions]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
-||[[# raise-exc]][#raise-exc-note raise exception]||Throw["failed"]||##gray|//use//## [http://hyperpolyglot.org/scripting#exceptions Python exceptions]||Error("failed");||error("failed")||
-||[[# handle-exc]][#handle-exc-note handle exception]||Print[Catch[Throw["failed"]]]|| || ||iferr(error("failed"), E, \ _
-@<&nbsp;&nbsp;>@print(errname(E), ": ", component(E, 1)))||
-||[[# uncaught-exc]][#uncaught-exc-note uncaught exception behavior]|| || ||##gray|Error() //invokes the GAP debugger.  Type// _
- _
-@<&nbsp;&nbsp;>@Quit; _
- _
-//to return to REPL.//##|| ||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
+||[[# raise-exc]][#raise-exc-note raise exception]||Throw["failed"]|| ||error("failed");||##gray|//use//## [http://hyperpolyglot.org/scripting#exceptions Python exceptions]||
+||[[# handle-exc]][#handle-exc-note handle exception]||Print[Catch[Throw["failed"]]]|| ||errcatch(error("failed"));|| ||
+||[[# uncaught-exc]][#uncaught-exc-note uncaught exception behavior]|| || || || ||
 ||||||||||~ [[# streams]][#streams-note streams]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[[# std-file-handles]][#std-file-handles-note standard file handles]||Streams["stdout"] _
 Streams["stderr"] _
  _
 ##gray|(* all open file handles: *)## _
 Streams[]|| || || ||
-||[[# write-line-stdout]][#write-line-stdout-note write line to stdout]||Print["hello"]|| ||Print("hello");||print("hello")||
+||[[# write-line-stdout]][#write-line-stdout-note write line to stdout]||Print["hello"]|| || || ||
 ||[[# open-file]][#open-file-note open file for reading]||f  = OpenRead["/etc/hosts"]|| || || ||
 ||[[# open-file-write]][#open-file-write-note open file for writing]||f = OpenWrite["/tmp/test"]|| || || ||
 ||[[# open-file-append]][#open-file-append-note open file for appending]||f = OpenAppend["/tmp/test"]|| || || ||
@@ -645,7 +575,7 @@ Streams[]|| || || ||
 ||[[# read-file-str]][#read-file-str-note read file into string]||s = ReadString[f]|| || || ||
 ||[[# write-str]][#write-str-note write string]||WriteString[f, "lorem ipsum"]|| || || ||
 ||[#read-file-string-array read file into array of strings]||s = Import["/etc/hosts"] _
-a = StringSplit[s, "\n"]|| || ||a = readstr("/etc/hosts")||
+a = StringSplit[s, "\n"]|| || || ||
 ||[[# seek]][#seek-note file handle position] _
  _
 ##gray|//get, set//##||f = StringToStream["foo bar baz"] _
@@ -659,19 +589,17 @@ SetStreamPosition[f, Infinity]|| || || ||
 ||[[# tmp-file]][#tmp-file-note open temporary file]||f = OpenWrite[] _
 path = Part[f, 1]|| || || ||
 ||||||||||~ [[# files]][#files-note files]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[[# file-test]][#file-test-note file exists test, regular file test]||FileExistsQ["/etc/hosts"] _
-FileType["/etc/hosts"] == File|| ||IsExistingFile("/etc/hosts");|| ||
+FileType["/etc/hosts"] == File|| || || ||
 ||[[# file-size]][#file-size-note file size]||FileByteCount["/etc/hosts"]|| || || ||
-||[[# readable-writeable-executable]][#readable-writable-executable-note is file readable, writable, executable]|| || ||IsReadableFile("/etc/hosts"); _
-IsWritableFile("/etc/hosts"); _
-IsExecutableFile("/etc/hosts");|| ||
+||[[# readable-writeable-executable]][#readable-writable-executable-note is file readable, writable, executable]|| || || || ||
 ||[[# last-modification-time]][#last-modification-time-note last modification time]||FileDate["/etc/hosts"]|| || || ||
 ||[[# file-cp-rm-mv]][#file-cp-rm-mv-note copy file, remove file, rename file]||CopyFile["/tmp/foo", "/tmp/bar"] _
 DeleteFile["/tmp/foo"] _
 RenameFile["/tmp/bar", "/tmp/foo"]|| || || ||
 ||||||||||~ [[# directories]][#directories-note directories]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[[# working-dir]][#working-dir-note working directory]||dir = Directory[] _
  _
 SetDirectory["/tmp"]|| || || ||
@@ -691,266 +619,185 @@ AbsoluteFileName["~/foo"]|| || || ||
 ||[[# rmdir]][#rm-dir-note remove empty directory]||DeleteDirectory["/tmp/foo.d"]|| || || ||
 ||[[# rm-rf]][#rm-rf-note remove directory and contents]||DeleteDirectory["/tmp/foo.d", _
 @<&nbsp;&nbsp;>@DeleteContents -> True]|| || || ||
-||[[# dir-test]][#dir-test-note directory test]||DirectoryQ["/etc"]|| ||IsDirectoryPath("/etc");|| ||
+||[[# dir-test]][#dir-test-note directory test]||DirectoryQ["/etc"]|| || || ||
 ||||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
-||[[# load-lib]][#load-lib-note load library]||Get["foo.m"]|| ||Read('foo.g');|| ||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
+||[[# load-lib]][#load-lib-note load library]||Get["foo.m"]|| || || ||
 ||||||||||~ [[# reflection]][#reflection-note reflection]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
-||[#list-function-documentation list function documentation]|| || || ||?||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[#function-documentation get function documentation]||?Tan _
-Information[Tan]||print(sympy.solve.@@__doc__@@) _
+Information[Tan]||Describe(solve);||describe(solve);||print(sympy.solve.@@__doc__@@) _
  _
 ##gray|# in IPython:## _
 sympy.solve? _
-help(sympy.solve)|| ||? tan||
+help(sympy.solve)||
 ||list function options||Options[Solve] _
 Options[Plot]|| || || ||
-||[#data-type query data type]||Head[x]|| || ||type(x)||
-||list types|| || || ||\t||
-||[#list-variables list variables in scope]||Names[$Context <> "*"]|| || ||variable()||
-||list built-in functions|| || || ||?*||
-||list metacommands|| || || ||?\||
-||search documentation|| || ||??DirectProduct||??? modulus||
-||||||||||~ [[# vectors]][#vectors-note vectors]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
-||[[# vec-literal]][#vec-literal-note vector literal]||##gray|(* row vector is same as array: *)## _
-{1, 2, 3}||##gray|# column vector:## _
-sympy.Matrix([1, 2, 3])||##gray|# row vector is same as array:## _
-[1, 2, 3]||[1, 2, 3]||
-||[[# const-vec]][#const-vec-note constant vector] _
- _
-##gray|//all zeros, all ones//##||Table[0, {i, 1, 100}] _
-Table[1, {i, 1, 100}]|| || ||vector(100, i, 0) _
-vector(100, i, 1)||
-||[[# vec-coordinate]][#vec-coordinate-note vector coordinate]||##gray|(* indices start at one: *)## _
-{1,v2, 3}[[1]]|| ||vec := [1, 2, 3]; _
-##gray|# indices start at one:## _
-v[1];||##gray|@@\\@@ indices start at one:## _
-[1, 2, 3][1]||
-||[[# vec-dim]][#vec-dim-note vector dimension] _
-@<&nbsp;>@||Length[{1, 2, 3}]|| ||Length([1, 2, 3])||length([1, 2, 3]) _
-#[1, 2, 3]||
-||[[# vec-element-wise]][#vec-element-wise-note element-wise arithmetic operators]||+ - * / _
-##gray|//adjacent lists are multiplied element-wise//##|| ||+ - * /||+ -||
-||[[# vec-length-mismatch]][#vec-length-mismatch-note vector length mismatch] _
-@<&nbsp;>@||##gray|//error//##|| ||##gray|//shorter vector is zero-padded//##||##gray|//error//##||
-||[[# vec-scalar]][#vec-scalar-note scalar multiplication]||3 {1, 2, 3} _
-{1, 2, 3} 3 _
-##gray|//* may also be used//##|| ||3 * [1, 2, 3]; _
-[1, 2, 3] * 3;||3 * [1, 2, 3] _
-[1, 2, 3] * 3||
-||[[# vec-dot]][#vec-dot-note dot product]||{1, 1, 1} . {2, 2, 2} _
-Dot[{1, 1, 1}, {2, 2, 2}]||v1 = sympy.Matrix([1, 1, 1]) _
-v2 = sympy.Matrix([2, 2, 2]) _
-v1.dot(v2)||[1, 1, 1] * [2, 2, 2]||[1, 1, 1] * [2, 2, 2] ~||
-||[[# vec-cross]][#vec-cross-note cross product]||Cross[{1, 0, 0}, {0, 1, 0}]||e1 = sympy.Matrix([1, 0, 0]) _
-e2 = sympy.Matrix([0, 1, 0]) _
-e1.cross(e2)|| || ||
-||[[# vec-norms]][#vec-norms-note norms]||Norm[{1, 2, 3}, 1] _
-Norm[{1, 2, 3}] _
-Norm[{1, 2, 3}, Infinity]||vec = sympy.Matrix([1, 2, 3]) _
- _
-vec.norm(1) _
-vec.norm() _
-vec.norm(inf)|| ||vec = [1, 2, 3] _
- _
-normlp(vec, 1) _
-normlp(vec, 2) _
-normlp(vec)||
-||[[# orthonormal-basis]][#orthonormal-basis-note orthonormal basis]||Orthogonalize[@@{{1, 0, 1}, {1, 1, 1}}@@]|| || || ||
-||||||||||~ [[# matrices]][#matrices-note matrices]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
-||literal||##gray|(* used a nested array for each row: *)## _
-@@{{@@1, 2}, {3, 4@@}}@@ _
- _
-##gray|(* display as grid with aligned columns: *)## _
-MatrixForm[@@{{@@1, 2}, {3, 4@@}}@@]||sympy.Matrix([[1, 2], [3, 4]])||[[1, 2], [3, 4]]||[1, 2; 3, 4] _
- _
-##gray|@@\\@@ from rows:## _
-row1 = [1, 2] _
-row2 = [3, 4] _
-matconcat([row1; row2])||
-||construct from sequence||ArrayReshape[{1, 2, 3, 4, 5, 6}, {2, 3}]||sympy.Matrix(2, 3, [1, 2, 3, 4, 5, 6])|| || ||
-||construct from columns|| || || ||col1 = [1, 3]~ _
-col2 = [2, 4]~ _
-matconcat([col1, col2])||
-||construct from submatrices|| || || ||A = [1, 2; 3, 4] _
-B = [4, 3; 2, 1] _
-##gray|@@\\@@ 4x4 matrix:## _
-C = matconcat([A, B; B, A])||
-||constant matrices||Table[0, {i, 3}, {j, 3}] _
-Table[1, {i, 3}, {j, 3}]||sympy.zeros(3, 3) _
-sympy.ones(3, 3)|| ||matrix(3, 3, i, j, 0) _
-matrix(3, 3, i, j, 1) _
- _
-##gray|@@\\@@ 3x3 Hilbert matrix:## _
-matrix(3, 3, i, j, 1 / (i + j - 1))||
-||diagonal matrices _
-##gray|//and identity//##||DiagonalMatrix[{1, 2, 3}] _
-IdentityMatrix[3]||sympy.diag(*[1, 2, 3]) _
-sympy.eye(3)||DiagonalMat([1, 2, 3]) _
-IdentityMat(3)||matdiagonal([1, 2, 3]) _
-matid(3)||
-||dimensions||##gray|(* returns {3, 2}: *)## _
-Dimensions[@@{{1, 2}, {3, 4}, {5, 6}}@@]||A = sympy.matrix([[1, 2], [3, 4], [5, 6]]) _
- _
-##gray|# returns (3, 2):## _
-A.shape||##gray|# returns [3, 2]:## _
-DimensionsMat([[1, 2], [3, 4], [5, 6]])||##gray|@@\\@@ [3, 2]:## _
-matsize([1, 2; 3, 4; 5, 6])||
-||element lookup||##gray|(* top left corner: *)## _
-@@{{1, 2}, {3, 4}}@@[[1, 1]]||A = sympy.Matrix([[1, 2], [3, 4]]) _
- _
-##gray|# top left corner:## _
-A[0, 0]||A := [[1, 2], [3, 4]];  _
- _
-##gray|# top left corner:## _
-A[1][1]||##gray|@@\\@@ top left corner:## _
-A[1, 1]||
-||extract row||##gray|(* first row: *)## _
-@@{{1, 2}, {3, 4}}@@[[1]]||##gray|# first row:## _
-A[0, :]|| ||##gray|@@\\@@ first row:## _
-[1, 2; 3, 4][1, ]||
-||extract column||##gray|(* first column as array: *)## _
-@@{{1, 2}, {3, 4}}@@[[All, 1]]||##gray|# first column as 1x2 matrix:## _
-A[:, 0]|| ||##gray|@@\\@@ first column:## _
-[1, 2; 3, 4][, 1]||
-||extract submatrix||A = @@{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}@@ _
-A[[1;;2, 1;;2]]||rows = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] _
-A = sympy.Matrix(rows) _
-A[0:2, 0:2]|| ||A = [1, 2, 3; 4, 5, 6; 7, 8, 9] _
- _
-vecextract(A, "1..2", "1..2")||
-||element-wise operators||+ - * / _
-##gray|//adjacent matrices are multiplied element-wise//##||+ - _
- _
-##gray|# for Hadamard product:## _
-A.multiply_elementwise(B)||+ -||+ -||
-||product||A = @@{{1, 2}, {3, 4}}@@ _
-B = @@{{4, 3}, {2, 1}}@@ _
-Dot[A, B] _
-##gray|(* or use period: *)## _
-A . B||A = sympy.matrix([[1, 2], [3, 4]]) _
-B = sympy.matrix([[4, 3], [2, 1]]) _
-A * B||A := [[1, 2], [3, 4]]; _
-B := [[4, 3], [2, 1]]; _
-A * B;||A = [1, 2; 3, 4] _
-B = [4, 3; 2, 1] _
-A * B||
-||power||MatrixPower[@@{{1, 2}, {3, 4}}@@, 3] _
- _
-##gray|(* element-wise operator: *)## _
-A ^ 3||A ** 3|| [[1, 2], [3, 4]] ^ 3||[1, 2; 3, 4] ^ 3||
-||exponential||MatrixExp[@@{{1, 2}, {3, 4}}@@]|| || || ||
-||log||MatrixLog[@@{{1, 2}, {3, 4}}@@]|| || || ||
-||kronecker product||A = @@{{1, 2}, {3, 4}}@@ _
-B = @@{{4, 3}, {2, 1}}@@ _
-KroneckerProduct[A, B]|| ||A := [[1, 2], [3, 4]]; _
-B := [[4, 3], [2, 1]]; _
-KroneckerProduct(A, B);|| ||
-||norms||A = @@{{1, 2}, {3, 4}}@@ _
- _
-Norm[A, 1] _
-Norm[A, 2] _
-Norm[A, Infinity] _
-Norm[A, "Frobenius"]|| || || ||
-||transpose||Transpose[@@{{1, 2}, {3, 4}}@@] _
- _
-##gray|(* or ESC tr ESC for T exponent notation *)##||A.T|| ||A~ _
-mattranspose(A)||
-||conjugate transpose||A = @@{{1, I}, {2, -I}}@@ _
-ConjugateTranspose[A] _
- _
-##gray|(* or ESC ct ESC for dagger exponent notation *)##||M = sympy.Matrix([[1, sympy.I], [2, -sympy.I]]) _
-M.adjoint()|| ||conj([1, I; 2, -I] ~)||
-||inverse||Inverse[@@{{1, 2}, {3, 4}}@@]||A.inv()||Inverse([[1, 2], [3, 4]])||[1, 2; 3, 4] ^ -1 _
-1 /  [1, 2; 3, 4]||
-||row echelon form||RowReduce[@@{{1, 1}, {1, 1}}@@]|| || || ||
-||pseudoinverse||PseudoInverse[@@{{1, 0}, {3, 0}}@@]|| || || ||
-||determinant||Det[@@{{1, 2}, {3, 4}}@@]||A.det()||Determinant([[1, 2], [3, 4]])||matdet([1, 2; 3, 4])||
-||trace||Tr[@@{{1, 2}, {3, 4}}@@]|| ||Trace([[1, 2], [3, 4]])||trace([1, 2; 3, 4])||
-||rank||MatrixRank[@@{{1, 1}, {0, 0}}@@]|| ||RankMat([[1, 1], [0, 0]])||matrank([1, 1; 0, 0])||
-||nullspace basis||NullSpace[@@{{1, 1}, {0, 0}}@@]|| || ||matker([1, 1; 0, 0])||
-||range basis|| || ||matimage([1, 1; 0, 0])||
-||eigenvalues||Eigenvalues[@@{{1, 2}, {3, 4}}@@]||A.eigenvals()|| ||[vals, vecs] = mateigen([1, 2; 3, 4], flag=1)||
-||eigenvectors||Eigenvectors[@@{{1, 2}, {3, 4}}@@]||A.eigenvects()|| ||mateigen([1, 2; 3, 4])||
-||singular value decomposition||SingularValueDecomposition[@@{{1, 1}, {1, 0}}@@]|| || || ||
-||qr decomposition||QRDecomposition[@@{{1, 2}, {3, 4}}@@]|| || ||matqr([1, 2; 3, 4])||
-||solve system of equations|| || || ||A = [1, 2; 3, 4] _
-matsolve(A, [2, 3]~)||
+||[#data-type query data type]||Head[x]||whattype(x);|| || ||
+||[#list-variables list variables in scope]||Names[$Context <> "*"]|| || || ||
 ||||||||||~ [[# symbolic-expr]][#symbolic-expr-note symbolic expressions]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
-||simplify||Simplify[Cos[x]^2 + Sin[x]^2] _
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
+||[[# symbolic-expr-literal]][#symbolic-expr-literal-note literal]||expr = 1 + x + x^2||expr := 1 + x + x^2;||expr = 1 + x + x^2;||x = sympy.symbols('x') _
  _
-##gray|(* perform more simplications: *)## _
-FullSimplify[-(1/2) I E^(-I x) (-1 + E^(2 I x))]||sympy.simplify(sympy.cos(x)@@**@@2 + sympy.sin(x)@@**@@2)|| || ||
-||simplify with assumption||Simplify[Sqrt[x^2], Assumptions -> x >= 0] _
-Simplify[(-1)^(n * (n + 1)), _
-@<&nbsp;&nbsp;>@Assumptions -> n \[Element] Integers] _
- _
-##gray|(* perform fewer simplications: *)## _
-Refine[Sqrt[x^2], Assumptions -> x >= 0] _
-Refine[(-1)^(n * (n + 1)), n \[Element] Integers]|| || || ||
-||apply rule||##gray|(* {3, 3}: *)## _
+expr = 1 + x + x^2||
+||[[# prevent-simplification]][#prevent-simplification-note prevent simplification]||HoldForm[x + x] _
+x + x @@//@@ HoldForm|| || || ||
+||[[# symbolic-expr-subst]][#symbolic-expr-subst-note substitute]||##gray|(* {3, 3}: *)## _
 ReplaceAll[{x, x}, x -> 3] _
  _
 ##gray|(* {3, 3}: *)## _
-{x, x} /. x -> 3|| || || ||
-||replace head||Apply[Times, Plus[x, 3]] _
-Times @<@@>@ Plus[x, 3] _
-Times @<@@>@ (x + 3)|| || || ||
-||prevent simplification||HoldForm[1 + 2] _
- 1 + 2 @@//@@ HoldForm|| || || ||
-||list evaluation steps||Trace[Apply[And, Map[EvenQ, {2, 3, 4}]]]|| || || ||
+{x, x} /. x -> 3||##gray|# [3, 3]:## _
+subs(x = 3, [x, x]);||##gray|/* [3, 3]: */## _
+subst(3, x, [x, x]);||sympy.Matrix([x, x]).subs(x, 3)||
+||[[# piecewise-symbolic-expr]][#piecewise-symbolic-expr-note piecewise-defined expression]||Piecewise[{{x, x >= 0}, {-x, x < 0}}] _
+ _
+##gray|(* otherwise case: *)## _
+Piecewise[{{-x, x < 0}}, x]||piecewise(x < 0, -x, x >= 0, x); _
+ _
+##gray|# otherwise case:## _
+piecewise(x < 0, -x, x);||if x < 0 then -x else x;||sympy.Piecewise((-x, x < 0), (x, x >= 0)) _
+ _
+##gray|# otherwise case:## _
+sympy.Piecewise((-x, x < 0), (x, True))||
+||[[# simplify]][#simplify-note simplify]||Simplify[Cos[x]^2 + Sin[x]^2] _
+ _
+##gray|(* perform more simplications: *)## _
+FullSimplify[-(1/2) I E^(-I x) (-1 + E^(2 I x))]||simplify(cos(x)^2 + sin(x)^2);|| ||sympy.simplify(sympy.cos(x)@@**@@2 + sympy.sin(x)@@**@@2)||
+||[[# assumption]][#assumption-note assumption]||Simplify[Sqrt[x^2], Assumptions -> x >= 0] _
+Simplify[(-1)^(n * (n + 1)), _
+@<&nbsp;&nbsp;>@Assumptions -> Element[n, Integers]] _
+ _
+##gray|(* perform fewer simplications: *)## _
+Refine[Sqrt[x^2], Assumptions -> x >= 0] _
+Refine[(-1)^(n * (n + 1)), Element[n, Integers]]||assume(x > 0); _
+##gray|# Maple puts a tilde after an unknown with _
+# an assumption; e.g: x~:## _
+sqrt(x^2); _
+ _
+##gray|# expression-local assumption:## _
+sqrt(x^2) assuming(x > 0); _
+ _
+simplify((-1)^(n * (n + 1))) assuming(n, integer);||assume(x > 0); _
+sqrt(x^2); _
+ _
+##gray|/* There is no assumption predicate for _
+@<&nbsp;&nbsp;&nbsp;>@integer variables. */##||x = sympy.symbols('x', positive=True) _
+sympy.sqrt(x ** 2) _
+ _
+n = sympy.symbols('n', integer=True) _
+(-1)**((n) * (n + 1))||
+||[[# assumption-predicates]][#assumption-predicates-note assumption predicates]||Element[x, Complexes] _
+Element[x, Reals] _
+Element[x, Algebraics] _
+Element[x, Rationals] _
+Element[x, Integers] _
+Element[x, Primes] _
+Element[x, Integers] && Mod[x, 5] == 0 _
+Element[x, Booleans] _
+ _
+##gray|(* assumptions can use inequalities and logical operators: *)## _
+x > 0 @@||@@ x < 0||##gray|# a partial list:## _
+complex _
+real _
+rational _
+integer _
+prime _
+odd _
+even _
+positive _
+nonnegative _
+negative||##gray|//Assumptions can only be created using relational operators.//##||##gray|# a partial list:## _
+complex _
+real _
+algebraic _
+rational _
+integer _
+positive _
+nonpositive _
+negative _
+nonnegative _
+nonzero _
+prime _
+odd _
+even||
+||[[# rm-assumption]][#rm-assumption-note remove assumption]||##gray|//None.  Assumptions are always local.//##||##gray|# removes all assumptions about x:## _
+x := 'x';||forget(x > 0);||##gray|# removes all assumptions about x:## _
+x = sympy.symbols('x')||
 ||||||||||~ [[# calculus]][#calculus-note calculus]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[[# limit]][#limit-note limit] _
-@<&nbsp;>@||Limit[Sin[x]/x, x -> 0]||sympy.limit(sympy.sin(x)/x, x, 0)|| || ||
+@<&nbsp;>@||Limit[Sin[x]/x, x -> 0]||limit(sin(x) / x, x = 0);||limit(sin(x)/x, x, 0);||sympy.limit(sympy.sin(x)/x, x, 0)||
 ||[[# limit-at-infinity]][#limit-at-infinity-note limit at infinity] _
-@<&nbsp;>@||Limit[1/x, x -> Infinity]||sympy.limit(1/x, x, sympy.oo)|| || ||
+@<&nbsp;>@||Limit[1/x, x -> Infinity]||limit(1 / x, x = infinity);||limit(1/x, x, inf);||sympy.limit(1/x, x, sympy.oo)||
+||[[# one-sided-limit]][#one-sided-limit-note one-sided limit] _
+ _
+##gray|//from left, from right//##||Limit[1/x, x -> 0, Direction -> 1] _
+Limit[1/x, x -> 0, Direction -> -1]||limit( 1/ x, x = 0, left); _
+limit( 1/ x, x = 0, right);||limit(1/x, x, 0, minus); _
+limit(1/x, x, 0, plus);||sympy.limit(1/x, x, 0, '-') _
+sympy.limit(1/x, x, 0, '+')||
 ||[#derivative derivative]||D[x^3 + x + 3, x] _
  _
-D[x^3 + x + 3, x] /. x -> 2||sympy.diff(x@@**@@3 + x + 3, x) _
+D[x^3 + x + 3, x] /. x -> 2||diff(x^3 + x + 3, x);||diff(x^3 + x + 3, x); _
  _
-sympy.diff(x@@**@@3 + x + 3, x).subs(x, 2)|| ||P = x^3 + x + 3 _
-P' _
-sin(x)' _
-deriv(y^2 + 2, y)||
+at(diff(x^3 + x + 3, x), [x=2]);||sympy.diff(x@@**@@3 + x + 3, x) _
+ _
+sympy.diff(x@@**@@3 + x + 3, x).subs(x, 2)||
 ||[[# derivative-func]][#derivative-func-note derivative of a function]||f[x_] = x^3 + x + 3 _
  _
+##gray|(* returns expression: *)## _
+D[f[x, x] _
+ _
+##gray|(* return functions: *)## _
+f' _
+Derivative[1][f] _
+ _
+##gray|(* evaluating derivative at a point: *)## _
 f'[2] _
-Derivative[1][f][2]|| || || ||
+Derivative[1][f][2]||f := (x) -> x^3 + x + 3; _
+ _
+##gray|# returns expression:## _
+diff(f(x), x); _
+ _
+##gray|# returns function:## _
+D(f); _
+ _
+##gray|# evaluating derivative at a point:## _
+D(f)(2);|| || ||
 ||[[# derivative-const]][#derivative-const-note constants]||##gray|(* a depends on x; b does not: *)## _
 D[a x + b, x,  NonConstants -> {a}] _
  _
-Dt[a x + b, x, Constants -> {b}]|| || || ||
+Dt[a x + b, x, Constants -> {b}]|| ||##gray|/* symbols constant unless declared with depends: */## _
+depends(a, x); _
+diff(a * x + b, x); _
+ _
+##gray|/* makes a constant again: */## _
+remove(a, dependency);|| ||
 ||[#higher-order-derivative higher order derivative]||D[Log[x], {x, 3}] _
 Log'''[x] _
-Derivative[3][Log][x]||sympy.diff(sympy.log(x), x, 3)|| || ||
+Derivative[3][Log][x]|| ||diff(log(x), x, 3);||sympy.diff(sympy.log(x), x, 3)||
 ||[[# mixed-partial-derivative]][#mixed-partial-derivative-note mixed partial derivative]||D[x^9 * y^8, x, y, y] _
-D[x^9 * y^8, x, {y, 2}]||sympy.diff(x@@**@@9 * y@@**@@8, x, y, y)|| || ||
+D[x^9 * y^8, x, {y, 2}]|| ||diff(x^9 * y^8, x, 1, y, 2);||sympy.diff(x@@**@@9 * y@@**@@8, x, y, y)||
 ||[[# div-grad-curl]][#div-grad-curl-note div, grad, and curl]||Div[{x^2, x y, x y z}, {x, y, z}] _
  _
 Grad[2 x y z^2, {x, y, z}] _
  _
 Curl[{x y, y^2}, {x, y}]|| || || ||
 ||[#antiderivative antiderivative] _
-@<&nbsp;>@||Integrate[x^3 + x + 3, x]||sympy.integrate(x@@**@@3 + x + 3, x)|| || ||
+@<&nbsp;>@||Integrate[x^3 + x + 3, x]|| ||integrate(x^3 + x + 3, x);||sympy.integrate(x@@**@@3 + x + 3, x)||
 ||[#integration definite integral] _
-@<&nbsp;>@||Integrate[x^3 + x + 3, {x, 0, 1}]||sympy.integrate(x@@**@@3 + x + 3, [x, 0, 1])|| || ||
+@<&nbsp;>@||Integrate[x^3 + x + 3, {x, 0, 1}]|| ||integrate(x^3 + x + 3, x, 0, 1);||sympy.integrate(x@@**@@3 + x + 3, [x, 0, 1])||
 ||[#improper-integral improper integral] _
-@<&nbsp;>@||Integrate[Exp[-x], {x, 0, Infinity}]||sympy.integrate(sympy.exp(-x), (x, 0, sympy.oo))|| || ||
-||[[# residue]][#residue-note residue]||Residue[1/(z - I), {z, I}]|| || || ||
-||series sum||Sum[2^-n, {n, 1, Infinity}]|| || || ||
+@<&nbsp;>@||Integrate[Exp[-x], {x, 0, Infinity}]|| ||integrate(exp(-x), x, 0, inf);||sympy.integrate(sympy.exp(-x), (x, 0, sympy.oo))||
+||[[# residue]][#residue-note residue]||Residue[1/(z - I), {z, I}]|| ||residue(1 / (z - %i), z, %i);|| ||
+||series sum||Sum[2^-n, {n, 1, Infinity}]|| ||sum(2^-n, n, 1, inf), simpsum;|| ||
 ||power series||Plus @@ Table[x^i / i!, {i, 0, 10}] + O[x]^11|| || || ||
-||power series of function||Series[Cos[x], {x, 0, 10}]||sympy.series(sympy.cos(x), x, n=11)|| ||\ps 10 _
-Ser(cos(x))||
+||power series of function||Series[Cos[x], {x, 0, 10}]|| || ||sympy.series(sympy.cos(x), x, n=11)||
 ||||||||||~ [[# equations-unknowns]][#equations-unknowns-note equations and unknowns]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
-||[#solution solution to an equation]||Solve[x^3 + x + 3 == 0, x]||solve(x@@**@@3 + x + 3, x)|| ||solve(x=-10, 10, x^3 + x + 3)||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
+||[#solution solution to an equation]||Solve[x^3 + x + 3 == 0, x]||solve(x^3 + x + 3 = 0, x);||solve(x^3 + x + 3 = 0, x);||solve(x@@**@@3 + x + 3, x)||
 ||[#solution-two-eqn solution to multiple equations]||Solve[x + y == 3 &&  x == 2y, _
-@<&nbsp;&nbsp;>@{x, y}]||solve([x + y - 3, 3*x - 2*y], [x, y])|| || ||
+@<&nbsp;&nbsp;>@{x, y}]||solve({x = 2 * y, x + y = 3}, {x, y});||solve([x + y = 3, x = 2*y], [x, y]);||solve([x + y - 3, 3*x - 2*y], [x, y])||
 ||[#solve-diophantine solve diophantine equation]||Solve[a^2 + b^2 == c^2 && _
 a > 0  && a < 10 && _
 b > 0 && b < 10 && _
@@ -959,9 +806,24 @@ c > 0 && c < 10, _
 ||differential equation||DSolve[y'[x] == y[x], y[x], x]|| || || ||
 ||differential equation with boundary condition||DSolve[{y'[x] == y[x], y[0] == 1}, y[x], x]|| || || ||
 ||system of differential equations|| || || || ||
-||recurrence equation||RSolve[{a[n + 2] == a[n + 1] + a[n], a[0] == 1, a[1] == 1}, a[n], n]|| || || ||
+||recurrence equation||eqns = {a[n + 2] == a[n + 1] + a[n], _
+@<&nbsp;&nbsp;>@a[0] == 0, _
+@<&nbsp;&nbsp;>@a[1] == 1} _
+ _
+RSolve[eqns, a[n], n] _
+ _
+##gray|(* remove Fibonacci[] from solution: *)## _
+FunctionExpand[RSolve[eqns, a[n], n]]||eqns := {a(0) = 0, _
+@<&nbsp;&nbsp;>@a(1) = 1, _
+@<&nbsp;&nbsp;>@a(n+2) = a(n+1)+a(n)}; _
+ _
+rsolve(eqns, a);||solve_rec(a[n]=a[n-1]+a[n-2], a[n], a[0] = 0, a[1] = 1);||n = sympy.symbols('n') _
+a = sympy.Function('a') _
+eqn = a(n+2) - a(n+1) - a(n) _
+ _
+sympy.rsolve(eqn, a(n), {a(0): 0, a(1): 1})||
 ||||||||||~ [[# optimization]][#optimization-note optimization]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[[# minimize]][#minimize-note minimize]||##gray|(* returns list of two items: min value and rule _
 @<&nbsp;&nbsp;&nbsp;>@transforming x to argmin *)## _
 Minimize[x^2 + 1, x] _
@@ -972,7 +834,7 @@ MinValue(x^2 + 1, x] _
  _
 ##gray|(* 2 ways to get argmin: *)## _
 x /. Minimize[x^2 + 1, x][[2]] _
-ArgMin[x^2 + 1, x]|| || || ||
+ArgMin[x^2 + 1, x]||minimize(x^2 + 1, x)|| || ||
 ||[[# maximize]][#maximize-note maximize]||Maximize[-x^4 + 3 x^3, x] _
  _
 Maxvalue[-x^4 + 3 x^3, x] _
@@ -1010,259 +872,296 @@ Minimize[(x - a)^2 + x, x]|| || || ||
 @<&nbsp;&nbsp;>@Method -> "ConjugateGradient"] _
  _
 ##gray|(* other method: "PrincipalAxis*)##|| || || ||
+||||||||||~ [[# vectors]][#vectors-note vectors]||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
+||[[# vec-literal]][#vec-literal-note vector literal]||##gray|(* row vector is same as array: *)## _
+{1, 2, 3}||Vector(3, [1, 2, 3]);||##gray|/* row vector is same as array: */## _
+[1, 2, 3];||##gray|# column vector:## _
+sympy.Matrix([1, 2, 3])||
+||[[# const-vec]][#const-vec-note constant vector] _
+ _
+##gray|//all zeros, all ones//##||Table[0, {i, 1, 100}] _
+Table[1, {i, 1, 100}]||Vector(100, fill=0); _
+Vector(100, fill=1);||makelist(0, 100); _
+makelist(1, 100);|| ||
+||[[# vec-coordinate]][#vec-coordinate-note vector coordinate]||##gray|(* indices start at one: *)## _
+{6, 7, 8}[[1]]||Vector(3, [6, 7, 8])[1];||[6, 7, 8][1];|| ||
+||[[# vec-dim]][#vec-dim-note vector dimension] _
+@<&nbsp;>@||Length[{1, 2, 3}]||nops(Vector(3, [1, 2, 3]));||length([1, 2, 3]);|| ||
+||[[# vec-element-wise]][#vec-element-wise-note element-wise arithmetic operators]||+ - * / _
+##gray|//adjacent lists are multiplied element-wise//##||+ - *~ /~|| + - * /|| ||
+||[[# vec-length-mismatch]][#vec-length-mismatch-note vector length mismatch] _
+@<&nbsp;>@||##gray|//error//##||##gray|//dimensions do not match error//##||##gray|//error//##|| ||
+||[[# vec-scalar]][#vec-scalar-note scalar multiplication]||3 {1, 2, 3} _
+{1, 2, 3} 3 _
+##gray|//* may also be used//##||3 * Vector(3, [1, 2, 3]); _
+Vector(3, [1, 2, 3]) * 3;||3 * [1, 2, 3]; _
+[1, 2, 3] * 3;|| ||
+||[[# vec-dot]][#vec-dot-note dot product]||{1, 1, 1} . {2, 2, 2} _
+Dot[{1, 1, 1}, {2, 2, 2}]||Vector(3, [1, 1, 1]) . Vector(3, [2, 2, 2]);||[1, 1, 1] . [2, 2, 2];||v1 = sympy.Matrix([1, 1, 1]) _
+v2 = sympy.Matrix([2, 2, 2]) _
+v1.dot(v2)||
+||[[# vec-cross]][#vec-cross-note cross product]||Cross[{1, 0, 0}, {0, 1, 0}]||with(LinearAlgebra): _
+ _
+e1 := Vector(3, [1, 0, 0]); _
+e2 := Vector(3, [0, 1, 0]); _
+CrossProduct(e1, e2); _
+e1 &x e2;|| ||e1 = sympy.Matrix([1, 0, 0]) _
+e2 = sympy.Matrix([0, 1, 0]) _
+e1.cross(e2)||
+||[[# vec-norms]][#vec-norms-note norms]||Norm[{1, 2, 3}, 1] _
+Norm[{1, 2, 3}] _
+Norm[{1, 2, 3}, Infinity]||with(LinearAlgebra): _
+ _
+v := Vector(3, [1, 2, 3]); _
+VectorNorm(v, 1); _
+VectorNorm(v, 2); _
+VectorNorm(v, infinity);|| ||vec = sympy.Matrix([1, 2, 3]) _
+ _
+vec.norm(1) _
+vec.norm() _
+vec.norm(inf)||
+||[[# orthonormal-basis]][#orthonormal-basis-note orthonormal basis]||Orthogonalize[@@{{1, 0, 1}, {1, 1, 1}}@@]|| || || ||
+||||||||||~ [[# matrices]][#matrices-note matrices]||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
+||[[# matrix-literal-constructor]][#matrix-literal-constructor-note literal]||##gray|(* used a nested array for each row: *)## _
+@@{{@@1, 2}, {3, 4@@}}@@ _
+ _
+##gray|(* display as grid with aligned columns: *)## _
+MatrixForm[@@{{@@1, 2}, {3, 4@@}}@@]||A := @<<<1|2>, <3|4>>>@||matrix([1, 2], [3, 4]);||sympy.Matrix([[1, 2], [3, 4]])||
+||[[# matrix-from-seq]][#matrix-from-seq-note construct from sequence]||ArrayReshape[{1, 2, 3, 4, 5, 6}, {2, 3}]|| || ||sympy.Matrix(2, 3, [1, 2, 3, 4, 5, 6])||
+||[[# matrix-from-cols]][#matrix-from-cols-note construct from columns]|| || || || ||
+||[[# matrix-from-submatrices]][#matrix-from-submatrices-note construct from submatrices]|| || || || ||
+||[[# const-matrices]][#const-matrices-note constant matrices]||Table[0, {i, 3}, {j, 3}] _
+Table[1, {i, 3}, {j, 3}]|| ||zeromatrix(3, 3);||sympy.zeros(3, 3) _
+sympy.ones(3, 3)||
+||[[# diagonal-matrices]][#diagonal-matrices-note diagonal matrices] _
+##gray|//and identity//##||DiagonalMatrix[{1, 2, 3}] _
+IdentityMatrix[3]|| ||ident(3) * [1, 2, 3]; _
+ident(3);||sympy.diag(*[1, 2, 3]) _
+sympy.eye(3)||
+||[[# matrix-dim]][#matrix-dim-note dimensions]||##gray|(* returns {3, 2}: *)## _
+Dimensions[@@{{1, 2}, {3, 4}, {5, 6}}@@]|| || ||A = sympy.matrix([[1, 2], [3, 4], [5, 6]]) _
+ _
+##gray|# returns (3, 2):## _
+A.shape||
+||[[# element-lookup]][#element-lookup-note element lookup]||##gray|(* top left corner: *)## _
+@@{{1, 2}, {3, 4}}@@[[1, 1]]|| || ||A = sympy.Matrix([[1, 2], [3, 4]]) _
+ _
+##gray|# top left corner:## _
+A[0, 0]||
+||[[# extract-matrix-row]][#extract-matrix-row-note extract row]||##gray|(* first row: *)## _
+@@{{1, 2}, {3, 4}}@@[[1]]|| || ||##gray|# first row:## _
+A[0, :]||
+||[[# extract-matrix-col]][#extract-matrix-col-note extract column]||##gray|(* first column as array: *)## _
+@@{{1, 2}, {3, 4}}@@[[All, 1]]|| || ||##gray|# first column as 1x2 matrix:## _
+A[:, 0]||
+||[[# extract-submatrix]][#extract-submatrix-note extract submatrix]||A = @@{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}@@ _
+A[[1;;2, 1;;2]]|| || ||rows = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] _
+A = sympy.Matrix(rows) _
+A[0:2, 0:2]||
+||[[# matrix-elem-wise-op]][#matrix-elem-wise-op-note element-wise operators]||+ - * / _
+##gray|//adjacent matrices are multiplied element-wise//##|| ||+ - * /||+ - _
+ _
+##gray|# for Hadamard product:## _
+A.multiply_elementwise(B)||
+||[[# matrix-mult]][#matrix-mult-note product]||A = @@{{1, 2}, {3, 4}}@@ _
+B = @@{{4, 3}, {2, 1}}@@ _
+Dot[A, B] _
+##gray|(* or use period: *)## _
+A . B|| ||A: matrix([1, 2], [3, 4]); _
+B: matrix([4, 3], [2, 1]); _
+A . B;||A = sympy.matrix([[1, 2], [3, 4]]) _
+B = sympy.matrix([[4, 3], [2, 1]]) _
+A * B||
+||[[# matrix-power]][#matrix-power-note power]||MatrixPower[@@{{1, 2}, {3, 4}}@@, 3] _
+ _
+##gray|(* element-wise operator: *)## _
+A ^ 3|| || ||A ** 3||
+||[[# matrix-exponential]][#matrix-exponential-note exponential]||MatrixExp[@@{{1, 2}, {3, 4}}@@]|| || || ||
+||[[# matrix-log]][#matrix-log-note log]||MatrixLog[@@{{1, 2}, {3, 4}}@@]|| || || ||
+||[[# kronecker-prod]][#kronecker-prod-note kronecker product]||A = @@{{1, 2}, {3, 4}}@@ _
+B = @@{{4, 3}, {2, 1}}@@ _
+KroneckerProduct[A, B]|| || || ||
+||[[# matrix-norm]][#matrix-norm-note norms]||A = @@{{1, 2}, {3, 4}}@@ _
+ _
+Norm[A, 1] _
+Norm[A, 2] _
+Norm[A, Infinity] _
+Norm[A, "Frobenius"]|| || || ||
+||[[# matrix-transpose]][#matrix-transpose-note transpose]||Transpose[@@{{1, 2}, {3, 4}}@@] _
+ _
+##gray|(* or ESC tr ESC for T exponent notation *)##|| ||transpose(A);||A.T||
+||[[# matrix-conjugate-transpose]][#matrix-conjugate-transpose-note conjugate transpose]||A = @@{{1, I}, {2, -I}}@@ _
+ConjugateTranspose[A] _
+ _
+##gray|(* or ESC ct ESC for dagger exponent notation *)##|| || ||M = sympy.Matrix([[1, sympy.I], [2, -sympy.I]]) _
+M.adjoint()||
+||[[# matrix-inverse]][#matrix-inverse-note inverse]||Inverse[@@{{1, 2}, {3, 4}}@@]|| ||invert(A);||A.inv()||
+||[[# row-echelon-form]][#row-echelon-form-note row echelon form]||RowReduce[@@{{1, 1}, {1, 1}}@@]|| || || ||
+||[[# pseudoinverse]][#pseudoinverse-note pseudoinverse]||PseudoInverse[@@{{1, 0}, {3, 0}}@@]|| || || ||
+||[[# determinant]][#determinant-note determinant]||Det[@@{{1, 2}, {3, 4}}@@]|| ||determinant(A);||A.det()||
+||[[# trace]][#trace-note trace]||Tr[@@{{1, 2}, {3, 4}}@@]|| || || ||
+||[[# matrix-rank]][#matrix-rank-note rank]||MatrixRank[@@{{1, 1}, {0, 0}}@@]|| || || ||
+||[[# nullspace-basis]][#nullspace-basis-note nullspace basis]||NullSpace[@@{{1, 1}, {0, 0}}@@]|| || || ||
+||[[# range-basis]][#range-basis-note range basis]|| || || || ||
+||[[# eigenval]][#eigenval-note eigenvalues]||Eigenvalues[@@{{1, 2}, {3, 4}}@@]|| ||##gray|/* returns list of two lists: _
+@<&nbsp;&nbsp;&nbsp;>@first is the eigenvalues, _
+@<&nbsp;&nbsp;&nbsp;>@second is their multiplicities */## _
+eigenvalues(A);||A.eigenvals()||
+||[[# eigenvec]][#eigenvec-note eigenvectors]||Eigenvectors[@@{{1, 2}, {3, 4}}@@]|| ||##gray|/* returns list of two lists.  The first item is the return value of eigenvalues().  The second item is a list containing a list of eigenvectors for each eigenvalue. */## _
+eigenvectors(A);||A.eigenvects()||
+||[[# svd]][#svd-note singular value decomposition]||SingularValueDecomposition[@@{{1, 1}, {1, 0}}@@]|| || || ||
+||[[# qr-decomposition]][#qr-decomposition-note qr decomposition]||QRDecomposition[@@{{1, 2}, {3, 4}}@@]|| || || ||
+||[[# solve-linear-eqns]][#solve-linear-eqns-note solve system of equations]|| || || || ||
 ||||||||||~ [[# combinatorics]][#combinatorics-note combinatorics]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[[# factorial]][#factorial-note factorial]||10! _
-Factorial[10]||factorial(10)||Factorial(10);||10!||
-||falling factorial||FactorialPower[10, 3]|| || ||10! / (10 - 3)!||
-||binomial coefficient||Binomial[10, 3]||binomial(10, 3)||Binomial(10, 3);||binomial(10, 3)||
-||multinomial coefficient||Multinomial[3, 4, 5]|| || || ||
+Factorial[10]||10! _
+factorial(10)||10! _
+factorial(10);||factorial(10)||
+||falling factorial||FactorialPower[10, 3]|| || || ||
+||binomial coefficient||Binomial[10, 3]||binomial(10, 3)||binomial(10, 3);||binomial(10, 3)||
+||multinomial coefficient||Multinomial[3, 4, 5]|| ||multinomial(12, [3, 4, 5]);|| ||
 ||integer partitions _
  _
 ##gray|//and count//##||IntegerPartitions[10] _
  _
-Length[IntegerPartitions[10]]|| ||Partitions(10); _
+Length[IntegerPartitions[10]]|| ||integer_partitions(10); _
  _
-NrPartitions(10);||partitions(10) _
- _
-length(partitions(10))||
+length(integer_partitions(10));|| ||
 ||set partitions _
  _
 ##gray|//and Bell number//##||StirlingS2[10, 3] _
-BellB[10]|| || ||stirling(10, 3, 2) _
-sum(i=1, 10, stirling(10, i, 2))||
-||permutations with k disjoint cycles||Abs[StirlingS1[n, k]]|| || ||abs(stirling(n, k, 1))||
+BellB[10]|| || || ||
+||permutations with k disjoint cycles||Abs[StirlingS1[n, k]]|| || || ||
 ||fibonacci number _
  _
 ##gray|//and lucas number//##||Fibonacci[10] _
-LucasL[10]|| || ||fibonacci(10) _
-##gray|//??//##||
-||bernoulli number||BernoulliB[100]|| || ||bernfrac(100)||
+LucasL[10]|| || || ||
+||bernoulli number||BernoulliB[100]|| || || ||
 ||||||||||~ [[# number-theory]][#number-theory-note number theory]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
-||[[# pseudoprime-test]][#pseudoprime-test-note pseudoprime test]||PrimeQ[7]||sympy.ntheory.primetest.isprime(7) _
-sympy.ntheory.primetest.mr(7, [2, 3])||IsPrimeInt(7);||ispseudoprime(7)||
-||[[# true-prime-test]][#true-prime-test-note true prime test] _
-@<&nbsp;>@|| || || ||isprime(7)||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
+||[[# pseudoprime-test]][#pseudoprime-test-note pseudoprime test]||PrimeQ[7]|| ||primep(7);||sympy.ntheory.primetest.isprime(7) _
+sympy.ntheory.primetest.mr(7, [2, 3])||
 ||[[# divisors]][#divisors-note divisors]||##gray|(* {1, 2, 4, 5, 10, 20, 25, 50, 100}: *)## _
-Divisors[100]||sympy.ntheory.divisors(100)||DivisorsInt(100);||divisors(100)||
+Divisors[100]|| ||divisors(100);||sympy.ntheory.divisors(100)||
 ||[[# prime-factors]][#prime-factors prime factors]||##gray|(* returns @<{{>@2, 2}, {3, 1}, {7, 1}} *)## _
-FactorInteger[84]||##gray|# {2: 2, 3: 1, 7: 1}:## _
-sympy.ntheory.factorint(84)||##gray|# [ 2, 2, 3, 7 ]:## _
-FactorsInt(84);||##gray|@@\\@@ [2,2; 3,1; 7,1]:## _
-factor(84)||
+FactorInteger[84]|| ||##gray|/* 2^2 3 7: */## _
+factor(84); _
+ _
+##gray|/* [[2,2],[3,1],[7,1]]: */## _
+ifactors(84);||##gray|# {2: 2, 3: 1, 7: 1}:## _
+sympy.ntheory.factorint(84)||
 ||[[# next-prime]][#next-prime-note next prime] _
  _
 ##gray|//and preceding//##||NextPrime[1000] _
-NextPrime[1000, -1]||sympy.ntheory.generate.nextprime(1000) _
-sympy.ntheory.generate.prevprime(1000)||NextPrimeInt(1000); _
-PrevPrimeInt(1000);||nextprime(1000) _
-precprime(1000)||
+NextPrime[1000, -1]|| ||next_prime(1000); _
+prev_prime(1000);||sympy.ntheory.generate.nextprime(1000) _
+sympy.ntheory.generate.prevprime(1000)||
 ||[[# nth-prime]][#nth-prime-note nth prime]||##gray|(* 541: *)## _
-Prime[100]||sympy.ntheory.generate.prime(100)|| ||##gray|@@\\@@ first 100 primes: primes(100)## _
-primes(100)[100]||
+Prime[100]|| || ||sympy.ntheory.generate.prime(100)||
 ||[[# prime-counting-func]][#prime-counting-func-note prime counting function]||##gray|(* 25: *)## _
-PrimePi[100]||sympy.ntheory.generate.primepi(100)|| ||primepi(100)||
+PrimePi[100]|| || ||sympy.ntheory.generate.primepi(100)||
 ||[[# divmod]][#divmod-note divmod] _
-@<&nbsp;>@||QuotientRemainder[7, 3]||divmod(7, 3)|| ||divrem(7, 3)||
+@<&nbsp;>@||QuotientRemainder[7, 3]|| ||divide(7, 3);||divmod(7, 3)||
 ||[[# gcd]][#gcd-note greatest common divisor] _
  _
 ##gray|//and relatively prime test//##||GCD[14, 21] _
 GCD[14, 21, 777] _
  _
-CoprimeQ[14, 21]||sympy.gcd(14, 21) _
-sympy.gcd(sympy.gcd(14, 21), 777)||GcdInt(14, 21); _
-GcdInt(GcdInt(14, 21), 777);||gcd(14, 21) _
-gcd(gcd(14, 21), 777)||
+CoprimeQ[14, 21]|| ||gcd(14, 21); _
+gcd(gcd(14, 21), 777);||sympy.gcd(14, 21) _
+sympy.gcd(sympy.gcd(14, 21), 777)||
 ||[[# extended-euclidean-algorithm]][#extended-euclidean-algorithm-note extended euclidean algorithm]||##gray|(* {1, {2, -1}}: *)## _
-ExtendedGCD[3, 5]||import sympy.ntheory.modular _
+ExtendedGCD[3, 5]|| ||##gray|/* [2,-1,1]: */## _
+gcdex(3, 5);||import sympy.ntheory.modular _
  _
 ##gray|# (2, -1, 1):## _
-sympy.ntheory.modular.igcdex(3, 5)||ret := Gcdex(3, 5); _
- _
-##gray|# 2:## _
-ret.coeff1; _
-##gray|# -1:## _
-ret.coeff2; _
-##gray|# 1:## _
-ret.gcd;||##gray|@@\\@@ [2, -1, 1]:## _
-gcdext(3, 5)||
-||[[# lcm]][#lcm-note least common multiple]||LCM[14, 21]||sympy.lcm(14, 21)||LcmInt(14, 21);||lcm(14, 21)||
-||[[# int-residues]][#int-residues-note integer residues]|| || ||r := ZmodnZ(5); _
-fam := ElementsFamily(FamilyObj(r));; _
- _
-ZmodnZObj(fam, 2) + ZmodnZObj(fam, 3);||Mod(2, 5) + Mod(3, 5) _
-Mod(2, 5) - Mod(3, 5) _
-Mod(2, 5) * Mod(3, 5) _
-Mod(2, 5)^2||
-||[[# mult-inverse]][#mult-inverse-note multiplicative inverse]|| || ||r := ZmodnZ(7); _
-fam := ElementsFamily(FamilyObj(r));; _
- _
-ZmodnZObj(2, 7)^-1;||Mod(2, 7)^-1 _
- _
-##gray|@@\\@@ raises error:## _
-Mod(2, 4)^-1||
-||[[# chinese-remainder-thm]][#chinese-remainder-thm-note chinese remainder theorem]|| || ||##gray|# 173:## _
-ChineseRem([17, 11], [3, 8]);||##gray|@@\\@@ Mod(173, 187):## _
-chinese(Mod(3, 17), Mod(8, 11))|||
-||[[# lift-int-residue]][#lift-int-residue-note lift integer residue]|| || || ||##gray|@@\\@@ 7:## _
-lift(-17, 12) _
-##gray|@@\\@@ -5:## _
-centerlift(-17, 12)||
+sympy.ntheory.modular.igcdex(3, 5)||
+||[[# lcm]][#lcm-note least common multiple]||LCM[14, 21]|| ||lcm(14, 21);||sympy.lcm(14, 21)||
+||[[# int-residues]][#int-residues-note integer residues]|| || || || ||
+||[[# mult-inverse]][#mult-inverse-note multiplicative inverse]|| || || || ||
+||[[# chinese-remainder-thm]][#chinese-remainder-thm-note chinese remainder theorem]|| || || || ||
+||[[# lift-int-residue]][#lift-int-residue-note lift integer residue]|| || || || ||
 ||[[# euler-totient]][#euler-totient-note euler totient] _
-@<&nbsp;>@||EulerPhi[256]||sympy.ntheory.totient(256)||Phi(256);||eulerphi(256)||
-||[[# mult-order]][#mult-order-note multiplicative order]||MultiplicativeOrder[7, 108]|| ||OrderMod(7, 108);||znorder(Mod(7, 108))||
+@<&nbsp;>@||EulerPhi[256]|| ||totient(256);||sympy.ntheory.totient(256)||
+||[[# mult-order]][#mult-order-note multiplicative order]||MultiplicativeOrder[7, 108]|| || || ||
 ||[[# primitive-roots]][#primitive-roots-note primitive roots]||PrimitiveRoot[11] _
  _
 ##gray|(* all primitive roots: *)## _
-PrimitiveRootList[11]|| ||PrimitiveRootMod(11);||znprimroot(11)||
-||[[# discrete-log]][#discrete-log-note discrete logarithm]|| || ||##gray|# arg: 10, base: 2, modulus: 11## _
-LogMod(10, 2, 11);||znlog(10, Mod(2, 11)) _
-znlog(Mod(10, 11), Mod(2, 11))||
-||[[# carmichael-func]][#carmichael-func-note carmichael function]||CarmichaelLambda[561]|| ||Lambda(561);||lcm(znstar(561)[2])||
+PrimitiveRootList[11]|| || || ||
+||[[# discrete-log]][#discrete-log-note discrete logarithm]|| || || || ||
+||[[# carmichael-func]][#carmichael-func-note carmichael function]||CarmichaelLambda[561]|| || || ||
 ||[[# kronecker-symbol]][#kronecker-symbol-note kronecker symbol] _
  _
 ##gray|//and jacobi symbol//##||KroneckerSymbol[3, 5] _
-JacobiSymbol[3, 5]|| ||Jacobi(3, 5);||kronecker(3, 5)||
-||[[# moebius-func]][#moebius-func-note moebius function]||MoebiusMu[11]|| ||MoebiusMu(11);||moebius(11)||
-||[[# riemann-zeta-func]][#riemann-zeta-func-note riemann zeta function]||Zeta[2]||sympy.mpmath.zeta(2)|| ||zeta(2)||
+JacobiSymbol[3, 5]|| ||##gray|//??//## _
+jacobi(3, 5);|| ||
+||[[# moebius-func]][#moebius-func-note moebius function]||MoebiusMu[11]|| ||moebius(11);|| ||
+||[[# riemann-zeta-func]][#riemann-zeta-func-note riemann zeta function]||Zeta[2]|| ||zeta(2);||sympy.mpmath.zeta(2)||
 ||[[# mangoldt-lambda]][#mangoldt-lambda-note mangoldt lambda]||MangoldtLambda[11]|| || || ||
 ||[[# dirichlet-char]][#dirichlet-char-note dirichlet character]||Table[DirichletCharacter[2, 1, i], {i, 100}]|| || || ||
-||||||||||~ [[# elliptic-curves]][#elliptic-curves-note elliptic curves]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
-||elliptic curve from coefficients|| || || ||##gray|@@\\@@ ellinit([a, b, c, d, e]) where _
-@@\\@@ _
-@@\\@@@<&nbsp;&nbsp;&nbsp;>@y^2 + axy + by = x^3 + cx^2 + dx + e _
-@@\\@@## _
-e0 = ellinit([0,0,1,-7,6]) _
- _
-##gray|@@\\@@ ellinit([a, b]) where _
-@@\\@@ _
-@@\\@@@<&nbsp;&nbsp;&nbsp;>@y^2 = x^3 + ax + b _
-@@\\@@## _
-e1 = ellinit([-1, 0])||
-||discriminant|| || || ||e0.disc||
-||conductor|| || || ||ellglobalred(e0)[1]||
-||singularity test|| || || ||e0.disc == 0||
-||convert to minimal model|| || || ||e0 = ellinit([6, -3, 9, -16, -14]) _
-e = ellminimalmodel(e0)||
-||coordinate transformation on point|| || || ||e0 = ellinit([6, -3, 9, -16, -14]) _
-e = ellminimalmodel(e0, &v) _
-##gray|@@\\@@ minimal to original:## _
-ellchangepointinv([0, 0], v) _
-##gray|@@\\@@ original to minimal:## _
-ellchangepoint([-2, 2], v)||
-||coordinate transformation on curve: ellchangecurve|| || || ||e0 = ellinit([6, -3, 9, -16, -14]) _
-e = ellminimalmodel(e0, &v) _
-##gray|@@\\@@ same as e0:## _
-ellchangecurve(e, v)||
-||point on curve test|| || || ||ellisoncurve(e, [0, 2])||
-||abscissa to ordinates|| || || ||##gray|@@\\@@ vector of size 0, 1, or 2:## _
-ellordinate(e, 0)||
-||group identity|| || || ||[0]||
-||group operation|| || || ||elladd(e, [0, 2], [1, -1])||
-||group inverse|| || || ||ellneg(e, [0, 2])||
-||group multiplication|| || || ||ellmul(e, [0, 2], 3)||
-||canonical height of point|| || || ||ellheight(e, [0, -3])||
-||order of point|| || || ||##gray|@@\\@@ returns 0 for infinite order:## _
-ellorder(e, [0, 2]) _
- _
-ellorder(e1, [0, 0])||
-||torsion subgroup|| || || ||e1 = ellinit([-1, 0]) _
- _
-##gray|@@\\@@ returns [t, v1, v2]: _
-@@\\@@ _
-@@\\@@@<&nbsp;&nbsp;&nbsp;>@t: order of torsion group _
-@@\\@@@<&nbsp;&nbsp;&nbsp;>@v1: orders of component cyclic groups _
-@@\\@@@<&nbsp;&nbsp;&nbsp;>@v2: generators of same cyclic groups _
-@@\\@@## _
-elltors(e1)||
-||analytic rank|| || || ||##gray|@@\\@@ first value is rank:## _
-[a, b] = ellanalyticrank(e) _
- _
-##gray|@@\\@@ recompute second value to higher precision:## _
-\p 100 _
-b = ellL1(e, a)||
-||L-function value|| || || ||elllseries(e, 1 + I)||
-||L-function coefficients|| || || ||##gray|@@\\@@ tenth coefficient:## _
-ellak(e, 10) _
-##gray|@@\\@@ first ten coefficients:## _
-ellan(e, 10)||
 ||||||||||~ [[# rational-algebraic-numbers]][#rational-algebraic-numbers-note rational and algebraic numbers]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
-||to continued fraction||cf = ContinuedFraction[Pi, 100]|| || ||\p 100 _
-contfrac(Pi)||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
+||to continued fraction||cf = ContinuedFraction[Pi, 100]|| || || ||
 ||from continued fraction||##gray|(* rational approx. of π: *)## _
 FromContinuedFraction[cf]|| || || ||
-||p-adic number|| || || ||##gray|@@\\@@ p is 2 and precision in powers of 2 is 100:## _
-1/2 + O(2^100)||
-||lift p-adic to rational|| || || ||lift(1/2 + O(2^100))||
-||gaussian integer norm|| || || ||norm(1 + I)||
-||quadratic extension|| || || ||##gray|@@\\@@ make w equal to sqrt(D)/4:## _
-D = -4 _
-w = quadgen(D)||
-||quadratic number|| || || ||(1 + w)^2||
+||p-adic number|| || || || ||
+||lift p-adic to rational|| || || || ||
+||gaussian integer norm|| || || || ||
+||quadratic extension|| || || || ||
+||quadratic number|| || || || ||
 ||||||||||~ [[# polynomials]][#polynomials-note polynomials]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||from expression with indeterminates||(x - 1) (x - 2) _
  _
-(x + 1)^2 (y + 2)^3|| || ||(x - 1) * (x - 2) _
- _
-(1+x)^2 * (2+y)^3||
+(x + 1)^2 (y + 2)^3|| || || ||
 ||from coefficient array||coeff = {1, -3, 2} _
-Plus @@ Table[coeff[[i]] * x^(3 - i), {i, 1, 3}]|| || ||Pol([1, -3, 2]) _
- _
-##gray|@@\\@ zero-degree coefficient first:## _
-Polrev([2, -3, 1])||
-||to coefficient array||CoefficientList[(x + 1)^10, x]|| || ||Vec((x+1)^10)||
-||lookup coefficient||Coefficient[(1 + x)^10, x, 3]|| || ||polcoeff((x+1)^10, 3)||
-||substitute indeterminate|| || || ||##gray|@@\\@@ replace x with 3:## _
-subst((x-1)*(x-2), x, 3) _
-##gray|@@\\@@ replace x with (x-1):## _
-subst((x-1)*(x-2), x, (x-1))||
-||degree||Exponent[(x + 1)^10, x]|| || ||poldegree((x-1)^10)||
-||operations||+ - * /|| || ||+ - * /||
+Plus @@ Table[coeff[[i]] * x^(3 - i), {i, 1, 3}]|| || || ||
+||to coefficient array||CoefficientList[(x + 1)^10, x]|| || || ||
+||lookup coefficient||Coefficient[(1 + x)^10, x, 3]|| || || ||
+||substitute indeterminate|| || || || ||
+||degree||Exponent[(x + 1)^10, x]|| || || ||
+||operations||+ - * /|| || || ||
 ||division and remainder||PolynomialReduce[x^10 - 1, x - 1, {x}] _
 PolynomialReduce[x^10 - y^10, x - y, {x, y}]|| || || ||
-||[#expand-polynomial expand polynomial]||Expand[(1 + x)^5]||sympy.expand((1+x)@@**@@5)|| || ||
-||[#factor-polynomial factor polynomial]||Factor[3 + 10 x + 9 x^2 + 2 x^3]||sympy.factor(3 + 10*x + 9*x@@**@@2 + 2*x@@**@@3)|| || ||
+||[#expand-polynomial expand polynomial]||Expand[(1 + x)^5]|| || ||sympy.expand((1+x)@@**@@5)||
+||[#factor-polynomial factor polynomial]||Factor[3 + 10 x + 9 x^2 + 2 x^3]|| || ||sympy.factor(3 + 10*x + 9*x@@**@@2 + 2*x@@**@@3)||
 ||collect terms||##gray|(* write as polynomial in x: *)## _
-Collect[(1 + x + y)^3, x]||sympy.collect(sympy.expand((x+y+1)**3), x)|| || ||
-||factor||Factor[x^10 - y^10]|| || ||factor(x^2-1)||
-||roots||Solve[x^3 + 3 x^2 + 2 x - 1 == 0, x]|| || ||polroots(x^3+3*x^2+2*x-1)||
+Collect[(1 + x + y)^3, x]|| || ||sympy.collect(sympy.expand((x+y+1)**3), x)||
+||factor||Factor[x^10 - y^10]|| || || ||
+||roots||Solve[x^3 + 3 x^2 + 2 x - 1 == 0, x]|| || || ||
 ||greatest common divisor||p1 = -2 - x + 2 x^2 + x^3 _
 p2 = 6 - 7 x + x^3 _
-PolynomialGCD[p1, p2]|| || ||p1 = x^3 + 2*x^2 -x -2 _
-p2 = x^3 -7*x + 6 _
-gcd(p1, p2)||
-||resultant||Resultant[(x-1)(x-2), (x-3)(x-3), x]|| || ||polresultant((x-1)*(x-2), (x-3)^2)||
-||discriminant||Discriminant[(x + 1) (x - 2), x]|| || ||poldisc((x+1)*(x-2))||
+PolynomialGCD[p1, p2]|| || || ||
+||resultant||Resultant[(x-1)(x-2), (x-3)(x-3), x]|| || || ||
+||discriminant||Discriminant[(x + 1) (x - 2), x]|| || || ||
 ||groebner basis||p1 = x^2 + y + z - 1 _
 p2 = x + y^2 + z - 1 _
 p3 = x + y + z^2 - 1 _
  _
 ##gray|(* uses lexographic order by default: *)## _
-GroebnerBasis[{p1, p2, p3}, {x, y, z}]|| || ||##gray|//none//##||
-||specify ordering|| || || ||##gray|//none//##||
-||symmetric polynomial||SymmetricPolynomial[3, {x1, x2, x3, x4}]|| || ||##gray|//none//##||
-||cyclotomic polynomial||Cyclotomic[10, x]|| || ||polcyclo(10)||
-||hermite polynomial||HermiteH[4, x]|| || ||polhermite(4)||
+GroebnerBasis[{p1, p2, p3}, {x, y, z}]|| || || ||
+||specify ordering|| || || || ||
+||symmetric polynomial||SymmetricPolynomial[3, {x1, x2, x3, x4}]|| || || ||
+||cyclotomic polynomial||Cyclotomic[10, x]|| || || ||
+||hermite polynomial||HermiteH[4, x]|| || || ||
 ||chebyshev polynomial _
  _
 ##gray|//first and second kind//##||ChebyshevT[4, x] _
-ChebyshevU[4, x]|| || ||polchebyshev(4, 1) _
-polychebyshev(4, 2)||
+ChebyshevU[4, x]|| || || ||
 ||interpolation polynomial||pts = Inner[List, {1, 2, 3}, {2, 4, 7}, List] _
-InterpolatingPolynomial[pts, x]|| || ||polinterpolate([1, 2, 3], [2, 4, 7])||
-||characteristic polynomial||CharacteristicPolynomial[@@{{1, 2}, {3, 4}}@@, x]|| || ||charpoly([1, 2; 3, 4])||
+InterpolatingPolynomial[pts, x]|| || || ||
+||characteristic polynomial||CharacteristicPolynomial[@@{{1, 2}, {3, 4}}@@, x]|| || || ||
 ||minimal polynomial|| || || || ||
 ||piecewise polynomial|| || || || ||
-||rational function||(x - 1) / (x - 2)^2|| || ||(x - 1) / (x - 2)^2||
-||[#add-fractions add fractions]||Together[a/b + c/d]||sympy.together(x/y + z/w)|| || ||
-||[#partial-fraction-decomposition partial fraction decomposition]||Apart[(b c + a d)/(b d)]||##gray|# only one symbol allowed in denominator:## _
-sympy.apart((3*x+2) / (x*(x+1)))|| || ||
+||rational function||(x - 1) / (x - 2)^2|| || || ||
+||[#add-fractions add fractions]||Together[a/b + c/d]|| || ||sympy.together(x/y + z/w)||
+||[#partial-fraction-decomposition partial fraction decomposition]||Apart[(b c + a d)/(b d)]|| || ||##gray|# only one symbol allowed in denominator:## _
+sympy.apart((3*x+2) / (x*(x+1)))||
 ||||||||||~ [[# trigonometry]][#trigonometry-note trigonometry]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||eliminate sums and multiples inside trig functions||TrigExpand[Sin[2 x + y]]|| || || ||
 ||eliminate powers of trig functions||TrigReduce[Sin[x]^2]|| || || ||
 ||trig to complex exponential|| || || || ||
@@ -1280,218 +1179,156 @@ FourierSeries[f[x], x, 10]|| || || ||
  _
 InverseFourierTransform[f[ω], ω, t]|| || || ||
 ||||||||||~ [[# special-functions]][#special-functions-note special functions]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
-||gamma||Gamma[1/2]|| || ||gamma(1/2)||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
+||gamma||Gamma[1/2]|| || || ||
 ||hyperbolic||Sinh Cosh Tanh _
-ArcSinh ArcCosh ArcTanh|| || ||sinh cosh tanh||
+ArcSinh ArcCosh ArcTanh|| || || ||
 ||elliptic integerals||EllipticK EllipticF _
 EllipticE _
 EllipticPi|| || || ||
 ||bessel functions||BesselJ _
 BesselY _
 BesselI _
-BesselK|| || ||besselh1 besselh2 besseli besselj besseljh besselk besseln||
-||[[# riemann-zeta]][#riemann-zeta-note Riemann zeta]||Zeta[2]|| || ||zeta(2)||
+BesselK|| || || ||
+||[[# riemann-zeta]][#riemann-zeta-note Riemann zeta]||Zeta[2]|| || || ||
 ||||||||||~ [[# permutations]][#permutations-note permutations]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
-||permutation from disjoint cycles||p = Cycles[@@{{1, 2}, {3, 4}}@@]||import sympy.combinatorics as combinatorics _
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
+||permutation from disjoint cycles||p = Cycles[@@{{1, 2}, {3, 4}}@@]|| || ||import sympy.combinatorics as combinatorics _
  _
-p = combinatorics.Permutation(0, 1)(2, 3)||p := (1, 2)(3, 4);|| ||
-||permutation from list||p = PermutationCycles[{2, 1, 4, 3}]||import sympy.combinatorics as combinatorics _
+p = combinatorics.Permutation(0, 1)(2, 3)||
+||permutation from list||p = PermutationCycles[{2, 1, 4, 3}]|| || ||import sympy.combinatorics as combinatorics _
  _
-p = combinatorics.Permutation([1, 0, 3, 2])||p2 := PermList([2, 1, 4, 3]);|| ||
-||permutation from two lists||FindPermutation[{a, b, c}, {b, c, a}]|| ||##gray|# must be positive integers:## _
-p := MappingPermListList([6, 8, 4, 2], [2, 4, 6, 8])|| ||
+p = combinatorics.Permutation([1, 0, 3, 2])||
+||permutation from two lists||FindPermutation[{a, b, c}, {b, c, a}]|| || || ||
 ||act on element||p = Cycles[@@{{1, 2}, {3, 4}}@@] _
  _
-PermutationReplace[1, p]||p(0)||1 ^ p; _
- _
-##gray|# preimage of 1 under p:## _
-1 / p;|| ||
+PermutationReplace[1, p]|| || ||p(0)||
 ||act on list||##gray|(* if list is too big, extra elements retain _
 @<&nbsp;&nbsp;&nbsp;>@their positions; if list is too small, _
 @<&nbsp;&nbsp;&nbsp;>@expression is left unevaluated. *)## _
-Permute[{a, b, c, d}, p12n34]||a, b, c, d = sympy.symbols('a b c d') _
+Permute[{a, b, c, d}, p12n34]|| || ||a, b, c, d = sympy.symbols('a b c d') _
   _
 p = combinatorics.Permutation(0, 1)(2, 3) _
-p([a, b, c, d])|| || ||
+p([a, b, c, d])||
 ||compose||p1 = Cycles[@@{{1, 2}, {3, 4}}@@] _
 p2 = Cycles[@@{{1, 3}}@@] _
-PermutationProduct[p1, p2]||p1 = combinatorics.Permutation(0, 1)(2, 3) _
+PermutationProduct[p1, p2]|| || ||p1 = combinatorics.Permutation(0, 1)(2, 3) _
 p2 = combinatorics.Permutation(0, 2) _
  _
-p1 * p2||(1, 2)(3, 4) * (1, 3);|| ||
-||invert||InversePermutation[Cycles[@@{{1, 2, 3}}@@]]||p = combinatorics.Permutation(0, 1, 2) _
+p1 * p2||
+||invert||InversePermutation[Cycles[@@{{1, 2, 3}}@@]]|| || ||p = combinatorics.Permutation(0, 1, 2) _
  _
-p ** -1||(1, 2, 3) ^ -1;|| ||
-||power||PermutationPower[Cycles[@@{{1, 2, 3, 4, 5}}@@], 3]||p = combinatorics.Permutation(0, 1, 2, 3, 4) _
+p ** -1||
+||power||PermutationPower[Cycles[@@{{1, 2, 3, 4, 5}}@@], 3]|| || ||p = combinatorics.Permutation(0, 1, 2, 3, 4) _
  _
-p ** 3||(1, 2, 3, 4, 5) ^ 3;|| ||
-||order||PermutationOrder[Cycles[@@{{1, 2, 3, 4, 5}}@@]]||combinatorics.Permutation(0, 1, 2, 3, 4).order()|| || ||
-||support||PermutationSupport[Cycles[@@{{1, 3, 5}, {7, 8}}@@]]||p = combinatorics.Permutation(0, 2, 4)(6, 7) _
+p ** 3||
+||order||PermutationOrder[Cycles[@@{{1, 2, 3, 4, 5}}@@]]|| || ||combinatorics.Permutation(0, 1, 2, 3, 4).order()||
+||support||PermutationSupport[Cycles[@@{{1, 3, 5}, {7, 8}}@@]]|| || ||p = combinatorics.Permutation(0, 2, 4)(6, 7) _
  _
-p.support()||MovedPoints((1, 3, 5)(7, 8));|| ||
-||number of inversions|| ||Permutation(0, 2, 1).inversions()|| || ||
-||parity|| ||Permutation(0, 2, 1).parity()|| || ||
-||to inversion vector|| ||Permutation(0, 2, 1).inversion_vector()|| || ||
-||from inversion vector|| ||Permutation.from_inversion_vector([2, 0])|| || ||
+p.support()||
+||number of inversions|| || || ||Permutation(0, 2, 1).inversions()||
+||parity|| || || ||Permutation(0, 2, 1).parity()||
+||to inversion vector|| || || ||Permutation(0, 2, 1).inversion_vector()||
+||from inversion vector|| || || ||Permutation.from_inversion_vector([2, 0])||
 ||all permutations||GroupElements[SymmetricGroup[4]] _
  _
 ##gray|(* of a list: *)## _
 Permutations[{a, b, c, d}]|| || || ||
-||random permutation||RandomPermutation[10]||Permutation.random(10)|| || ||
+||random permutation||RandomPermutation[10]|| || ||Permutation.random(10)||
 ||||||||||~ [[# groups]][#groups-note groups]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||group from permutation generators||e1 = Cycles[@@{{1, 3, 5, 2}}@@] _
 e2 = Cycles[@@{{1, 2}}@@] _
-g := PermutationGroup[{e1, e2}]||from sympy.combinatorics import * _
+g := PermutationGroup[{e1, e2}]|| || ||from sympy.combinatorics import * _
  _
 p1 = Permutation(0, 2, 4, 1) _
 p2 = Permutation(0, 1) _
-g = PermutationGroup(p1, p2)||g := Group((1, 3, 5, 2), (1, 2)); _
- _
-##gray|# or## _
-g := GroupWithGenerators([(1, 3, 5, 2), (1, 2)]);|| ||
+g = PermutationGroup(p1, p2)||
 ||named groups _
  _
 ##gray|//symmetric, alternating, cyclic, dihedral//##||s4 = SymmetricGroup[4] _
 a4 = AlternatingGroup[4] _
 z5 = CyclicGroup[5] _
-d10 = DihedralGroup[10]||from sympy.combinatorics import * _
+d10 = DihedralGroup[10]|| || ||from sympy.combinatorics import * _
  _
 s4 = SymmetricGroup(4) _
 a4 = AlternatingGroup(4) _
 z5 = CyclicGroup(5) _
-d10 = DihedralGroup(10)||s4 := SymmetricGroup(4); _
-a4 := AlternatingGroup(4); _
-z5 := CyclicGroup(5); _
-d10 := DihedralGroup(2 * 10);|| ||
-||groups by size|| || ||AllSmallGroups(8);|| ||
-||conjugate group|| || ||ConjugateGroup(SymmetricGroup(4), (4, 5));|| ||
-||direct product|| ||from sympy.combinatorics import * _
+d10 = DihedralGroup(10)||
+||groups by size|| || || || ||
+||conjugate group|| || || || ||
+||direct product|| || || ||from sympy.combinatorics import * _
  _
 z3 = CyclicGroup(3) _
 a4 = AlternatingGroup(4) _
-g = DirectProduct(z3, a4)||z3 := CyclicGroup(3); _
-a4 := AlternatingGroup(4); _
-g := DirectProduct(z3, a4);|| ||
-||free product|| || ||f := FreeProduct(CyclicGroup(3), CyclicGroup(2));|| ||
-||free group|| || ||##gray|# integers under addition:## _
-z := FreeGroup(1); _
- _
-##gray|# free group with 2 generators:## _
-f := FreeGroup("a", "b");|| ||
+g = DirectProduct(z3, a4)||
+||free product|| || || || ||
+||free group|| || || || ||
 ||all elements||GroupElements[DihedralGroup[10]]|| || || ||
-||identity element||Cycles[{}]|| ||Identity(g)|| ||
-||random element||RandomSample[GroupElements[g], 1][[1]]||g.random()||Random(g)|| ||
+||identity element||Cycles[{}]|| || || ||
+||random element||RandomSample[GroupElements[g], 1][[1]]|| || ||g.random()||
 ||group operation||e1 := RandomSample[GroupElements[g], 1][[1]] _
 e2 := RandomSample[GroupElements[g], 1][[1]] _
-PermutationProduct[e1, e2]||e1 = g.random() _
+PermutationProduct[e1, e2]|| || ||e1 = g.random() _
 e2 = g.random() _
-e1 * e2||e1 := Random(g); _
-e2 := Random(g); _
-e1 * e2;|| ||
-||inverse element|| ||e1**-1||Inverse(e1); _
-##gray|# or:## _
-e1^-1;|| ||
-||commutator|| ||##gray|# e2 ** -1 * e1 ** -1 * e2 * e1:## _
-e1.commutator(e2)||##gray|# e1^-1 * e2^-1 * e1 * e2:## _
-Comm(e1, e2);|| ||
-||generators|| ||g.generators||s10 := SymmetricGroup(10); _
-##gray|# return generators in an array:## _
-GeneratorsOfGroup(s10); _
- _
-##gray|# notation for individual generators:## _
-s10.1; _
-s10.2;|| ||
-||express element using generators|| || ||s10 := SymmetricGroup(10); _
-Factorization(s10, (1,3,8,10,5,9,2,7));|| ||
-||number of elements by generator word length|| || ||s6 := SymmetricGroup(6); _
-GrowthFunctionOfGroup(s6);|| ||
-||group from finite presentation|| || ||f := FreeGroup( "a", "b" ); _
-g := f / [ f.1^2, f.2^3, (f.1 * f.2)^5 ];|| ||
-||order of group element|| || ||d10 := DihedralGroup(10); _
- _
-Order(d10.1); _
-Order(d10.2);|| ||
-||order||GroupOrder[g]||g.order()||Size(g)|| ||
-||cyclic test|| || ||IsCyclic(AlternatingGroup(10));|| ||
-||abelian test|| ||g.is_abelian||IsAbelian(CyclicGroup(10)); || ||
-||identify|| || ||StructureDescription(g);|| ||
-||cosets|| || ||RightCoset() _
-CanonicalRightCosetElement() _
-CosetDecomposition() _
-RightTraversal(G, U)|| ||
+e1 * e2||
+||inverse element|| || || ||e1**-1||
+||commutator|| || || ||##gray|# e2 ** -1 * e1 ** -1 * e2 * e1:## _
+e1.commutator(e2)||
+||generators|| || || ||g.generators||
+||express element using generators|| || || || ||
+||number of elements by generator word length|| || || || ||
+||group from finite presentation|| || || || ||
+||order of group element|| || || || ||
+||order||GroupOrder[g]|| || ||g.order()||
+||cyclic test|| || || || ||
+||abelian test|| || || ||g.is_abelian||
+||identify|| || || || ||
+||cosets|| || || || ||
 ||||||||||~ [[# subgroups]][#subgroups-note subgroups]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
-||all subgroups|| || ||AllSubgroups(SymmetricGroup(4));|| ||
-||subgroup lattice|| || ||s4 := SymmetricGroup(4); _
-lat := LatticeSubgroups(s4); _
-DotFileLatticeSubgroups(lat, "lattice.dot"); _
-##gray|#  dot -Tpng < lattice.dot > lattice.png##|| ||
-||maximal subgroups|| || ||MaximalSubgroups(s4);|| ||
-||frattini subgroup|| || ||FrattiniSubgroup(DihedralGroup(8));|| ||
-||subgroup from generators|| || ||g := Group((1, 3, 5, 7), (2, 4)); _
-h := Subgroup(g, [(2, 4)]);|| ||
-||normal subgroups|| || ||NormalSubgroups(s4);|| ||
-||center|| ||g.center()||g := DirectProduct(CyclicGroup(4), DihedralGroup(6)); _
-Center(g);|| ||
-||centralizer|| || ||g := SymmetricGroup(5); _
-h := Centralizer(g, (1, 3)(4, 5));|| ||
-||normalizer|| || ||s4 := SymmetricGroup(4); _
-g := Group([(1,2)(3,4)]); _
-Normalizer(s4, g);|| ||
-||commutator subgroup|| || ||g1 := Group((1,2,3),(1,2)); _
-g2 := Group((2,3,4),(3,4)); _
-CommutatorSubgroup(g1, g2);|| ||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
+||all subgroups|| || || || ||
+||subgroup lattice|| || || || ||
+||maximal subgroups|| || || || ||
+||frattini subgroup|| || || || ||
+||subgroup from generators|| || || || ||
+||normal subgroups|| || || || ||
+||center|| || || ||g.center()||
+||centralizer|| || || || ||
+||normalizer|| || || || ||
+||commutator subgroup|| || || || ||
 ||subgroup test|| || || || ||
-||subgroup index|| || ||Index(g, h);|| ||
-||normal test|| || ||IsNormal(g, h);|| ||
-||subnormal test|| || ||IsSubnormal(g, h);|| ||
-||nonabelian simple groups|| || ||##gray|# argument is list of orders:## _
-AllSmallNonabelianSimpleGroups([1..10000]);|| ||
-||simple test|| || ||IsSimple(SymmetricGroup(4));|| ||
-||solvable test|| ||g.is_solvable||IsSolvable(SymmetricGroup(4));|| ||
-||derived series|| ||g.derived_series()||DerivedSeriesOfGroup(SymmetricGroup(4));|| ||
-||characteristic test|| || ||s4 := SymmetricGroup(4); _
-h := Subgroup(s4, [(1,4)(2,3), (1,3)(2,4), (2,4,3)]); _
-IsCharacteristicSubgroup(s4, h);|| ||
+||subgroup index|| || || || ||
+||normal test|| || || || ||
+||subnormal test|| || || || ||
+||nonabelian simple groups|| || || || ||
+||simple test|| || || || ||
+||solvable test|| || || ||g.is_solvable||
+||derived series|| || || ||g.derived_series()||
+||characteristic test|| || || || ||
 ||semidirect product|| || || || ||
 ||||||||||~ [[# group-homomorphisms]][#group-homomorphisms-note group homomorphisms]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
-||all homomorphisms|| || ||s4 := SymmetricGroup(4); _
-s3 := SymmetricGroup(3); _
-AllHomomorphisms(s3, s4);|| ||
-||all homomorphims classes|| || ||AllHomomorphismClasses(s3, s4);|| ||
-||endomorphisms and automorphisms|| || ||AllEndomorphisms(s4); _
-AllAutomorphisms(s4);|| ||
-||homomorphism from generator images|| || ||hom := GroupHomomorphismByImages(s3, s4, _
-@<&nbsp;&nbsp;>@[(1,2,3), (1,2)], _
-@<&nbsp;&nbsp;>@[(2,3,4), (2,3)]); _
- _
-##gray|# uses generators of s3:## _
-hom := GroupHomomorphismByImages(s3, s4, _
-@<&nbsp;&nbsp;>@[(2,3,4), (2,3)]);|| ||
-||surjective test|| || ||IsSurjective(hom);|| ||
-||injective test|| || ||IsInjective(hom);|| ||
-||bijective test|| || ||IsBijective(hom);|| ||
-||kernel|| || ||Kernel(AllHomomorphisms(s3, s4)[1]);|| ||
-||image|| || ||Image(AllHomomorphisms(s3, s4)[1]);|| ||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
+||all homomorphisms|| || || || ||
+||all homomorphims classes|| || || || ||
+||endomorphisms and automorphisms|| || || || ||
+||homomorphism from generator images|| || || || ||
+||surjective test|| || || || ||
+||injective test|| || || || ||
+||bijective test|| || || || ||
+||kernel|| || || || ||
+||image|| || || || ||
 ||||||||||~ [[# actions]][#actions-note actions]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
-||conjugate element|| || ||##gray|# (1,2,3)^-1 * (1,2) * (1,2,3):## _
-(1,2)^(1,2,3)|| ||
-||conjugate set|| || ||s3 := SymmetricGroup(3); _
-s3^(3,4); _
-(3,4)^s3;|| ||
-||conjugacy class|| || ||s4: SymmetricGroup(4); _
-AsList(ConjugacyClass(s4, (1,2,3)));|| ||
-||conjugacy classes|| || ||ConjugacyClasses(SymmetricGroup(4));|| ||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
+||conjugate element|| || || || ||
+||conjugate set|| || || || ||
+||conjugacy class|| || || || ||
+||conjugacy classes|| || || || ||
 ||stabilizer|| || || || ||
 ||orbit|| || || || ||
 ||transitive test|| || || || ||
 ||||||||||~ [[# descriptive-statistics]][#descriptive-statistics-note descriptive statistics]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[[# first-moment-stats]][#first-moment-stats-note first moment statistics]||vals = {1, 2, 3, 8, 12, 19} _
 X = NormalDistribution[0, 1] _
  _
@@ -1537,23 +1374,23 @@ data = Flatten[Map[f, tab]]|| || || ||
 ##gray|(* bins are [0, 3), [3, 6), and [6, 9): *)## _
 bins = BinCounts[data, {{0, 3, 6, 9}}]|| || || ||
 ||||||||||~ [[# distributions]][#distributions-note distributions]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[[# binomial]][#binomial-note binomial] _
  _
 ##gray|//density, cumulative distribution, sample//##||X = BinomialDistribution[100, 1/2] _
  _
 PDF[X][50] _
 CDF[X][50] _
-RandomVariate[X]||from sympy.stats import * _
+RandomVariate[X]|| || ||from sympy.stats import * _
  _
 X = Binomial('X', 100, sympy.Rational(1, 2)) _
  _
 density(Y).dict[sympy.Integer(50)] _
 P(X < 50) _
-sample(X)|| || ||
-||[[# poisson]][#poisson-note poisson]||X = PoissonDistribution[1]||##gray|# P(X < 4) raises NotImplementedError:## _
-X = Poisson('X', 1)|| || ||
-||[[# discrete-uniform]][#discrete-uniform-note discrete uniform]||X = DiscreteUniformDistribution[{0, 99}]||X = DiscreteUniform('X', list(range(0, 100)))|| || ||
+sample(X)||
+||[[# poisson]][#poisson-note poisson]||X = PoissonDistribution[1]|| || ||##gray|# P(X < 4) raises NotImplementedError:## _
+X = Poisson('X', 1)||
+||[[# discrete-uniform]][#discrete-uniform-note discrete uniform]||X = DiscreteUniformDistribution[{0, 99}]|| || ||X = DiscreteUniform('X', list(range(0, 100)))||
 ||[[# normal]][#normal-note normal] _
  _
 ##gray|//density, cumulative distribution, quantile, sample//##||X = NormalDistribution[0, 1] _
@@ -1561,21 +1398,21 @@ X = Poisson('X', 1)|| || ||
 PDF[X][0] _
 CDF[X][0] _
 InverseFunction[CDF[X]][1/2] _
-RandomVariate[X]||from sympy.stats import * _
+RandomVariate[X]|| || ||from sympy.stats import * _
  _
 X = Normal('X', 0, 1) _
  _
 density(X)(0) _
 P(X < 0) _
 ##gray|//??//## _
-sample(X)|| || ||
-||[[# gamma]][#gamma-note gamma]||X = GammaDistribution[1, 1]||X = Gamma('X', 1, 1)|| || ||
-||[[# exponential]][#exponential-note exponential]||X = ExponentialDistribution[1]||X = Exponential('X', 1)|| || ||
-||[[# chi-squared]][#chi-squared-note chi-squared]||X = ChiSquareDistribution[2]||X = ChiSquared('X', 2)|| || ||
-||[[# beta]][#beta-note beta]||X = BetaDistribution[10, 90]||X = Beta('X', 10, 90)|| || ||
-||[[# uniform]][#uniform-note uniform]||X = UniformDistribution[{0, 1}]||X = Uniform('X', 0, 1)|| || ||
-||[[# students-t]][#students-t-note student's t]||X = StudentTDistribution[2]||X = StudentT('X', 2)|| || ||
-||[[# snedecors-f]][#snedecors-f-note snedecor's F]||X = FRatioDistribution[1, 1]||X = FDistribution('X', 1, 1)|| || ||
+sample(X)||
+||[[# gamma]][#gamma-note gamma]||X = GammaDistribution[1, 1]|| || ||X = Gamma('X', 1, 1)||
+||[[# exponential]][#exponential-note exponential]||X = ExponentialDistribution[1]|| || ||X = Exponential('X', 1)||
+||[[# chi-squared]][#chi-squared-note chi-squared]||X = ChiSquareDistribution[2]|| || ||X = ChiSquared('X', 2)||
+||[[# beta]][#beta-note beta]||X = BetaDistribution[10, 90]|| || ||X = Beta('X', 10, 90)||
+||[[# uniform]][#uniform-note uniform]||X = UniformDistribution[{0, 1}]|| || ||X = Uniform('X', 0, 1)||
+||[[# students-t]][#students-t-note student's t]||X = StudentTDistribution[2]|| || ||X = StudentT('X', 2)||
+||[[# snedecors-f]][#snedecors-f-note snedecor's F]||X = FRatioDistribution[1, 1]|| || ||X = FDistribution('X', 1, 1)||
 ||[[# empirical-density-func]][#empirical-density-func-note empirical density function]||X = NormalDistribution[0, 1] _
 data = Table[RandomVariate[X], {i, 1, 30}] _
 Y = EmpiricalDistribution[data] _
@@ -1585,7 +1422,7 @@ data = Table[RandomVariate[X], {i, 1, 30}] _
 Y = EmpiricalDistribution[data] _
 Plot[CDF[Y][x], {x, -4, 4}]|| || || ||
 ||||||||||~ [[# univariate-charts]][#univariate-chart-note univariate charts]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[[image http://farm5.static.flickr.com/4090/5039793334_f76edece33_m.jpg]] [#bar-chart vertical bar chart]||BarChart[{7, 3, 8, 5, 5}, _
 @<&nbsp;&nbsp;>@ChartLegends-> _
 @<&nbsp;&nbsp;&nbsp;&nbsp;>@{"a","b","c","d","e"}]|| || || ||
@@ -1614,7 +1451,7 @@ BoxWhiskerChart[d]|| || || ||
  _
 AxisLabel -> {"time", "distance"}|| || || ||
 ||||||||||~ [[# bivariate-charts]][#bivariate-chart-note bivariate charts]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[[image http://farm5.static.flickr.com/4154/5039126187_e340b3f4aa_m.jpg]] _
 [#stacked-bar-chart stacked bar chart]||d = @@{{@@7, 1}, {3, 2}, {8, 1}, _
 @<&nbsp;&nbsp;>@{5, 3}, {5, 1}} _
@@ -1655,11 +1492,11 @@ QuantilePlot[d1, d2]|| || || ||
 ListLinePlot[d, _
 @<&nbsp;&nbsp;>@AxesLabel -> {x, x^2}]|| || || ||
 ||[[# axis-limits]][#axis-limits-note axis limits]||Plot[x^2, {x, 0, 20}, _
-@<&nbsp;&nbsp;>@PlotRange -> @@{{0, 20}, {-200, 500}}@@]|| || ||
+@<&nbsp;&nbsp;>@PlotRange -> @@{{0, 20}, {-200, 500}}@@]|| || || ||
 ||[#logarithmic-y-axis logarithmic y-axis]||LogPlot[{x^2, x^3, x^4, x^5}, _
 @<&nbsp;&nbsp;>@{x, 0, 20}]|| || || ||
 ||||||||||~ [[# trivariate-charts]][#trivariate-chart-note trivariate charts]||
-||~ ||~ mathematica||~ sympy||~ gap||~ pari/gp||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[#3d-scatter-plot 3d scatter plot]||nd = NormalDistribution[0,1] _
 d = RandomReal[nd, {50, 3}] _
 ListPointPlot3D[d]|| || || ||
@@ -2150,8 +1987,8 @@ Get the character code point for a character or single character string.
 
 Delete all occurrences of a set of characters from a string.
 
-[[# resizable-arrays-note]]
-+ [#resizable-arrays Resizable Arrays]
+[[# arrays-note]]
++ [#arrays Arrays]
 
 [[# array-literal-note]]
 ++ [#array-literal literal]
@@ -2279,6 +2116,9 @@ How to interleave two arrays.
 
 [[# cartesian-product-note]]
 ++ [#cartesian-product cartesian product]
+
+[[# sets-note]]
++ [#sets Sets]
 
 [[# arith-seq-note]]
 + [#arith-seq Arithmetic Sequences]
@@ -2408,6 +2248,115 @@ How to write code that executes even if an exception is raised.
 
 How to get the documentation for a function.
 
+[[# symbolic-expr-note]]
++ [#symbolic-expr Symbolic Expressions]
+
+A defining feature of a computer algebra system is //symbolic expressions//.
+
+In most programming languages, when an expression is encountered during execution, the expression is evaluated.  Variable identifiers are replaced by the values the variables contain.  Functions and operators are executed and replaced by the values then return.  If a variable or function is undefined, an error usually results, though some languages use a default value for a missing variable.
+
+In a CAS, a symbolic expression which cannot be evaluated because of undefined variables will evaluate to an expression containing the undefined variables as unknowns.  Symbolic expressions are thus first class values.  They can be passed to functions which find roots of polynomials or solve systems of equations.  Implementing a general purpose solver for systems of equations in a language which lacks symbolic expressions is awkward.
+
+[[# symbolic-expr-literal-note]]
+++ [#symbolic-expr-literal literal]
+
+How to create a symbolic expression.
+
+In most CAS systems, any expression an undefined variables is automatically a a symbolic expression.
+
+**sympy:**
+
+In SymPy, unknowns must be declared.  This is a consequence of SymPy being implemented as a library in a general purpose language which throws exceptions when undefined variables are encountered.
+
+
+[[# prevent-simplification-note]]
+++ [#prevent-simplification prevent simplification]
+
+[[# symbolic-expr-subst-note]]
+++ [#symbolic-expr-subst substitute]
+
+[[# piecewise-symbolic-expr-note]]
+++ [#piecewise-symbolic-expr piecewise-defined expression]
+
+[[# simplify-note]]
+++ [#simplify simplify]
+
+[[# assumption-note]]
+++ [#assumption assumption]
+
+[[# assumption-predicates-note]]
+++ [#assumption-predicates assumption predicates]
+
+[[# rm-assumption-note]]
+++ [#rm-assumption remove assumption]
+
+[[# calculus-note]]
++ [#calculus Calculus]
+
+[[# equations-unknowns-note]]
++ [#eqn Equations and Unknowns]
+
+[[# optimization-note]]
++ [#optimization Optimization]
+
+An optimization problem consists of a real-valued function called the //objective function//.
+
+The objective function takes one or more //input variables//.  In the case of a maximization problem, the goal is to find the value for the input variables where the objective function achieves its maximum value.  Similarly for a minimization function one looks for the values for which the objective function achieves its minimum value.
+
+[[# minimize-note]]
+++ [#minimize minimize]
+
+How to solve a minimization problem in one variable.
+
+[[# maximize-note]]
+++ [#maximize maximize]
+
+How to solve a maximization problem.
+
+We can use a function which solves minimization problems to solve maximization problems by negating the objective function.  The downside is we might forget the minimum value returned is the negation of the maximum value we seek.
+
+[[# optimize-unknown-param-note]]
+++ [#optimize-unknown-param objective with unknown parameter]
+
+How to solve an optimization when the objective function contains unknown parameters.
+
+[[# unbounded-behavior-note]]
+++ [#unbounded-behavior unbounded behavior]
+
+What happens when attempting to solve an unbounded optimization problem.
+
+[[# optimize-multiple-var-note]]
+++ [#optimize-multiple-var multiple variables]
+
+How to solve an optimization problem with more than one input variable.
+
+[[# optimize-constraints-note]]
+++ [#optimize-constraints constraints]
+
+How to solve an optimization with constraints on the input variable.  The constrains are represented by inequalities.
+
+[[# infeasible-behavior-note]]
+++ [#infeasible-behavior infeasible behavior]
+
+What happens when attempting to solve an optimization problem when the solution set for the constraints is empty.
+
+[[# optimize-int-var-note]]
+++ [#optimize-int-var integer variables]
+
+How to solve an optimization problem when the input variables are constrained to linear values.
+
+[[# numerical-opt-note]]
+++ [#numerical-opt numerical optimization]
+
+Alternatives for finding optima which use numerical methods instead of exact methods.
+
+The techniques use heuristics for finding global optima which may not work in some cases.
+
+[[# local-opt-near-point-note]]
+++ [#local-opt-near-point local optimum near point]
+
+Numerical methods for finding a local optima near a specified point.
+
 [[# vectors-note]]
 + [#vectors Vectors]
 
@@ -2530,76 +2479,6 @@ How to test two matrices for equality.
 ++ norms
 
 How to compute the 1-norm, the 2-norm, the infinity norm, and the frobenius norm.
-
-[[# symbolic-expr-note]]
-+ [#symbolic-expr Symbolic Expressions]
-
-[[# calculus-note]]
-+ [#calculus Calculus]
-
-[[# equations-unknowns-note]]
-+ [#eqn Equations and Unknowns]
-
-[[# optimization-note]]
-+ [#optimization Optimization]
-
-An optimization problem consists of a real-valued function called the //objective function//.
-
-The objective function takes one or more //input variables//.  In the case of a maximization problem, the goal is to find the value for the input variables where the objective function achieves its maximum value.  Similarly for a minimization function one looks for the values for which the objective function achieves its minimum value.
-
-[[# minimize-note]]
-++ [#minimize minimize]
-
-How to solve a minimization problem in one variable.
-
-[[# maximize-note]]
-++ [#maximize maximize]
-
-How to solve a maximization problem.
-
-We can use a function which solves minimization problems to solve maximization problems by negating the objective function.  The downside is we might forget the minimum value returned is the negation of the maximum value we seek.
-
-[[# optimize-unknown-param-note]]
-++ [#optimize-unknown-param objective with unknown parameter]
-
-How to solve an optimization when the objective function contains unknown parameters.
-
-[[# unbounded-behavior-note]]
-++ [#unbounded-behavior unbounded behavior]
-
-What happens when attempting to solve an unbounded optimization problem.
-
-[[# optimize-multiple-var-note]]
-++ [#optimize-multiple-var multiple variables]
-
-How to solve an optimization problem with more than one input variable.
-
-[[# optimize-constraints-note]]
-++ [#optimize-constraints constraints]
-
-How to solve an optimization with constraints on the input variable.  The constrains are represented by inequalities.
-
-[[# infeasible-behavior-note]]
-++ [#infeasible-behavior infeasible behavior]
-
-What happens when attempting to solve an optimization problem when the solution set for the constraints is empty.
-
-[[# optimize-int-var-note]]
-++ [#optimize-int-var integer variables]
-
-How to solve an optimization problem when the input variables are constrained to linear values.
-
-[[# numerical-opt-note]]
-++ [#numerical-opt numerical optimization]
-
-Alternatives for finding optima which use numerical methods instead of exact methods.
-
-The techniques use heuristics for finding global optima which may not work in some cases.
-
-[[# local-opt-near-point-note]]
-++ [#local-opt-near-point local optimum near point]
-
-Numerical methods for finding a local optima near a specified point.
 
 [[# combinatorics-note]]
 + [#combinatorics Combinatorics]
@@ -2865,39 +2744,6 @@ The Möbius function is multiplicative: when //a// and //b// are relatively prim
 [[# mangoldt-lambda-note]]
 ++ [#mangoldt-lambda mangoldt lambda]
 
-[[# elliptic-curves-note]]
-+ [#elliptic-curves Elliptic Curves]
-
-The //multidegree// of a multivariate monomial is the sum of the exponents of the indeterminates.  E.g. the multidegree of {{x²y⁵z³}} is 10.
-
-The //multidegree// of a multivariate polynomial is the maximum of the multidegrees of its terms.
-
-A //cubic multivariate polynomial// is a multivariate polynomial of multidegree 3.
-
-An elliptic curve can be represented by a cubic bivariate polynomial.
-
-Geometrically, the zeros of a cubic bivariate polynomial form a curve in the coordinate plane.  It is customary, however, to study elliptic curves in the projective plane.  To get the projective plane, we take the set of triples (a, b, c), not all zero, and we define an equivalence relation on them where (a, b, c) = (ta, tb, tc) for any non-zero t.  If c is non-zero, the (a/c, b/c, 1) is an element of this class, and by associating x with a/c and y with b/c this gives us a way of embedding the coordinate plane in the projective plane.  Points in the projective plane with c = 0 can be thought of as points at infinity. 
-
-Two curves are //birationally equivalent// if there exist coordinate transformations going both directions which are rational functions and which map one curve to the other.
-
-Every cubic bivariate polynomial is birationally equivalent to a polynomial in //Weierstrass normal form//:
-
-[[math]]
-y^2 = x^3 + a x + b
-[[/math]]
-
-A consequence of Bezout's theorem is that any line will intersect a cubic bivariate polynomial in three places.  The field of coefficients must be ℂ, and the coordinates must be projective to account for intersection at infinity.  Also, one must allow for multiple intersections at a point.
-
-The //discriminant// of an elliptic curve in Weierstrass normal form is:
-
-[[math]]
--16(4a^3 + 27b^2)
-[[/math]]
-
-An elliptic curve is said to be singular if the discriminant is non-zero.  Geometrically, non-singular curves do not intersect themselves and don't have any cusps or isolated points.
-
-A line will intersect a non-singular elliptic curve at three points in projective space.  One can thus use the elliptic curve to define an abelian group in the following manner.  Given points P and Q, define {{P * Q}} as the third point of intersection on the curve of the line defined by P and Q.  Define {{P + Q}} as the third point of intersection of the line defined by {{P * Q}} and the point {{O}} at infinity.  Note that {{+}} and not {{*}} is the group operator.  To add a point P to itself, we use the tangent line of the elliptic curve at P.  We define {{P * P}} as the third point of intersection of the tangent line with the curve, and {{P + P}} as the third point of intersection of the line defined by {{P * P}} and the point at infinity {{O}}.
-
 [[# rational-algebraic-numbers-note]]
 + [#rational-algebraic-numbers Rational and Algebraic Numbers]
 
@@ -3068,19 +2914,17 @@ Many software packages make 3D versions of pie charts which communicate no addit
 [http://reference.wolfram.com/mathematica/guide/Mathematica.html Mathematica Documentation Center]
 [http://wolframalpha.com WolframAlpha]
 
+[[# maple]]
++ [#top Maple]
+
+http://www.maplesoft.com/support/help/
+
+[[# maxima]]
++ [#top Maxima]
+
+http://maxima.sourceforge.net/docs/manual/maxima.html
+
 [[# sympy]]
 + [#top SymPy]
 
 [http://docs.sympy.org/latest/index.html Welcome to SymPy’s documentation!]
-
-[[# gap]]
-+ [#top GAP]
-
-[http://www.gap-system.org/Manuals/doc/ref/chap0.html GAP - Reference Manual]
-
-[[# pari-gp]]
-+ [#top Pari/GP]
-
-[http://pari.math.u-bordeaux.fr/pub/pari/manuals/2.5.0/tutorial.pdf A Tutorial for Pari/GP (pdf)]
-[http://pari.math.u-bordeaux.fr/dochtml/html.stable/ Pari/GP Functions by Category]
-[http://www.staff.science.uu.nl/~beuke106/boek/refcard.pdf Pari/GP Reference Card (pdf)]

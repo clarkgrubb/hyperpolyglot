@@ -67,7 +67,11 @@
 [[/row]]
 
 [[row]]
-[[cell]]**Computer Algebra Software:**[[/cell]][[cell]][[[computer-algebra|Mathematica, SymPy, GAP, Pari/GP]]][[/cell]]
+[[cell]]**Computer Algebra Software I:**[[/cell]][[cell]][[[computer-algebra|Mathematica, Maple, Maxima, SymPy]]][[/cell]]
+[[/row]]
+
+[[row]]
+[[cell]]**Computer Algebra Software II:**[[/cell]][[cell]][[[more-computer-algebra|Magma, GAP, Singular, Pari/GP]]][[/cell]]
 [[/row]]
 
 [[row]]

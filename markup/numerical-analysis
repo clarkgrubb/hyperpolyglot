@@ -853,7 +853,7 @@ A[4]||A = np.array([[2, 4], [6, 8]]) _
 A[1] _
  _
 ##gray|# returns 8:## _
-A.reshape(4)[3]||A = [2 4; 6 8] _
+A.flat[3]||A = [2 4; 6 8] _
  _
 ##gray|# returns 8:## _
 A[4]||
