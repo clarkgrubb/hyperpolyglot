@@ -232,8 +232,8 @@ param n4 := prod {i in s} i;@<&nbsp;&nbsp;>@##gray|# 10!## _
  _
 ##gray|# sum of squares:## _
 param n5 := sum {i in s} i * i;||
-||universal and existential tests|| ||set str1 :=  if (forall {i in s} i > 5) then 'yes' else 'no'; _
-set str2 =  if (exists {i in s} i > 5) then 'yes' else 'no';||
+||universal test|| ||set str1 :=  if (forall {i in s} i > 5) then 'yes' else 'no';||
+||existential test|| ||set str2 =  if (exists {i in s} i > 5) then 'yes' else 'no';||
 ||||||~ [[# functions]][#functions-note functions]||
 ||~ ||~ gnuplot||~ glpk||
 ||[#function-definition define function]||##gray|# body of function must be an expression:## _

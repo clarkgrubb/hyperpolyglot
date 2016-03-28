@@ -642,6 +642,20 @@ Options[Plot]|| || || ||
 expr = 1 + x + x^2||
 ||[[# prevent-simplification]][#prevent-simplification-note prevent simplification]||HoldForm[x + x] _
 x + x @@//@@ HoldForm|| || || ||
+||[[# symbolic-expr-var-update]][#symbolic-expr-var-update-note variable update]||expr = 1 + x _
+x = 3 _
+##gray|(* 4: *)## _
+expr||expr := 1 + x; _
+x := 3; _
+##gray|# 4:## _
+expr;||expr: 1 + x; _
+x: 3; _
+##gray|/* 1 + x: */## _
+expr;||x = sympy.symbols('x') _
+expr = 1 + x _
+x = 3 _
+##gray|# 1 + x:## _
+expr||
 ||[[# symbolic-expr-subst]][#symbolic-expr-subst-note substitute]||##gray|(* {3, 3}: *)## _
 ReplaceAll[{x, x}, x -> 3] _
  _
@@ -775,24 +789,39 @@ diff(a * x + b, x); _
 remove(a, dependency);|| ||
 ||[#higher-order-derivative higher order derivative]||D[Log[x], {x, 3}] _
 Log'''[x] _
-Derivative[3][Log][x]|| ||diff(log(x), x, 3);||sympy.diff(sympy.log(x), x, 3)||
+Derivative[3][Log][x]||diff(log(x), [x$3]);||diff(log(x), x, 3);||sympy.diff(sympy.log(x), x, 3)||
 ||[[# mixed-partial-derivative]][#mixed-partial-derivative-note mixed partial derivative]||D[x^9 * y^8, x, y, y] _
-D[x^9 * y^8, x, {y, 2}]|| ||diff(x^9 * y^8, x, 1, y, 2);||sympy.diff(x@@**@@9 * y@@**@@8, x, y, y)||
+D[x^9 * y^8, x, {y, 2}]||diff(x^9*y^8, x, y, y); _
+diff(x^9 * y^8, x, [y$2]);||diff(x^9 * y^8, x, 1, y, 2);||sympy.diff(x@@**@@9 * y@@**@@8, x, y, y)||
 ||[[# div-grad-curl]][#div-grad-curl-note div, grad, and curl]||Div[{x^2, x y, x y z}, {x, y, z}] _
  _
 Grad[2 x y z^2, {x, y, z}] _
  _
-Curl[{x y, y^2}, {x, y}]|| || || ||
+Curl[{x y z, y^2, 0}, {x, y, z}]||with(VectorCalculus): _
+SetCoordinates('cartesian'[x, y, z]); _
+ _
+Divergence(VectorField(<x^2, x*y, x*y*z>))); _
+Gradient(2*x*y*z^2, [x, y, z]); _
+Curl(VectorField(<x*y*z, y^2, 0>));|| || ||
 ||[#antiderivative antiderivative] _
-@<&nbsp;>@||Integrate[x^3 + x + 3, x]|| ||integrate(x^3 + x + 3, x);||sympy.integrate(x@@**@@3 + x + 3, x)||
+@<&nbsp;>@||Integrate[x^3 + x + 3, x]||integrate(x^3 + x + 3, x)||integrate(x^3 + x + 3, x);||sympy.integrate(x@@**@@3 + x + 3, x)||
 ||[#integration definite integral] _
-@<&nbsp;>@||Integrate[x^3 + x + 3, {x, 0, 1}]|| ||integrate(x^3 + x + 3, x, 0, 1);||sympy.integrate(x@@**@@3 + x + 3, [x, 0, 1])||
+@<&nbsp;>@||Integrate[x^3 + x + 3, {x, 0, 1}]||integrate(x^3 + x + 3, [x = 0 .. 1]);||integrate(x^3 + x + 3, x, 0, 1);||sympy.integrate(x@@**@@3 + x + 3, [x, 0, 1])||
 ||[#improper-integral improper integral] _
-@<&nbsp;>@||Integrate[Exp[-x], {x, 0, Infinity}]|| ||integrate(exp(-x), x, 0, inf);||sympy.integrate(sympy.exp(-x), (x, 0, sympy.oo))||
-||[[# residue]][#residue-note residue]||Residue[1/(z - I), {z, I}]|| ||residue(1 / (z - %i), z, %i);|| ||
-||series sum||Sum[2^-n, {n, 1, Infinity}]|| ||sum(2^-n, n, 1, inf), simpsum;|| ||
-||power series||Plus @@ Table[x^i / i!, {i, 0, 10}] + O[x]^11|| || || ||
-||power series of function||Series[Cos[x], {x, 0, 10}]|| || ||sympy.series(sympy.cos(x), x, n=11)||
+@<&nbsp;>@||Integrate[Exp[-x], {x, 0, Infinity}]||integrate(exp(-x), [x = 0 .. infinity]);||integrate(exp(-x), x, 0, inf);||sympy.integrate(sympy.exp(-x), (x, 0, sympy.oo))||
+||[[# double-integral]][#double-integral-note double integral]||##gray|(* integrates over y first: *)## _
+Integrate[x^2 + y^2, {x, 0, 1}, {y, 0, x}]||##gray|# integrates over y first:## _
+integrate(x^2 + y^2, [y = 0 .. x, x = 0 .. 1]);||integrate(integrate(x^2+y^2, y, 0, x), x, 0, 1);||f = sympy.integrate(@@x**2 + y**2@@, (y, 0, x)) _
+sympy.integrate(f, (x, 0, 1))||
+||[[# residue]][#residue-note residue] _
+@<&nbsp;>@||Residue[1/(z - I), {z, I}]||residue(1/(z-I), z = I);||residue(1 / (z - %i), z, %i);||sympy.residue(1/(z-sympy.I), z, sympy.I)||
+||sum||Sum[2^i, {i, 1, 10}]||sum(2^i, i = 1 .. 10);||sum(2^i, i, 1, 10);||sympy.Sum(2**i, (i, 1, 10)).doit()||
+||sum series||Sum[2^-n, {n, 1, Infinity}]||sum(2^(-n), n = 1 .. infinity);||sum(2^-n, n, 1, inf), simpsum;||sympy.Sum(2**(-n), (n, 1, sympy.oo)).doit()||
+||series expansion of function||Series[Cos[x], {x, 0, 10}]||series(cos(x), x = 0, 10);||taylor(cos(x), [x, 0, 10]);||sympy.series(sympy.cos(x), x, n=11)||
+||partial sum with omitted order term||expr = 1 + x + x/2 + x^2/6 + O[x]^3 _
+ _
+##gray|(* remove omitted order term: *)## _
+Normal[expr]|| || || ||
 ||||||||||~ [[# equations-unknowns]][#equations-unknowns-note equations and unknowns]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[#solution solution to an equation]||Solve[x^3 + x + 3 == 0, x]||solve(x^3 + x + 3 = 0, x);||solve(x^3 + x + 3 = 0, x);||solve(x@@**@@3 + x + 3, x)||
@@ -1040,14 +1069,18 @@ BellB[10]|| || || ||
 ##gray|//and lucas number//##||Fibonacci[10] _
 LucasL[10]|| || || ||
 ||bernoulli number||BernoulliB[100]|| || || ||
+||catalan number||CatalanNumber[10]|| || || ||
 ||||||||||~ [[# number-theory]][#number-theory-note number theory]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
-||[[# pseudoprime-test]][#pseudoprime-test-note pseudoprime test]||PrimeQ[7]|| ||primep(7);||sympy.ntheory.primetest.isprime(7) _
+||[[# pseudoprime-test]][#pseudoprime-test-note pseudoprime test]||PrimeQ[7]||isprime(7);||primep(7);||sympy.ntheory.primetest.isprime(7) _
 sympy.ntheory.primetest.mr(7, [2, 3])||
 ||[[# divisors]][#divisors-note divisors]||##gray|(* {1, 2, 4, 5, 10, 20, 25, 50, 100}: *)## _
-Divisors[100]|| ||divisors(100);||sympy.ntheory.divisors(100)||
+Divisors[100]||with(NumberTheory): _
+ _
+Divisors(100);||divisors(100);||sympy.ntheory.divisors(100)||
 ||[[# prime-factors]][#prime-factors prime factors]||##gray|(* returns @<{{>@2, 2}, {3, 1}, {7, 1}} *)## _
-FactorInteger[84]|| ||##gray|/* 2^2 3 7: */## _
+FactorInteger[84]||##gray|# [1, [[2, 2], [3, 1], [7, 1]]]:## _
+ifactors(84);||##gray|/* 2^2 3 7: */## _
 factor(84); _
  _
 ##gray|/* [[2,2],[3,1],[7,1]]: */## _
@@ -1056,13 +1089,16 @@ sympy.ntheory.factorint(84)||
 ||[[# next-prime]][#next-prime-note next prime] _
  _
 ##gray|//and preceding//##||NextPrime[1000] _
-NextPrime[1000, -1]|| ||next_prime(1000); _
+NextPrime[1000, -1]||nextprime(1000); _
+prevprime(1000);||next_prime(1000); _
 prev_prime(1000);||sympy.ntheory.generate.nextprime(1000) _
 sympy.ntheory.generate.prevprime(1000)||
 ||[[# nth-prime]][#nth-prime-note nth prime]||##gray|(* 541: *)## _
-Prime[100]|| || ||sympy.ntheory.generate.prime(100)||
+Prime[100]||ithprime(100);|| ||sympy.ntheory.generate.prime(100)||
 ||[[# prime-counting-func]][#prime-counting-func-note prime counting function]||##gray|(* 25: *)## _
-PrimePi[100]|| || ||sympy.ntheory.generate.primepi(100)||
+PrimePi[100]||with(NumberTheory): _
+ _
+pi(100);|| ||sympy.ntheory.generate.primepi(100)||
 ||[[# divmod]][#divmod-note divmod] _
 @<&nbsp;>@||QuotientRemainder[7, 3]|| ||divide(7, 3);||divmod(7, 3)||
 ||[[# gcd]][#gcd-note greatest common divisor] _
@@ -1070,16 +1106,23 @@ PrimePi[100]|| || ||sympy.ntheory.generate.primepi(100)||
 ##gray|//and relatively prime test//##||GCD[14, 21] _
 GCD[14, 21, 777] _
  _
-CoprimeQ[14, 21]|| ||gcd(14, 21); _
+CoprimeQ[14, 21]||igcd(14, 21); _
+igcd(14, 21, 777); _
+ _
+with(NumberTheory): _
+ _
+AreCoprime(14, 21);||gcd(14, 21); _
 gcd(gcd(14, 21), 777);||sympy.gcd(14, 21) _
 sympy.gcd(sympy.gcd(14, 21), 777)||
 ||[[# extended-euclidean-algorithm]][#extended-euclidean-algorithm-note extended euclidean algorithm]||##gray|(* {1, {2, -1}}: *)## _
-ExtendedGCD[3, 5]|| ||##gray|/* [2,-1,1]: */## _
+ExtendedGCD[3, 5]||##gray|# Returns 1; _
+# sets a and b to 2 and -1:## _
+igcdex(3, 5, 'a', 'b')||##gray|/* [2,-1,1]: */## _
 gcdex(3, 5);||import sympy.ntheory.modular _
  _
 ##gray|# (2, -1, 1):## _
 sympy.ntheory.modular.igcdex(3, 5)||
-||[[# lcm]][#lcm-note least common multiple]||LCM[14, 21]|| ||lcm(14, 21);||sympy.lcm(14, 21)||
+||[[# lcm]][#lcm-note least common multiple]||LCM[14, 21]||ilcm(14, 21);||lcm(14, 21);||sympy.lcm(14, 21)||
 ||[[# int-residues]][#int-residues-note integer residues]|| || || || ||
 ||[[# mult-inverse]][#mult-inverse-note multiplicative inverse]|| || || || ||
 ||[[# chinese-remainder-thm]][#chinese-remainder-thm-note chinese remainder theorem]|| || || || ||
@@ -1256,7 +1299,6 @@ a4 = AlternatingGroup(4) _
 z5 = CyclicGroup(5) _
 d10 = DihedralGroup(10)||
 ||groups by size|| || || || ||
-||conjugate group|| || || || ||
 ||direct product|| || || ||from sympy.combinatorics import * _
  _
 z3 = CyclicGroup(3) _
@@ -2251,11 +2293,11 @@ How to get the documentation for a function.
 [[# symbolic-expr-note]]
 + [#symbolic-expr Symbolic Expressions]
 
-A defining feature of a computer algebra system is //symbolic expressions//.
+A defining feature of computer algebra systems is //symbolic expressions//.
 
-In most programming languages, when an expression is encountered during execution, the expression is evaluated.  Variable identifiers are replaced by the values the variables contain.  Functions and operators are executed and replaced by the values then return.  If a variable or function is undefined, an error usually results, though some languages use a default value for a missing variable.
+In most programming languages, evaluating an expression with an undefined variable results in an error.  Some languages assign a default value to variables so that such expressions can be evaluated.
 
-In a CAS, a symbolic expression which cannot be evaluated because of undefined variables will evaluate to an expression containing the undefined variables as unknowns.  Symbolic expressions are thus first class values.  They can be passed to functions which find roots of polynomials or solve systems of equations.  Implementing a general purpose solver for systems of equations in a language which lacks symbolic expressions is awkward.
+In a CAS, undefined variables are treated as unknowns; expressions which contains them are //symbolic expressions//.  When evaluating them, if the unknowns cannot be eliminated, the expression cannot be reduced to a numeric value. The expression then evaluates to a possibly simplified or normalized version of itself.  Symbolic expressions are first class values; they can be stored in variables or passed to functions.  An application of symbolic expressions is a function which solves a system of equations.  Without symbolic expressions, it would be awkward for the caller to specify the equations to be solved.
 
 [[# symbolic-expr-literal-note]]
 ++ [#symbolic-expr-literal literal]
@@ -2266,11 +2308,15 @@ In most CAS systems, any expression an undefined variables is automatically a a 
 
 **sympy:**
 
-In SymPy, unknowns must be declared.  This is a consequence of SymPy being implemented as a library in a general purpose language which throws exceptions when undefined variables are encountered.
-
+In SymPy, unknowns must be declared.  This is a consequence of SymPy being implemented as a library in a language which throws exceptions when undefined variables are encountered.
 
 [[# prevent-simplification-note]]
 ++ [#prevent-simplification prevent simplification]
+
+[[# symbolic-expr-var-update-note]]
+++ [#symbolic-expr-var-update variable update]
+
+Do symbolic expressions "see" changes to the unknown variables they contain.
 
 [[# symbolic-expr-subst-note]]
 ++ [#symbolic-expr-subst substitute]
