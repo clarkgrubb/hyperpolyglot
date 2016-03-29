@@ -1,6 +1,6 @@
 //a side-by-side reference sheet//
 
-[#grammar-execution grammar and execution] | [#var-expr variables and expression] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#resizable-arrays resizable arrays] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#streams streams] | [#files files] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#reflection reflection] | [#debugging-profiling debugging and profiling]
+[#grammar-execution grammar and execution] | [#var-expr variables and expression] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#arrays arrays] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#streams streams] | [#files files] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#reflection reflection] | [#debugging-profiling debugging and profiling]
 
 ||~ [[# general]]||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
 ||[[# version-used]][#version-used-note version used] _
@@ -261,7 +261,7 @@ $s = $s -replace "mi", "ma"||
 get-date -uformat '%Y-%m-%d %H:%M:%S'||
 ||[[# current-unix-epoch]][#current-unix-epoch-note current unix epoch]||date +'%s'|| ||get-date -uformat %s||
 ||[[# fmt-datetime]][#fmt-datetime-note format datetime]||date -d '1970-01-01 00:00:00 UTC' +'%s'|| ||get-date -date '1970-01-01 00:00:00' -uformat %s||
-||||||||~ [[# resizable-arrays]][#resizable-arrays-note resizable arrays]||
+||||||||~ [[# arrays]][#arrays-note arrays]||
 ||~ ||~ [#posix posix shell]||~ [#cmd-prompt cmd.exe]||~ [#powershell powershell]||
 ||[[# resizable-array-literal]][#resizable-array-literal-note literal]||nums=(1 2 3 4)||set nums=(1 2 3 4)||$nums = 1 ,2 ,3, 4 _
 $nums = @(1 ,2, 3, 4)||
@@ -1215,8 +1215,8 @@ echo ${str//mi/ma}
 [[# dates-time-note]]
 + [#dates-time Dates and Time]
 
-[[# resizable-arrays-note]]
-+ [#resizable-arrays Resizable Arrays]
+[[# arrays-note]]
++ [#arrays Arrays]
 
 [[# array-literal]]
 ++ array literal

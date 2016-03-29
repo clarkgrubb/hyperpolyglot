@@ -1,4 +1,4 @@
-[#version version] | [#grammar-execution grammar and execution] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#resizable-arrays resizable arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#streams streams] | [#files files] | [#file-fmt file formats] | [#directories directories ] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#user-defined-types user-defined types] | [#generic-types generic types] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#reflection reflection] | [#net-web net and web] | [#debugging-profiling debugging and profiling]
+[#version version] | [#grammar-execution grammar and execution] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#arrays arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#streams streams] | [#files files] | [#file-fmt file formats] | [#directories directories ] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#user-defined-types user-defined types] | [#generic-types generic types] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#reflection reflection] | [#net-web net and web] | [#debugging-profiling debugging and profiling]
 
 ||||||~ [[# version]][#version-note version]||
 ||~ ||~ [#typescript typescript]||~ [#dart dart]||
@@ -441,7 +441,7 @@ var dt3 = dt.subtract(delta3);||
 ||[[# daylight-savings-test]][#daylight-savings-test-note daylight savings test]|| || ||
 ||[[# microseconds]][#microseconds-note microseconds]|| || ||
 ||[[# sleep]][#sleep-note sleep]||##gray|//none//##|| ||
-||||||~ [[# resizable-arrays]][#resizable-arrays-note resizable arrays]||
+||||||~ [[# arrays]][#arrays-note arrays]||
 ||~  ||~ typescript||~ dart||
 ||[[# array-literal]][#array-literal-note literal] _
 @<&nbsp;>@||var a = [1, 2, 3, 4]; _
@@ -1436,8 +1436,8 @@ $ tslint -c ~/.tslint.json -f foo.ts|| ||
 [[# dates-time-note]]
 + [#dates-time Dates and Time]
 
-[[# resizable-arrays-note]]
-+ [#resizable-arrays Resizable Arrays]
+[[# arrays-note]]
++ [#arrays Arrays]
 
 [[# dictionaries-note]]
 + [#dictionaries Dictionaries]

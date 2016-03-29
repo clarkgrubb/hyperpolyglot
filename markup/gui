@@ -1,6 +1,6 @@
 //a side-by-side reference sheet//
 
-[#grammar-invocation grammar and invocation] | [#var-expr variables and expression] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#resizable-arrays resizable arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#streams streams] | [#files files] | [#file-fmt file formats] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#reflection reflection] | [#gui gui] | [#net-web net and web]
+[#grammar-invocation grammar and invocation] | [#var-expr variables and expression] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#arrays arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#streams streams] | [#files files] | [#file-fmt file formats] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#reflection reflection] | [#gui gui] | [#net-web net and web]
 
 ||~ [[# general]]||~ [#javascript javascript]||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
 ||[[# version-used]][#version-used-note version used] _
@@ -412,7 +412,7 @@ var t2 = new Date(t1.getTime() + delta);|| || || ||
 ||[[# sleep]][#sleep-note sleep] _
 @<&nbsp;>@||##gray|//none//##|| ||after 500|| ||
 ||[[# timeout]][#timeout-note timeout]|| || || || ||
-||||||||||~ [[# resizable-arrays]][#resizable-arrays-note resizable arrays]||
+||||||||||~ [[# arrays]][#arrays-note arrays]||
 ||~ ||~ [#javascript javascript]||~ [#smalltalk smalltalk]||~ [#tcl tcl]||~ [#autohotkey autohotkey]||
 ||[[# resizable-array-literal]][#resizable-array-literal-note literal]||a = [1, 2, 3, 4]||nums := OrderedCollection new. _
 nums add: 1; add: 2; add: 3; add: 4. _
@@ -1377,8 +1377,8 @@ How to replace all occurrences of a pattern in a string.
 
 The Unix epoch is the number of seconds since January 1, 1970 UTC.  In the case of Lua, the native date/time object is the Unix epoch, so no conversion is needed.
 
-[[# resizable-array-note]]
-+ [#resizable arrays Resizable Arrays]
+[[# arrays-note]]
++ [#arrays Arrays]
 
 **tcl:**
 

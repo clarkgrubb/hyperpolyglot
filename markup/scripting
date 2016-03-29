@@ -1,6 +1,6 @@
 [[# top]]//a side-by-side reference sheet//
 
-**sheet one:** [#version version] | [#grammar-execution grammar and execution] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#resizable-arrays resizable arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#concurrency concurrency]
+**sheet one:** [#version version] | [#grammar-execution grammar and execution] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#arrays arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#concurrency concurrency]
 
 **[[[scripting2|sheet two]]]:** [[[scripting2#streams|streams]]] | [[[scripting2#files|files]]] | [[[scripting2#file-fmt|file formats]]] | [[[scripting2#directories|directories]]] | [[[scripting2#processes-environment|processes and environment]]] | [[[scripting2#option-parsing|option parsing]]] | [[[scripting2#libraries-namespaces|libraries and namespaces]]] | [[[scripting2#objects|objects]]] | [[[scripting2#inheritance-polymorphism|inheritance and polymorphism]]] | [[[scripting2#reflection|reflection]]] | [[[scripting2#net-web|net and web]]] | [[[scripting2#gui|gui]]] |  [[[scripting2#unit-tests|unit tests]]] | [[[scripting2#debugging-profiling|debugging and profiling]]] | [[[scripting2#java-interop|java interop]]]
 
@@ -866,7 +866,7 @@ signal.alarm(0)||require ##maroon|'timeout'## _
 @<&nbsp;&nbsp;>@##purple|end## _
 ##purple|rescue## ##green|Timeout##::##green|Error## _
 ##purple|end##||
-||||||||||~ [[# resizable-arrays]][#resizable-arrays-note resizable arrays]||
+||||||||||~ [[# arrays]][#arrays-note arrays]||
 ||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# array-literal]][#array-literal-note literal] _
 @<&nbsp;>@||a = [1, 2, 3, 4]||$##peru|a## = [1, 2, 3, 4]; _
@@ -3455,8 +3455,8 @@ How to cause a process to timeout if it takes too long.
 
 Techniques relying on SIGALRM only work on Unix systems.
 
-[[# resizable-arrays-note]]
-+ [#resizable-arrays Resizable Arrays]
+[[# arrays-note]]
++ [#arrays Arrays]
 
 What the languages call their basic container types:
 

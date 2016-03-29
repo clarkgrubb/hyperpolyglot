@@ -14,7 +14,10 @@
 ||[[# implicit-prologue]][#implicit-prologue-note implicit prologue]|| || || ||import sympy _
  _
 ##gray|# enable LaTeX rendering in Jupyter notebook:## _
-sympy.init_printing()||
+sympy.init_printing() _
+ _
+##gray|# unknown variables must be declared:## _
+x, y = sympy.symbols('x y')||
 ||||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[[# interpreter]][#interpreter-note interpreter] _
@@ -389,7 +392,8 @@ a := sort([3, 1, 4, 2]);|| || ||
 a := MakeUnique([1, 1, 2, 3]);|| || ||
 ||[[# membership]][#membership-note membership] _
 @<&nbsp;>@||MemberQ[{1, 2, 3}, 2]||evalb(2 in [1, 2, 3]); _
-member(2, [1, 2, 3]);|| || ||
+member(2, [1, 2, 3]);||member(7, {1, 2, 3}); _
+evalb(7 in {1, 2, 3});|| ||
 ||[[# intersection]][#intersection-note intersection] _
 @<&nbsp;>@||Intersect[{1, 2}, {2, 3, 4}]|| || || ||
 ||[[# union]][#union-note union] _
@@ -444,7 +448,7 @@ add(zip(@@`*`@@, [1, 2, 3], [2, 3, 4]))|| || ||
 ||[[# cartesian-product]][#cartesian-product-note cartesian product]||Outer[List, {1, 2, 3}, {"a", "b", "c"}]|| || || ||
 ||||||||||~ [[# sets]][#sets-note sets]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
-||literal|| || || || ||
+||literal|| ||{1, 2, 3};|| || ||
 ||list to set|| || || || ||
 ||set to list|| || || || ||
 ||union|| || || || ||
@@ -824,17 +828,25 @@ sympy.integrate(f, (x, 0, 1))||
 Normal[expr]|| || || ||
 ||||||||||~ [[# equations-unknowns]][#equations-unknowns-note equations and unknowns]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
-||[#solution solution to an equation]||Solve[x^3 + x + 3 == 0, x]||solve(x^3 + x + 3 = 0, x);||solve(x^3 + x + 3 = 0, x);||solve(x@@**@@3 + x + 3, x)||
-||[#solution-two-eqn solution to multiple equations]||Solve[x + y == 3 &&  x == 2y, _
-@<&nbsp;&nbsp;>@{x, y}]||solve({x = 2 * y, x + y = 3}, {x, y});||solve([x + y = 3, x = 2*y], [x, y]);||solve([x + y - 3, 3*x - 2*y], [x, y])||
-||[#solve-diophantine solve diophantine equation]||Solve[a^2 + b^2 == c^2 && _
-a > 0  && a < 10 && _
-b > 0 && b < 10 && _
-c > 0 && c < 10, _
-{a, b, c}, Integers]|| || || ||
-||differential equation||DSolve[y'[x] == y[x], y[x], x]|| || || ||
-||differential equation with boundary condition||DSolve[{y'[x] == y[x], y[0] == 1}, y[x], x]|| || || ||
-||system of differential equations|| || || || ||
+||[#solution solution to an equation]||Solve[x^3 + x + 3 == 0, x]||solve(x^3 + x + 3 = 0, x);||solve(x^3 + x + 3 = 0, x);||sympy.solve(x@@**@@3 + x + 3, x)||
+||[#solution-two-eqn solution to multiple equations]||Solve[x + y == 3 &&  x == 2 * y, _
+@<&nbsp;&nbsp;>@{x, y}] _
+ _
+##gray|(* or: *)## _
+Solve[{x + y == 3, x == 2 * y}, {x, y}]||solve({x = 2 * y, x + y = 3}, {x, y});||solve([x + y = 3, x = 2*y], [x, y]);||sympy.solve([x + y - 3, 3*x - 2*y], [x, y])||
+||differential equation||DSolve[y'[x] == y[x], y[x], x]||dsolve(diff(y(x), x) = y(x), y(x));||desolve([diff(y(x), x) = y(x)], [y(x)]);||from sympy import Derivative _
+y = sympy.Function('y') _
+ _
+sympy.dsolve(Derivative(y(x), x) - y(x), y(x))||
+||differential equation with boundary condition||DSolve[{y'[x] == y[x], y[0] == 1}, y[x], x]||dsolve({diff(y(x), x) = y(x), y(0) = 1}, y(x));||atvalue(y(x), x=0, 1); _
+desolve([diff(y(x), x) = y(x)], [y(x)]);||##gray|//support for boundary conditions is limited//##||
+||system of differential equations||eqn1 = x'[t] == x[t] - x[t] * y[t] _
+eqn2 = y'[t] == x[t] * y[t] - y[t] _
+DSolve[{eqn1, eqn2}, {x[t], y[t]}, t]||eqn1 := diff(x(t), t) = x(t)-x(t)*y(t); _
+eqn2 := diff(y(t), t) = x(t)*y(t)-y(t); _
+dsolve([eqn1, eqn2], [x(t), y(t)]);||eqn1: diff(x(t), t) = x(t) - x(t) * y(t); _
+eqn2: diff(y(t), t) = x(t) * y(t) - y(t); _
+desolve([eqn1, eqn2], [x(t), y(t)]);|| ||
 ||recurrence equation||eqns = {a[n + 2] == a[n + 1] + a[n], _
 @<&nbsp;&nbsp;>@a[0] == 0, _
 @<&nbsp;&nbsp;>@a[1] == 1} _
@@ -863,7 +875,10 @@ MinValue(x^2 + 1, x] _
  _
 ##gray|(* 2 ways to get argmin: *)## _
 x /. Minimize[x^2 + 1, x][[2]] _
-ArgMin[x^2 + 1, x]||minimize(x^2 + 1, x)|| || ||
+ArgMin[x^2 + 1, x]||minimize(x^2 + 1, x); _
+ _
+##gray|# also return argmin:## _
+minimize(x^2+1, x, location = true);|| || ||
 ||[[# maximize]][#maximize-note maximize]||Maximize[-x^4 + 3 x^3, x] _
  _
 Maxvalue[-x^4 + 3 x^3, x] _
