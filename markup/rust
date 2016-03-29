@@ -82,7 +82,7 @@ def n = 1 + 2||
 ||[[# assignment]][#assignment-note assignment]|| ||var i = 0 _
  _
 i = 3|| ||
-||[[# parallel-assignment]][#parallel-assignment-note parallel assignment]|| ||var (m, n) = (3, 7)|| ||
+||[[# parallel-assignment]][#parallel-assignment-note parallel assignment]|| ||var (m, n) = (3, 7)|| val (m, n) = (3, 7) ||
 ||[[# swap]][#swap-note swap]|| ||(x, y) = (y, x)|| ||
 ||[[# compound-assignment]][#compound-assignment-note compound assignment]|| ||##gray|//arithmetic://## _
 += -= *= /= %= _
