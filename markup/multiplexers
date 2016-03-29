@@ -14,6 +14,7 @@
 ||kill session //foo//||$ screen -r foo -X quit||$ tmux kill-session -t foo||
 ||send multiplexer command to session //foo//||$ screen -r foo -X ##gray|//command//##||$ tmux ##gray|//command//## -t foo||
 ||run ls in session //foo//||$ screen -r foo -X stuff "ls $(echo -ne '\015')"||$ tmux send-keys -t foo 'ls' C-m||
+||run vi in new window||$ screen vi /etc/motd ||$ tmux new-window vi /etc/motd||
 
 [[# key-bindings]]
 ++ Key Bindings
