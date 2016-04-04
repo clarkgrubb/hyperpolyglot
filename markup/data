@@ -6,7 +6,7 @@
 ||[[# version-used]][#version-used-note version used] _
 @<&nbsp;>@||##gray|//PostgreSQL 9.0//##||##gray|//20070501//##||##gray|//0.9//##||
 ||[[# show-version]][#show-version-note show version] _
-@<&nbsp;>@||$ psql @@--@@version||$ awk @@--@@version||$ pig @@--@@version||
+@<&nbsp;>@||@@>@@ SELECT version();||$ awk @@--@@version||$ pig @@--@@version||
 ||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
 ||~ ||~ [#sql sql]||~ [#awk awk]||~ [#pig pig]||
 ||[[# interpreter]][#interpreter-note interpreter] _

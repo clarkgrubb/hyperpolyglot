@@ -37,12 +37,13 @@ Website_ _
 ##gray|//footnote://## _
 .. _Website: @@http://website.com@@|| || || ||
 ||link onsite||<a href="page">Pipe Trick</a>|| ||@@[[page|Pipe Trick]]@@||link:page.html[Pipe Trick]|| ||
-||define anchor||<a name="foo"/>|| ||##gray|//Headers automatically get anchors.  Also://## _
+||define anchor||<a name="foo"/>||.. _foo:||##gray|//Headers automatically get anchors.  Also://## _
 <div id="foo"></div>||anchor:foo[]||#+NAME: foo||
 ||link to anchor||<a href="#foo">Foo</a> _
  _
 ##gray|//pandoc extension://## _
-[Foo](#foo)|| ||@@[[#foo|Foo]]@@||@<<<anchor:foo,Foo>>>@||@@[[foo][Foo]]@@||
+[Foo](#foo)||##gray|//Links to "_foo"; "foo" is used for text://## _
+foo_||@@[[#foo|Foo]]@@||@<<<anchor:foo,Foo>>>@||@@[[foo][Foo]]@@||
 ||comment||<!@@--@@ comment @@--@@>||.. comment _
 @<&nbsp;&nbsp;&nbsp;>@another comment _
  _
@@ -391,7 +392,7 @@ int add(int a, int b) { _
 int add(int a, int b) { _
 @<&nbsp;&nbsp;>@return (a+b); _
 } _
-~~~||##gray|//add classes, but a style sheet is necessary to get the colors://## _
+~~~||##gray|//Adds classes, but a style sheet is necessary to get the colors://## _
 .. code-block:: c _
  _
 @<&nbsp;&nbsp;>@int add(int a, int b) { _
