@@ -2,7 +2,7 @@
 
 [#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#arrays arrays] | [#sets sets] | [#arith-seq arithmetic sequences] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#streams streams] | [#files files] | [#directories directories] | [#libraries-namespaces libraries and namespaces] |  [#reflection reflection]
  
-[#symbolic-expr symbolic expressions] | [#calculus calculus] | [#equations-unknowns equations and unknowns] | [#optimization optimization] | [#vectors vectors] | [#matrices matrices] | [#combinatorics combinatorics] | [#number-theory number theory] | [#rational-algebraic-numbers rational and algebraic numbers] | [#polynomials polynomials] | [#trigonometry trigonometry] | [#special-functions special functions] | [#permutations permutations] | [#groups groups] | [#subgroups subgroups] | [#group-homomorphisms group homomorphisms] | [#actions actions] | [#descriptive-statistics descriptive statistics] | [#distributions distributions] 
+[#symbolic-expr symbolic expressions] | [#calculus calculus] | [#equations-unknowns equations and unknowns] | [#optimization optimization] | [#vectors vectors] | [#matrices matrices] | [#combinatorics combinatorics] | [#number-theory number theory] |  [#polynomials polynomials] | [#trigonometry trigonometry] | [#special-functions special functions] | [#permutations permutations] | [#groups groups] | [#subgroups subgroups] | [#group-homomorphisms group homomorphisms] | [#actions actions] | [#descriptive-statistics descriptive statistics] | [#distributions distributions] 
 
 [#univariate-charts univariate charts] | [#bivariate-charts bivariate charts] | [#trivariate-charts trivariate charts]
 
@@ -92,7 +92,7 @@ With[{x = 3, y = 4}, Print[x + y]] _
 ||[[# null-test]][#null-test-note null test] _
 @<&nbsp;>@||x == Null|| || ||x is None||
 ||[[# undef-var]][#undef-var-note undefined variable access] _
-@<&nbsp;>@||##gray|//treated as an unknown number//##|| || ||##gray|//raises// NameError##||
+@<&nbsp;>@||##gray|//treated as an unknown number//##||##gray|//treated as an unknown number//##||##gray|//treated as an unknown number//##||##gray|//raises// NameError##||
 ||[[# rm-var-binding]][#rm-var-binding-note remove variable binding]||Clear[x] _
 Remove[x]||x := 'x'||kill(x);||del x||
 ||[[# cond-expr]][#cond-expr-note conditional expression] _
@@ -213,7 +213,11 @@ sympy.Abs sympy.arg _
 sympy.conjugate||
 ||[[# random-num]][#random-num-note random number] _
 ##gray|//uniform integer, uniform float//##||RandomInteger[{0, 99}] _
-RandomReal[]|| ||random(100); _
+RandomReal[]||rgen := rand(0..99); _
+rgen(); _
+ _
+rgen := rand(0.0 .. 1.0); _
+rgen();||random(100); _
 random(1.0);|| ||
 ||[[# random-seed]][#random-seed-note random seed] _
 ##gray|//set, get//##||SeedRandom[17] _
@@ -398,8 +402,7 @@ evalb(7 in {1, 2, 3});|| ||
 @<&nbsp;>@||Intersect[{1, 2}, {2, 3, 4}]|| || || ||
 ||[[# union]][#union-note union] _
 @<&nbsp;>@||Union[{1, 2}, {2, 3, 4}]|| || || ||
-||[[# set-diff]][#set-diff-note relative complement, symmetric difference]||Complement[{1, 2, 3}, {2}] _
-##gray|//none//##|| || || ||
+||[[# set-diff]][#set-diff-note relative complement]||Complement[{1, 2, 3}, {2}]|| || || ||
 ||[[# map]][#map-note map]||Map[Function[x, x x], {1, 2, 3}] _
  _
 Function[x, x x] /@ {1, 2, 3} _
@@ -448,25 +451,24 @@ add(zip(@@`*`@@, [1, 2, 3], [2, 3, 4]))|| || ||
 ||[[# cartesian-product]][#cartesian-product-note cartesian product]||Outer[List, {1, 2, 3}, {"a", "b", "c"}]|| || || ||
 ||||||||||~ [[# sets]][#sets-note sets]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
-||literal|| ||{1, 2, 3};|| || ||
-||list to set|| || || || ||
-||set to list|| || || || ||
-||union|| || || || ||
+||[[# set-literal]][#set-literal-note literal]|| ||{1, 2, 3};|| || ||
+||[[# array-to-set]][#array-to-set-note array to set]|| ||{op([1, 2, 3])};|| || ||
+||[[# set-to-array]][#set-to-array-note set to array]|| ||[op({1, 2, 3})];|| || ||
+||[[# set-union]][#set-union-note union]|| ||{1, 2, 3} union {2, 3, 4};|| || ||
 ||[[# set-membership]][#set-membership-note membership] _
-@<&nbsp;>@|| || || || ||
+@<&nbsp;>@|| ||evalb(7 in {1, 2, 3}); _
+member(7, {1, 2, 3});|| || ||
 ||[[# set-intersection]][#set-intersection-note intersection] _
-@<&nbsp;>@|| || || || ||
-||[[# set-union]][#set-union-note union] _
-@<&nbsp;>@|| || || || ||
-||[[# set-diff]][#set-diff-note relative complement, symmetric difference]|| || || || ||
+@<&nbsp;>@|| ||{1, 2, 3} intersect {2, 3, 4};|| || ||
+||[[# set-diff]][#set-diff-note relative complement]|| ||{1, 2, 3} minus {2, 3, 4};|| || ||
 ||||||||||~ [[# arith-seq]][#arith-seq-note arithmetic sequences]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[#range unit difference] _
-@<&nbsp;>@||Range[1, 100]||i $ i = 1..100;|| ||range(1, 101)||
+@<&nbsp;>@||Range[1, 100]||i $ i = 1..100;||makelist(i, i, 1, 100);||range(1, 101)||
 ||[#arithmetic-sequence-integer difference of 10] _
-@<&nbsp;>@||Range[1, 100, 10]||10 * i + 1 $ i = 1..9;|| ||range(1, 100, 10)||
-||[#airthmetic-sequence-float difference of 0.1] _
-@<&nbsp;>@||Range[1, 100, .1]||1 + .1 * i $ i = 0..990|| || ||
+@<&nbsp;>@||Range[1, 100, 10]||10 * i + 1 $ i = 1..9;||makelist(i, i, 1, 100, 10);||range(1, 100, 10)||
+||[#airthmetic-sequence-float difference of 1/10] _
+@<&nbsp;>@||Range[1, 100, 1/10]||1 + 1/10 * i $ i = 0..990||makelist(i, i, 1, 100, 1/10);|| ||
 ||||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[[# dict-literal]][#dict-literal-note literal] _
@@ -549,19 +551,27 @@ f(*a)||
 @<&nbsp;&nbsp;>@Print["positive"], _
 @<&nbsp;&nbsp;>@If[x < 0, _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Print["negative"], _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Print["zero"]]]|| ||if x > 0 _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Print["zero"]]]||if x > 0 then _
+@<&nbsp;&nbsp;>@print("positive"); _
+elif x < 0 then _
+@<&nbsp;&nbsp;>@print("negative"); _
+else _
+@<&nbsp;&nbsp;>@print("zero"); _
+end if||if x > 0 _
 @<&nbsp;&nbsp;>@then print("positive") _
 @<&nbsp;&nbsp;>@else if x < 0 _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@then print("negative") _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@else print("zero");||##gray|//use//## [http://hyperpolyglot.org/scripting#execution-control Python execution control]||
 ||[#while while]||i = 0 _
 While[i < 10, Print[i]; i++]|| ||for i: 0 step 1 while i < 10 do print(i);|| ||
-||[#for for]||For[i = 0, i < 10, i++, Print[i]]|| ||for i: 1 step 1 thru 10 do print(i);|| ||
+||[#for for]||For[i = 0, i < 10, i++, Print[i]]||for i from 1 by 1 while i < 10 do _
+@<&nbsp;&nbsp;>@print(i); _
+end do;||for i: 1 step 1 thru 10 do print(i);|| ||
 ||[#break break]||Break[]|| || || ||
 ||[#continue continue]||Continue[]|| || || ||
 ||||||||||~ [[# exceptions]][#exceptions-note exceptions]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
-||[[# raise-exc]][#raise-exc-note raise exception]||Throw["failed"]|| ||error("failed");||##gray|//use//## [http://hyperpolyglot.org/scripting#exceptions Python exceptions]||
+||[[# raise-exc]][#raise-exc-note raise exception]||Throw["failed"]||error "failed";||error("failed");||##gray|//use//## [http://hyperpolyglot.org/scripting#exceptions Python exceptions]||
 ||[[# handle-exc]][#handle-exc-note handle exception]||Print[Catch[Throw["failed"]]]|| ||errcatch(error("failed"));|| ||
 ||[[# uncaught-exc]][#uncaught-exc-note uncaught exception behavior]|| || || || ||
 ||||||||||~ [[# streams]][#streams-note streams]||
@@ -597,7 +607,11 @@ path = Part[f, 1]|| || || ||
 ||[[# file-test]][#file-test-note file exists test, regular file test]||FileExistsQ["/etc/hosts"] _
 FileType["/etc/hosts"] == File|| || || ||
 ||[[# file-size]][#file-size-note file size]||FileByteCount["/etc/hosts"]|| || || ||
-||[[# readable-writeable-executable]][#readable-writable-executable-note is file readable, writable, executable]|| || || || ||
+||[[# readable-writeable-executable]][#readable-writable-executable-note is file readable, writable, executable]|| ||with(FileTools): _
+ _
+isReadable("/etc/hosts"); _
+IsWritable("/etc/hosts"); _
+IsExecutable("/etc/hosts");|| || ||
 ||[[# last-modification-time]][#last-modification-time-note last modification time]||FileDate["/etc/hosts"]|| || || ||
 ||[[# file-cp-rm-mv]][#file-cp-rm-mv-note copy file, remove file, rename file]||CopyFile["/tmp/foo", "/tmp/bar"] _
 DeleteFile["/tmp/foo"] _
@@ -606,10 +620,17 @@ RenameFile["/tmp/bar", "/tmp/foo"]|| || || ||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[[# working-dir]][#working-dir-note working directory]||dir = Directory[] _
  _
-SetDirectory["/tmp"]|| || || ||
-||[[# build-pathname]][#build-pathname-note build pathname]||FileNameJoin[{"/etc", "hosts"}]|| || || ||
+SetDirectory["/tmp"]||dir := currentdir(); _
+ _
+currentdir("/tmp");|| || ||
+||[[# build-pathname]][#build-pathname-note build pathname]||FileNameJoin[{"/etc", "hosts"}]||with(FileTools): _
+ _
+JoinPath(["/etc", "hosts"]);|| || ||
 ||[[# dirname-basename]][#dirname-basename-note dirname and basename]||DirectoryName["/etc/hosts"] _
-FileBaseName["/etc/hosts"]|| || || ||
+FileBaseName["/etc/hosts"]||with(FileTools): _
+ _
+ParentDirectory("/etc/hosts"); _
+Filename("/etc/hosts");|| || ||
 ||[[# absolute-pathname]][#absolute-pathname-note absolute pathname]||##gray|(* file must exist; _
 @<&nbsp;&nbsp;&nbsp;>@symbolic links are resolved: *)## _
 AbsoluteFileName["foo"] _
@@ -618,12 +639,12 @@ AbsoluteFileName["../foo"] _
 AbsoluteFileName["./foo"] _
 AbsoluteFileName["~/foo"]|| || || ||
 ||[[# glob]][#glob-note glob paths]||Function[x, Print[x]] /@ FileNames["/tmp/*"]|| || || ||
-||[[# mkdir]][#mkdir-note make directory]||CreateDirectory["/tmp/foo.d"]|| || || ||
+||[[# mkdir]][#mkdir-note make directory]||CreateDirectory["/tmp/foo.d"]||mkdir("/tmp/foo.d");|| || ||
 ||[[# recursive-cp]][#recursive-cp-note recursive copy]||CopyDirectory["/tmp/foo.d", "/tmp/baz.d"]|| || || ||
-||[[# rmdir]][#rm-dir-note remove empty directory]||DeleteDirectory["/tmp/foo.d"]|| || || ||
+||[[# rmdir]][#rm-dir-note remove empty directory]||DeleteDirectory["/tmp/foo.d"]||rmdir("/tmp/foo.d");|| || ||
 ||[[# rm-rf]][#rm-rf-note remove directory and contents]||DeleteDirectory["/tmp/foo.d", _
 @<&nbsp;&nbsp;>@DeleteContents -> True]|| || || ||
-||[[# dir-test]][#dir-test-note directory test]||DirectoryQ["/etc"]|| || || ||
+||[[# dir-test]][#dir-test-note directory test]||DirectoryQ["/etc"]||isdir("/etc");|| || ||
 ||||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[[# load-lib]][#load-lib-note load library]||Get["foo.m"]|| || || ||
@@ -754,7 +775,7 @@ Limit[1/x, x -> 0, Direction -> -1]||limit( 1/ x, x = 0, left); _
 limit( 1/ x, x = 0, right);||limit(1/x, x, 0, minus); _
 limit(1/x, x, 0, plus);||sympy.limit(1/x, x, 0, '-') _
 sympy.limit(1/x, x, 0, '+')||
-||[#derivative derivative]||D[x^3 + x + 3, x] _
+||[[# derivative]][#derivative-note derivative]||D[x^3 + x + 3, x] _
  _
 D[x^3 + x + 3, x] /. x -> 2||diff(x^3 + x + 3, x);||diff(x^3 + x + 3, x); _
  _
@@ -791,7 +812,7 @@ diff(a * x + b, x); _
  _
 ##gray|/* makes a constant again: */## _
 remove(a, dependency);|| ||
-||[#higher-order-derivative higher order derivative]||D[Log[x], {x, 3}] _
+||[[# higher-order-derivative]][#higher-order-derivative-note higher order derivative]||D[Log[x], {x, 3}] _
 Log'''[x] _
 Derivative[3][Log][x]||diff(log(x), [x$3]);||diff(log(x), x, 3);||sympy.diff(sympy.log(x), x, 3)||
 ||[[# mixed-partial-derivative]][#mixed-partial-derivative-note mixed partial derivative]||D[x^9 * y^8, x, y, y] _
@@ -807,11 +828,11 @@ SetCoordinates('cartesian'[x, y, z]); _
 Divergence(VectorField(<x^2, x*y, x*y*z>))); _
 Gradient(2*x*y*z^2, [x, y, z]); _
 Curl(VectorField(<x*y*z, y^2, 0>));|| || ||
-||[#antiderivative antiderivative] _
+||[[# antiderivative]][#antiderivative-note antiderivative] _
 @<&nbsp;>@||Integrate[x^3 + x + 3, x]||integrate(x^3 + x + 3, x)||integrate(x^3 + x + 3, x);||sympy.integrate(x@@**@@3 + x + 3, x)||
-||[#integration definite integral] _
+||[[# definite-integral]][#definite-integral-note definite integral] _
 @<&nbsp;>@||Integrate[x^3 + x + 3, {x, 0, 1}]||integrate(x^3 + x + 3, [x = 0 .. 1]);||integrate(x^3 + x + 3, x, 0, 1);||sympy.integrate(x@@**@@3 + x + 3, [x, 0, 1])||
-||[#improper-integral improper integral] _
+||[[# improper-integral]][#improper-integral-note improper integral] _
 @<&nbsp;>@||Integrate[Exp[-x], {x, 0, Infinity}]||integrate(exp(-x), [x = 0 .. infinity]);||integrate(exp(-x), x, 0, inf);||sympy.integrate(sympy.exp(-x), (x, 0, sympy.oo))||
 ||[[# double-integral]][#double-integral-note double integral]||##gray|(* integrates over y first: *)## _
 Integrate[x^2 + y^2, {x, 0, 1}, {y, 0, x}]||##gray|# integrates over y first:## _
@@ -819,35 +840,38 @@ integrate(x^2 + y^2, [y = 0 .. x, x = 0 .. 1]);||integrate(integrate(x^2+y^2, y,
 sympy.integrate(f, (x, 0, 1))||
 ||[[# residue]][#residue-note residue] _
 @<&nbsp;>@||Residue[1/(z - I), {z, I}]||residue(1/(z-I), z = I);||residue(1 / (z - %i), z, %i);||sympy.residue(1/(z-sympy.I), z, sympy.I)||
-||sum||Sum[2^i, {i, 1, 10}]||sum(2^i, i = 1 .. 10);||sum(2^i, i, 1, 10);||sympy.Sum(2**i, (i, 1, 10)).doit()||
-||sum series||Sum[2^-n, {n, 1, Infinity}]||sum(2^(-n), n = 1 .. infinity);||sum(2^-n, n, 1, inf), simpsum;||sympy.Sum(2**(-n), (n, 1, sympy.oo)).doit()||
-||series expansion of function||Series[Cos[x], {x, 0, 10}]||series(cos(x), x = 0, 10);||taylor(cos(x), [x, 0, 10]);||sympy.series(sympy.cos(x), x, n=11)||
-||partial sum with omitted order term||expr = 1 + x + x/2 + x^2/6 + O[x]^3 _
+||[[# sum]][#sum-note sum] _
+@<&nbsp;>@||Sum[2^i, {i, 1, 10}]||sum(2^i, i = 1 .. 10);||sum(2^i, i, 1, 10);||sympy.Sum(2**i, (i, 1, 10)).doit()||
+||[[# series-sum]][#series-sum-note series sum] _
+@<&nbsp;>@||Sum[2^-n, {n, 1, Infinity}]||sum(2^(-n), n = 1 .. infinity);||sum(2^-n, n, 1, inf), simpsum;||sympy.Sum(2@@**@@(-n), (n, 1, sympy.oo)).doit()||
+||[[# series-expansion-func]][#series-expansion-func-note series expansion of function]||Series[Cos[x], {x, 0, 10}]||series(cos(x), x = 0, 10);||taylor(cos(x), [x, 0, 10]);||sympy.series(sympy.cos(x), x, n=11)||
+||[[# omitted-order-term]][#omitted-order-term-note omitted order term]||expr = 1 + x + x/2 + x^2/6 + O[x]^3 _
  _
 ##gray|(* remove omitted order term: *)## _
 Normal[expr]|| || || ||
 ||||||||||~ [[# equations-unknowns]][#equations-unknowns-note equations and unknowns]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
-||[#solution solution to an equation]||Solve[x^3 + x + 3 == 0, x]||solve(x^3 + x + 3 = 0, x);||solve(x^3 + x + 3 = 0, x);||sympy.solve(x@@**@@3 + x + 3, x)||
-||[#solution-two-eqn solution to multiple equations]||Solve[x + y == 3 &&  x == 2 * y, _
+||[[# solve-eqn]][#solve-eqn-note solve equation] _
+@<&nbsp;>@||Solve[x^3 + x + 3 == 0, x]||solve(x^3 + x + 3 = 0, x);||solve(x^3 + x + 3 = 0, x);||sympy.solve(x@@**@@3 + x + 3, x)||
+||[[# solve-eqns]][#solve-eqns-note solve equations]||Solve[x + y == 3 &&  x == 2 * y, _
 @<&nbsp;&nbsp;>@{x, y}] _
  _
 ##gray|(* or: *)## _
 Solve[{x + y == 3, x == 2 * y}, {x, y}]||solve({x = 2 * y, x + y = 3}, {x, y});||solve([x + y = 3, x = 2*y], [x, y]);||sympy.solve([x + y - 3, 3*x - 2*y], [x, y])||
-||differential equation||DSolve[y'[x] == y[x], y[x], x]||dsolve(diff(y(x), x) = y(x), y(x));||desolve([diff(y(x), x) = y(x)], [y(x)]);||from sympy import Derivative _
+||[[# differential-eqn]][#differential-eqn-note differential equation]||DSolve[y'[x] == y[x], y[x], x]||dsolve(diff(y(x), x) = y(x), y(x));||desolve([diff(y(x), x) = y(x)], [y(x)]);||from sympy import Derivative _
 y = sympy.Function('y') _
  _
 sympy.dsolve(Derivative(y(x), x) - y(x), y(x))||
-||differential equation with boundary condition||DSolve[{y'[x] == y[x], y[0] == 1}, y[x], x]||dsolve({diff(y(x), x) = y(x), y(0) = 1}, y(x));||atvalue(y(x), x=0, 1); _
+||[[# differential-eqn-boundary-condition]][#differential-eqn-boundary-condition-note differential equation with boundary condition]||DSolve[{y'[x] == y[x], y[0] == 1}, y[x], x]||dsolve({diff(y(x), x) = y(x), y(0) = 1}, y(x));||atvalue(y(x), x=0, 1); _
 desolve([diff(y(x), x) = y(x)], [y(x)]);||##gray|//support for boundary conditions is limited//##||
-||system of differential equations||eqn1 = x'[t] == x[t] - x[t] * y[t] _
+||[[# differential-eqns]][#differential-eqns-note differential equations]||eqn1 = x'[t] == x[t] - x[t] * y[t] _
 eqn2 = y'[t] == x[t] * y[t] - y[t] _
 DSolve[{eqn1, eqn2}, {x[t], y[t]}, t]||eqn1 := diff(x(t), t) = x(t)-x(t)*y(t); _
 eqn2 := diff(y(t), t) = x(t)*y(t)-y(t); _
 dsolve([eqn1, eqn2], [x(t), y(t)]);||eqn1: diff(x(t), t) = x(t) - x(t) * y(t); _
 eqn2: diff(y(t), t) = x(t) * y(t) - y(t); _
 desolve([eqn1, eqn2], [x(t), y(t)]);|| ||
-||recurrence equation||eqns = {a[n + 2] == a[n + 1] + a[n], _
+||[[# recurrence-eqn]][#recurrence-eqn-note recurrence equation]||eqns = {a[n + 2] == a[n + 1] + a[n], _
 @<&nbsp;&nbsp;>@a[0] == 0, _
 @<&nbsp;&nbsp;>@a[1] == 1} _
  _
@@ -875,26 +899,34 @@ MinValue(x^2 + 1, x] _
  _
 ##gray|(* 2 ways to get argmin: *)## _
 x /. Minimize[x^2 + 1, x][[2]] _
-ArgMin[x^2 + 1, x]||minimize(x^2 + 1, x); _
+ArgMin[x^2 + 1, x]||##gray|# 1:## _
+minimize(x^2 + 1, x); _
  _
-##gray|# also return argmin:## _
-minimize(x^2+1, x, location = true);|| || ||
+##gray|# 1, {[{x = 0}, 1]}:## _
+minimize(x^2+1, x, location);|| || ||
 ||[[# maximize]][#maximize-note maximize]||Maximize[-x^4 + 3 x^3, x] _
  _
 Maxvalue[-x^4 + 3 x^3, x] _
-ArgMax[-x^4 + 3 x^3, x]|| || || ||
+ArgMax[-x^4 + 3 x^3, x]||##gray|# 2187/256:## _
+maximize(-x^4+3*x^3, x); _
+ _
+##gray|# 2187/256, {[{x = 9/4}, 2187/256]}:## _
+maximize(-x^4+3*x^3, x, location);|| || ||
 ||[[# optimize-unknown-param]][#optimize-unknown-param-note objective with unknown parameter]||##gray|(* minval and argmin are expressions _
 @<&nbsp;&nbsp;&nbsp;>@containing a: *)## _
-Minimize[(x - a)^2 + x, x]|| || || ||
+Minimize[(x - a)^2 + x, x]||##gray|//Doesn't work; returns expression unevaluated.//##|| || ||
 ||[[# unbounded-behavior]][#unbounded-behavior-note unbounded behavior]||##gray|(* MaxValue will be Infinity; MinValue will be _
-@<&nbsp;&nbsp;&nbsp;>@-Infinity; ArgMax or ArgMin will be _
-@<&nbsp;&nbsp;&nbsp;>@Indeterminate *)##|| || || ||
-||[[# optimize-multiple-var]][#optimize-multiple-var-note multiple variables]||Minimize[x^4 - 2 x^2 + 2 y^4 - 3 y^2, {x, y}]|| || || ||
+@<&nbsp;&nbsp;&nbsp;>@-Infinity *)##||##gray|# minimize will return -infinity; _
+# maximize will return infinity##|| || ||
+||[[# optimize-multiple-var]][#optimize-multiple-var-note multiple variables]||##gray|(* returns one solution: *)## _
+Minimize[x^4 - 2 x^2 + 2 y^4 - 3 y^2, {x, y}]||expr := x^4+2*y^4-2*x^2-3*y^2; _
+##gray|# returns all four solutions:## _
+minimize(expr, [x, y], location);|| || ||
 ||[[# optimize-constraints]][#optimize-constraints-note constraints]||Minimize[{-x - 2 y^2, y^2 <= 17, 2 x + y <= 5}, _
-@<&nbsp;&nbsp;>@{x, y}]|| || || ||
+@<&nbsp;&nbsp;>@{x, y}]||##gray|//none//##|| || ||
 ||[[# infeasible-behavior]][#infeasible-behavior-note infeasible behavior]||##gray|(* MaxValue will be -Infinity; MinValue will be _
 @<&nbsp;&nbsp;&nbsp;>@Infinity; ArgMax or ArgMin will be _
-@<&nbsp;&nbsp;&nbsp;>@Indeterminate *)##|| || || ||
+@<&nbsp;&nbsp;&nbsp;>@Indeterminate *)##||##gray|//no infeasible expressions//##|| || ||
 ||[[# optimize-int-var]][#optimize-int-var-note integer variables]||Maximize[{x^2 + 2*y, _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@x >= 0, y >= 0, _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@2 x + Pi * y <= 4}, _
@@ -965,47 +997,76 @@ VectorNorm(v, infinity);|| ||vec = sympy.Matrix([1, 2, 3]) _
 vec.norm(1) _
 vec.norm() _
 vec.norm(inf)||
-||[[# orthonormal-basis]][#orthonormal-basis-note orthonormal basis]||Orthogonalize[@@{{1, 0, 1}, {1, 1, 1}}@@]|| || || ||
+||[[# orthonormal-basis]][#orthonormal-basis-note orthonormal basis]||Orthogonalize[@@{{1, 0, 1}, {1, 1, 1}}@@]|| ||load(eigen); _
+ _
+gramschmidt([[1, 0, 1], [1, 1, 1]]);|| ||
 ||||||||||~ [[# matrices]][#matrices-note matrices]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
-||[[# matrix-literal-constructor]][#matrix-literal-constructor-note literal]||##gray|(* used a nested array for each row: *)## _
+||[[# matrix-literal-ctor]][#matrix-literal-ctor-note literal or constructor]||##gray|(* used a nested array for each row: *)## _
 @@{{@@1, 2}, {3, 4@@}}@@ _
  _
 ##gray|(* display as grid with aligned columns: *)## _
-MatrixForm[@@{{@@1, 2}, {3, 4@@}}@@]||A := @<<<1|2>, <3|4>>>@||matrix([1, 2], [3, 4]);||sympy.Matrix([[1, 2], [3, 4]])||
-||[[# matrix-from-seq]][#matrix-from-seq-note construct from sequence]||ArrayReshape[{1, 2, 3, 4, 5, 6}, {2, 3}]|| || ||sympy.Matrix(2, 3, [1, 2, 3, 4, 5, 6])||
-||[[# matrix-from-cols]][#matrix-from-cols-note construct from columns]|| || || || ||
-||[[# matrix-from-submatrices]][#matrix-from-submatrices-note construct from submatrices]|| || || || ||
-||[[# const-matrices]][#const-matrices-note constant matrices]||Table[0, {i, 3}, {j, 3}] _
-Table[1, {i, 3}, {j, 3}]|| ||zeromatrix(3, 3);||sympy.zeros(3, 3) _
+MatrixForm[@@{{@@1, 2}, {3, 4@@}}@@]||A := <1, 2; 3, 4>;||matrix([1, 2], [3, 4]);||sympy.Matrix([[1, 2], [3, 4]])||
+||[[# matrix-from-seq]][#matrix-from-seq-note construct from sequence]||ArrayReshape[{1, 2, 3, 4, 5, 6}, {2, 3}]||Matrix(2, 3, [1, 2, 3, 4, 5, 6])|| ||sympy.Matrix(2, 3, [1, 2, 3, 4, 5, 6])||
+||[[# const-matrices]][#const-matrices-note constant matrices] _
+ _
+##gray|//all zeros, all ones//##||Table[0, {i, 3}, {j, 3}] _
+Table[1, {i, 3}, {j, 3}]||Matrix(3, 3, fill=0); _
+Matrix(3, 3, fill=1);||zeromatrix(3, 3); _
+ _
+f[i, j] := 1; _
+genmatrix(f, 3, 3);||sympy.zeros(3, 3) _
 sympy.ones(3, 3)||
 ||[[# diagonal-matrices]][#diagonal-matrices-note diagonal matrices] _
 ##gray|//and identity//##||DiagonalMatrix[{1, 2, 3}] _
-IdentityMatrix[3]|| ||ident(3) * [1, 2, 3]; _
+IdentityMatrix[3]||with(LinearAlgebra): _
+ _
+IdentityMatrix(3); _
+DiagonalMatrix([1, 2, 3]);||ident(3) * [1, 2, 3]; _
 ident(3);||sympy.diag(*[1, 2, 3]) _
 sympy.eye(3)||
+||[[# matrix-formula]][#matrix-formula-note matrix by formula]||Table[1/(i + j - 1), {i, 1, 3}, {j, 1, 3}]||h := (i, j) -> 1/(i+j-1); _
+Matrix(3, 3, h);||h2[i, j] := 1/(i + j -1); _
+genmatrix(h2, 3, 3);|| ||
 ||[[# matrix-dim]][#matrix-dim-note dimensions]||##gray|(* returns {3, 2}: *)## _
-Dimensions[@@{{1, 2}, {3, 4}, {5, 6}}@@]|| || ||A = sympy.matrix([[1, 2], [3, 4], [5, 6]]) _
+Dimensions[@@{{1, 2}, {3, 4}, {5, 6}}@@]||with(LinearAlgebra): _
+ _
+A := Matrix(3, 2, [1, 2, 3, 4, 5, 6]); _
+r, c := Dimension(A);||A: matrix([1, 2, 3], [4, 5, 6]); _
+matrix_size(A);||A = sympy.matrix([[1, 2], [3, 4], [5, 6]]) _
  _
 ##gray|# returns (3, 2):## _
 A.shape||
-||[[# element-lookup]][#element-lookup-note element lookup]||##gray|(* top left corner: *)## _
-@@{{1, 2}, {3, 4}}@@[[1, 1]]|| || ||A = sympy.Matrix([[1, 2], [3, 4]]) _
+||[[# matrix-elem-lookup]][#matrix-elem-lookup-note element lookup]||##gray|(* top left corner: *)## _
+@@{{1, 2}, {3, 4}}@@[[1, 1]]||<1, 2; 3, 4>[1][1]; _
+<1, 2; 3, 4>[1, 1];||A: matrix([1, 2], [3, 4]); _
+ _
+A[1, 1]; _
+A[1][1];||A = sympy.Matrix([[1, 2], [3, 4]]) _
  _
 ##gray|# top left corner:## _
 A[0, 0]||
 ||[[# extract-matrix-row]][#extract-matrix-row-note extract row]||##gray|(* first row: *)## _
-@@{{1, 2}, {3, 4}}@@[[1]]|| || ||##gray|# first row:## _
+@@{{1, 2}, {3, 4}}@@[[1]]||<1, 2; 3, 4>[1];||row(matrix([1, 2], [3, 4]), 1); _
+matrix([1, 2], [3, 4])[1];||##gray|# first row:## _
 A[0, :]||
 ||[[# extract-matrix-col]][#extract-matrix-col-note extract column]||##gray|(* first column as array: *)## _
-@@{{1, 2}, {3, 4}}@@[[All, 1]]|| || ||##gray|# first column as 1x2 matrix:## _
+@@{{1, 2}, {3, 4}}@@[[All, 1]]||with(LinearAlgebra): _
+ _
+Column(<1, 2; 3, 4>, 1);||col(matrix([1, 2], [3, 4]), 1);||##gray|# first column as 1x2 matrix:## _
 A[:, 0]||
 ||[[# extract-submatrix]][#extract-submatrix-note extract submatrix]||A = @@{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}@@ _
-A[[1;;2, 1;;2]]|| || ||rows = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] _
+A[[1;;2, 1;;2]]||A := <1, 2, 3; 4, 5, 6; 7, 8, 9>; _
+A[1..2, 1..2];|| ||rows = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] _
 A = sympy.Matrix(rows) _
 A[0:2, 0:2]||
+||[[# matrix-scalar-mult]][#matrix-scalar-mult-note scalar multiplication]||3 * @@{{1, 2}, {3, 4}}@@ _
+@@{{1, 2}, {3, 4}}@@ * 3||3 * <1, 2; 3, 4>; _
+<1, 2; 3, 4> * 3;||3 * matrix([1, 2], [3, 4]); _
+matrix([1, 2], [3, 4]) * 3;||3 * sympy.Matrix([[1, 2], [3, 4]]) _
+sympy.Matrix([[1, 2], [3, 4]]) * 3||
 ||[[# matrix-elem-wise-op]][#matrix-elem-wise-op-note element-wise operators]||+ - * / _
-##gray|//adjacent matrices are multiplied element-wise//##|| ||+ - * /||+ - _
+##gray|//adjacent matrices are multiplied element-wise//##||+ - *~||+ - * /||+ - _
  _
 ##gray|# for Hadamard product:## _
 A.multiply_elementwise(B)||
@@ -1013,7 +1074,9 @@ A.multiply_elementwise(B)||
 B = @@{{4, 3}, {2, 1}}@@ _
 Dot[A, B] _
 ##gray|(* or use period: *)## _
-A . B|| ||A: matrix([1, 2], [3, 4]); _
+A . B||A := <1, 2; 3, 4>; _
+B := <4, 3; 2, 1>; _
+A . B;||A: matrix([1, 2], [3, 4]); _
 B: matrix([4, 3], [2, 1]); _
 A . B;||A = sympy.matrix([[1, 2], [3, 4]]) _
 B = sympy.matrix([[4, 3], [2, 1]]) _
@@ -1021,70 +1084,184 @@ A * B||
 ||[[# matrix-power]][#matrix-power-note power]||MatrixPower[@@{{1, 2}, {3, 4}}@@, 3] _
  _
 ##gray|(* element-wise operator: *)## _
-A ^ 3|| || ||A ** 3||
-||[[# matrix-exponential]][#matrix-exponential-note exponential]||MatrixExp[@@{{1, 2}, {3, 4}}@@]|| || || ||
+A ^ 3||with(LinearAlgebra): _
+ _
+MatrixPower(<1, 2; 3, 4>, 3);||matrix([1, 2], [3, 4]) @@^^@@ 3;||A ** 3||
+||[[# matrix-exponential]][#matrix-exponential-note exponential]||MatrixExp[@@{{1, 2}, {3, 4}}@@]||with(LinearAlgebra): _
+ _
+MatrixExponential(<1, 2; 3, 4>);|| || ||
 ||[[# matrix-log]][#matrix-log-note log]||MatrixLog[@@{{1, 2}, {3, 4}}@@]|| || || ||
 ||[[# kronecker-prod]][#kronecker-prod-note kronecker product]||A = @@{{1, 2}, {3, 4}}@@ _
 B = @@{{4, 3}, {2, 1}}@@ _
-KroneckerProduct[A, B]|| || || ||
-||[[# matrix-norm]][#matrix-norm-note norms]||A = @@{{1, 2}, {3, 4}}@@ _
+KroneckerProduct[A, B]||with(LinearAlgebra): _
+ _
+A := <1, 2; 3, 4>; _
+B := <4, 3; 2, 1>; _
+KroneckerProduct(A, B);||A: matrix([1, 2], [3, 4]); _
+B: matrix([4, 3], [2, 1]); _
+kronecker_product(A, B);|| ||
+||[[# matrix-norms]][#matrix-norms-note norms]||A = @@{{1, 2}, {3, 4}}@@ _
  _
 Norm[A, 1] _
 Norm[A, 2] _
 Norm[A, Infinity] _
-Norm[A, "Frobenius"]|| || || ||
+Norm[A, "Frobenius"]||with(LinearAlgebra): _
+ _
+A := <1, 2; 3, 4>; _
+ _
+Norm(A, 1); _
+Norm(A, 2); _
+Norm(A, infinity); _
+Norm(A, Frobenius);||A: matrix([1, 2], [3, 4]); _
+ _
+mat_norm(A, 1); _
+##gray|/* none */## _
+mat_norm(A, inf); _
+mat_norm(A, frobenius);|| ||
 ||[[# matrix-transpose]][#matrix-transpose-note transpose]||Transpose[@@{{1, 2}, {3, 4}}@@] _
  _
-##gray|(* or ESC tr ESC for T exponent notation *)##|| ||transpose(A);||A.T||
+##gray|(* or ESC tr ESC for T exponent notation *)##||with(LinearAlgebra): _
+ _
+Transpose(<1, 2; 3, 4>);||transpose(A);||A.T||
 ||[[# matrix-conjugate-transpose]][#matrix-conjugate-transpose-note conjugate transpose]||A = @@{{1, I}, {2, -I}}@@ _
 ConjugateTranspose[A] _
  _
-##gray|(* or ESC ct ESC for dagger exponent notation *)##|| || ||M = sympy.Matrix([[1, sympy.I], [2, -sympy.I]]) _
+##gray|(* or ESC ct ESC for dagger exponent notation *)##||with(LinearAlgebra): _
+ _
+A := <1, I; 2, -I>; _
+HermitianTranspose(A);||ctranspose(matrix([1, %i], [2, -%i]));||M = sympy.Matrix([[1, sympy.I], [2, -sympy.I]]) _
 M.adjoint()||
-||[[# matrix-inverse]][#matrix-inverse-note inverse]||Inverse[@@{{1, 2}, {3, 4}}@@]|| ||invert(A);||A.inv()||
-||[[# row-echelon-form]][#row-echelon-form-note row echelon form]||RowReduce[@@{{1, 1}, {1, 1}}@@]|| || || ||
+||[[# matrix-inverse]][#matrix-inverse-note inverse]||Inverse[@@{{1, 2}, {3, 4}}@@] _
+ _
+##gray|(* expression left unevaluated: *)## _
+Inverse[@@{{1, 0}, {0, 0}}@@]||with(LinearAlgebra): _
+ _
+MatrixInverse(<1, 2; 3, 4>); _
+ _
+##gray|# error:## _
+MatrixInverse(<1, 0; 0, 0>);||invert(A); _
+A @@^^@@ -1; _
+ _
+##gray|/* error: */## _
+invert(matrix([1, 0], [0, 0]));||A.inv() _
+ _
+##gray|# raises ValueError:## _
+sympy.Matrix([[1, 0], [0, 0]]).inv()||
+||[[# row-echelon-form]][#row-echelon-form-note row echelon form]||RowReduce[@@{{1, 1}, {1, 1}}@@]||with(LinearAlgebra): _
+ _
+ReducedRowEchelonForm(<1, 1; 1, 1>);||echelon(matrix([1, 1], [1, 1]));|| ||
 ||[[# pseudoinverse]][#pseudoinverse-note pseudoinverse]||PseudoInverse[@@{{1, 0}, {3, 0}}@@]|| || || ||
-||[[# determinant]][#determinant-note determinant]||Det[@@{{1, 2}, {3, 4}}@@]|| ||determinant(A);||A.det()||
-||[[# trace]][#trace-note trace]||Tr[@@{{1, 2}, {3, 4}}@@]|| || || ||
-||[[# matrix-rank]][#matrix-rank-note rank]||MatrixRank[@@{{1, 1}, {0, 0}}@@]|| || || ||
-||[[# nullspace-basis]][#nullspace-basis-note nullspace basis]||NullSpace[@@{{1, 1}, {0, 0}}@@]|| || || ||
-||[[# range-basis]][#range-basis-note range basis]|| || || || ||
-||[[# eigenval]][#eigenval-note eigenvalues]||Eigenvalues[@@{{1, 2}, {3, 4}}@@]|| ||##gray|/* returns list of two lists: _
+||[[# determinant]][#determinant-note determinant]||Det[@@{{1, 2}, {3, 4}}@@]||with(LinearAlgebra): _
+ _
+Determinant(<1, 2; 3, 4>);||determinant(A);||A.det()||
+||[[# trace]][#trace-note trace]||Tr[@@{{1, 2}, {3, 4}}@@]||with(LinearAlgebra): _
+ _
+Trace(<1, 2; 3, 4>);||load("nchrpl"); _
+ _
+mattrace(matrix([1, 2], [3, 4]));|| ||
+||[[# matrix-rank]][#matrix-rank-note rank]||MatrixRank[@@{{1, 1}, {0, 0}}@@]||with(LinearAlgebra): _
+ _
+Rank(<1, 1; 0, 0>);||rank(matrix([1, 1], [0, 0]));|| ||
+||[[# nullspace-basis]][#nullspace-basis-note nullspace basis]||NullSpace[@@{{1, 1}, {0, 0}}@@]||with(LinearAlgebra): _
+ _
+NullSpace(<1, 1; 0, 0>);||nullspace(matrix([1, 1], [0, 0]));|| ||
+||[[# eigenval]][#eigenval-note eigenvalues]||Eigenvalues[@@{{1, 2}, {3, 4}}@@]||with(LinearAlgebra): _
+ _
+Eigenvalues(<1, 2; 3, 4>);||##gray|/* returns list of two lists: _
 @<&nbsp;&nbsp;&nbsp;>@first is the eigenvalues, _
 @<&nbsp;&nbsp;&nbsp;>@second is their multiplicities */## _
 eigenvalues(A);||A.eigenvals()||
-||[[# eigenvec]][#eigenvec-note eigenvectors]||Eigenvectors[@@{{1, 2}, {3, 4}}@@]|| ||##gray|/* returns list of two lists.  The first item is the return value of eigenvalues().  The second item is a list containing a list of eigenvectors for each eigenvalue. */## _
+||[[# eigenvec]][#eigenvec-note eigenvectors]||Eigenvectors[@@{{1, 2}, {3, 4}}@@]||Eigenvectors(<1, 2; 3, 4>);||##gray|/* returns list of two lists.  The first item is the return value of eigenvalues().  The second item is a list containing a list of eigenvectors for each eigenvalue. */## _
 eigenvectors(A);||A.eigenvects()||
-||[[# svd]][#svd-note singular value decomposition]||SingularValueDecomposition[@@{{1, 1}, {1, 0}}@@]|| || || ||
-||[[# qr-decomposition]][#qr-decomposition-note qr decomposition]||QRDecomposition[@@{{1, 2}, {3, 4}}@@]|| || || ||
-||[[# solve-linear-eqns]][#solve-linear-eqns-note solve system of equations]|| || || || ||
+||[[# spectral-decomposition]][#spectral-decomposition-note spectral decomposition]||A = @@{{1, 2}, {2, 1}}@@ _
+z :=  Eigensystem[A] _
+d := DiagonalMatrix[z[[1]]] _
+P := Transpose[z[[2]]] _
+ _
+P . d . Inverse[P] == A|| || || ||
+||[[# lup-decomposition]][#lup-decomposition-note LUP decomposition]||{lu, p, c} = LUDecomposition[@@{{1, 2}, {3, 4}}@@] _
+L = LowerTriangularize[lu] _
+U = UpperTriangularize[lu] _
+P = Permute[IdentityMatrix[2], p]||L, U, P := LUDecomposition(<1, 2; 3, 4>);|| || ||
+||[[# qr-decomposition]][#qr-decomposition-note QR decomposition]||A := @@{{1, 2}, {3, 4}}@@ _
+{Q, R} = QRDecomposition[A] _
+A == Q . R|| || || ||
+||[[# jordan-decomposition]][#jordan-decomposition-note jordan decomposition]||A := {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}} _
+z := JordanDecomposition[A] _
+P := z[[1]] _
+J := z[[2]] _
+A . P == P . J|| || || ||
+||[[# svd]][#svd-note singular value decomposition]||A := @@{{1, 2}, {3, 4}}@@ _
+z := SingularValueDecomposition[A] _
+U := z[[1]] _
+S := z[[2]] _
+V := z[[3]] _
+ _
+N[A] == N[U . S . ConjugateTranspose[V]]|| || || ||
+||[[# polar-decomposition]][#polar-decomposition-note polar decomposition]||A := @@{{1, 2}, {3, 4}}@@ _
+{u, s, v} := SingularValueDecomposition[A] _
+vt :=  ConjugateTranspose[v] _
+ _
+U := u * vt _
+P =  v * s * vt|| || || ||
 ||||||||||~ [[# combinatorics]][#combinatorics-note combinatorics]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
-||[[# factorial]][#factorial-note factorial]||10! _
-Factorial[10]||10! _
-factorial(10)||10! _
-factorial(10);||factorial(10)||
-||falling factorial||FactorialPower[10, 3]|| || || ||
-||binomial coefficient||Binomial[10, 3]||binomial(10, 3)||binomial(10, 3);||binomial(10, 3)||
-||multinomial coefficient||Multinomial[3, 4, 5]|| ||multinomial(12, [3, 4, 5]);|| ||
-||integer partitions _
+||[[# factorial]][#factorial-note factorial]||5! _
+Factorial[5] _
  _
-##gray|//and count//##||IntegerPartitions[10] _
+Permutations[Range[1, 5]]||5! _
+factorial(5)||5! _
+factorial(5);||sympy.factorial(5)||
+||[[# binomial-coefficient]][#binomial-coefficient-note binomial coefficient]||Binomial[10, 3]||binomial(10, 3)||binomial(10, 3);||sympy.binomial(10, 3)||
+||[[# multinomial-coefficient]][#multinomial-coefficient-note multinomial coefficient]||Multinomial[3, 4, 5]||with(combinat): _
  _
-Length[IntegerPartitions[10]]|| ||integer_partitions(10); _
+multinomial(12, 3, 4, 5);||multinomial(12, [3, 4, 5]);|| ||
+||[[# int-partitions]][#int-partitions-note integer partitions]||PartitionsP[10] _
  _
-length(integer_partitions(10));|| ||
-||set partitions _
+##gray|(* the partitions as an array: *)## _
+IntegerPartitions[10]||with(combinat): _
  _
-##gray|//and Bell number//##||StirlingS2[10, 3] _
-BellB[10]|| || || ||
-||permutations with k disjoint cycles||Abs[StirlingS1[n, k]]|| || || ||
-||fibonacci number _
+numbpart(10); _
+ _
+##gray|# the partitions as an array:## _
+partition(10);||length(integer_partitions(10)); _
+ _
+##gray|/* the partitions as an array: */## _
+integer_partitions(10); _
+ _
+||from sympy.utilities.iterables import partitions _
+ _
+len(list(partitions(10))) _
+ _
+[p.copy() for p in partitions(10)]||
+||[[# compositions]][#compositions-note compositions]||needs["Combinatorica`"] _
+ _
+NumberOfCompositions[10, 3] _
+Compositions[10, 3]||with(combinat): _
+ _
+numbcomp(10, 3); _
+composition(10, 3);|| || ||
+||[[# set-partitions]][#set-partitions-note set partitions]||StirlingS2[10, 3] _
+ _
+needs["Combinatorica`"] _
+ _
+KSetPartitions[10, 3] _
+SetPartititions[10]||Stirling2(10, 3);||stirling2(10, 3);|| ||
+||[[# bell-num]][#bell-num-note bell number]||BellB[10]||with(combinat): _
+ _
+bell(10);|| ||sympy.bell(10)||
+||[[# permutations-k-disjoint-cycles]][#permutations-k-disjoint-cyclces permutations with k disjoint cycles]||Abs[StirlingS1[10, 3]]||abs(Stirling1(10, 3));||abs(stirling1(10, 3));|| ||
+||[[# fibonacci-num]][#fibonacci-num-note fibonacci number] _
  _
 ##gray|//and lucas number//##||Fibonacci[10] _
-LucasL[10]|| || || ||
-||bernoulli number||BernoulliB[100]|| || || ||
-||catalan number||CatalanNumber[10]|| || || ||
+LucasL[10]||with(combinat): _
+ _
+fibonacci(10);||fib(10); _
+lucas(10);||sympy.fibonacci(10) _
+sympy.lucas(10)||
+||[[# bernoulli-num]][#bernoulli-num-note bernoulli number]||BernoulliB[100]||bernoulli(100);||bern(100);||sympy.bernoulli(100)||
+||[[# harmonic-num]][#harmonic-num-note harmonic number]||HarmonicNumber[100]||sum(1/n, n = 1 .. 100);|| ||sympy.harmonic(100)||
+||[[# catalan-num]][#catalan-num-note catalan number]||CatalanNumber[10]|| || ||sympy.catalan(10)||
 ||||||||||~ [[# number-theory]][#number-theory-note number theory]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[[# pseudoprime-test]][#pseudoprime-test-note pseudoprime test]||PrimeQ[7]||isprime(7);||primep(7);||sympy.ntheory.primetest.isprime(7) _
@@ -1138,38 +1315,49 @@ gcdex(3, 5);||import sympy.ntheory.modular _
 ##gray|# (2, -1, 1):## _
 sympy.ntheory.modular.igcdex(3, 5)||
 ||[[# lcm]][#lcm-note least common multiple]||LCM[14, 21]||ilcm(14, 21);||lcm(14, 21);||sympy.lcm(14, 21)||
-||[[# int-residues]][#int-residues-note integer residues]|| || || || ||
-||[[# mult-inverse]][#mult-inverse-note multiplicative inverse]|| || || || ||
-||[[# chinese-remainder-thm]][#chinese-remainder-thm-note chinese remainder theorem]|| || || || ||
-||[[# lift-int-residue]][#lift-int-residue-note lift integer residue]|| || || || ||
+||[[# mult-inverse]][#mult-inverse-note multiplicative inverse]||##gray|(* inverse of 2 mod 7: *)## _
+PowerMod[2, -1, 7] _
+ _
+##gray|(* left unevaluated: *)## _
+PowerMod[2, -1, 4]|| || || ||
+||[[# chinese-remainder-thm]][#chinese-remainder-thm-note chinese remainder theorem]||##gray|(* returns 173, which is equal to 3 mod 17 and 8 mod 11: *)## _
+ChineseRemainder[{3, 8}, {17, 11}]||##gray|# 173:## _
+chrem([3, 8], [17, 11]);||##gray|/* 173: */## _
+chinese([3, 8], [17, 11]);|| ||
 ||[[# euler-totient]][#euler-totient-note euler totient] _
-@<&nbsp;>@||EulerPhi[256]|| ||totient(256);||sympy.ntheory.totient(256)||
-||[[# mult-order]][#mult-order-note multiplicative order]||MultiplicativeOrder[7, 108]|| || || ||
+@<&nbsp;>@||EulerPhi[256]||with(NumberTheory): _
+ _
+Totient(256);||totient(256);||sympy.ntheory.totient(256)||
+||[[# mult-order]][#mult-order-note multiplicative order]||MultiplicativeOrder[7, 108]||with(NumberTheory): _
+ _
+MultiplicativeOrder(7, 108);|| || ||
 ||[[# primitive-roots]][#primitive-roots-note primitive roots]||PrimitiveRoot[11] _
  _
 ##gray|(* all primitive roots: *)## _
-PrimitiveRootList[11]|| || || ||
-||[[# discrete-log]][#discrete-log-note discrete logarithm]|| || || || ||
-||[[# carmichael-func]][#carmichael-func-note carmichael function]||CarmichaelLambda[561]|| || || ||
+PrimitiveRootList[11]||with(NumberTheory): _
+ _
+PrimitiveRoot(11);|| || ||
+||[[# discrete-log]][#discrete-log-note discrete logarithm]|| ||ModularLog(10, 2, 11);|| || ||
+||[[# carmichael-func]][#carmichael-func-note carmichael function]||CarmichaelLambda[561]||with(NumberTheory): _
+ _
+CarmichaelLambda(561);|| || ||
 ||[[# kronecker-symbol]][#kronecker-symbol-note kronecker symbol] _
  _
 ##gray|//and jacobi symbol//##||KroneckerSymbol[3, 5] _
-JacobiSymbol[3, 5]|| ||##gray|//??//## _
+JacobiSymbol[3, 5]||with(NumberTheory): _
+ _
+KroneckerSymbol(3, 5); _
+JacobiSymbol(3, 5);||##gray|//??//## _
 jacobi(3, 5);|| ||
-||[[# moebius-func]][#moebius-func-note moebius function]||MoebiusMu[11]|| ||moebius(11);|| ||
-||[[# riemann-zeta-func]][#riemann-zeta-func-note riemann zeta function]||Zeta[2]|| ||zeta(2);||sympy.mpmath.zeta(2)||
+||[[# moebius-func]][#moebius-func-note moebius function]||MoebiusMu[11]||with(NumberTheory): _
+ _
+Moebius(11);||moebius(11);|| ||
+||[[# riemann-zeta-func]][#riemann-zeta-func-note riemann zeta function]||Zeta[2]||Zeta(2);||zeta(2);||sympy.mpmath.zeta(2)||
 ||[[# mangoldt-lambda]][#mangoldt-lambda-note mangoldt lambda]||MangoldtLambda[11]|| || || ||
 ||[[# dirichlet-char]][#dirichlet-char-note dirichlet character]||Table[DirichletCharacter[2, 1, i], {i, 100}]|| || || ||
-||||||||||~ [[# rational-algebraic-numbers]][#rational-algebraic-numbers-note rational and algebraic numbers]||
-||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||to continued fraction||cf = ContinuedFraction[Pi, 100]|| || || ||
 ||from continued fraction||##gray|(* rational approx. of π: *)## _
 FromContinuedFraction[cf]|| || || ||
-||p-adic number|| || || || ||
-||lift p-adic to rational|| || || || ||
-||gaussian integer norm|| || || || ||
-||quadratic extension|| || || || ||
-||quadratic number|| || || || ||
 ||||||||||~ [[# polynomials]][#polynomials-note polynomials]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||from expression with indeterminates||(x - 1) (x - 2) _
@@ -1238,17 +1426,22 @@ FourierSeries[f[x], x, 10]|| || || ||
 InverseFourierTransform[f[ω], ω, t]|| || || ||
 ||||||||||~ [[# special-functions]][#special-functions-note special functions]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
-||gamma||Gamma[1/2]|| || || ||
+||gamma||Gamma[1/2]||GAMMA(1/2);s|| || ||
 ||hyperbolic||Sinh Cosh Tanh _
-ArcSinh ArcCosh ArcTanh|| || || ||
+ArcSinh ArcCosh ArcTanh||sinh cosh tanh _
+arcsinh arccosh arctanh|| || ||
 ||elliptic integerals||EllipticK EllipticF _
 EllipticE _
-EllipticPi|| || || ||
+EllipticPi||EllipticK EllipticF _
+EllipticE _
+EllipticPi|| || ||
 ||bessel functions||BesselJ _
 BesselY _
 BesselI _
-BesselK|| || || ||
-||[[# riemann-zeta]][#riemann-zeta-note Riemann zeta]||Zeta[2]|| || || ||
+BesselK||BesselJ _
+BesselY _
+BesselI _
+BesselK|| || ||
 ||||||||||~ [[# permutations]][#permutations-note permutations]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||permutation from disjoint cycles||p = Cycles[@@{{1, 2}, {3, 4}}@@]|| || ||import sympy.combinatorics as combinatorics _
@@ -2354,8 +2547,80 @@ Do symbolic expressions "see" changes to the unknown variables they contain.
 [[# calculus-note]]
 + [#calculus Calculus]
 
+[[# limit-note]]
+++ [#limit limit]
+
+[[# limit-at-infinity-note]]
+++ [#limit-at-infinity limit at infinity]
+
+[[# one-sided-limit-note]]
+++ [#one-sided-limit one-sided limit]
+
+[[# derivative-note]]
+++ [#derivative derivative]
+
+[[# derivative-func-note]]
+++ [#derivative-func derivative of a function]
+
+[[# derivative-const-note]]
+++ [#derivative-const constants]
+
+[[# higher-order-derivative-note]]
+++ [#higher-order-derivative higher order derivative]
+
+[[# mixed-partial-derivative-note]]
+++ [#mixed-partial-derivative mixed partial derivative]
+
+[[# div-grad-curl-note]]
+++ [#div-grad-curl div, grad, and curl]
+
+[[# antiderivative-note]]
+++ [#antiderivative antiderivative]
+
+[[# definite-integral-note]]
+++ [#definite-integral definite integral]
+
+[[# improper-integral-note]]
+++ [#improper-integral improper integral]
+
+[[# double-integral-note]]
+++ [#double-integral double integral]
+
+[[# residue-note]]
+++ [#residue residue]
+
+[[# sum-note]]
+++ [#sum sum]
+
+[[# series-sum-note]]
+++ [#series-sum series sum]
+
+[[# series-expansion-func-note]]
+++ [#series-expansion-func series expansion of function]
+
+[[# omitted-order-term-note]]
+++ [#omitted-order-term omitted order term]
+
 [[# equations-unknowns-note]]
 + [#eqn Equations and Unknowns]
+
+[[# solve-eqn-note]]
+++ [#solve-eqn solve equation]
+
+[[# solve-eqns-note]]
+++ [#solve-eqns solve equations]
+
+[[# differential-eqn-note]]
+++ [#differential-eqn differential equation]
+
+[[# differential-eqn-boundary-condition-note]]
+++ [#differential-eqn-boundary-condition differential equation with boundary condition]
+
+[[# differential-eqns-note]]
+++ [#differential-eqns differential equations]
+
+[[# recurrence-eqn-note]]
+++ [#recurrence-eqn recurrence equation]
 
 [[# optimization-note]]
 + [#optimization Optimization]
@@ -2471,12 +2736,11 @@ How to compute the cross product of two three-dimensional vectors.
 
 How to compute the norm of a vector.
 
-
 [[# matrices-note]]
 + [#matrices Matrices]
 
-[[# matrix-literal-constructor]]
-++ literal or constructor
+[[# matrix-literal-ctor-note]]
+++ [#matrix-literal-ctor literal or constructor]
 
 Literal syntax or constructor for creating a matrix.
 
@@ -2486,63 +2750,214 @@ Matrices are represented as lists of lists.  No error is generated if one of the
 
 Matrices are displayed by Mathematica using list notation.  To see a matrix as it would be displayed in mathematical notation, use the //MatrixForm// function.
 
-[[# matrix-dimensions]]
-++ dimensions
+[[# matrix-from-seq-note]]
+++ [#matrix-from-seq construct from sequence]
 
-How to get the dimensions of a matrix.
+[[# const-matrices-note]]
+++ [#const-matrices constant matrices]
 
-[[# matrix-access]]
-++ element access
+[[# diagonal-matrices-note]]
+++ [#diagonal-matrices diagonal matrices]
 
-How to access an element of a matrix.  All languages described here follow the convention from mathematics of specifying the row index before the column index.
+[[# matrix-formula-note]]
+++ [#matrix-formula matrix by formula]
 
-[[# matrix-row-access]]
-++ row access
+[[# matrix-dim-note]]
+++ [#matrix-dim dimensions]
+
+How to get the number of rows and columns of a matrix.
+
+[[# matrix-elem-lookup-note]]
+++ [#matrix-elem-lookup element lookup]
+
+How to access an element of a matrix.
+
+The anguages described here follow the mathematical convention of putting the row index before the column index.
+
+[[# extract-matrix-row-note]]
+++ [#extract-matrix-row extract row]
 
 How to access a row.
 
-[[# matrix-column-access]]
-++ column access
+[[# extract-matrix-col-note]]
+++ [#extract-matrix-col extract column]
 
 How to access a column.
 
-[[# submatrix-access]]
-++ submatrix access
+[[# extract-submatrix-note]]
+++ [#extract-submatrix extract submatrix]
 
 How to access a submatrix.
 
-[[# matrix-scalar-multiplication]]
-++ scalar multiplication
+[[# matrix-scalar-mult-note]]
+++ [#matrix-scalar-mult scalar multiplication]
 
 How to multiply a matrix by a scalar.
 
-[[# matrix-element-wise-operators]]
-++ element-wise operators
+[[# matrix-elem-wise-op-note]]
+++ [#matrix-elem-wise-op element-wise operators]
 
 Operators which act on two identically sized matrices element by element.  Note that element-wise multiplication of two matrices is used less frequently in mathematics than matrix multiplication.
 
-[[# matrix-multiplication]]
-++ multiplication
+[[# matrix-mult-note]]
+++ [#matrix-mult product]
 
 How to multiply matrices.  Matrix multiplication should not be confused with element-wise multiplication of matrices.  Matrix multiplication in non-commutative and only requires that the number of columns of the matrix on the left match the number of rows of the matrix.  Element-wise multiplication, by contrast, is commutative and requires that the dimensions of the two matrices be equal.
 
-[[# kronecker-product]]
-++ kronecker product
+[[# matrix-power-note]]
+++ [#matrix-power power]
+
+[[# matrix-exponential-note]]
+++ [#matrix-exponential exponential]
+
+[[# matrix-log-note]]
+++ [#matrix-log log]
+
+[[# kronecker-prod-note]]
+++ [#kronecker-prod kronecker product]
 
 The [http://en.wikipedia.org/wiki/Kronecker_product Kronecker product] is a non-commutative operation defined on any two matrices.  If A is m x n and B is p x q, then the Kronecker product is a matrix with dimensions mp x nq.
 
-[[# matrix-comparison]]
-++ comparison
-
-How to test two matrices for equality.
-
-[[# matrix-norms]]
-++ norms
+[[# matrix-norms-note]]
+++ [#matrix-norms norms]
 
 How to compute the 1-norm, the 2-norm, the infinity norm, and the frobenius norm.
 
+[[# matrix-transpose-note]]
+++ [#matrix-transpose transpose]
+
+[[# matrix-conjugate-transpose-note]]
+++ [#matrix-conjugate-transpose conjugate transpose]
+
+[[# matrix-inverse-note]]
+++ [#matrix-inverse inverse]
+
+[[# row-echelon-form-note]]
+++ [#row-echelon-form row echelon form]
+
+[[# pseudoinverse-note]]
+++ [#pseudoinverse pseudoinverse]
+
+[[# determinant-note]]
+++ [#determinant determinant]
+
+[[# trace-note]]
+++ [#trace trace]
+
+[[# matrix-rank-note]]
+++ [#matrix-rank rank]
+
+[[# nullspace-basis-note]]
+++ [#nullspace-basis nullspace basis]
+
+[[# eigenval-note]]
+++ [#eigenval eigenvalues]
+
+[[# eigenvec-note]]
+++ [#eigenvec eigenvectors]
+
+[[# spectral-decomposition-note]]
+++ [#spectral-decomposition spectral decomposition]
+
+The spectral decomposition of a square matrix //A// is a factorization //P ⋅D ⋅ P^^-1^^// where //P// is invertible and //D// is diagonal.
+
+If a spectral decomposition exists, the matrix //A// is said to be //diagonalizable//.
+
+If an invertiable matrix //P// exists such that //A = P ⋅ B ⋅ P^^-1^^//, then //A// and //B// are said to be //similar//.
+
+According to the spectral theorem, and spectral decomposition exists when the matrix //A// is //normal//, which means it commutes with its conjugate transpose.
+
+If a matrix //A// is symmetric, then a spectral decomposition //P ⋅ D ⋅ P^^-1^^// exists, and moreover //P// and //D// are real matrices.
+
+The spectral decomposition is also called the //eigendecomposition//.  The values on the diagonal of //D// are eigenvalues of the original matrix //A//.
+
+[[# lup-decomposition-note]]
+++ [#lup-decomposition LUP decomposition]
+
+Factor a square matrix //A// into a lower triangular matrix //L//, an upper triangular matrix //U//, and a permutation matrix //P//.
+
+An LUP factorization of a square matrix always exists.  
+
+[[# qr-decomposition-note]]
+++ [#qr-decomposition QR decomposition]
+
+[[# jordan-decomposition-note]]
+++ [#jordan-decomposition jordan decomposition]
+
+[[# svd-note]]
+++ [#svd singular value decomposition]
+
+[[# polar-decomposition-note]]
+++ [#polar-decomposition polar decomposition]
+
 [[# combinatorics-note]]
 + [#combinatorics Combinatorics]
+
+Enumerative combinatorics is the study of the size of finite sets.  The sets are defined by some property, and we seek a formula for the size of the set so defined.
+
+For some simple examples, let //A// and //B// be disjoint sets of size //n// and //m// respectively.  The size of the union //A ∪ B// is //n + m// and the size of the Cartesian product //A × B// is //nm//.  The size of the power set of //A// is //2^^n^^//.
+
+[[# factorial-note]]
+++ [#factorial factorial]
+
+The factorial function //n!// is the product of the first //n// positive integers //1 × 2 × ... × n//.
+
+It is also the number of permutations or bijective functions on a set of //n// elements.  It is the number of orderings that can be given to //n// elements.
+
+See the section on permutations below for how to iterate through all //n!// permutations on a set of //n// elements.
+
+As the factorial function grows rapidly with //n//, it is useful to be aware of this approximation:
+
+[[math]]
+\ln n! \approx n \ln n - n + \frac{1}{2} \ln 2 \pi n
+[[/math]]
+
+[[# binomial-coefficient-note]]
+++ [#binomial-coefficient binomial coefficient]
+
+The binomial coefficient can be defined using the factorial function:
+
+[[math]]
+{n \choose k} = \frac{n!}{(n-k)! k!}
+[[/math]]
+
+The binomial coefficient appears in the binomial theorem:
+
+[[math]]
+(x+y)^n = \sum_{k=0}^{n} {n \choose k} x^k y^{n-k}
+[[/math]]
+
+The binomial cofficient [[$ { n \choose k } $]] is the number of sets of size //k// which can be drawn from a set of size //n// without replacement.
+
+[[# multinomial-coefficient-note]]
+++ [#multinomial-coefficient multinomial coefficient]
+
+[[# int-partitions-note]]
+++ [#int-partitions integer partitions]
+
+[[# compositions-note]]
+++ [#compositions compositions]
+
+[[# set-partitions-note]]
+++ [#set-partitions set partitions]
+
+[[# bell-num-note]]
+++ [#set-bell-num bell number]
+
+[[# permutations-k-disjoint-cycles-note]]
+++ [#permutations-k-disjoint-cycles permutations with k disjoint cycles]
+
+[[# fibonacci-num-note]]
+++ [#fibonacci-num fibonacci number]
+
+[[# bernoulli-num-note]]
+++ [#bernoulli-num bernoulli number]
+
+[[# harmonic-num-note]
+++ [#harmonic-num harmonic number]
+
+[[# catalan-num-note]]
+++ [#catalan-num catalan number]
 
 [[# number-theory-note]]
 + [#number-theory Number Theory]
@@ -2804,9 +3219,6 @@ The Möbius function is multiplicative: when //a// and //b// are relatively prim
 
 [[# mangoldt-lambda-note]]
 ++ [#mangoldt-lambda mangoldt lambda]
-
-[[# rational-algebraic-numbers-note]]
-+ [#rational-algebraic-numbers Rational and Algebraic Numbers]
 
 [[# polynomials-note]]
 + [#polynomials Polynomials]

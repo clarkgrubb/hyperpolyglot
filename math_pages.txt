@@ -1,4 +1,6 @@
+computer-algebra
 data
 distributions
 numerical-analysis
 misc-math
+more-computer-algebra
