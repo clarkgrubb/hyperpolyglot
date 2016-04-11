@@ -1,0 +1,179 @@
+[[# top]][#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arith-logic arithmetic and logic] | [#strings strings] | [#regex regular expressions] | [#dates-time dates and time] | [#arrays arrays] | [#dictionaries dictionaries] | [#functions functions] | [#exec-control execution control] | [#exceptions exceptions] | [#streams streams] | [#file-fmt file formats] | [#processes-env processes and environment] | [#lib-namespaces libraries and namespaces]
+
+||||~ [[# version]]version||
+||~ ||~ [#jq jq]||
+||version used||##gray|//1.5//##||
+||show version||$ jq @@--@@version||
+||||~ [[# grammar-invocation]]grammar and execution||
+||~ ||~ [#jq jq]||
+||interpreter||$ cat hello.jq _
+"Hello, World!" _
+ _
+$ jq -nr -f hello.jq _
+Hello, World!||
+||command line program||$ echo '1 2 3' | jq '. * .' _
+ _
+##gray|# no stdin:## _
+$ jq -n '1 + 1' ||
+||block delimiters||( )||
+||statement separator|| ||
+||end of line comment||##gray|# comment##||
+||||~ [[# var-expr]]variables and expressions||
+||~ ||~ jq||
+||assignment||$ echo '[1,2,3]' | jq 'length as $x | map(. * $x)' _
+ _
+##gray|"length as $x" assigns the value 3 to $x. _
+ _
+The following filter receives the same input the assignment filter got.##||
+||null||null||
+||null test||$ echo '{"name": "Ed"}' | jq '.age == null'||
+||coalesce||##gray|# also replaces false:## _
+$ echo '{}' | jq '.age // 0'||
+||conditional expression||$ echo '-3' | jq 'if . < 0 then -. else . end'||
+||||~ [[# arith-logic]]arithmetic and logic||
+||~ ||~ jq||
+||true and false||true false||
+||falsehoods||null false||
+||logical operators||and or not||
+||relational operators||@@==@@ != < > <= >=||
+||min and max||$ echo '[1,2,3]' | jq 'min' _
+$ echo '[1,2,3]' | jq 'max'||
+||arithmetic operators||+ - * / %||
+||integer division||jq -n '-13 / 5 | floor'||
+||division by zero||##gray|//error//##||
+||power|| ||
+||sqrt||$ jq -n '2 | sqrt'||
+||sqrt -1||##gray|# null:## _
+jq -n '-1 | sqrt'||
+||transcendental functions||exp log _
+sin cos tan _
+asin acos atan||
+||float truncation||$ jq '1.1 | floor'||
+||||~ [[# strings]]strings||
+||~ ||~ jq||
+||literal||"lorem ipsum"||
+||newline in literal||##gray|//not allowed; use// \n //escape sequence//##||
+||string escapes||\\ \" \/ \b \f \n \r \r \t \u##gray|//hhhh//##||
+||variable interpolation||$ echo '{"foo": 1, "bar": 2}' | jq '"\(.foo):\(.bar)"'||
+||concatenate||"foo" + "bar"||
+||translate case||$ echo '"foo"' | jq 'ascii_upcase _
+$ echo '"FOO"' | jq 'ascii_downcase'||
+||number to string||$ echo '7' | jq 'tostring'||
+||string to number||$ echo '"7"' | jq 'tonumber'||
+||string join||$ echo '["do", "re", "mi"]' | jq 'join(" ")'||
+||split||$ echo '"do  re mi"' | jq 'split(" ")' _
+ _
+##gray|# remove two empty strings:## _
+$ echo '" do  re mi"' | jq 'split(" ") | map(select(length > 0))'||
+||prefix and suffix test||$ echo '"foobar"' | jq 'startswith("foo")' _
+$ echo '"foobar"' | jq 'endswith("bar")'||
+||string length||$ jq -R 'length' /etc/hosts||
+||index of substring _
+ _
+##gray|//first, last//##||##gray|# 3:## _
+$ echo '"do re re"' | jq 'index("re")' _
+ _
+##gray|# 6:## _
+$ echo '"do re re"' | jq 'rindex("re")' _
+ _
+##gray|# null:## _
+$ echo '"do re re"' | jq 'rindex("mi")'||
+||||~ [[# regex]]regular expressions||
+||~ ||~ jq||
+||literal||"lorem|ipsum"||
+||character class abbrevations||##gray|//but backslashes must be doubled inside double quotes://## _
+. \d \D \h \H \s \S \w \W||
+||anchors||##gray|//but backslashes must be doubled inside double quotes://## _
+^ $ \A \b \B \z \Z||
+||match test||$ echo $'"It\'s 1999!"'  | jq '. | test("1999")'||
+||case insensitive match test||$ echo $'"FOO BAR"' | jq 'test("foo"; "i")' _
+$ echo $'"FOO BAR"' | jq 'test(["foo", "i"])' _
+$ echo $'"FOO BAR"' | jq 'test("(?i)foo")'||
+||substitution _
+ _
+##gray|//first occurrence, all occurrences//##||$ echo '"do re mi mi mi"' | jq 'sub("mi"; "ma")' _
+$ echo '"do re mi mi mi"' | jq 'gsub("mi"; "ma")'||
+||named group capture||$ echo '"foo.txt"' | jq 'capture("^(?<root>.*)\\.(?<suffix>.*)$") | .root'||
+||||~ [[# dates-time]]dates and time||
+||~ ||~ jq||
+||current datetime||##gray|# array of broken-down datetime values:## _
+$ jq -n 'now | gmtime'  _
+ _
+##gray|# ISO 8601 format:## _
+$ jq -n 'now | gmtime | todate'||
+||current unix epoch||$ jq -n 'now'||
+||broken-down datetime to unix epoch||$ echo '[2016,11,15,11,30,0,4,349]' | jq 'mktime'||
+||unix epoch to broken-down datetime||$ echo 1481801400 | jq 'gmtime'||
+||format datetime||$ jq -n 'now | gmtime | strftime("%Y-%m-%d %H:%M:%S")'||
+||parse datetime||##gray|# parses to array of broken-down datetime values:## _
+$ echo '"2016-12-15 11:30:00"' | jq 'strptime("%Y-%m-%d %H:%M:%S")'||
+||||~ [[# arrays]]arrays||
+||~ ||~ jq||
+||lookup||##gray|# 6:## _
+$ echo '[6, 7, 8, 9'] | jq '.[0]'||
+||length||$ echo '[6, 7, 8, 9'] | jq 'length'||
+||slice||##gray|# [7, 8]:## _
+$ echo '[6,7,8,9]' | jq '.[1:3]'||
+||slice from beginning||jq -c '.[:2]'||
+||slice to end||##gray|//from element 3 on://## _
+$ jq -c '.[2:]' _
+ _
+##gray|//last two elements://## _
+$ jq -c '.[-2:]'||
+||indices||$ jq -c 'keys'||
+||reverse||$ echo '[1,2,3]' | jq 'reverse'||
+||sort||$ echo '[3,1,4,2]' | jq 'sort' ||
+||dedupe||$ echo '[1,1,2,3]' | jq 'unique'||
+||subset test||$ echo '[1,2,3]' | jq 'contains([1])' _
+$ echo '[1]' | jq 'inside([1,2,3])' ||
+||map||$ echo '[1,2,3]' | jq '.[] | . * .' _
+$ echo '[1,2,3]' | jq 'map(. * .)'||
+||filter||$ echo '[1,2,3]' | jq 'map(select(. > 2))'||
+||reduce||$  echo '[1,2,3,4]'| jq 'reduce .[] as $item (0; .+$item)'||
+||universal and existential test||$ echo '[1,2,3]' | jq 'all(. > 2)' _
+$ echo '[1,2,3]' | jq 'any(. > 2)'||
+||flatten _
+##gray|//one level, completely//##||$ echo '[1,[2,[3]]]' | jq -c 'flatten(1)' _
+$ echo '[1,[2,[3]]]' | jq -c 'flatten'||
+||||~ [[# dictionaries]]dictionaries||
+||~ ||~ jq||
+||literal||{"t": 1, "f": 0}||
+||size||$ echo '{"t": 1, "f": 0}' | jq 'length'||
+||lookup||$ echo '{"t": 1, "f": 0}' | jq '.t' _
+$ echo '{"t": 1, "f": 0}' | jq '.["t"]'||
+||update||$ echo '{"t": 1, "f": 0}' | jq '.f = -1'||
+||is key present||$ echo '{"t": 1, "f": 0}' | jq 'has("t")' _
+$ echo '"t"' | jq 'in({"t": 1, "f": 0})'||
+||missing key behavior||##gray|# null:## _
+$ echo '{"t": 1, "f": 0}' | jq '.m' ||
+||delete||$ echo '{"t": 1, "f": 0}' | jq 'del(.t)'||
+||||~ [[# functions]]functions||
+||~ ||~ jq||
+||define||$ echo '1 2 3 4' | jq 'def double: 2 * .;'||
+||call||$ echo '1 2 3 4' | jq 'def double: 2 * .; double'||
+||||~ [[# exec-control]]execution control||
+||~ ||~ jq||
+||||~ [[# exceptions]]exceptions||
+||~ ||~ jq||
+||raise exception||$ jq -n 'error("bam!")'||
+||||~ [[# streams]]streams||
+||~ ||~ jq||
+||write to stderr||##gray|# input to debug is also passed on to subsequent filters:## _
+$ jq -n '"foo" | debug'||
+||read input as array of strings||jq -R 'length' /etc/hosts||
+||array to stream||$ echo '[1,2,3]' | jq '.[]'||
+||stream to array||$ echo '1 2 3' | jq -s '.'||
+||||~ [[# file-fmt]]file formats||
+||~ ||~ jq||
+||||~ [[# processes-env]]processes and environment||
+||~ ||~ jq||
+||environment variable||$ jq -n 'env.HOME'  _
+$ jq -n 'env["HOME"]'||
+||||~ [[# lib-namespaces]]libraries and namespaces||
+||~ ||~ jq||
+||~ ||~ ##EFEFEF|@@___________________________________________________________________@@##||
+
+[[# jq]]
++ Jq
+
+[http://manpages.ubuntu.com/manpages/xenial/man1/jq.1.html jq man page]

@@ -647,7 +647,7 @@ AbsoluteFileName["~/foo"]|| || || ||
 ||[[# dir-test]][#dir-test-note directory test]||DirectoryQ["/etc"]||isdir("/etc");|| || ||
 ||||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
-||[[# load-lib]][#load-lib-note load library]||Get["foo.m"]|| || || ||
+||[[# load-lib]][#load-lib-note load library]||Get["foo.m"]|| ||load(grobner);|| ||
 ||||||||||~ [[# reflection]][#reflection-note reflection]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[#function-documentation get function documentation]||?Tan _
@@ -685,8 +685,14 @@ expr||
 ReplaceAll[{x, x}, x -> 3] _
  _
 ##gray|(* {3, 3}: *)## _
-{x, x} /. x -> 3||##gray|# [3, 3]:## _
-subs(x = 3, [x, x]);||##gray|/* [3, 3]: */## _
+{x, x} /. x -> 3 _
+ _
+##gray|(* {3, 4}: *)## _
+{x, y} /. {x -> 3, y -> 4}||##gray|# [3, 3]:## _
+subs(x = 3, [x, x]); _
+ _
+##gray|# [3, 4]:## _
+subs([x = 3, y = 4], [x, y])||##gray|/* [3, 3]: */## _
 subst(3, x, [x, x]);||sympy.Matrix([x, x]).subs(x, 3)||
 ||[[# piecewise-symbolic-expr]][#piecewise-symbolic-expr-note piecewise-defined expression]||Piecewise[{{x, x >= 0}, {-x, x < 0}}] _
  _
@@ -1159,6 +1165,16 @@ Determinant(<1, 2; 3, 4>);||determinant(A);||A.det()||
 Trace(<1, 2; 3, 4>);||load("nchrpl"); _
  _
 mattrace(matrix([1, 2], [3, 4]));|| ||
+||[[# characteristic-polynomial]][#characteristic-polynomial-note characteristic polynomial]||CharacteristicPolynomial[@@{{1, 2}, {3, 4}}@@, x]||with(LinearAlgebra): _
+ _
+CharacteristicPolynomial(<1, 2; 3, 4>, x);||A: matrix([1, 2], [3, 4]); _
+ _
+charpoly(A, x);|| ||
+||[[# minimal-polynomial]][#minimal-polynomial-note minimal polynomial]|| ||with(LinearAlgebra): _
+ _
+MinimalPolynomial(IdentityMatrix(3), x);||load(diag); _
+ _
+minimalPoly(jordan(ident(3)));|| ||
 ||[[# matrix-rank]][#matrix-rank-note rank]||MatrixRank[@@{{1, 1}, {0, 0}}@@]||with(LinearAlgebra): _
  _
 Rank(<1, 1; 0, 0>);||rank(matrix([1, 1], [0, 0]));|| ||
@@ -1206,21 +1222,39 @@ U := u * vt _
 P =  v * s * vt|| || || ||
 ||||||||||~ [[# combinatorics]][#combinatorics-note combinatorics]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
-||[[# factorial]][#factorial-note factorial]||5! _
+||[[# factorial]][#factorial-note factorial] _
+ _
+##gray|//and permutations//##||5! _
 Factorial[5] _
  _
 Permutations[Range[1, 5]]||5! _
 factorial(5)||5! _
 factorial(5);||sympy.factorial(5)||
-||[[# binomial-coefficient]][#binomial-coefficient-note binomial coefficient]||Binomial[10, 3]||binomial(10, 3)||binomial(10, 3);||sympy.binomial(10, 3)||
+||[[# binomial-coefficient]][#binomial-coefficient-note binomial coefficient] _
+ _
+##gray|//and combinations//##||Binomial[10, 3]||binomial(10, 3)||binomial(10, 3);||sympy.binomial(10, 3)||
 ||[[# multinomial-coefficient]][#multinomial-coefficient-note multinomial coefficient]||Multinomial[3, 4, 5]||with(combinat): _
  _
 multinomial(12, 3, 4, 5);||multinomial(12, [3, 4, 5]);|| ||
-||[[# int-partitions]][#int-partitions-note integer partitions]||PartitionsP[10] _
+||[[# rising-falling-factorial]][#rising-falling-factorial-note rising and falling factorial]||Pochhammer[1/2, 3] _
+ _
+FactorialPower[1/2, 3]||pochhammer(1/2, 3); _
+ _
+pochhammer(1/2 - 2, 3);||pochhammer(1/2, 3); _
+ _
+pochhammer(1/2 - 2, 3);|| ||
+||[[# subfactorial]][#subfactorial-note subfactorial] _
+ _
+##gray|//and derangments//##||Needs["Combinatorica@@`@@"] _
+ _
+NumberOfDerangements[10]|| || ||sympy.!n(10)||
+||[[# int-partitions]][#int-partitions-note integer partitions]||##gray|(* number of partitions: *)## _
+PartitionsP[10] _
  _
 ##gray|(* the partitions as an array: *)## _
 IntegerPartitions[10]||with(combinat): _
  _
+##gray|# number of partitions:## _
 numbpart(10); _
  _
 ##gray|# the partitions as an array:## _
@@ -1234,16 +1268,20 @@ integer_partitions(10); _
 len(list(partitions(10))) _
  _
 [p.copy() for p in partitions(10)]||
-||[[# compositions]][#compositions-note compositions]||needs["Combinatorica`"] _
+||[[# compositions]][#compositions-note compositions]||Needs["Combinatorica@@`@@"] _
  _
+##gray|(* weak compositions of size 3 is 66: *)## _
 NumberOfCompositions[10, 3] _
+ _
 Compositions[10, 3]||with(combinat): _
  _
+##gray|# compositions of size 3 is 36:## _
 numbcomp(10, 3); _
+ _
 composition(10, 3);|| || ||
 ||[[# set-partitions]][#set-partitions-note set partitions]||StirlingS2[10, 3] _
  _
-needs["Combinatorica`"] _
+Needs["Combinatorica@@`@@"] _
  _
 KSetPartitions[10, 3] _
 SetPartititions[10]||Stirling2(10, 3);||stirling2(10, 3);|| ||
@@ -1353,59 +1391,143 @@ jacobi(3, 5);|| ||
  _
 Moebius(11);||moebius(11);|| ||
 ||[[# riemann-zeta-func]][#riemann-zeta-func-note riemann zeta function]||Zeta[2]||Zeta(2);||zeta(2);||sympy.mpmath.zeta(2)||
-||[[# mangoldt-lambda]][#mangoldt-lambda-note mangoldt lambda]||MangoldtLambda[11]|| || || ||
-||[[# dirichlet-char]][#dirichlet-char-note dirichlet character]||Table[DirichletCharacter[2, 1, i], {i, 100}]|| || || ||
-||to continued fraction||cf = ContinuedFraction[Pi, 100]|| || || ||
-||from continued fraction||##gray|(* rational approx. of π: *)## _
-FromContinuedFraction[cf]|| || || ||
+||[[# continued-fraction]][#continued-fraction-note continued fraction]||##gray|(* {0, 1, 1, 1, 5}: *)## _
+ContinuedFraction[11/17] _
+ _
+##gray|(* arrray of first 100 digits for for pi: *)## _
+ca= ContinuedFraction[Pi, 100] _
+ _
+##gray|(* rational approximation of pi: *)## _
+FromContinuedFraction[a]||##gray|# [0, 1, 1, 1, 5]:## _
+convert(11/17, confrac); _
+ _
+convert(Pi, confrac, 100);||##gray|/* [0,1,1,1,5]: */## _
+cf(11/17); _
+ _
+float_pi: %pi, numer; _
+a = cf(float_pi); _
+ _
+##gray|/* as continued fraction: */## _
+as_cf: cfdisrep(a); _
+ _
+##gray|/* as simple fraction: */## _
+ratsimp(as_cf);|| ||
+||[[# convergents]][#convergents-note convergents]||Convergents[11/17] _
+ _
+##gray|(* for continued fraction: *)## _
+Convergents[{0, 1, 1, 1, 5}] _
+ _
+##gray|(* first 100 rational approximations: *)## _
+Convergents[Pi, 100]||##gray|# no retval; convergents printed to stdout:## _
+convergs(convert(11/17, confrac)); _
+ _
+convergs(convert(Pi, confrac, 100));|| || ||
 ||||||||||~ [[# polynomials]][#polynomials-note polynomials]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
-||from expression with indeterminates||(x - 1) (x - 2) _
+||[[# polynomial-literal]][#polynomial-literal-note literal]||p = 2 -3 * x + 2* x^2 _
+p2 = (1 + x)^10||p := x^2 - 3*x + 2; _
+p2 := (1 + x)^10;||p: x^2 - 3*x + 2; _
+p2: (x + 1)^10;|| ||
+||[[# extract-polynomial-coefficient]][#extract-polynomial-coefficient-note extract coefficient]||Coefficient[(1 + x)^10, x, 3]||coeff((1 + x)^10, x, 3);||coeff(expand((x + 1)^10), x^3); _
  _
-(x + 1)^2 (y + 2)^3|| || || ||
-||from coefficient array||coeff = {1, -3, 2} _
-Plus @@ Table[coeff[[i]] * x^(3 - i), {i, 1, 3}]|| || || ||
-||to coefficient array||CoefficientList[(x + 1)^10, x]|| || || ||
-||lookup coefficient||Coefficient[(1 + x)^10, x, 3]|| || || ||
-||substitute indeterminate|| || || || ||
-||degree||Exponent[(x + 1)^10, x]|| || || ||
-||operations||+ - * /|| || || ||
-||division and remainder||PolynomialReduce[x^10 - 1, x - 1, {x}] _
-PolynomialReduce[x^10 - y^10, x - y, {x, y}]|| || || ||
-||[#expand-polynomial expand polynomial]||Expand[(1 + x)^5]|| || ||sympy.expand((1+x)@@**@@5)||
-||[#factor-polynomial factor polynomial]||Factor[3 + 10 x + 9 x^2 + 2 x^3]|| || ||sympy.factor(3 + 10*x + 9*x@@**@@2 + 2*x@@**@@3)||
-||collect terms||##gray|(* write as polynomial in x: *)## _
-Collect[(1 + x + y)^3, x]|| || ||sympy.collect(sympy.expand((x+y+1)**3), x)||
-||factor||Factor[x^10 - y^10]|| || || ||
-||roots||Solve[x^3 + 3 x^2 + 2 x - 1 == 0, x]|| || || ||
-||greatest common divisor||p1 = -2 - x + 2 x^2 + x^3 _
+coeff(expand((x + 1)^10), x, 3);|| ||
+||[[# extract-polynomial-coefficients]][#extract-polynomial-coefficients-note extract coefficients]||CoefficientList[(x + 1)^10, x]||coeffs(collect((1 + x)^10, x), x);||p: expand((x+1)^10); _
+makelist(coeff(p, x^i), i, 0, 10);|| ||
+||[[# polynomial-from-coefficient-array]][#polynomial-from-coefficient-array-note from array of coefficients]||a = {2, -3, 1} _
+Sum[a[[i]] * x^i, {i, 1, 3}]||a := [2, -3, 1]; _
+sum(a[i] * x^i, i = 1 .. 3);||a: [2, -3, 1]; _
+sum(x^i * a[i + 1], i, 0, 2);|| ||
+||[[# polynomial-degree]][#polynomial-degree-note degree]||Exponent[(x + 1)^10, x]||degree((1 + x)^10, x);||hipow(expand((1 + x)^10), x);|| ||
+||[[# expand-polynomial]][#expand-polynomial-note expand]||Expand[(1 + x)^5]||expand((1+x)^5);||expand((1+x)^5);||sympy.expand((1+x)@@**@@5)||
+||[[# factor-polynomial]][#factor-polynomial-note factor]||Factor[3 + 10 x + 9 x^2 + 2 x^3] _
+ _
+Factor[x^10 - y^10]||factor(2*x^3 + 9*x^2 + 10*x + 3); _
+ _
+factor(x^10 - y^10);||factor(2*x^3 + 9*x^2 + 10*x + 3);||sympy.factor(3 + 10*x + 9*x@@**@@2 + 2*x@@**@@3)||
+||[[# polynomial-roots]][#polynomial-roots-note roots]||Solve[x^3 + 3 x^2 + 2 x - 1 == 0, x] _
+ _
+##gray|(* just the 2nd root: *)## _
+Root[x^3 + 3 x^2 + 2 x - 1, 2]||solve(x^3 + 3*x^2 + 2*x - 1 = 0, x); _
+ _
+##gray|# rational roots only:## _
+roots(2*x^4 - 17*x^3 + 23*x^2 - 17*x + 21, x);||solve(x^3 + 3*x^2 + 2*x - 1 = 0, x);|| ||
+||[[# polynomial-quotient-remainder]][#polynomial-quotient-remainder-note quotient and remainder]||PolynomialReduce[x^10 - 1, x - 1, {x}]||quo(x^10 - 1, x - 1, x); _
+rem(x^10 - 1, x - 1, x);||[q, r]: divide(x^10-1, x - 1);|| ||
+||[[# polynomial-gcd]][#polynomial-gcd-note greatest common divisor]||p1 = -2 - x + 2 x^2 + x^3 _
 p2 = 6 - 7 x + x^3 _
-PolynomialGCD[p1, p2]|| || || ||
-||resultant||Resultant[(x-1)(x-2), (x-3)(x-3), x]|| || || ||
-||discriminant||Discriminant[(x + 1) (x - 2), x]|| || || ||
-||groebner basis||p1 = x^2 + y + z - 1 _
+PolynomialGCD[p1, p2]||p1 := x^3 + 2*x^2 - x - 2; _
+p2 := x^3 - 7*x + 6; _
+ _
+gcd(p1, p2);||p1: -2 - x + 2 * x^2 + x^3; _
+p2: 6 - 7*x + x^3; _
+gcd(p1, p2);|| ||
+||[[# polynomial-extended-euclidean-algo]][#polynomial-extended-euclidean-algor-note extended euclidean algorithm]||p1 = -2 - x + 2 x^2 + x^3 _
+p2 = 6 - 7 x + x^3 _
+ _
+##gray|(* returns list; first element is GCD; 2nd element is list of two polynomials *)## _
+PolynomialExtendedGCD[p1, p2, x]||p1 := x^3 + 2*x^2 - x - 2; _
+p2 := x^3 - 7*x + 6; _
+ _
+##gray|# returns gcd; sets a and b to polynomials:## _
+gcdex(p1, p2, x, a, b);|| || ||
+||[[# resultant]][#resultant-note resultant]||Resultant[(x-1) * (x-2), (x-3) * (x-3), x]||resultant((x-1)*(x-2), (x-3)*(x-3), x);||resultant((x - 1)*(x - 2), (x - 3)*(x - 3), x);|| ||
+||[[# discrimant]][#discriminant-note discriminant]||Discriminant[(x + 1) * (x - 2), x]||discrim((x+1)*(x-2), x);|| || ||
+||[[# collect-terms]][#collect-terms-note collect terms]||##gray|(* write as polynomial in x: *)## _
+Collect[(1 + x + y)^3, x]||collect((1 + x + y)^3, x);||load(facexp); _
+ _
+facsum(expand((1 + x + y)^5), x);||sympy.collect(sympy.expand((x+y+1)**3), x)||
+||[[# multivariate-polynomial-quotient-remainder]][#multivariate-polynomial-quotient-remainder-note multivariate quotient and remainder]||PolynomialReduce[x^10 - y^10, x - y, {x, y}]|| ||[q, r]: divide(x^10 - y^10, x - y);|| ||
+||[[# groebner-basis]][#groebner-basis-note groebner basis]||p1 = x^2 + y + z - 1 _
 p2 = x + y^2 + z - 1 _
 p3 = x + y + z^2 - 1 _
  _
 ##gray|(* uses lexographic order by default: *)## _
-GroebnerBasis[{p1, p2, p3}, {x, y, z}]|| || || ||
-||specify ordering|| || || || ||
-||symmetric polynomial||SymmetricPolynomial[3, {x1, x2, x3, x4}]|| || || ||
-||cyclotomic polynomial||Cyclotomic[10, x]|| || || ||
-||hermite polynomial||HermiteH[4, x]|| || || ||
-||chebyshev polynomial _
+GroebnerBasis[{p1, p2, p3}, {x, y, z}]||with(Groebner): _
+ _
+p1 := x^2+y+z-1; _
+p2 := y^2+x+z-1; _
+p3 := z^2+x+y-1; _
+ _
+Basis([p1, p2, p3], plex(x, y, z));|| || ||
+||specify ordering||GroebnerBasis[{p1, p2, p3}, {x, y, z}, _
+@<&nbsp;&nbsp;>@MonomialOrder -> DegreeReverseLexicographic] _
+ _
+##gray|(* possible values for MonomialOrder: _
+ _
+@<&nbsp;&nbsp;&nbsp;>@Lexicographic _
+@<&nbsp;&nbsp;&nbsp;>@DegreeLexicographic _
+@<&nbsp;&nbsp;&nbsp;>@EliminationOrder _
+@<&nbsp;&nbsp;&nbsp;>@{1, 2, 3} *)##|| || || ||
+||elementary symmetric polynomial||SymmetricPolynomial[3, {x1, x2, x3, x4}]|| || || ||
+||symmetric reduction||##gray|(* returns list of two elements; 2nd element is remainder if polynomial not symmetric: *)## _
+SymmetricReduction[x^3 + y^3 + z^3, {x, y, z}]||##gray|# error if not symmetric:## _
+convert(x^3 + y^3 + z^3, 'elsymfun');|| || ||
+||[[# cyclotomic-polynomial]][#cyclotomic-polynomial-note cyclotomic polynomial]||Cyclotomic[10, x]||with(NumberTheory): _
+ _
+CyclotomicPolynomial(10, x);|| || ||
+||[[# hermite-polynomial]][#hermite-polynomial-note hermite polynomial]||HermiteH[4, x]||with(orthopoly): _
+ _
+H(4, x)|| || ||
+||[[# chebyshev-polynomial]][#chebyshev-polynomial-note chebyshev polynomial] _
  _
 ##gray|//first and second kind//##||ChebyshevT[4, x] _
-ChebyshevU[4, x]|| || || ||
+ChebyshevU[4, x]||with(orthopoly): _
+ _
+T(4, x); _
+U(4, x);|| || ||
 ||interpolation polynomial||pts = Inner[List, {1, 2, 3}, {2, 4, 7}, List] _
 InterpolatingPolynomial[pts, x]|| || || ||
-||characteristic polynomial||CharacteristicPolynomial[@@{{1, 2}, {3, 4}}@@, x]|| || || ||
-||minimal polynomial|| || || || ||
-||piecewise polynomial|| || || || ||
-||rational function||(x - 1) / (x - 2)^2|| || || ||
-||[#add-fractions add fractions]||Together[a/b + c/d]|| || ||sympy.together(x/y + z/w)||
-||[#partial-fraction-decomposition partial fraction decomposition]||Apart[(b c + a d)/(b d)]|| || ||##gray|# only one symbol allowed in denominator:## _
-sympy.apart((3*x+2) / (x*(x+1)))||
+||spline|| || || || ||
+||[[# partial-fraction-decomposition]][#partial-fraction-decomposition-note partial fraction decomposition]||Apart[(3*x + 2)/ (x^2 + x)] _
+ _
+##gray|(* can handle multiple vars in denominator: *)## _
+Apart[(b * c + a * d)/(b * d)]||convert((2 + 3*x)/(x^2 + x), 'parfrac');||partfrac((3*x + 2) / (x^2 + x), x);||sympy.apart((3*x+2) / (x*(x+1)))||
+||[[# add-fractions]][#add-fractions-note add fractions]||Together[a/b + c/d]||simplify(a/b + c/d);||ratsimp(a/b + c/d);||sympy.together(x/y + z/w)||
+||[[# pade-approximant]][#pade-approximant-note pade approximant]||PadeApproximant[Log[x], {x, 1, {2, 3}}]||with(numapprox): _
+ _
+pade(log(x), x = 1, [3, 2]);||p: taylor(log(x + 1), [x, 0, 5]); _
+ _
+pade(p, 3, 2);|| ||
 ||||||||||~ [[# trigonometry]][#trigonometry-note trigonometry]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||eliminate sums and multiples inside trig functions||TrigExpand[Sin[2 x + y]]|| || || ||
@@ -1426,22 +1548,38 @@ FourierSeries[f[x], x, 10]|| || || ||
 InverseFourierTransform[f[ω], ω, t]|| || || ||
 ||||||||||~ [[# special-functions]][#special-functions-note special functions]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
-||gamma||Gamma[1/2]||GAMMA(1/2);s|| || ||
-||hyperbolic||Sinh Cosh Tanh _
+||[[# gamma-func]][#gamma-func-note gamma function]||Gamma[1/2]||GAMMA(1/2);||gamma(1/2);|| ||
+||[[# err-func]][#err-func-note error function]||Erf[1/2] // N _
+ _
+Erfc Erfi _
+InverseErf InverseErfc||evalf(erf(1/2)); _
+ _
+erfc erfi||erf(1/2), numer; _
+ _
+erfc erfi|| ||
+||[[# hyperbolic-func]][#hyperbolic-func-note hyperbolic functions]||Sinh Cosh Tanh _
 ArcSinh ArcCosh ArcTanh||sinh cosh tanh _
-arcsinh arccosh arctanh|| || ||
-||elliptic integerals||EllipticK EllipticF _
+arcsinh arccosh arctanh||sinh cosh tanh _
+asinh acosh atanh|| ||
+||[[# elliptic-func]][#elliptic-func-note elliptic integerals]||EllipticK _
+EllipticF _
 EllipticE _
-EllipticPi||EllipticK EllipticF _
+EllipticPi||EllipticK _
+EllipticF _
 EllipticE _
-EllipticPi|| || ||
-||bessel functions||BesselJ _
+EllipticPi||elliptic_f _
+elliptic_e _
+elliptic_pi|| ||
+||[[# bessel-func]][#bessel-func-note bessel functions]||BesselJ _
 BesselY _
 BesselI _
 BesselK||BesselJ _
 BesselY _
 BesselI _
-BesselK|| || ||
+BesselK||bessel_j _
+bessel_y _
+bessel_i _
+bessel_k|| ||
 ||||||||||~ [[# permutations]][#permutations-note permutations]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||permutation from disjoint cycles||p = Cycles[@@{{1, 2}, {3, 4}}@@]|| || ||import sympy.combinatorics as combinatorics _
@@ -2844,6 +2982,12 @@ How to compute the 1-norm, the 2-norm, the infinity norm, and the frobenius norm
 [[# trace-note]]
 ++ [#trace trace]
 
+[[# characteristic-polynomial-note]]
+++ [#characteristic-polynomial characteristic polynomial]
+
+[[# minimal-polynomial-note]]
+++ [#minimal-polynomial minimal polynomial]
+
 [[# matrix-rank-note]]
 ++ [#matrix-rank rank]
 
@@ -2932,11 +3076,68 @@ The binomial cofficient [[$ { n \choose k } $]] is the number of sets of size //
 [[# multinomial-coefficient-note]]
 ++ [#multinomial-coefficient multinomial coefficient]
 
+[[# rising-falling-factorial-note]]
+++ [#rising-falling-factorial rising and falling factorial]
+
+[[# subfactorial-note]]
+++ [#subfactorial subfactorial]
+
+A //derangement// is a permutation on a set of //n// elements where every element moves to a new location.
+
+The number of derangements is thus less than the number of permutations, //n!//, and the function for the number of derangements is called the //subfactorial// function.
+
+Using a exclamation point as a prefix to denote the subfactorial, the following equations hold:
+
+[[math]]
+!n  = n \cdot [!(n-1)] + (-1)^n
+[[/math]]
+
+[[math]]
+!n = n! \sum_{i=0}^n \frac{(-1)^i}{i!}
+[[/math]]
+
+[[math]]
+lim_{n \rightarrow \infty} \frac{!n}{n!} = \frac{1}{e}
+[[/math]]
+
 [[# int-partitions-note]]
 ++ [#int-partitions integer partitions]
 
+The number of multisets of positive integers which sum to a integer.
+
+There are 5 integer partitions of 4:
+
+[[code]]
+    4
+    3 + 1
+    2 + 2
+    2 + 1 + 1
+    1 + 1 + 1 + 1
+[[/code]]
+
 [[# compositions-note]]
 ++ [#compositions compositions]
+
+The number of sequences of positive integers which sum to an integer.
+
+There are 8 compositions of 4:
+
+[[code]]
+    4
+    3 + 1
+    1 + 3
+    2 + 2
+    2 + 1 + 1
+    1 + 2 + 1
+    1 + 1 + 2
+    1 + 1 + 1 + 1
+[[/code]]
+
+**mathematica:**
+
+The {{NumberOfCompositions}} and {{Compositions}} functions use //weak compositions//, which include zero as a possible summation.
+
+The number of weak compositions of an integer is infinite, since there is no limit on the number of times zero can appear as a summand.  The number of weak compositions of a fixed size is finite, however.
 
 [[# set-partitions-note]]
 ++ [#set-partitions set partitions]
@@ -2953,7 +3154,7 @@ The binomial cofficient [[$ { n \choose k } $]] is the number of sets of size //
 [[# bernoulli-num-note]]
 ++ [#bernoulli-num bernoulli number]
 
-[[# harmonic-num-note]
+[[# harmonic-num-note]]
 ++ [#harmonic-num harmonic number]
 
 [[# catalan-num-note]]
@@ -3214,20 +3415,124 @@ The Möbius function is multiplicative: when //a// and //b// are relatively prim
 [[# riemann-zeta-func-note]]
 ++ [#riemann-zeta-func riemann zeta function]
 
-[[# dirichelt-char-note]]
-++ [#dirichlet-char dirichlet character]
+[[# continued-fraction-note]]
+++ [#continued-fraction continued fraction]
 
-[[# mangoldt-lambda-note]]
-++ [#mangoldt-lambda mangoldt lambda]
+Convert a real number to a continued fraction.
+
+A continued fraction is a sequence of integers //a,,0,,, a,,1,,, ..., a,,n,,// representing the fraction:
+
+[[math]]
+a_0 + \frac{1}{a_1 + \frac{1}{a_2 + \frac{1}{\ddots + {\frac{1}{a_n}}}}} 
+[[/math]]
+
+The sequence can even be infinite, in which case the fraction is the limit of the rational numbers defined by taking the first //n// digits in the sequence.
+
+A continued fraction for a real number can be computed using the Euclidean algorithm.  In the case of a rational number, one starts with the numerator and the denominator.  In the case of a rational number, one can start with the number itself and 1.
+
+A continued fraction is finite if and only if the number is a rational.
+
+A continued fraction repeats if and only if it is a quadratic irrational.
+
+[[# convergents-note]]
+++ [#convergents convergents]
+
+The first //n// digits of a continued fraction define a sequence of rational numbers called the //convergents//.    The rational numbers converge to the number defined by the continued fraction.
+
+Each convergent //r/q// is the closest rational number to the continued fraction with denominator of size //q// or smaller.
 
 [[# polynomials-note]]
 + [#polynomials Polynomials]
+
+[[# polynomial-literal-note]]
+++ [#polynomial-literal literal]
+
+[[# extract-polynomial-coefficient-note]]
+++ [#extract-polynomial-coefficient extract coefficient]
+
+[[# extract-polynomial-coefficients-note]]
+++ [#extract-polynomial-coefficients extract coefficients]
+
+[[# polynomial-from-coefficient-array-note]]
+++ [#polynomial-from-coefficient-array from array of coefficients]
+
+[[# polynomial-degree-note]]
+++ [#polynomial-degree degree]
+
+[[# expand-polynomial-note]]
+++ [#expand-polynomial expand]
+
+[[# factor-polynomial-note]]
+++ [#factor-polynomial factor]
+
+[[ #collect-terms-note]]
+++ [#collect-terms collect terms]
+
+[[# polynomial-roots-note]]
+++ [#polynomial-root roots]
+
+[[# polynomial-quotient-remainder-note]]
+++ [#polynomial-quotient-remainder quotient and remainder]
+
+[[# polynomial-gcd-note]]
+++ [#polynomial-gcd greatest common divisor]
+
+++ extended euclidean algorithm
+
+++ resultant
+
+++ discriminant
+
+++ groebner basis
+
+++ specify ordering
+
+++ elementary symmetric polynomial
+
+++ symmetric reduction
+
+[[# cyclotomic-polynomial-note]]
+++ [#cyclotomic-polynomial cyclotomic polynomial]
+
+[[# hermite-polynomial-note]]
+++ [#hermite-polynomial hermite polynomial]
+
+[[# chebyshev-polynomial-note]]
+++ [#chebyshev-polynomial chebyshev polynomial]
+
+++ interpolation polynomial
+
+++ spline
+
+[[# add-fractions-note]]
+++ [#add-fractions add fractions]
+
+[[# partial-fraction-decomposition-note]]
+++ [#parial-fraction-decomposition partial fraction decomposition]
+
+[[# pade-approximant-note]]
+++ [#pade-approximant pade approximant]
 
 [[# trigonometry-note]]
 + [#trigonometry Trigonometry]
 
 [[# special-functions-note]]
 + [#special-functions Special Functions]
+
+[[# gamma-func-note]]
+++ [#gamma-func gamma function]
+
+[[# err-func-note]]
+++ [#err-func error function]
+
+[[# hyperbolic-func-note]]
+++ [#hyperbolic-func hyperbolic functions]
+
+[[# elliptic-func-note]]
+++ [#elliptic-func elliptic functions]
+
+[[# bessel-func-note]]
+++ [#bessel-func bessel functions]
 
 [[# permutations-note]]
 + [#permutations Permutations]

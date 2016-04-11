@@ -112,7 +112,7 @@
 [[/row]]
 
 [[row]]
-[[cell]]**Relational Queries:**[[/cell]][[cell]][[[data|SQL, Awk, Pig]]][[/cell]]
+[[cell]]**Relational Data and JSON Tools:**[[/cell]][[cell]][[[data|SQL, Awk, Pig]]], [[[json|Jq]]][[/cell]]
 [[/row]]
 
 [[row]]
