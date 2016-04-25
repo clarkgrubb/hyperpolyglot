@@ -1085,10 +1085,6 @@ names(cnts) = c("a","b","c","d","e") _
 pie(cnts)||cnts = [7,3,8,5,5] _
 labs = ['a','b','c','d','e'] _
 plt.pie(cnts, labels=labs)|| ||
-||[[image http://farm5.static.flickr.com/4089/5037399669_13c8e585e0_m.jpg]] _
-[[# stem-leaf-plot]][#stem-leaf-plot-note stem-and-leaf plot]||##gray|//none//##||##gray|//generates an ascii chart://## _
- _
-stem(20*rnorm(100))||##gray|//none//##|| ||
 ||[[image http://farm5.static.flickr.com/4106/5037415497_4c6fbfcab2_m.jpg]] _
 [[# histogram]][#histogram-note histogram]||hist(randn(1, 100), 10)||hist(rnorm(100), breaks=10)||plt.hist(sp.randn(100), _
 @<&nbsp;&nbsp;>@bins=range(-5,5))|| ||
@@ -2422,26 +2418,6 @@ A bar chart with horizontal bars which are aligned on the left.
 A pie chart displays values using the areas of circular sectors or equivalently the lengths of the arcs of those sectors.
 
 A pie chart implies that the values are percentages of a whole.
-
-[[# stem-leaf-plot-note]]
-++ [#stem-leaf-plot stem-and-leaf plot]
-
-A stem-and-leaf plot is a concise way of storing a small set of numbers which makes their distribution visually evident.
-
-The original set of numbers can be recovered with some loss of accuracy by appending the number on the left with each of the digits on the right.    In the example below the original data set contained -43, -42, -41, -39, -38, -35, ..., 35, 44, 46, 50, 58. 
-
-[[code]]
-> stem(20*rnorm(100))
-
-  The decimal point is 1 digit(s) to the right of the |
-
-  -4 | 321
-  -2 | 98544054310
-  -0 | 8864333111009998776444332222110
-   0 | 0001122333333466667778899122334555666789
-   2 | 00023669025
-   4 | 4608
-[[/code]]
 
 [[# histogram-note]]
 ++ [#histogram histogram]

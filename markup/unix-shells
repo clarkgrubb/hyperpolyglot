@@ -58,10 +58,12 @@ A nonce environment variable can be set for the exclusive use of the command.
 
 Pipelines are a sequence of simple commands in which the standard output of each command is redirected to the standard input of its successor.
 
+A pipeline is successful if the last command returns a zero status.
+
 [[# sublist-separators-note]]
 ++ [#sublist-separators sublist separators]
 
-//Sublist// is a term from the {{zsh}} documentation describing one or more pipelines separated by the shortcut operators {{&&}} and {{@@||@@}}.  When {{&&}} is encountered, the shell stops executing the pipelines if the previous pipeline failed.  When {{@@||@@}} is encountered, the shell stops executing if the previous pipeline succeeded.  A pipeline is successful if the last command returns a zero status.
+//Sublist// is a term from the {{zsh}} documentation describing one or more pipelines separated by the shortcut operators {{&&}} and {{@@||@@}}.  When {{&&}} is encountered, the shell stops executing the pipelines if the previous pipeline failed.  When {{@@||@@}} is encountered, the shell stops executing if the previous pipeline succeeded.  A sublist is successful if the last command to execute returns a zero status.
 
 **fish:**
 
