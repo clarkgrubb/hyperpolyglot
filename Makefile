@@ -85,6 +85,10 @@ check.%: markup/%
 .PHONY:
 download: $(markup)
 
+.PHONY:
+upload.origin:
+	aws s3 cp origin/images $(AWS_ORIGIN_BUCKET)/images --recursive
+
 .PHONY: instructions
 instructions:
 	@echo
@@ -112,6 +116,10 @@ instructions:
 	@echo '  To upload edited markup to the wiki, use this command:'
 	@echo
 	@echo '    $$ ./bin/page_content.py --page=PAGE --upload < markup/PAGE'
+	@echo
+	@echo '  To upload content to origin:'
+	@echo
+	@echo '    $$ make upload.origin' 
 	@echo
 	@echo '------------------------------------------------------------------------------'
 
