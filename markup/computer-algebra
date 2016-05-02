@@ -4,7 +4,7 @@
  
 [#symbolic-expr symbolic expressions] | [#calculus calculus] | [#equations-unknowns equations and unknowns] | [#optimization optimization] | [#vectors vectors] | [#matrices matrices] | [#combinatorics combinatorics] | [#number-theory number theory] |  [#polynomials polynomials] | [#trigonometry trigonometry] | [#special-functions special functions] | [#permutations permutations] |  [#descriptive-statistics descriptive statistics] | [#distributions distributions] | [#statistical-tests statistical tests]
 
-[#univariate-charts univariate charts] | [#bivariate-charts bivariate charts] | [#trivariate-charts trivariate charts]
+[#bar-charts bar charts] | [#scatter-plots scatter plots] | [#line-surface-charts line and surface charts]
 
 ||~ ||~ [#mathematica mathematica]||~ [#maple maple]||~ [#maxima maxima]||~ [#sympy sympy]||
 ||[[# version-used]][#version-used-note version used] _
@@ -2129,106 +2129,234 @@ ANOVA[Join[x1, x2, x3]] _
 ##gray|(* alternative hypothesis is true: *)## _
 ANOVA[Join[x1, x2, y]]|| || || ||
 ||[[# two-way-anova]][#two-way-anova-note two-way anova]|| || || || ||
-||||||||||~ [[# univariate-charts]][#univariate-chart-note univariate charts]||
+||||||||||~ [[# bar-charts]][#bar-charts-note bar charts]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
-||[[image http://farm5.static.flickr.com/4090/5039793334_f76edece33_m.jpg]] [#bar-chart vertical bar chart]||BarChart[{7, 3, 8, 5, 5}, _
+||[[# vertical-bar-chart]][[image http://cdn.hyperpolyglot.org/images/vertical-bar-chart.jpg]] _
+[#vertical-bar-chart-note vertical bar chart]||BarChart[{7, 3, 8, 5, 5}, _
 @<&nbsp;&nbsp;>@ChartLegends-> _
 @<&nbsp;&nbsp;&nbsp;&nbsp;>@{"a","b","c","d","e"}]||with(Statistics): _
  _
 ColumnGraph(["a =7, "b"=3, "c"=8, "d"=5, "e"=5]);|| || ||
-||[[image http://farm5.static.flickr.com/4092/5039776078_cc38a4ff5f_m.jpg]] _
-[#horizontal-bar-chart horizontal bar chart]||BarChart[{7, 3, 8, 5, 5}, BarOrigin -> Left]||with(Statistics): _
+||[[# horizontal-bar-chart]][[image http://cdn.hyperpolyglot.org/images/horizontal-bar-chart.jpg]] _
+[#horizontal-bar-chart-note horizontal bar chart]||BarChart[{7, 3, 8, 5, 5}, BarOrigin -> Left]||with(Statistics): _
  _
 BarChart(["a"=7, "b"=3, "c"=8, "d"=5, "e"=5]);|| || ||
-||[[image http://farm5.static.flickr.com/4145/5037819710_d932767cd5_m.jpg]] [#pie-chart pie chart]||PieChart[{7, 3, 8, 5, 5}]||with(Statistics): _
+||[[# stacked-bar-chart]][[image http://cdn.hyperpolyglot.org/images/stacked-bar-chart.jpg]] _
+[#stacked-bar-chart-note stacked bar chart]||data = @@{{@@7, 1}, {3, 2}, {8, 1}, {5, 3}, {5, 1@@}}@@ _
+BarChart[data, ChartLayout -> "Stacked"]||with(Statistics): _
+ _
+ColumnGraph([[7, 3, 8, 5, 5], [1, 2, 1, 3, 1]], _
+@<&nbsp;&nbsp;>@format = stacked);|| || ||
+||[[# grouped-bar-chart]][[image http://cdn.hyperpolyglot.org/images/grouped-bar-chart.jpg]] _
+[#grouped-bar-chart-note grouped bar chart]||data = @@{{@@7, 1}, {3, 2}, {8, 1}, {5, 3}, {5, 1@@}}@@ _
+BarChart[data]||with(Statistics): _
+ _
+ColumnGraph([[7, 3, 8, 5, 5], [1, 2, 1, 3, 1]]);|| || ||
+||[[# pie-chart]][[image http://cdn.hyperpolyglot.org/images/pie-chart.jpg]] _
+[#pie-chart-note pie chart]||PieChart[{7, 3, 8, 5, 5}]||with(Statistics): _
  _
 PieChart(["a"=7, "b"=3, "c"=8, "d"=5, "e"=5]);|| || ||
-||[[image http://farm5.static.flickr.com/4106/5037415497_4c6fbfcab2_m.jpg]] [#histogram histogram]||nd = NormalDistribution[0, 1] _
-Histogram[RandomReal[nd, 100], 10]||with(Statistics): _
+||[[# histogram]][[image http://cdn.hyperpolyglot.org/images/histogram.jpg]] _
+[#histogram-note histogram]||X = NormalDistribution[0, 1] _
+Histogram[RandomReal[X, 100], 10]||with(Statistics): _
  _
 X := RandomVariable(Normal(0, 1)); _
 Histogram(Sample(X, 100));|| || ||
-||[[image http://farm5.static.flickr.com/4106/5037525393_7ac86e81c3_m.jpg]] [#box-and-whisker-plot box-and-whisker plot]||nd = NormalDistribution[0, 1] _
-n100 = RandomVariate[nd, 100] _
-BoxWhiskerChart[d] _
+||[[# box-plot]][[image http://cdn.hyperpolyglot.org/images/box-plot.jpg]] _
+[#box-plot-note box plot]||X = NormalDistribution[0, 1] _
+n100 = RandomVariate[X, 100] _
+BoxWhiskerChart[n100] _
  _
-ed = ExponentialDistribution[1] _
-e100 = RandomVariate[ed, 100] _
+Y = ExponentialDistribution[1] _
+e100 = RandomVariate[Y, 100] _
 u100 = RandomReal[1, 100] _
-d = {n100, e100, u100} _
-BoxWhiskerChart[d]||with(Statistics): _
+data = {n100, e100, u100} _
+BoxWhiskerChart[data]||with(Statistics): _
  _
 X := RandomVariable(Normal(0, 1)); _
 BoxPlot(Sample(X, 100));|| || ||
-||[#univariate-title set chart title]||BoxWhiskerChart[data, _
+||[[# set-chart-title]][#set-chart-title-note set chart title]||BoxWhiskerChart[data, _
 @<&nbsp;&nbsp;>@PlotLabel -> "chart example"]||BoxPlot(Sample(X, 100), _
 @<&nbsp;&nbsp;>@ title = "chart example");|| || ||
-||[[# subplot-grid]][#subplot-grid-note grid of subplots][[image http://farm8.staticflickr.com/7551/15816199467_a0a0f159d0_t.jpg]]||GraphicsGrid[Table[Table[ _
+||[[# grid-of-subplots]][[image http://cdn.hyperpolyglot.org/images/subplot-grid.jpg]] _
+[#grid-of-subplots-note grid of subplots]||GraphicsGrid[Table[Table[ _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Histogram[RandomReal[X, 100], 10], _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@{i, 1, 2}], _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@{j, 1, 2}]]|| || || ||
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@{j, 1, 2}]]||with(plots): with(Statistics): _
+ _
+A := Array(1 .. 2, 1 .. 2); _
+X := RandomVariable(Normal(0, 1)); _
+for i while i <= 2 do _
+@<&nbsp;&nbsp;>@for j while j <= 2 do _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@A[i, j] := Histogram(Sample(X, 100)); _
+@<&nbsp;&nbsp;>@end do; _
+end do; _
+Display(A);|| || ||
 ||[[# save-plot-as-png]][#save-plot-as-png-note save plot as png]||Export["hist.png", _
-@<&nbsp;&nbsp;>@Histogram[RandomReal[X, 100], 10]]|| || || ||
-||||||||||~ [[# bivariate-charts]][#bivariate-chart-note bivariate charts]||
+@<&nbsp;&nbsp;>@Histogram[RandomReal[X, 100], 10]]||with(plottools): with(Statistics): _
+ _
+X := RandomVariable(Normal(0, 1)); _
+plt := BoxPlot(Sample(X, 100)); _
+exportplot("boxplot.png", plt);|| || ||
+||||||||||~ [[# scatter-plots]][#scatter-plots-note scatter plots]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
-||[[image http://farm5.static.flickr.com/4154/5039126187_e340b3f4aa_m.jpg]] _
-[#stacked-bar-chart stacked bar chart]||d = @@{{@@7, 1}, {3, 2}, {8, 1}, _
-@<&nbsp;&nbsp;>@{5, 3}, {5, 1}} _
-BarChart[d, ChartLayout -> _
-@<&nbsp;&nbsp;>@"Stacked"]|| || || ||
-||[[image http://farm6.static.flickr.com/5044/5267212089_a7749bbe3e_s.jpg]] [#scatterplot scatter plot]||nd = NormalDistribution[0, 1] _
-rn = Function[RandomReal[nd]] _
-d = {rn[],rn[]} & /@ Range[1,50] _
-ListPlot[d]|| || || ||
-||[[image http://farm6.static.flickr.com/5089/5267975488_2216ae147e_s.jpg]][#linear-regression-line linear regression line]||d = Table[{i, _
-@<&nbsp;&nbsp;>@2 i + RandomReal[{-5, 5}]}, _
+||[[# scatter-plot]][[image http://cdn.hyperpolyglot.org/images/scatter-plot.jpg]] _
+[#scatter-plot-note scatter plot]||X = NormalDistribution[0, 1] _
+rand = Function[RandomReal[X]] _
+data = {rand[], rand[]} & /@ Range[1, 50] _
+ListPlot[data]||with(Statistics): _
+ _
+X := RandomVariable(Normal(0, 1)); _
+ScatterPlot(Sample(X, 50), Sample(X, 50));||load(distrib); _
+ _
+x: makelist(random_normal(0, 1), i, 1, 50); _
+y: makelist(random_normal(0, 1), i, 1, 50); _
+wxplot2d([discrete, x, y], [style, points]);|| ||
+||[[# additional-point-set]][[image http://cdn.hyperpolyglot.org/images/additional-point-set.jpg]] _
+[#additional-point-set-note additional point set]||Show[ListPlot[data1], _
+@<&nbsp;&nbsp;>@ListPlot[data2, PlotStyle -> Red]]|| || || ||
+||[[# point-types]][#point-types-note point types]||ListPlot[data, PlotMarkers -> {"*"}] _
+ _
+##gray|(* shows standard sequence of point types: *)## _
+Graphics`PlotMarkers[] _
+ _
+##gray|(* The elements of the PlotMarkers array can be strings, symbols, expressions, or images. *)##||ScatterPlot(Sample(X, 50), Sample(X, 50), symbol = asterisk); _
+ _
+##gray|(* possible symbol values: _
+ _
+@<&nbsp;&nbsp;>@asterisk _
+@<&nbsp;&nbsp;>@box _
+@<&nbsp;&nbsp;>@circle _
+@<&nbsp;&nbsp;>@cross _
+@<&nbsp;&nbsp;>@diagonalcross _
+@<&nbsp;&nbsp;>@diamond _
+@<&nbsp;&nbsp;>@point _
+@<&nbsp;&nbsp;>@solidbox _
+@<&nbsp;&nbsp;>@solidcircle _
+@<&nbsp;&nbsp;>@soliddiamond _
+*)##||wxplot2d([discrete, x, y], _
+@<&nbsp;&nbsp;>@[style, points], _
+@<&nbsp;&nbsp;>@[point_type, asterisk]); _
+ _
+##gray|/* possible point_type values: _
+ _
+@<&nbsp;&nbsp;>@asterisk _
+@<&nbsp;&nbsp;>@box _
+@<&nbsp;&nbsp;>@bullet _
+@<&nbsp;&nbsp;>@circle _
+@<&nbsp;&nbsp;>@diamond _
+@<&nbsp;&nbsp;>@plus _
+@<&nbsp;&nbsp;>@square _
+@<&nbsp;&nbsp;>@times _
+@<&nbsp;&nbsp;>@triangle _
+ _
+The bullet and box are filled versions of circle and square. _
+*/##|| ||
+||[[# scatter-plot-3d]][[image http://cdn.hyperpolyglot.org/images/scatter-plot-3d.jpg]] _
+[#scatter-plot-3d-note 3d scatter plot]||X = NormalDistribution[0, 1] _
+data = RandomReal[X, {50, 3}] _
+ListPointPlot3D[data]|| || || ||
+||[[# bubble-chart]][[image http://cdn.hyperpolyglot.org/images/bubble-chart.jpg]] _
+[#bubble-chart-note bubble chart]||X = NormalDistribution[0, 1] _
+data = RandomReal[X, {50, 3}] _
+BubbleChart[data]|| || || ||
+||[[# linear-regression-line]][[image http://cdn.hyperpolyglot.org/images/linear-regression-line.jpg]] _
+[#linear-regression-line-note linear regression line]||data = Table[{i, 2 * i + RandomReal[{-5, 5}]}, _
 @<&nbsp;&nbsp;>@{i, 0, 20}] _
-model = LinearModelFit[d, x, x] _
-Show[ListPlot[d], _
+model = LinearModelFit[data, x, x] _
+Show[ListPlot[data], _
 @<&nbsp;&nbsp;>@Plot[model["BestFit"], _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@{x, 0, 20}]]|| || || ||
-||[[image http://farm6.static.flickr.com/5125/5267434941_f8537c9d26_s.jpg]] [#polygonal-plot polygonal line plot]||f = Function[i, {i, rn[]}] _
-d = f /@ Range[1, 20] _
-ListLinePlot[d]|| || || ||
-||[[image http://farm6.static.flickr.com/5041/5268071368_75c3aee42e_t.jpg]] [#area-chart area chart]||d = @@{{@@7, 1, 3, 2, 8}, _
-@<&nbsp;&nbsp;>@{1, 5, 3, 5, 1}} _
-sd = {d[[1]], d[[1]] + d[[2]]} _
-ListLinePlot[sd, Filling -> _
-@<&nbsp;&nbsp;>@{1 -> {Axis, LightBlue}, _
-@<&nbsp;&nbsp;&nbsp;>@2 -> @@{{@@1}, LightRed}}]|| || || ||
-||[[image http://farm6.static.flickr.com/5049/5268229340_0b96b5e223_s.jpg]] [#cubic-spline cubic spline]||d = Table[{i, RandomReal[nd]}, _
-@<&nbsp;&nbsp;>@{i, 0, 20}] _
-f = Interpolation[d, _
-@<&nbsp;&nbsp;>@InterpolationOrder -> 3] _
-Show[ListPlot[d], _
-@<&nbsp;&nbsp;>@Plot[f[x], {x, 0, 20}]]|| || || ||
-||[[image http://farm6.static.flickr.com/5204/5268208606_b745646ea6_s.jpg]] [#function-plot function plot]||Plot[Sin[x], {x, -4, 4}]||plot(sin(x), x = -4 .. 4);||wxplot2d(sin(x), [x, -4, 4]);|| ||
-||[[image http://farm6.static.flickr.com/5048/5267567389_27a19429e4_s.jpg]] [#qq-plot quantile-quantile plot]||nd = NormalDistribution[0, 1] _
-d1 = RandomReal[1, 50] _
-d2 = RandomReal[nd, 50] _
-QuantilePlot[d1, d2]|| || || ||
-||[#axis-label axis label]||d = Table[{i, i^2}, {i, 1, 20}] _
-ListLinePlot[d, _
-@<&nbsp;&nbsp;>@AxesLabel -> {x, x^2}]|| || || ||
+||[[# q-q-plot]][[image http://cdn.hyperpolyglot.org/images/q-q-plot.jpg]] _
+[#q-q-plot-note quantile-quantile plot]||X = NormalDistribution[0, 1] _
+data1 = RandomReal[1, 50] _
+data2 = RandomReal[X, 50] _
+QuantilePlot[data1, data2]||with(Statistics): _
+ _
+X := RandomVariable(Normal(0, 1)); _
+Y := RandomVariable(Uniform(0, 1)); _
+QuantilePlot(Sample(X, 200), Sample(Y, 200));|| || ||
+||[[# axis-label]][#axis-label-note axis label]||data = Table[{i, i^2}, {i, 1, 20}] _
+ListLinePlot[data, AxesLabel -> {x, x^2}]||plot([i$i = 1 .. 20], [i*i$i = 1 .. 20], _
+@<&nbsp;&nbsp;>@labels = [x, x^2]);|| || ||
 ||[[# axis-limits]][#axis-limits-note axis limits]||Plot[x^2, {x, 0, 20}, _
-@<&nbsp;&nbsp;>@PlotRange -> @@{{0, 20}, {-200, 500}}@@]|| || || ||
-||[#logarithmic-y-axis logarithmic y-axis]||LogPlot[{x^2, x^3, x^4, x^5}, _
-@<&nbsp;&nbsp;>@{x, 0, 20}]|| || || ||
-||||||||||~ [[# trivariate-charts]][#trivariate-chart-note trivariate charts]||
+@<&nbsp;&nbsp;>@PlotRange -> @@{{0, 20}, {-200, 500}}@@]||plot([i$i = 1 .. 20], [i*i$i = 1 .. 20], _
+@<&nbsp;&nbsp;>@x = 0 .. 20, y = -200 .. 500);|| || ||
+||||||||||~ [[# line-surface-charts]][#line-surface-charts-note line and surface charts]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
-||[#3d-scatter-plot 3d scatter plot]||nd = NormalDistribution[0,1] _
-d = RandomReal[nd, {50, 3}] _
-ListPointPlot3D[d]|| || || ||
-||[[image http://farm6.static.flickr.com/5245/5268191292_a75a367c39_s.jpg]] [#additional-data additional data set]||nd = NormalDistribution[0, 1] _
-x1 = RandomReal[nd, 20] _
-x2 = RandomReal[nd, 20] _
-ListLinePlot[{x1, x2}]|| || || ||
-||[#bubble-chart bubble chart]||nd = NormalDistribution[0,1] _
-d = RandomReal[nd, {50, 3}] _
-BubbleChart[d]|| || || ||
-||[#surface-plot surface plot]||Plot3D[Sinc[Sqrt[x^2 + y^2]], _
+||[[# polygonal-line-plot]][[image http://cdn.hyperpolyglot.org/images/polygonal-line-plot.jpg]] _
+[#polygonal-line-plot-note polygonal line plot]||X = NormalDistribution[0, 1] _
+rand = Function[RandomReal[X]] _
+f = Function[i, {i, rand[]}] _
+data = f /@ Range[1, 20] _
+ListLinePlot[data]||with(Statistics): _
+ _
+X := RandomVariable(Normal(0, 1)); _
+pts := Sample(X, 20); _
+plot([i$i = 1 .. 20], pts);|| || ||
+||[[# additional-line]][[image http://cdn.hyperpolyglot.org/images/additional-line.jpg]] _
+[#additional-line-note additional line]||X = NormalDistribution[0, 1] _
+data1 = RandomReal[X, 20] _
+data2 = RandomReal[X, 20] _
+ListLinePlot[{data1, data2}]|| || || ||
+||[[# line-types]][#line-types-note line types]||ListLinePlot[data, PlotStyle -> Dashed] _
+ _
+##gray|(* PlotStyle values: _
+ _
+@<&nbsp;&nbsp;>@Dashed _
+@<&nbsp;&nbsp;>@DotDashed _
+@<&nbsp;&nbsp;>@Dotted _
+*)##|| || || ||
+||[[# legend]][[image http://cdn.hyperpolyglot.org/images/legend.jpg]] _
+[#legend-note legend]||X = NormalDistribution[0, 1] _
+data1 = RandomReal[X, 20] _
+data2 = RandomReal[X, 20] _
+ListLinePlot[{data1, data2}, _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@PlotLegends -> {"first", "second"}]|| || || ||
+||[[# function-plot]][[image http://cdn.hyperpolyglot.org/images/function-plot.jpg]] _
+[#function-plot-note function plot]||Plot[Sin[x], {x, -4, 4}]||plot(sin(x), x = -4 .. 4);||wxplot2d(sin(x), [x, -4, 4]);|| ||
+||[[# cubic-spline]][[image http://cdn.hyperpolyglot.org/images/cubic-spline.jpg]] _
+[#cubic-spline-note cubic spline]||data = Table[{i, RandomReal[nd]}, _
+@<&nbsp;&nbsp;>@{i, 0, 20}] _
+f = Interpolation[data, _
+@<&nbsp;&nbsp;>@InterpolationOrder -> 3] _
+Show[ListPlot[data], _
+@<&nbsp;&nbsp;>@Plot[f[x], {x, 0, 20}]]|| || || ||
+||[[# logarithmic-y-axis]][#logarithmic-y-axis-note logarithmic y-axis]||LogPlot[{x^2, x^3, x^4, x^5}, _
+@<&nbsp;&nbsp;>@{x, 0, 20}]||with(plots): _
+ _
+logplot([x^2, x^3, x^4, x^5], x = 0 .. 20);|| || ||
+||[[# area-chart]][[image http://cdn.hyperpolyglot.org/images/area-chart.jpg width="75px"]] _
+[#area-chart-note area chart]||data = @@{{@@7, 1, 3, 2, 8}, {1, 5, 3, 5, 1@@}}@@ _
+stacked = {data[[1]], data[[1]] + data[[2]]} _
+ListLinePlot[stacked, Filling -> _
+@<&nbsp;&nbsp;>@{1 -> {Axis, LightBlue}, _
+@<&nbsp;&nbsp;&nbsp;>@2 -> @@{{@@1}, LightRed}}]||with(Statistics): _
+ _
+AreaChart([[7, 1, 3, 2, 8], [1, 5, 3, 5, 1]], _
+@<&nbsp;&nbsp;>@format = stacked);|| || ||
+||[[# heat-map]][[image http://cdn.hyperpolyglot.org/images/heat-map.jpg]] _
+[#heat-map-note heat map]||##gray|(* of function: *)## _
+DensityPlot[Sin[x] * Sin[y], _
+@<&nbsp;&nbsp;>@{x, -4, 4}, _
+@<&nbsp;&nbsp;>@{y, -4, 4}] _
+ _
+##gray|(* of data: *)## _
+data = Table[x * y + 10 * rand[], _
+@<&nbsp;&nbsp;>@{x, 1, 10}, _
+@<&nbsp;&nbsp;>@{y, 1, 10}] _
+ListDensityPlot[data]|| || || ||
+||[[# contour-plot]][#contour-plot-note contour plot]||##gray|(* of function: *)## _
+ContourPlot[x * (y - 1), {x, 0, 10}, {y, 0, 10}] _
+ _
+##gray|(* of data: *)## _
+data = Table[x * (y - 1) + 5 * rand[], {x, 0, 10}, {y, 0, 10}] _
+ListContourPlot[data]|| || || ||
+||[[# surface-plot]][#surface-plot-note surface plot]||Plot3D[Sinc[Sqrt[x^2 + y^2]], _
 @<&nbsp;&nbsp;>@{x, -25, 25}, _
 @<&nbsp;&nbsp;>@{y, -25, 25}]|| || || ||
+||[[# vector-field-plot]][#vector-field-plot-note vector field plot]||##gray|(* of function: *)## _
+StreamPlot[{x^2 + y, 1 + x - y^2}, {x, -4, 4}, {y, -4, 4}]|| || || ||
 ||~ ||~ ##EFEFEF|@@_______________________________________________________@@##||~ ##EFEFEF|@@_______________________________________________________@@##||~ ##EFEFEF|@@_______________________________________________________@@##||~ ##EFEFEF|@@_______________________________________________________@@##||
 
 
@@ -4000,15 +4128,11 @@ A test whether variables are drawn from distributions with the same variance.
 [[# two-way-anova-note]]
 ++ [#two-way-anova two-way anova]
 
-[[# univariate-chart-note]]
-+ [#univariate-charts Univariate Charts]
+[[# bar-charts-note]]
++ [#bar-charts Bar Charts]
 
-A univariate chart can be used to display a list or array of numerical values.  Univariate data can be displayed in a table with a single column or two columns if each numerical value is given a name.  A multivariate chart, by contrast, is used to display a list or array of //tuples// of numerical values.
-
-In order for a list of numerical values to be meaningfully displayed in a univariate chart, it must be meaningful to perform comparisons (<, >, =) on the values.  Hence the values should have the same unit of measurement.
-
-[[# bar-chart]]
-++ vertical bar chart
+[[# vertical-bar-chart-note]]
+++ [#vertical-bar-chart vertical bar chart]
 
 A chart which represents values with rectangular bars which line up on the bottom.  It is a deceptive practice for the bottom not to represent zero, even if a y-axis with labelled tick marks or grid lines is provided.  A cut in the vertical axis and one of the bars may be desirable if the cut value is a large outlier.  Putting such a cut all of the bars near the bottom is a deceptive practice similar not taking to the base of the bars to be zero, however.
 
@@ -4016,40 +4140,103 @@ Another bad practice is the 3D bar chart.  In such a chart heights are represent
 
 **mathematica**
 
-[[# horizontal-bar-chart]]
-++ horizontal bar chart
+[[# horizontal-bar-chart-note]]
+++ [#horizontal-bar-chart horizontal bar chart]
 
 A bar chart in which zero is the y-axis and the bars extend to the right.
 
-[[# pie-chart]]
-++ pie chart
+[[# stacked-bar-chart-note]]
+++ [#stacked-bar-chart stacked bar chart]
 
-A bar chart displays values using the areas of circular sectors or equivalently, the lengths of the arcs of those sectors.  A pie chart implies that the values are percentages of a whole.  The viewer is likely to make an assumption about what the whole circle represents.  Thus, using a pie chart to show the revenue of some companies in a line of business could be regarded as deceptive if there are other companies in the same line of business which are left out.  The viewer may mistakenly assume the whole circle represents the total market.
+[[# grouped-bar-chart-note]]
+++ [#grouped-bar-chart grouped bar chart]
 
-If two values are close in value, people cannot determine visually which of the corresponding sectors in a pie chart is larger without the aid of a protractor.  For this reason many consider bar charts superior to pie charts.
+[[# pie-chart-note]]
+++ [#pie-chart pie chart]
 
-Many software packages make 3D versions of pie charts which communicate no additional information and in fact make it harder to interpret the data.
+[[# histogram-note]]
+++ [#histogram histogram]
 
-[[# stem-and-leaf-plot]]
-++ stem-and-leaf plot
+[[# box-plot-note]]
+++ [#box-plot box plot]
 
-[[# histogram]]
-++ histogram
+[[# set-chart-title-note]]
+++ [#set-chart-title set chart title]
 
-[[# box-and-whisker-plot]]
-++ box-and-whisker plot
+[[# grid-of-subplots-note]]
+++ [#grid-of-subplots grid of subplots]
 
-[[# univariate-title]]
-++ set chart title
+[[# save-plot-as-png-note]]
+++ [#save-plot-as-png save plot as png]
 
-[[# bivariate-chart-note]]
-+ [#bivariate-charts Bivariate Charts]
+[[# scatter-plots-note]]
++ [#scatter-plots Scatter Plots]
 
-[[# stacked-bar-chart]]
-++ stacked bar chart
+[[# scatter-plot-note]]
+++ [#scatter-plot scatter plot]
 
-[[# trivariate-chart-note]]
-+ [#trivariate-charts Trivariate Charts]
+[[# additional-point-set-note]]
+++ [#additional-point-set additional point set]
+
+[[# point-types-note]]
+++ [#point-types point types]
+
+[[# scatter-plot-3d-note]]
+++ [#scatter-plot-3d 3d scatter plot]
+
+[[# bubble-chart-note]]
+++ [#bubble-chart bubble chart]
+
+[[# linear-regression-line-note]]
+++ [#linear-regression-line linear regression line]
+
+[[# q-q-plot-note]]
+++ [#q-q-plot quantile-quantile plot]
+
+[[# axis-label-note]]
+++ [#axis-label axis label]
+
+[[# axis-limits-note]]
+++ [#axis-limits axis limits]
+
+[[# line-surface-charts-note]]
++ [#line-surface-charts Line and Surface Charts]
+
+[[# polygonal-line-plot-note]]
+++ [#polygonal-line-plot polygonal line plot]
+
+[[# additional-line-note]]
+++ [#additional-line additional line]
+
+[[# line-types-note]]
+++ [#line-types line types]
+
+[[# legend-note]]
+++ [#legend legend]
+
+[[# function-plot-note]]
+++ [#function-plot function plot]
+
+[[# cubic-spline-note]]
+++ [#cubic-spline cubic spline]
+
+[[# logarithmic-y-axis-note]]
+++ [#logarithmic-y-axis logarithmic y-axis]
+
+[[# area-chart-note]]
+++ [#area-chart area chart]
+
+[[# heat-map-note]]
+++ [#heat-map heat map]
+
+[[# contour-plot-note]]
+++ [#contour-plot contour plot]
+
+[[# surface-plot-note]]
+++ [#surface-plot surface plot]
+
+[[# vector-field-plot-note]]
+++ [#vector-field-plot vector field plot]
 
 [[# mathematica]]
 + [#top Mathematica]

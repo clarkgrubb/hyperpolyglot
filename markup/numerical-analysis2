@@ -6,7 +6,7 @@
 
 [#vectors vectors] | [#matrices matrices] | [#sparse-matrices sparse matrices] | [#optimization optimization] | [#polynomials polynomials] | [#descriptive-statistics descriptive statistics] | [#distributions distributions] | [#linear-regression linear regression] | [#statistical-tests statistical tests] | [#time-series time series] | [#fast-fourier-transform fast fourier transform] | [#clustering clustering]
 
-[#univariate-charts univariate charts] | [#bivariate-charts bivariate charts] | [#multivariate-charts multivariate charts]
+[#bar-charts bar charts] | [#scatter-plots scatter plots] | [#line-surface-charts line and surface charts]
 
 ||||||||||~ [[# tables]][#tables-note tables]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
@@ -284,6 +284,10 @@ eye(3)||diag(c(1, 2, 3) _
 diag(3)||np.diag([1, 2, 3]) _
 np.identity(3)||diagm([1, 2, 3]) _
 eye(3)||
+||[[# matrix-formula]][#matrix-formula-note matrix by formula]||i = ones(10, 1) * (1:10) _
+j = (1:10)' * ones(1, 10) _
+##gray|% use component-wise ops only:## _
+1 ./ (i + j - 1)|| || || ||
 ||[[# matrix-dim]][#matrix-dim-note dimensions]||rows(A) _
 columns(A)||dim(A)[1] _
 dim(A)[2]||nrows, ncols = A.shape||nrows, ncols = size([1 2 3; 4 5 6])||
@@ -453,8 +457,8 @@ yy = polyval(p, xx) _
 plot(xx, yy)|| || || ||
 ||exact polynomial fit with derivative values|| || || || ||
 ||piecewise polynomial fit|| || || || ||
-||[[image http://farm6.static.flickr.com/5049/5268229340_0b96b5e223_s.jpg]] _
-[[# cubic-spline]][#cubic-spline-note cubic spline]||f = spline(1:20, normrnd(0, 1, 1, 20)) _
+||[[# cubic-spline]][[image http://cdn.hyperpolyglot.org/images/cubic-spline.jpg]] _
+[#cubic-spline-note cubic spline]||f = spline(1:20, normrnd(0, 1, 1, 20)) _
 x = 1:.1:20 _
 plot(x, ppval(f, x))||f = splinefun(rnorm(20)) _
 x = seq(1, 20, .1) _
@@ -1064,32 +1068,48 @@ dm = squareform(pdist(pts, 'euclidean'))|| || || ||
 ||dendogram|| || || || ||
 ||silhouette plot|| || || || ||
 ||k-means|| || || || ||
-||||||||||~ [[# univariate-charts]][#univariate-chart-note univariate charts]||
+||||||||||~ [[# bar-charts]][#bar-charts-note bar charts]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
-||[[image http://farm5.static.flickr.com/4090/5039793334_f76edece33_m.jpg]] [[# bar-chart]][#bar-chart-note vertical bar chart]||bar([7 3 8 5 5])||cnts = c(7,3,8,5,5) _
+||[[# vertical-bar-chart]][[image http://cdn.hyperpolyglot.org/images/vertical-bar-chart.jpg]] _
+[#vertical-bar-chart-note vertical bar chart]||bar([7 3 8 5 5])||cnts = c(7,3,8,5,5) _
 names(cnts) = c("a","b","c","d","e") _
 barplot(cnts) _
  _
 x = floor(6*runif(100)) _
 barplot(table(x))||cnts = [7,3,8,5,5] _
 plt.bar(range(0,len(cnts)), cnts)|| ||
-||[[image http://farm5.static.flickr.com/4092/5039776078_cc38a4ff5f_m.jpg]] _
-[[# horizontal-bar-chart]][#horizontal-bar-chart-note horizontal bar chart]||barh([7 3 8 5 5])||cnts = c(7,3,8,5,5) _
+||[[# horizontal-bar-chart]][[image http://cdn.hyperpolyglot.org/images/vertical-bar-chart.jpg]] _
+[#horizontal-bar-chart-note horizontal bar chart]||barh([7 3 8 5 5])||cnts = c(7,3,8,5,5) _
 names(cnts) = c("a","b","c","d","e") _
 barplot(cnts, horiz=T)||cnts = [7,3,8,5,5] _
 plt.barh(range(0,len(cnts)), cnts)|| ||
-||[[image http://farm5.static.flickr.com/4145/5037819710_d932767cd5_m.jpg]] _
-[[# pie-chart]][#pie-chart-note pie chart]||labels = {'a','b','c','d','e'} _
+||[[# stacked-bar-chart]][[image http://cdn.hyperpolyglot.org/images/stacked-bar-chart.jpg]] _
+[#stacked-bar-chart-note stacked bar chart]||d = [7 1; 3 2; 8 1; 5 3; 5 1] _
+bar(d, 'stacked')||d = matrix(c(7,1,3,2,8,1,5,3,5,1), _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@nrow=2) _
+labels = c("a","b","c","d","e") _
+barplot(d,names.arg=labels)||a1 = [7,3,8,5,5] _
+a2 = [1,2,1,3,1] _
+plt.bar(range(0,5), a1, color='r') _
+plt.bar(range(0,5), a2, color='b')|| ||
+||[[# grouped-bar-chart]][[image http://cdn.hyperpolyglot.org/images/grouped-bar-chart.jpg]] _
+[#grouped-bar-chart-note grouped bar chart]||d = [7 1; 3 2; 8 1; 5 3; 5 1] _
+bar(d)||d = matrix(c(7,1,3,2,8,1,5,3,5,1), _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@nrow=2) _
+labels = c("a","b","c","d","e") _
+barplot(d,names.arg=labels,beside=TRUE)|| || ||
+||[[# pie-chart]][[image http://cdn.hyperpolyglot.org/images/pie-chart.jpg]] _
+[#pie-chart-note pie chart]||labels = {'a','b','c','d','e'} _
 pie([7 3 8 5 5], labels)||cnts = c(7,3,8,5,5) _
 names(cnts) = c("a","b","c","d","e") _
 pie(cnts)||cnts = [7,3,8,5,5] _
 labs = ['a','b','c','d','e'] _
 plt.pie(cnts, labels=labs)|| ||
-||[[image http://farm5.static.flickr.com/4106/5037415497_4c6fbfcab2_m.jpg]] _
-[[# histogram]][#histogram-note histogram]||hist(randn(1, 100), 10)||hist(rnorm(100), breaks=10)||plt.hist(sp.randn(100), _
+||[[# histogram]][[image http://cdn.hyperpolyglot.org/images/histogram.jpg]] _
+[#histogram-note histogram]||hist(randn(1, 100), 10)||hist(rnorm(100), breaks=10)||plt.hist(sp.randn(100), _
 @<&nbsp;&nbsp;>@bins=range(-5,5))|| ||
-||[[image http://farm5.static.flickr.com/4106/5037525393_7ac86e81c3_m.jpg]] _
-[[# box-plot]][#box-plot-note box plot]||boxplot(randn(1, 100)) _
+||[[# box-plot]][[image http://cdn.hyperpolyglot.org/images/box-plot.jpg]] _
+[#box-plot-note box plot]||boxplot(randn(1, 100)) _
  _
 boxplot([randn(1, 100) _
 @<&nbsp;&nbsp;>@exprnd(1, 1, 100) _
@@ -1108,7 +1128,8 @@ boxplot(rnorm(100), _
 @<&nbsp;&nbsp;>@main="boxplot example", _
 @<&nbsp;&nbsp;>@sub="to illustrate options")||plt.boxplot(sp.randn(100)) _
 plt.title('boxplot example')|| ||
-||[[# subplot-grid]][#subplot-grid-note grid of subplots][[image http://farm8.staticflickr.com/7551/15816199467_a0a0f159d0_t.jpg]]||##gray|% 3rd arg refers to the subplot; _
+||[[# subplot-grid]][[image http://cdn.hyperpolyglot.org/images/subplot-grid.jpg]] _
+[#subplot-grid-note grid of subplots]||##gray|% 3rd arg refers to the subplot; _
 % subplots are numbered in row-major order.## _
 for i = 1:4 _
 @<&nbsp;&nbsp;>@subplot(2, 2, i), hist(randn(50)) _
@@ -1131,25 +1152,31 @@ hist(rnorm(100)) _
 dev.off()||y = randn(50) _
 plot(y) _
 savefig('line-plot.png')|| ||
-||||||||||~ [[# bivariate-charts]][#bivariate-chart-note bivariate charts]||
+||||||||||~ [[# scatter-plots]][#scatter-plots-note scatter plots]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
-||[[image http://farm5.static.flickr.com/4154/5039126187_e340b3f4aa_m.jpg]] _
-[[# stacked-bar-chart]][#stacked-bar-chart-note stacked bar chart]||d = [7 1; 3 2; 8 1; 5 3; 5 1] _
-bar(d, 'stacked')||d = matrix(c(7,1,3,2,8,1,5,3,5,1), _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@nrow=2) _
-labels = c("a","b","c","d","e") _
-barplot(d,names.arg=labels)||a1 = [7,3,8,5,5] _
-a2 = [1,2,1,3,1] _
-plt.bar(range(0,5), a1, color='r') _
-plt.bar(range(0,5), a2, color='b')|| ||
-||[[image http://farm8.staticflickr.com/7490/15814685770_09478e1222_t.jpg]] _
-[[# grouped-bar-chart]][#grouped-bar-chart-note grouped bar chart]||d = [7 1; 3 2; 8 1; 5 3; 5 1] _
-bar(d)||d = matrix(c(7,1,3,2,8,1,5,3,5,1), _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;>@nrow=2) _
-labels = c("a","b","c","d","e") _
-barplot(d,names.arg=labels,beside=TRUE)|| || ||
-||[[image http://farm6.static.flickr.com/5044/5267212089_a7749bbe3e_s.jpg]] _
-[[# scatter-plot]][#scatter-plot-note scatter plot]||plot(randn(1,50),randn(1,50),'+')||plot(rnorm(50), rnorm(50))||plt.scatter(sp.randn(50), sp.randn(50), marker='x')|| ||
+||[[# scatter-plot]][[image http://cdn.hyperpolyglot.org/images/scatter-plot.jpg]] _
+[#scatter-plot-note scatter plot]||plot(randn(1,50),randn(1,50),'+')||plot(rnorm(50), rnorm(50))||plt.scatter(sp.randn(50), sp.randn(50), marker='x')|| ||
+||[[# additional-point-set]][[image http://cdn.hyperpolyglot.org/images/additional-point-set.jpg]] _
+[#additional-point-set-note additional point set]||plot(randn(20), randn(20), '.k', randn(20), randn(20), '.r')||plot(rnorm(20), rnorm(20)) _
+points(rnorm(20), rnorm(20), _
+@<&nbsp;&nbsp;>@col='red')|| || ||
+||[[# colors]][#colors-note colors]||##gray|//Use color letters by themselves for colored lines.  Use '.r' for red dots.// _
+ _
+'b': blue _
+'g': green _
+'r': red _
+'c': cyan _
+'m': magenta _
+'y': yellow _
+'k': black _
+'w': white##||##gray|# Use the col parameter to specify the color of points _
+# and lines. _
+# _
+# The colors() function returns a list of recognized _
+# names for colors.## _
+ _
+plot(rnorm(10), col='red') _
+plot(rnorm(10), col='#FF0000')|| || ||
 ||[[# point-types]][#point-types-note point types]||##gray|'.': point _
 'o': circle _
 'x': x-mark _
@@ -1199,8 +1226,31 @@ barplot(d,names.arg=labels,beside=TRUE)|| || ||
 'd': thin_diamond _
 '|': vline _
 '_': hline##|| ||
-||[[image http://farm9.staticflickr.com/8568/16001259452_55e23d1303_t.jpg]] _
-[[# hexbin]][#hexbin-note hexagonal binning]|| ||install.packages('hexbin') _
+||[[# scatter-plot-matrix]][[image http://cdn.hyperpolyglot.org/images/scatter-plot-matrix.jpg]] _
+[#scatter-plot-matrix-note scatter plot matrix]|| ||x = rnorm(20) _
+y = rnorm(20) _
+z = x + 3*y _
+w = y + 0.1*rnorm(20) _
+df = data.frame(x, y, z, w) _
+ _
+pairs(df)|| || ||
+||[[# scatter-plot-3d]][[image http://cdn.hyperpolyglot.org/images/scatter-plot-3d.jpg]] _
+[#scatter-plot-3d-note 3d scatter plot]|| ||install.packages('scatterplot3d') _
+library('scatterplot3d') _
+ _
+scatterplot3d(rnorm(50), rnorm(50), _
+@<&nbsp;&nbsp;>@rnorm(50), type="h")|| || ||
+||[[# bubble-chart]][[image http://cdn.hyperpolyglot.org/images/bubble-chart.jpg]] _
+[#bubble-chart-note bubble chart]|| ||install.packages('ggplot2') _
+library('ggplot2') _
+ _
+df = data.frame(x=rnorm(20), _
+@<&nbsp;&nbsp;>@y=rnorm(20), z=rnorm(20)) _
+ _
+p = ggplot(df, aes(x=x, y=y, size=z)) _
+p + geom_point()|| || ||
+||[[# hexagonal-bins]][[image http://cdn.hyperpolyglot.org/images/hexagonal-bins.jpg]] _
+[#hexagonal-bins-note hexagonal bins]|| ||install.packages('hexbin') _
 library('hexbin') _
  _
 plot(hexbin(rnorm(1000), _
@@ -1208,8 +1258,8 @@ plot(hexbin(rnorm(1000), _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@xbins=12))||hexbin(randn(1000), _
 @<&nbsp;&nbsp;>@randn(1000), _
 @<&nbsp;&nbsp;>@gridsize=12)|| ||
-||[[image http://farm6.static.flickr.com/5089/5267975488_2216ae147e_s.jpg]] _
-[[# linear-regression-line]][#linear-regression-line-note linear regression line]|| ||x = 0:20 _
+||[[# linear-regression-line]][[image http://cdn.hyperpolyglot.org/images/linear-regression-line.jpg]] _
+[#linear-regression-line-note linear regression line]|| ||x = 0:20 _
 y = 2 * x + rnorm(21)*10 _
  _
 fit = lm(y ~ x) _
@@ -1224,8 +1274,36 @@ m, c = np.linalg.lstsq(A, y)[0] _
  _
 plt.scatter(x, y) _
 plt.plot(x, [m*i + c for i in x])|| ||
-||[[image http://farm6.static.flickr.com/5125/5267434941_f8537c9d26_s.jpg]] _
-[[# polygonal-plot]][#polygonal-plot-note polygonal line plot]||plot(1:20,randn(1,20))||plot(1:20, rnorm(20), type="l")||plt.plot(range(0,20), sp.randn(20), '-')|| ||
+||[[# q-q-plot]][[image http://cdn.hyperpolyglot.org/images/q-q-plot.jpg]] _
+[#q-q-plot-note quantile-quantile plot]|| ||qqplot(runif(50), rnorm(50)) _
+lines(c(-9,9), c(-9,9), col="red")|| || ||
+||[[# axis-labels]][#axis-labels-note axis labels]||plot( 1:20, (1:20) .** 2) _
+xlabel('x') _
+ylabel('x squared')||plot(1:20, (1:20)^2, _
+@<&nbsp;&nbsp;>@xlab="x", ylab="x squared")||x = range(0, 20) _
+plt.plot(x, [i * i for i in x], '-') _
+plt.xlabel('x') _
+plt.ylabel('x squared')|| ||
+||[[# axis-limits]][#axis-limits-note axis limits]||plot( 1:20, (1:20) .** 2) _
+##gray|% [xmin, xmax, ymin, ymax]:## _
+axis([1 20 -200 500])||plot(1:20, (1:20)^2, _
+@<&nbsp;&nbsp;>@xlim=c(0, 20), ylim=c(-200,500))||x = range(0, 20) _
+plt.plot(x, [i * i for i in x], '-') _
+plt.xlim([0, 20]) _
+plt.ylim([-200, 500])|| ||
+||||||||||~ [[# line-surface-charts]][#line-surface-charts-note line and surface charts]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
+||[[# polygonal-line-plot]][[image http://cdn.hyperpolyglot.org/images/polygonal-line-plot.jpg]] _
+[#polygonal-line-plot-note polygonal line plot]||plot(1:20,randn(1,20))||plot(1:20, rnorm(20), type="l")||plt.plot(range(0,20), sp.randn(20), '-')|| ||
+||[[# additional-line]][[image http://cdn.hyperpolyglot.org/images/additional-line.jpg]] _
+[#additional-line-note additional line set]||plot(1:20, randn(1, 20), _
+@<&nbsp;&nbsp;>@1:20, randn(1, 20)) _
+ _
+##gray|//optional method://## _
+plot(1:20, randn(1, 20)) _
+hold on _
+plot(1:20, randn(1, 20))||plot(1:20, rnorm(20), type="l") _
+lines(1:20, rnorm(20), col="red")|| || ||
 ||[[# line-types]][#line-types-note line types]||##gray|//Optional 3rd argument to plot:// _
  _
 '-': solid _
@@ -1267,27 +1345,20 @@ plt.plot(x, [m*i + c for i in x])|| ||
 'd': thin_diamond _
 '|': vline _
 '_': hline##|| ||
-||[[image http://farm6.static.flickr.com/5204/5268208606_b745646ea6_s.jpg]] _
-[[# function-plot]][#function-plot-note function plot]||fplot(@sin, [-4 4])||x = seq(-4, 4, .01) _
+||[[# legend]][[image http://cdn.hyperpolyglot.org/images/legend.jpg]] _
+[#legend-note legend]|| ||x = (1:20) _
+y = x + rnorm(20) _
+y2 = x - 2 + rnorm(20) _
+ _
+plot(x, y, type="l", col="black") _
+lines(x, y2, type="l", col="red") _
+legend('topleft', c('first', 'second'), _
+@<&nbsp;&nbsp;>@lty=c(1,1), lwd=c(2.5, 2.5), _
+@<&nbsp;&nbsp;>@col=c('black', 'red'))|| || ||
+||[[# function-plot]][[image http://cdn.hyperpolyglot.org/images/function-plot.jpg]] _
+[#function-plot-note function plot]||fplot(@sin, [-4 4])||x = seq(-4, 4, .01) _
 plot(sin(x), type="l")||x = [i * .01 for i in range(-400, 400)] _
 plt.plot(x, sin(x), '-')|| ||
-||[[image http://farm6.static.flickr.com/5048/5267567389_27a19429e4_s.jpg]] _
-[[# qq-plot]][#qq-plot-note quantile-quantile plot]|| ||qqplot(runif(50), rnorm(50)) _
-lines(c(-9,9), c(-9,9), col="red")|| || ||
-||[[# axis-labels]][#axis-labels-note axis labels]||plot( 1:20, (1:20) .** 2) _
-xlabel('x') _
-ylabel('x squared')||plot(1:20, (1:20)^2, _
-@<&nbsp;&nbsp;>@xlab="x", ylab="x squared")||x = range(0, 20) _
-plt.plot(x, [i * i for i in x], '-') _
-plt.xlabel('x') _
-plt.ylabel('x squared')|| ||
-||[[# axis-limits]][#axis-limits-note axis limits]||plot( 1:20, (1:20) .** 2) _
-##gray|% [xmin, xmax, ymin, ymax]:## _
-axis([1 20 -200 500])||plot(1:20, (1:20)^2, _
-@<&nbsp;&nbsp;>@xlim=c(0, 20), ylim=c(-200,500))||x = range(0, 20) _
-plt.plot(x, [i * i for i in x], '-') _
-plt.xlim([0, 20]) _
-plt.ylim([-200, 500])|| ||
 ||[[# logarithmic-y-axis]][#logarithmic-y-axis-note logarithmic y-axis]||semilogy(x, x .** 2, _
 @<&nbsp;&nbsp;>@x, x .** 3, _
 @<&nbsp;&nbsp;>@x, x .** 4, _
@@ -1302,34 +1373,6 @@ for i in [2,3,4,5]: _
  _
 for i in [0,1,2,3]: _
 @<&nbsp;&nbsp;>@semilogy(x, y[i])|| ||
-||||||||||~ [[# multivariate-charts]][#multivariate-chart-note multivariate charts]||
-||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
-||[[# additional-line]][[image http://farm6.static.flickr.com/5245/5268191292_a75a367c39_s.jpg]] _
-[#additional-line-note additional line set]||plot(1:20, randn(1, 20), _
-@<&nbsp;&nbsp;>@1:20, randn(1, 20)) _
- _
-##gray|//optional method://## _
-plot(1:20, randn(1, 20)) _
-hold on _
-plot(1:20, randn(1, 20))||plot(1:20, rnorm(20), type="l") _
-lines(1:20, rnorm(20), col="red")|| || ||
-||[[# colors]][#colors-note colors]||##gray|//Use color letters by themselves for colored lines.  Use '.r' for red dots.// _
- _
-'b': blue _
-'g': green _
-'r': red _
-'c': cyan _
-'m': magenta _
-'y': yellow _
-'k': black _
-'w': white##||##gray|# Use the col parameter to specify the color of points _
-# and lines. _
-# _
-# The colors() function returns a list of recognized _
-# names for colors.## _
- _
-plot(rnorm(10), col='red') _
-plot(rnorm(10), col='#FF0000')|| || ||
 ||[[# superimposed-plots]][#superimposed-plots-note superimposed plots with different y-axis scales]|| ||x <- 1:10 _
 y <- rnorm(10) _
 z <- rnorm(10) * 1000 _
@@ -1341,21 +1384,7 @@ plot(x, z, col='red', type='l', axes=F, _
 axis(side=4, col='red', col.axis='red', _
 @<&nbsp;&nbsp;>@at=pretty(range(z))) _
 mtext('z', side=4, line=3, col='red')|| || ||
-||[[# legend]][[image http://farm8.staticflickr.com/7461/15382318933_b4ba583034_t.jpg]] _
-[#legend-note legend]|| ||x = (1:20) _
-y = x + rnorm(20) _
-y2 = x - 2 + rnorm(20) _
- _
-plot(x, y, type="l", col="black") _
-lines(x, y2, type="l", col="red") _
-legend('topleft', c('first', 'second'), _
-@<&nbsp;&nbsp;>@lty=c(1,1), lwd=c(2.5, 2.5), _
-@<&nbsp;&nbsp;>@col=c('black', 'red'))|| || ||
-||[[# additional-point]][[image http://farm9.staticflickr.com/8600/15814685890_69b3f21697_t.jpg]] _
-[#additional-point-note additional point set]||plot(randn(20), randn(20), '.k', randn(20), randn(20), '.r')||plot(rnorm(20), rnorm(20)) _
-points(rnorm(20), rnorm(20), _
-@<&nbsp;&nbsp;>@col='red')|| || ||
-||[[# area-chart]][[image http://farm6.static.flickr.com/5041/5268071368_75c3aee42e_t.jpg]] _
+||[[# area-chart]][[image http://cdn.hyperpolyglot.org/images/area-chart.jpg width="75px"]] _
 [#area-chart-note stacked area chart]|| ||install.packages('ggplot2') _
 library('ggplot2') _
  _
@@ -1368,7 +1397,7 @@ p = ggplot(df, aes(x=x, y=y, _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@group=letter, _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@fill=letter)) _
 p + geom_area(position='stack')|| || ||
-||[[# overlapping-area-chart]][[image http://farm8.staticflickr.com/7557/15815944099_9b56eb2af4_t.jpg]] _
+||[[# overlapping-area-chart]][[image http://cdn.hyperpolyglot.org/images/overlapping-area-chart.jpg]] _
 [#overlapping-area-chart-note overlapping area chart]|| ||install.packages('ggplot2') _
 library('ggplot2') _
  _
@@ -1382,30 +1411,7 @@ p = ggplot(df, aes(x=x, ymin=0, ymax=y, _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@group=letter, fill=letter, _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@alpha=alpha)) _
 p + geom_ribbon()|| || ||
-||[[# 3d-scatter-plot]][[image http://farm9.staticflickr.com/8611/15814558578_f6b4f8d3b0_t.jpg]] _
-[#3d-scatter-plot-note 3d scatter plot]|| ||install.packages('scatterplot3d') _
-library('scatterplot3d') _
- _
-scatterplot3d(rnorm(50), rnorm(50), _
-@<&nbsp;&nbsp;>@rnorm(50), type="h")|| || ||
-||[[# bubble-chart]][[image http://farm9.staticflickr.com/8591/15999976481_b2082d7d5b_t.jpg]] _
-[#bubble-chart-note bubble chart]|| ||install.packages('ggplot2') _
-library('ggplot2') _
- _
-df = data.frame(x=rnorm(20), _
-@<&nbsp;&nbsp;>@y=rnorm(20), z=rnorm(20)) _
- _
-p = ggplot(df, aes(x=x, y=y, size=z)) _
-p + geom_point()|| || ||
-||[[# scatter-plot-matrix]][[image http://farm8.staticflickr.com/7521/15976165976_636a08e4e8_t.jpg]] _
-[#scatter-plot-matrix-note scatter plot matrix]|| ||x = rnorm(20) _
-y = rnorm(20) _
-z = x + 3*y _
-w = y + 0.1*rnorm(20) _
-df = data.frame(x, y, z, w) _
- _
-pairs(df)|| || ||
-||[[# contour-plot]][[image http://farm8.staticflickr.com/7496/15814558718_3f63b8e371_t.jpg]] _
+||[[# contour-plot]][[image http://cdn.hyperpolyglot.org/images/contour-plot.jpg]] _
 [#contour-plot-note contour plot]|| ||m = matrix(0, 100, 100) _
 for (i in 2:100) { _
 @<&nbsp;&nbsp;>@for (j in 2:100) {  _
@@ -1415,6 +1421,12 @@ for (i in 2:100) { _
 } _
  _
 filled.contour(1:100, 1:100, m)|| || ||
+||[[# heat-map]][[image http://cdn.hyperpolyglot.org/images/heat-map.jpg]] _
+[#heat-map-note heat map]||i = ones(100, 1) * (1:100) _
+j = (1:100)' * ones(1, 100) _
+data = sin(.2 * i) .* sin(.2 * j) _
+colormap(gray) _
+imagesc(data)|| || || ||
 ||~ ||~ ##EFEFEF|@@__________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________@@##||
 
 
@@ -2388,11 +2400,11 @@ How to get a data point in a time series by its ordinal position.
 [[# clustering-note]]
 + [#clustering Clustering]
 
-[[# univariate-chart-note]]
-+ [#univariate-charts Univariate Charts]
+[[# bar-charts-note]]
++ [#bar-charts Bar Charts]
 
-[[# bar-chart-note]]
-++ [#bar-chart vertical bar chart]
+[[# vertical-bar-chart-note]]
+++ [#vertical-bar-chart vertical bar chart]
 
 A chart in which numerical values are represented by horizontal bars.  The bars are aligned at the bottom.
 
@@ -2411,6 +2423,17 @@ qplot(names, data=df, geom="bar", weight=cnts)
 ++ [#horizontal-bar-chart horizontal bar chart]
 
 A bar chart with horizontal bars which are aligned on the left.
+
+[[# stacked-bar-chart-note]]
+++ [#stacked-bar-chart stacked bar chart]
+
+Two or more data sets with a common set of labels can be charted with a stacked bar chart.  This makes the sum of the data sets for each label readily apparent.
+
+[[# grouped-bar-chart-note]]
+++ [#grouped-bar-chart grouped bar chart]
+
+Optionally data sets with a common set of labels can be charted with a grouped bar chart which clusters the bars for each label.  The grouped bar chart makes it easier to perform comparisons between labels for each data set.
+
 
 [[# pie-chart-note]]
 ++ [#pie-chart pie chart]
@@ -2472,18 +2495,9 @@ The {{qplot}} commands supports the {{main}} options for setting the title:
 qplot(x="rnorm", y=rnorm(50), geom="boxplot", main="boxplot example")
 [[/code]]
 
-[[# bivariate-chart-note]]
-+ [#bivariate-charts Bivariate Charts]
 
-[[# stacked-bar-chart-note]]
-++ [#stacked-bar-chart stacked bar chart]
-
-Two or more data sets with a common set of labels can be charted with a stacked bar chart.  This makes the sum of the data sets for each label readily apparent.
-
-[[# grouped-bar-chart-note]]
-++ [#grouped-bar-chart grouped bar chart]
-
-Optionally data sets with a common set of labels can be charted with a grouped bar chart which clusters the bars for each label.  The grouped bar chart makes it easier to perform comparisons between labels for each data set.
+[[# scatter-plots-note]]
++ [#scatter-plots Scatter Plots]
 
 [[# scatter-plot-note]]
 ++ [#scatter-plot scatter plot]
@@ -2502,36 +2516,35 @@ p = p + layer(geom="point")
 p
 [[/code]]
 
+[[# additional-point-set-note]]
+++ [#additional-point-set additional point set]
+
 [[# point-types-note]]
 ++ [#point-types point types]
 
-[[# hexbin-note]]
-++ [#hexbin hexagonal binning]
+[[# hexagonal-bins-note]]
+++ [#hexagonal-bins hexagonal bins]
 
 A hexagonal binning is the two-dimensional analog of a histogram.  The number of data points in each hexagon is tabulated, and then color or grayscale is used to show the frequency.
 
 A hexagonal binning is superior to a scatter-plot when the number of data points is high because most scatter-plot software doesn't indicate when points are occur on top of each other.
+
+[[# scatter-plot-3d-note]]
+++ [#scatter-plot-3d 3d scatter plot]
+
+[[# bubble-chart-note]]
+++ [#bubble-chart bubble chart]
+
+[[# scatter-plot-matrix-note]]
+++ [#scatter-plot-matrix scatter plot matrix]
 
 [[# linear-regression-line-note]]
 ++ [#linear-regression-line linear regression line]
 
 How to plot a line determined by linear regression on top of a scatter plot.
 
-[[# polygonal-plot-note]]
-++ [#polygonal-plot polygonal line plot]
-
-How to connect the dots of a data set with a polygonal line.
-
-[[# line-types-note]]
-++ [#line-types line types]
-
-[[# function-plot-note]]
-++ [#function-plot function plot]
-
-How to plot a function.
-
-[[# qq-plot-note]]
-++ [#qq-plot quantile-quantile plot]
+[[# q-q-plot-note]]
+++ [#q-q-plot quantile-quantile plot]
 
 Also called a Q-Q plot.
 
@@ -2565,16 +2578,29 @@ p + layer(geom="point") + xlab('x') + ylab('x squared')
 
 How to manually set the range of values displayed by an axis.
 
-[[# logarithmic-y-axis-note]]
-++ [#logarithmic-y-axis logarithmic y-axis]
+[[# line-surface-charts-note]]
++ [#line-surface-charts Line and Surface Charts]
 
-[[# multivariate-chart-note]]
-+ [#multivariate-charts Multivariate Charts]
+[[# polygonal-plot-note]]
+++ [#polygonal-plot polygonal line plot]
+
+How to connect the dots of a data set with a polygonal line.
 
 [[# additional-line-note]]
 ++ [#additional-line additional line set]
 
 How to add another line to a plot.
+
+[[# line-types-note]]
+++ [#line-types line types]
+
+[[# function-plot-note]]
+++ [#function-plot function plot]
+
+How to plot a function.
+
+[[# logarithmic-y-axis-note]]
+++ [#logarithmic-y-axis logarithmic y-axis]
 
 [[# colors-note]]
 ++ [#colors colors]
@@ -2620,23 +2646,11 @@ The named parameter {{lty}} specifies the line type.  The value can be either an
 ||5||'longdash'||
 ||6||'twodash'||
 
-[[# additional-point-note]]
-++ [#additional-point additional point set]
-
 [[# area-chart-note]]
 ++ [#area-chart stacked area chart]
 
 [[# overlapping-area-chart-note]]
 ++ [#overlapping-area-chart overlapping area chart]
-
-[[# 3d-scatter-plot-note]]
-++ [#3d-scatter-plot 3d scatter plot]
-
-[[# bubble-chart-note]]
-++ [#bubble-chart bubble chart]
-
-[[# scatter-plot-matrix-note]]
-++ [#scatter-plot-matrix scatter plot matrix]
 
 [[# contour-plot-note]]
 ++ [#contour-plot contour plot]

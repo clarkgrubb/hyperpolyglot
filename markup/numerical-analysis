@@ -6,7 +6,7 @@
 
 [[[numerical-analysis2#vectors|vectors]]] | [[[numerical-analysis2#matrices|matrices]]] | [[[numerical-analysis2#sparse-matrices|sparse matrices]]] | [[[numerical-analysis2#optimization|optimization]]] | [[[numerical-analysis2#polynomials|polynomials]]] | [[[numerical-analysis2#descriptive-statistics|descriptive statistics]]] | [[[numerical-analysis2#distributions|distributions]]] | [[[numerical-analysis2#linear-regression|linear regression]]] | [[[numerical-analysis2#statistical-tests|statistical tests]]] | [[[numerical-analysis2#time-series|time series]]] | [[[numerical-analysis2#fast-fourier-transform|fast fourier transform]]] | [[[numerical-analysis2#clustering|clustering]]]
 
-[[[numerical-analysis2#univariate-charts|univariate charts]]] | [[[numerical-analysis2#bivariate-charts|bivariate charts]]] | [[[numerical-analysis2#multivariate-charts|multivariate charts]]]
+[[[numerical-analysis2#bar-charts|bar charts]]] | [[[numerical-analysis2#scatter-plots|scatter plots]]] | [[[numerical-analysis2#line-surface-charts|line and surface charts]]]
 
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# version-used]][#version-used-note version used]||##gray|//MATLAB 8.3//## _
@@ -730,14 +730,19 @@ seq(0, 100, 10)||range(0, 101, 10)||0:10:100||
  _
 ##gray|# 3rd arg is length of sequence, not step size:## _
 sp.linspace(0, 10, 100)||0:0.1:10||
-||[[# iter-over-arith-seq]][#iter-over-arith-seq-note iterate over arithmetic sequence]|| || ||##gray|# range replaces xrange in Python 3:## _
+||[[# arith-seq-computed-diff]][#arith-seq-computed-diff-note computed difference]||##gray|% 100 evenly spaced values:## _
+linspace(3.7, 19.4, 100) _
+ _
+##gray|% 100 is default num. of elements:## _
+linspace(3.7, 19.4)|| ||numpy.linspace(3.7, 19.4, 100) || ||
+||[[# iter-over-arith-seq]][#iter-over-arith-seq-note iterate]|| || ||##gray|# range replaces xrange in Python 3:## _
 n = 0 _
 for i in xrange(1, 1000001): _
 @<&nbsp;&nbsp;>@n += i||n = 0 _
 for i in 1:1000000 _
 @<&nbsp;&nbsp;>@n += i _
 end||
-||[[# arith-seq-to-array]][#arith-seq-to-array-note convert arithmetic sequence to array]|| || ||a = range(1, 11) _
+||[[# arith-seq-to-array]][#arith-seq-to-array-note to array]|| || ||a = range(1, 11) _
 ##gray|# Python 3:## _
 a = list(range(1, 11))||a = Array(1:10)||
 ||||||||||~ [[# two-d-arrays]][#two-d-arrays-note two dimensional arrays]||
@@ -2200,23 +2205,32 @@ A deep copy is a recursive copy.  The original array is copied and a deep copy i
 An arithmetic sequence is a sequence of numeric values in which consecutive terms have a constant difference.
 
 [[# arith-seq-diff-one-note]]
-++ unit difference
+++ [#arith-seq-diff-one unit difference]
 
 An arithmetic sequence with a difference of 1.
 
-++ difference of 10
+[[# arith-seq-diff-ten-note]]
+++ [#arith-seq-diff-ten difference of 10]
 
 An arithmetic sequence with a difference of 10.
 
-++ difference of 0.1
+[[# arith-seq-diff-tenth-note]]
+++ [#arith-seq-diff-tenth difference of 0.1]
 
 An arithmetic sequence with a difference of 0.1.
 
-++ iterate
+[[# arith-seq-computed-diff-note]]
+++ [#arith-seq-computed-diff computed difference]
+
+An arithmetic sequence where the difference is computed using the start and end values and the number of elements.
+
+[[# iter-over-arith-seq-note]]
+++ [#iter-over-arith-seq iterate]
 
 How to iterate over an arithmetic sequence.
 
-++ convert to array
+[[# arith-seq-to-array-note]]
+++ [#arith-seq-to-array to array]
 
 How to convert an arithmetic sequence to an array.
 

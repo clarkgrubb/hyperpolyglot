@@ -2,7 +2,7 @@
  _
 [#optimization optimization] | [#linear-regression linear regression] _
  _
-[#univariate-charts univariate charts] | [#bivariate-charts bivariate charts] | [#trivariate-charts trivariate charts]
+[#univariate-charts univariate charts] | [#multivariate-charts multivariate charts]
 
 ||~ ||~ [#gnuplot gnuplot]||~ [#glpk glpk]||
 ||[[# version-used]][#version-used-note version used] _
@@ -404,6 +404,10 @@ plot [0:6] [0:9] "data.txt" \ _
 @<&nbsp;&nbsp;>@using 0:1 notitle with boxes|| ||
 ||[[image http://farm5.static.flickr.com/4092/5039776078_cc38a4ff5f_m.jpg]] _
 [#horizontal-bar-chart horizontal bar chart]|| || ||
+||[[image http://farm5.static.flickr.com/4154/5039126187_e340b3f4aa_m.jpg]] _
+[#stacked-bar-chart stacked bar chart]|| || ||
+||[[image http://farm8.staticflickr.com/7490/15814685770_09478e1222_t.jpg]] _
+[[# grouped-bar-chart]][#grouped-bar-chart-note grouped bar chart]|| || ||
 ||[[image http://farm5.static.flickr.com/4145/5037819710_d932767cd5_m.jpg]] _
 [[# pie-chart]][#pie-chart-note pie chart]||##gray|//see note//##|| ||
 ||[[image http://farm5.static.flickr.com/4106/5037415497_4c6fbfcab2_m.jpg]] _
@@ -428,12 +432,8 @@ plot [0.5:1.5] [0.0:1.1] "data.txt" \ _
 @<&nbsp;&nbsp;>@using (1.0):1:(0.3) notitle|| ||
 ||[#univariate-title set chart title]||set title "a plot" _
 plot "data.txt"|| ||
-||||||~ [[# bivariate-charts]][#bivariate-charts-note bivariate charts]||
+||||||~ [[# multivariate-charts]][#multivariate-charts-note multivariate charts]||
 ||~ ||~ gnuplot||~ glpk||
-||[[image http://farm5.static.flickr.com/4154/5039126187_e340b3f4aa_m.jpg]] _
-[#stacked-bar-chart stacked bar chart]|| || ||
-||[[image http://farm8.staticflickr.com/7490/15814685770_09478e1222_t.jpg]] _
-[[# grouped-bar-chart]][#grouped-bar-chart-note grouped bar chart]|| || ||
 ||[[image http://farm6.static.flickr.com/5044/5267212089_a7749bbe3e_s.jpg]] [#scatterplot scatter plot]||##gray|# seq 50 | awk '{x=rand(); print x,x+rand()}' > data.txt## _
  _
 set terminal png size 400,300 _
@@ -459,8 +459,6 @@ plot [-4:4] sin(x)|| ||
 ||axis limits|| || ||
 ||grid lines|| || ||
 ||[#logarithmic-y-axis logarithmic y-axis]|| || ||
-||||||~ [[# trivariate-charts]][#trivariate-charts-note trivariate charts]||
-||~ ||~ gnuplot||~ glpk||
 ||[#3d-scatter-plot 3d scatter plot]|| || ||
 ||[[image http://farm6.static.flickr.com/5245/5268191292_a75a367c39_s.jpg]] [#additional-data additional data set]||##gray|# seq 1 20 | awk '{print rand() + rand(), rand() + rand()}' \ _
 #@<&nbsp;&nbsp;&nbsp;>@> data.txt## _
@@ -604,11 +602,8 @@ unset key
 plot x with lines lc rgb "#ffffff"
 [[/code]]
 
-[[# bivariate-charts-note]]
-+ [#bivariate-charts Bivariate Charts]
-
-[[# trivariate-charts-note]]
-+ [#trivariate-charts Trivariate Charts]
+[[# multivariate-charts-note]]
++ [#multivariate-charts Multivariate Charts]
 
 [[# gnuplot]]
 + [#top Gnuplot]
