@@ -5,3 +5,4 @@ root
 root.*
 skeleton.db
 build
+.DS_Store
