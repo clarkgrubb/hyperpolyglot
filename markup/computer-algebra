@@ -4,7 +4,7 @@
  
 [#symbolic-expr symbolic expressions] | [#calculus calculus] | [#equations-unknowns equations and unknowns] | [#optimization optimization] | [#vectors vectors] | [#matrices matrices] | [#combinatorics combinatorics] | [#number-theory number theory] |  [#polynomials polynomials] | [#trigonometry trigonometry] | [#special-functions special functions] | [#permutations permutations] |  [#descriptive-statistics descriptive statistics] | [#distributions distributions] | [#statistical-tests statistical tests]
 
-[#bar-charts bar charts] | [#scatter-plots scatter plots] | [#line-surface-charts line and surface charts]
+[#bar-charts bar charts] | [#scatter-plots scatter plots] | [#line-charts line charts] | [#surface-charts surface charts] | [#chart-options chart options]
 
 ||~ ||~ [#mathematica mathematica]||~ [#maple maple]||~ [#maxima maxima]||~ [#sympy sympy]||
 ||[[# version-used]][#version-used-note version used] _
@@ -361,7 +361,8 @@ First /@ Position[{7, 8, 9, 9}, 9]||with(ListTools): _
  _
 Search(9, [7, 8, 9]); _
  _
-##gray|# SearchAll returns all positions##|| || ||
+##gray|# SearchAll returns all positions##||a: [7, 8, 9, 9]; _
+first(sublist_indices(a, lambda([x], x = 9)));|| ||
 ||[[# array-slice]][#array-slice-note slice] _
 @<&nbsp;>@||{1, 2, 3}[[1 ;; 2]]|| || || ||
 ||[[# array-of-integers-as-index]][#array-of-integers-as-index-note array of integers as index]||##gray|(* evaluates to {7, 9, 9} *)## _
@@ -371,23 +372,25 @@ AppendTo[a, 9] _
 elem = a[[Length[a]]] _
 a = Delete[a, Length[a]] _
 elem|| || || ||
-||[[# array-front]][#array-front-note manipulate front]||a = {6,7,8} _
+||[[# array-front]][#array-front-note manipulate front]||a = {6, 7, 8} _
 PrependTo[a, 5] _
 elem = a[[1]] _
 a = Delete[a, 1] _
-elem|| || || ||
+elem|| ||a: [6, 7, 8]; _
+push(5, a); _
+elem: pop(a);|| ||
 ||[[# array-head]][#array-head-note head] _
-@<&nbsp;>@||First[{1, 2, 3}]|| || || ||
+@<&nbsp;>@||First[{1, 2, 3}]|| ||first([1, 2, 3]);|| ||
 ||[[# array-tail]][#array-tail-note tail] _
-@<&nbsp;>@||Rest[{1, 2, 3}]|| || || ||
+@<&nbsp;>@||Rest[{1, 2, 3}]|| ||rest([1, 2, 3]);|| ||
 ||[[# array-cons]][#array-cons-note cons]||##gray|(* first arg must be an array *)## _
-Prepend[{2, 3}, 1]|| || || ||
+Prepend[{2, 3}, 1]|| ||cons(1, [2, 3]);|| ||
 ||[[# array-concatenate]][#array-concatenate-note concatenate] _
-@<&nbsp;>@||Join[{1, 2, 3}, {4, 5, 6}]|| || || ||
+@<&nbsp;>@||Join[{1, 2, 3}, {4, 5, 6}]||[op([1, 2, 3]), op([4, 5, 6])]||append([1, 2, 3], [4, 5, 6]);|| ||
 ||[[# array-replicate]][#array-replicate-note replicate] _
-@<&nbsp;>@||ten_zeros = Table[0, {i, 0, 9}]|| || || ||
+@<&nbsp;>@||ten_zeros = Table[0, {i, 0, 9}]|| ||ten_zeros: makelist(0, 10);|| ||
 ||[[# copy-array]][#copy-array-note copy] _
-@<&nbsp;>@||a2 = a|| || || ||
+@<&nbsp;>@||a2 = a|| ||a2: copylist(a);|| ||
 ||[[# iterate-over-array]][#iterate-over-array-note iterate] _
 @<&nbsp;>@||Function[x, Print[x]] /@ {1, 2, 3}||for i in [1, 2, 3] do _
 @<&nbsp;&nbsp;>@print(i); _
@@ -395,15 +398,15 @@ end do;||for i in [1, 2, 3] do print(i);|| ||
 ||[[# reverse-array]][#reverse-array-note reverse] _
 @<&nbsp;>@||Reverse[{1, 2, 3}]||with(ListTools): _
  _
-Reverse([1, 2, 3]);|| || ||
+Reverse([1, 2, 3]);||reverse([1, 2, 3]);|| ||
 ||[[# sort-array]][#sort-array-note sort]||##gray|(* original list not modified: *)## _
 a = Sort[{3, 1, 4, 2}]||##gray|# original list not modified:## _
-a := sort([3, 1, 4, 2]);|| || ||
+a := sort([3, 1, 4, 2]);||sort([3, 1, 4, 2]);|| ||
 ||[[# dedupe-array]][#dedupe-array-note dedupe] _
 @<&nbsp;>@||DeleteDuplicates[{1, 2, 2, 3}]||with(ListTools): _
  _
 ##gray|# original list not modified:## _
-a := MakeUnique([1, 1, 2, 3]);|| || ||
+a := MakeUnique([1, 1, 2, 3]);||unique([1, 2, 2, 3]);|| ||
 ||[[# membership]][#membership-note membership] _
 @<&nbsp;>@||MemberQ[{1, 2, 3}, 2]||evalb(2 in [1, 2, 3]); _
 member(2, [1, 2, 3]);||member(7, {1, 2, 3}); _
@@ -422,7 +425,7 @@ sqr[x_] := x * x _
 SetAttributes[sqr, Listable] _
 sqr[{1, 2, 3, 4}]||map(x -> x * x, [1, 2, 3]);||map(lambda([x], x * x), [1, 2, 3]);|| ||
 ||[[# filter]][#filter-note filter] _
-@<&nbsp;>@||Select[{1, 2, 3}, # > 2 &]||select(x -> x > 2, [1, 2, 3]);|| || ||
+@<&nbsp;>@||Select[{1, 2, 3}, # > 2 &]||select(x -> x > 2, [1, 2, 3]);||sublist([1, 2, 3], lambda([x], x > 2));|| ||
 ||[[# reduce]][#reduce-note reduce] _
 @<&nbsp;>@||Fold[Plus, 0, {1, 2, 3}]|| || || ||
 ||[[# universal-existential-test]][#universal-existential-test-note universal and existential tests]||##gray|//none//##|| || || ||
@@ -430,7 +433,8 @@ sqr[{1, 2, 3, 4}]||map(x -> x * x, [1, 2, 3]);||map(lambda([x], x * x), [1, 2, 3
 Max[{6, 7, 8}]||with(ListTools): _
  _
 FindMinimalElement([6, 7, 8]); _
-FindMaximalElement([6, 7, 8]);|| || ||
+FindMaximalElement([6, 7, 8]);||apply(min, [6, 7, 8]); _
+apply(max, [6, 7, 8]);|| ||
 ||[[# shuffle-sample]][#shuffle-sample-note shuffle and sample]||x = {3, 7, 5, 12, 19, 8, 4} _
  _
 RandomSample[x] _
@@ -458,7 +462,8 @@ Interleave([1, 2, 3], ["a", "b", "c"]); _
 zip(@@`[]`@@, [1, 2, 3], ["a", "b", "c"]); _
  _
 ##gray|# same as DotProduct([1, 2, 3], [2, 3, 4]):## _
-add(zip(@@`*`@@, [1, 2, 3], [2, 3, 4]))|| || ||
+add(zip(@@`*`@@, [1, 2, 3], [2, 3, 4]))||##gray|/* list of six elements: */## _
+join([1, 2, 3], ["a", "b", "c"]);|| ||
 ||[[# cartesian-product]][#cartesian-product-note cartesian product]||Outer[List, {1, 2, 3}, {"a", "b", "c"}]|| || || ||
 ||||||||||~ [[# sets]][#sets-note sets]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
@@ -683,13 +688,19 @@ AbsoluteFileName["~/foo"]|| || || ||
 ||||||||||~ [[# reflection]][#reflection-note reflection]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[#function-documentation get function documentation]||?Tan _
-Information[Tan]||Describe(solve);||describe(solve);||print(sympy.solve.@@__doc__@@) _
+Information[Tan]||Describe(solve);||describe(solve); _
+ _
+? solve;||print(sympy.solve.@@__doc__@@) _
  _
 ##gray|# in IPython:## _
 sympy.solve? _
 help(sympy.solve)||
 ||[[# func-options]][#func-options-note function options]||Options[Solve] _
 Options[Plot]|| || || ||
+||[[# func-src]][#func-src-note function source]|| ||interface(verboseproc = 2); _
+print(ScatterPlot);|| ||import inspect _
+ _
+inspect.getsourcelines(sympy.integrate)||
 ||[#data-type query data type]||Head[x]||whattype(x);||symbolp(x); _
 numberp(7); _
 stringp("seven"); _
@@ -2136,32 +2147,53 @@ ANOVA[Join[x1, x2, y]]|| || || ||
 @<&nbsp;&nbsp;>@ChartLegends-> _
 @<&nbsp;&nbsp;&nbsp;&nbsp;>@{"a","b","c","d","e"}]||with(Statistics): _
  _
-ColumnGraph(["a =7, "b"=3, "c"=8, "d"=5, "e"=5]);|| || ||
+ColumnGraph( _
+@<&nbsp;&nbsp;>@["a" =7, "b"=3, "c"=8, "d"=5, "e"=5]);||x: [7, 3, 8, 5, 5]; _
+labs: [a, b, c, d, e]; _
+data: makelist(makelist(labs[i], j, x[i]), i, 5); _
+wxbarsplot(flatten(data));|| ||
 ||[[# horizontal-bar-chart]][[image http://cdn.hyperpolyglot.org/images/horizontal-bar-chart.jpg]] _
 [#horizontal-bar-chart-note horizontal bar chart]||BarChart[{7, 3, 8, 5, 5}, BarOrigin -> Left]||with(Statistics): _
  _
-BarChart(["a"=7, "b"=3, "c"=8, "d"=5, "e"=5]);|| || ||
+BarChart(["a"=7, "b"=3, "c"=8, "d"=5, "e"=5]);||##gray|//none//##|| ||
+||[[# grouped-bar-chart]][[image http://cdn.hyperpolyglot.org/images/grouped-bar-chart.jpg]] _
+[#grouped-bar-chart-note grouped bar chart]||data = @@{{@@7, 1}, {3, 2}, {8, 1}, {5, 3}, {5, 1@@}}@@ _
+BarChart[data]||with(Statistics): _
+ _
+ColumnGraph([[7, 3, 8, 5, 5], [1, 2, 1, 3, 1]]);||x: [7, 3, 8, 5, 5]; _
+y: [1,2,1,3,1]; _
+labs: [a, b, c, d, e]; _
+d1: makelist(makelist(labs[i], j, x[i]), i, 5); _
+d2: makelist(makelist(labs[i], j, y[i]), i, 5); _
+wxbarsplot(flatten(d1), flatten(d2));|| ||
 ||[[# stacked-bar-chart]][[image http://cdn.hyperpolyglot.org/images/stacked-bar-chart.jpg]] _
 [#stacked-bar-chart-note stacked bar chart]||data = @@{{@@7, 1}, {3, 2}, {8, 1}, {5, 3}, {5, 1@@}}@@ _
 BarChart[data, ChartLayout -> "Stacked"]||with(Statistics): _
  _
 ColumnGraph([[7, 3, 8, 5, 5], [1, 2, 1, 3, 1]], _
-@<&nbsp;&nbsp;>@format = stacked);|| || ||
-||[[# grouped-bar-chart]][[image http://cdn.hyperpolyglot.org/images/grouped-bar-chart.jpg]] _
-[#grouped-bar-chart-note grouped bar chart]||data = @@{{@@7, 1}, {3, 2}, {8, 1}, {5, 3}, {5, 1@@}}@@ _
-BarChart[data]||with(Statistics): _
- _
-ColumnGraph([[7, 3, 8, 5, 5], [1, 2, 1, 3, 1]]);|| || ||
+@<&nbsp;&nbsp;>@format = stacked);||x: [7, 3, 8, 5, 5]; _
+y: [1,2,1,3,1]; _
+labs: [a, b, c, d, e]; _
+d1: makelist(makelist(labs[i], j, x[i]), i, 5); _
+d2: makelist(makelist(labs[i], j, y[i]), i, 5); _
+wxbarsplot(flatten(d1), flatten(d2), _
+@<&nbsp;&nbsp;>@grouping=stacked);|| ||
 ||[[# pie-chart]][[image http://cdn.hyperpolyglot.org/images/pie-chart.jpg]] _
 [#pie-chart-note pie chart]||PieChart[{7, 3, 8, 5, 5}]||with(Statistics): _
  _
-PieChart(["a"=7, "b"=3, "c"=8, "d"=5, "e"=5]);|| || ||
+PieChart(["a"=7, "b"=3, "c"=8, "d"=5, "e"=5]);||x: [7, 3, 8, 5, 5]; _
+labs: [a, b, c, d, e]; _
+data: makelist(makelist(labs[i], j, x[i]), i, 5); _
+wxpiechart(flatten(data));|| ||
 ||[[# histogram]][[image http://cdn.hyperpolyglot.org/images/histogram.jpg]] _
 [#histogram-note histogram]||X = NormalDistribution[0, 1] _
 Histogram[RandomReal[X, 100], 10]||with(Statistics): _
  _
 X := RandomVariable(Normal(0, 1)); _
-Histogram(Sample(X, 100));|| || ||
+Histogram(Sample(X, 100));||load(distrib); _
+ _
+data: makelist(random_normal(0, 1), i, 1, 100); _
+wxhistogram(data);|| ||
 ||[[# box-plot]][[image http://cdn.hyperpolyglot.org/images/box-plot.jpg]] _
 [#box-plot-note box plot]||X = NormalDistribution[0, 1] _
 n100 = RandomVariate[X, 100] _
@@ -2174,32 +2206,30 @@ data = {n100, e100, u100} _
 BoxWhiskerChart[data]||with(Statistics): _
  _
 X := RandomVariable(Normal(0, 1)); _
-BoxPlot(Sample(X, 100));|| || ||
-||[[# set-chart-title]][#set-chart-title-note set chart title]||BoxWhiskerChart[data, _
-@<&nbsp;&nbsp;>@PlotLabel -> "chart example"]||BoxPlot(Sample(X, 100), _
-@<&nbsp;&nbsp;>@ title = "chart example");|| || ||
-||[[# grid-of-subplots]][[image http://cdn.hyperpolyglot.org/images/subplot-grid.jpg]] _
-[#grid-of-subplots-note grid of subplots]||GraphicsGrid[Table[Table[ _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Histogram[RandomReal[X, 100], 10], _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@{i, 1, 2}], _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@{j, 1, 2}]]||with(plots): with(Statistics): _
+BoxPlot(Sample(X, 100));||load(distrib); _
  _
-A := Array(1 .. 2, 1 .. 2); _
-X := RandomVariable(Normal(0, 1)); _
-for i while i <= 2 do _
-@<&nbsp;&nbsp;>@for j while j <= 2 do _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@A[i, j] := Histogram(Sample(X, 100)); _
-@<&nbsp;&nbsp;>@end do; _
-end do; _
-Display(A);|| || ||
-||[[# save-plot-as-png]][#save-plot-as-png-note save plot as png]||Export["hist.png", _
-@<&nbsp;&nbsp;>@Histogram[RandomReal[X, 100], 10]]||with(plottools): with(Statistics): _
- _
-X := RandomVariable(Normal(0, 1)); _
-plt := BoxPlot(Sample(X, 100)); _
-exportplot("boxplot.png", plt);|| || ||
+data: makelist(random_normal(0, 1), i, 1, 100); _
+wxboxplot(data);|| ||
 ||||||||||~ [[# scatter-plots]][#scatter-plots-note scatter plots]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
+||[[# strip-chart]][[image http://cdn.hyperpolyglot.org/images/strip-chart.jpg]] _
+[#strip-chart-note strip chart]||X = NormalDistribution[0, 1] _
+data = {RandomReal[X], 0} & /@ Range[1, 50] _
+ListPlot[data]||with(Statistics): _
+ _
+X := RandomVariable(Normal(0, 1)); _
+ScatterPlot(Sample(X, 50), [0$i = 1 .. 50]);|| || ||
+||[[# strip-chart-jitter]][[image http://cdn.hyperpolyglot.org/images/strip-chart-jitter.jpg]] _
+[#strip-chart-jitter-note strip chart with jitter]||X = NormalDistribution[0, 1] _
+Y = UniformDistribution[{-0.05, 0.05}] _
+data = {RandomReal[X], RandomReal[Y]} & /@ _
+@<&nbsp;&nbsp;>@Range[1, 50] _
+ListPlot[data, PlotRange -> {Automatic, {-1, 1}}]||with(Statistics): _
+ _
+X := RandomVariable(Normal(0, 1)); _
+ScatterPlot(Sample(X, 50), _
+@<&nbsp;&nbsp;>@jitter = true, _
+@<&nbsp;&nbsp;>@view = [-2 .. 2, -19 .. 20]);|| || ||
 ||[[# scatter-plot]][[image http://cdn.hyperpolyglot.org/images/scatter-plot.jpg]] _
 [#scatter-plot-note scatter plot]||X = NormalDistribution[0, 1] _
 rand = Function[RandomReal[X]] _
@@ -2213,14 +2243,36 @@ x: makelist(random_normal(0, 1), i, 1, 50); _
 y: makelist(random_normal(0, 1), i, 1, 50); _
 wxplot2d([discrete, x, y], [style, points]);|| ||
 ||[[# additional-point-set]][[image http://cdn.hyperpolyglot.org/images/additional-point-set.jpg]] _
-[#additional-point-set-note additional point set]||Show[ListPlot[data1], _
-@<&nbsp;&nbsp;>@ListPlot[data2, PlotStyle -> Red]]|| || || ||
+[#additional-point-set-note additional point set]||X = NormalDistribution[0, 1] _
+rand = Function[RandomReal[X]] _
+data1 = {rand[], rand[]} & /@ Range[1, 50] _
+data2 = {rand[]+1, rand[]+1} & /@ Range[1, 50] _
+Show[ListPlot[data1], _
+@<&nbsp;&nbsp;>@ListPlot[data2, PlotStyle -> Red]]||with(Statistics): _
+with(plots): _
+ _
+X := RandomVariable(Normal(0, 1)); _
+p1 := plot(Sample(X, 50), Sample(X, 50), _
+@<&nbsp;&nbsp;>@color = black, style = point); _
+p2 := plot(Sample(X, 50) +~ 1, _
+@<&nbsp;&nbsp;>@Sample(X, 50) +~ 1, color = red, _
+@<&nbsp;&nbsp;>@style = point); _
+display([p1, p2]);||load(distrib); _
+ _
+x1: makelist(random_normal(0, 1), i, 1, 50); _
+y1: makelist(random_normal(0, 1), i, 1, 50); _
+x2: makelist(random_normal(0, 1), i, 1, 50) + 1; _
+y2: makelist(random_normal(0, 1), i, 1, 50); + 1; _
+wxplot2d([[discrete, x1, y1], _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@[discrete, x2, y2]], _
+@<&nbsp;&nbsp;>@[style, points], [color, black, red]);|| ||
 ||[[# point-types]][#point-types-note point types]||ListPlot[data, PlotMarkers -> {"*"}] _
  _
 ##gray|(* shows standard sequence of point types: *)## _
 Graphics`PlotMarkers[] _
  _
-##gray|(* The elements of the PlotMarkers array can be strings, symbols, expressions, or images. *)##||ScatterPlot(Sample(X, 50), Sample(X, 50), symbol = asterisk); _
+##gray|(* The elements of the PlotMarkers array can be strings, symbols, expressions, or images. *)##||ScatterPlot(Sample(X, 50), Sample(X, 50), _
+@<&nbsp;&nbsp;>@symbol = asterisk); _
  _
 ##gray|(* possible symbol values: _
  _
@@ -2252,21 +2304,69 @@ Graphics`PlotMarkers[] _
  _
 The bullet and box are filled versions of circle and square. _
 */##|| ||
+||[[# point-size]][#point-size-note point size]||X = NormalDistribution[0, 1] _
+rand = Function[RandomReal[X]] _
+data = {rand[], rand[]} & /@ Range[1, 50] _
+##gray|(* point size is fraction of plot width: *)## _
+ListPlot[data, PlotStyle -> {PointSize[0.03]}]|| || || ||
+||[[# scatter-plot-matrix]][[image http://cdn.hyperpolyglot.org/images/scatter-plot-matrix.jpg]] _
+[#scatter-plot-matrix-note scatter plot matrix]||Needs["StatisticalPlots@@`@@"] _
+ _
+X = NormalDistribution[0, 1] _
+x = RandomReal[X, 50] _
+y = RandomReal[X, 50] _
+z = x + 3 * y _
+w = y + RandomReal[X, 50] _
+PairwiseScatterPlot[Transpose[{x, y, z, w}]]|| ||load(distrib); _
+ _
+x: makelist(random_normal(0, 1), i, 1, 50); _
+y: makelist(random_normal(0, 1), i, 1, 50); _
+z: x + 3 * y; _
+w: y + makelist(random_normal(0, 1), i, 1, 50); _
+wxscatterplot(transpose(matrix(x, y, z, w)));|| ||
 ||[[# scatter-plot-3d]][[image http://cdn.hyperpolyglot.org/images/scatter-plot-3d.jpg]] _
 [#scatter-plot-3d-note 3d scatter plot]||X = NormalDistribution[0, 1] _
 data = RandomReal[X, {50, 3}] _
-ListPointPlot3D[data]|| || || ||
+ListPointPlot3D[data]||with(Statistics): _
+ _
+X := RandomVariable(Normal(0, 1)); _
+ScatterPlot3D([[Sample(X, 50)], [Sample(X, 50)], _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@[Sample(X, 50)]]);||##gray|//none//##|| ||
 ||[[# bubble-chart]][[image http://cdn.hyperpolyglot.org/images/bubble-chart.jpg]] _
 [#bubble-chart-note bubble chart]||X = NormalDistribution[0, 1] _
 data = RandomReal[X, {50, 3}] _
-BubbleChart[data]|| || || ||
+BubbleChart[data]||with(Statistics); _
+ _
+X := RandomVariable(Normal(0, 1)); _
+Z := RandomVariable(DiscreteUniform(1, 10)); _
+##gray|# appears to ignore the 3rd argument and _
+# make a scatter plot:## _
+BubblePlot(Sample(X, 50), Sample(X, 50), _
+@<&nbsp;&nbsp;>@Sample(Z, 50));|| || ||
 ||[[# linear-regression-line]][[image http://cdn.hyperpolyglot.org/images/linear-regression-line.jpg]] _
 [#linear-regression-line-note linear regression line]||data = Table[{i, 2 * i + RandomReal[{-5, 5}]}, _
 @<&nbsp;&nbsp;>@{i, 0, 20}] _
 model = LinearModelFit[data, x, x] _
 Show[ListPlot[data], _
 @<&nbsp;&nbsp;>@Plot[model["BestFit"], _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@{x, 0, 20}]]|| || || ||
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@{x, 0, 20}]]||with(Statistics); _
+ _
+X := RandomVariable(Normal(0, 1)); _
+x := [i$i = 1 .. 100]; _
+y := x +~ 10 * Sample(X, 100); _
+ScatterPlot(x, y, fit = [a*t+b, t]);||load(distrib); _
+load(lsquares); _
+ _
+X: makelist(i, i, 50); _
+Y: makelist(X[i] + random_normal(0, 1), i, 50); _
+M: transpose(matrix(X, Y)); _
+fit: lsquares_estimates(M, [x, y], y = A*x + B, _
+@<&nbsp;&nbsp;>@[A, B]); _
+A: second(fit[1][1]), numer; _
+B: second(fit[1][2]), numer; _
+Xhat: makelist(A*X[i] + B, i, 50); _
+wxplot2d([[discrete, X, Y], [discrete, X, Xhat]], _
+@<&nbsp;&nbsp;>@[style, points, lines], [color, black, red]);|| ||
 ||[[# q-q-plot]][[image http://cdn.hyperpolyglot.org/images/q-q-plot.jpg]] _
 [#q-q-plot-note quantile-quantile plot]||X = NormalDistribution[0, 1] _
 data1 = RandomReal[1, 50] _
@@ -2275,14 +2375,14 @@ QuantilePlot[data1, data2]||with(Statistics): _
  _
 X := RandomVariable(Normal(0, 1)); _
 Y := RandomVariable(Uniform(0, 1)); _
-QuantilePlot(Sample(X, 200), Sample(Y, 200));|| || ||
-||[[# axis-label]][#axis-label-note axis label]||data = Table[{i, i^2}, {i, 1, 20}] _
-ListLinePlot[data, AxesLabel -> {x, x^2}]||plot([i$i = 1 .. 20], [i*i$i = 1 .. 20], _
-@<&nbsp;&nbsp;>@labels = [x, x^2]);|| || ||
-||[[# axis-limits]][#axis-limits-note axis limits]||Plot[x^2, {x, 0, 20}, _
-@<&nbsp;&nbsp;>@PlotRange -> @@{{0, 20}, {-200, 500}}@@]||plot([i$i = 1 .. 20], [i*i$i = 1 .. 20], _
-@<&nbsp;&nbsp;>@x = 0 .. 20, y = -200 .. 500);|| || ||
-||||||||||~ [[# line-surface-charts]][#line-surface-charts-note line and surface charts]||
+QuantilePlot(Sample(X, 200), Sample(Y, 200));||load(distrib); _
+ _
+x: makelist(random_continuous_uniform(0, 1), _
+@<&nbsp;&nbsp;>@i, 200); _
+y: makelist(random_normal(0, 1), i, 200); _
+wxplot2d([discrete, sort(x), sort(y)], _
+@<&nbsp;&nbsp;>@[style, points]);|| ||
+||||||||||~ [[# line-charts]][#line-charts-note line charts]||
 ||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
 ||[[# polygonal-line-plot]][[image http://cdn.hyperpolyglot.org/images/polygonal-line-plot.jpg]] _
 [#polygonal-line-plot-note polygonal line plot]||X = NormalDistribution[0, 1] _
@@ -2293,12 +2393,30 @@ ListLinePlot[data]||with(Statistics): _
  _
 X := RandomVariable(Normal(0, 1)); _
 pts := Sample(X, 20); _
-plot([i$i = 1 .. 20], pts);|| || ||
+plot([i$i = 1 .. 20], pts);||load(distrib); _
+ _
+x: makelist(random_normal(0, 1), i, 1, 20); _
+wxplot2d([discrete, makelist(i, i, 20), x]);|| ||
 ||[[# additional-line]][[image http://cdn.hyperpolyglot.org/images/additional-line.jpg]] _
 [#additional-line-note additional line]||X = NormalDistribution[0, 1] _
 data1 = RandomReal[X, 20] _
 data2 = RandomReal[X, 20] _
-ListLinePlot[{data1, data2}]|| || || ||
+ListLinePlot[{data1, data2} _
+@<&nbsp;&nbsp;>@PlotStyle->{Black, Red}]||with(Statistics): _
+with(plots): _
+ _
+X := RandomVariable(Normal(0, 1)); _
+p1 := plot([i$i = 1 .. 50], Sample(X, 50), _
+@<&nbsp;&nbsp;>@color = black); _
+p2 := plot([i$i = 1 .. 50], Sample(X, 50), _
+@<&nbsp;&nbsp;>@color = red); _
+display(p1, p2);||load(distrib); _
+ _
+x: makelist(random_normal(0, 1), i, 1, 20); _
+y: makelist(random_normal(0, 1), i, 1, 20); _
+wxplot2d([[discrete, makelist(i, i, 20), x], _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@[discrete, makelist(i, i, 20), y]], _
+@<&nbsp;&nbsp;>@[color, black, red]);|| ||
 ||[[# line-types]][#line-types-note line types]||ListLinePlot[data, PlotStyle -> Dashed] _
  _
 ##gray|(* PlotStyle values: _
@@ -2306,26 +2424,78 @@ ListLinePlot[{data1, data2}]|| || || ||
 @<&nbsp;&nbsp;>@Dashed _
 @<&nbsp;&nbsp;>@DotDashed _
 @<&nbsp;&nbsp;>@Dotted _
-*)##|| || || ||
-||[[# legend]][[image http://cdn.hyperpolyglot.org/images/legend.jpg]] _
-[#legend-note legend]||X = NormalDistribution[0, 1] _
+*)##||with(Statistics): _
+ _
+X := RandomVariable(Normal(0, 1)); _
+plot([i$i = 1 .. 50], Sample(X, 50), _
+@<&nbsp;&nbsp;>@linestyle = dot); _
+ _
+##gray|(* linestyle values: _
+ _
+@<&nbsp;&nbsp;>@solid _
+@<&nbsp;&nbsp;>@dot _
+@<&nbsp;&nbsp;>@dash _
+@<&nbsp;&nbsp;>@dashdot _
+@<&nbsp;&nbsp;>@longdash _
+@<&nbsp;&nbsp;>@spacedash _
+@<&nbsp;&nbsp;>@spacedot _
+*)##||##gray|//none//##|| ||
+||[[# line-thickness]][#line-thickness-note line thickness]||X = NormalDistribution[0, 1] _
 data1 = RandomReal[X, 20] _
 data2 = RandomReal[X, 20] _
+##gray|(* thickness is fraction of plot width: *)## _
 ListLinePlot[{data1, data2}, _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@PlotLegends -> {"first", "second"}]|| || || ||
+@<&nbsp;&nbsp;>@PlotStyle -> {Thickness[0.01], Thickness[0.02]}]||with(Statistics); _
+with(plots); _
+ _
+X := RandomVariable(Normal(0, 1)); _
+p1 := plot([i$i = 1 .. 50], Sample(X, 50), _
+@<&nbsp;&nbsp;>@thickness = 1); _
+p2 := plot([i$i = 1 .. 50], Sample(X, 50), _
+@<&nbsp;&nbsp;>@thickness = 3); _
+display(p1, p2)|| || ||
 ||[[# function-plot]][[image http://cdn.hyperpolyglot.org/images/function-plot.jpg]] _
 [#function-plot-note function plot]||Plot[Sin[x], {x, -4, 4}]||plot(sin(x), x = -4 .. 4);||wxplot2d(sin(x), [x, -4, 4]);|| ||
+||[[# parametric-plot]][[image http://cdn.hyperpolyglot.org/images/parametric-plot.jpg]] _
+[#parametric-plot-note parametric plot]||ParametricPlot[{Sin[u], Sin[2 * u]}, _
+@<&nbsp;&nbsp;>@{u, 0, 2 * Pi}]||plot([sin(t), sin(2*t), t = 0 .. 2*Pi]);||wxplot2d([parametric, sin(t), sin(2*t), _
+@<&nbsp;&nbsp;>@[t, 0, 2*%pi]]);|| ||
+||[[# implicit-plot]][[image http://cdn.hyperpolyglot.org/images/implicit-plot.jpg]] _
+[#implicit-plot-note implicit plot]||ContourPlot[x^2 + y^2 == 1, {x, -1, 1}, _
+@<&nbsp;&nbsp;>@{y, -1, 1}]||with(plots, implicitplot); _
+ _
+implicitplot(x^2+y^2 = 1, x = -1 .. 1, _
+@<&nbsp;&nbsp;>@y = -1 .. 1);||load(implicit_plot); _
+ _
+wximplicit_plot(x^2 + y^2 = 1, [x, -1, 1], _
+@<&nbsp;&nbsp;>@[y, -1, 1]);|| ||
+||[[# polar-plot]][[image http://cdn.hyperpolyglot.org/images/polar-plot.jpg]] _
+[#polar-plot-note polar plot]||PolarPlot[Sin[3 * t], {t, 0, Pi}]||with(plots): _
+ _
+polarplot(sin(3*u), u = 0 .. Pi);||f(x) := sin(3 * x); _
+wxplot2d([parametric, cos(t)*f(t), sin(t)*f(t), _
+@<&nbsp;&nbsp;>@[t, 0, %pi]]);|| ||
 ||[[# cubic-spline]][[image http://cdn.hyperpolyglot.org/images/cubic-spline.jpg]] _
-[#cubic-spline-note cubic spline]||data = Table[{i, RandomReal[nd]}, _
+[#cubic-spline-note cubic spline]||X = NormalDistribution[0, 1] _
+data = Table[{i, RandomReal[X]}, _
 @<&nbsp;&nbsp;>@{i, 0, 20}] _
 f = Interpolation[data, _
 @<&nbsp;&nbsp;>@InterpolationOrder -> 3] _
 Show[ListPlot[data], _
-@<&nbsp;&nbsp;>@Plot[f[x], {x, 0, 20}]]|| || || ||
-||[[# logarithmic-y-axis]][#logarithmic-y-axis-note logarithmic y-axis]||LogPlot[{x^2, x^3, x^4, x^5}, _
-@<&nbsp;&nbsp;>@{x, 0, 20}]||with(plots): _
+@<&nbsp;&nbsp;>@Plot[f[x], {x, 0, 20}]]||with(CurveFitting): _
+with(Statistics): _
  _
-logplot([x^2, x^3, x^4, x^5], x = 0 .. 20);|| || ||
+X := RandomVariable(Normal(0, 1)); _
+x := [i$i = 1 .. 20]; _
+y := convert(Sample(X, 20), list); _
+plot(Spline(zip(@@`[]`@@, x, y), z), z = 0 .. 21);||load(interpol); _
+load(distrib); _
+load(draw); _
+ _
+data: makelist([i, random_normal(0, 1)], i, 20); _
+cspline(data); _
+f(x):=@@''@@%; _
+wxdraw2d(explicit(f(x),x,0,20));|| ||
 ||[[# area-chart]][[image http://cdn.hyperpolyglot.org/images/area-chart.jpg width="75px"]] _
 [#area-chart-note area chart]||data = @@{{@@7, 1, 3, 2, 8}, {1, 5, 3, 5, 1@@}}@@ _
 stacked = {data[[1]], data[[1]] + data[[2]]} _
@@ -2335,6 +2505,21 @@ ListLinePlot[stacked, Filling -> _
  _
 AreaChart([[7, 1, 3, 2, 8], [1, 5, 3, 5, 1]], _
 @<&nbsp;&nbsp;>@format = stacked);|| || ||
+||||||||||~ [[# surface-charts]][#surface-charts-note surface charts]||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
+||[[# contour-plot]][[image http://cdn.hyperpolyglot.org/images/contour-plot.jpg]] _
+[#contour-plot-note contour plot]||##gray|(* of function: *)## _
+ContourPlot[x * (y - 1), {x, 0, 10}, {y, 0, 10}] _
+ _
+##gray|(* of data: *)## _
+X = NormalDistribution[0, 1] _
+rand = Function[RandomReal[X]] _
+data = Table[x * (y - 1) + 5 * rand[], _
+@<&nbsp;&nbsp;>@{x, 0, 10}, {y, 0, 10}] _
+ListContourPlot[data]||with(plots): _
+ _
+contourplot(x*(y-1), x = 0 .. 10, y = 0 .. 10);||wxcontour_plot(x * (y-1), [x, 0, 10], _
+@<&nbsp;&nbsp;>@[y, 0, 10]);|| ||
 ||[[# heat-map]][[image http://cdn.hyperpolyglot.org/images/heat-map.jpg]] _
 [#heat-map-note heat map]||##gray|(* of function: *)## _
 DensityPlot[Sin[x] * Sin[y], _
@@ -2342,21 +2527,193 @@ DensityPlot[Sin[x] * Sin[y], _
 @<&nbsp;&nbsp;>@{y, -4, 4}] _
  _
 ##gray|(* of data: *)## _
+X = NormalDistribution[0, 1] _
+rand = Function[RandomReal[X]] _
 data = Table[x * y + 10 * rand[], _
 @<&nbsp;&nbsp;>@{x, 1, 10}, _
 @<&nbsp;&nbsp;>@{y, 1, 10}] _
-ListDensityPlot[data]|| || || ||
-||[[# contour-plot]][#contour-plot-note contour plot]||##gray|(* of function: *)## _
-ContourPlot[x * (y - 1), {x, 0, 10}, {y, 0, 10}] _
+ListDensityPlot[data]||with(plots): _
  _
-##gray|(* of data: *)## _
-data = Table[x * (y - 1) + 5 * rand[], {x, 0, 10}, {y, 0, 10}] _
-ListContourPlot[data]|| || || ||
-||[[# surface-plot]][#surface-plot-note surface plot]||Plot3D[Sinc[Sqrt[x^2 + y^2]], _
-@<&nbsp;&nbsp;>@{x, -25, 25}, _
-@<&nbsp;&nbsp;>@{y, -25, 25}]|| || || ||
-||[[# vector-field-plot]][#vector-field-plot-note vector field plot]||##gray|(* of function: *)## _
-StreamPlot[{x^2 + y, 1 + x - y^2}, {x, -4, 4}, {y, -4, 4}]|| || || ||
+densityplot(sin(x)*sin(y), x = -4..4, y = -4..4);||wxplot3d (sin(x) * sin(y), [x,-4,4], [y,-4,4], _
+@<&nbsp;&nbsp;>@[elevation, 0], [azimuth, 0], _
+@<&nbsp;&nbsp;>@[grid, 100, 100], [mesh_lines_color, false]);|| ||
+||[[# shaded-surface-plot]][[image http://cdn.hyperpolyglot.org/images/shaded-surface-plot.jpg]] _
+[#shaded-surface-plot-note shaded surface plot]||Plot3D[Exp[-(x^2 + y^2)], {x, -2, 2}, {y, -2, 2}, _
+@<&nbsp;&nbsp;>@MeshStyle -> None]||plot3d(exp(-x^2-y^2), x = -2 .. 2, _
+@<&nbsp;&nbsp;>@y = -2 .. 2, style = surface);|| || ||
+||[[# light-source]][#light-source-note light source]||lot3D[Exp[-(x^2 + y^2)], _
+@<&nbsp;&nbsp;>@{x, -2, 2}, {y, -2, 2}, _
+@<&nbsp;&nbsp;>@MeshStyle -> None,  _
+@<&nbsp;&nbsp;>@Lighting -> @@{{"Point", White, {5, -5, 5}}}@@]|| || || ||
+||[[# mesh-surface-plot]][[image http://cdn.hyperpolyglot.org/images/mesh-surface-plot.jpg]] _
+[#mesh-surface-plot-note mesh surface plot]||Plot3D[Exp[-(x^2 + y^2)], {x, -2, 2}, {y, -2, 2},  Lighting -> {White}, PlotStyle -> White]||plot3d(exp(-x^2-y^2), x = -2 .. 2, _
+@<&nbsp;&nbsp;>@y = -2 .. 2, style = wireframe)||wxplot3d(exp(-(x^2 + y^2)), _
+@<&nbsp;&nbsp;>@[x, -2, 2], [y, -2, 2], _
+@<&nbsp;&nbsp;>@[palette, false], [color, black]);|| ||
+||[[# view-point]][#view-point-note view point]||##gray|(* (x, y, z) coordinates; _
+@<&nbsp;&nbsp;&nbsp;>@(0, 0, 3) is from above: *)## _
+Plot3D[Exp[-(x^2 + y^2)], _
+@<&nbsp;&nbsp;>@{x, -2, 2}, {y, -2, 2}, _
+@<&nbsp;&nbsp;>@MeshStyle -> None, _
+@<&nbsp;&nbsp;>@ViewPoint -> {0, 0, 3}]|| || || ||
+||[[# vector-field-plot]][[image http://cdn.hyperpolyglot.org/images/vector-field-plot.jpg]] _
+[#vector-field-plot-note vector field plot]||StreamPlot[{x^2 + y, 1 + x - y^2}, {x, -4, 4}, {y, -4, 4}]||with(plots): _
+ _
+fieldplot([x^2 + y, y^2 + x + 1], _
+@<&nbsp;&nbsp;>@x = -4 .. 4, y = -4 .. 4);||plotdf([x^2 + y, 1 + x - y^2], [x, -4, 4], _
+@<&nbsp;&nbsp;>@[y, -4, 4]);|| ||
+||||||||||~ [[# chart-options]][#chart-options-note chart options]||
+||~ ||~ mathematica||~ maple||~ maxima||~ sympy||
+||[[# chart-title]][#chart-title-note chart title]||##gray|(* title on top by default *)## _
+Plot[Sin[x], {x, -4, 4}, _
+@<&nbsp;&nbsp;>@PlotLabel -> "title example"]||##gray|# title on top; caption on bottom## _
+ _
+plot(sin(x), title = "title example", _
+@<&nbsp;&nbsp;>@caption = "caption example")||wxplot2d(sin(x), [x, -4, 4], _
+@<&nbsp;&nbsp;>@[title, "title example"]); _
+ _
+data: 1, 1, 2, 2, 3, 3, 3, 3, 4]; _
+wxboxplot(data, title="title example"); _
+ _
+##gray|/* title on top by default */##|| ||
+||[[# axis-label]][#axis-label-note axis label]||data = Table[{i, i^2}, {i, 1, 20}] _
+ListLinePlot[data, AxesLabel -> {x, x^2}]||plot([i$i = 1 .. 20], [i*i$i = 1 .. 20], _
+@<&nbsp;&nbsp;>@labels = [x, x^2]);||x: makelist(i, i, 20); _
+y: makelist(i^2, i, 20); _
+wxplot2d([discrete, x, y], _
+@<&nbsp;&nbsp;>@[xlabel, "x"], [ylabel, "x^2"]);|| ||
+||[[# legend]][[image http://cdn.hyperpolyglot.org/images/legend.jpg]] _
+[#legend-note legend]||X = NormalDistribution[0, 1] _
+data1 = RandomReal[X, 20] _
+data2 = RandomReal[X, 20] _
+ListLinePlot[{data1, data2}, _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@PlotLegends -> {"first", "second"}]||with(Statistics); _
+with(plots); _
+ _
+X := RandomVariable(Normal(0, 1)); _
+p1 := plot([i$i = 1 .. 50], Sample(X, 50), _
+@<&nbsp;&nbsp;>@color = black, legend = "first"); _
+p2 := plot([i$i = 1 .. 50], Sample(X, 50), _
+@<&nbsp;&nbsp;>@color = red, legend = "second"); _
+display(p1, p2)||##gray|/* wxplot2d includes a legend by default. _
+ _
+Provide [legend, false] as argument to suppress it. */##|| ||
+||[[# data-label]][#data-label-note data label]||data = @@{{@@313, 3.7}, {62, .094}, {138, 6.6}, _
+@<&nbsp;&nbsp;>@{113, 0.76}, {126, 0.15}} _
+ _
+##gray|(* The {0, -1} argument of Text[] centers the label above the data point. *)## _
+Show[ListPlot[data, _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@AxesLabel -> {"pop", "area"}], _
+@<&nbsp;&nbsp;>@Graphics[Text["USA", data[[1]], {0, -1}]], _
+@<&nbsp;&nbsp;>@Graphics[Text["UK", data[[2]], {0, -1}]],  _
+@<&nbsp;&nbsp;>@Graphics[Text["Russia", data[[3]], {0, -1}]],  _
+@<&nbsp;&nbsp;>@Graphics[Text["Mexico", data[[4]], {0, -1}]], _
+@<&nbsp;&nbsp;>@Graphics[Text["Japan", data[[5]], {0, -1}]]]|| || || ||
+||[[# named-colors]][#named-colors-note named colors]||White Gray Black Transparent _
+ _
+Blue Brown Cyan Green Magenta Orange Pink Purple Red Yellow _
+ _
+LightBlue LightBrown LightCyan LightGray LightGreen LightMagenta LightOrange LightPink LightPurple LightRed LightYellow||aquamarine black blue brown coral cyan gold gray green grey khaki magenta maroon navy orange pink plum red sienna tan turquoise violet wheat white yellow _
+ _
+White WhiteSmoke LightGray LightGrey DarkGray DarkGrey Gray Grey DimGray DimGrey Black _
+ _
+AliceBlue AntiqueWhite Aqua Aquamarine Azure Beige Bisque BlanchedAlmond Blue BlueViolet Brown Burlywood CadetBlue Chartreuse Chocolate Coral CornflowerBlue Cornsilk Crimson Cyan DeepPink DeepSkyBlue DodgerBlue Feldspar Firebrick FloralWhite ForestGreen Fuchsia Gainsboro GhostWhite Gold Goldenrod Green GreenYellow Honeydew HotPink IndianRed Indigo Ivory Khaki Lavender LavenderBlush LawnGreen LemonChiffon Lime LimeGreen Linen Magenta Maroon MediumAquamarine MediumBlue MediumOrchid MediumPurple MediumSeaGreen MediumSlateBlue MediumSpringGreen MediumTurquoise MediumVioletRed MidnightBlue MintCream MistyRose Moccasin NavajoWhite Navy NavyBlue OldLace Olive OliveDrab Orange OrangeRed Orchid PaleGoldenrod PaleGreen PaleTurquoise PaleVioletRed PapayaWhip PeachPuff Peru Pink Plum PowderBlue Purple Red RosyBrown RoyalBlue SaddleBrown Salmon SandyBrown SeaGreen Seashell Sienna Silver SkyBlue SlateBlue SlateGray SlateGrey Snow SpringGreen SteelBlue Tan Teal Thistle Tomato Turquoise Violet VioletRed Wheat Yellow YellowGreen _
+ _
+DarkBlue DarkCyan DarkGoldenrod DarkGray DarkGreen DarkGrey DarkKhaki DarkMagenta DarkOliveGreen DarkOrange DarkOrchid DarkRed DarkSalmon DarkSeaGreen DarkSlateBlue DarkSlateGray DarkSlateGrey DarkTurquoise DarkViolet _
+ _
+LightBlue LightCoral LightCyan LightGoldenrod LightGoldenrodYellow LightGray LightGreen LightGrey LightPink LightSalmon LightSeaGreen LightSkyBlue LightSlateBlue LightSlateGray LightSlateGrey LightSteelBlue LightYellow||white gray black _
+ _
+gray0 gray10 gray100 gray20 gray30 gray40 gray50 gray60 gray70 gray80 gray90 gray100 grey grey0 grey10 grey20 grey30 grey40 grey50 grey60 grey70 grey80 grey90 grey100 _
+ _
+aquamarine beige blue brown coral cyan forest_green gold goldenrod green khaki magenta medium_blue midnight_blue navy orange orange_red pink plum purple red royalblue salmon sea_green skyblue spring_green turquoise violet yellow _
+ _
+dark_blue dark_cyan dark_goldenrod dark_gray dark_green dark_grey dark_khaki dark_magenta dark_orange dark_pink dark_red dark_salmon dark_turquoise dark_violet dark_yellow _
+ _
+light_blue light_coral light_cyan light_goldenrod light_gray light_green light_grey light_magenta light_pink light_red light_salmon light_turquoise light_yellow|| ||
+||[[# rgb-color]][#rgb-color-note rgb color]||RGBColor[1, 0, 0] _
+##gray|(* with opacity: *)## _
+RGBColor[1, 0, 0, 0.5]||ColorTools:-Color([1, 0, 0])||[color, "#FF0000"]|| ||
+||[[# background-color]][#background-color-note background color]||Plot[Sin[x], {x, 0, 2 Pi}, _
+@<&nbsp;&nbsp;>@Background -> Black, _
+@<&nbsp;&nbsp;>@PlotStyle -> White, _
+@<&nbsp;&nbsp;>@AxesStyle -> White, _
+@<&nbsp;&nbsp;>@TicksStyle -> White, _
+@<&nbsp;&nbsp;>@GridLines -> Automatic, _
+@<&nbsp;&nbsp;>@GridLinesStyle -> White]||p1 := plot([1, -1], x = -4 .. 4, _
+@<&nbsp;&nbsp;>@filled = true, _
+@<&nbsp;&nbsp;>@color = black, _
+@<&nbsp;&nbsp;>@axis = [color = white]); _
+p2 := plot(sin(x), x = -4 .. 4, _
+@<&nbsp;&nbsp;>@color = white, _
+@<&nbsp;&nbsp;>@axis = [color = white]); _
+display(p1, p2);|| || ||
+||[[# axis-limits]][#axis-limits-note axis limits]||Plot[x^2, {x, 0, 20}, _
+@<&nbsp;&nbsp;>@PlotRange -> @@{{0, 20}, {-200, 500}}@@]||plot([i$i = 1 .. 20], [i*i$i = 1 .. 20], _
+@<&nbsp;&nbsp;>@x = 0 .. 20, y = -200 .. 500);|| || ||
+||[[# logarithmic-y-axis]][#logarithmic-y-axis-note logarithmic y-axis]||LogPlot[{x^2, x^3, x^4, x^5}, _
+@<&nbsp;&nbsp;>@{x, 0, 20}]||with(plots): _
+ _
+logplot([x^2, x^3, x^4, x^5], x = 0 .. 20);||x: makelist(i, i, 20); _
+wxplot2d([ _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@[discrete, x, makelist(i^2, i, 20)], _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@[discrete, x, makelist(i^3, i, 20)]], _
+@<&nbsp;&nbsp;>@[logy, true]);|| ||
+||[[# aspect-ratio]][#aspect-ratio-note aspect ratio]||##gray|(* aspect ratio is height divided by width: *)## _
+Plot[Sin[x], {x, 0, 2 Pi}, AspectRatio -> 0.25] _
+ _
+##gray|(* In the notebook, dragging the corner of an image increases or decreases the size, but aspect ratio is preserved. *)##||##gray|# size is width and height in pixels:## _
+plot(sin(x), size = [800, 200]); _
+ _
+##gray|# In the notebook, dragging the corner _
+# of an image can change width and height _
+# independently##||wxplot2d(sin(x), [x, -4, 4], _
+@<&nbsp;&nbsp;>@[yx_ratio, 0.25]); _
+ _
+##gray|/* Image size can't be changed in notebook. */##|| ||
+||[[# ticks]][#ticks-note ticks]||Plot[Sin[x], {x, 0, 2 Pi}, Ticks -> None] _
+ _
+Plot[Sin[x], {x, 0, 2 Pi}, _
+@<&nbsp;&nbsp;>@Ticks -> @@{{0, Pi, 2*Pi}, {-1, 0, 1}}@@]||##gray|# rm x and y ticks:## _
+plot(sin(x), x = -4 .. 4, tickmarks = [0, 0]); _
+ _
+plot(sin(x), x = -4 .. 4, _
+@<&nbsp;&nbsp;>@tickmarks = [[0, Pi, 2*Pi], [-1, 0, 1]])||wxplot2d(sin(x), [x, -4, 4], _
+@<&nbsp;&nbsp;>@[xtics, -4, 2, 4], _
+@<&nbsp;&nbsp;>@[ytics, -1, 0.5, 1]);|| ||
+||[[# grid-lines]][#grid-lines-note grid lines]||Plot[Sin[x], {x, 0, 2 Pi}, _
+@<&nbsp;&nbsp;>@GridLines -> Automatic] _
+ _
+Plot[Sin[x], {x, 0, 2 Pi}, _
+@<&nbsp;&nbsp;>@GridLines -> @@{{@@0, 1, 2, 3, 4, 5, 6}, _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@{-1, -0.5, 0, 0.5, 1}}]||plot(sin(x), x = -4 .. 4, gridlines);|| || ||
+||[[# grid-of-subplots]][[image http://cdn.hyperpolyglot.org/images/subplot-grid.jpg]] _
+[#grid-of-subplots-note grid of subplots]||GraphicsGrid[Table[Table[ _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Histogram[RandomReal[X, 100], 10], _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@{i, 1, 2}], _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@{j, 1, 2}]]||with(plots): with(Statistics): _
+ _
+A := Array(1 .. 2, 1 .. 2); _
+X := RandomVariable(Normal(0, 1)); _
+for i while i <= 2 do _
+@<&nbsp;&nbsp;>@for j while j <= 2 do _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@A[i, j] := Histogram(Sample(X, 100)); _
+@<&nbsp;&nbsp;>@end do; _
+end do; _
+Display(A);||load(distrib); _
+ _
+x: makelist(makelist(random_normal(0, 1), i, 50), _
+@<&nbsp;&nbsp;>@j, 4); _
+p: makelist(histogram_description(x[i]), i, 4); _
+wxdraw(gr2d(p[1]), gr2d(p[2]), gr2d(p[3]), _
+@<&nbsp;&nbsp;>@gr2d(p[4]), columns=2);|| ||
+||[[# save-plot-as-png]][#save-plot-as-png-note save plot as png]||Export["hist.png", _
+@<&nbsp;&nbsp;>@Histogram[RandomReal[X, 100], 10]]||with(plottools): with(Statistics): _
+ _
+X := RandomVariable(Normal(0, 1)); _
+plt := BoxPlot(Sample(X, 100)); _
+exportplot("boxplot.png", plt);||##gray|//After creating a plot, run// gnuplot //on the// .gnuplot //file generated in the home directory://## _
+ _
+$ gnuplot maxout.gnuplot|| ||
 ||~ ||~ ##EFEFEF|@@_______________________________________________________@@##||~ ##EFEFEF|@@_______________________________________________________@@##||~ ##EFEFEF|@@_______________________________________________________@@##||~ ##EFEFEF|@@_______________________________________________________@@##||
 
 
@@ -2836,6 +3193,12 @@ Delete all occurrences of a set of characters from a string.
 
 [[# arrays-note]]
 + [#arrays Arrays]
+
+||~ section||~ mathematica||~ maple||~ maxima||~ sympy||
+||[#arrays arrays]||List||list||list||list||
+||multidimensional arrays||List||Array||array||##gray|//none//##||
+||[#vectors vectors]||List||Vector||list||Matrix||
+||[#matrices matrices]||List||Matrix||matrix||Matrix||
 
 [[# array-literal-note]]
 ++ [#array-literal literal]
@@ -4134,73 +4497,98 @@ A test whether variables are drawn from distributions with the same variance.
 [[# vertical-bar-chart-note]]
 ++ [#vertical-bar-chart vertical bar chart]
 
-A chart which represents values with rectangular bars which line up on the bottom.  It is a deceptive practice for the bottom not to represent zero, even if a y-axis with labelled tick marks or grid lines is provided.  A cut in the vertical axis and one of the bars may be desirable if the cut value is a large outlier.  Putting such a cut all of the bars near the bottom is a deceptive practice similar not taking to the base of the bars to be zero, however.
+A chart in which the height of bars is used to represent a list of numbers.
 
-Another bad practice is the 3D bar chart.  In such a chart heights are represented by the height of what appear to be three dimensional blocks.  Such charts impress an undiscriminating audience but make it more difficult to make a visual comparison of the charted quantities.
+**maxima:**
 
-**mathematica**
+Maxima plots the frequency of the values, and not the values themselves.  Non-positive values cannot be represented.
 
 [[# horizontal-bar-chart-note]]
 ++ [#horizontal-bar-chart horizontal bar chart]
 
 A bar chart in which zero is the y-axis and the bars extend to the right.
 
-[[# stacked-bar-chart-note]]
-++ [#stacked-bar-chart stacked bar chart]
-
 [[# grouped-bar-chart-note]]
 ++ [#grouped-bar-chart grouped bar chart]
+
+[[# stacked-bar-chart-note]]
+++ [#stacked-bar-chart stacked bar chart]
 
 [[# pie-chart-note]]
 ++ [#pie-chart pie chart]
 
+**maxima:**
+
+Note that Maxima plots the frequency of the values, and not the values themselves.
+
 [[# histogram-note]]
 ++ [#histogram histogram]
+
+A histogram is a bar chart in which each bar represents the frequency of values in a data set within a range.  The width of the bars can be used to indicate the ranges.
 
 [[# box-plot-note]]
 ++ [#box-plot box plot]
 
-[[# set-chart-title-note]]
-++ [#set-chart-title set chart title]
-
-[[# grid-of-subplots-note]]
-++ [#grid-of-subplots grid of subplots]
-
-[[# save-plot-as-png-note]]
-++ [#save-plot-as-png save plot as png]
-
 [[# scatter-plots-note]]
 + [#scatter-plots Scatter Plots]
+
+[[# strip-chart-note]]
+++ [#strip-chart strip chart]
+
+A strip chart represents a list of values by points on a line. The values are converted to pairs by assigning the y-coordinate a constant value of zero.  Pairs are then displayed with a scatter plot.
+
+[[# strip-chart-jitter-note]]
+++ [#strip-chart-jitter strip chart with jitter]
+
+A strip chart in which in which a random variable with small range is used to fill the y-coordinate. Jitter makes it easier to see how many values are in dense regions.
 
 [[# scatter-plot-note]]
 ++ [#scatter-plot scatter plot]
 
+How to plot a list of pairs of numbers by representing the pairs as points in the (x, y) plane.
+
 [[# additional-point-set-note]]
 ++ [#additional-point-set additional point set]
+
+How to add a second list of pairs of numbers to a scatter plot.  Color can be used to distinguish the two data sets.
 
 [[# point-types-note]]
 ++ [#point-types point types]
 
+How to select the symbols used to mark data points.  Choice of symbols can be use to distinguish data sets.
+
+[[# point-size-note]]
+++ [#point-size point size]
+
+How to change the size of the symbols used to mark points.
+
+[[# scatter-plot-matrix-note]]
+++ [#scatter-plot-matrix scatter plot matrix]
+
+A scatter plot matrix is a way of displaying a multivariate data set by means of a grid of scatter plots.  Off-diagonal plots are scatter plots of two of the variables.  On-diagonal plots can be used to to display the name or a histogram of one of the variables.
+
 [[# scatter-plot-3d-note]]
 ++ [#scatter-plot-3d 3d scatter plot]
+
+How to represent a list of triples of numbers by points in (x, y, z) space.
 
 [[# bubble-chart-note]]
 ++ [#bubble-chart bubble chart]
 
+How to represent a list of triples of numbers by position in the (x, y) plane and size of the point marker.
+
+It is probably better to associate the 3rd component of each triple with the //area//, and not the //diameter// of the point marker, but in general bubble charts suffer from ambiguity.
+
 [[# linear-regression-line-note]]
 ++ [#linear-regression-line linear regression line]
+
+How to add a linear regression line to a scatter plot.
 
 [[# q-q-plot-note]]
 ++ [#q-q-plot quantile-quantile plot]
 
-[[# axis-label-note]]
-++ [#axis-label axis label]
-
-[[# axis-limits-note]]
-++ [#axis-limits axis limits]
-
-[[# line-surface-charts-note]]
-+ [#line-surface-charts Line and Surface Charts]
+[[# line-charts-note]]
++ [#line-charts Line Charts]
 
 [[# polygonal-line-plot-note]]
 ++ [#polygonal-line-plot polygonal line plot]
@@ -4211,32 +4599,95 @@ A bar chart in which zero is the y-axis and the bars extend to the right.
 [[# line-types-note]]
 ++ [#line-types line types]
 
-[[# legend-note]]
-++ [#legend legend]
+[[# line-thickness-note]]
+++ [#line-thickness line thickness]
 
 [[# function-plot-note]]
 ++ [#function-plot function plot]
 
+[[# parametric-plot-note]]
+++ [#parametric-plot parametric plot]
+
+[[# implicit-plot-note]]
+++ [#implicit-plot implicit plot]
+
+[[# polar-plot-note]]
+++ [#polar-plot polar plot]
+
 [[# cubic-spline-note]]
 ++ [#cubic-spline cubic spline]
-
-[[# logarithmic-y-axis-note]]
-++ [#logarithmic-y-axis logarithmic y-axis]
 
 [[# area-chart-note]]
 ++ [#area-chart area chart]
 
-[[# heat-map-note]]
-++ [#heat-map heat map]
+[[# surface-charts-note]]
++ [#surface-charts Surface Charts]
 
 [[# contour-plot-note]]
 ++ [#contour-plot contour plot]
 
-[[# surface-plot-note]]
-++ [#surface-plot surface plot]
+[[# heat-map-note]]
+++ [#heat-map heat map]
+
+[[# shaded-surface-plot-note]]
+++ [#shaded-surface-plot shaded surface plot]
+
+[[# light-source-note]]
+++ [#light-source light source]
+
+[[# mesh-surface-plot-note]]
+++ [#mesh-surface-plot mesh surface plot]
+
+[[# view-point-note]]
+++ [#view-point view point]
 
 [[# vector-field-plot-note]]
 ++ [#vector-field-plot vector field plot]
+
+[[# chart-options-note]]
++ [#chart-options Chart Options]
+
+[[# chart-title-note]]
+++ [#chart-title chart title]
+
+[[# axis-label-note]]
+++ [#axis-label axis label]
+
+[[# legend-note]]
+++ [#legend legend]
+
+[[# data-label-note]]
+++ [#data-label data label]
+
+[[# named-colors-note]]
+++ [#named-colors named colors]
+
+[[# rgb-color-note]]
+++ [#rgb-color rgb color]
+
+[[# background-color-note]]
+++ [#background-color background color]
+
+[[# axis-limits-note]]
+++ [#axis-limits axis limits]
+
+[[# logarithmic-y-axis-note]]
+++ [#logarithmic-y-axis logarithmic y-axis]
+
+[[# aspect-ratio-note]]
+++ [#aspect-ratio aspect ratio]
+
+[[# ticks-note]]
+++ [#ticks ticks]
+
+[[# grid-lines-note]]
+++ [#grid-lines grid lines]
+
+[[# grid-of-subplots-note]]
+++ [#grid-of-subplots grid of subplots]
+
+[[# save-plot-as-png-note]]
+++ [#save-plot-as-png save plot as png]
 
 [[# mathematica]]
 + [#top Mathematica]

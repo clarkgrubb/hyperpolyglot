@@ -6,7 +6,7 @@
 
 [[[numerical-analysis2#vectors|vectors]]] | [[[numerical-analysis2#matrices|matrices]]] | [[[numerical-analysis2#sparse-matrices|sparse matrices]]] | [[[numerical-analysis2#optimization|optimization]]] | [[[numerical-analysis2#polynomials|polynomials]]] | [[[numerical-analysis2#descriptive-statistics|descriptive statistics]]] | [[[numerical-analysis2#distributions|distributions]]] | [[[numerical-analysis2#linear-regression|linear regression]]] | [[[numerical-analysis2#statistical-tests|statistical tests]]] | [[[numerical-analysis2#time-series|time series]]] | [[[numerical-analysis2#fast-fourier-transform|fast fourier transform]]] | [[[numerical-analysis2#clustering|clustering]]]
 
-[[[numerical-analysis2#bar-charts|bar charts]]] | [[[numerical-analysis2#scatter-plots|scatter plots]]] | [[[numerical-analysis2#line-surface-charts|line and surface charts]]]
+[[[numerical-analysis2#bar-charts|bar charts]]] | [[[numerical-analysis2#scatter-plots|scatter plots]]] | [[[numerical-analysis2#line-surface-charts|line and surface charts]]] | [[[numerical-analysis2#chart-options|chart options]]]
 
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# version-used]][#version-used-note version used]||##gray|//MATLAB 8.3//## _
@@ -2073,11 +2073,11 @@ This section covers one-dimensional arrays which map integers to values.
 
 Here are the data types covered in each section:
 
-||~ section||~ matlab||~ r||~ numpy||
-||[#arrays arrays]||matrix (ndims = 1)||vector||list||
-||[#multidimensional-arrays multidimensional arrays]||matrix||array||np.array||
-||[#vectors vectors]||matrix (ndims = 1)||vector||np.array (ndim = 1)||
-||[#matrices matrices]||matrix (ndims = 2)||matrix||np.matrix||
+||~ section||~ matlab||~ r||~ numpy||~ julia||
+||[#arrays arrays]||matrix (ndims = 1)||vector||list|| ||
+||[#multidimensional-arrays multidimensional arrays]||matrix||array||np.array|| ||
+||[#vectors vectors]||matrix (ndims = 1)||vector||np.array (ndim = 1)|| ||
+||[#matrices matrices]||matrix (ndims = 2)||matrix||np.matrix|| ||
 
 [[# array-elem-type-note]]
 ++ [#array-elem-type element type]

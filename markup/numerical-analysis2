@@ -6,7 +6,7 @@
 
 [#vectors vectors] | [#matrices matrices] | [#sparse-matrices sparse matrices] | [#optimization optimization] | [#polynomials polynomials] | [#descriptive-statistics descriptive statistics] | [#distributions distributions] | [#linear-regression linear regression] | [#statistical-tests statistical tests] | [#time-series time series] | [#fast-fourier-transform fast fourier transform] | [#clustering clustering]
 
-[#bar-charts bar charts] | [#scatter-plots scatter plots] | [#line-surface-charts line and surface charts]
+[#bar-charts bar charts] | [#scatter-plots scatter plots] | [#line-surface-charts line and surface charts] | [#chart-options chart options]
 
 ||||||||||~ [[# tables]][#tables-note tables]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
@@ -1122,61 +1122,14 @@ boxplot(rnorm(100), _
 plt.boxplot([sp.randn(100), _
 @<&nbsp;&nbsp;>@np.random.uniform(size=100), _
 @<&nbsp;&nbsp;>@np.random.exponential(size=100)])|| ||
-||[[# chart-title]][#chart-title-note chart title]||bar([7 3 8 5 5]) _
-title('bar chart example')||##gray|//all chart functions except for// stem //accept a// main //parameter://## _
-boxplot(rnorm(100), _
-@<&nbsp;&nbsp;>@main="boxplot example", _
-@<&nbsp;&nbsp;>@sub="to illustrate options")||plt.boxplot(sp.randn(100)) _
-plt.title('boxplot example')|| ||
-||[[# subplot-grid]][[image http://cdn.hyperpolyglot.org/images/subplot-grid.jpg]] _
-[#subplot-grid-note grid of subplots]||##gray|% 3rd arg refers to the subplot; _
-% subplots are numbered in row-major order.## _
-for i = 1:4 _
-@<&nbsp;&nbsp;>@subplot(2, 2, i), hist(randn(50)) _
-end||for (i in split.screen(c(2, 2))) { _
-@<&nbsp;&nbsp;>@screen(n=i) _
-@<&nbsp;&nbsp;>@hist(rnorm(100)) _
-}||for i in [1, 2, 3, 4]: _
-@<&nbsp;&nbsp;>@plt.subplot(2, 2, i) _
-@<&nbsp;&nbsp;>@plt.hist(sp.randn(100), bins=range(-5,5))|| ||
-||[[# new-plot-window]][#new-plot-window-note open new plot window]||open new plot _
-figure _
-open new plot||hist(rnorm(100)) _
-dev.new() _
-hist(rnorm(100))|| || ||
-||[[# close-plot-windows]][#close-plot-windows-note close all plot windows]||close all||graphics.off()|| || ||
-||[[# save-plot-as-png]][#save-plot-as-png-note save plot as png]|| f = figure _
-hist(randn(100)) _
-print(f, '-dpng', 'histogram.png')||png('hist.png') _
-hist(rnorm(100)) _
-dev.off()||y = randn(50) _
-plot(y) _
-savefig('line-plot.png')|| ||
 ||||||||||~ [[# scatter-plots]][#scatter-plots-note scatter plots]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# scatter-plot]][[image http://cdn.hyperpolyglot.org/images/scatter-plot.jpg]] _
 [#scatter-plot-note scatter plot]||plot(randn(1,50),randn(1,50),'+')||plot(rnorm(50), rnorm(50))||plt.scatter(sp.randn(50), sp.randn(50), marker='x')|| ||
 ||[[# additional-point-set]][[image http://cdn.hyperpolyglot.org/images/additional-point-set.jpg]] _
 [#additional-point-set-note additional point set]||plot(randn(20), randn(20), '.k', randn(20), randn(20), '.r')||plot(rnorm(20), rnorm(20)) _
-points(rnorm(20), rnorm(20), _
+points(rnorm(20) + 1, rnorm(20) + 1, _
 @<&nbsp;&nbsp;>@col='red')|| || ||
-||[[# colors]][#colors-note colors]||##gray|//Use color letters by themselves for colored lines.  Use '.r' for red dots.// _
- _
-'b': blue _
-'g': green _
-'r': red _
-'c': cyan _
-'m': magenta _
-'y': yellow _
-'k': black _
-'w': white##||##gray|# Use the col parameter to specify the color of points _
-# and lines. _
-# _
-# The colors() function returns a list of recognized _
-# names for colors.## _
- _
-plot(rnorm(10), col='red') _
-plot(rnorm(10), col='#FF0000')|| || ||
 ||[[# point-types]][#point-types-note point types]||##gray|'.': point _
 'o': circle _
 'x': x-mark _
@@ -1260,12 +1213,13 @@ plot(hexbin(rnorm(1000), _
 @<&nbsp;&nbsp;>@gridsize=12)|| ||
 ||[[# linear-regression-line]][[image http://cdn.hyperpolyglot.org/images/linear-regression-line.jpg]] _
 [#linear-regression-line-note linear regression line]|| ||x = 0:20 _
-y = 2 * x + rnorm(21)*10 _
+y = 2 * x + rnorm(21) * 10 _
  _
 fit = lm(y ~ x) _
  _
 plot(y) _
-lines(x, fit$fitted.values, type='l')||x = range(0,20) _
+lines(x, fit$fitted.values, type='l', _
+@<&nbsp;&nbsp;>@col='red')||x = range(0,20) _
 err = sp.randn(20)*10 _
 y = [2*i for i in x] + err _
  _
@@ -1277,26 +1231,12 @@ plt.plot(x, [m*i + c for i in x])|| ||
 ||[[# q-q-plot]][[image http://cdn.hyperpolyglot.org/images/q-q-plot.jpg]] _
 [#q-q-plot-note quantile-quantile plot]|| ||qqplot(runif(50), rnorm(50)) _
 lines(c(-9,9), c(-9,9), col="red")|| || ||
-||[[# axis-labels]][#axis-labels-note axis labels]||plot( 1:20, (1:20) .** 2) _
-xlabel('x') _
-ylabel('x squared')||plot(1:20, (1:20)^2, _
-@<&nbsp;&nbsp;>@xlab="x", ylab="x squared")||x = range(0, 20) _
-plt.plot(x, [i * i for i in x], '-') _
-plt.xlabel('x') _
-plt.ylabel('x squared')|| ||
-||[[# axis-limits]][#axis-limits-note axis limits]||plot( 1:20, (1:20) .** 2) _
-##gray|% [xmin, xmax, ymin, ymax]:## _
-axis([1 20 -200 500])||plot(1:20, (1:20)^2, _
-@<&nbsp;&nbsp;>@xlim=c(0, 20), ylim=c(-200,500))||x = range(0, 20) _
-plt.plot(x, [i * i for i in x], '-') _
-plt.xlim([0, 20]) _
-plt.ylim([-200, 500])|| ||
 ||||||||||~ [[# line-surface-charts]][#line-surface-charts-note line and surface charts]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# polygonal-line-plot]][[image http://cdn.hyperpolyglot.org/images/polygonal-line-plot.jpg]] _
 [#polygonal-line-plot-note polygonal line plot]||plot(1:20,randn(1,20))||plot(1:20, rnorm(20), type="l")||plt.plot(range(0,20), sp.randn(20), '-')|| ||
 ||[[# additional-line]][[image http://cdn.hyperpolyglot.org/images/additional-line.jpg]] _
-[#additional-line-note additional line set]||plot(1:20, randn(1, 20), _
+[#additional-line-note additional line]||plot(1:20, randn(1, 20), _
 @<&nbsp;&nbsp;>@1:20, randn(1, 20)) _
  _
 ##gray|//optional method://## _
@@ -1345,45 +1285,10 @@ lines(1:20, rnorm(20), col="red")|| || ||
 'd': thin_diamond _
 '|': vline _
 '_': hline##|| ||
-||[[# legend]][[image http://cdn.hyperpolyglot.org/images/legend.jpg]] _
-[#legend-note legend]|| ||x = (1:20) _
-y = x + rnorm(20) _
-y2 = x - 2 + rnorm(20) _
- _
-plot(x, y, type="l", col="black") _
-lines(x, y2, type="l", col="red") _
-legend('topleft', c('first', 'second'), _
-@<&nbsp;&nbsp;>@lty=c(1,1), lwd=c(2.5, 2.5), _
-@<&nbsp;&nbsp;>@col=c('black', 'red'))|| || ||
 ||[[# function-plot]][[image http://cdn.hyperpolyglot.org/images/function-plot.jpg]] _
 [#function-plot-note function plot]||fplot(@sin, [-4 4])||x = seq(-4, 4, .01) _
 plot(sin(x), type="l")||x = [i * .01 for i in range(-400, 400)] _
 plt.plot(x, sin(x), '-')|| ||
-||[[# logarithmic-y-axis]][#logarithmic-y-axis-note logarithmic y-axis]||semilogy(x, x .** 2, _
-@<&nbsp;&nbsp;>@x, x .** 3, _
-@<&nbsp;&nbsp;>@x, x .** 4, _
-@<&nbsp;&nbsp;>@x, x .** 5)||x = 0:20 _
-plot(x, x^2, log="y",type="l") _
-lines(x, x^3, col="blue") _
-lines(x, x^4, col="green") _
-lines(x, x^5, col="red")||x = range(0, 20) _
- _
-for i in [2,3,4,5]: _
-@<&nbsp;&nbsp;>@y.append([j**i for j in x]) _
- _
-for i in [0,1,2,3]: _
-@<&nbsp;&nbsp;>@semilogy(x, y[i])|| ||
-||[[# superimposed-plots]][#superimposed-plots-note superimposed plots with different y-axis scales]|| ||x <- 1:10 _
-y <- rnorm(10) _
-z <- rnorm(10) * 1000 _
-par(mar = c(5, 4, 4, 4) + 0.3) _
-plot(x, y, type='l') _
-par(new=T) _
-plot(x, z, col='red', type='l', axes=F, _
-@<&nbsp;&nbsp;>@xlab='', ylab='') _
-axis(side=4, col='red', col.axis='red', _
-@<&nbsp;&nbsp;>@at=pretty(range(z))) _
-mtext('z', side=4, line=3, col='red')|| || ||
 ||[[# area-chart]][[image http://cdn.hyperpolyglot.org/images/area-chart.jpg width="75px"]] _
 [#area-chart-note stacked area chart]|| ||install.packages('ggplot2') _
 library('ggplot2') _
@@ -1412,7 +1317,13 @@ p = ggplot(df, aes(x=x, ymin=0, ymax=y, _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@alpha=alpha)) _
 p + geom_ribbon()|| || ||
 ||[[# contour-plot]][[image http://cdn.hyperpolyglot.org/images/contour-plot.jpg]] _
-[#contour-plot-note contour plot]|| ||m = matrix(0, 100, 100) _
+[#contour-plot-note contour plot]|| || || || ||
+||[[# heat-map]][[image http://cdn.hyperpolyglot.org/images/heat-map.jpg]] _
+[#heat-map-note heat map]||i = ones(100, 1) * (1:100) _
+j = (1:100)' * ones(1, 100) _
+data = sin(.2 * i) .* sin(.2 * j) _
+colormap(gray) _
+imagesc(data)||m = matrix(0, 100, 100) _
 for (i in 2:100) { _
 @<&nbsp;&nbsp;>@for (j in 2:100) {  _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@m[i,j] = (m[i-1,j] + m[i,j-1])/2 + _
@@ -1421,12 +1332,104 @@ for (i in 2:100) { _
 } _
  _
 filled.contour(1:100, 1:100, m)|| || ||
-||[[# heat-map]][[image http://cdn.hyperpolyglot.org/images/heat-map.jpg]] _
-[#heat-map-note heat map]||i = ones(100, 1) * (1:100) _
-j = (1:100)' * ones(1, 100) _
-data = sin(.2 * i) .* sin(.2 * j) _
-colormap(gray) _
-imagesc(data)|| || || ||
+||||||||||~ [[# chart-options]][#chart-options-note chart options]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
+||[[# chart-title]][#chart-title-note chart title]||bar([7 3 8 5 5]) _
+title('bar chart example')||##gray|//all chart functions except for// stem //accept a// main //parameter://## _
+boxplot(rnorm(100), _
+@<&nbsp;&nbsp;>@main="boxplot example", _
+@<&nbsp;&nbsp;>@sub="to illustrate options")||plt.boxplot(sp.randn(100)) _
+plt.title('boxplot example')|| ||
+||[[# subplot-grid]][[image http://cdn.hyperpolyglot.org/images/subplot-grid.jpg]] _
+[#subplot-grid-note grid of subplots]||##gray|% 3rd arg refers to the subplot; _
+% subplots are numbered in row-major order.## _
+for i = 1:4 _
+@<&nbsp;&nbsp;>@subplot(2, 2, i), hist(randn(50)) _
+end||for (i in split.screen(c(2, 2))) { _
+@<&nbsp;&nbsp;>@screen(n=i) _
+@<&nbsp;&nbsp;>@hist(rnorm(100)) _
+}||for i in [1, 2, 3, 4]: _
+@<&nbsp;&nbsp;>@plt.subplot(2, 2, i) _
+@<&nbsp;&nbsp;>@plt.hist(sp.randn(100), bins=range(-5,5))|| ||
+||[[# new-plot-window]][#new-plot-window-note open new plot window]||open new plot _
+figure _
+open new plot||hist(rnorm(100)) _
+dev.new() _
+hist(rnorm(100))|| || ||
+||[[# close-plot-windows]][#close-plot-windows-note close all plot windows]||close all||graphics.off()|| || ||
+||[[# save-plot-as-png]][#save-plot-as-png-note save plot as png]|| f = figure _
+hist(randn(100)) _
+print(f, '-dpng', 'histogram.png')||png('hist.png') _
+hist(rnorm(100)) _
+dev.off()||y = randn(50) _
+plot(y) _
+savefig('line-plot.png')|| ||
+||[[# colors]][#colors-note colors]||##gray|//Use color letters by themselves for colored lines.  Use '.r' for red dots.// _
+ _
+'b': blue _
+'g': green _
+'r': red _
+'c': cyan _
+'m': magenta _
+'y': yellow _
+'k': black _
+'w': white##||##gray|# Use the col parameter to specify the color of points _
+# and lines. _
+# _
+# The colors() function returns a list of recognized _
+# names for colors.## _
+ _
+plot(rnorm(10), col='red') _
+plot(rnorm(10), col='#FF0000')|| || ||
+||[[# axis-labels]][#axis-labels-note axis labels]||plot( 1:20, (1:20) .** 2) _
+xlabel('x') _
+ylabel('x squared')||plot(1:20, (1:20)^2, _
+@<&nbsp;&nbsp;>@xlab="x", ylab="x squared")||x = range(0, 20) _
+plt.plot(x, [i * i for i in x], '-') _
+plt.xlabel('x') _
+plt.ylabel('x squared')|| ||
+||[[# axis-limits]][#axis-limits-note axis limits]||plot( 1:20, (1:20) .** 2) _
+##gray|% [xmin, xmax, ymin, ymax]:## _
+axis([1 20 -200 500])||plot(1:20, (1:20)^2, _
+@<&nbsp;&nbsp;>@xlim=c(0, 20), ylim=c(-200,500))||x = range(0, 20) _
+plt.plot(x, [i * i for i in x], '-') _
+plt.xlim([0, 20]) _
+plt.ylim([-200, 500])|| ||
+||[[# logarithmic-y-axis]][#logarithmic-y-axis-note logarithmic y-axis]||semilogy(x, x .** 2, _
+@<&nbsp;&nbsp;>@x, x .** 3, _
+@<&nbsp;&nbsp;>@x, x .** 4, _
+@<&nbsp;&nbsp;>@x, x .** 5)||x = 0:20 _
+plot(x, x^2, log="y",type="l") _
+lines(x, x^3, col="blue") _
+lines(x, x^4, col="green") _
+lines(x, x^5, col="red")||x = range(0, 20) _
+ _
+for i in [2,3,4,5]: _
+@<&nbsp;&nbsp;>@y.append([j**i for j in x]) _
+ _
+for i in [0,1,2,3]: _
+@<&nbsp;&nbsp;>@semilogy(x, y[i])|| ||
+||[[# superimposed-plots]][#superimposed-plots-note superimposed plots with different y-axis scales]|| ||x <- 1:10 _
+y <- rnorm(10) _
+z <- rnorm(10) * 1000 _
+par(mar = c(5, 4, 4, 4) + 0.3) _
+plot(x, y, type='l') _
+par(new=T) _
+plot(x, z, col='red', type='l', axes=F, _
+@<&nbsp;&nbsp;>@xlab='', ylab='') _
+axis(side=4, col='red', col.axis='red', _
+@<&nbsp;&nbsp;>@at=pretty(range(z))) _
+mtext('z', side=4, line=3, col='red')|| || ||
+||[[# legend]][[image http://cdn.hyperpolyglot.org/images/legend.jpg]] _
+[#legend-note legend]|| ||x = (1:20) _
+y = x + rnorm(20) _
+y2 = x - 2 + rnorm(20) _
+ _
+plot(x, y, type="l", col="black") _
+lines(x, y2, type="l", col="red") _
+legend('topleft', c('first', 'second'), _
+@<&nbsp;&nbsp;>@lty=c(1,1), lwd=c(2.5, 2.5), _
+@<&nbsp;&nbsp;>@col=c('black', 'red'))|| || ||
 ||~ ||~ ##EFEFEF|@@__________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________@@##||
 
 
@@ -2482,20 +2485,6 @@ qplot(x="rnorm", y=rnorm(50), geom="boxplot")
 qplot(x=c("rnorm", "rexp", "runif"), y=c(rnorm(50), rexp(50), runif(50)), geom="boxplot")
 [[/code]]
 
-[[# chart-title-note]]
-++ [#chart-title chart title]
-
-How to set the chart title.
-
-**r:**
-
-The {{qplot}} commands supports the {{main}} options for setting the title:
-
-[[code]]
-qplot(x="rnorm", y=rnorm(50), geom="boxplot", main="boxplot example")
-[[/code]]
-
-
 [[# scatter-plots-note]]
 + [#scatter-plots Scatter Plots]
 
@@ -2556,6 +2545,52 @@ If the two data sets have the same number of elements, one can simply sort them 
 
 If the number of elements is different, one a set of quantiles (such as percentiles) for each set.  The {{quantile}} function of MATLAB and R is convenient for this.  With Python, one can use {{scipy.stats.scoreatpercentile}}.
 
+[[# line-surface-charts-note]]
++ [#line-surface-charts Line and Surface Charts]
+
+[[# polygonal-plot-note]]
+++ [#polygonal-plot polygonal line plot]
+
+How to connect the dots of a data set with a polygonal line.
+
+[[# additional-line-note]]
+++ [#additional-line additional line]
+
+How to add another line to a plot.
+
+[[# line-types-note]]
+++ [#line-types line types]
+
+[[# function-plot-note]]
+++ [#function-plot function plot]
+
+How to plot a function.
+
+[[# area-chart-note]]
+++ [#area-chart stacked area chart]
+
+[[# overlapping-area-chart-note]]
+++ [#overlapping-area-chart overlapping area chart]
+
+[[# contour-plot-note]]
+++ [#contour-plot contour plot]
+
+[[# chart-options-note]]
++ [#chart-options Chart Options]
+
+[[# chart-title-note]]
+++ [#chart-title chart title]
+
+How to set the chart title.
+
+**r:**
+
+The {{qplot}} commands supports the {{main}} options for setting the title:
+
+[[code]]
+qplot(x="rnorm", y=rnorm(50), geom="boxplot", main="boxplot example")
+[[/code]]
+
 [[# axis-labels-note]]
 ++ [#axis-labels axis labels]
 
@@ -2577,27 +2612,6 @@ p + layer(geom="point") + xlab('x') + ylab('x squared')
 ++ [#axis-limits axis limits]
 
 How to manually set the range of values displayed by an axis.
-
-[[# line-surface-charts-note]]
-+ [#line-surface-charts Line and Surface Charts]
-
-[[# polygonal-plot-note]]
-++ [#polygonal-plot polygonal line plot]
-
-How to connect the dots of a data set with a polygonal line.
-
-[[# additional-line-note]]
-++ [#additional-line additional line set]
-
-How to add another line to a plot.
-
-[[# line-types-note]]
-++ [#line-types line types]
-
-[[# function-plot-note]]
-++ [#function-plot function plot]
-
-How to plot a function.
 
 [[# logarithmic-y-axis-note]]
 ++ [#logarithmic-y-axis logarithmic y-axis]
@@ -2645,15 +2659,6 @@ The named parameter {{lty}} specifies the line type.  The value can be either an
 ||4||'dotdash'||
 ||5||'longdash'||
 ||6||'twodash'||
-
-[[# area-chart-note]]
-++ [#area-chart stacked area chart]
-
-[[# overlapping-area-chart-note]]
-++ [#overlapping-area-chart overlapping area chart]
-
-[[# contour-plot-note]]
-++ [#contour-plot contour plot]
 
 [[# matlab]]
 + [#top MATLAB]

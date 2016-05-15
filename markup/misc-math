@@ -2,7 +2,7 @@
  _
 [#optimization optimization] | [#linear-regression linear regression] _
  _
-[#univariate-charts univariate charts] | [#multivariate-charts multivariate charts]
+[#bar-charts bar charts] | [#scatter-plots scatter plots] | [#line-surface-charts line and surface charts] | [#chart-options chart options]
 
 ||~ ||~ [#gnuplot gnuplot]||~ [#glpk glpk]||
 ||[[# version-used]][#version-used-note version used] _
@@ -392,9 +392,10 @@ display obj, x; _
 end;||
 ||||||~ [[# linear-regression]][#linear-regression-note linear regression]||
 ||~ ||~ gnuplot||~ glpk||
-||||||~ [[# univariate-charts]][#univariate-charts-note univariate charts]||
+||||||~ [[# bar-charts]][#bar-charts-note bar charts]||
 ||~ ||~ gnuplot||~ glpk||
-||[[image http://farm5.static.flickr.com/4090/5039793334_f76edece33_m.jpg]] [#bar-chart vertical bar chart]||##gray|# echo $'7\n3\n8\n5\n5' > data.txt## _
+||[[# vertical-bar-chart]][[image http://cdn.hyperpolyglot.org/images/vertical-bar-chart.jpg]] _
+[#vertical-bar-chart-note vertical bar chart]||##gray|# echo $'7\n3\n8\n5\n5' > data.txt## _
  _
 set terminal png size 400,300 _
 set output "barchart.png" _
@@ -402,16 +403,16 @@ set boxwidth 0.9 _
 set style fill solid 1.0 _
 plot [0:6] [0:9] "data.txt" \ _
 @<&nbsp;&nbsp;>@using 0:1 notitle with boxes|| ||
-||[[image http://farm5.static.flickr.com/4092/5039776078_cc38a4ff5f_m.jpg]] _
-[#horizontal-bar-chart horizontal bar chart]|| || ||
-||[[image http://farm5.static.flickr.com/4154/5039126187_e340b3f4aa_m.jpg]] _
-[#stacked-bar-chart stacked bar chart]|| || ||
-||[[image http://farm8.staticflickr.com/7490/15814685770_09478e1222_t.jpg]] _
-[[# grouped-bar-chart]][#grouped-bar-chart-note grouped bar chart]|| || ||
-||[[image http://farm5.static.flickr.com/4145/5037819710_d932767cd5_m.jpg]] _
-[[# pie-chart]][#pie-chart-note pie chart]||##gray|//see note//##|| ||
-||[[image http://farm5.static.flickr.com/4106/5037415497_4c6fbfcab2_m.jpg]] _
-[[# histogram]][#histogram-note histogram]||##gray|# awk '{ print length($0)}' /usr/share/dict/words > hist.txt## _
+||[[# horizontal-bar-chart]][[image http://cdn.hyperpolyglot.org/images/horizontal-bar-chart.jpg]] _
+[#horizontal-bar-chart-note horizontal bar chart]|| || ||
+||[[# stacked-bar-chart]][[image http://cdn.hyperpolyglot.org/images/stacked-bar-chart.jpg]] _
+[#stacked-bar-chart-note stacked bar chart]|| || ||
+||[[# grouped-bar-chart]][[image http://cdn.hyperpolyglot.org/images/grouped-bar-chart.jpg]] _
+[#grouped-bar-chart-note grouped bar chart]|| || ||
+||[[# pie-chart]][[image http://cdn.hyperpolyglot.org/images/pie-chart.jpg]] _
+[#pie-chart-note pie chart]||##gray|//see note//##|| ||
+||[[# histogram]][[image http://cdn.hyperpolyglot.org/images/histogram.jpg]] _
+[#histogram-note histogram]||##gray|# awk '{ print length($0)}' /usr/share/dict/words > hist.txt## _
  _
 set terminal png size 400,300 _
 set output "histogram.png" _
@@ -421,7 +422,8 @@ unset key _
 plot "hist.txt" \ _
 @<&nbsp;&nbsp;>@using (bin($1,binwidth)):(1.0) \ _
 @<&nbsp;&nbsp;>@smooth freq with boxes|| ||
-||[[image http://farm5.static.flickr.com/4106/5037525393_7ac86e81c3_m.jpg]] [#box-and-whisker-plot box-and-whisker plot]||##gray|# seq 100 | awk '{print rand() ** 3}' > data.txt## _
+||[[# box-plot]][[image http://cdn.hyperpolyglot.org/images/box-plot.jpg]] _
+[#box-plot box plot]||##gray|# seq 100 | awk '{print rand() ** 3}' > data.txt## _
  _
 set terminal png size 400,300 _
 set output "boxplot.png" _
@@ -430,37 +432,32 @@ set style data boxplot _
 set boxwidth 0.2 _
 plot [0.5:1.5] [0.0:1.1] "data.txt" \ _
 @<&nbsp;&nbsp;>@using (1.0):1:(0.3) notitle|| ||
-||[#univariate-title set chart title]||set title "a plot" _
-plot "data.txt"|| ||
-||||||~ [[# multivariate-charts]][#multivariate-charts-note multivariate charts]||
+||||||~ [[# scatter-plots]][#scatter-plots-note scatter plots]||
 ||~ ||~ gnuplot||~ glpk||
-||[[image http://farm6.static.flickr.com/5044/5267212089_a7749bbe3e_s.jpg]] [#scatterplot scatter plot]||##gray|# seq 50 | awk '{x=rand(); print x,x+rand()}' > data.txt## _
+||[[# scatter-plot]][[image http://cdn.hyperpolyglot.org/images/scatter-plot.jpg]] _
+[#scatter-plot-note scatter plot]||##gray|# seq 50 | awk '{x=rand(); print x,x+rand()}' > data.txt## _
  _
 set terminal png size 400,300 _
 set output "scatter.png" _
 unset key _
 plot "data.txt"|| ||
-||[[image http://farm6.static.flickr.com/5089/5267975488_2216ae147e_s.jpg]][#linear-regression-line linear regression line]|| || ||
-||[[image http://farm6.static.flickr.com/5125/5267434941_f8537c9d26_s.jpg]] [#polygonal-plot polygonal line plot]||##gray|# seq 1 20 | awk '{print rand() + rand() + rand()}' > data.txt## _
+||[#bubble-chart bubble chart]|| || ||
+||[#3d-scatter-plot 3d scatter plot]|| || ||
+||[[# linear-regression-line]][[image http://cdn.hyperpolyglot.org/images/linear-regression-line.jpg]] _
+[#linear-regression-line linear regression line]|| || ||
+||[[# q-q-plot]][[image http://cdn.hyperpolyglot.org/images/q-q-plot.jpg]] _
+[#q-q-plot-note quantile-quantile plot]|| || ||
+||||||~ [[# line-surface-charts]][#line-surface-charts-note line and surface charts]||
+||~ ||~ gnuplot||~ glpk||
+||[[# polygonal-line-plot]][[image http://cdn.hyperpolyglot.org/images/polygonal-line-plot.jpg]] _
+[#polygonal-line-plot-note polygonal line plot]||##gray|# seq 1 20 | awk '{print rand() + rand() + rand()}' > data.txt## _
  _
 set terminal png size 400,300 _
 set output "polygonal.png" _
 unset key _
 plot "data.txt" using 0:1 with lines|| ||
-||filled curve|| || ||
-||time series|| || ||
-||[[image http://farm6.static.flickr.com/5049/5268229340_0b96b5e223_s.jpg]] [#cubic-spline cubic spline]|| || ||
-||[[image http://farm6.static.flickr.com/5204/5268208606_b745646ea6_s.jpg]] [#function-plot function plot]||set terminal png size 400,300 _
-set output 'sin.png' _
-unset key _
-plot [-4:4] sin(x)|| ||
-||[[image http://farm6.static.flickr.com/5048/5267567389_27a19429e4_s.jpg]] [#qq-plot quantile-quantile plot]|| || ||
-||[#axis-label axis label]|| || ||
-||axis limits|| || ||
-||grid lines|| || ||
-||[#logarithmic-y-axis logarithmic y-axis]|| || ||
-||[#3d-scatter-plot 3d scatter plot]|| || ||
-||[[image http://farm6.static.flickr.com/5245/5268191292_a75a367c39_s.jpg]] [#additional-data additional data set]||##gray|# seq 1 20 | awk '{print rand() + rand(), rand() + rand()}' \ _
+||[[# additional-line]][[image http://cdn.hyperpolyglot.org/images/additional-line.jpg]] _
+[#additional-line-note additional line]||##gray|# seq 1 20 | awk '{print rand() + rand(), rand() + rand()}' \ _
 #@<&nbsp;&nbsp;&nbsp;>@> data.txt## _
  _
 set terminal png size 400,300 _
@@ -468,6 +465,25 @@ set output "two-lines.png" _
 unset key _
 plot "data.txt" using 0:1 with lines, \ _
 @<&nbsp;&nbsp;>@"data.txt" using 0:2 with lines|| ||
+||line types|| || ||
+||[[# cubic-spline]][[image http://cdn.hyperpolyglot.org/images/cubic-spline.jpg]] _
+[#cubic-spline-note cubic spline]|| || ||
+||[[# function-plot]][[image http://cdn.hyperpolyglot.org/images/function-plot.jpg]] _
+[#function-plot-note function plot]||set terminal png size 400,300 _
+set output 'sin.png' _
+unset key _
+plot [-4:4] sin(x)|| ||
+||[[# area-chart]][[image http://cdn.hyperpolyglot.org/images/area-chart.jpg width="75px"]] _
+[#area-chart-note area chart]|| || ||
+||[#surface-plot surface plot]|| || ||
+||contour plot|| || ||
+||||||~ [[# chart-options]][#chart-options-note chart-options]||
+||~ ||~ gnuplot||~ glpk||
+||[#univariate-title set chart title]||set title "a plot" _
+plot "data.txt"|| ||
+||[#axis-label axis label]|| || ||
+||axis limits|| || ||
+||[#logarithmic-y-axis logarithmic y-axis]|| || ||
 ||legend||##gray|# seq 1 20 | awk '{print rand() + rand(), rand() + rand()}' \ _
 #@<&nbsp;&nbsp;&nbsp;>@> data.txt## _
  _
@@ -476,17 +492,12 @@ set output "legend.png" _
 plot "data.txt" using 0:1 with lines title "first", \ _
 @<&nbsp;&nbsp;>@"data.txt" using 0:2 with lines title "second"|| ||
 ||legend options|| || ||
-||[[image http://farm6.static.flickr.com/5041/5268071368_75c3aee42e_t.jpg]] [#area-chart area chart]|| || ||
 ||colors||##gray|# use a string to specify a color:## _
 set terminal png background "black" _
 set terminal png background "#000000" _
  _
 ##gray|# list recognized color names:## _
 show colors|| ||
-||line types|| || ||
-||[#bubble-chart bubble chart]|| || ||
-||[#surface-plot surface plot]|| || ||
-||contour plot|| || ||
 ||~ ||~ ##EFEFEF|@@___________________________________________________________________@@##||~ ##EFEFEF|@@___________________________________________________________________@@##||
 
 [[# general-note]]
@@ -566,8 +577,8 @@ quit
 [[# linear-regression-note]]
 + [#linear-regression Linear Regression]
 
-[[# univariate-charts-note]]
-+ [#univariate-charts Univariate Charts]
+[[# bar-charts-note]]
++ [#bar-charts Bar Charts]
 
 [[# pie-chart-note]]
 ++ [#pie-chart pie chart]
@@ -602,8 +613,14 @@ unset key
 plot x with lines lc rgb "#ffffff"
 [[/code]]
 
-[[# multivariate-charts-note]]
-+ [#multivariate-charts Multivariate Charts]
+[[# scatter-plots-note]]
++ [#scatter-plots Scatter Plots]
+
+[[# line-surface-charts-note]]
++ [#line-surface-charts Line and Surface Charts]
+
+[[# chart-options-note]]
++ [#chart-options Chart Options]
 
 [[# gnuplot]]
 + [#top Gnuplot]
