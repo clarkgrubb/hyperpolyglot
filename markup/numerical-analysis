@@ -6,7 +6,7 @@
 
 [[[numerical-analysis2#vectors|vectors]]] | [[[numerical-analysis2#matrices|matrices]]] | [[[numerical-analysis2#sparse-matrices|sparse matrices]]] | [[[numerical-analysis2#optimization|optimization]]] | [[[numerical-analysis2#polynomials|polynomials]]] | [[[numerical-analysis2#descriptive-statistics|descriptive statistics]]] | [[[numerical-analysis2#distributions|distributions]]] | [[[numerical-analysis2#linear-regression|linear regression]]] | [[[numerical-analysis2#statistical-tests|statistical tests]]] | [[[numerical-analysis2#time-series|time series]]] | [[[numerical-analysis2#fast-fourier-transform|fast fourier transform]]] | [[[numerical-analysis2#clustering|clustering]]]
 
-[[[numerical-analysis2#bar-charts|bar charts]]] | [[[numerical-analysis2#scatter-plots|scatter plots]]] | [[[numerical-analysis2#line-surface-charts|line and surface charts]]] | [[[numerical-analysis2#chart-options|chart options]]]
+[[[numerical-analysis2#bar-charts|bar charts]]] | [[[numerical-analysis2#scatter-plots|scatter plots]]] | [[[numerical-analysis2#line-charts|line charts]]] | [[[numerical-analysis2#surface-charts|surface charts]]] | [[[numerical-analysis2#chart-options|chart options]]]
 
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# version-used]][#version-used-note version used]||##gray|//MATLAB 8.3//## _
@@ -22,7 +22,8 @@ $ octave @@--version@@||$ R @@--version@@||sys.version _
 np.@@__version__@@ _
 sp.@@__version__@@ _
 mpl.@@__version__@@||$ julia @@--@@version||
-||[[# implicit-prologue]][#implicit-prologue-note implicit prologue]||##gray|//none//##|| ||import sys, os, re, math _
+||[[# implicit-prologue]][#implicit-prologue-note implicit prologue]||##gray|//none//##||install.packages('ggplot2') _
+library('ggplot2')||import sys, os, re, math _
 import numpy as np _
 import scipy as sp _
 import scipy.stats as stats _

@@ -590,7 +590,7 @@ val dict = mutable.Map.empty[String, Int]||
 val dict = Map("t" -> 1, "f" -> 0)||
 ||[[# dict-size]][#dict-size-note size] _
 @<&nbsp;>@|| ||dict.count||dict.size||
-||[[# dict-lookup]][#dict-lookup-note lookup]|| ||dict["t"]||dict["f"] _
+||[[# dict-lookup]][#dict-lookup-note lookup]|| ||dict["t"]||dict("f") _
  _
 ##gray|@@//@@ returns Option[Int]:## _
 dict.get("f")||
@@ -1261,7 +1261,7 @@ c match { case Red => "red"; case _ => "not red" }||
 ||define class|| || ||##gray|@@//@@ Constructor takes optional  param of type Int. _
 @@//@@ _
 @@//@@ Precede param name by val or var _
-@@//@@ to implicit define an instance variable## _
+@@//@@ to implicitly define an instance variable## _
 class Counter(n: Int = 0) { _
 @<&nbsp;&nbsp;>@##gray|@@//@@ Executes when object is created. _
 @<&nbsp;&nbsp;>@@@//@@ _
@@ -1282,7 +1282,7 @@ class Counter(n: Int = 0) { _
 }||
 ||create object|| || ||val c = new Counter _
 val c2 = new Counter(1)||
-||invoke method|| || ||c.incr _
+||invoke method|| || ||c.incr() _
 c.value = c.value + 1||
 ||define class variable and method|| || ||##gray|@@//@@ Define singleton object outside of class body:## _
 object Counter { _

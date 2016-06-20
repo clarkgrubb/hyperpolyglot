@@ -2,73 +2,123 @@
 
 ||||~ [[# version]]version||
 ||~ ||~ [#jq jq]||
-||version used||##gray|//1.5//##||
-||show version||$ jq @@--@@version||
+||[[# version-used]][#version-used-note version used] _
+@<&nbsp;>@||##gray|//1.5//##||
+||[[# show-version]][#show-version-note show version] _
+@<&nbsp;>@||$ jq @@--@@version||
 ||||~ [[# grammar-invocation]]grammar and execution||
 ||~ ||~ [#jq jq]||
-||interpreter||$ cat hello.jq _
+||[[# interpreter]][#interpreter-note interpreter]||$ cat > hello.jq _
 "Hello, World!" _
  _
+##gray|# -n: use single "null" as input _
+# -r: write string content instead of quoted string literal to stdout## _
 $ jq -nr -f hello.jq _
 Hello, World!||
-||command line program||$ echo '1 2 3' | jq '. * .' _
+||[[# cmd-line-program]][#cmd-line-program-note command line program]||$ echo '1 2 3' | jq '. * .' _
  _
 ##gray|# no stdin:## _
 $ jq -n '1 + 1' ||
-||block delimiters||( )||
-||statement separator|| ||
-||end of line comment||##gray|# comment##||
+||[[# stmt-separator]][#stmt-separator-note statement separator]||##gray|A program consists of filter expressions separated by commas and pipes: , | _
+ _
+A filter expressions acts on its input and produces output. _
+ _
+The pipe separator makes the output of the left expression the input of the right expression. _
+ _
+The comma separator, which concatenates the output of two filters, has higher precedence than the pipe separator. _
+ _
+A function definition, include statement, or import statement is terminated by a semicolon: ;##||
+||[[# block-delimiters]][#block-delimiters-note block delimiters] _
+@<&nbsp;>@||##gray|# Use parens to change precedence:## _
+$ jq -n '2, (3 | . * .)' _
+$ jq -n '2, 3 | . * .'||
+||[[# eol-comment]][#eol-comment-note end of line comment] _
+@<&nbsp;>@||##gray|# comment##||
 ||||~ [[# var-expr]]variables and expressions||
 ||~ ||~ jq||
-||assignment||$ echo '[1,2,3]' | jq 'length as $x | map(. * $x)' _
+||[[# assignment]][#assignment-note assignment]||$ echo '[1,2,3]' | jq 'length as $x | map(. * $x)' _
  _
 ##gray|"length as $x" assigns the value 3 to $x. _
  _
 The following filter receives the same input the assignment filter got.##||
-||null||null||
-||null test||$ echo '{"name": "Ed"}' | jq '.age == null'||
-||coalesce||##gray|# also replaces false:## _
+||[[# compound-assignment]][#compound-assignment-note compound assignment]||@@|= += -= *= /= %= //=@@ _
+ _
+##gray|Compound operators are used with arrays and dictionaries.  A copy of the array or dictionary is returned, with fields specified on the LHS replaced by new values.  If the compound assignment expression is "LHS OP= RHS", then the new value is "LHS OP RHS".## _
+ _
+##gray|# {"t": 2, "f": 0}:## _
+$ echo '{"t": 1, "f": 0}' | jq '.t += 1' _
+ _
+##gray|More than one field can be updated. _
+ _
+# {"t": 2, "f": 1}:## _
+$ echo '{"t": 1, "f": 0}' | jq '.[] += 1'||
+||[[# null]][#null-note null] _
+@<&nbsp;>@||null||
+||[[# null-test]][#null-test-note null test] _
+@<&nbsp;>@||$ echo '{"name": "Ed"}' | jq '.age == null'||
+||[[# coalesce]][#coalesce-note coalesce]||##gray|# also replaces false:## _
 $ echo '{}' | jq '.age // 0'||
-||conditional expression||$ echo '-3' | jq 'if . < 0 then -. else . end'||
+||[[# conditional-expr]][#conditional-expr-note conditional expression] _
+@<&nbsp;>@||$ echo '-3' | jq 'if . < 0 then -. else . end'||
 ||||~ [[# arith-logic]]arithmetic and logic||
 ||~ ||~ jq||
-||true and false||true false||
-||falsehoods||null false||
-||logical operators||and or not||
-||relational operators||@@==@@ != < > <= >=||
-||min and max||$ echo '[1,2,3]' | jq 'min' _
+||[[# true-false]][#true-false-note true and false] _
+@<&nbsp;>@||true false||
+||[[# falsehoods]][#falsehoods-note falsehoods] _
+@<&nbsp;>@||null false||
+||[[# logical-op]][#logical-op-note logical operators] _
+@<&nbsp;>@||and or not||
+||[[# relational-op]][#relational-op-note relational operators] _
+@<&nbsp;>@||@@==@@ != < > <= >=||
+||[[# min-max]][#min-max-note min and max] _
+@<&nbsp;>@||$ echo '[1,2,3]' | jq 'min' _
 $ echo '[1,2,3]' | jq 'max'||
-||arithmetic operators||+ - * / %||
-||integer division||jq -n '-13 / 5 | floor'||
-||division by zero||##gray|//error//##||
-||power|| ||
-||sqrt||$ jq -n '2 | sqrt'||
-||sqrt -1||##gray|# null:## _
-jq -n '-1 | sqrt'||
-||transcendental functions||exp log _
+||[[# arith-op]][#arith-op-note arithmetic operators] _
+@<&nbsp;>@||+ - * / %||
+||[[# int-division]][#int-division-note integer division]||##gray|# floor is new in 1.4:## _
+$ jq -n '-13 / 5 | floor'||
+||[[# division-by-zero]][#division-by-zero-note division by zero] _
+@<&nbsp;>@||##gray|//error//##||
+||[[# sqrt]][#sqrt-note sqrt]||##gray|# new in 1.4:## _
+$ jq -n '2 | sqrt'||
+||[[# sqrt-negative-one]][#sqrt-negative-one-note sqrt -1]||##gray|# null:## _
+$ jq -n '-1 | sqrt'||
+||[[# transcendental-func]][#transcendental-func-note transcendental functions]||##gray|# new in 1.5:## _
+exp log _
 sin cos tan _
 asin acos atan||
-||float truncation||$ jq '1.1 | floor'||
+||[[# float-trunc]][#float-trunc-note float truncation]||##gray|# floor is new in 1.4:## _
+$ jq '1.1 | floor'||
 ||||~ [[# strings]]strings||
 ||~ ||~ jq||
-||literal||"lorem ipsum"||
-||newline in literal||##gray|//not allowed; use// \n //escape sequence//##||
-||string escapes||\\ \" \/ \b \f \n \r \r \t \u##gray|//hhhh//##||
-||variable interpolation||$ echo '{"foo": 1, "bar": 2}' | jq '"\(.foo):\(.bar)"'||
-||concatenate||"foo" + "bar"||
-||translate case||$ echo '"foo"' | jq 'ascii_upcase _
+||[[# str-literal]][#str-literal-note literal] _
+@<&nbsp;>@||"lorem ipsum"||
+||[[# newline-in-literal]][#new-line-in-literal-note newline in literal] _
+@<&nbsp;>@||##gray|//not allowed; use// \n //escape sequence//##||
+||[[# str-esc]][#str-esc-note string escapes] _
+@<&nbsp;>@||\\ \" \/ \b \f \n \r \r \t \u##gray|//hhhh//##||
+||[[# var-interpolation]][#var-interpolation-note variable interpolation] _
+@<&nbsp;>@||$ echo '{"foo": 1, "bar": 2}' | jq '"\(.foo):\(.bar)"'||
+||[[# concat]][#concat-note concatenate] _
+@<&nbsp;>@||"foo" + "bar"||
+||[[# translate-case]][#translate-case-note translate case]||$ echo '"foo"' | jq 'ascii_upcase _
 $ echo '"FOO"' | jq 'ascii_downcase'||
-||number to string||$ echo '7' | jq 'tostring'||
-||string to number||$ echo '"7"' | jq 'tonumber'||
-||string join||$ echo '["do", "re", "mi"]' | jq 'join(" ")'||
-||split||$ echo '"do  re mi"' | jq 'split(" ")' _
+||[[# num-to-str]][#num-to-str-note number to string] _
+@<&nbsp;>@||$ echo '7' | jq 'tostring'||
+||[[# str-to-num]][#str-to-num-note string to number] _
+@<&nbsp;>@||$ echo '"7"' | jq 'tonumber'||
+||[[# str-join]][#str-join-note string join]||##gray|# join is new in 1.4:## _
+$ echo '["do", "re", "mi"]' | jq 'join(" ")'||
+||[[# split]][#split-note split]||##gray|# split is new in 1.4:## _
+$ echo '"do  re mi"' | jq 'split(" ")' _
  _
 ##gray|# remove two empty strings:## _
 $ echo '" do  re mi"' | jq 'split(" ") | map(select(length > 0))'||
-||prefix and suffix test||$ echo '"foobar"' | jq 'startswith("foo")' _
+||[[# prefix-suffix-test]][#prefix-suffix-test-note prefix and suffix test]||$ echo '"foobar"' | jq 'startswith("foo")' _
 $ echo '"foobar"' | jq 'endswith("bar")'||
-||string length||$ jq -R 'length' /etc/hosts||
-||index of substring _
+||[[# str-len]][#str-len-note string length] _
+@<&nbsp;>@||$ jq -R 'length' /etc/hosts||
+||[[# index-substr]][#index-substr-note index of substring] _
  _
 ##gray|//first, last//##||##gray|# 3:## _
 $ echo '"do re re"' | jq 'index("re")' _
@@ -80,41 +130,53 @@ $ echo '"do re re"' | jq 'rindex("re")' _
 $ echo '"do re re"' | jq 'rindex("mi")'||
 ||||~ [[# regex]]regular expressions||
 ||~ ||~ jq||
-||literal||"lorem|ipsum"||
-||character class abbrevations||##gray|//but backslashes must be doubled inside double quotes://## _
+||[[# regex-literal]][#regex-literal-note literal]||##gray|# regexes are new in 1.5:## _
+"lorem|ipsum"||
+||[[# char-class-abbrev]][#char-class-abbrev-note character class abbrevations]||##gray|//but backslashes must be doubled inside double quotes://## _
 . \d \D \h \H \s \S \w \W||
-||anchors||##gray|//but backslashes must be doubled inside double quotes://## _
+||[[# anchors]][#anchors-note anchors]||##gray|//but backslashes must be doubled inside double quotes://## _
 ^ $ \A \b \B \z \Z||
-||match test||$ echo $'"It\'s 1999!"'  | jq '. | test("1999")'||
-||case insensitive match test||$ echo $'"FOO BAR"' | jq 'test("foo"; "i")' _
+||[[# match-test]][#match-test-note match test] _
+@<&nbsp;>@||$ echo $'"It\'s 1999!"'  | jq '. | test("1999")'||
+||[[# case-insensitive-match-test]][#case-insensitive-match-test-note case insensitive match test]||$ echo $'"FOO BAR"' | jq 'test("foo"; "i")' _
 $ echo $'"FOO BAR"' | jq 'test(["foo", "i"])' _
 $ echo $'"FOO BAR"' | jq 'test("(?i)foo")'||
-||substitution _
+||[[# subst]][#subst-note substitution] _
  _
 ##gray|//first occurrence, all occurrences//##||$ echo '"do re mi mi mi"' | jq 'sub("mi"; "ma")' _
 $ echo '"do re mi mi mi"' | jq 'gsub("mi"; "ma")'||
-||named group capture||$ echo '"foo.txt"' | jq 'capture("^(?<root>.*)\\.(?<suffix>.*)$") | .root'||
+||[[# named-group-capture]][#named-group-capture-note named group capture] _
+@<&nbsp;>@||$ echo '"foo.txt"' | jq 'capture("^(?<root>.*)\\.(?<suffix>.*)$") | .root'||
 ||||~ [[# dates-time]]dates and time||
 ||~ ||~ jq||
-||current datetime||##gray|# array of broken-down datetime values:## _
+||[[# current-datetime]][#current-datetime-note current datetime]||##gray|# date/time functions are new in 1.5## _
+ _
+##gray|# array of broken-down datetime values:## _
 $ jq -n 'now | gmtime'  _
  _
 ##gray|# ISO 8601 format:## _
 $ jq -n 'now | gmtime | todate'||
-||current unix epoch||$ jq -n 'now'||
-||broken-down datetime to unix epoch||$ echo '[2016,11,15,11,30,0,4,349]' | jq 'mktime'||
-||unix epoch to broken-down datetime||$ echo 1481801400 | jq 'gmtime'||
-||format datetime||$ jq -n 'now | gmtime | strftime("%Y-%m-%d %H:%M:%S")'||
-||parse datetime||##gray|# parses to array of broken-down datetime values:## _
+||[[# current-unix-epoch]][#current-unix-epoch-note current unix epoch] _
+@<&nbsp;>@||$ jq -n 'now'||
+||[[# broken-down-datetime-to-unix-epoch]][#broken-down-datetime-to-unix-epoch-note broken-down datetime to unix epoch]||$ echo '[2016,11,15,11,30,0,4,349]' | jq 'mktime'||
+||[[# unix-epoch-to-broken-down-datetime]][#unix-epoch-to-broken-down-datetime-note unix epoch to broken-down datetime]||$ echo 1481801400 | jq 'gmtime'||
+||[[# fmt-datetime]][#fmt-datetime-note format datetime] _
+@<&nbsp;>@||$ jq -n 'now | gmtime | strftime("%Y-%m-%d %H:%M:%S")'||
+||[[# parse-datetime]][#parse-datetime-note parse datetime]||##gray|# parses to array of broken-down datetime values:## _
 $ echo '"2016-12-15 11:30:00"' | jq 'strptime("%Y-%m-%d %H:%M:%S")'||
 ||||~ [[# arrays]]arrays||
 ||~ ||~ jq||
 ||lookup||##gray|# 6:## _
 $ echo '[6, 7, 8, 9'] | jq '.[0]'||
+||not an array behavior||##gray|# error:## _
+$ echo 1 | jq '.[0]' _
+ _
+##gray|# no error and no output:## _
+$ echo 1 | jq '.[0]?'||
 ||length||$ echo '[6, 7, 8, 9'] | jq 'length'||
 ||slice||##gray|# [7, 8]:## _
 $ echo '[6,7,8,9]' | jq '.[1:3]'||
-||slice from beginning||jq -c '.[:2]'||
+||slice from beginning||$ jq -c '.[:2]'||
 ||slice to end||##gray|//from element 3 on://## _
 $ jq -c '.[2:]' _
  _
@@ -133,7 +195,8 @@ $ echo '[1,2,3]' | jq 'map(. * .)'||
 ||universal and existential test||$ echo '[1,2,3]' | jq 'all(. > 2)' _
 $ echo '[1,2,3]' | jq 'any(. > 2)'||
 ||flatten _
-##gray|//one level, completely//##||$ echo '[1,[2,[3]]]' | jq -c 'flatten(1)' _
+##gray|//one level, completely//##||##gray|# flatten is new in 1.5:## _
+$ echo '[1,[2,[3]]]' | jq -c 'flatten(1)' _
 $ echo '[1,[2,[3]]]' | jq -c 'flatten'||
 ||||~ [[# dictionaries]]dictionaries||
 ||~ ||~ jq||
@@ -146,21 +209,39 @@ $ echo '{"t": 1, "f": 0}' | jq '.["t"]'||
 $ echo '"t"' | jq 'in({"t": 1, "f": 0})'||
 ||missing key behavior||##gray|# null:## _
 $ echo '{"t": 1, "f": 0}' | jq '.m' ||
+||not a dictionary behavior||##gray|# error:## _
+$ echo 1 | jq '.foo' _
+ _
+##gray|# no error and no output:## _
+$ echo 1 | jq '.foo?'||
 ||delete||$ echo '{"t": 1, "f": 0}' | jq 'del(.t)'||
 ||||~ [[# functions]]functions||
 ||~ ||~ jq||
 ||define||$ echo '1 2 3 4' | jq 'def double: 2 * .;'||
 ||call||$ echo '1 2 3 4' | jq 'def double: 2 * .; double'||
+||function with argument||$ echo '1 2 3 4' | jq 'def multiply($x): . * $x; multiply(7)' _
+ _
+##gray|# without $, argument is treated as a filter:## _
+echo '1 2 3 4' | jq 'def apply(f): f; apply(. * 7)'||
 ||||~ [[# exec-control]]execution control||
 ||~ ||~ jq||
+||if||$ echo '-3' | jq 'if . < 0 then -. else . end'||
+||while||$ jq -n '1 | while(. < 10; . + 1)' ||
+||break||$ jq -n '1 | label $out | while(true; if . > 10 then break $out else. + 1 end)'||
 ||||~ [[# exceptions]]exceptions||
 ||~ ||~ jq||
 ||raise exception||$ jq -n 'error("bam!")'||
+||handle exception||##gray|# set output to null:## _
+$ jq -n 'try error("bam!") catch null' _
+ _
+##gray|# two ways to handle with no output:## _
+$ jq -n 'try error("bam!") catch empty' _
+$ jq -n 'error("bam!")?'||
 ||||~ [[# streams]]streams||
 ||~ ||~ jq||
 ||write to stderr||##gray|# input to debug is also passed on to subsequent filters:## _
 $ jq -n '"foo" | debug'||
-||read input as array of strings||jq -R 'length' /etc/hosts||
+||read input as array of strings||$ jq -R 'length' /etc/hosts||
 ||array to stream||$ echo '[1,2,3]' | jq '.[]'||
 ||stream to array||$ echo '1 2 3' | jq -s '.'||
 ||||~ [[# file-fmt]]file formats||
@@ -171,6 +252,25 @@ $ jq -n '"foo" | debug'||
 $ jq -n 'env["HOME"]'||
 ||||~ [[# lib-namespaces]]libraries and namespaces||
 ||~ ||~ jq||
+||load library||$ cat > multiples.jq  _
+def double: 2 * .; _
+def triple: 3 * .; _
+def quadruple; 4 * .; _
+ _
+$ echo 3 | jq 'include "multiples"; double'||
+||library path command line option||$ mkdir ~/.jq _
+$ cat > ~/.jq/multiples.jq _
+def double: 2 * .; _
+def triple: 3 * .; _
+def quadruple; 4 * .; _
+ _
+$ echo 3 | jq -L ~/.jq 'include "multiples"; double'||
+||load definitions in namespace||$ cat > multiples.jq  _
+def double: 2 * .; _
+def triple: 3 * .; _
+def quadruple; 4 * .; _
+ _
+$ echo 3 | jq 'import "multiples" as mult; mult::double'||
 ||~ ||~ ##EFEFEF|@@___________________________________________________________________@@##||
 
 [[# jq]]
