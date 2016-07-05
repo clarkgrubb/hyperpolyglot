@@ -311,7 +311,7 @@ A * 3||3 * [1 2; 3 4] _
 [1 2; 3 4] * 3||
 ||[#matrix-element-wise-operators element-wise operators]||.+ .- .* ./||+ - * /||+ - np.multiply() np.divide()||+ - .* ./||
 ||[#matrix-multiplication multiplication] _
-@<&nbsp;>@||A * B||A %*% B||A * B||A * B||
+@<&nbsp;>@||A * B||A %*% B||np.dot(A, B)||A * B||
 ||[#matrix-power power]||A ^ 3 _
  _
 ##gray|% power of each entry:## _

@@ -215,6 +215,8 @@ $ echo 1 | jq '.foo' _
 ##gray|# no error and no output:## _
 $ echo 1 | jq '.foo?'||
 ||delete||$ echo '{"t": 1, "f": 0}' | jq 'del(.t)'||
+||keys and values as arrays||$ echo '{"do": 1, "re": 2}'  | jq 'keys' _
+$ echo '{"do": 1, "re": 2}' | jq 'to_entries | map(.value)'||
 ||||~ [[# functions]]functions||
 ||~ ||~ jq||
 ||define||$ echo '1 2 3 4' | jq 'def double: 2 * .;'||

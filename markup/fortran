@@ -1,12 +1,12 @@
 [[# top]]//a side-by-side reference sheet//
 
-[#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#dates-time dates and time] | [#arrays arrays] | [#arith-seq arithmetic sequences] | [#multidimensional-arrays multidimensional arrays] | [#functions functions] | [#execution-control execution control] | [#file-handles file handles] | [#processes-environment processes and environment]
+[#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#dates-time dates and time] | [#arrays arrays] | [#arith-seq arithmetic sequences] | [#functions functions] | [#execution-control execution control] | [#file-handles file handles] | [#processes-environment processes and environment]
 
 [#vectors vectors] | [#matrices matrices]
 
 ||~ [[# general]]||~ [#fortran fortran]||~ [#apl apl]||
 ||[[# version-used]][#version-used-note version used] _
-@<&nbsp;>@||##gray|//GNU Fortran 4.5 (Fortran 95)//##||##gray|//GNU APL 1.4//##||
+@<&nbsp;>@||##gray|//GNU Fortran 4.5 (Fortran 95)//##||##gray|//GNU APL 1.5//##||
 ||[[# show-version]][#show-version-note show version] _
 @<&nbsp;>@||$ gfortran @@--@@version||$ apl @@--@@version||
 ||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
@@ -82,6 +82,15 @@ null()|| ||
 ⍝ fore:@<&nbsp;&nbsp;&nbsp;&nbsp;>@≤## _
  _
 ≡ ≠ > < ≥ ≤||
+||[[# min-max]][#min-max-note min and max]||min(1, 2, 3) _
+max(1, 2, 3)||##gray|⍝ minimum: ⌊ _
+⍝ maximum: ⌈## _
+ _
+1 ⌊ 2 ⌊ 3 _
+1 ⌈ 2 ⌈ 3 _
+ _
+⌊  / 1 2 3 _
+⌈ / 1 2 3||
 ||[[# int-type]][#int-type-note integer type] _
 @<&nbsp;>@||integer _
  _
@@ -225,15 +234,11 @@ not(##gray|//i//##)|| ||
 ||~ ||~ fortran||~ apl||
 ||[[# str-type]][#str-type-note string type] _
 @<&nbsp;>@||characater(len=100) s|| ||
-||[[# char-type]][#char-type-note char type]|| || ||
 ||[[# str-literal]][#str-literal-note string literal] _
 @<&nbsp;>@||'don''t say "no"' _
 "don't say ""no"""||'don''t say "no"'||
 ||[[# newline-in-str-literal]][#newline-in-str-literal-note newline in string literal]||"lorem" @@//@@ achar(10) @@//@@ "ipsum"|| ||
 ||[[# str-literal-esc]][#str-literal-esc-note string escapes]||##gray|//none//##|| ||
-||[#allocate-string allocate string]|| || ||
-||[#string-comparison comparison]|| || ||
-||[#string-equal semantics of ==]|| || ||
 ||[#string-to-number convert string to numeric]|| ||##gray|⍝ execute: ⍎## _
  _
 ⍎ '4'||
@@ -254,7 +259,6 @@ write(s,'(A A F9.3 I9)') 'foo', ':', 2.2, 7|| ||
 ||[#trim trim]||##gray|//??//## _
 adjustl(' foo') _
 trim('foo ')|| ||
-||[#pad pad on right]|| || ||
 ||[#string-length length] _
 @<&nbsp;>@||len("hello")||⍴ 'hello'||
 ||[#char-access character access]||"hello"(1:1)|| ||
@@ -278,13 +282,13 @@ write(*, *) 'elapsed time: ', t2 - t1||##gray|//none//##||
 ||~ ||~ fortran||~ apl||
 ||[[# allocate-array-on-stack]][#allocate-array-on-stack-note allocate on stack]||##gray|! uninitialized values get zero values:## _
 integer, dimension(3) :: a _
-integer :: a2(3)|| ||
+integer :: a2(3)||##gray|//none//##||
 ||[[# allocate-array-on-heap]][#allocate-array-on-heap-note allocate on heap]||##gray|! unitialized values get zero values:## _
 integer, dimension(:), allocatable :: a _
-allocate(a(3))|| ||
+allocate(a(3))||##gray|//all data is stored on heap//##||
 ||[[# free-array-on-heap]][#free-array-on-heap-note free heap]||##gray|! usually not necessary, since memory is freed _
 ! when the variable goes out of scope.## _
-deallocate(a)|| ||
+deallocate(a)||##gray|//none; memory is garbage collected//##||
 ||[[# array-literal]][#array-literal-note literal]||integer::a(3) = (/ 1, 2, 3 /)||a ← 1 2 3||
 ||[[# array-size]][#array-size-note size] _
 @<&nbsp;>@||size((/ 1, 2, 3 /))||##gray|⍝ rho: ⍴## _
@@ -296,47 +300,90 @@ integer :: a(4) _
 a = (/ 7, 8, 9, 10 /) _
 a(2)||a ← 7 8 9 10  _
  _
-1 ↑ 1 ↓ a||
-||[[# array-update]][#array-update-note update]||a(1) = 8|| ||
+a[2] _
+(7 8 9 10)[2] _
+ _
+##gray|⍝ change index origin from 1 to 0:## _
+⎕IO ← 0||
+||[[# array-update]][#array-update-note update]||a(1) = 8||a[1] ← 8||
 ||[[# array-out-of-bounds]][#array-out-of-bounds-note out-of-bounds behavior]||##gray|//If the array dimensions are set at compilation time (i.e. the array is stack allocated), then the code fails to compile.  _
  _
-Out-of-bounds references to arrays with dimensions set at run time (i.e. the array is heap allocated) could segfault or return a memory value outside of the array.//##|| ||
+Out-of-bounds references to arrays with dimensions set at run time (i.e. the array is heap allocated) could segfault or return a memory value outside of the array.//##||INDEX ERROR||
 ||[[# array-element-index]][#array-element-index-note element index]|| ||##gray|⍝ evaluates to 2:## _
 7 8 9 ⍳ 8||
 ||[[# slice-array]][#slice-array-note slice]||##gray|! can't slice literal## _
 int::a1(3),a2(2) _
  _
 a1 = (/1,2,3/) _
-a2 = a1(1:2)|| ||
-||[[# slice-array-to-end]][#slice-array-to-end-note slice to end]|| || ||
-||[[# array-back]][#array-back-note manipulate back]|| || ||
-||[[# array-front]][#array-front-note manipulate front]|| || ||
+a2 = a1(1:2)||##gray|⍝ 7 8:## _
+ _
+a ← 7 8 9 10 _
+1 ↓ 3 ↑ a||
+||[[# slice-array-to-end]][#slice-array-to-end-note slice to end]|| ||##gray|⍝ 8 9 10:## _
+ _
+a ← 7 8 9 10 _
+1 ↓ a||
+||[[# array-back]][#array-back-note manipulate back]|| ||a ← 7 8 9 10 _
+ _
+##gray|⍝ 10:## _
+¯1 ↑ a _
+ _
+##gray|⍝ set a to 7 8 9:## _
+a ← ¯1 ↓ a _
+ _
+##gray|⍝ set a to 7 8 9 11:## _
+a ← a , 11||
+||[[# array-front]][#array-front-note manipulate front]|| ||a ← 7 8 9 10 _
+ _
+##gray|⍝ 6:## _
+1 ↑ a _
+ _
+##gray|⍝ set a to 8 9 10:## _
+a ← 1 ↓ a _
+ _
+##gray|⍝ set a to 6 8 9 10:## _
+a ← 6 , a||
 ||[[# concatenate-array]][#concatenate-array-note concatenate]|| ||1 2 3 , 4 5 6||
-||[[# copy-array]][#copy-array-note copy]|| || ||
-||[[# array-as-func-arg]][#array-as-func-arg-note array as function argument]|| || ||
+||[[# array-replicate]][#array-replicate-note replicate]|| ||##gray|⍝ 10 zeros:## _
+10 / 0||
+||[[# copy-array]][#copy-array-note copy]|| ||a ← 1 2 3 _
+b ← a _
+##gray|⍝ does not modify a:## _
+b[1] ← 4||
 ||[[# iterate-over-array]][#iterate-over-array-note iterate]|| || ||
-||[[# sort-array]][#sort-array-note sort]|| || ||
+||[[# sort-array]][#sort-array-note sort]|| ||a ← 8 7 10 9 _
+a[⍋ a]||
+||[[# reduce]][#reduce-note reduce]|| ||+ / 1 2 3 _
+ _
+##gray|⍝ 2:## _
+- / 1 2 3||
 ||||||~ [[# arith-seq]][#arith-seq-note arithmetic sequences]||
 ||~ ||~ fortran||~ apl||
-||unit difference|| ||##gray|⍝ iota: ⍳## _
+||[[# arith-seq-diff-one]][#arith-seq-diff-one-note unit difference]|| ||##gray|⍝ iota: ⍳## _
  _
 ⍳ 100||
-||||||~ [[# multidimensional-arrays]][#multidimensional-arrays-note multidimensional arrays]||
-||~ ||~ fortran||~ apl||
-||construct from sequence—2d||integer::a(2,2) = & _
-@<&nbsp;&nbsp;>@reshape((/ 1, 2, 3, 4 /), & _
-@<&nbsp;&nbsp;>@(/ 2, 2 /))||##gray|⍝ rho: ⍴## _
+||[[# arith-seq-diff-ten]][#arith-seq-diff-ten-note difference of 10]|| ||##gray|⍝ 0, 10, @@...@@, 100:## _
  _
-2 2 ⍴ 1 2 3 4||
+10 × ( ⍳ 11 ) - 1||
+||[[# arith-seq-diff-tenth]][#arith-seq-diff-tenth-note difference of .1]|| ||##gray|⍝ 0.0, 0.1, @@...@@, 10.0## _
+ _
+.1 × ( ⍳ 101 ) - 1||
 ||||||~ [[# functions]][#functions-note functions]||
 ||~ ||~ fortran||~ apl||
 ||[[# def-func]][#def-func-note define function]||integer function add(n, m) _
 @<&nbsp;&nbsp;>@integer, intent(in) :: n _
 @<&nbsp;&nbsp;>@integer, intent(in) :: m _
 @<&nbsp;&nbsp;>@add = n + m _
-end function add|| ||
+end function add||##gray|⍝ define dyadic operator:## _
+∇r ← a add b _
+r ← a + b ∇ _
+ _
+##gray|⍝ define monadic operator:## _
+∇r ← double n _
+r ← 2 × n ∇||
 ||[[# invoke-func]][#invoke-func-note invoke function] _
-@<&nbsp;>@||add(3, 7)|| ||
+@<&nbsp;>@||add(3, 7)||3 add 7 _
+double 7||
 ||[[# forward-decl-func]][#forward-decl-func-note forward declaration of function]|| || ||
 ||[[# overload-func]][#overload-func-note overload function]|| || ||
 ||[[# nest-func]][#nest-func-note nest function]|| || ||
@@ -412,7 +459,7 @@ open(unit=7, file='/etc/passwd', action='read')|| ||
 ||[[# tmp-file]][#tmp-file-note open unused file]|| || ||
 ||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
 ||~ ||~ fortran||~ apl||
-||command line arguments||character(len=10) :: arg _
+||[[# cmd-line-arg]][#cmd-line-arg-note command line arguments]||character(len=10) :: arg _
 integer arg_len _
  _
 i = 1 _
@@ -425,7 +472,7 @@ do while (i <= command_argument_count()) _
 @<&nbsp;&nbsp;>@endif _
 @<&nbsp;&nbsp;>@i = i + 1 _
 end do||⎕ARG||
-||environment variable||character(len=100) :: var _
+||[[# env-var]][#env-var-note environment variable]||character(len=100) :: var _
 integer var_len _
  _
 call get_environment_variable('HOME', var, var_len) _
@@ -440,18 +487,20 @@ endif||##gray|⍝ quad: ⎕## _
 ##gray|⍝ returns n by 2 array containing all environment _
 ⍝ variable names and their values:## _
 ⎕ENV ''||
-||exit||stop _
+||[[# exit]][#exit-note exit]||stop _
  _
 ##gray|! nonzero status:## _
 error stop 1||)OFF||
 ||||||~ [[# vectors]][#vectors-note vectors]||
 ||~ ||~ fortran||~ apl||
-||[#vector-literal vector literal]||##gray|//same as array//##|| ||
-||[#vector-element-wise element-wise arithmetic operators]||+ - * /|| ||
-||[#vector-length-mismatch result of vector length mismatch]||##gray|//compilation error//##|| ||
+||[#vector-literal vector literal]||##gray|//same as array//##||##gray|⍝ same as array:## _
+1 2 3||
+||[#vector-element-wise element-wise arithmetic operators]||+ - * /||+ - × ÷||
+||[#vector-length-mismatch result of vector length mismatch]||##gray|//compilation error//##||LENGTH ERROR||
 ||[#vector-scalar scalar multiplication]||3 * (/1,2,3/) _
-(/1,2,3/) * 3|| ||
-||[#vector-dot dot product]||dot_product((/1,1,1/),(/2,2,2/))|| ||
+(/1,2,3/) * 3||3 × 1 2 3 _
+1 2 3 × 3||
+||[#vector-dot dot product]||dot_product((/1,1,1/),(/2,2,2/))||1 1 1 + . × 2 2 2||
 ||||||~ [[# matrices]][#matrices-note matrices]||
 ||~ ||~ fortran||~ apl||
 ||[#matrix-literal-constructor matrix literal or constructor]||##gray|! column-major order:## _
@@ -461,8 +510,43 @@ integer::A(2,2) = & _
  _
 integer::B(2,2) = & _
 @<&nbsp;&nbsp;>@reshape((/ 4, 2, 3, 1 /), & _
-@<&nbsp;&nbsp;>@(/ 2, 2 /))|| ||
-||[#matrix-multiplication multiplication]||matmul(A, B)|| ||
+@<&nbsp;&nbsp;>@(/ 2, 2 /))||##gray|⍝ row-major order:## _
+A ←  2 2 ⍴ 1 2 3 4 ||
+||[[# constant-matrices]][#constant-matrices-note constant matrices] _
+ _
+##gray|//all zeros, all ones//##|| ||3 3 ⍴ 0 _
+3 3 ⍴ 1||
+||[[# diagonal-matrices]][#diagonal-matrices-note diagonal matrices] _
+ _
+##gray|//and identity//##|| ||##gray|⍝ 3×3 identity:## _
+I ← 3 3 ⍴ 1 , 3 ⍴ 0 _
+D ← I  + . × 1 2 3||
+||[[# matrix-dim]][#matrix-dim-note dimensions]|| ||A ←  2 3 ⍴ 1 2 3 4 5 6 _
+ _
+⍴ A||
+||[[# matrix-elem-access]][#matrix-elem-access-note element access]|| ||A ←  2 2 ⍴ 1 2 3 4 _
+##gray|⍝ 1:## _
+A[1; 1]||
+||[[# matrix-row-access]][#matrix-row-access-note row access]|| ||A ←  2 2 ⍴ 1 2 3 4 _
+##gray|⍝ 1 2:## _
+A[1; ]||
+||[[# matrix-column-access]][#matrix-column-access-note column access]|| ||A ←  2 2 ⍴ 1 2 3 4 _
+##gray|⍝ 1 3:## _
+A[; 1]||
+||[[# matrix-scalar-multiplication]][#matrix-scalar-multiplication-note scalar multiplication]|| ||A ← 2 2 ⍴ 1 2 3 4 _
+3 × A _
+A × 3||
+||[[# matrix-elem-wise-op]][#matrix-elem-wise-op-note element-wise operators]|| ||+ - × ÷||
+||[[# marix-transpose]][#matrix-transpose-note transpose]|| || A ← 2 2 ⍴ 1 2 3 4 _
+ _
+##gray|⍝ cant: ⍉ _
+⍉ A||
+||[#matrix-multiplication multiplication]||matmul(A, B)||A ← 2 2 ⍴ 1 2 3 4 _
+B ← 2 2 ⍴ 4 3 2 1 _
+A + . × B||
+||[[# matrix-inverse]][#matrix-inverse-note inverse]|| ||A ←  2 2 ⍴ 1 2 3 4  _
+##gray|⍝ inverse: ⌹## _
+⌹ A||
 ||~ ||~ ##EFEFEF|@@____________________________________________________________________________________________________@@##||~ ##EFEFEF|@@____________________________________________________________________________________________________@@##||
 
 
@@ -554,6 +638,9 @@ APL also has operators for "nand" and "nor":
 [[# relational-op-note]]
 ++ [#relational-op relational operators]
 
+[[# min-max-note]]
+++ [#min-max min and max]
+
 [[# int-type-note]]
 ++ [#int-type integer type]
 
@@ -609,6 +696,18 @@ Fortran format strings use these expressions:
 
 [[# arrays-note]]
 + [#arrays Arrays]
+
+[[# arith-seq-note]]
++ [#arith-seq Arithmetic Sequences]
+
+[[# arith-seq-diff-one-note]]
+++ [#arith-seq-diff-one unit difference]
+
+[[# arith-seq-diff-ten-note]]
+++ [#arith-seq-diff-ten difference of 10]
+
+[[# arith-seq-diff-tenth-note]]
+++ [#arith-seq-diff-tenth difference of 0.1]
 
 [[# functions-note]]
 + [#functions Functions]
@@ -670,6 +769,12 @@ Notation used in [http://www.csee.umbc.edu/~squire/fortranclass/summary.shtml#Fo
 
 [[# processes-environment-note]]
 + [#processes-environment Processes and Environment]
+
+[[# vectors-note]]
++ [#vectors Vectors]
+
+[[# matrices-note]]
++ [#matrices Matrices]
 
 [[# fortran]]
 + [#top Fortran]
