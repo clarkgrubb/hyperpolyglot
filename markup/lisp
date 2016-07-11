@@ -546,7 +546,7 @@ fround fceiling ffloor _
 ||concatenate _
 @<&nbsp;>@||(append '(1 2 3) '(4 5 6))||(append '(1 2 3) '(4 5 6))||(concat '(1 2 3) '(4 5 6))||(append '(1 2 3) '(4 5 6))||
 ||[#take take] _
-@<&nbsp;>@||##gray|//none//##||(take '(1 2 3 4) 2)||(take 2 '(1 2 3 4))||##gray|//none//##||
+@<&nbsp;>@||##gray|//none//##||(take '(1 2 3 4) 2)||(take 2 '(1 2 3 4))||(subseq '(1 2 3 4) 0 2)||
 ||[#drop drop] _
 @<&nbsp;>@||(nthcdr 2 '(1 2 3 4))||(drop '(1 2 3 4) 2)||(drop 2 '(1 2 3 4))||(nthcdr 2 '(1 2 3 4))||
 ||last element _
