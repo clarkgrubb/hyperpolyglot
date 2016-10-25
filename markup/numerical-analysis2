@@ -416,9 +416,11 @@ object.size(X)||import scipy.sparse as sparse _
 sparse.issparse(X)|| ||
 ||||||||||~ [[# optimization]][#optimization-note optimization]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
-||[[# minimize-linear-prob]][#minimize-linear-prob-note linear minimization]||##gray|% download and install cvx:## _
+||[[# linear-min]][#linear-min-note linear minimization]||##gray|% download and install cvx:## _
 cvx_begin _
-@<&nbsp;&nbsp;>@variables x1, x2, x3; _
+@<&nbsp;&nbsp;>@variable x1; _
+@<&nbsp;&nbsp;>@variable x2; _
+@<&nbsp;&nbsp;>@variable x3; _
 @<&nbsp;&nbsp;>@minimize x1 + x2 + x3; _
 @<&nbsp;&nbsp;>@subject to _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@x1 + x2 >= 1; _
@@ -426,24 +428,162 @@ cvx_begin _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@x1 + x3 >= 1; _
 cvx_end; _
  _
+##gray|% 'Solved' in cvx_status## _
 ##gray|% argmin in x1, x2, x3## _
-##gray|% minval in cvx_optval##|| || || ||
-||array of input variables||cvx_begin _
+##gray|% minval in cvx_optval##||##gray|# install.packages('lpSolve')## _
+require(lpSolve) _
+ _
+obj = c(1, 1, 1) _
+A = matrix(c(1, 1, 0, 0, 1, 1, 1, 0, 1), _
+@<&nbsp;&nbsp;>@nrow=3, byrow=T) _
+dir = c(">=", ">=", ">=") _
+rhs = c(1, 1, 1) _
+result = lp("min", obj, A, dir, rhs) _
+ _
+##gray|# 0 in result$status## _
+##gray|# argmin in result$solution## _
+##gray|# minval in result$objval##||##gray|# sudo pip install cvxopt## _
+from cvxopt.modeling import * _
+ _
+x1 = variable(1, 'x1') _
+x2 = variable(1, 'x2') _
+x3 = variable(1, 'x3') _
+c1 = (x1 + x2 >= 1) _
+c2 = (x1 + x3 >= 1) _
+c3 = (x2 + x3 >= 1) _
+lp = op(x1 + x2 + x3, [c1, c2, c3]) _
+lp.solve() _
+ _
+##gray|# 'optimal' in lp.status## _
+##gray|# argmin in x1.value[0], x2.value[0], _
+#@<&nbsp;&nbsp;&nbsp;>@x3.value[0]## _
+##gray|# minval in lp.objective.value()[0]##|| ||
+||[[# decision-var-vec]][#decision-var-vec-note decision variable vector]||cvx_begin _
 @<&nbsp;&nbsp;>@variable x(3); _
 @<&nbsp;&nbsp;>@minimize sum(x); _
 @<&nbsp;&nbsp;>@subject to _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@x(1) + x(2) >= 1; _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@x(2) + x(3) >= 1; _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@x(1) + x(3) >= 1; _
-cvx_end;|| || || ||
-||multidimensional array of input variables|| || || || ||
-||linear maximization|| || || || ||
-||variable constraints|| || || || ||
-||unbounded behavior|| || || || ||
-||infeasible behavior|| || || || ||
-||complex variables|| || || || ||
-||integer variables|| || || || ||
-||binary variables|| || || || ||
+cvx_end;||##gray|# decision variables must be an array##||##gray|# sudo pip install cvxopt## _
+from cvxopt.modeling import * _
+ _
+x = variable(3, 'x') _
+c1 = (x[0] + x[1] >= 1) _
+c2 = (x[0] + x[2] >= 1) _
+c3 = (x[1] + x[2] >= 1) _
+lp = op(x[0] + x[1] + x[2], [c1, c2, c3]) _
+lp.solve()|| ||
+||[[# linear-max]][#linear-max-note linear maximization]||cvx_begin _
+@<&nbsp;&nbsp;>@variable x(3); _
+@<&nbsp;&nbsp;>@maximize sum(x); _
+@<&nbsp;&nbsp;>@subject to _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@x(1) + x(2) <= 1; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@x(2) + x(3) <= 1; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@x(1) + x(3) <= 1; _
+cvx_end;||##gray|# install.packages('lpSolve')## _
+require(lpSolve) _
+ _
+obj = c(1, 1, 1) _
+A = matrix(c(1, 1, 0, 0, 1, 1, 1, 0, 1), _
+@<&nbsp;&nbsp;>@nrow=3, byrow=T) _
+dir = c("<=", "<=", "<=") _
+rhs = c(1, 1, 1) _
+result = lp("max", obj, A, dir, rhs)||##gray|# None; negate objective function before _
+# solving; negate optimal value which _
+# is found.##|| ||
+||[[# var-declaration-constraint]][#var-declaration-constraint-note constraint in variable declaration]||cvx_begin _
+@<&nbsp;&nbsp;>@variable x(3) nonnegative; _
+@<&nbsp;&nbsp;>@minimize 10*x(1) + 5*x(2) + 4*x(3); _
+@<&nbsp;&nbsp;>@subject to _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@x(1) + x(2) + x(3) >= 10; _
+cvx_end||##gray|# none; but note that variables are assumed _
+# to be nonnegative##||##gray|# none##|| ||
+||[[# opt-unbounded-behavior]][#opt-unbounded-behavior-note unbounded behavior]||cvx_begin _
+@<&nbsp;&nbsp;>@variable x(3); _
+@<&nbsp;&nbsp;>@maximize sum(x); _
+cvx_end _
+ _
+##gray|% Inf in cvx_optval## _
+##gray|% 'Unbounded' in cvx_status##||##gray|# install.packages('lpSolve')## _
+require(lpSolve) _
+ _
+obj = c(1, 1, 1) _
+A = matrix(c(1, 1, 1), nrow=1, byrow=T) _
+dir = c(">=") _
+rhs = c(1) _
+result = lp("max", obj, A, dir, rhs) _
+ _
+##gray|# result$status is 3##||##gray|# sudo pip install cvxopt## _
+from cvxopt.modeling import * _
+ _
+x = variable(3, 'x') _
+c1 = (x[0] >= 0) _
+c2 = (x[1] >= 0) _
+c3 = (x[2] <= 0) _
+lp = op(x[0] + x[1] + x[2], [c1, c2, c3]) _
+lp.solve() _
+ _
+##gray|# lp.status is 'dual infeasible'##|| ||
+||[[# opt-infeasible-behavior]][#opt-infeasible-behavior-note infeasible behavior]||cvx_begin _
+@<&nbsp;&nbsp;>@variable x(3) nonnegative; _
+@<&nbsp;&nbsp;>@maximize sum(x); _
+@<&nbsp;&nbsp;>@subject to _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@x(1) + x(2) + x(3) < -1; _
+cvx_end _
+ _
+##gray|% -Inf in cvx_optval## _
+##gray|% 'Infeasible' in cvx_status##||##gray|# install.packages('lpSolve')## _
+require(lpSolve) _
+ _
+obj = c(1, 1, 1) _
+A = matrix(c(1, 1, 1), nrow=1, byrow=T) _
+dir = c("<=") _
+rhs = c(-1) _
+result = lp("min", obj, A, dir, rhs) _
+ _
+##gray|# result$status is 2##||##gray|# sudo pip install cvxopt## _
+from cvxopt.modeling import * _
+ _
+x = variable(3, 'x') _
+c1 = (x[0] >= 0) _
+c2 = (x[1] >= 0) _
+c3 = (x[2] >= 0) _
+c4 = (x[0] + x[1] + x[2] <= -1) _
+lp = op(x[0] + x[1] + x[2], [c1, c2, c3, c4]) _
+lp.solve() _
+ _
+##gray|# lp.status is 'primal infeasible'##|| ||
+||[[# int-decision-var]][#int-decision-var-note integer decision variable]||##gray|% requires Optimization Toolbox:## _
+f = [1 1 1] _
+A = [-1 -1 0; -1 0 -1; 0 -1 -1; _
+@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@-1 0 0; 0 -1 0; 0 0 -1] _
+b = [-1 -1 -1 0 0 0] _
+##gray|% 2nd arg indicates integer vars## _
+[x opt flag] = intlinprog(f, [1 1 1], A, b) _
+ _
+##gray|% if solution found, flag is 1## _
+##gray|% x is argmin ## _
+##gray|% opt is optimal value##||##gray|# install.packages('lpSolve')## _
+require(lpSolve) _
+ _
+obj = c(1, 1, 1) _
+A = matrix(c(1, 1, 0, 0, 1, 1, 1, 0, 1), _
+@<&nbsp;&nbsp;>@nrow=3, byrow=T) _
+dir = c(">=", ">=", ">=") _
+rhs = c(1, 1, 1) _
+result = lp("min", obj, A, dir, rhs, _
+@<&nbsp;&nbsp;>@int.vec=c(1, 1, 1))|| || ||
+||[[# binary-decision-var]][#binary-decision-var-note binary decision variable]|| ||##gray|# install.packages('lpSolve')## _
+require(lpSolve) _
+ _
+obj = c(1, 1, 1) _
+A = matrix(c(1, 1, 0, 0, 1, 1, 1, 0, 1), _
+@<&nbsp;&nbsp;>@nrow=3, byrow=T) _
+dir = c(">=", ">=", ">=") _
+rhs = c(1, 1, 1) _
+result = lp("min", obj, A, dir, rhs, _
+@<&nbsp;&nbsp;>@binary.vec=c(1, 1, 1))||##gray|# integer solver not provided by default##|| ||
 ||||||||||~ [[# polynomials]][#polynomials-note polynomials]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||exact polynomial fit||x = [1 2 3 4] _
@@ -1837,40 +1977,57 @@ Coordinate format specifies a matrix with three arrays: the row indices, the the
 [[# optimization-note]]
 + [#optimization Optimization]
 
-A linear program is an optimization problem in which one tries to minimize or maximize a linear function called the //objective function// subject to linear inequality constraints.
+In an optimization problem one seeks the smallest or largest value assumed by an //objective function//.  The inputs to the objective function are the //decision variables//.  A set of equations or inequalities, the //constraints//, can be used to restrict the decision variables to a //feasible region//.
 
-The unknowns in the objective function and the constraints are called the decision variables.
+If the feasible region is empty, the problem is said to be //infeasible//.  If a minimization problem does not have a lower bound on the feasible region, or if a maximization problem does not have an upper bound on the feasible region, the problem is said to be //unbounded//.
 
-[[# minimize-linear-prob-note]]
-++ [#minimize-linear-prob linear minimization]
+An optimization problem is //linear// if both its objective function and its constraints are linear.  A constraint is linear if it can be written in the form //∑ aᵢ xᵢ ≤ b//, //∑ aᵢ xᵢ ≥ b//, or //∑ aᵢ xᵢ = b//, where //xᵢ// are the decision variables.
 
-How to solve a linear program where the objective function is minimized.
+An //integer linear program// is a linear optimization problem where the decision variables are constrained to assume integer values.  Polynomial time algorithms exist for solving linear programs when the decision variables are real-valued, but solving integer linear programs is NP-hard.  A //mixed integer linear program// has a mix of integer and real-valued decision variables.  A special case of an integer linear program is a //binary linear program// where the decision variables assume the values 0 or 1.
 
-If we have a maximization problem {{c * x}}, then we can find the solution by minimizing {{-c * x}}; that is, replacing {{c}} with {{-c}}.
+[[# linear-min-note]]
+++ [#linear-min linear minimization]
+
+An example of a linear minimization problem.
+
+[[# decision-var-vec-note]]
+++ [#decision-var-vec decision variable vector]
+
+How to declare a vector of decision variables.
+
+[[# linear-max-note]]
+++ [#linear-max linear maximization]
+
+An example of a linear maximization problem.
+
+[[# var-declaration-constraint-note]]
+++ [#var-declaration-constraint constraint in variable declaration]
+
+How to include a constraint on a decision variable in its declaration.
+
+[[# unbounded-behavior-note]]
+++ [#unbounded-behavior unbounded behavior]
+
+What happens when attempting to solve an unbounded optimization problem.
+
+[[# infeasible-behavior-note]]
+++ [#infeasible-behavior infeasible behavior]
+
+What happens when attempting to solve an infeasible optimization problem.
+
+[[# int-decision-var-note]]
+++ [#int-decision-var integer decision variable]
+
+How to declare a decision variable to be integer valued.
 
 **matlab:**
 
-{{linprog}} is part of the Optimization toolbox.
+The solvers which ship with CVX do not support integer programming.
 
-The function {{linprog}} minimizes {{c * x}} subject to the constraint that {{A * x <= b}}.  {{A * x}} and {{b}} are vectors, and when we say that {{A * x <= b}}, we mean that each component of {{A * x}} must be less than or equal to the corresponding component of {{b}}.
+[[# binary-decision-var-note]]
+++ [#binary-decision-var binary decision variable]
 
-When formulating constraints in the form {{A * x <= b}}, we may find that we have some greater-than constraints of the form: {{a,,i1,, x,,1,, + ... + a,,in,, x,,n,, >= b,,i,,}}.  We convert each such constraint to a less-than constraint by multiplying it by {{-1}}.  We use the values {{-a,,i1,,}}, ..., {{-a,,in,,}} in {{A}} and {{-b,,i,,}} in {{b}}.
-
-[[# minimize-linear-prob-decision-var-bounds-note]]
-++ [#minimize-linear-prob-decision-var-bounds linear minimization with bounds on decision variables]
-
-How to solve a linear program where the objective function is minimized and with extra constraints on the decision variables of the form {{L,,i,, <= x,,i,, <= U,,i,,}}.
-
-
-
-[[# minimize-linear-prob-equality-constraints-note]]
-++ [#minimize-linear-prob-equality-constraints linear minimization with equality constraints]
-
-[[# minimize-quadratic-prob-note]]
-++ [#minimize-quadratic-prob quadratic minimization]
-
-[[# minimize-int-linear-prob-note]]
-++ [#minimize-int-linear-prob integer linear minimization]
+How to declare a decision variable to only take the values 0 or 1.
 
 [[# polynomials-note]]
 + [#polynomials Polynomials]

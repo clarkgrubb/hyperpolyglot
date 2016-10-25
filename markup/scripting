@@ -1,30 +1,29 @@
 [[# top]]//a side-by-side reference sheet//
 
-**sheet one:** [#version version] | [#grammar-execution grammar and execution] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#arrays arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#concurrency concurrency]
+**sheet one:** [#version version] | [#grammar-execution grammar and execution] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#arrays arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#threads threads]
 
-**[[[scripting2|sheet two]]]:** [[[scripting2#streams|streams]]] | [[[scripting2#files|files]]] | [[[scripting2#file-fmt|file formats]]] | [[[scripting2#directories|directories]]] | [[[scripting2#processes-environment|processes and environment]]] | [[[scripting2#option-parsing|option parsing]]] | [[[scripting2#libraries-namespaces|libraries and namespaces]]] | [[[scripting2#objects|objects]]] | [[[scripting2#inheritance-polymorphism|inheritance and polymorphism]]] | [[[scripting2#reflection|reflection]]] | [[[scripting2#net-web|net and web]]] | [[[scripting2#gui|gui]]] |  [[[scripting2#unit-tests|unit tests]]] | [[[scripting2#debugging-profiling|debugging and profiling]]] | [[[scripting2#java-interop|java interop]]]
+**[[[scripting2|sheet two]]]:** [[[scripting2#streams|streams]]] | [[[scripting2#async|asynchronous events]]] |  [[[scripting2#files|files]]] | [[[scripting2#file-fmt|file formats]]] | [[[scripting2#directories|directories]]] | [[[scripting2#processes-environment|processes and environment]]] | [[[scripting2#option-parsing|option parsing]]] | [[[scripting2#libraries-namespaces|libraries and namespaces]]] | [[[scripting2#objects|objects]]] | [[[scripting2#inheritance-polymorphism|inheritance and polymorphism]]] | [[[scripting2#reflection|reflection]]] | [[[scripting2#net-web|net and web]]] | [[[scripting2#gui|gui]]] | [[[scripting2#databases|databases]]] | [[[scripting2#unit-tests|unit tests]]] | [[[scripting2#logging|logging]]] | [[[scripting2#debugging|debugging]]]
 
 ||||||||||~ [[# version]][#version-note version]||
 ||~ ||~ [#node node.js]||~ [#php php]||~ [#python python]||~ [#ruby ruby]||
 ||[[# version-used]][#version-used-note version used] _
-@<&nbsp;>@|| ||##gray|//5.5//##||##gray|//2.7; 3.3//##||##gray|//1.9; 2.0//##||
+@<&nbsp;>@||##gray|//6.3//##||##gray|//7.0//##||##gray|//3.5//##||##gray|//2.3//##||
 ||[[# version]][#version-note show version] _
 @<&nbsp;>@||$ node @@--@@version||$ php @@--@@version||$ python -V _
 $ python @@--@@version||$ ruby @@--@@version||
 ||[[# implicit-prologue]][#implicit-prologue-note implicit prologue] _
-@<&nbsp;>@||##gray|@@//@@ npm install underscore## _
-##purple|var## ##peru|us## = require(##maroon|'underscore'##);||##gray|//none//##||##purple|import## os, re, sys||##gray|//none//##||
+@<&nbsp;>@||##gray|@@//@@ npm install lodash## _
+let _ = require('lodash');||##gray|# sudo apt install php-mbstring##||import os, re, sys||##gray|//none//##||
 ||||||||||~ [[# grammar-execution]][#grammar-execution-note grammar and execution]||
 ||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# interpreter]][#interpreter-note interpreter] _
 @<&nbsp;>@||$ node foo.js||$ php -f foo.php||$ python foo.py||$ ruby foo.rb||
 ||[[# repl]][#repl-note repl] _
 @<&nbsp;>@||$ node||$ php -a||$ python||$ irb||
-||[[# cmd-line-program]][#cmd-line-program-note command line program]||$ node -e 'var sys = require("sys"); _
-  sys.puts("hi world!");'||$ php -r 'echo "hi\n";'||$ python -c 'print("hi")'||$ ruby -e 'puts "hi"'||
+||[[# cmd-line-program]][#cmd-line-program-note command line program]||$ node -e "console.log('hi!');"||$ php -r 'echo "hi!\n";'||$ python -c 'print("hi!")'||$ ruby -e 'puts "hi!"'||
 ||[[# block-delimiters]][#block-delimiters-note block delimiters] _
 @<&nbsp;>@||{}||{}||: ##gray|//and offside rule//##||{} _
-##purple|do end##||
+do end||
 ||[[# statement-separator]][#statement-separator-note statement separator] _
 @<&nbsp;>@||##gray|//; or newline _
  _
@@ -37,9 +36,9 @@ newline sometimes not separator when following line would not parse as a valid s
 ##gray|//newlines not separators inside (), [], {}, triple quote literals, or after backslash: @@\@@//##||##gray|//newline or//## ; _
  _
 ##gray|//newlines not separators inside (), [], {}, @@``@@, '', "", or after binary operator or backslash: @@\@@//##||
-||[[# source-code-encoding]][#source-code-encoding-note source code encoding]|| ||##gray|//none//##||##gray|//Python 3 source is UTF-8 by default//## _
+||[[# source-code-encoding]][#source-code-encoding-note source code encoding]||##gray|//source is always UTF-8//##||##gray|//none//##||##gray|//Python 3 source is UTF-8 by default; Python 2 source is US-ASCII//## _
  _
-##gray|# -*- coding: utf-8 -*-##||##gray|//Ruby 2.0 source is UTF-8 by default//## _
+##gray|# -*- coding: us-ascii -*-##||##gray|//Ruby 2.0 source is UTF-8 by default//## _
  _
 ##gray|# -*- coding: utf-8 -*-##||
 ||[[# eol-comment]][#eol-comment-note end-of-line comment] _
@@ -50,89 +49,81 @@ newline sometimes not separator when following line would not parse as a valid s
 another line */##||##gray|/* comment line _
 another line */##||##gray|//use triple quote string literal://## _
  _
-##maroon|'''comment line _
-another line'''##||##gray|=begin _
+'''comment line _
+another line'''||##gray|=begin _
 comment line _
 another line _
 =end##||
 ||||||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
 ||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# local-var]][#local-var-note local variable] _
-@<&nbsp;>@||##purple|var## ##peru|x## = 1; _
+@<&nbsp;>@||##gray|@@//@@ new in ES6:## _
+let x = 1; _
+let y = 2, z = 3; _
  _
-##purple|var## ##peru|y## = 2, ##peru|z## = 3;||##gray|# in function body:## _
-$##peru|v## = ##teal|NULL##; _
-$##peru|a## = []; _
-$##peru|d## = []; _
-$##peru|x## = 1; _
-list($##peru|y##, $##peru|z##) = [2, 3];||##gray|# in function body:## _
-##peru|v## = ##teal|None## _
-##peru|a##, ##peru|d## = [], {} _
-##peru|x## = 1 _
-##peru|y##, ##peru|z## = 2, 3||v = ##peru|nil## _
-a, d = [], {} _
+##gray|@@//@@ older alternative to let:## _
+var x = 1; _
+ _
+##gray|@@//@@ let local scope is nearest _
+@@//@@ enclosing block; var local scope _
+@@//@@ is nearest function body. _
+ _
+@@//@@ var variables are visible to all code _
+@@//@@ in the function body; even code _
+@@//@@ preceding the var statement.##||##gray|# in function body:## _
+$x = 1; _
+list($y, $z) = [2, 3];||##gray|# in function body:## _
 x = 1 _
+y, z = 2, 3||x = 1 _
 y, z = 2, 3||
-||[[# local-scope-regions]][#local-scope-regions-note regions which define lexical scope]||##gray|//top level: _
-@<&nbsp;&nbsp;>@html page _
+||[[# file-scope-var]][#file-scope-var-note file scope variable]||##gray|@@//@@ outside any function body:## _
+let n = 1; _
  _
-nestable: _
-@<&nbsp;&nbsp;>@function//##||##gray|//top level: _
-@<&nbsp;&nbsp;>@function or method body _
+incrFileVar () { n++; }||##gray|//none//##||##gray|//none//##||##gray|//none//##||
+||[[# global-var]][#global-var-note global variable]||global.g = 1; _
  _
-nestable (with use clause): _
-@<&nbsp;&nbsp;>@anonymous function body//##||##gray|//nestable (read only): _
-@<&nbsp;&nbsp;>@function or method body//##||##gray|//top level: _
-@<&nbsp;&nbsp;>@file _
-@<&nbsp;&nbsp;>@class block _
-@<&nbsp;&nbsp;>@module block _
-@<&nbsp;&nbsp;>@method body _
+incrGlobal () { global.g++; }||$g = 1; _
  _
-nestable: _
-@<&nbsp;&nbsp;>@anonymous function body _
-@<&nbsp;&nbsp;>@anonymous block//##||
-||[[# global-var]][#global-var-note global variable]||##gray|@@//@@ assign without using var## _
-g = 1; _
+function incr_global() { _
+@<&nbsp;&nbsp;>@global $g; _
+@<&nbsp;&nbsp;>@++$g; _
+}||g = 1 _
  _
-##purple|function## ##mediumblue|incr_global## () { g++; }||list($##peru|g1##, $##peru|g2##) = [7, 8]; _
+def incr_global(): _
+@<&nbsp;&nbsp;>@global g _
+@<&nbsp;&nbsp;>@g += 1||$g = 1 _
  _
-##purple|function## ##0000CD|swap_globals##() { _
-@<&nbsp;&nbsp;>@##purple|global## $##peru|g1##, $##peru|g2##; _
-@<&nbsp;&nbsp;>@list($##peru|g1##, $##peru|g2##) = [$##peru|g2##, $##peru|g1##]; _
-}||##peru|g1##, ##peru|g2## = 7, 8 _
- _
-##purple|def## ##0000CD|swap_globals##(): _
-@<&nbsp;&nbsp;>@##purple|global## g1, g2 _
-@<&nbsp;&nbsp;>@g1, g2 = g2, g1||##peru|$g1##, ##peru|$g2## = 7, 8 _
- _
-##purple|def## ##0000CD|swap_globals## _
-@<&nbsp;&nbsp;>@##peru|$g1##, ##peru|$g2## = ##peru|$g2##, ##peru|$g1## _
+def incr_global _
+@<&nbsp;&nbsp;>@$g += 1 _
 end||
 ||[[# const]][#const-note constant] _
-@<&nbsp;>@||##gray|//none//##||define(##maroon|"PI"##, 3.14); _
+@<&nbsp;>@||##gray|@@//@@ new in ES6## _
+const PI = 3.14;||define("PI", 3.14); _
  _
-##purple|const## ##teal|PI## = 3.14;||##gray|# uppercase identifiers _
+const PI = 3.14;||##gray|# uppercase identifiers _
 # constant by convention## _
-##peru|PI## = 3.14||##gray|# warning if capitalized _
+PI = 3.14||##gray|# warning if capitalized _
 # identifier is reassigned## _
-##green|PI## = 3.14||
+PI = 3.14||
 ||[[# assignment]][#assignment-note assignment] _
-@<&nbsp;>@||x = 1;||$##peru|v## = 1;||##gray|//assignments can be chained but otherwise don't return values://## _
-##peru|v## = 1||v = 1||
+@<&nbsp;>@||v = 1;||$v = 1;||##gray|# assignments can be chained _
+# but otherwise don't return values:## _
+v = 1||v = 1||
 ||[[# parallel-assignment]][#parallel-assignment-note parallel assignment] _
-@<&nbsp;>@||##gray|//none//##||list($##peru|x##, $##peru|y##, $##peru|z##) = [1 ,2, 3]; _
+@<&nbsp;>@||##gray|@@//@@ new in ES6:## _
+let [x, y, z] = [1, 2, 3];||list($x, $y, $z) = [1 ,2, 3]; _
  _
 ##gray|# 3 is discarded:## _
-list($##peru|x##, $##peru|y##) = [1, 2, 3]; _
+list($x, $y) = [1, 2, 3]; _
  _
 ##gray|# $z set to NULL:## _
-list($##peru|x##, $##peru|y##, $##peru|z##) = [1, 2];||##peru|x##, ##peru|y##, ##peru|z## = 1, 2, 3 _
+list($x, $y, $z) = [1, 2];||x, y, z = 1, 2, 3 _
  _
 ##gray|# raises ValueError:## _
-##peru|x##, ##peru|y## = 1, 2, 3 _
+x, y = 1, 2, 3 _
  _
 ##gray|# raises ValueError:## _
-##peru|x##, ##peru|y##, ##peru|z## = 1, 2||x, y, z = 1, 2, 3 _
+x, y, z = 1, 2||x, y, z = 1, 2, 3 _
  _
 ##gray|# 3 is discarded:## _
 x, y = 1, 2, 3 _
@@ -140,9 +131,8 @@ x, y = 1, 2, 3 _
 ##gray|# z set to nil:## _
 x, y, z = 1, 2||
 ||[[# swap]][#swap-note swap] _
-@<&nbsp;>@||tmp = x; _
-x = y; _
-y = tmp;||list($##peru|x##, $##peru|y##) = [$##peru|y##, $##peru|x##];||##peru|x##, ##peru|y## = y, x||x, y = y, x||
+@<&nbsp;>@||##gray|@@//@@ new in ES6:## _
+[x, y] = [y, x];||list($x, $y) = [$y, $x];||x, y = y, x||x, y = y, x||
 ||[[# compound-assignment]][#compound-assignment-note compound assignment] _
 ##gray|//arithmetic, string, logical, bit//##||+= -= *= /= ##gray|//none//## %= _
 += _
@@ -159,37 +149,38 @@ y = tmp;||list($##peru|x##, $##peru|y##) = [$##peru|y##, $##peru|x##];||##peru|x
 &&= @@||@@= ^= _
 @@<<= >>= @@&= |= ^=||
 ||[[# incr-decr]][#incr-decr-note increment and decrement] _
-@<&nbsp;>@||##purple|var## x = 1; _
-##purple|var## y = ++x; _
-##purple|var## z = @@--@@y;||$##peru|x## = 1; _
-$##peru|y## = ++$##peru|x##; _
-$##peru|z## = @@--@@$##peru|y##;||##gray|//none//##||x = 1 _
+@<&nbsp;>@||let x = 1; _
+let y = ++x; _
+let z = @@--@@y;||$x = 1; _
+$y = ++$x; _
+$z = @@--@@$y;||##gray|//none//##||x = 1 _
 ##gray|# x and y not mutated:## _
 y = x.succ _
 z = y.pred||
 ||[[# null]][#null-note null] _
-@<&nbsp;>@||##green|null##||##teal|NULL## ##gray|# case insensitive##||##teal|None##||##peru|nil##||
+@<&nbsp;>@||null||NULL ##gray|# case insensitive##||None||nil||
 ||[[# null-test]][#null-test-note null test] _
-@<&nbsp;>@||v === ##green|null##||is_null($##peru|v##) _
-! isset($##peru|v##)||v == ##teal|None## _
-v ##purple|is## ##teal|None##||v == ##peru|nil## _
+@<&nbsp;>@||v === null||is_null($v) _
+! isset($v)||v is None||v == nil _
 v.nil?||
 ||[[# undef-var]][#undef-var-note undefined variable] _
-@<&nbsp;>@||##green|undefined##||##teal|NULL##||##gray|//raises// NameError##||##gray|//raises// NameError##||
+@<&nbsp;>@||##gray|//Evaluates as//## undefined _
+ _
+##gray|//Use the triple equality//## === ##gray|//operator to test for this value.//##||##gray|//Evaluates as//## NULL||##gray|//raises//## NameError||##gray|//raises//## NameError||
 ||[[# conditional-expr]][#conditional-expr-note conditional expression] _
-@<&nbsp;>@||x > 0 ? x : -x||$##peru|x## > 0 ? $##peru|x## : -$##peru|x##||x ##purple|if## x > 0 ##purple|else## -x||x > 0 ? x : -x||
+@<&nbsp;>@||x > 0 ? x : -x||$x > 0 ? $x : -$x||x if x > 0 else -x||x > 0 ? x : -x||
 ||||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
 ||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# true-false]][#true-false-note true and false] _
-@<&nbsp;>@||##green|true false##||##teal|TRUE FALSE## ##gray|# case insensitive##||##purple|True False##||##peru|true false##||
+@<&nbsp;>@||true false||TRUE FALSE ##gray|# case insensitive##||True False||true false||
 ||[[# falsehoods]][#falsehoods-note falsehoods] _
-@<&nbsp;>@||##green|false null undefined## ##maroon|""## 0 ##green|NaN##||##teal|FALSE NULL## 0 0.0 ##maroon|"" "0"## []||##purple|False## ##teal|None## 0 0.0 ##maroon|''## [] {}||##peru|false nil##||
+@<&nbsp;>@||false null undefined '' 0 NaN||FALSE NULL 0 0.0 "" "0" []||False None 0 0.0 '' [] {}||false nil||
 ||[[# logical-op]][#logical-op-note logical operators] _
 @<&nbsp;>@||@@&& ||@@ !||&& @@||@@ ! _
 ##gray|//lower precedence://## _
-##purple|and or xor##||##purple|and or not##||&& @@||@@ ! _
+and or xor||and or not||&& @@||@@ ! _
 ##gray|//lower precedence://## _
-##purple|and or not##||
+and or not||
 ||[[# relational-op]][#relational-op-note relational operators] _
 @<&nbsp;>@||@@===@@ !== < > >= <= _
  _
@@ -204,121 +195,115 @@ Math.max(1, 2, 3) _
 Math.min.apply(Math, [1, 2, 3]) _
 Math.max.apply(Math, [1, 2, 3])||min(1, 2, 3) _
 max(1, 2, 3) _
-$##peru|a## = [1, 2, 3] _
-min($##peru|a##) _
-max($##peru|a##)||##purple|min##(1, 2, 3) _
-##purple|max##(1, 2, 3) _
+$a = [1, 2, 3] _
+min($a) _
+max($a)||min(1, 2, 3) _
+max(1, 2, 3) _
  _
-##purple|min##([1, 2, 3]) _
-##purple|max##([1, 2, 3])||[1, 2, 3].min _
+min([1, 2, 3]) _
+max([1, 2, 3])||[1, 2, 3].min _
 [1, 2, 3].max||
-||[[# three-val-comparison]][#three-val-comparison-note three value comparison]||##gray|//none//##||##gray|//none//##||##gray|//removed from Python 3://## _
-##purple|cmp##(0, 1) _
-##purple|cmp##(##maroon|'do'##, ##maroon|'re'##)||0 <=> 1 _
-##maroon|"do"## <=> ##maroon|"re"##||
 ||[[# arith-op]][#arith-op-note arithmetic operators] _
-##gray|//addition, subtraction, multiplication, float division, quotient, remainder//##||+ - * / ##gray|//none//## %||+ - * / ##gray|//none//## %||+ - * ##gray|//see note//## // % _
+##gray|//addition, subtraction, multiplication, float division, quotient, remainder//##||+ - * / ##gray|//none//## %||+ - * / ##gray|//none//## %||+ - * / // % _
  _
-##gray|//Python 2 does not have an operator which performs float division on integers.  In Python 3 / always performs float division.//##||+ - * x.fdiv(y) / %||
+##gray|//In Python 2, / performs integer division.//##||+ - * x.fdiv(y) / %||
 ||[[# int-div]][#int-div-note integer division] _
-@<&nbsp;>@||Math.floor(x / y)||(##green|int##)(13 / 5) ||13 // 5||13 / 5||
+@<&nbsp;>@||Math.floor(22 / 7)||(int)(22 / 7) ||22 // 7||22 / 7||
 ||[[# divmod]][#divmod-note divmod] _
-@<&nbsp;>@||##gray|//none//##||##gray|//none//##||q, r = ##purple|divmod##(13, 5)||q, r = 13.divmod(5)||
+@<&nbsp;>@||##gray|//none//##||##gray|//none//##||q, r = divmod(22, 7)||q, r = 22.divmod(7)||
 ||[[# int-div-zero]][#int-div-zero-note integer division by zero] _
-@<&nbsp;>@||##gray|//returns assignable value Infinity, NaN, or -Infinity depending upon whether dividend is positive, zero, or negative. _
+@<&nbsp;>@||##gray|//Returns Infinity, NaN, or -Infinity depending upon sign of dividend. _
  _
 There are literals for Infinity and NaN.//##||##gray|//returns// FALSE //with warning//##||##gray|//raises// ZeroDivisionError##||##gray|//raises// ZeroDivisionError##||
 ||[[# float-div]][#float-div-note float division] _
-@<&nbsp;>@||13 / 5||13 / 5|| ##purple|float##(13) / 5 _
+@<&nbsp;>@||22 / 7||22 / 7|| 22 / 7 _
  _
-##gray|# Python 3:## _
-13 / 5||13.to_f / 5 ##gray|//or//## _
-13.fdiv(5)||
+##gray|# Python 2:## _
+float(22) / 7||22.to_f / 7 _
+ _
+22.fdiv(7)||
 ||[[# float-div-zero]][#float-div-zero-note float division by zero] _
 @<&nbsp;>@||##gray|//same behavior as for integers//##||##gray|//returns// FALSE //with warning//##||##gray|//raises// ZeroDivisionError##||##gray|//returns// -Infinity, NaN, //or// Infinity##||
 ||[[# power]][#power-note power] _
-@<&nbsp;>@||Math.pow(2, 32)||pow(2, 32)||2@@**@@32||2@@**@@32||
-||[[# sqrt]][#sqrt-note sqrt]||Math.sqrt(2)||sqrt(2)||##purple|import## math _
+@<&nbsp;>@||Math.pow(2, 32)||pow(2, 32)||2 @@**@@ 32||2 @@**@@ 32||
+||[[# sqrt]][#sqrt-note sqrt]||Math.sqrt(2)||sqrt(2)||import math _
  _
-math.sqrt(2)||include ##green|Math## _
+math.sqrt(2)||include Math _
  _
 sqrt(2)||
 ||[[# sqrt-negative-one]][#sqrt-negative-one-note sqrt -1] _
 @<&nbsp;>@||NaN||NaN||##gray|# raises ValueError:## _
-##purple|import## math _
+import math _
 math.sqrt(-1) _
  _
 ##gray|# returns complex float:## _
-##purple|import## cmath _
+import cmath _
 cmath.sqrt(-1)||##gray|Math.sqrt(-1) raises Math::DomainError unless require 'complex' is in effect.## _
  _
 ##gray|(-1) ** 0.5 is (0+1.0i)##||
 ||[[# transcendental-func]][#transcendental-func-note transcendental functions] _
-@<&nbsp;>@||Math.exp Math.log Math.sin Math.cos Math.tan Math.asin Math.acos Math.atan Math.atan2||exp log sin cos tan asin acos atan atan2||##purple|from## math ##purple|import## exp, log, \ _
-sin, cos, tan, asin, acos, atan, atan2||include ##green|Math## _
+@<&nbsp;>@||Math.exp Math.log Math.sin Math.cos Math.tan Math.asin Math.acos Math.atan Math.atan2||exp log sin cos tan asin acos atan atan2||from math import exp, log, \ _
+sin, cos, tan, asin, acos, atan, atan2||include Math _
  _
 exp log sin cos tan asin acos atan atan2||
 ||[[# transcendental-const]][#transcendental-const-note transcendental constants] _
 ##gray|//π and e//##||Math.PI _
-Math.E||##teal|M_PI M_E##||import ##purple|math## _
+Math.E||M_PI M_E||import math _
  _
-math.pi math.e||include ##green|Math## _
+math.pi math.e||include Math _
  _
-##green|PI E##||
+PI E||
 ||[[# float-truncation]][#float-truncation-note float truncation] _
 @<&nbsp;>@||##gray|//none//## _
 Math.round(3.1) _
 Math.floor(3.1) _
-Math.ceil(3.1)||(##green|int##)$##peru|x## _
-round($##peru|x##) _
-ceil($##peru|x##) _
-floor($##peru|x##)||##purple|import## math _
+Math.ceil(3.1)||(int)$x _
+round($x) _
+ceil($x) _
+floor($x)||import math _
  _
-##purple|int##(x) _
-##purple|int##(##purple|round##(x)) _
+int(x) _
+int(round(x)) _
 math.ceil(x) _
 math.floor(x)||x.to_i _
 x.round _
 x.ceil _
 x.floor||
 ||[[# abs-val]][#abs-val-note absolute value] _
-@<&nbsp;>@||Math.abs(-3)||abs($##peru|x##)||##purple|abs##(x)||x.abs||
+@<&nbsp;>@||Math.abs(-3)||abs($x)||abs(x)||x.abs||
 ||[[# int-overflow]][#int-overflow-note integer overflow] _
 @<&nbsp;>@||##gray|//all numbers are floats//##||##gray|//converted to float//##||##gray|//becomes arbitrary length integer of type// long##||##gray|//becomes arbitrary length integer of type// Bignum##||
 ||[[# float-overflow]][#float-overflow-note float overflow] _
-@<&nbsp;>@||##green|Infinity##||INF||##gray|//raises// OverflowError##||##green|Infinity##||
+@<&nbsp;>@||Infinity||INF||##gray|//raises// OverflowError##||Infinity||
 ||[[# rational-construction]][#rational-construction-note rational construction] _
-@<&nbsp;>@|| ||##gray|//none//##||##purple|from## fractions ##purple|import## Fraction _
+@<&nbsp;>@||##gray|//none//##||##gray|//none//##||from fractions import Fraction _
  _
-##peru|x## = Fraction(22, 7)||require ##maroon|'rational'## _
- _
-x = ##green|Rational##(22, 7)||
+x = Fraction(22, 7)||22 / 7r _
+22r / 7||
 ||[[# rational-decomposition]][#rational-decomposition-note rational decomposition] _
-@<&nbsp;>@|| ||##gray|//none//##||x.numerator _
-x.denominator||x.numerator _
-x.denominator||
+@<&nbsp;>@||##gray|//none//##||##gray|//none//##||x.numerator _
+x.denominator||(22 / 7r).numerator _
+(22 / 7r).denominator||
 ||[[# complex-construction]][#complex-construction-note complex construction] _
-@<&nbsp;>@|| ||##gray|//none//##||##peru|z## = 1 + 1.414j||require ##maroon|'complex'## _
- _
-z = 1 + 1.414.im||
+@<&nbsp;>@||##gray|//none//##||##gray|//none//##||z = 1 + 1.414j||z = 1 + 1.414i||
 ||[[# complex-decomposition]][#complex-decomposition-note complex decomposition] _
-##gray|//real and imaginary component, argument, absolute value, conjugate//##|| ||##gray|//none//##||##purple|import## cmath _
+##gray|//real and imaginary component, argument, absolute value, conjugate//##||##gray|//none//##||##gray|//none//##||import cmath _
  _
 z.real _
 z.imag _
 cmath.phase(z) _
 abs(z) _
-z.conjugate()||z.real _
-z.imag _
-z.arg _
-z.abs _
-z.conj||
+z.conjugate()||(1 + 3i).real _
+(1 + 3i).imag _
+(1 + 3i).arg _
+(1 + 3i).abs _
+(1 + 3i).conj||
 ||[[# random-num]][#random-num-note random number] _
 ##gray|//uniform integer, uniform float, normal float//##||Math.floor(Math.random() * 100) _
 Math.random() _
 ##gray|//none//##||rand(0,99) _
 lcg_value() _
-##gray|//none//##||##purple|import## random _
+##gray|//none//##||import random _
  _
 random.randint(0, 99) _
 random.random() _
@@ -328,10 +313,10 @@ rand _
 ||[[# random-seed]][#random-seed-note random seed] _
 ##gray|//set, get, restore//##||##gray|//none//##||srand(17); _
  _
-##gray|//none//##||##purple|import## random _
+##gray|//none//##||import random _
  _
 random.seed(17) _
-##peru|seed## = random.getstate() _
+seed = random.getstate() _
 random.setstate(seed)||srand(17) _
  _
 seed = srand _
@@ -343,550 +328,648 @@ srand(seed)||
 0x2a||0b101010 _
 052 _
 0x2a||0b101010 _
-0o52 ##gray|@@#@@ also 052 in Python 2## _
+0o52@<&nbsp;&nbsp;>@##gray|@@#@@ also 052 in Python 2## _
 0x2a||0b101010 _
 052 _
 0x2a||
 ||[[# radix]][#radix-note radix] _
 ##gray|//convert integer to and from string with radix//##||(42).toString(7) _
-##gray|//??//##||base_convert(##maroon|"42"##, 10, 7); _
-base_convert(##maroon|"60"##, 7, 10);||##gray|//none//## _
-int(##maroon|"60"##, 7)||42.to_s(7) _
-##maroon|"60"##.to_i(7)||
+parseInt('60', 7)||base_convert("42", 10, 7); _
+base_convert("60", 7, 10);||##gray|//none//## _
+int('60', 7)||42.to_s(7) _
+"60".to_i(7)||
 ||||||||||~ [[# strings]][#strings-note strings]||
 ||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# str-type]][#str-type-note string type] _
-@<&nbsp;>@||String||string||str||String||
+@<&nbsp;>@||String||##gray|# array of bytes:## _
+string||str _
+ _
+##gray|# Python 2:## _
+unicode||String||
 ||[[# str-literal]][#str-literal-note string literal] _
-@<&nbsp;>@||##maroon|"don't say \"no\"" _
-'don\'t say "no"'##||##maroon|"don't say \"no\""## _
-##maroon|'don\'t say "no"'##||##maroon|'don\'t say "no"'## _
-##maroon|"don't say \"no\""## _
-##maroon|"don't "## ##maroon|'say "no"'## _
-##maroon|'''don't say "no"'''## _
-##maroon|"""don't say "no\""""##||##maroon|"don't say \"no\""## _
-##maroon|'don\'t say "no"'## _
-##maroon|"don't "## ##maroon|'say "no"'##||
+@<&nbsp;>@||'don\'t say "no"' _
+"don't say \"no\""||"don't say \"no\"" _
+'don\'t say "no"'||'don\'t say "no"' _
+"don't say \"no\"" _
+"don't " 'say "no"' _
+ _
+##gray|# Python 2 (and Python 3):## _
+u'lorem' _
+u"ipsum"||"don't say \"no\"" _
+'don\'t say "no"' _
+"don't " 'say "no"'||
 ||[[# newline-in-str-literal]][#newline-in-str-literal-note newline in literal] _
-@<&nbsp;>@||##gray|//yes//##||##maroon|'first line _
+@<&nbsp;>@||##gray|@@//@@ backquote literals only:## _
+@@`@@first line _
+second line@@`@@ _
+ _
+##gray|@@//@@ Backslashes can be used to break _
+@@//@@ long strings.##||'first line _
 second line' _
  _
 "first line _
-second line"##||##gray|//triple quote literals only://## _
-##maroon|'''first line _
+second line"||##gray|# triple quote literals only:## _
+'''first line _
 second line''' _
  _
 """first line _
-second line"""##||##maroon|'first line _
+second line"""||'first line _
 second line' _
  _
 "first line _
-second line"##||
+second line"||
 ||[[# str-literal-esc]][#str-literal-esc-note literal escapes] _
 @<&nbsp;>@||##gray|//single and double quotes://## _
-\b \f \n \r \t \v \uhhhh \xhh \" \' \\||##gray|//double quoted://## _
+\b \f \n \r \t \v \x##gray|//hh//## \" \' \\ _
+ \u##gray|//hhhh//## \u{##gray|//hhhhh//##}||##gray|//double quoted://## _
 \f \n \r \t \v \x##gray|//hh//## \$ \" \\ \##gray|//ooo//## _
  _
 ##gray|//single quoted://## _
-\' \\||##gray|//single and double quoted://## _
-\##gray|//newline//## \\ \' \" \a \b \f \n \r \t \v \##gray|//ooo//## \x##gray|//hh//## _
+\' \\||\##gray|//newline//## \\ \' \" \a \b \f \n \r \t \v \##gray|//ooo//## \x##gray|//hh//## \u##gray|//hhhh//## \U##gray|//hhhhhhhh//## _
  _
-##gray|//Python 3://## _
-\u##gray|//hhhh//## \U##gray|//hhhhhhhh//##||##gray|//double quoted://## _
+##gray|//In Python 2,// \u //and// \U //only available in string literals with// u //prefix//##||##gray|//double quoted://## _
 \a \b \c##gray|//x//## \e \f \n \r \s \t \v \x##gray|//hh//## \##gray|//ooo//## \u##gray|//hhhh//## \u{##gray|//hhhhh//##} _
  _
 ##gray|//single quoted://## _
 \' \\||
 ||[[# here-doc]][#here-doc-note here document] _
-@<&nbsp;>@||##gray|//none//##||$##peru|word## = ##maroon|"amet"##; _
+@<&nbsp;>@||##gray|//none//##||$word = "amet"; _
  _
-$##peru|s## = ##maroon|@@<<<@@EOF _
+$s = @@<<<@@EOF _
 lorem ipsum _
 dolor sit $word _
-EOF##;||##gray|//none//##||word = ##maroon|"amet"## _
+EOF;||##gray|//none//##||word = "amet" _
  _
-s = ##maroon|@@<<@@EOF _
+s = @@<<@@EOF _
 lorem ipsum _
-dolor sit## ##peru|#{word}## _
-##maroon|EOF##||
+dolor sit #{word} _
+EOF||
 ||[[# var-interpolation]][#var-interpolation-note variable interpolation] _
-@<&nbsp;>@||##gray|@@//@@ None; use string concatenation. _
-@@//@@ Both of these expressions are '11':## _
-1 + "1" _
-"1" + 1||$##peru|count## = 3; _
-$##peru|item## = ##maroon|"ball"##; _
-##purple|echo## ##maroon|"$count ${item}s\n"##;||##peru|count## = 3 _
-##peru|item## = ##maroon|'ball'## _
-##purple|print##(##maroon|'{count} {item}s'##.format( _
-@<&nbsp;&nbsp;>@@@**@@##purple|locals##()))||count = 3 _
-item = ##maroon|"ball"## _
-puts ##maroon|"####peru|#{count} #{item}####maroon|s"##||
-||[[# expr-interpolation]][#expr-interpolation-note expression interpolation]||##gray|//none//##||##gray|//none//##||##maroon|'1 + 1 = {}'##.format(1 + 1)||##maroon|"1 + 1 = #{1 + 1}"##||
+@<&nbsp;>@||let count = 3; _
+let item = 'ball'; _
+let s = @@`@@${count} ${item}s@@`@@;||$count = 3; _
+$item = "ball"; _
+echo "$count ${item}s\n";||count = 3 _
+item = 'ball' _
+print('{count} {item}s'.format( _
+@<&nbsp;&nbsp;>@@@**@@locals()))||count = 3 _
+item = "ball" _
+puts "#{count} #{item}s"||
+||[[# expr-interpolation]][#expr-interpolation-note expression interpolation]||@@`@@1 + 1 = ${1 + 1}@@`@@||##gray|//none//##||'1 + 1 = {}'.format(1 + 1)||"1 + 1 = #{1 + 1}"||
 ||[[# format-str]][#format-str-note format string] _
 @<&nbsp;>@||##gray|@@//@@ None; use string concatenation. _
 @@//@@ Evaluates to "12.35":## _
-12.3456.toFixed(2)||$##peru|fmt## = ##maroon|"lorem %s %d %f"##; _
-sprintf($##peru|fmt##, ##maroon|"ipsum"##, 13, 3.7);||##maroon|'lorem %s %d %f'## % (##maroon|'ipsum'##, 13, 3.7) _
+12.3456.toFixed(2)||$fmt = "lorem %s %d %f"; _
+sprintf($fmt, "ipsum", 13, 3.7);||'lorem %s %d %f' % ('ipsum', 13, 3.7) _
  _
-##peru|fmt## = ##maroon|'lorem {0} {1} {2}'## _
-fmt.format(##maroon|'ipsum'##, 13, 3.7)||##maroon|"lorem %s %d %f"## % [##maroon|"ipsum"##, 13, 3.7]||
-||[[# mutable-str]][#mutable-str-note are strings mutable?]||##gray|//no//##||$##peru|s## = ##maroon|"bar"##; _
-$##peru|s2## = $##peru|s##; _
+fmt = 'lorem {0} {1} {2}' _
+fmt.format('ipsum', 13, 3.7)||"lorem %s %d %f" % ["ipsum", 13, 3.7]||
+||[[# mutable-str]][#mutable-str-note are strings mutable?]||##gray|//no//##||$s = "bar"; _
+$s2 = $s; _
 ##gray|# sets s to "baz"; s2 is unchanged:## _
-$##peru|s##[2] = ##maroon|"z"##;||##gray|//no//##||s = ##maroon|"bar"## _
+$s[2] = "z";||##gray|//no//##||s = "bar" _
 s2 = s _
 ##gray|# sets s and s2 to "baz":## _
-s[2] = ##maroon|"z"##||
-||[[# copy-str]][#copy-str-note copy string]||##gray|//none//##||$##peru|s2## = $##peru|s##;||##gray|//none//##||s = ##maroon|"bar"## _
+s[2] = "z"||
+||[[# copy-str]][#copy-str-note copy string]||##gray|//none//##||$s2 = $s;||##gray|//none//##||s = "bar" _
 s2 = s.clone _
 ##gray|# s2 is not altered:## _
-s[2] = ##maroon|"z"##||
+s[2] = "z"||
 ||[[# str-concat]][#str-concat-note concatenate] _
-@<&nbsp;>@||s = "Hello, " + "World!";||$##peru|s## = ##maroon|"Hello, "##; _
-$##peru|s2## = $##peru|s## . ##maroon|"World!"##;||##peru|s## = ##maroon|'Hello, '## _
-##peru|s2## = s + ##maroon|'World!'## _
+@<&nbsp;>@||s = 'Hello, ' + 'World!';||$s = "Hello, "; _
+$s2 = $s . "World!";||s = 'Hello, ' _
+s2 = s + 'World!' _
  _
 ##gray|# juxtaposition can be used to _
 # concatenate literals:## _
-##peru|s2## = ##maroon|'Hello, ' "World!"##||s = ##maroon|"Hello, "## _
-s2 = s + ##maroon|"World!"## _
+s2 = 'Hello, ' "World!"||s = "Hello, " _
+s2 = s + "World!" _
  _
 ##gray|# juxtaposition can be used to _
 # concatenate literals:## _
-s2  = ##maroon|"Hello, " 'World!'##||
+s2  = "Hello, " 'World!'||
 ||[[# str-replicate]][#str-replicate-note replicate] _
-@<&nbsp;>@||var hbar = Array(80).join("-");||$##peru|hbar## = str_repeat(##maroon|"-"##, 80);||##peru|hbar## = ##maroon|'-'## * 80||hbar = ##maroon|"-"## * 80||
+@<&nbsp;>@||let hbar = _.repeat('-', 80);||$hbar = str_repeat("-", 80);||hbar = '-' * 80||hbar = "-" * 80||
 ||[[# translate-case]][#translate-case-note translate case] _
-##gray|//to upper, to lower//##||"lorem".toUpperCase() _
-"LOREM".toLowerCase()||strtoupper(##maroon|"lorem"##) _
-strtolower(##maroon|"LOREM"##)||##maroon|'lorem'##.upper() _
-##maroon|'LOREM'##.lower()||##maroon|"lorem"##.upcase _
-##maroon|"LOREM"##.downcase||
+##gray|//to upper, to lower//##||'lorem'.toUpperCase() _
+'LOREM'.toLowerCase()||mb_strtoupper("lorem") _
+mb_strtolower("LOREM") _
+##gray|# strtoupper/strtolower are ASCII only##||'lorem'.upper() _
+'LOREM'.lower()||"lorem".upcase _
+"LOREM".downcase||
 ||[[# capitalize]][#capitalize-note capitalize] _
-##gray|//string, words//##||##gray|//none//##||ucfirst(##maroon|"lorem"##) _
-ucwords(##maroon|"lorem ipsum"##)||##purple|import## string _
+##gray|//string, words//##||_.capitalize('lorem'); _
+##gray|//none//##||##gray|# ASCII only:## _
+ucfirst(strtolower("lorem")) _
+ucwords(strtolower("lorem ipsum")) _
+##gray|# Unicode title case:## _
+mb_convert_case("lorem ipsum", MB_CASE_TITLE)||import string _
  _
-##maroon|'lorem'##.capitalize() _
-string.capwords(##maroon|'lorem ipsum'##)||##maroon|"lorem"##.capitalize _
+'lorem'.capitalize() _
+string.capwords('lorem ipsum')||"lorem".capitalize _
 ##gray|//none//##||
 ||[[# trim]][#trim-note trim] _
-##gray|//both sides, left, right//##||" lorem ".trim() _
-##gray|# some browsers:## _
-" lorem".trimLeft() _
-"lorem ".trimRight()||trim(##maroon|" lorem "##) _
-ltrim(##maroon|" lorem"##) _
-rtrim(##maroon|"lorem "##)||##maroon|' lorem '##.strip() _
-##maroon|' lorem'##.lstrip() _
-##maroon|'lorem '##.rstrip()||##maroon|" lorem "##.strip _
-##maroon|" lorem"##.lstrip _
-##maroon|"lorem "##.rstrip||
+##gray|//both sides, left, right//##||' lorem '.trim() _
+' lorem'.trimLeft() _
+'lorem '.trimRight()||trim(" lorem ") _
+ltrim(" lorem") _
+rtrim("lorem ")||' lorem '.strip() _
+' lorem'.lstrip() _
+'lorem '.rstrip()||" lorem ".strip _
+" lorem".lstrip _
+"lorem ".rstrip||
 ||[[# pad]][#pad-note pad] _
-##gray|//on right, on left, centered//##||##gray|//none//##||str_pad(##maroon|"lorem"##, 10) _
-str_pad(##maroon|"lorem"##, 10, ##maroon|" "##, ##teal|STR_PAD_LEFT##) _
-str_pad(##maroon|"lorem"##, 10, ##maroon|" "##, ##teal|STR_PAD_BOTH##)||##maroon|'lorem'##.ljust(10) _
-##maroon|'lorem'##.rjust(10) _
-##maroon|'lorem'##.center(10)||##maroon|"lorem"##.ljust(10) _
-##maroon|"lorem"##.rjust(10) _
-##maroon|"lorem"##.center(10)||
+##gray|//on right, on left, centered//##||_.padStart('lorem', 10) _
+_.padEnd('lorem', 10) _
+_.pad('lorem', 10)||$s = "lorem"; _
+$delta = strlen($s) - mb_strlen($s); _
+str_pad($s, 10 + $delta) _
+str_pad("$s, 10 + $delta, " ", STR_PAD_LEFT) _
+str_pad($s, 10 + $delta, " ", STR_PAD_BOTH)||'lorem'.ljust(10) _
+'lorem'.rjust(10) _
+'lorem'.center(10)||"lorem".ljust(10) _
+"lorem".rjust(10) _
+"lorem".center(10)||
 ||[[# num-to-str]][#num-to-str-note number to string] _
-@<&nbsp;>@||"value: " + 8||##maroon|"value: "## . 8||##maroon|'value: '## + ##purple|str##(8)||##maroon|"value: "## + 8.to_s||
+@<&nbsp;>@||'value: ' + 8||"value: " . 8||'value: ' + str(8)||"value: " + 8.to_s||
 ||[[# str-to-num]][#str-to-num-note string to number] _
-@<&nbsp;>@||7 + parseInt("12", 10) _
-73.9 + parseFloat(".037") _
+@<&nbsp;>@||7 + parseInt('12;, 10) _
+73.9 + parseFloat('.037') _
  _
 ##gray|@@//@@ 12:## _
-parseInt("12A") _
+parseInt('12A') _
 ##gray|@@//@@ NaN:## _
-parseInt("A")||7 + ##maroon|"12"## _
-73.9 + ##maroon|".037"## _
+parseInt('A')||7 + "12" _
+73.9 + ".037" _
  _
 ##gray|# 12:## _
-0 + ##maroon|"12A"## _
+0 + "12A" _
 ##gray|# 0:## _
-0 + ##maroon|"A"##||7 + ##purple|int##(##maroon|'12'##) _
-73.9 + ##purple|float##(##maroon|'.037'##) _
+0 + "A"||7 + int('12') _
+73.9 + float('.037') _
  _
 ##gray|# raises ValueError:## _
-##purple|int##(##maroon|'12A'##) _
+int('12A') _
 ##gray|# raises ValueError:## _
-##purple|int##(##maroon|'A'##)||7 + ##maroon|"12"##.to_i _
-73.9 +  ##maroon|".037"##.to_f _
+int('A')||7 + "12".to_i _
+73.9 +  ".037".to_f _
  _
 ##gray|# 12:## _
-##maroon|"12A"##.to_i _
+"12A".to_i _
 ##gray|# 0:## _
-##maroon|"A"##.to_i||
+"A".to_i||
 ||[[# str-join]][#str-join-note string join] _
-@<&nbsp;>@||["do", "re", "mi"].join(" ")||$##peru|a## = [##maroon|"do"##, ##maroon|"re"##, ##maroon|"mi"##, ##maroon|"fa"##]; _
-implode(##maroon|" "##, $##peru|a##)||##maroon|' '##.join([##maroon|'do'##, ##maroon|'re'##, ##maroon|'mi'##, ##maroon|'fa'##]) _
+@<&nbsp;>@||['do', 're', 'mi'].join(' ')||$a = ["do", "re", "mi", "fa"]; _
+implode(" ", $a)||' '.join(['do', 're', 'mi', 'fa']) _
  _
 ##gray|# raises TypeError:## _
-##maroon|' '##.join([1, 2, 3])||%w(do re mi fa).join(##maroon|' '##) _
+' '.join([1, 2, 3])||%w(do re mi fa).join(' ') _
  _
 ##gray|# implicitly converted to strings:## _
-[1, 2, 3].join(##maroon|' '##)||
+[1, 2, 3].join(' ')||
 ||[[# split]][#split-note split] _
-@<&nbsp;>@||##gray|@@//@@ [ "do", "re", "", "mi", "" ]:## _
-"do re@<&nbsp;&nbsp;>@mi ".split(" ") _
+@<&nbsp;>@||##gray|@@//@@ [ 'do', 're', '', 'mi', '' ]:## _
+'do re@<&nbsp;&nbsp;>@mi '.split(' ') _
  _
-##gray|@@//@@ [ "do", "re", "mi", "" ]:## _
-"do re@<&nbsp;&nbsp;>@mi ".split(/\s+/)||##gray|# [ "do", "re", "", "mi", "" ]:## _
-explode(##maroon|" "##, ##maroon|"do re@<&nbsp;&nbsp;>@mi "##) _
+##gray|@@//@@ [ 'do', 're', 'mi', '' ]:## _
+'do re@<&nbsp;&nbsp;>@mi '.split(/\s+/)||##gray|# [ "do", "re", "", "mi", "" ]:## _
+explode(" ", "do re@<&nbsp;&nbsp;>@mi ") _
  _
 ##gray|# [ "do", "re", "mi", "" ]:## _
 preg_split('/\s+/', "do re@<&nbsp;&nbsp;>@mi ")||##gray|# ['do', 're', '', 'mi', '']:## _
-##maroon|'do re@<&nbsp;&nbsp;>@mi '##.split(##maroon|' '##) _
+'do re@<&nbsp;&nbsp;>@mi '.split(' ') _
  _
 ##gray|# ['do', 're', 'mi']:## _
-##maroon|'do re@<&nbsp;&nbsp;>@mi '##.split()||##gray|# ["do", "re", "", "mi"]:## _
-##maroon|"do re@<&nbsp;&nbsp;>@mi "##.split(##maroon|/ /##) _
+'do re@<&nbsp;&nbsp;>@mi '.split()||##gray|# ["do", "re", "", "mi"]:## _
+"do re@<&nbsp;&nbsp;>@mi ".split(/ /) _
  _
 ##gray|# ["do", "re", "mi"]:## _
-##maroon|"do re@<&nbsp;&nbsp;>@mi "##.split||
+"do re@<&nbsp;&nbsp;>@mi ".split||
 ||[[# split-in-two]][#split-in-two-note split in two] _
-@<&nbsp;>@||##gray|//none//##||preg_split(##maroon|'/\s+/'##, ##maroon|"do re mi fa"##, 2)||##maroon|'do re mi fa'##.split(##purple|None##, 1)||##maroon|"do re mi fa"##.split(##maroon|/\s+/##, 2)||
-||[[# split-keep-delimiters]][#split-keep-delimiters-note split and keep delimiters]||##gray|//none//##||preg_split(##maroon|'/(\s+)/'##, ##maroon|"do re mi fa"##, _
-@<&nbsp;&nbsp;>@##teal|NULL##, ##teal|PREG_SPLIT_DELIM_CAPTURE##)||re.split(##maroon|'(\s+)'##, ##maroon|'do re mi fa'##)||##maroon|"do re mi fa"##.split(##maroon|/(\s+)/##)||
-||[[# prefix-suffix-test]][#prefix-suffix-test-note prefix and suffix test]||"foobar".startsWith("foo") _
-"foobar".endsWith("bar")|| ||'foobar'.startswith('foo') _
+@<&nbsp;>@||'do re mi fa'.split(/\s+/, 2)||preg_split('/\s+/', "do re mi fa", 2)||'do re mi fa'.split(None, 1)||"do re mi fa".split(/\s+/, 2)||
+||[[# split-keep-delimiters]][#split-keep-delimiters-note split and keep delimiters]||##gray|//none//##||preg_split('/(\s+)/', "do re mi fa", _
+@<&nbsp;&nbsp;>@NULL, PREG_SPLIT_DELIM_CAPTURE)||re.split('(\s+)', 'do re mi fa')||"do re mi fa".split(/(\s+)/)||
+||[[# prefix-suffix-test]][#prefix-suffix-test-note prefix and suffix test]||'foobar'.startsWith('foo') _
+'foobar'.endsWith('bar')|| ||'foobar'.startswith('foo') _
 'foobar'.endswith('bar')||'foobar'.start_with?('foo') _
 'foobar'.end_with?('bar')||
 ||[[# str-len]][#str-len-note length] _
-@<&nbsp;>@||"lorem".length||strlen(##maroon|"lorem"##)||##purple|len##(##maroon|'lorem'##)||##maroon|"lorem"##.length _
-##maroon|"lorem"##.size||
+@<&nbsp;>@||'lorem'.length||mb_strlen("lorem") _
+##gray|# strlen() counts bytes##||len('lorem')||"lorem".length _
+"lorem".size||
 ||[[# index-substr]][#index-substr-note index of substring] _
 ##gray|//first, last//##||##gray|@@//@@ returns -1 if not found:## _
-"lorem ipsum".indexOf("ipsum")||##gray|# returns FALSE if not found:## _
-strpos(##maroon|"do re re"##, ##maroon|"re"##) _
-strrpos(##maroon|"do re re"##, ##maroon|"re"##)||##gray|# raises ValueError if not found:## _
-##maroon|'do re re'##.index(##maroon|'re'##) _
-##maroon|'do re re'##.rindex(##maroon|'re'##) _
+'lorem ipsum'.indexOf('ipsum')||##gray|# returns FALSE if not found:## _
+mb_strpos("do re re", "re") _
+mb_strrpos("do re re", "re")||##gray|# raises ValueError if not found:## _
+'do re re'.index('re') _
+'do re re'.rindex('re') _
  _
 ##gray|# returns -1 if not found:## _
-##maroon|'do re re'##.find(##maroon|'re'##) _
-##maroon|'do re re'##.rfind(##maroon|'re'##) ||##gray|# returns nil if not found:## _
-##maroon|"do re re"##.index(##maroon|"re"##) _
-##maroon|"do re re"##.rindex(##maroon|"re"##)||
+'do re re'.find('re') _
+'do re re'.rfind('re') ||##gray|# returns nil if not found:## _
+"do re re".index("re") _
+"do re re".rindex("re")||
 ||[[# extract-substr]][#extract-substr-note extract substring] _
-##gray|//by start and length, by start and end, by successive starts//##||"lorem ipsum".substr(6, 5) _
-"lorem ipsum".substring(6, 11)||substr(##maroon|"lorem ipsum"##, 6, 5) _
+##gray|//by start and length, by start and end, by successive starts//##||'lorem ipsum'.substr(6, 5) _
+'lorem ipsum'.substring(6, 11)||mb_substr("lorem ipsum", 6, 5) _
 ##gray|//none//## _
 ##gray|//none//##||##gray|//none//## _
 ##gray|//none//## _
-##maroon|'lorem ipsum'##[6:11]||##maroon|"lorem ipsum"##[6, 5] _
-##maroon|"lorem ipsum"##[6@@..@@10] _
-##maroon|"lorem ipsum"##[6@@...@@11]||
-||[[# lookup-char]][#lookup-char-note character lookup]||"lorem ipsum"[6]||##gray|# syntax error to use index notation _
-# directly on string literal:## _
-$##peru|s## = ##maroon|"lorem ipsum"##; _
-$##peru|s##[6];||##maroon|'lorem ipsum'##[6]||##maroon|"lorem ipsum"##[6]||
+'lorem ipsum'[6:11]||"lorem ipsum"[6, 5] _
+"lorem ipsum"[6@@..@@10] _
+"lorem ipsum"[6@@...@@11]||
+||[[# bytes-type]][#bytes-type-note byte array type]||Buffer||string||bytes _
+ _
+##gray|# In Python 2, str also byte array type##||Array ##gray|//of//## Fixnum||
+||[[# bytes-to-str]][#bytes-to-str-note byte array to string]||let a = Buffer.from([0xce, 0xbb]); _
+let s = a.toString('utf-8');||##gray|//strings are byte arrays//##||s = b'\xce\xbb'.decode('utf-8')||a = "\u03bb".bytes _
+s = a.pack("C*").force_encoding('utf-8')||
+||[[# str-to-bytes]][#str-to-bytes-note string to byte array]||a = Buffer.from('\u03bb')||##gray|//strings are byte arrays//##||a = '\u03bb'.encode('utf-8') _
+ _
+##gray|# Python 2:## _
+a = u'\u03bb'.encode('utf-8')||a = "\u03bb".bytes||
+||[[# lookup-char]][#lookup-char-note character lookup]||'lorem ipsum'[6]||mb_substr("lorem ipsum", 6, 1) _
+##gray|# byte lookup:## _
+"lorem ipsum"[6]||'lorem ipsum'[6]||"lorem ipsum"[6]||
 ||[[# chr-ord]][#chr-ord-note chr and ord] _
 @<&nbsp;>@||String.fromCharCode(65) _
-"A".charCodeAt(0)||chr(65) _
-ord(##maroon|"A"##)||##purple|chr##(65) _
-##purple|ord##(##maroon|'A'##) _
- _
-##gray|# Python 3:## _
-##purple|chr##(0x3bb) _
-##purple|ord##(##maroon|'\u03bb'##)||65.chr _
-##maroon|"A"##.ord _
- _
-0x3bb.chr(##maroon|'UTF-8'##) _
-##maroon|"\u03bb"##.codepoints.first||
+'A'.charCodeAt(0)||##gray|# ASCII only:## _
+chr(65) _
+ord("A")||chr(65) _
+ord('A')||65.chr('UTF-8') _
+"A".ord||
 ||[[# str-to-char-array]][#str-to-char-array-note to array of characters] _
-@<&nbsp;>@||"abcd".split("")||str_split(##maroon|"abcd"##)||##purple|list##(##maroon|'abcd'##)||##maroon|"abcd"##.split(##maroon|""##)||
+@<&nbsp;>@||'abcd'.split('')||str_split("abcd")||list('abcd')||"abcd".split("")||
 ||[[# translate-char]][#translate-char-note translate characters] _
-@<&nbsp;>@||##gray|//none//##||$##peru|ins## = implode(range(##maroon|"a"##, ##maroon|"z"##)); _
-$##peru|outs## = substr($##peru|ins##, 13, 13) . _
-@<&nbsp;&nbsp;>@substr($##peru|ins##, 0, 13); _
-strtr(##maroon|"hello"##, $##peru|ins##, $##peru|outs##)||##purple|from## string ##purple|import## lowercase ##purple|as## ins _
-##purple|from## string ##purple|import## maketrans _
+@<&nbsp;>@||##gray|//none//##||$ins = implode(range("a", "z")); _
+$outs = substr($ins, 13, 13) . _
+@<&nbsp;&nbsp;>@substr($ins, 0, 13); _
+strtr("hello", $ins, $outs)||from string import ascii_lowercase _
  _
-##peru|outs## = ins[13:] + ins[:13] _
-##maroon|'hello'##.translate(maketrans(ins,outs))||##maroon|"hello"##.tr(##maroon|"a-z"##, ##maroon|"n-za-m"##)||
-||[[# delete-char]][#delete-char-note delete characters]||##gray|//none//##||$##peru|vowels## = str_split(##maroon|"aeiou"##); _
-$##peru|s## = ##maroon|"disemvowel me"##; _
-$##peru|s## = str_replace($##peru|vowels##, ##maroon|""##, $##peru|s##);||##maroon|"disemvowel me"##.translate(##teal|None##, ##maroon|"aeiou"##)||##maroon|"disemvowel me"##.delete(##maroon|"aeiou"##)||
-||[[# squeeze-char]][#squeeze-char-note squeeze characters]||##gray|//none//##||$##peru|s## = ##maroon|"too@<&nbsp;&nbsp;>@much@<&nbsp;&nbsp;>@space"##; _
-$##peru|s## = = preg_replace(##maroon|'/(\s)+/'##, ##maroon|'\1'##, $##peru|s##);||re.sub(##maroon|'(\s)+'##, r##maroon|'\1'##, ##maroon|'too@<&nbsp;&nbsp;>@much@<&nbsp;&nbsp;>@space'##)||##maroon|"too@<&nbsp;&nbsp;>@much@<&nbsp;&nbsp;>@space"##.squeeze(##maroon|" "##)||
+ins = ascii_lowercase _
+outs = ins[13:] + ins[:13] _
+table = str.maketrans(ins, outs) _
+'hello'.translate(table)||"hello".tr("a-z", "n-za-m")||
+||[[# delete-char]][#delete-char-note delete characters]||##gray|//none//##||$vowels = str_split("aeiou"); _
+$s = "disemvowel me"; _
+$s = str_replace($vowels, "", $s);||table = {ord(ch): None for ch in "aeiou"} _
+"disemvowel me".translate(table)||"disemvowel me".delete("aeiou")||
+||[[# squeeze-char]][#squeeze-char-note squeeze characters]||##gray|//none//##||$s = "too@<&nbsp;&nbsp;&nbsp;>@much@<&nbsp;&nbsp;&nbsp;>@space"; _
+$s = = preg_replace('/(\s)+/', '\1', $s);||re.sub('(\s)+', r'\1', _
+@<&nbsp;&nbsp;>@'too@<&nbsp;&nbsp;&nbsp;>@much@<&nbsp;&nbsp;&nbsp;>@space')||"too@<&nbsp;&nbsp;&nbsp;>@much@<&nbsp;&nbsp;&nbsp;>@space".squeeze(" ")||
 ||||||||||~ [[# regexes]][#regexes-note regular expressions]||
 ||~  ||~ node.js||~ php||~ python||~ ruby||
-||[[# regex-literal]][#regex-literal-note literal, custom delimited literal]||/lorem|ipsum/||##maroon|'/lorem|ipsum/'## _
-##maroon|'(/etc/hosts)'##||re.compile(##maroon|'lorem|ipsum'##) _
-##gray|//none//##||##maroon|/lorem|ipsum/ _
-%r(/etc/hosts)##||
-||[[# char-class-abbrev]][#char-class-abbrev-note character class abbreviations]||. \d \D \s \S \w \W||. \d \D \h \H \s \S \v \V \w \W||. \d \D \s \S \w \W||. \d \D \h \H \s \S \w \W||
+||[[# regex-literal]][#regex-literal-note literal, custom delimited literal]||/lorem|ipsum/||'/lorem|ipsum/' _
+'(/etc/hosts)'||re.compile(r'lorem|ipsum') _
+##gray|//none//##||/lorem|ipsum/ _
+%r(/etc/hosts) _
+##gray|# double quoted string escapes _
+# and #{} substitution can be used##||
+||[[# ascii-char-class-abbrev]][#ascii-char-class-abbrev-note ascii character class abbreviations]||.@<&nbsp;&nbsp;&nbsp;>@[^\n] _
+\d@<&nbsp;&nbsp;>@[0-9] _
+\D@<&nbsp;&nbsp;>@[^0-9] _
+\s@<&nbsp;&nbsp;>@[ \t\r\n\f] _
+\S@<&nbsp;&nbsp;>@[^ \t\r\n\f] _
+\w@<&nbsp;&nbsp;>@[A-Za-z0-9_] _
+\W@<&nbsp;&nbsp;>@[^A-Za-z0-9_]||.@<&nbsp;&nbsp;&nbsp;>@[^\n] _
+\d@<&nbsp;&nbsp;>@[0-9] _
+\D@<&nbsp;&nbsp;>@[^0-9] _
+\h@<&nbsp;&nbsp;>@[ \t] _
+\H@<&nbsp;&nbsp;>@[^ \t] _
+\s@<&nbsp;&nbsp;>@[ \t\r\n\f] _
+\S@<&nbsp;&nbsp;>@[^ \t\r\n\f] _
+\w@<&nbsp;&nbsp;>@[A-Za-z0-9_] _
+\W@<&nbsp;&nbsp;>@[^A-Za-z0-9_]||.@<&nbsp;&nbsp;&nbsp;>@[^\n]@<&nbsp;&nbsp;>@##gray|//with// re.S //modifier matches all chars//## _
+\d@<&nbsp;&nbsp;>@[0-9] _
+\D@<&nbsp;&nbsp;>@[^0-9] _
+\s@<&nbsp;&nbsp;>@[ \t\r\n\f] _
+\S@<&nbsp;&nbsp;>@[^ \t\r\n\f] _
+\w@<&nbsp;&nbsp;>@[A-Za-z0-9_] _
+\W@<&nbsp;&nbsp;>@[^A-Za-z0-9_] _
+ _
+##gray|//In Python 3, the above definitions are used when// re.A //is in effect.//##||.@<&nbsp;&nbsp;&nbsp;>@[^\n]@<&nbsp;&nbsp;>@##gray|//with// m //modifier matches all chars//## _
+\d@<&nbsp;&nbsp;>@[0-9] _
+\D@<&nbsp;&nbsp;>@[^0-9] _
+\h@<&nbsp;&nbsp;>@[0-9a-fA-F] _
+\H@<&nbsp;&nbsp;>@[^0-9a-fA-F] _
+\s@<&nbsp;&nbsp;>@[ \t\r\n\f] _
+\S@<&nbsp;&nbsp;>@[^ \t\r\n\f] _
+\w@<&nbsp;&nbsp;>@[A-Za-z0-9_] _
+\W@<&nbsp;&nbsp;>@[^A-Za-z0-9_]||
+||[[# unicode-char-class-abbrev]][#unicode-char-class-abbrev-note unicode character class abbreviations]||##gray|//none//##||##gray|//POSIX character classes such as// [[:alpha:]] //are available, but they match sets of ASCII characters.  General category values (e.g.// \p{L}, \p{Lu}//) can be used.  Morever, they can be used inside character classes (.e.g.// [\p{L}\p{N}]//).//##||.@<&nbsp;&nbsp;&nbsp;>@[^\n]@<&nbsp;&nbsp;>@##gray|//with// re.S //modifier matches all chars//## _
+\d@<&nbsp;&nbsp;>@[##gray|//Nd//##]@<&nbsp;&nbsp;>@##gray|Nd: //Number, decimal digit//## _
+\D@<&nbsp;&nbsp;>@[^##gray|//Nd//##] _
+\s@<&nbsp;&nbsp;>@[##gray|//Z//##\t\n\r\f\v\x1c\x1d\x1e\x1f\x85] _
+\S@<&nbsp;&nbsp;>@[^##gray|//Z//##\t\n\r\f\v\x1c\x1d\x1e\x1f\x85] _
+\w [##gray|//LN//##_]@<&nbsp;&nbsp;>@##gray|L: //Letter//; N: //Number//## _
+\W [##gray|^//LN//##_] _
+ _
+##gray|//In Python 2, the above definitions are used when// re.U //is in effect.//##||. _
+\p{Digit} _
+\p{^Digit} _
+\p{Space} _
+\p{^Space} _
+\p{Word} _
+\p{^Word} _
+ _
+##gray|//POSIX character classes (e.g.// @@[[:alpha:]]@@//), general category values (e.g.// \p{L}, \p{Lu}//), and script names (e.g.// \p{Greek}) //also supported.//##||
 ||[[# regex-anchors]][#regex-anchors-note anchors] _
-@<&nbsp;>@||^ $ \b \B||^ $ \A \b \B \z \Z||^ $ \A \b \B \Z||^ $ \A \b \B \z \Z||
+@<&nbsp;>@||^@<&nbsp;&nbsp;&nbsp;>@##gray|//start of string or line with// m //modifier//## _
+$@<&nbsp;&nbsp;&nbsp;>@##gray|//end of string or line with// m //modifier//## _
+\b@<&nbsp;&nbsp;>@##gray|//word boundary:// \w\W //or// \W\w## _
+\B@<&nbsp;&nbsp;>@##gray|//non word boundary//##||^@<&nbsp;&nbsp;&nbsp;>@##gray|//start of string or line with// m //modifier//## _
+$@<&nbsp;&nbsp;&nbsp;>@##gray|//end of string or line with// m //modifier//## _
+\A@<&nbsp;&nbsp;>@##gray|//start of string//## _
+\b@<&nbsp;&nbsp;>@##gray|//word boundary:// \w\W //or// \W\w## _
+\B@<&nbsp;&nbsp;>@##gray|//non word boundary//## _
+\z@<&nbsp;&nbsp;>@##gray|//end of string//## _
+\Z@<&nbsp;&nbsp;>@##gray|//end of string, excluding final newline//##||^@<&nbsp;&nbsp;&nbsp;>@##gray|//start of string or line with// re.M## _
+$@<&nbsp;&nbsp;&nbsp;>@##gray|//end of string or line with// re.M## _
+\A@<&nbsp;&nbsp;>@##gray|//start of string//## _
+\b@<&nbsp;&nbsp;>@##gray|//word boundary:// \w\W //or// \W\w## _
+\B@<&nbsp;&nbsp;>@##gray|//non word boundary//## _
+\Z@<&nbsp;&nbsp;>@##gray|//end of string//##||^@<&nbsp;&nbsp;&nbsp;>@##gray|//start of line//## _
+$@<&nbsp;&nbsp;&nbsp;>@##gray|//end of line//## _
+\A@<&nbsp;&nbsp;>@##gray|//start of string//## _
+\b@<&nbsp;&nbsp;>@##gray|//unicode-aware word boundary//## _
+\B@<&nbsp;&nbsp;>@##gray|//unicode-aware non word boundary//## _
+\z@<&nbsp;&nbsp;>@##gray|//end of string//## _
+\Z@<&nbsp;&nbsp;>@##gray|//end of string, excluding final newline//##||
 ||[[# regex-test]][#regex-test-note match test] _
 @<&nbsp;>@||if (s.match(/1999/)) { _
-@<&nbsp;&nbsp;>@alert("party!"); _
-}||if (preg_match(##maroon|'/1999/'##, $##peru|s##)) { _
-@<&nbsp;&nbsp;>@echo ##maroon|"party!\n"##; _
-}||##purple|if## re.search(##maroon|'1999'##, s): _
-@<&nbsp;&nbsp;>@##purple|print##(##maroon|'party!'##)||##purple|if## ##maroon|/1999/##.match(s) _
-@<&nbsp;&nbsp;>@puts ##maroon|"party!"## _
-##purple|end##||
-||[[# case-insensitive-regex]][#case-insensitive-regex-note case insensitive match test]||"Lorem".match(/lorem/i)||preg_match(##maroon|'/lorem/i'##, ##maroon|"Lorem"##)||re.search(##maroon|'lorem'##, ##maroon|'Lorem'##, re.I)||##maroon|/lorem/##i.match(##maroon|"Lorem"##)||
+@<&nbsp;&nbsp;>@console.log('party!'); _
+}||if (preg_match('/1999/', $s)) { _
+@<&nbsp;&nbsp;>@echo "party!\n"; _
+}||if re.search('1999', s): _
+@<&nbsp;&nbsp;>@print('party!')||if /1999/.match(s) _
+@<&nbsp;&nbsp;>@puts "party!" _
+end||
+||[[# case-insensitive-regex]][#case-insensitive-regex-note case insensitive match test] _
+@<&nbsp;>@||'Lorem'.match(/lorem/i)||preg_match('/lorem/i', "Lorem")||re.search('lorem', 'Lorem', re.I)||/lorem/i.match("Lorem")||
 ||[[# regex-modifiers]][#regex-modifiers-note modifiers] _
-@<&nbsp;>@||g i m||e i m s x||re.I re.M re.S re.X||i o m x||
+@<&nbsp;>@||g@<&nbsp;&nbsp;>@##gray|//used for global substitution and scanning//## _
+i@<&nbsp;&nbsp;>@##gray|//make case insensitive//## _
+m@<&nbsp;&nbsp;>@##gray|//change meaning of// ^ //and// $## _
+u@<&nbsp;&nbsp;>@##gray|\u{} //syntax and astral character support//## _
+y@<&nbsp;&nbsp;>@##gray|//used to scan in loop//##||i@<&nbsp;&nbsp;>@##gray|//make case insensitive//##  _
+m@<&nbsp;&nbsp;>@##gray|//change meaning of// ^ //and// $## _
+s@<&nbsp;&nbsp;>@##gray|//change meaning of// .## _
+x@<&nbsp;&nbsp;>@##gray|//ignore whitespace outside char class//##||re.A@<&nbsp;&nbsp;>@##gray|//change meaning of// \b \B \d \D \s \S \w \W## _
+re.I@<&nbsp;&nbsp;>@##gray|//make case insensitive//## _
+re.M@<&nbsp;&nbsp;>@##gray|//change meaning of// ^ //and// $## _
+re.S@<&nbsp;&nbsp;>@##gray|//change meaning of// .## _
+re.X@<&nbsp;&nbsp;>@##gray|//ignore whitespace outside char class//##||i@<&nbsp;&nbsp;>@##gray|//make case insensitive//## _
+o@<&nbsp;&nbsp;>@##gray|//interpolate #{} in literal once//## _
+m@<&nbsp;&nbsp;>@##gray|//change meaning of// .## _
+x@<&nbsp;&nbsp;>@##gray|//ignore whitespace outside char class//##||
 ||[[# subst]][#subst-note substitution] _
-@<&nbsp;>@||s = "do re mi mi mi"; _
-s.replace(/mi/g, "ma");||$##peru|s## = ##maroon|"do re mi mi mi"##; _
-$##peru|s## = preg_replace(##maroon|'/mi/'##, ##maroon|"ma"##, $##peru|s##);||##peru|s## = ##maroon|'do re mi mi mi'## _
-##peru|s## = re.compile(##maroon|'mi'##).sub(##maroon|'ma'##, s)||s = ##maroon|"do re mi mi mi"## _
-s.gsub!(##maroon|/mi/##, ##maroon|"ma"##)||
+@<&nbsp;>@||s = 'do re mi mi mi'; _
+s.replace(/mi/g, 'ma');||$s = "do re mi mi mi"; _
+$s = preg_replace('/mi/', "ma", $s);||s = 'do re mi mi mi' _
+s = re.compile('mi').sub('ma', s)||s = "do re mi mi mi" _
+s.gsub!(/mi/, "ma")||
 ||[[# match-prematch-postmatch]][#match-prematch-postmatch-note match, prematch, postmatch] _
-@<&nbsp;>@||##per|m## = /\d{4}/.exec(s); _
+@<&nbsp;>@||m = /\d{4}/.exec(s); _
 if (m) { _
 @<&nbsp;&nbsp;>@match = m[0]; _
-@<&nbsp;&nbsp;>@##gray|# no prematch or postmatch## _
-}||##gray|//none//##||##peru|m## = re.search(##maroon|'\d{4}'##, s) _
-##purple|if## m: _
+@<&nbsp;&nbsp;>@##gray|@@//@@ no prematch or postmatch## _
+}||##gray|//none//##||m = re.search('\d{4}', s) _
+if m: _
 @<&nbsp;&nbsp;>@match = m.group() _
 @<&nbsp;&nbsp;>@prematch = s[0:m.start(0)] _
-@<&nbsp;&nbsp;>@postmatch = s[m.end(0):##purple|len##(s)]||m = ##maroon|/\d{4}/##.match(s) _
-##purple|if## m _
+@<&nbsp;&nbsp;>@postmatch = s[m.end(0):len(s)]||m = /\d{4}/.match(s) _
+if m _
 @<&nbsp;&nbsp;>@match = m[0] _
 @<&nbsp;&nbsp;>@prematch = m.pre_match _
 @<&nbsp;&nbsp;>@postmatch = m.post_match _
-##purple|end##||
+end||
 ||[[# group-capture]][#group-capture-note group capture] _
 @<&nbsp;>@||rx = /^(\d{4})-(\d{2})-(\d{2})$/; _
 m = rx.exec('2009-06-03'); _
 yr = m[1]; _
 mo = m[2]; _
-dy = m[3];||$##peru|s## = ##maroon|"2010-06-03"##; _
-$##peru|rx## = ##maroon|'/(\d{4})-(\d{2})-(\d{2})/'##; _
-preg_match($##peru|rx##, $##peru|s##, $##peru|m##); _
-list($_, $##peru|yr##, $##peru|mo##, $##peru|dy##) = $##peru|m##;||##peru|rx## = ##maroon|'(\d{4})-(\d{2})-(\d{2})'## _
-##peru|m## = re.search(rx, ##maroon|'2010-06-03'##) _
-##peru|yr##, ##peru|mo##, ##peru|dy## = m.groups()||rx = ##maroon|/(\d{4})-(\d{2})-(\d{2})/## _
-m = rx.match(##maroon|"2010-06-03"##) _
+dy = m[3];||$s = "2010-06-03"; _
+$rx = '/(\d{4})-(\d{2})-(\d{2})/'; _
+preg_match($rx, $s, $m); _
+list($_, $yr, $mo, $dy) = $m;||rx = '(\d{4})-(\d{2})-(\d{2})' _
+m = re.search(rx, '2010-06-03') _
+yr, mo, dy = m.groups()||rx = /(\d{4})-(\d{2})-(\d{2})/ _
+m = rx.match("2010-06-03") _
  yr, mo, dy = m[1..3]||
-||[[# named-group-capture]][#named-group-capture-note named group capture]||##gray|//none//##||$##peru|s## = ##maroon|"foo.txt"##; _
-$##peru|rx## = ##maroon|'/^(?P<file>.+)\.(?P<suffix>.+)$/'##; _
-preg_match($##peru|rx##, $##peru|s##, $##peru|m##); _
+||[[# named-group-capture]][#named-group-capture-note named group capture]||##gray|//none//##||$s = "foo.txt"; _
+$rx = '/^(?P<file>.+)\.(?P<suffix>.+)$/'; _
+preg_match($rx, $s, $m); _
  _
-$##peru|m##[##maroon|"file"##] _
-$##peru|m##[##maroon|"suffix"##]||##peru|rx## = ##maroon|'^(?P<file>.+)\.(?P<suffix>.+)$'## _
-##peru|m## = re.search(rx, ##maroon|'foo.txt'##) _
+$m["file"] _
+$m["suffix"]||rx = '^(?P<file>.+)\.(?P<suffix>.+)$' _
+m = re.search(rx, 'foo.txt') _
  _
-m.groupdict()[##maroon|'file'##] _
-m.groupdict()[##maroon|'suffix'##]||rx = ##maroon|/^(?<file>.+)\.(?<suffix>.+)$/## _
-m = rx.match(##maroon|'foo.txt'##) _
+m.groupdict()['file'] _
+m.groupdict()['suffix']||rx = /^(?<file>.+)\.(?<suffix>.+)$/ _
+m = rx.match('foo.txt') _
  _
-m[##maroon|"file"##] _
-m[##maroon|"suffix"##]||
+m["file"] _
+m["suffix"]||
 ||[[# scan]][#scan-note scan] _
-@<&nbsp;>@||var a = "dolor sit amet".match(/\w+/g);||$##peru|s## = ##maroon|"dolor sit amet"##; _
-preg_match_all(##maroon|'/\w+/'##, $##peru|s##, $##peru|m##); _
-$##peru|a## = $##peru|m##[0];||##peru|s## = ##maroon|'dolor sit amet'## _
-##peru|a## = re.findall(##maroon|'\w+'##, s)||a = ##maroon|"dolor sit amet"##.scan(##maroon|/\w+/##)||
-||[[# backreference]][#backreference-note backreference in match and substitution]||/(\w+) \1/.exec("do do") _
+@<&nbsp;>@||let a = 'dolor sit amet'.match(/\w+/g);||$s = "dolor sit amet"; _
+preg_match_all('/\w+/', $s, $m); _
+$a = $m[0];||s = 'dolor sit amet' _
+a = re.findall('\w+', s)||a = "dolor sit amet".scan(/\w+/)||
+||[[# backreference]][#backreference-note backreference in match and substitution]||/(\w+) \1/.exec('do do') _
  _
-"do re".replace(/(\w+) (\w+)/, '$2 $1')||preg_match(##maroon|'/(\w+) \1/'##, ##maroon|"do do"##) _
+'do re'.replace(/(\w+) (\w+)/, '$2 $1')||preg_match('/(\w+) \1/', "do do") _
  _
-$##peru|s## = ##maroon|"do re"##; _
-$##peru|rx## = ##maroon|'/(\w+) (\w+)/'##; _
-$##peru|s## = preg_replace($##peru|rx##, ##maroon|'\2 \1'##, $##peru|s##);||##gray|//none//## _
+$s = "do re"; _
+$rx = '/(\w+) (\w+)/'; _
+$s = preg_replace($rx, '\2 \1', $s);||##gray|//none//## _
  _
-##peru|rx## = re.compile(##maroon|'(\w+) (\w+)'##) _
-rx.sub(r##maroon|'\2 \1'##, ##maroon|'do re'##)||##maroon|/(\w+) \1/##.match(##maroon|"do do"##) _
+rx = re.compile('(\w+) (\w+)') _
+rx.sub(r'\2 \1', 'do re')||/(\w+) \1/.match("do do") _
  _
-##maroon|"do re"##.sub(##maroon|/(\w+) (\w+)/##, ##maroon|'\2 \1'##)||
+"do re".sub(/(\w+) (\w+)/, '\2 \1')||
 ||[[# recursive-regex]][#recursive-regex-note recursive regex] _
-@<&nbsp;>@||##gray|//none//##||##maroon|'/\(([^()]*|($R))\)/'##||##gray|//none//##||##maroon|/(?<foo>\(([^()]*|\g<foo>)*\))/##||
+@<&nbsp;>@||##gray|//none//##||'/\(([^()]*|($R))\)/'||##gray|//none//##||/(?<foo>\(([^()]*|\g<foo>)*\))/||
 ||||||||||~ [[# dates-time]][#dates-time-note dates and time]||
 ||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# broken-down-datetime-type]][#broken-down-datetime-type-note broken-down datetime type] _
-@<&nbsp;>@||##green|Date##||##green|DateTime##||datetime.datetime||##green|Time##||
-||[[# current-datetime]][#current-datetime-note current datetime]||##purple|var## ##peru|t## = ##purple|new## ##green|Date##();||$##peru|t## = ##purple|new## ##green|DateTime##(##maroon|"now"##); _
-$##peru|utc_tmz## = ##purple|new## ##green|DateTimeZone##(##maroon|"UTC"##); _
-$##peru|utc## = ##purple|new## ##green|DateTime##(##maroon|"now"##, $##peru|utc_tmz##);||##purple|import## datetime _
+@<&nbsp;>@||Date||DateTime||datetime.datetime||Time||
+||[[# current-datetime]][#current-datetime-note current datetime]||let t = new Date();||$t = new DateTime("now"); _
+$utc_tmz = new DateTimeZone("UTC"); _
+$utc = new DateTime("now", $utc_tmz);||import datetime _
  _
-##peru|t## = datetime.datetime.now() _
-##peru|utc## = datetime.datetime.utcnow()||t = ##green|Time##.now _
-utc = ##green|Time##.now.utc||
-||[[# current-unix-epoch]][#current-unix-epoch-note current unix epoch]||(##purple|new## ##green|Date##()).getTime() / 1000||$##peru|epoch## = time();||##purple|import## datetime _
+t = datetime.datetime.now() _
+utc = datetime.datetime.utcnow()||t = Time.now _
+utc = Time.now.utc||
+||[[# current-unix-epoch]][#current-unix-epoch-note current unix epoch]||(new Date()).getTime() / 1000||$epoch = time();||import datetime _
  _
-##peru|t## = datetime.datetime.now() _
-##peru|epoch## = ##purple|int##(t.strftime(##maroon|"%s"##))||epoch = ##green|Time##.now.to_i||
-||[[# broken-down-datetime-to-unix-epoch]][#broken-down-datetime-to-unix-epoch-note broken-down datetime to unix epoch]||Math.round(t.getTime() / 1000)||$##peru|epoch## = $##peru|t##->getTimestamp();||##purple|from## datetime ##purple|import## datetime ##purple|as## dt _
+t = datetime.datetime.now() _
+epoch = int(t.strftime("%s"))||epoch = Time.now.to_i||
+||[[# broken-down-datetime-to-unix-epoch]][#broken-down-datetime-to-unix-epoch-note broken-down datetime to unix epoch]||Math.round(t.getTime() / 1000)||$epoch = $t->getTimestamp();||from datetime import datetime as dt _
  _
-##peru|epoch## = ##purple|int##(t.strftime(##maroon|"%s"##))||epoch = t.to_i||
-||[[# unix-epoch-to-broken-down-datetime]][#unix-epoch-to-broken-down-datetime-note unix epoch to broken-down datetime]||##purple|var## ##peru|epoch## = 1315716177; _
-##purple|var## ##peru|t2## = ##purple|new## ##green|Date##(epoch * 1000);||$##peru|t2## = ##purple|new## ##green|DateTime##(); _
-$##peru|t2##->setTimestamp(1304442000);||##peru|t## = dt.fromtimestamp(1304442000)||t = ##green|Time##.at(1304442000)||
-||[[# fmt-datetime]][#fmt-datetime-note format datetime]||##gray|//none//##||strftime(##maroon|"%Y-%m-%d %H:%M:%S"##, $##peru|epoch##); _
-date(##maroon|"Y-m-d H:i:s"##, $##peru|epoch##); _
-$##peru|t##->format(##maroon|"Y-m-d H:i:s"##);||t.strftime(##maroon|'%Y-%m-%d %H:%M:%S'##)||t.strftime(##maroon|"%Y-%m-%d %H:%M:%S"##)||
-||[[# parse-datetime]][#parse-datetime-note parse datetime]||##gray|//none//##||$##peru|fmt## = ##maroon|"Y-m-d H:i:s"##; _
-$##peru|s## = ##maroon|"2011-05-03 10:00:00"##; _
-$##peru|t## = ##green|DateTime##::createFromFormat($##peru|fmt##, _
-@<&nbsp;&nbsp;>@$##peru|s##);||##purple|from## datetime ##purple|import## datetime _
+epoch = int(t.strftime("%s"))||epoch = t.to_i||
+||[[# unix-epoch-to-broken-down-datetime]][#unix-epoch-to-broken-down-datetime-note unix epoch to broken-down datetime]||let epoch = 1315716177; _
+let t2 = new Date(epoch * 1000);||$t2 = new DateTime(); _
+$t2->setTimestamp(1304442000);||t = dt.fromtimestamp(1304442000)||t = Time.at(1304442000)||
+||[[# fmt-datetime]][#fmt-datetime-note format datetime]||##gray|@@//@@ npm install moment## _
+let moment = require('moment'); _
  _
-##peru|s## = ##maroon|'2011-05-03 10:00:00'## _
-##peru|fmt## = ##maroon|'%Y-%m-%d %H:%M:%S'## _
-##peru|t## = datetime.strptime(s, fmt)||require ##maroon|'date'## _
+let t = moment(new Date()); _
+let fmt = 'YYYY-MM-DD HH:mm:ss'; _
+console.log(t.format(fmt));||strftime("%Y-%m-%d %H:%M:%S", $epoch); _
+date("Y-m-d H:i:s", $epoch); _
+$t->format("Y-m-d H:i:s");||t.strftime('%Y-%m-%d %H:%M:%S')||t.strftime("%Y-%m-%d %H:%M:%S")||
+||[[# parse-datetime]][#parse-datetime-note parse datetime]||##gray|@@//@@ npm install moment## _
+let moment = require('moment'); _
  _
-s = ##maroon|"2011-05-03 10:00:00"## _
-fmt = ##maroon|"%Y-%m-%d %H:%M:%S"## _
-t = ##green|DateTime##.strptime(s, fmt).to_time||
-||[[# parse-datetime-without-fmt]][#parse-datetime-without-fmt-note parse datetime w/o format]||##purple|var## ##peru|t## = ##purple|new## ##green|Date##(##maroon|"July 7, 1999"##);||$##peru|epoch## = strtotime(##maroon|"July 7, 1999"##);||##gray|# pip install python-dateutil## _
-##purple|import## dateutil.parser _
+let fmt = 'YYYY-MM-DD HH:mm:ss'; _
+let s = '2011-05-03 10:00:00'; _
+let t = moment(s, fmt);||$fmt = "Y-m-d H:i:s"; _
+$s = "2011-05-03 10:00:00"; _
+$t = DateTime::createFromFormat($fmt, _
+@<&nbsp;&nbsp;>@$s);||from datetime import datetime _
  _
-##peru|s## = ##maroon|'July 7, 1999'## _
-##peru|t## = dateutil.parser.parse(s)||require ##maroon|'date'## _
+s = '2011-05-03 10:00:00' _
+fmt = '%Y-%m-%d %H:%M:%S' _
+t = datetime.strptime(s, fmt)||require 'date' _
  _
-s = ##maroon|"July 7, 1999"## _
-t = ##green|Date##.parse(s).to_time||
+s = "2011-05-03 10:00:00" _
+fmt = "%Y-%m-%d %H:%M:%S" _
+t = DateTime.strptime(s, fmt).to_time||
+||[[# parse-datetime-without-fmt]][#parse-datetime-without-fmt-note parse datetime w/o format]||let t = new Date('July 7, 1999');||$epoch = strtotime("July 7, 1999");||##gray|# pip install python-dateutil## _
+import dateutil.parser _
+ _
+s = 'July 7, 1999' _
+t = dateutil.parser.parse(s)||require 'date' _
+ _
+s = "July 7, 1999" _
+t = Date.parse(s).to_time||
 ||[[# date-parts]][#date-parts-note date parts]||t.getFullYear() _
 t.getMonth() + 1 _
-t.getDate() ##gray|# getDay() is day of week##||(##green|int##)$##peru|t##->format(##maroon|"Y"##) _
-(##green|int##)$##peru|t##->format(##maroon|"m"##) _
-(##green|int##)$##peru|t##->format(##maroon|"d"##)||t.year _
+t.getDate() ##gray|@@//@@ getDay() is day of week##||(int)$t->format("Y") _
+(int)$t->format("m") _
+(int)$t->format("d")||t.year _
 t.month _
 t.day||t.year _
 t.month _
 t.day||
 ||[[# time-parts]][#time-parts-note time parts]||t.getHours() _
 t.getMinutes() _
-t.getSeconds()||(##green|int##)$##peru|t##->format(##maroon|"H"##) _
-(##green|int##)$##peru|t##->format(##maroon|"i"##) _
-(##green|int##)$##peru|t##->format(##maroon|"s"##)||t.hour _
+t.getSeconds()||(int)$t->format("H") _
+(int)$t->format("i") _
+(int)$t->format("s")||t.hour _
 t.minute _
 t.second||t.hour _
 t.min _
 t.sec||
-||[[# build-datetime]][#build-datetime-note build broken-down datetime]||##purple|var## ##peru|yr## = 1999; _
-##purple|var## ##peru|mo## = 9; _
-##purple|var## ##peru|dy## = 10; _
-##purple|var## ##peru|hr## = 23; _
-##purple|var## ##peru|mi## = 30; _
-##purple|var## ##peru|ss## = 0; _
-##purple|var## ##peru|t## = ##purple|new## ##green|Date##(yr, mo - 1, dy, hr, mi, ss);|| ||##purple|import## datetime _
+||[[# build-datetime]][#build-datetime-note build broken-down datetime]||let yr = 1999; _
+let mo = 9; _
+let dy = 10; _
+let hr = 23; _
+let mi = 30; _
+let ss = 0; _
+let t = new Date(yr, mo - 1, dy, _
+@<&nbsp;&nbsp;>@hr, mi, ss);|| ||import datetime _
  _
-##peru|yr## = 1999 _
-##peru|mo## = 9 _
-##peru|dy## = 10 _
-##peru|hr## = 23 _
-##peru|mi## = 30 _
-##peru|ss## = 0 _
-##peru|t## = datetime.datetime(yr, mo, dy, hr, mi, ss)||yr = 1999 _
+yr = 1999 _
 mo = 9 _
 dy = 10 _
 hr = 23 _
 mi = 30 _
 ss = 0 _
-t = ##green|Time##.new(yr, mo, dy, hr, mi, ss)||
+t = datetime.datetime(yr, mo, dy, hr, mi, ss)||yr = 1999 _
+mo = 9 _
+dy = 10 _
+hr = 23 _
+mi = 30 _
+ss = 0 _
+t = Time.new(yr, mo, dy, hr, mi, ss)||
 ||[[# datetime-subtraction]][#datetime-subtraction-note datetime subtraction]||##gray|number //containing time difference in milliseconds//##||##gray|# DateInterval object if diff method used:## _
-$##peru|fmt## = ##maroon|"Y-m-d H:i:s"##; _
-$##peru|s## = ##maroon|"2011-05-03 10:00:00"##; _
-$##peru|then## = ##green|DateTime##::createFromFormat($##peru|fmt##, $##peru|s##); _
-$##peru|now##  = ##purple|new## ##green|DateTime##(##maroon|"now"##); _
-$##peru|interval## = $##peru|now##->diff($##peru|then##);||##gray|datetime.timedelta //object//## _
+$fmt = "Y-m-d H:i:s"; _
+$s = "2011-05-03 10:00:00"; _
+$then = DateTime::createFromFormat($fmt, $s); _
+$now  = new DateTime("now"); _
+$interval = $now->diff($then);||##gray|datetime.timedelta //object//## _
  _
 ##gray|//use// total_seconds() //method to convert to float representing difference in seconds//##||##gray|Float //containing time difference in seconds//##||
-||[[# add-duration]][#add-duration-note add duration]||##purple|var## ##peru|t1## = ##purple|new## ##green|Date##(); _
-##purple|var## ##peru|delta## = (10 * 60 + 3) * 1000; _
-##purple|var## ##peru|t2## = ##purple|new## ##green|Date##(t1.getTime() + delta);||$##peru|now## = ##purple|new## ##green|DateTime##(##maroon|"now"##); _
-$##peru|now##->add(##purple|new## ##green|DateInterval##(##maroon|"PT10M3S"##);||##purple|import## datetime _
+||[[# add-duration]][#add-duration-note add duration]||let t1 = new Date(); _
+let delta = (10 * 60 + 3) * 1000; _
+let t2 = new Date(t1.getTime() + delta);||$now = new DateTime("now"); _
+$now->add(new DateInterval("PT10M3S");||import datetime _
  _
-##peru|delta## = datetime.timedelta( _
+delta = datetime.timedelta( _
 @<&nbsp;&nbsp;>@minutes=10, _
 @<&nbsp;&nbsp;>@seconds=3) _
-##peru|t## = datetime.datetime.now() + delta||require ##maroon|'date/delta'## _
+t = datetime.datetime.now() + delta||require 'date/delta' _
  _
-s = ##maroon|"10 min, 3 s"## _
-delta = ##green|Date##::##green|Delta##.parse(s).in_secs _
-t = ##green|Time##.now + delta||
-||[[# local-tmz-determination]][#local-tmz-determination-note local time zone determination]|| ||##gray|# DateTime objects can be instantiated without _
-# specifying the time zone if a default is set:## _
-$##peru|s## = ##maroon|"America/Los_Angeles"##; _
-date_default_timezone_set($##peru|s##);||##gray|//a// datetime //object has no time zone information unless a// tzinfo //object is provided when it is created//##||##gray|//if no time zone is specified the local time zone is used//##||
+s = "10 min, 3 s" _
+delta = Date::Delta.parse(s).in_secs _
+t = Time.now + delta||
+||[[# local-tmz-determination]][#local-tmz-determination-note local time zone determination]||##gray|TZ environment variable or host time zone##||##gray|# DateTime objects can be instantiated _
+# without specifying the time zone _
+# if a default is set:## _
+$s = "America/Los_Angeles"; _
+date_default_timezone_set($s);||##gray|//a// datetime //object has no time zone information unless a// tzinfo //object is provided when it is created//##||##gray|//if no time zone is specified the local time zone is used//##||
 ||[[# nonlocal-tmz]][#nonlocal-tmz-note nonlocal time zone]|| || ||##gray|# pip install pytz## _
-##purple|import## pytz _
-##purple|import## datetime _
+import pytz _
+import datetime _
  _
-##peru|tmz## = pytz.timezone(##maroon|'Asia/Tokyo'##) _
-##peru|utc## = datetime.datetime.utcnow() _
-##peru|utc_dt## = datetime.datetime( _
+tmz = pytz.timezone('Asia/Tokyo') _
+utc = datetime.datetime.utcnow() _
+utc_dt = datetime.datetime( _
 @<&nbsp;&nbsp;>@*utc.timetuple()[0:5], _
 @<&nbsp;&nbsp;>@tzinfo=pytz.utc) _
-##peru|jp_dt## = utc_dt.astimezone(tmz)||##gray|# gem install tzinfo## _
-require ##maroon|'tzinfo'## _
+jp_dt = utc_dt.astimezone(tmz)||##gray|# gem install tzinfo## _
+require 'tzinfo' _
  _
-tmz = ##gr4een|TZInfo##::##green|Timezone##.get(##maroon|"Asia/Tokyo"##) _
-jp_time = tmz.utc_to_local(##green|Time##.now.utc)||
+tmz = TZInfo::Timezone.get("Asia/Tokyo") _
+jp_time = tmz.utc_to_local(Time.now.utc)||
 ||[[# tmz-info]][#tmz-info-note time zone info] _
  _
-##gray|//name and UTC offset//##|| ||$##peru|tmz## = date_timezone_get($##peru|t##); _
+##gray|//name and UTC offset//##|| ||$tmz = date_timezone_get($t); _
  _
-timezone_name_get($##peru|tmz##); _
-date_offset_get($##peru|t##) / 3600;||##purple|import## time _
+timezone_name_get($tmz); _
+date_offset_get($t) / 3600;||import time _
  _
-##peru|tm## = time.localtime() _
+tm = time.localtime() _
 @<&nbsp;&nbsp;>@ _
 time.tzname[tm.tm_isdst] _
 (time.timezone / -3600) + tm.tm_isdst||t.zone _
 t.utc_offset / 3600||
-||[[# daylight-savings-test]][#daylight-savings-test-note daylight savings test]|| ||$##peru|t##->format(##maroon|"I"##);||##purple|import## time _
+||[[# daylight-savings-test]][#daylight-savings-test-note daylight savings test]||##gray|@@//@@ npm install moment## _
+let moment = require('moment'); _
  _
-##peru|tm## = time.localtime() _
+moment(new Date()).isDST()||$t->format("I");||import time _
+ _
+tm = time.localtime() _
 @<&nbsp;&nbsp;>@ _
 tm.tm_isdst||t.dst?||
-||[[# microseconds]][#microseconds-note microseconds]|| ||list($##peru|frac##, $##peru|sec##) = explode(##maroon|" "##, microtime()); _
-$##peru|usec## = $##peru|frac## * 1000 * 1000;||t.microsecond||t.usec||
-||[[# sleep]][#sleep-note sleep]||##gray|//none//##||##gray|# a float argument will be truncated _
-# to an integer:## _
-sleep(1);||##purple|import## time _
+||[[# microseconds]][#microseconds-note microseconds]||t.getMilliseconds() * 1000 _
  _
-time.sleep(0.5)||sleep(0.5)||
-||[[# timeout]][#timeout-note timeout]|| ||##gray|//use// set_time_limit //to limit execution time of the entire script; use// stream_set_timeout //to limit time spent reading from a stream opened with// fopen //or// fsockopen##||##purple|import## signal, time _
- _
-##purple|class## ##green|Timeout##(##green|Exception##): ##purple|pass## _
- _
-##purple|def## ##mediumblue|timeout_handler##(signo, fm): _
-@<&nbsp;&nbsp;>@##purple|raise## Timeout() _
- _
-signal.signal(signal.SIGALRM, _
-@<&nbsp;&nbsp;>@timeout_handler) _
- _
-##purple|try##: _
-@<&nbsp;&nbsp;>@signal.alarm(5) _
-@<&nbsp;&nbsp;>@might_take_too_long() _
-##purple|except## Timeout: _
-@<&nbsp;&nbsp;>@##purple|pass## _
-signal.alarm(0)||require ##maroon|'timeout'## _
- _
-##purple|begin## _
-@<&nbsp;&nbsp;>@##green|Timeout##.timeout(5) ##purple|do## _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@might_take_too_long _
-@<&nbsp;&nbsp;>@##purple|end## _
-##purple|rescue## ##green|Timeout##::##green|Error## _
-##purple|end##||
+##gray|@@//@@ [sec, nanosec] since system boot:## _
+process.hrtime()||list($frac, $sec) = explode(" ", microtime()); _
+$usec = $frac * 1000 * 1000;||t.microsecond||t.usec||
 ||||||||||~ [[# arrays]][#arrays-note arrays]||
 ||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# array-literal]][#array-literal-note literal] _
-@<&nbsp;>@||a = [1, 2, 3, 4]||$##peru|a## = [1, 2, 3, 4]; _
+@<&nbsp;>@||a = [1, 2, 3, 4]||$a = [1, 2, 3, 4]; _
  _
 ##gray|# older syntax:## _
-$##peru|a## = array(1, 2, 3, 4);||##peru|a## = [1, 2, 3, 4]||a = [1, 2, 3, 4] _
+$a = array(1, 2, 3, 4);||a = [1, 2, 3, 4]||a = [1, 2, 3, 4] _
  _
 ##gray|# a = ['do', 're', 'mi']## _
 a = %w(do re mi)||
 ||[[# array-size]][#array-size-note size] _
-@<&nbsp;>@||a.length||count($##peru|a##)||##purple|len##(a)||a.size _
-a.length ##gray|# same as size##||
+@<&nbsp;>@||a.length||count($a)||len(a)||a.size _
+a.length||
 ||[[# array-empty]][#array-empty-note empty test] _
 @<&nbsp;>@||##gray|@@//@@ TypeError if a is null or undefined:## _
 a.length === 0||##gray|# NULL tests as empty:## _
-!$##peru|a##||##gray|# None tests as empty:## _
-##purple|not## a||##gray|# NoMethodError if a is nil:## _
+!$a||##gray|# None tests as empty:## _
+not a||##gray|# NoMethodError if a is nil:## _
 a.empty?||
 ||[[# array-lookup]][#array-lookup-note lookup] _
-@<&nbsp;>@||a[0]||$##peru|a##[0] _
+@<&nbsp;>@||a[0]||$a[0] _
  _
 ##gray|# PHP uses the same type for arrays and _
 # dictionaries; indices can be negative _
@@ -898,57 +981,57 @@ a[-1]||a[0] _
 ##gray|# returns last element:## _
 a[-1]||
 ||[[# array-update]][#array-update-note update] _
-@<&nbsp;>@||a[0] = "lorem"||$##peru|a##[0] = ##maroon|"lorem"##;||a[0] = ##maroon|'lorem'## ||a[0] = ##maroon|"lorem"##||
-||[[# array-out-of-bounds]][#array-out-of-bounds-note out-of-bounds behavior]||##gray|//returns// undefined##||$##peru|a## = []; _
+@<&nbsp;>@||a[0] = 'lorem'||$a[0] = "lorem";||a[0] = 'lorem' ||a[0] = "lorem"||
+||[[# array-out-of-bounds]][#array-out-of-bounds-note out-of-bounds behavior]||##gray|//returns// undefined##||$a = []; _
 ##gray|# evaluates as NULL:## _
-$##peru|a##[10]; _
+$a[10]; _
 ##gray|# increases array size to one:## _
-$##peru|a##[10] = ##maroon|"lorem"##;||##peru|a## = [] _
+$a[10] = "lorem";||a = [] _
 ##gray|# raises IndexError:## _
 a[10] _
 ##gray|# raises IndexError:## _
-a[10] = ##maroon|'lorem'##||a = [] _
+a[10] = 'lorem'||a = [] _
 ##gray|# evaluates as nil:## _
 a[10] _
 ##gray|# increases array size to 11:## _
-a[10] = ##maroon|"lorem"##||
+a[10] = "lorem"||
 ||[[# array-element-index]][#array-element-index-note element index] _
  _
 ##gray|//first and last occurrence//##||##gray|@@//@@ return -1 if not found:## _
 [6, 7, 7, 8].indexOf(7) _
-[6, 7, 7, 8].lastIndexOf(7)||$##peru|a## = [##maroon|"x"##, ##maroon|"y"##, ##maroon|"y"##, ##maroon|"z"##]; _
+[6, 7, 7, 8].lastIndexOf(7)||$a = ["x", "y", "y", "z"]; _
  _
 ##gray|# returns FALSE if not found:## _
-$##peru|i## = array_search(##maroon|"y"##, $##peru|a##, ##teal|TRUE##); _
-##gray|//none//##||##peru|a## = [##maroon|'x'##, ##maroon|'y'##, ##maroon|'y'##, ##maroon|'z'##] _
+$i = array_search("y", $a, TRUE); _
+##gray|//none//##||a = ['x', 'y', 'y', 'z'] _
  _
 ##gray|# raises ValueError if not found:## _
-a.index(##maroon|'y'##) _
+a.index('y') _
 ##gray|//none//##||a = %w(x y y z) _
  _
 ##gray|# return nil if not found:## _
-a.index(##maroon|'y'##) _
-a.rindex(##maroon|'y'##)||
+a.index('y') _
+a.rindex('y')||
 ||[[# array-slice]][#array-slice-note slice] _
 ##gray|//by endpoints, by length//## _
 @<&nbsp;>@||##gray|@@//@@ select 3rd and 4th elements:## _
-["a", "b", "c", "d"].slice(2, 4) _
+['a', 'b', 'c', 'd'].slice(2, 4) _
 ##gray|//none//##||##gray|# select 3rd and 4th elements:## _
 ##gray|//none//## _
-array_slice($##peru|a##, 2, 2)||##gray|# select 3rd and 4th elements:## _
+array_slice($a, 2, 2)||##gray|# select 3rd and 4th elements:## _
 a[2:4] _
 a[@@2:2@@ + 2]||##gray|# select 3rd and 4th elements:## _
 a[2..3] _
 a[2, 2]||
 ||[[# array-slice-to-end]][#array-slice-to-end-note slice to end] _
-@<&nbsp;>@||["a", "b", "c", "d"].slice(1)||array_slice($##peru|a##, 1)||a[1:]||a[1..-1]||
+@<&nbsp;>@||['a', 'b', 'c', 'd'].slice(1)||array_slice($a, 1)||a[1:]||a[1..-1]||
 ||[[# array-back]][#array-back-note manipulate back] _
 @<&nbsp;>@||a = [6, 7, 8]; _
 a.push(9); _
-i = a.pop();||$##peru|a## = [6, 7, 8]; _
-array_push($##peru|a##, 9); _
-$##peru|a##[] = 9; ##gray|# same as array_push## _
-array_pop($##peru|a##);||##peru|a## = [6, 7, 8] _
+i = a.pop();||$a = [6, 7, 8]; _
+array_push($a, 9); _
+$a[] = 9; ##gray|# same as array_push## _
+array_pop($a);||a = [6, 7, 8] _
 a.append(9) _
 a.pop()||a = [6, 7, 8] _
 a.push(9) _
@@ -957,73 +1040,84 @@ a.pop||
 ||[[# array-front]][#array-front-note manipulate front] _
 @<&nbsp;>@||a = [6, 7, 8]; _
 a.unshift(5); _
-i = a.shift();||$##peru|a## = [6, 7, 8]; _
-array_unshift($##peru|a##, 5); _
-array_shift($##peru|a##);||##peru|a## = [6, 7, 8] _
+i = a.shift();||$a = [6, 7, 8]; _
+array_unshift($a, 5); _
+array_shift($a);||a = [6, 7, 8] _
 a.insert(0, 5) _
 a.pop(0)||a = [6, 7, 8] _
 a.unshift(5) _
 a.shift||
-||[[# array-concatenation]][#array-concatenation-note concatenate]||a = [1, 2, 3].concat([4, 5, 6]);||$##peru|a## = [1, 2, 3]; _
-$##peru|a2## = array_merge($##peru|a##, [4, 5, 6]); _
-$##peru|a## = array_merge($##peru|a##, [4, 5, 6]);||##peru|a## = [1, 2, 3] _
-##peru|a2## = a + [4, 5, 6] _
+||[[# array-concatenation]][#array-concatenation-note concatenate]||a = [1, 2, 3].concat([4, 5, 6]);||$a = [1, 2, 3]; _
+$a2 = array_merge($a, [4, 5, 6]); _
+$a = array_merge($a, [4, 5, 6]);||a = [1, 2, 3] _
+a2 = a + [4, 5, 6] _
 a.extend([4, 5, 6])||a = [1, 2, 3] _
 a2 = a + [4, 5, 6] _
 a.concat([4, 5, 6])||
-||[[# replicate-array]][#replicate-array-note replicate]||##gray|//none//##||$##peru|a## = array_fill(0, 10, ##green|NULL##);||a = [##purple|None##] * 10 _
-a = [##purple|None for## i ##purple|in range##(0, 10)]||a = [##peru|nil##] * 10 _
-a = ##green|Array##.new(10, ##peru|nil##)||
+||[[# replicate-array]][#replicate-array-note replicate]||Array(10).fill(null)||$a = array_fill(0, 10, NULL);||a = [None] * 10 _
+a = [None for i in range(0, 10)]||a = [nil] * 10 _
+a = Array.new(10, nil)||
 ||[[# array-copy]][#array-copy-note copy] _
 ##gray|//address copy, shallow copy, deep copy//##||a = [1, 2, [3, 4]]; _
 a2 = a; _
 a3 = a.slice(0); _
-a4 = JSON.parse(JSON.stringify(a));||$##peru|a## = [1, 2, [3, 4]]; _
-$##peru|a2## =& $##peru|a##; _
+a4 = JSON.parse(JSON.stringify(a));||$a = [1, 2, [3, 4]]; _
+$a2 =& $a; _
 ##gray|//none//## _
-$##peru|a4## = $##peru|a##;||##purple|import## copy _
+$a4 = $a;||import copy _
  _
-##peru|a## = [1,2,[3,4]] _
-##peru|a2## = a _
-##peru|a3## = ##purple|list##(a) _
-##peru|a4## = copy.deepcopy(a)||a = [1,2,[3,4]] _
+a = [1,2,[3,4]] _
+a2 = a _
+a3 = list(a) _
+a4 = copy.deepcopy(a)||a = [1,2,[3,4]] _
 a2 = a _
 a3 = a.dup _
-a4 = ##green|Marshal##.load(##green|Marshal##.dump(a))||
+a4 = Marshal.load(Marshal.dump(a))||
 ||[[# array-as-func-arg]][#array-as-func-arg-note array as function argument]||##gray|//parameter contains address copy//##||##gray|//parameter contains deep copy//##||##gray|//parameter contains address copy//##||##gray|//parameter contains address copy//##||
 ||[[# iterate-over-array]][#iterate-over-array-note iterate over elements] _
-@<&nbsp;>@||[1, 2, 3].forEach(function(n) { _
+@<&nbsp;>@||[6, 7, 8].forEach((n) => { _
 @<&nbsp;&nbsp;>@console.log(n); _
-});||##purple|foreach## ([1, 2, 3] ##purple|as## $##peru|i##) { _
-@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"$i\n"##; _
-}||##purple|for## i ##purple|in## [1, 2, 3]: _
-@<&nbsp;&nbsp;>@##purple|print##(i)||[1, 2, 3].each { |i| puts i }||
-||[[# indexed-array-iteration]][#indexed-array-iteration-note iterate over indices and elements]||var len = a.length; _
-for (var i = 0; i < len; i++ ) { _
-@<&nbsp;&nbsp;>@alert(a[i]); _
-}||$##peru|a## = [##maroon|"do"##, ##maroon|"re"##, ##maroon|"mi"## ##maroon|"fa"##]; _
-##purple|foreach## ($##peru|a## as $##peru|i## => $##peru|s##) { _
-@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"$s at index $i\n"##; _
-}||##peru|a## = [##maroon|'do'##, ##maroon|'re'##, ##maroon|'mi'##, ##maroon|'fa'##] _
-##purple|for## i, s ##purple|in## enumerate(a): _
-@<&nbsp;&nbsp;>@##purple|print##(##maroon|'%s at index %d'## % (s, i))||a = %w(do re mi fa) _
+}); _
+ _
+##gray|@@//@@ new in ES6:## _
+for (let n of [6, 7, 8]) { _
+@<&nbsp;&nbsp;>@console.log(n); _
+}||foreach ([1, 2, 3] as $i) { _
+@<&nbsp;&nbsp;>@echo "$i\n"; _
+}||for i in [1, 2, 3]: _
+@<&nbsp;&nbsp;>@print(i)||[1, 2, 3].each { |i| puts i }||
+||[[# indexed-array-iteration]][#indexed-array-iteration-note iterate over indices and elements]||for (let i = 0; i < a.length; ++i) { _
+@<&nbsp;&nbsp;>@console.log(a[i]); _
+} _
+ _
+##gray|@@//@@ indices not guaranteed to be in order:## _
+for (let i in a) { _
+@<&nbsp;&nbsp;>@console.log(a[i]); _
+}||$a = ["do", "re", "mi" "fa"]; _
+foreach ($a as $i => $s) { _
+@<&nbsp;&nbsp;>@echo "$s at index $i\n"; _
+}||a = ['do', 're', 'mi', 'fa'] _
+for i, s in enumerate(a): _
+@<&nbsp;&nbsp;>@print('%s at index %d' % (s, i))||a = %w(do re mi fa) _
 a.each_with_index do |s, i| _
-@<&nbsp;&nbsp;>@puts ##maroon|"####peru|#{s}## ##maroon|at index## ##peru|#{i}####maroon|"## _
+@<&nbsp;&nbsp;>@puts "#{s} at index #{i}" _
 end||
 ||[[# range-iteration]][#range-iteration-note iterate over range]||##gray|//not space efficient; use C-style for loop//##||##gray|//not space efficient; use C-style for loop//##||##gray|# use range() in Python 3:## _
-##purple|for## i ##purple|in xrange##(1, 1000001): _
-@<&nbsp;&nbsp;>@##gray|//code//##||(1..1_000_000).each ##purple|do## |i| _
+for i in xrange(1, 1000001): _
+@<&nbsp;&nbsp;>@##gray|//code//##||(1..1_000_000).each do |i| _
 @<&nbsp;&nbsp;>@##gray|//code//## _
-##purple|end##||
-||[[# range-array]][#range-array-note instantiate range as array]||var a = us.range(1, 10);||$##peru|a## = range(1, 10);||##peru|a## = ##purple|range##(1, 11) _
+end||
+||[[# range-array]][#range-array-note instantiate range as array]||let a = _.range(1, 11);||$a = range(1, 10);||a = range(1, 11) _
 ##gray|//Python 3://## _
-##peru|a## = ##purple|list##(##purple|range##(1, 11))||a = (1..10).to_a||
+a = list(range(1, 11))||a = (1..10).to_a||
 ||[[# array-reverse]][#array-reverse-note reverse] _
-##gray|//non-destructive, in-place//##||var a = [1, 2, 3]; _
-a.reverse();||$##peru|a## = [1, 2, 3]; _
+##gray|//non-destructive, in-place//##||let a = [1, 2, 3]; _
  _
-array_reverse($##peru|a##); _
-$##peru|a## = array_reverse($##peru|a##);||##peru|a## = [1, 2, 3] _
+let a2 = a.slice(0).reverse(); _
+a.reverse();||$a = [1, 2, 3]; _
+ _
+array_reverse($a); _
+$a = array_reverse($a);||a = [1, 2, 3] _
  _
 a[::-1] _
 a.reverse()||a = [1, 2, 3] _
@@ -1033,274 +1127,280 @@ a.reverse _
 ||[[# array-sort]][#array-sort-note sort] _
 ##gray|//non-destructive, _
 in-place, _
-custom comparision//##||var a = [3, 1, 4, 2]; _
-a.sort();||$##peru|a## = [##maroon|"b"##, ##maroon|"A"##, ##maroon|"a"##, ##maroon|"B"##]; _
+custom comparision//##||let a = [3, 1, 4, 2]; _
+ _
+let a2 = a.slice(0).sort(); _
+a.sort();||$a = ["b", "A", "a", "B"]; _
  _
 ##gray|//none//## _
-sort($##peru|a##); _
-##gray|//none, but// usort //sorts in place//##||##peru|a## = [##maroon|'b'##, ##maroon|'A'##, ##maroon|'a'##, ##maroon|'B'##] _
+sort($a); _
+##gray|//none, but// usort //sorts in place//##||a = ['b', 'A', 'a', 'B'] _
  _
-##purple|sorted##(a) _
+sorted(a) _
 a.sort() _
 ##gray|# custom binary comparision _
 # removed from Python 3:## _
-a.sort(key=##purple|str##.lower)||a = %w(b A a B) _
+a.sort(key=str.lower)||a = %w(b A a B) _
  _
 a.sort _
 a.sort! _
-a.sort ##purple|do## |x, y| _
+a.sort do |x, y| _
 @<&nbsp;&nbsp;>@x.downcase <=> y.downcase _
-##purple|end##||
+end||
 ||[[# array-dedupe]][#array-dedupe-note dedupe] _
-##gray|//non-destructive, in-place//##||var a = [1, 2, 2, 3]; _
+##gray|//non-destructive, in-place//##||let a = [1, 2, 2, 3]; _
  _
-var a2 = us.uniq(a); _
-a = us.uniq(a);||$##peru|a## = [1, 2, 2, 3]; _
+let a2 = _.uniq(a); _
+a = _.uniq(a);||$a = [1, 2, 2, 3]; _
  _
-$##peru|a2## = array_unique($##peru|a##); _
-$##peru|a## = array_unique($##peru|a##);||##peru|a## = [1, 2, 2, 3] _
+$a2 = array_unique($a); _
+$a = array_unique($a);||a = [1, 2, 2, 3] _
  _
-##peru|a2## = ##purple|list##(##purple|set##(a)) _
-##peru|a## = ##purple|list##(##purple|set##(a))||a = [1, 2, 2, 3] _
+a2 = list(set(a)) _
+a = list(set(a))||a = [1, 2, 2, 3] _
  _
 a2 = a.uniq _
 a.uniq!||
 ||[[# membership]][#membership-note membership] _
-@<&nbsp;>@||us.contains(a, 7)||in_array(7, $##peru|a##)||7 ##purple|in## a||a.include?(7)||
+@<&nbsp;>@||a.includes(7)||in_array(7, $a)||7 in a||a.include?(7)||
 ||[[# intersection]][#intersection-note intersection] _
-@<&nbsp;>@||us.intersection([1, 2], [2, 3, 4])|| $##peru|a## = [1, 2]; _
-$##peru|b## = [2, 3, 4] _
-array_intersect($##peru|a##, $##peru|b##)||{1, 2} & {2, 3, 4}||[1, 2] & [2 ,3, 4]||
+@<&nbsp;>@||_.intersection([1, 2], [2, 3, 4])|| $a = [1, 2]; _
+$b = [2, 3, 4] _
+array_intersect($a, $b)||{1, 2} & {2, 3, 4}||[1, 2] & [2 ,3, 4]||
 ||[[# union]][#union-note union] _
-@<&nbsp;>@||us.union([1, 2], [2, 3, 4])||$##peru|a1## = [1, 2]; _
-$##peru|a2## = [2, 3, 4]; _
-array_unique(array_merge($##peru|a1##, $##peru|a2##))||{1, 2} | {2, 3, 4}||[1, 2] | [2, 3, 4]||
-||[[# set-diff]][#set-diff-note relative complement, symmetric difference]||us.difference([1, 2, 3], [2]) _
-##gray|//none//##||$##peru|a1## = [1, 2, 3]; _
-$##peru|a2## = [2]; _
-array_values(array_diff($##peru|a1##, $##peru|a2##)) _
+@<&nbsp;>@||_.union([1, 2], [2, 3, 4])||$a1 = [1, 2]; _
+$a2 = [2, 3, 4]; _
+array_unique(array_merge($a1, $a2))||{1, 2} | {2, 3, 4}||[1, 2] | [2, 3, 4]||
+||[[# set-diff]][#set-diff-note relative complement, symmetric difference]||_.difference([1, 2, 3], [2]) _
+##gray|//none//##||$a1 = [1, 2, 3]; _
+$a2 = [2]; _
+array_values(array_diff($a1, $a2)) _
 ##gray|//none//##||{1, 2, 3} - {2} _
-{1, 2} ^ {2, 3, 4}||require ##maroon|'set'## _
+{1, 2} ^ {2, 3, 4}||require 'set' _
  _
 [1, 2, 3] - [2] _
-##green|Set##[1, 2] ^ ##green|Set##[2 ,3, 4]||
+Set[1, 2] ^ Set[2 ,3, 4]||
 ||[[# map]][#map-note map] _
 @<&nbsp;>@||##gray|@@//@@ callback gets 3 args: _
 @@//@@ value, index, array## _
-a.map(function(x) { return x * x })||array_map(function ($##peru|x##) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|return## $##peru|x## * $##peru|x##; _
-@<&nbsp;&nbsp;>@}, [1, 2, 3])||##purple|map##(##purple|lambda## x: x * x, [1, 2, 3]) _
+a.map((x) => x * x)||array_map(function ($x) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return $x * $x; _
+@<&nbsp;&nbsp;>@}, [1, 2, 3])||map(lambda x: x * x, [1, 2, 3]) _
 ##gray|# or use list comprehension:## _
 [x * x for x in [1, 2, 3]]||[1, 2, 3].map { |o| o * o }||
 ||[[# filter]][#filter-note filter] _
-@<&nbsp;>@||a.filter(function(x) { return x > 1 }) 	||array_filter([1, 2, 3], _
-@<&nbsp;&nbsp;>@function ($##peru|x##) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|return## $##peru|x##>1; _
-@<&nbsp;&nbsp;>@})||##purple|filter##(##purple|lambda## x: x > 1, [1, 2, 3]) _
+@<&nbsp;>@||a.filter((x) => x > 1) 	||array_filter([1, 2, 3], _
+@<&nbsp;&nbsp;>@function ($x) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return $x>1; _
+@<&nbsp;&nbsp;>@})||filter(lambda x: x > 1, [1, 2, 3]) _
 ##gray|# or use list comprehension:## _
 [x for x in [1, 2, 3] if x > 1]||[1, 2, 3].select { |o| o > 1 }||
 ||[[# reduce]][#reduce-note reduce] _
-@<&nbsp;>@||a.reduce(function(m, o) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return m + o; _
-@<&nbsp;&nbsp;>@}, 0)||array_reduce([1, 2, 3], _
-@<&nbsp;&nbsp;>@function($##peru|x##,$##peru|y##) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|return## $##peru|x## + $##peru|y##; _
+@<&nbsp;>@||a.reduce((m, o) => m + o, 0)||array_reduce([1, 2, 3], _
+@<&nbsp;&nbsp;>@function($x,$y) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return $x + $y; _
 @<&nbsp;&nbsp;>@}, 0)||##gray|# import needed in Python 3 only## _
-##purple|from## functools ##purple|import reduce## _
+from functools import reduce _
  _
-##purple|reduce##(##purple|lambda## x, y: x + y, [1, 2, 3], 0)||[1, 2, 3].inject(0) { |m, o| m + o }||
+reduce(lambda x, y: x + y, [1, 2, 3], 0)||[1, 2, 3].inject(0) { |m, o| m + o }||
 ||[[# universal-existential-test]][#universal-existential-test-note universal  and existential tests] _
-@<&nbsp;>@||var a = [1, 2, 3, 4]; _
-var even = function(x) { _
-@<&nbsp;&nbsp;>@return x % 2 == 0; _
-}; _
+@<&nbsp;>@||let a = [1, 2, 3, 4]; _
  _
-a.every(even) _
-a.some(even)||##gray|//use array_filter//##||##purple|all##(i % 2 == 0 ##purple|for## i ##purple|in## [1, 2, 3, 4]) _
-##purple|any##(i % 2 == 0 ##purple|for## i ##purple|in## [1, 2, 3, 4])||[1, 2, 3, 4].all? {|i| i.even? } _
+a.every((n) => n % 2 === 0) _
+a.some((n) => n % 2 === 0)||##gray|//use array_filter//##||all(i % 2 == 0 for i in [1, 2, 3, 4]) _
+any(i % 2 == 0 for i in [1, 2, 3, 4])||[1, 2, 3, 4].all? {|i| i.even? } _
 [1, 2, 3, 4].any? {|i| i.even? }||
-||[[# shuffle-sample]][#shuffle-sample-note shuffle and sample]||var a = [1, 2, 3, 4]; _
-a = us.shuffle(a); _
-var samp = us.sample([1, 2, 3, 4], 2);||$##peru|a## = [1, 2, 3, 4]; _
-shuffle($##peru|a##); _
-$##peru|samp## = array_rand(|[1, 2, 3, 4], 2);||##purple|from## random ##purple|import## shuffle, sample _
+||[[# shuffle-sample]][#shuffle-sample-note shuffle and sample]||let a = [1, 2, 3, 4]; _
  _
-##peru|a## = [1, 2, 3, 4] _
+a = _.shuffle(a); _
+let samp = _.sampleSize([1, 2, 3, 4], 2);||$a = [1, 2, 3, 4]; _
+ _
+shuffle($a); _
+$samp = array_rand(|[1, 2, 3, 4], 2);||from random import shuffle, sample _
+ _
+a = [1, 2, 3, 4] _
 shuffle(a) _
 samp = sample([1, 2, 3, 4], 2)||[1, 2, 3, 4].shuffle! _
 samp = [1, 2, 3, 4].sample(2)||
 ||[[# flatten]][#flatten-note flatten] _
-##gray|//one level, completely//##||var a = [1, [2, [3, 4]]]; _
-var a2 = us.flatten(a, true); _
-var a3 = us.flatten(a);||##gray|//none//##||##gray|//none//##||a = [1, [2, [3, 4]]] _
+##gray|//one level, completely//##||let a = [1, [2, [3, 4]]]; _
+ _
+let a2 = _.flatten(a); _
+let a3 = _.flattenDeep(a);||##gray|//none//##||##gray|//none//##||a = [1, [2, [3, 4]]] _
 a2 = a.flatten(1) _
 a3 = a.flatten||
 ||[[# zip]][#zip-note zip] _
-@<&nbsp;>@||var a = _.zip( _
+@<&nbsp;>@||let a = _.zip([1, 2, 3], ['a', 'b', 'c']); _
+ _
+##gray|@@//@@ shorter array padded with undefined:## _
+_.zip([1, 2, 3], ['a', 'b'])||$a = array_map(NULL, _
 @<&nbsp;&nbsp;>@[1, 2, 3], _
-@<&nbsp;&nbsp;>@["a", "b", "c"]);||$##peru|a## = array_map(##teal|NULL##, _
-@<&nbsp;&nbsp;>@[1, 2, 3], _
-@<&nbsp;&nbsp;>@[##maroon|"a"##, ##maroon|"b"##, ##maroon|"c"##]);||##peru|a## = zip([1, 2, 3], [##maroon|'a'##, ##maroon|'b'##, ##maroon|'c'##])||a = [1, 2, 3].zip([##maroon|"a"##, ##maroon|"b"##, ##maroon|"c"##])||
+@<&nbsp;&nbsp;>@["a", "b", "c"]); _
+ _
+##gray|# shorter array padded with NULLs##||list(zip([1, 2, 3], ['a', 'b', 'c'])) _
+ _
+##gray|# extras in longer array dropped:## _
+list(zip([1, 2, 3], ['a', 'b']))||[1, 2, 3].zip(["a", "b", "c"]) _
+ _
+##gray|# shorter array padded with nil:## _
+[1, 2, 3].zip(["a", "b"])||
 ||||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
 ||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# dict-literal]][#dict-literal-note literal] _
-@<&nbsp;>@||d = {"t": 1, "f": 0}; _
+@<&nbsp;>@||d = {t: 1, f: 0}; _
 ##gray|@@//@@ keys do not need to be quoted if they _
 @@//@@ are a legal JavaScript variable name _
-@@//@@and not a reserved word##||$##peru|d## = [##maroon|"t"## => 1, ##maroon|"f"## => 0]; _
+@@//@@ and not a reserved word##||$d = ["t" => 1, "f" => 0]; _
   _
 ##gray|# older syntax:## _
-$##peru|d## = array(##maroon|"t"## => 1, ##maroon|"f"## => 0);||##peru|d## = {##maroon|'t'##: 1, ##maroon|'f'##: 0}||d = {##maroon|'t'## => 1, ##maroon|'f'## => 0} _
+$d = array("t" => 1, "f" => 0);||d = {'t': 1, 'f': 0}||d = {'t' => 1, 'f' => 0} _
  _
 ##gray|# keys are symbols:## _
-symbol_to_int = {##green|t##: 1, ##green|f##: 0}||
+symbol_to_int = {t: 1, f: 0}||
 ||[[# dict-size]][#dict-size-note size] _
-@<&nbsp;>@||var size = 0; _
-for (var k in d) { _
-@<&nbsp;&nbsp;>@if (d.hasOwnProperty(k)) size++; _
-}||count($##peru|d##)||##purple|len##(d)||d.size _
-d.length ##gray|# same as size##||
+@<&nbsp;>@||_.size(d) _
+Object.getOwnPropertyNames(d).length||count($d)||len(d)||d.size _
+d.length||d
 ||[[# dict-lookup]][#dict-lookup-note lookup] _
 @<&nbsp;>@||d.hasOwnProperty("t") ? d["t"] : undefined _
-d.hasOwnProperty("t") ? d.t : undefined||$##peru|d##[##maroon|"t"##]||d[##maroon|'t'##]||d[##maroon|'t'##]||
-||[[# dict-update]][#dict-update-note update]||d["t"] = 2; _
-d.t = 2;||$##peru|d##[##maroon|"t"##] = 2;||d[##maroon|'t'##] = 2||d[##maroon|'t'##] = 2||
+d.hasOwnProperty("t") ? d.t : undefined _
+ _
+##gray|@@//@@ JavaScript dictionaries are objects _
+@@//@@ and inherit properties from Object.##||$d["t"]||d['t']||d['t']||
+||[[# dict-update]][#dict-update-note update]||d['t'] = 2; _
+d.t = 2;||$d["t"] = 2;||d['t'] = 2 _
+ _
+##gray|# provide default to avoid KeyError:## _
+d.get('t', None)||d['t'] = 2||
 ||[[# dict-missing-key]][#dict-missing-key-note missing key behavior] _
-@<&nbsp;>@||var d = {}; _
-##gray|@@//@@ sets s to undefined:## _
-var s = d["lorem"]; _
+@<&nbsp;>@||let d = {}; _
+##gray|@@//@@ undefined:## _
+d["lorem"]; _
 ##gray|@@//@@ adds key/value pair:## _
-d["lorem"] = "ipsum"; ||$##peru|d## = []; _
-##gray|# sets $s to NULL:## _
-$##peru|s## = $##peru|d##[##maroon|"lorem"##]; _
+d["lorem"] = "ipsum"; ||$d = []; _
+##gray|# NULL:## _
+$d["lorem"]; _
 ##gray|# adds key/value pair:## _
-$##peru|d##[##maroon|"lorem"##] = ##maroon|"ipsum"##;||##peru|d## = {} _
+$d["lorem"] = "ipsum";||d = {} _
 ##gray|# raises KeyError:## _
-##peru|s## = d[##maroon|'lorem'##] _
+d['lorem'] _
 ##gray|# adds key/value pair:## _
-d[##maroon|'lorem'##] = ##maroon|'ipsum'##||d = {} _
-##gray|# sets s to nil:## _
-s = d[##maroon|'lorem'##] _
+d['lorem'] = 'ipsum'||d = {} _
+##gray|# nil:## _
+d['lorem'] _
 ##gray|# adds key/value pair:## _
-d[##maroon|'lorem'##] = ##maroon|'ipsum'##||
+d['lorem'] = 'ipsum'||
 ||[[# dict-key-check]][#dict-key-check-note is key present] _
-@<&nbsp;>@||d.hasOwnProperty("t");||array_key_exists(##maroon|"y"##, $##peru|d##);||##maroon|'y'## ##purple|in## d||d.key?(##maroon|'y'##)||
+@<&nbsp;>@||d.hasOwnProperty("t");||array_key_exists("y", $d);||'y' in d||d.key?('y')||
 ||[[# dict-delete]][#dict-delete-note delete]||delete d["t"]; _
-delete d.t;||$##peru|d## = [1 => ##maroon|"t"##, 0 => ##maroon|"f"##]; _
-unset($##peru|d##[1]);||##peru|d## = {1: ##purple|True##, 0: ##purple|False##} _
-##purple|del## d[1]||d = {1 => ##peru|true##, 0 => ##peru|false##} _
+delete d.t;||$d = [1 => "t", 0 => "f"]; _
+unset($d[1]);||d = {1: True, 0: False} _
+del d[1]||d = {1 => true, 0 => false} _
 d.delete(1)||
-||[[# dict-assoc-array]][#dict-assoc-array-note from array of pairs, from even length array]||var a = [["a", 1], ["b", 2], ["c", 3]]; _
-var d = us.object(a); _
+||[[# dict-assoc-array]][#dict-assoc-array-note from array of pairs, from even length array]||let a = [['a', 1], ['b', 2], ['c', 3]]; _
+let d = _.fromPairs(a); _
  _
-##gray|//none//##|| ||##peru|a## = [[##maroon|'a'##, 1], [##maroon|'b'##, 2], [##maroon|'c'##, 3]] _
-##peru|d## = ##purple|dict##(a) _
+##gray|//none//##|| ||a = [['a', 1], ['b', 2], ['c', 3]] _
+d = dict(a) _
  _
-##peru|a## = [##maroon|'a'##, 1, ##maroon|'b'##, 2, ##maroon|'c'##, 3] _
-##peru|d## =  ##purple|dict##(##purple|zip##(a[::2], a[1::2]))||a = [[##maroon|'a'##, 1], [##maroon|'b'##, 2], [##maroon|'c'##, 3]] _
-d = ##green|Hash##[a] _
+a = ['a', 1, 'b', 2, 'c', 3] _
+d =  dict(zip(a[::2], a[1::2]))||a = [['a', 1], ['b', 2], ['c', 3]] _
+d = Hash[a] _
  _
-a = [##maroon|'a'##, 1, ##maroon|'b'##, 2, ##maroon|'c'##, 3] _
-d = ##green|Hash##[*a]||
-||[[# dict-merge]][#dict-merge-note merge]||var d1 = {"a": 1, "b": 2}; _
-var d2 = {"c": 3, "d": 4}; _
-d1 = us.extend(d1, d2);||$##peru|d1## = [##maroon|"a"## => 1, ##maroon|"b"## => 2]; _
-$##peru|d2## = [##maroon|"b"## => 3, ##maroon|"c"## => 4]; _
-$##peru|d1## = array_merge($##peru|d1##, $##peru|d2##);||##peru|d1## = {##maroon|'a'##: 1, ##maroon|'b'##: 2} _
-##peru|d2## = {##maroon|'b'##: 3, ##maroon|'c'##: 4} _
-d1.update(d2)||d1 = {##maroon|'a'## => 1, ##maroon|'b'## => 2} _
-d2 = {##maroon|'b'## => 3, ##maroon|'c'## => 4} _
+a = ['a', 1, 'b', 2, 'c', 3] _
+d = Hash[*a]||
+||[[# dict-merge]][#dict-merge-note merge]||let d1 = {a: 1, b: 2}; _
+let d2 = {b: 3, c: 4}; _
+##gray|@@//@@ d2 overwrites shared keys in d1:## _
+d1 = _.assignIn(d1, d2);||$d1 = ["a" => 1, "b" => 2]; _
+$d2 = ["b" => 3, "c" => 4]; _
+$d1 = array_merge($d1, $d2);||d1 = {'a': 1, 'b': 2} _
+d2 = {'b': 3, 'c': 4} _
+d1.update(d2)||d1 = {'a' => 1, 'b' => 2} _
+d2 = {'b' => 3, 'c' => 4} _
 d1.merge!(d2)||
-||[[# dict-invert]][#dict-invert-note invert]||var to_num = {'t': 1, 'f': 0}; _
-var to_let = us.invert(to_num);||$##peru|to_num## = [##maroon|"t"## => 1, ##maroon|"f"## => 0]; _
-$##peru|to_let## = array_flip($##peru|to_num##);||##peru|to_num## = {##maroon|'t##': 1, ##maroon|'f'##: 0} _
+||[[# dict-invert]][#dict-invert-note invert]||let let2num = {t: 1, f: 0}; _
+let num2let = _.invert(let2num);||$to_num = ["t" => 1, "f" => 0]; _
+$to_let = array_flip($to_num);||to_num = {'t': 1, 'f': 0} _
 ##gray|# dict comprehensions added in 2.7:## _
-##peru|to_let## = {v: k ##purple|for## k, v _
-@<&nbsp;&nbsp;>@##purple|in## to_num.items()}||to_num = {##maroon|'t'## => 1, ##maroon|'f'## => 0} _
+to_let = {v: k for k, v _
+@<&nbsp;&nbsp;>@in to_num.items()}||to_num = {'t' => 1, 'f' => 0} _
 to_let = to_num.invert||
 ||[[# dict-iter]][#dict-iter-note iterate] _
-@<&nbsp;>@||for (var k in d) { _
-@<&nbsp;&nbsp;>@if (d.hasOwnProperty(k)) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|//use k or d[k]//## _
-@<&nbsp;&nbsp;>@} _
-}||##purple|foreach## ($##peru|d## as $##peru|k## => $##peru|v##) { _
-@<&nbsp;&nbsp;>@##gray|//code//## _
-}||##purple|for## k, v ##purple|in## d.iteritems(): _
-@<&nbsp;&nbsp;>@##gray|//code//## _
+@<&nbsp;>@||for (let k in d) { _
+@<&nbsp;&nbsp;>@console.log(@@`@@value at ${k} is ${d[k]}@@`@@); _
+}||foreach ($d as $k => $v) { _
+@<&nbsp;&nbsp;>@echo "value at ${k} is ${v}"; _
+}||for k, v in d.items(): _
+@<&nbsp;&nbsp;>@print('value at {} is {}'.format(k, v) _
  _
-##gray|//Python 3://## _
-##purple|for## k, v ##purple|in## d.items(): _
-@<&nbsp;&nbsp;>@##gray|//code//##||d.each ##purple|do## |k,v| _
-@<&nbsp;&nbsp;>@##gray|//code//## _
-##purple|end##||
-||[[# dict-key-val]][#dict-key-val-note keys and values as arrays]||us.keys(d) _
-us.values(d)||array_keys($##peru|d##) _
-array_values($##peru|d##)||d.keys() _
-d.values() _
+##gray|# Python 2: use iteritems()##||d.each do |k,v| _
+@<&nbsp;&nbsp;>@puts "value at #{k} is #{v}" _
+end||
+||[[# dict-key-val]][#dict-key-val-note keys and values as arrays]||Object.keys(d) _
+_.values(d)||array_keys($d) _
+array_values($d)||list(d.keys()) _
+list(d.values()) _
  _
-##gray|//Python 3://## _
-list(d.keys()) _
-list(d.values())||d.keys _
+##gray|# keys() and values return iterators _
+# in Python 3 and lists in Python 2##||d.keys _
 d.values||
-||[[# dict-sort-values]][#dict-sort-values-note sort by values]||function cmp2(a, b) { _
-@<&nbsp;&nbsp;>@if (a[1] < b[1]) { return -1; } _
-@<&nbsp;&nbsp;>@if (a[1] > b[1]) { return 1; } _
-@<&nbsp;&nbsp;>@return 0; _
-} _
+||[[# dict-sort-values]][#dict-sort-values-note sort by values]||let cmp = (a, b) => a[1] - b[1]; _
+let d = {t: 1, f: 0}; _
  _
-for (p in us.pairs(d).sort(cmp2)) { _
-@<&nbsp;&nbsp;>@alert(p[0] + ": " + p[1]); _
-}||asort($##peru|d##); _
+for (let p of _.toPairs(d).sort(cmp)) { _
+@<&nbsp;&nbsp;>@console.log(p); _
+}||asort($d); _
  _
-##purple|foreach## ($##peru|d## ##purple|as## $##peru|k## => $##peru|v##) { _
-@<&nbsp;&nbsp;>@##purple|print## ##maroon|"$k: $v\n"##; _
-}||##purple|from## operator ##purple|import## itemgetter _
+foreach ($d as $k => $v) { _
+@<&nbsp;&nbsp;>@print "$k: $v\n"; _
+}||from operator import itemgetter _
  _
-##peru|pairs## = ##purple|sorted##(d.iteritems(), _
-@<&nbsp;&nbsp;>@key=itemgetter(1)) _
+pairs = sorted(d.items(), key=itemgetter(1)) _
  _
-##purple|for## k, v ##purple|in## pairs: _
-@<&nbsp;&nbsp;>@##purple|print##(##maroon|'{}: {}'##.format(k, v))||d.sort_by { |k, v| v }.each ##purple|do## |k, v| _
-@<&nbsp;&nbsp;>@puts ##maroon|"#{k}: #{v}"## _
-##purple|end##||
-||[[# dict-default-val]][#dict-default-val-note default value, computed value]||##gray|//none//##||$##peru|counts## = []; _
-$##peru|counts##[##maroon|'foo'##] += 1; _
+for k, v in pairs: _
+@<&nbsp;&nbsp;>@print('{}: {}'.format(k, v))||d.sort_by { |k, v| v }.each do |k, v| _
+@<&nbsp;&nbsp;>@puts "#{k}: #{v}" _
+end||
+||[[# dict-default-val]][#dict-default-val-note default value, computed value]||##gray|//none//##||$counts = []; _
+$counts['foo'] += 1; _
  _
-##gray|//extend// ArrayObject //for computed values and defaults other than zero or empty string.//##||##purple|from## collections ##purple|import## defaultdict _
+##gray|# For computed values and defaults other than _
+# zero or empty string, extend ArrayObject.##||from collections import defaultdict _
  _
-##peru|counts## = defaultdict(##purple|lambda##: 0) _
-counts[##maroon|'foo'##] += 1 _
+counts = defaultdict(lambda: 0) _
+counts['foo'] += 1 _
  _
-##purple|class## ##green|Factorial##(dict): _
-@<&nbsp;&nbsp;>@##purple|def## ##mediumblue|@@__missing__@@##(##purple|self##, k): _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|if## k > 1: _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|return## k * ##purple|self##[k-1] _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|else##: _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|return## 1 _
+class Factorial(dict): _
+@<&nbsp;&nbsp;>@def @@__missing__@@(self, k): _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@if k > 1: _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return k * self[k-1] _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@else: _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return 1 _
  _
-##peru|factorial## = Factorial()||counts = ##green|Hash##.new(0) _
-counts[##maroon|'foo'##] += 1 _
+factorial = Factorial()||counts = Hash.new(0) _
+counts['foo'] += 1 _
  _
-factorial = ##green|Hash##.new ##purple|do## |h,k| _
+factorial = Hash.new do |h,k| _
 @<&nbsp;&nbsp;>@k > 1 ? k * h[k-1] : 1 _
-##purple|end##||
+end||
 ||||||||||~ [[# functions]][#functions-note functions]||
 ||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# def-func]][#def-func-note define] _
-@<&nbsp;>@||function add(x, y) { _
-@<&nbsp;&nbsp;>@return x+y; _
-}||##purple|function## ##0000CD|add3##($##peru|x1##, $##peru|x2##, $##peru|x3##) _
+@<&nbsp;>@||function add3 (x1, x2, x3) { _
+@<&nbsp;&nbsp;>@return x1 + x2 + x3; _
+}||function add3($x1, $x2, $x3) _
 { _
-@<&nbsp;&nbsp;>@##purple|return## $##peru|x1## + $##peru|x2## + $##peru|x3##; _
-}||##purple|def## ##0000CD|add3##(x1, x2, x3): _
-@<&nbsp;&nbsp;>@##purple|return## x1 + x2 + x3||##purple|def## ##0000CD|add3##(x1, x2, x3) _
+@<&nbsp;&nbsp;>@return $x1 + $x2 + $x3; _
+}||def add3(x1, x2, x3): _
+@<&nbsp;&nbsp;>@return x1 + x2 + x3||def add3(x1, x2, x3) _
 @<&nbsp;&nbsp;>@x1 + x2 + x3 _
-##purple|end## _
+end _
  _
 ##gray|# parens are optional and customarily _
 # omitted when defining functions _
 # with no parameters##||
-||[[# invoke-func]][#invoke-func-note invoke]||add(1, 2)||add3(1, 2, 3); _
+||[[# invoke-func]][#invoke-func-note invoke]||add3(1, 2, 3)||add3(1, 2, 3); _
  _
 ##gray|# function names are case insensitive:## _
 ADD3(1, 2, 3);||add3(1, 2, 3)||add3(1, 2, 3) _
@@ -1312,58 +1412,80 @@ add3 1, 2, 3||
 ||[[# extra-arg]][#extra-arg-note extra argument behavior] _
 @<&nbsp;>@||##gray|//ignored//##||##gray|//ignored//##||##gray|//raises// TypeError //if number of arguments doesn't match function arity//##||##gray|//raises// ArgumentError //if number of arguments doesn't match function arity//##||
 ||[[# default-arg]][#default-arg-note default argument] _
-@<&nbsp;>@||##gray|//none//##||##purple|function## ##mediumblue|my_log##($##peru|x##, $##peru|base##=10) _
+@<&nbsp;>@||##gray|@@//@@ new in ES6:## _
+function myLog (x, base = 10) { _
+@<&nbsp;&nbsp;>@return Math.log(x) / Math.log(base); _
+}||function my_log($x, $base=10) _
 { _
-@<&nbsp;&nbsp;>@##purple|return## log($##peru|x##) / log($##peru|base##); _
+@<&nbsp;&nbsp;>@return log($x) / log($base); _
 } _
  _
 my_log(42); _
-my_log(42, ##teal|M_E##);||##purple|import## math _
+my_log(42, M_E);||import math _
  _
-##purple|def## ##mediumblue|my_log##(x, base=10): _
-@<&nbsp;&nbsp;>@##purple|return## math.log(x) / math.log(base) _
- _
-my_log(42) _
-my_log(42, math.e)||##purple|def## ##mediumblue|my_log##(x, base=10) _
-@<&nbsp;&nbsp;>@##green|Math##.log(x) / ##green|Math##.log(base) _
-##purple|end## _
+def my_log(x, base=10): _
+@<&nbsp;&nbsp;>@return math.log(x) / math.log(base) _
  _
 my_log(42) _
-my_log(42, ##green|Math##::##green|E##)||
-||[[# variadic-func]][#variadic-func-note variadic function]||##gray|//args in//## arguments[0], arguments[1], ##gray|//… with number of args in//## arguments.length||##purple|function## ##mediumblue|first_and_last##() _
+my_log(42, math.e)||def my_log(x, base=10) _
+@<&nbsp;&nbsp;>@Math.log(x) / Math.log(base) _
+end _
+ _
+my_log(42) _
+my_log(42, Math::E)||
+||[[# variadic-func]][#variadic-func-note variadic function]||function firstAndLast() { _
+@<&nbsp;&nbsp;>@if (arguments.length >= 1) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@console.log('first: ' + arguments[0]); _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@if (arguments.length >= 2) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@console.log('last: ' + arguments[1]); _
+@<&nbsp;&nbsp;>@} _
+} _
+ _
+##gray|@@// ...@@ operator new in ES6:## _
+function firstAndLast(@@...@@a) { _
+@<&nbsp;&nbsp;>@if (a.length >= 1) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@console.log('first: ' + a[0]); _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@if (a.length >= 2) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@console.log('last: ' + a[1]); _
+@<&nbsp;&nbsp;>@} _
+}||function first_and_last() _
 { _
  _
-@<&nbsp;&nbsp;>@$##peru|arg_cnt## = func_num_args(); _
+@<&nbsp;&nbsp;>@$arg_cnt = func_num_args(); _
  _
-@<&nbsp;&nbsp;>@##purple|if## ($##peru|arg_cnt## >= 1) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@$##peru|n## = func_get_arg(0); _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"first: "## . $##peru|n## . ##maroon|"\n"##; _
+@<&nbsp;&nbsp;>@if ($arg_cnt >= 1) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@$n = func_get_arg(0); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@echo "first: " . $n . "\n"; _
 @<&nbsp;&nbsp;>@} _
  _
-@<&nbsp;&nbsp;>@##purple|if## ($##peru|arg_cnt## >= 2) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@$##peru|a## = func_get_args(); _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@$##peru|n## = $##peru|a##[$##peru|arg_cnt##-1]; _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"last: "## . $##peru|n## . ##maroon|"\n"##; _
+@<&nbsp;&nbsp;>@if ($arg_cnt >= 2) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@$a = func_get_args(); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@$n = $a[$arg_cnt-1]; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@echo "last: " . $n . "\n"; _
 @<&nbsp;&nbsp;>@} _
-}||##purple|def## ##mediumblue|first_and_last##(*a): _
+}||def first_and_last(*a): _
  _
-@<&nbsp;&nbsp;>@##purple|if len##(a) >= 1: _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|print##(##maroon|'first: '## + ##purple|str##(a[0])) _
+@<&nbsp;&nbsp;>@if len(a) >= 1: _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print('first: ' + str(a[0])) _
  _
-@<&nbsp;&nbsp;>@##purple|if len##(a) >= 2: _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|print##(##maroon|'last: '## + ##purple|str##(a[-1]))||##purple|def## ##mediumblue|first_and_last##(*a) _
+@<&nbsp;&nbsp;>@if len(a) >= 2: _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print('last: ' + str(a[-1]))||def first_and_last(*a) _
  _
-@<&nbsp;&nbsp;>@##purple|if## a.size >= 1 _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@puts ##maroon|"first: #{a[0]}"## _
-@<&nbsp;&nbsp;>@##purple|end## _
+@<&nbsp;&nbsp;>@if a.size >= 1 _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@puts "first: #{a[0]}" _
+@<&nbsp;&nbsp;>@end _
  _
-@<&nbsp;&nbsp;>@##purple|if## a.size >= 2 _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@puts ##maroon|"last: #{a[-1]}"## _
-@<&nbsp;&nbsp;>@##purple|end## _
-##purple|end##||
-||[[# apply-func]][#apply-func-note pass array elements as separate arguments]||##gray|//none//##||$##peru|a## = [1, 2, 3]; _
+@<&nbsp;&nbsp;>@if a.size >= 2 _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@puts "last: #{a[-1]}" _
+@<&nbsp;&nbsp;>@end _
+end||
+||[[# apply-func]][#apply-func-note pass array elements as separate arguments]||let a = [1, 2, 3]; _
  _
-call_user_func_array(##maroon|"add3"##, $##peru|a##);||##peru|a## = [2, 3] _
+let sum = add3(@@...@@a);||$a = [1, 2, 3]; _
+ _
+call_user_func_array("add3", $a);||a = [2, 3] _
  _
 add3(1, *a) _
  _
@@ -1376,236 +1498,283 @@ add3(1, *a) _
 ##gray|# splat operator can be used multiple _
 # times and can appear before regular _
 # arguments##||
-||[[# param-alias]][#param-alias-note parameter alias]||##gray|//none//##||##purple|function## ##0000CD|first_and_second##(&$##peru|a##) _
+||[[# param-alias]][#param-alias-note parameter alias]||##gray|//none//##||function first_and_second(&$a) _
 { _
-@<&nbsp;&nbsp;>@##purple|return## [$##peru|a##[0], $##peru|a##[1]]; _
+@<&nbsp;&nbsp;>@return [$a[0], $a[1]]; _
 }||##gray|//none//##||##gray|//none//##||
 ||[[# named-param]][#named-param-note named parameters] _
-@<&nbsp;>@||##gray|//none//##||##gray|//none//##||##purple|def## ##mediumblue|fequal##(x, y, eps=0.01): _
-@<&nbsp;&nbsp;>@##purple|return abs##(x - y) < eps _
+@<&nbsp;>@||##gray|//none//##||##gray|//none//##||def fequal(x, y, eps=0.01): _
+@<&nbsp;&nbsp;>@return abs(x - y) < eps _
  _
 fequal(1.0, 1.001) _
-fequal(1.0, 1.001, eps=0.1@@**@@10)||##purple|def## ##mediumblue|fequal##(x, y, opts={}) _
-@<&nbsp;&nbsp;>@eps = opts[##teal|:eps##] @@||@@ 0.01 _
-@<&nbsp;&nbsp;>@(x - y).abs < eps _
-##purple|end## _
- _
-fequal(1.0, 1.001) _
-fequal(1.0, 1.001, ##teal|:eps##=>0.1@@**@@10) _
- _
-##gray|# Ruby 2.0:## _
-##purple|def## ##mediumblue|fequals##(x, y, ##teal|eps##: 0.01) _
+fequal(1.0, 1.001, eps=0.1@@**@@10)||def fequals(x, y, eps: 0.01) _
 @<&nbsp;&nbsp;>@(x - y).abs < eps _
 end _
  _
 fequals(1.0, 1.001) _
-fequals(1.0, 1.001, ##teal|eps##: 0.1**10)||
+fequals(1.0, 1.001, eps: 0.1**10)||
 ||[[# retval]][#retval-note return value] _
-@<&nbsp;>@||return ##gray|//arg or//## undefined. ##gray|//If invoked with//## new ##gray|//and return value not an object, returns//## this||##gray|return //arg or// NULL##||##gray|return //arg or// None##||##gray|return //arg or last expression evaluated##//||
+@<&nbsp;>@||##gray|return //arg or// undefined.## _
+ _
+##gray|//If invoked with// new //and// return //value not an object, returns// this.##||##gray|return //arg or// NULL##||##gray|return //arg or// None##||##gray|return //arg or last expression evaluated##//||
 ||[[# multiple-retval]][#multiple-retval-note multiple return values] _
-@<&nbsp;>@||##gray|//none//##||##purple|function## ##0000CD|first_and_second##(&$##peru|a##) _
-{ _
-@<&nbsp;&nbsp;>@##purple|return## [$##peru|a##[0], $##peru|a##[1]]; _
+@<&nbsp;>@||function firstAndSecond(a) { _
+@<&nbsp;&nbsp;>@return [a[0], a[1]]; _
 } _
  _
-$##peru|a## = [1, 2, 3]; _
-list($##peru|x##, $##peru|y##) = _
-@<&nbsp;&nbsp;>@first_and_second($a);||##purple|def## ##0000CD|first_and_second##(a): _
-@<&nbsp;&nbsp;>@##purple|return## a[0], a[1] _
+let [x, y] = firstAndSecond([6, 7, 8]); _
+||function first_and_second(&$a) _
+{ _
+@<&nbsp;&nbsp;>@return [$a[0], $a[1]]; _
+} _
  _
-##peru|x##, ##peru|y## = first_and_second([1, 2, 3])||##purple|def## ##0000CD|first_and_second##(a) _
-@<&nbsp;&nbsp;>@##purple|return## a[0], a[1] _
-##purple|end## _
+$a = [6, 7, 8]; _
+list($x, $y) = _
+@<&nbsp;&nbsp;>@first_and_second($a);||def first_and_second(a): _
+@<&nbsp;&nbsp;>@return a[0], a[1] _
  _
-x, y = first_and_second([1, 2, 3])||
+x, y = first_and_second([6, 7, 8])||def first_and_second(a) _
+@<&nbsp;&nbsp;>@return a[0], a[1] _
+end _
+ _
+x, y = first_and_second([6, 7, 8])||
 ||[[# anonymous-func-literal]][#anonymous-func-literal-note anonymous function literal] _
-@<&nbsp;>@||var sqr = function(x) { return x*x; }||$##peru|sqr## = function ($##peru|x##) { _
-@<&nbsp;&nbsp;>@return $##peru|x## * $##peru|x##; _
+@<&nbsp;>@||let square = function (x) { _
+@<&nbsp;&nbsp;>@return x * x; _
+}; _
+ _
+##gray|@@//@@ => new in ES6:## _
+let square = (x) => { return x * x; }; _
+ _
+##gray|@@//@@ expression body variant:## _
+let square = (x) => x * x;||$square = function ($x) { _
+@<&nbsp;&nbsp;>@return $x * $x; _
 };||##gray|# body must be an expression:## _
-##peru|sqr## = ##purple|lambda## x: x * x||sqr = lambda { |x| x * x }||
-||[[# invoke-anonymous-func]][#invoke-anonymous-func-note invoke anonymous function]||sqr(2)||$##peru|sqr##(2)||sqr(2)||sqr.call(2) ##gray|//or//## _
-sqr[2]||
+square = lambda x: x * x||square = lambda { |x| x * x }||
+||[[# invoke-anonymous-func]][#invoke-anonymous-func-note invoke anonymous function]||square(2) _
+ _
+((x) => (x * x)(2)||$square(2)||square(2) _
+ _
+(lambda x: x * x)(2)||square.call(2) _
+ _
+##gray|# alternative syntax:## _
+square[2]||
 ||[[# func-as-val]][#func-as-val-note function as value] _
-@<&nbsp;>@||var func = add;||$##peru|func## = ##maroon|"add"##;||##peru|func## = add||func = lambda { |*args| add(*args) }||
+@<&nbsp;>@||let func = add3;||$func = "add3";||func = add3||func = lambda { |*args| add3(*args) }||
 ||[[# private-state-func]][#private-state-func-note function with private state]||function counter() { _
 @<&nbsp;&nbsp;>@counter.i += 1; _
 @<&nbsp;&nbsp;>@return counter.i; _
 } _
  _
 counter.i = 0; _
-alert(counter());||##purple|function## ##0000CD|counter##() _
+console.log(counter());||function counter() _
 { _
-@<&nbsp;&nbsp;>@##purple|static## $##peru|i## = 0; _
-@<&nbsp;&nbsp;>@##purple|return## ++$##peru|i##; _
+@<&nbsp;&nbsp;>@static $i = 0; _
+@<&nbsp;&nbsp;>@return ++$i; _
 } _
  _
-##purple|echo## counter();||##gray|# state not private:## _
-##purple|def## ##0000CD|counter##(): _
+echo counter();||##gray|# state not private:## _
+def counter(): _
 @<&nbsp;&nbsp;>@counter.i += 1 _
-@<&nbsp;&nbsp;>@##purple|return## counter.i _
+@<&nbsp;&nbsp;>@return counter.i _
  _
 counter.i = 0 _
-##purple|print##(counter())||##gray|//none//##||
-||[[# closure]][#closure-note closure]||function make_counter() { _
-@<&nbsp;&nbsp;>@var i = 0; _
+print(counter())||##gray|//none//##||
+||[[# closure]][#closure-note closure]||function makeCounter () { _
+@<&nbsp;&nbsp;>@let i = 0; _
  _
-@<&nbsp;&nbsp;>@return function() { _
+@<&nbsp;&nbsp;>@return function () { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@i += 1; _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return i; _
-@<&nbsp;&nbsp;>@} _
-}||##purple|function## ##0000CD|make_counter()## _
-{ _
-@<&nbsp;&nbsp;>@$##peru|i## = 0; _
-@<&nbsp;&nbsp;>@##purple|return## function () use (&$##peru|i##) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|return## ++$##peru|i##; _
 @<&nbsp;&nbsp;>@}; _
 } _
  _
-$##peru|nays## = make_counter(); _
-##purple|echo## $##peru|nays##();||##gray|# Python 3:## _
-##purple|def## ##0000CD|make_counter##(): _
+let nays = makeCounter(); _
+console.log(nays());||function make_counter() _
+{ _
+@<&nbsp;&nbsp;>@$i = 0; _
+@<&nbsp;&nbsp;>@return function () use (&$i) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return ++$i; _
+@<&nbsp;&nbsp;>@}; _
+} _
+ _
+$nays = make_counter(); _
+echo $nays();||def make_counter(): _
 @<&nbsp;&nbsp;>@i = 0 _
-@<&nbsp;&nbsp;>@##purple|def## ##0000CD|counter##(): _
+@<&nbsp;&nbsp;>@def counter(): _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|# new in Python 3:## _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@nonlocal i _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@i += 1 _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|return## i _
-@<&nbsp;&nbsp;>@##purple|return## counter _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return i _
+@<&nbsp;&nbsp;>@return counter _
  _
-nays = make_counter()||##purple|def## ##0000CD|make_counter## _
+nays = make_counter() _
+print(nays())||def make_counter _
 @<&nbsp;&nbsp;>@i = 0 _
-@<&nbsp;&nbsp;>@##purple|return## lambda { i +=1; i } _
-##purple|end## _
+@<&nbsp;&nbsp;>@return lambda { i +=1; i } _
+end _
  _
 nays = make_counter _
 puts nays.call||
-||[[# generator]][#generator-note generator]|| ||##gray|# PHP 5.5:## _
-##purple|function## ##mediumblue|make_counter##() { _
-@<&nbsp;&nbsp;>@$##peru|i## = 0; _
-@<&nbsp;&nbsp;>@##purple|while## (1) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|yield## ++$##peru|i##; _
+||[[# generator]][#generator-note generator]||function * makeCounter () { _
+@<&nbsp;&nbsp;>@let i = 0; _
+@<&nbsp;&nbsp;>@while (true) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@yield ++i; _
 @<&nbsp;&nbsp;>@} _
 } _
  _
-$##peru|nays## = make_counter(); _
+let nays = makeCounter(); _
+for (let cnt of nays) { _
+@<&nbsp;&nbsp;>@console.log(cnt); _
+@<&nbsp;&nbsp;>@if (cnt > 100) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@break; _
+@<&nbsp;&nbsp;>@} _
+}||##gray|# PHP 5.5:## _
+function make_counter() { _
+@<&nbsp;&nbsp;>@$i = 0; _
+@<&nbsp;&nbsp;>@while (1) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@yield ++$i; _
+@<&nbsp;&nbsp;>@} _
+} _
+ _
+$nays = make_counter(); _
 ##gray|# does not return a value:## _
-$##peru|nays##->next(); _
+$nays->next(); _
 ##gray|# runs generator if generator has not _
 # yet yielded:## _
-##purple|echo## $##peru|nays##->current();||##gray|# The itertools library contains _
-# standard generators. _
-# c.f. itertools.count()## _
+echo $nays->current();||##gray|# cf. itertools library## _
  _
-##purple|def## ##0000CD|make_counter##(): _
+def make_counter(): _
 @<&nbsp;&nbsp;>@i = 0 _
-@<&nbsp;&nbsp;>@##purple|while True##: _
+@<&nbsp;&nbsp;>@while True: _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@i += 1 _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|yield## i _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@yield i _
  _
-##peru|nays## = make_counter() _
-##purple|print##(nays.next())||##purple|def## ##0000CD|make_counter## _
-@<&nbsp;&nbsp;>@##purple|return## ##green|Fiber##.new ##purple|do## _
+nays = make_counter() _
+##gray|# Python 2: nays.next()## _
+print(next(nays)) _
+ _
+for cnt in nays: _
+@<&nbsp;&nbsp;>@print(cnt) _
+@<&nbsp;&nbsp;>@if cnt > 100: _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@break _
+ _
+##gray|# Returning without yielding raises _
+# StopIteration exception.##||def make_counter _
+@<&nbsp;&nbsp;>@return Fiber.new do _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@i = 0 _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|while## ##peru|true## _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@while true _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@i += 1 _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##green|Fiber##.yield i _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|end## _
-@<&nbsp;&nbsp;>@##purple|end## _
-##purple|end## _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Fiber.yield i _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@end _
+@<&nbsp;&nbsp;>@end _
+end _
  _
 nays = make_counter _
 puts nays.resume||
-||[[# decorator]][#decorator-note decorator]|| || ||##purple|def## ##mediumblue|logcall##(f): _
-@<&nbsp;&nbsp;>@##purple|def## ##mediumblue|wrapper##(*a, **opts): _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|print##(##maroon|'calling '## + f.@@__name__@@) _
+||[[# decorator]][#decorator-note decorator]||##gray|//none//##|| ||def logcall(f): _
+@<&nbsp;&nbsp;>@def wrapper(*a, **opts): _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print('calling ' + f.@@__name__@@) _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@f(*a, **opts) _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|print##(##maroon|'called '## + f.@@__name__@@) _
-@<&nbsp;&nbsp;>@##purple|return## wrapper _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print('called ' + f.@@__name__@@) _
+@<&nbsp;&nbsp;>@return wrapper _
  _
-##green|@logcall## _
-##purple|def## ##mediumblue|square##(x): _
-@<&nbsp;&nbsp;>@##purple|return## x * x|| ||
-||[[# invoke-op-like-func]][#invoke-op-like-func-note invoke operator like function]|| || ||##purple|import## operator _
+@logcall _
+def square(x): _
+@<&nbsp;&nbsp;>@return x * x|| ||
+||[[# invoke-op-like-func]][#invoke-op-like-func-note invoke operator like function]||##gray|//none//##|| ||import operator _
  _
 operator.mul(3, 7) _
  _
-##peru|a## = [##maroon|'foo'##, ##maroon|'bar'##, ##maroon|'baz'##] _
+a = ['foo', 'bar', 'baz'] _
 operator.itemgetter(2)(a)||3.*(7) _
  _
-a = [##maroon|'foo'##, ##maroon|'bar'##, ##maroon|'baz'##] _
+a = ['foo', 'bar', 'baz'] _
 a.[](2)||
 ||||||||||~ [[# execution-control]][#execution-control-note execution control]||
 ||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# if]][#if-note if] _
-@<&nbsp;>@||if (0 == n) { _
-@<&nbsp;&nbsp;>@alert("no hits"); _
-} else if (1 == n) { _
-@<&nbsp;&nbsp;>@alert("1 hit"); _
+@<&nbsp;>@||if (n === 0) { _
+@<&nbsp;&nbsp;>@console.log('no hits'); _
+} else if (n === 1) { _
+@<&nbsp;&nbsp;>@console.log('1 hit'); _
 } else { _
-@<&nbsp;&nbsp;>@alert(n + " hits"); _
-}||##purple|if## ( 0 == $##peru|n## ) { _
-@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"no hits\n"##; _
-} ##purple|elseif## ( 1 == $##peru|n## ) { _
-@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"one hit\n"##; _
-} ##purple|else## { _
-@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"$n hits\n"##; _
-}||##purple|if## 0 == n: _
-@<&nbsp;&nbsp;>@##purple|print##(##maroon|'no hits'##) _
-##purple|elif## 1 == n: _
-@<&nbsp;&nbsp;>@##purple|print##(##maroon|'one hit'##) _
-##purple|else##: _
-@<&nbsp;&nbsp;>@##purple|print##(##purple|str##(n) + ##maroon|' hits'##)||##purple|if## n == 0 _
-@<&nbsp;&nbsp;>@puts ##maroon|"no hits"## _
-##purple|elsif## 1 == n _
-@<&nbsp;&nbsp;>@puts ##maroon|"one hit"## _
-##purple|else## _
-@<&nbsp;&nbsp;>@puts ##maroon|"####peru|#{n}## ##maroon|hits"## _
-##purple|end##||
+@<&nbsp;&nbsp;>@console.log(n + ' hits'); _
+}||if ( 0 == $n ) { _
+@<&nbsp;&nbsp;>@echo "no hits\n"; _
+} elseif ( 1 == $n ) { _
+@<&nbsp;&nbsp;>@echo "one hit\n"; _
+} else { _
+@<&nbsp;&nbsp;>@echo "$n hits\n"; _
+}||if 0 == n: _
+@<&nbsp;&nbsp;>@print('no hits') _
+elif 1 == n: _
+@<&nbsp;&nbsp;>@print('one hit') _
+else: _
+@<&nbsp;&nbsp;>@print(str(n) + ' hits')||if n == 0 _
+@<&nbsp;&nbsp;>@puts "no hits" _
+elsif 1 == n _
+@<&nbsp;&nbsp;>@puts "one hit" _
+else _
+@<&nbsp;&nbsp;>@puts "#{n} hits" _
+end||
 ||[[# switch]][#switch-note switch]||switch (n) { _
 case 0: _
-@<&nbsp;&nbsp;>@alert("no hits\n"); _
+@<&nbsp;&nbsp;>@console.log('no hits\n;); _
 @<&nbsp;&nbsp;>@break; _
 case 1: _
-@<&nbsp;&nbsp;>@alert("one hit\n"); _
+@<&nbsp;&nbsp;>@console.log('one hit\n'); _
 @<&nbsp;&nbsp;>@break; _
 default: _
-@<&nbsp;&nbsp;>@alert(n + " hits\n"); _
-}||##purple|switch## ($##peru|n##) { _
-##purple|case## ##green|0##: _
-@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"no hits\n"##; _
-@<&nbsp;&nbsp;>@##purple|break##; _
-##purple|case## ##green|1##: _
-@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"one hit\n"##; _
-@<&nbsp;&nbsp;>@##purple|break##; _
-##purple|default##: _
-@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"$n hits\n"##; _
-}||##gray|//none//##||##purple|case## n _
-##purple|when## 0 _
-@<&nbsp;&nbsp;>@puts ##maroon|"no hits"## _
-##purple|when## 1 _
-@<&nbsp;&nbsp;>@puts ##maroon|"one hit"## _
-##purple|else## _
-@<&nbsp;&nbsp;>@puts ##maroon|"#{n} hits"## _
-##purple|end##||
+@<&nbsp;&nbsp;>@console.log(n + ' hits\n'); _
+}||switch ($n) { _
+case 0: _
+@<&nbsp;&nbsp;>@echo "no hits\n"; _
+@<&nbsp;&nbsp;>@break; _
+case 1: _
+@<&nbsp;&nbsp;>@echo "one hit\n"; _
+@<&nbsp;&nbsp;>@break; _
+default: _
+@<&nbsp;&nbsp;>@echo "$n hits\n"; _
+}||##gray|//none//##||case n _
+when 0 _
+@<&nbsp;&nbsp;>@puts "no hits" _
+when 1 _
+@<&nbsp;&nbsp;>@puts "one hit" _
+else _
+@<&nbsp;&nbsp;>@puts "#{n} hits" _
+end||
 ||[[# while]][#while-note while] _
 @<&nbsp;>@||while (i < 100) { _
 @<&nbsp;&nbsp;>@i += 1; _
-}|| ##purple|while## ( $##peru|i## < 100 ) { $##peru|i##++; }||##purple|while## i < 100: _
-@<&nbsp;&nbsp;>@i += 1||##purple|while## i < 100 ##purple|do## _
+}|| while ( $i < 100 ) { $i++; }||while i < 100: _
+@<&nbsp;&nbsp;>@i += 1||while i < 100 do _
 @<&nbsp;&nbsp;>@i += 1 _
-##purple|end##||
+end||
 ||[[# for]][#for-note for] _
-@<&nbsp;>@||for (var i = 0; i < 10; i++) { _
-@<&nbsp;&nbsp;>@alert(i); _
-}||##purple|for## ($##peru|i## = 1; $##peru|i## <= 10; $##peru|i##++) { _
-@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"$i\n"##; _
-}||##gray|//none//##||##gray|//none//##||
+@<&nbsp;>@||for (let i = 0; i < 10; ++i) { _
+@<&nbsp;&nbsp;>@console.log(i); _
+}||for ($i = 1; $i <= 10; $i++) { _
+@<&nbsp;&nbsp;>@echo "$i\n"; _
+}||for i in range(1, 11): _
+@<&nbsp;&nbsp;>@print(i)||##gray|//none//##||
 ||[[# break]][#break-note break] _
-@<&nbsp;>@||break||##purple|break##||##purple|break##||##purple|break##||
+@<&nbsp;>@||for (let i = 30; i < 50; ++i) { _
+@<&nbsp;&nbsp;>@if (i % 7 === 0) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@console.log('first multiple: ' + i); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@break; _
+@<&nbsp;&nbsp;>@} _
+}||break||break||break||
 ||[[# continue]][#continue-note continue] _
-@<&nbsp;>@||continue||##purple|continue##||##purple|continue##||##purple|next##||
+@<&nbsp;>@||for (let i = 30; i < 50; ++i) { _
+@<&nbsp;&nbsp;>@if (i % 7 === 0) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@continue; _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@console.log('not divisible: ' + i); _
+}||continue||continue||next||
 ||[[# statement-modifiers]][#statement-modifiers-note statement modifiers] _
-@<&nbsp;>@||##gray|//none//##||##gray|//none//##||##gray|//none//##||puts ##maroon|"positive"## ##purple|if## i > 0 _
-puts ##maroon|"nonzero"## ##purple|unless## i == 0||
+@<&nbsp;>@||##gray|//none//##||##gray|//none//##||##gray|//none//##||puts "positive" if i > 0 _
+puts "nonzero" unless i == 0||
 ||||||||||~ [[# exceptions]][#exceptions-note exceptions]||
 ||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# base-exc]][#base-exc-note base exception]||##gray|//Any value can be thrown.//##||Exception||BaseException _
@@ -1635,37 +1804,36 @@ puts ##maroon|"nonzero"## ##purple|unless## i == 0||
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@RangeException _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@UnderflowException _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@UnexpectedValueException||BaseException _
-@<&nbsp;&nbsp;>@SystemExit _
-@<&nbsp;&nbsp;>@KeyboardInterrupt _
-@<&nbsp;&nbsp;>@GeneratorExit _
 @<&nbsp;&nbsp;>@Exception _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@TypeError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@ImportError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@AssertionError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@ArithmeticError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@FloatingPointError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@OverflowError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@ZeroDivisionError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@SyntaxError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@OSError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@MemoryError _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@StopIteration _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@StandardError _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@BufferError _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@ArithmeticError _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@FloatingPointError _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@OverflowError _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@ZeroDivisionError _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@AssertionError _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@AttributeError _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@EnvironmentError _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@ EOFError _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@ImportError _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@LookupError _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@IndexError _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@KeyError _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@MemoryError _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@NameError _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@ReferenceError _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@RuntimeError _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@NotImplementedError _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@SyntaxError _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@SystemError _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@TypeError _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@ValueError _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@UnicodeError _
- _
-##gray|//Python 3 has a different tree//##||Exception _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Error _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@SystemError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@ValueError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@UnicodeError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@UnicodeEncodeError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@UnicodeDecodeError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@UnicodeTranslateError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@UnsupportedOperation _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@NameError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@AttributeError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@RuntimeError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@LookupError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@IndexError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@KeyError _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@EOFError _
+@<&nbsp;&nbsp;>@GeneratorExit _
+@<&nbsp;&nbsp;>@KeyboardInterrupt _
+@<&nbsp;&nbsp;>@SystemExit||Exception _
 @<&nbsp;&nbsp;>@NoMemoryError _
 @<&nbsp;&nbsp;>@ScriptError _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@LoadError _
@@ -1693,45 +1861,47 @@ puts ##maroon|"nonzero"## ##purple|unless## i == 0||
 @<&nbsp;&nbsp;>@SystemExit _
 @<&nbsp;&nbsp;>@fatal||
 ||[[# raise-exc]][#raise-exc-note raise exception] _
-@<&nbsp;>@||throw new Error("bad arg");||##purple|throw new## ##green|Exception##(##maroon|"bad arg"##);||##purple|raise## ##green|Exception##(##maroon|'bad arg'##)||##gray|# raises RuntimeError## _
-##purple|raise## ##maroon|"bad arg"##||
+@<&nbsp;>@||throw new Error("bad arg");||throw new Exception("bad arg");||raise Exception('bad arg')||##gray|# raises RuntimeError## _
+raise "bad arg"||
 ||[[# catch-all-handler]][#catch-all-handler-note catch-all handler] _
 @<&nbsp;>@||try { _
 @<&nbsp;&nbsp;>@risky(); _
-} _
-catch (e) { _
-@<&nbsp;&nbsp;>@alert("risky failed: " + e.message); _
-}||##purple|try## { _
+} catch (e) { _
+@<&nbsp;&nbsp;>@console.log( _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@'risky failed: ' + e.message); _
+}||try { _
 @<&nbsp;&nbsp;>@risky(); _
-} ##purple|catch## (##green|Exception## $##peru|e##) { _
-@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"risky failed: "##,  _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@$##peru|e##->getMessage(), ##maroon|"\n"##; _
-}||##purple|try##: _
+} catch (Exception $e) { _
+@<&nbsp;&nbsp;>@echo "risky failed: ",  _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@$e->getMessage(), "\n"; _
+}||try: _
 @<&nbsp;&nbsp;>@risky() _
-##purple|except##: _
-@<&nbsp;&nbsp;>@##purple|print##(##maroon|'risky failed'##)||##gray|# catches StandardError## _
-##purple|begin## _
+except: _
+@<&nbsp;&nbsp;>@print('risky failed')||##gray|# catches StandardError## _
+begin _
 @<&nbsp;&nbsp;>@risky _
-##purple|rescue## _
-@<&nbsp;&nbsp;>@print ##maroon|"risky failed: "## _
-@<&nbsp;&nbsp;>@puts ##peru|$!##.message _
-##purple|end##||
+rescue _
+@<&nbsp;&nbsp;>@print "risky failed: " _
+@<&nbsp;&nbsp;>@puts $!.message _
+end||
 ||[[# re-raise-exc]][#re-raise-exc-note re-raise exception]||try { _
 @<&nbsp;&nbsp;>@throw new Error("bam!"); _
-} _
-catch (e) { _
-@<&nbsp;&nbsp;>@alert("re-raising@@...@@"); _
+} catch (e) { _
+@<&nbsp;&nbsp;>@console.log('re-raising@@...@@'); _
 @<&nbsp;&nbsp;>@throw e; _
-}|| ||##purple|try##: _
-@<&nbsp;&nbsp;>@##purple|raise## ##green|Exception##(##maroon|'bam!'##) _
-##purple|except##: _
-@<&nbsp;&nbsp;>@##purple|print##(##maroon|'re-raising@@...@@'##) _
-@<&nbsp;&nbsp;>@##purple|raise##||##purple|begin## _
-@<&nbsp;&nbsp;>@##purple|raise## ##maroon|"bam!"## _
-##purple|rescue## _
-@<&nbsp;&nbsp;>@puts ##maroon|"re-raising..."## _
-@<&nbsp;&nbsp;>@##purple|raise## _
-##purple|end##||
+}|| ||try: _
+@<&nbsp;&nbsp;>@raise Exception('bam!') _
+except: _
+@<&nbsp;&nbsp;>@print('re-raising@@...@@') _
+@<&nbsp;&nbsp;>@raise||begin _
+@<&nbsp;&nbsp;>@raise "bam!" _
+rescue _
+@<&nbsp;&nbsp;>@puts "re-raising..." _
+@<&nbsp;&nbsp;>@raise _
+end _
+ _
+##gray|# if rescue clause raises different exception, _
+# original exception preserved at e.cause##||
 ||[[# last-exc-global]][#last-exc-global-note global variable for last exception]||##gray|//none//##||##gray|//none//##||##gray|//last exception:// sys.exc_info()[1]##||##gray|//last exception:// $!## _
 ##gray|//backtrace array of exc.:// $@## _
 ##gray|//exit status of child:// $?##||
@@ -1739,48 +1909,46 @@ catch (e) { _
 @<&nbsp;&nbsp;>@this.message = msg; _
 } _
  _
-Bam.prototype = new Error;||##purple|class## ##green|Bam## ##purple|extends## ##green|Exception## _
+Bam.prototype = new Error;||class Bam extends Exception _
 { _
-@<&nbsp;&nbsp;>@##purple|function## ##0000CD|@@__@@construct##() _
+@<&nbsp;&nbsp;>@function @@__@@construct() _
 @<&nbsp;&nbsp;>@{ _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##teal|parent##::@@__@@construct(##maroon|"bam!"##); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@parent::@@__@@construct("bam!"); _
 @<&nbsp;&nbsp;>@} _
-}||##purple|class## ##green|Bam##(##green|Exception##): _
-@<&nbsp;&nbsp;>@##purple|def## ##0000CD|@@__init__@@##(##purple|self##): _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|super##(Bam, ##purple|self##).@@__init__@@(##maroon|'bam!'##)||##purple|class## ##green|Bam## < ##green|Exception## _
-@<&nbsp;&nbsp;>@##purple|def## initialize _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|super##(##maroon|"bam!"##) _
-@<&nbsp;&nbsp;>@##purple|end## _
-##purple|end##||
+}||class Bam(Exception): _
+@<&nbsp;&nbsp;>@def @@__init__@@(self): _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@super(Bam, self).@@__init__@@('bam!')||class Bam < Exception _
+@<&nbsp;&nbsp;>@def initialize _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@super("bam!") _
+@<&nbsp;&nbsp;>@end _
+end||
 ||[[# handle-exc]][#handle-exc-note handle exception]||try { _
 @<&nbsp;&nbsp;>@throw new Bam("bam!"); _
-} _
-catch (e) { _
+} catch (e) { _
 @<&nbsp;&nbsp;>@if (e instanceof Bam) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@alert(e.message); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@console.log(e.message); _
 @<&nbsp;&nbsp;>@} _
 @<&nbsp;&nbsp;>@else { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@throw e; _
 @<&nbsp;&nbsp;>@} _
-}||##purple|try## { _
-@<&nbsp;&nbsp;>@##purple|throw new## ##green|Bam##; _
-} ##purple|catch## (##green|Bam## $##peru|e##) { _
-@<&nbsp;&nbsp;>@##purple|echo## $##peru|e##->getMessage(), ##maroon|"\n"##; _
-}||##purple|try##: _
-@<&nbsp;&nbsp;>@##purple|raise## Bam() _
-##purple|except## Bam ##purple|as## e: _
-@<&nbsp;&nbsp;>@##purple|print##(e)||##purple|begin## _
-@<&nbsp;&nbsp;>@##purple|raise## ##green|Bam##.new _
-##purple|rescue## ##green|Bam## => e _
+}||try { _
+@<&nbsp;&nbsp;>@throw new Bam; _
+} catch (Bam $e) { _
+@<&nbsp;&nbsp;>@echo $e->getMessage(), "\n"; _
+}||try: _
+@<&nbsp;&nbsp;>@raise Bam() _
+except Bam as e: _
+@<&nbsp;&nbsp;>@print(e)||begin _
+@<&nbsp;&nbsp;>@raise Bam.new _
+rescue Bam => e _
 @<&nbsp;&nbsp;>@puts e.message _
-##purple|end##||
+end||
 ||[[# finally-block]][#finally-block-note finally block] _
-@<&nbsp;>@||acquire_resource(); _
+@<&nbsp;>@||acquireResource(); _
 try { _
 @<&nbsp;&nbsp;>@risky(); _
-} _
-finally { _
-@<&nbsp;&nbsp;>@release_resource(); _
+} finally { _
+@<&nbsp;&nbsp;>@releaseResource(); _
 }||##gray|//PHP 5.5://## _
 acquire_resource(); _
 try { _
@@ -1789,30 +1957,58 @@ try { _
 finally { _
 @<&nbsp;&nbsp;>@release_resource(); _
 }||acquire_resource() _
-##purple|try##: _
+try: _
 @<&nbsp;&nbsp;>@risky() _
-##purple|finally##: _
+finally: _
 @<&nbsp;&nbsp;>@release_resource()||acquire_resource _
-##purple|begin## _
+begin _
 @<&nbsp;&nbsp;>@risky _
-##purple|ensure## _
+ensure _
 @<&nbsp;&nbsp;>@release_resource _
-##purple|end##||
-||||||||||~ [[# concurrency]][#concurrency-note concurrency]||
+end||
+||||||||||~ [[# threads]][#threads-note threads]||
 ||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# start-thread]][#start-thread-note start thread] _
-@<&nbsp;>@|| ||##gray|//none//##||##purple|class## ##green|sleep10##(threading.Thread): _
-@<&nbsp;&nbsp;>@##purple|def## ##0000CD|run##(##purple|self##): _
+@<&nbsp;>@|| ||##gray|//none//##||class sleep10(threading.Thread): _
+@<&nbsp;&nbsp;>@def run(self): _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@time.sleep(10) _
  _
-##peru|thr## = sleep10() _
-thr.start()|| thr = ##green|Thread##.new { sleep 10 }||
+thr = sleep10() _
+thr.start()|| thr = Thread.new { sleep 10 }||
 ||[[# wait-on-thread]][#wait-on-thread-note wait on thread] _
 @<&nbsp;>@|| || ||thr.join()||thr.join||
-||~ ||~ ##EFEFEF|@@_______________________________________________@@##||~ ##EFEFEF|@@____________________________________________@@##||~ ##EFEFEF|@@_____________________________________________@@##||~ ##EFEFEF|@@_____________________________________________@@##||
+||[[# sleep]][#sleep-note sleep]|| ||##gray|# a float argument will be truncated _
+# to an integer:## _
+sleep(1);||import time _
+ _
+time.sleep(0.5)||sleep(0.5)||
+||[[# timeout]][#timeout-note timeout]|| ||##gray|//use// set_time_limit //to limit execution time of the entire script; use// stream_set_timeout //to limit time spent reading from a stream opened with// fopen //or// fsockopen##||import signal, time _
+ _
+class Timeout(Exception): pass _
+ _
+def timeout_handler(signo, fm): _
+@<&nbsp;&nbsp;>@raise Timeout() _
+ _
+signal.signal(signal.SIGALRM, _
+@<&nbsp;&nbsp;>@timeout_handler) _
+ _
+try: _
+@<&nbsp;&nbsp;>@signal.alarm(5) _
+@<&nbsp;&nbsp;>@might_take_too_long() _
+except Timeout: _
+@<&nbsp;&nbsp;>@pass _
+signal.alarm(0)||require 'timeout' _
+ _
+begin _
+@<&nbsp;&nbsp;>@Timeout.timeout(5) do _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@might_take_too_long _
+@<&nbsp;&nbsp;>@end _
+rescue Timeout::Error _
+end||
+||~ ||~ ##efefef|@@_____________________________________________________@@##||~ ##efefef|@@_____________________________________________________@@##||~ ##efefef|@@_____________________________________________________@@##||~ ##efefef|@@_____________________________________________________@@##||
 
 
-**[[[scripting2|sheet two]]]:** [[[scripting2#streams|streams]]] | [[[scripting2#file|files]]] | [[[scripting2#directories|directories]]] | [[[scripting2#processes-environment|processes and environment]]] | [[[scripting2#option-parsing|option parsing]]] | [[[scripting2#libraries-namespaces|libraries and namespaces]]] | [[[scripting2#objects|objects]]] | [[[scripting2#inheritance-polymorphism|inheritance and polymorphism]]] | [[[scripting2#reflection|reflection]]] | [[[scripting2#net-web|net and web]]] | [[[scripting2#gui|gui]]] | [[[scripting2#unit-tests|unit tests]]] | [[[scripting2#debugging-profiling|debugging and profiling]]] | [[[scripting2#deployment|deployment]]]
+**[[[scripting2|sheet two]]]:** [[[scripting2#streams|streams]]] | [[[scripting2#async|asynchronous events]]] | [[[scripting2#file|files]]] | [[[scripting2#directories|directories]]] | [[[scripting2#processes-environment|processes and environment]]] | [[[scripting2#option-parsing|option parsing]]] | [[[scripting2#libraries-namespaces|libraries and namespaces]]] | [[[scripting2#objects|objects]]] | [[[scripting2#inheritance-polymorphism|inheritance and polymorphism]]] | [[[scripting2#reflection|reflection]]] | [[[scripting2#net-web|net and web]]] | [[[scripting2#gui|gui]]] | [[[scripting2#databases|databases]]] | [[[scripting2#unit-tests|unit tests]]] | [[[scripting2#logging-profiling|logging]]] | [[[scripting2#debugging-profiling|debugging]]]
 
 [[# version-note]]
 + [#version Version]
@@ -1873,6 +2069,10 @@ $ node
 [ 'one', 'two' ]
 
 [[/code]]
+
+**php:**
+
+The {{mbstring}} package adds UTF-8 aware string functions with {{mb_}} prefixes.
 
 **python:**
 
@@ -2023,67 +2223,10 @@ Variables are created by assignment.  If the variable does not have a dollar sig
 
 A lower case name can refer to a local variable or method.  If both are defined, the local variable takes precedence.  To invoke the method make the receiver explicit: e.g. self.//name//.  However, outside of class and modules local variables hide functions because functions are private methods in the class //Object//.  Assignment to //name// will create a local variable if one with that name does not exist, even if there is a method //name//.
 
-[[# local-scope-regions-note]]
-++ [#local-scope-regions regions which define lexical scope]
+[[# file-scope-var-note]]
+++ [#file-scope-var file scope variable]
 
-A list of regions which define a lexical scope for the local variables they contain.
-
-Local variables defined inside the region are only in scope while code within the region is executing.  If the language does not have closures, then code outside the region has no access to local variables defined inside the region.  If the language does have closures, then code inside the region can make local variables accessible to code outside the region by returning a reference.
-
-A region which is //top level// hides local variables in the scope which contains it from the code it contains.  A region can also be top level if the syntax requirements of the language prohibit it from being placed inside another scope defining region.
-
-A region is //nestable// if it can be placed inside another scope defining region, and if code in the inner region can access local variables in the outer region.
-
-**php:**
-
-Only function bodies and method bodies define scope.  Function definitions can be nested, but when this is done lexical variables in the outer function are not visible to code in the body of the inner function.
-
-Braces can be used to set off blocks of codes in a manner similar to the anonymous blocks of Perl.  However, these braces do not define a scope.  Local variables created inside the braces will be visible to subsequent code outside of the braces.
-
-Local variables cannot be created in class bodies.
-
-**python:**
-
-Only functions and methods define scope.  Function definitions can be nested.  When this is done, inner scopes have read access to variables defined in outer scopes.  Attempting to write (i.e. assign) to a variable defined in an outer scope will instead result in a variable getting created in the inner scope.  Python trivia question: what would happen if the following code were executed?
-
-[[code]]
-def foo():
-    v = 1
-    def bar():
-        print(v)
-        v = 2
-        print(v)
-    bar()
-
-foo()
-[[/code]]
-
-**ruby:**
-
-The keywords //if//, //unless//, //case//, //while//, and //until// each define a block which is terminated by an //end// keyword, but none of these blocks have their own scope.
-
-Anonymous functions can be created with the //lambda// keyword.  Ruby anonymous blocks can be provided after a function invocation and are bounded by curly brackets { } or the //do// and //end// keywords.  Both anonymous functions and anonymous blocks can have parameters which are specified at the start of the block within pipes.  Here are some examples:
-
-[[code]]
-id = lambda { |x| x }
-
-[3, 1, 2, 4].sort { |a,b| a <=> b }
-
-10.times do |i|
-  print "#{i}..." 
-end
-[[/code]]
-
-The scope of the parameters of an anonymous block or anonymous function is local to the block or function body.
-
-It is possible to mark variables as local, even when they are already defined in the containing scope.  Such variables are listed inside the parameter pipes, separated from the parameters by a semicolon:
-
-[[code]]
-x = 3
-noop = lambda { |; x| x = 15 }
-noop.call
-# x is still 3
-[[/code]]
+How to define a variable with scope bound by the source file.
 
 [[# global-var-note]]
 ++ [#global-var global variable]
@@ -2290,6 +2433,10 @@ if ($v == NULL) { echo "sadly true"; }
 
 The result of attempting to access an undefined variable.
 
+**python:**
+
+Because a class can implement an {{__eq__}} method to change the implementation of {{v == None}}, the expression can be {{True}} when {{v}} is not {{None}}.
+
 **php:**
 
 PHP does not provide the programmer with a mechanism to distinguish an undefined variable from a variable which has been set to NULL.
@@ -2411,13 +2558,6 @@ is true if and only if each of the following is true
 ++ [#min-max min and max]
 
 How to get the min and max.
-
-[[# three-val-comparison-note]]
-++ [#three-val-comparison three value comparison]
-
-Binary comparison operators which return -1, 0, or 1 depending upon whether the left argument is less than, equal to, or greater than the right argument.
-
-The {{<=>}} symbol is called the spaceship operator.
 
 [[# arith-op-note]]
 ++ [#arith-op arithmetic operators]
@@ -2573,7 +2713,7 @@ hex(42)
 [[# str-type-note]]
 ++ [#str-type string type]
 
-The type or types using for strings.
+The type for a string of Unicode characters.
 
 **php:**
 
@@ -2589,12 +2729,29 @@ There is a mutable {{bytearray}} type and an immutable {{bytes}} type for workin
 
 **ruby:**
 
-The {String}} type supports multibtye characters. All strings have an explicit {{Encoding}}.
+The {{String}} type supports multibtye characters. All strings have an explicit {{Encoding}}.
 
 [[# str-literal-note]]
 ++ [#str-literal string literal]
 
 The syntax for string literals.
+
+**python:**
+
+String literals may have a {{u}} prefix
+
+[[code]]
+u'lorem ipsum'
+u"lorem ipsum"
+u'''lorem
+ipsum'''
+u"""lorem
+ipsum"""
+[[/code]]
+
+In Python 3, these are identical to literals without the {{u}} prefix.
+
+In Python 2, these create {{unicode}} strings instead of {{str}} strings.  Since the Python 2 {{unicode}} type corresponds to the Python 3 {{str}} type, portable code will use the {{u}} prefix.
 
 **ruby:**
 
@@ -2764,6 +2921,22 @@ How to put a string into all caps or all lower case letters.
 
 How to capitalize a string and the words in a string.
 
+The examples lowercase non-initial letters.
+
+**php:**
+
+How to define a UTF-8 aware version of {{ucfirst}}.  This version also puts the rest of the string in lowercase:
+
+[[code]]
+function mb_ucfirst($string, $encoding = "UTF-8")
+{
+    $strlen = mb_strlen($string, $encoding);
+    $firstChar = mb_substr($string, 0, 1, $encoding);
+    $then = mb_substr(mb_strtolower($string), 1, $strlen - 1, $encoding);
+    return mb_strtoupper($firstChar, $encoding) . $then;
+}
+[[/code]]
+
 **ruby:**
 
 Rails monkey patches the {{String}} class with the {{titleize}} method for capitalizing the words in a string.
@@ -2878,6 +3051,21 @@ How to find the index of the leftmost occurrence of a substring in a string; how
 
 How to extract a substring from a string by index.
 
+[[# bytes-type-note]]
+++ [#bytes-type byte array type]
+
+The type for an array of bytes.
+
+[[# bytes-to-str-note]]
+++ [#bytes-to-str byte array to string]
+
+How to convert an array of bytes to a string of Unicode characters.
+
+[[# str-to-bytes-note]]
+++ [#str-to-bytes string to byte array]
+
+How to convert a string of Unicode characters to an array of bytes.
+
 [[# lookup-char-note]]
 ++ [#lookup-char character lookup]
 
@@ -2899,6 +3087,12 @@ How to split a string into an array of single character strings.
 ++ [#translate-char translate characters]
 
 How to apply a character mapping to a string.
+
+**python:**
+
+In Python 2, the string of lowercase letters is in {{string.lowercase}} instead of {{string.ascii_lowercase}}.
+
+In Python 2, the {{maketrans}} function is in the module {{string}} instead of {{str}}.
 
 [[# delete-char-note]]
 ++ [#delete-char delete characters]
@@ -3049,12 +3243,31 @@ re.compile('\w+').findall('do re me')
 re.findall('\w+', 'do re me')
 [[/code]]
 
-[[# char-class-abbrev-note]]
-++ [#char-class-abbrev character class abbreviations]
+[[# ascii-char-class-abbrev-note]]
+++ [#ascii-char-class-abbrev ascii character class abbreviations]
 
 The supported [#regex-char-class-abbrev character class abbreviations].
 
 Note that {{\h}} refers to horizontal whitespace (i.e. a space or tab) in PHP and a hex digit in Ruby.  Similarly {{\H}} refers to something that isn't horizontal whitespace in PHP and isn't a hex digit in Ruby.
+
+[[# unicode-char-class-abbrev-note]]
+++ [#unicode-char-class-abbrev unicode character class abbreviations]
+
+The supported character class abbreviations for sets of Unicode characters.
+
+Each Unicode character belongs to one of these major categories:
+
+||C||Other||
+||L||Letter||
+||M||Mark||
+||N||Number||
+||P||Punctuation||
+||S||Symbol||
+||Z||Separator||
+
+Each major category is subdivided into multiple minor categories.   Each minor category has a two letter code, where the first letter is the major category.  For example, {{Nd}} is "Number, decimal digit".
+
+Download [http://www.unicode.org/Public/UNIDATA/UnicodeData.txt UnicodeData.txt] to find out which major and minor category and character belongs to.
 
 [[# regex-anchors-note]]
 ++ [#regex-anchors anchors]
@@ -3106,10 +3319,19 @@ The lists are not comprehensive.  For all languages except Ruby there are additi
 ##gray|//Ruby://## makes the period . match newline characters.||
 ||o||##gray|//Ruby://## performs variable interpolation #{ } only once per execution of the program.||
 ||s, re.S||##gray|//PHP, Python://## makes the period . match newline characters.||
-||x, re.X||##gray|//all://## ignores whitespace in the regex which permits it to be used for formatting.||
+||x, re.X||##gray|//all://## ignores whitespace (outside of [] character classes) and #-style comments in the regex.||
+
+**python:**
 
 Python modifiers are bit flags.  To use more than one flag at the same time, join them with bit or: |
 
+There are alternative identifiers for the modifiers:
+
+||re.A||re.ASCII||
+||re.I||re.IGNORECASE||
+||re.M||re.MULTILINE||
+||re.S||re.DOTALL||
+||re.X||re.VERBOSE||
 
 [[# subst-note]]
 ++ [#subst substitution]
@@ -3195,9 +3417,9 @@ How to use backreferences in a regex; how to use backreferences in the replaceme
 [[# recursive-regex-note]]
 ++ [#recursive-regex recursive regex]
 
-Examples of recursive regexes.
+An examples of a recursive regex.
 
-The examples match substrings containing balanced parens.
+The example matches substrings containing balanced parens.
 
 [[# dates-time-note]]
 + [#dates-time Date and Time]
@@ -4134,6 +4356,21 @@ fequal(1.0, 1.001, eps=0.01)  # True
 fequal(1.0, 1.001)                 # raises TypeError
 [[/code]]
 
+**ruby:**
+
+In Ruby 2.1 named parameters can be made mandatory:
+
+[[code]]
+def fequals(x, y, eps:)
+  (x - y).abs < eps
+end
+
+# false:
+fequals(1.0, 1.001, eps: 0.1**10)
+# ArgumentError:
+fequals(1.0, 1.001)
+[[/code]]
+
 [[# retval-note]]
 ++ [#retval return value]
 
@@ -4420,8 +4657,100 @@ j -= 1 until j < 0
 [[# base-exc-note]]
 ++ [#base-exc base exception]
 
+The base exception type or class that can be used to catch all exceptions.
+
 [[# predefined-exc-note]]
 ++ [#predefined-exc predefined exceptions]
+
+A list of the more commonly encountered exceptions.
+
+**python:**
+
+Code for inspecting the descendants of a base class:
+
+[[code]]
+def print_class_hierarchy(cls, indent=0):
+    print(' ' * indent, cls.__name__)
+    for subclass in cls.__subclasses__():
+        print_class_hierarchy(subclass, indent + 2)
+[[/code]]
+
+The complete Python 3.5 exception hierarchy:
+
+[[code]]
+BaseException
+  Exception
+    TypeError
+    ImportError
+      ZipImportError
+    AssertionError
+    error
+    ArithmeticError
+      FloatingPointError
+      OverflowError
+      ZeroDivisionError
+    SyntaxError
+      IndentationError
+        TabError
+    OSError
+      BlockingIOError
+      TimeoutError
+      PermissionError
+      FileExistsError
+      ConnectionError
+        BrokenPipeError
+        ConnectionAbortedError
+        ConnectionResetError
+        ConnectionRefusedError
+      NotADirectoryError
+      UnsupportedOperation
+      ChildProcessError
+      IsADirectoryError
+      ItimerError
+      InterruptedError
+      FileNotFoundError
+      ProcessLookupError
+    BufferError
+    ReferenceError
+    MemoryError
+    StopIteration
+    StopAsyncIteration
+    Error
+    SystemError
+      CodecRegistryError
+    ValueError
+      UnicodeError
+        UnicodeEncodeError
+        UnicodeDecodeError
+        UnicodeTranslateError
+      UnsupportedOperation
+    NameError
+      UnboundLocalError
+    AttributeError
+    Warning
+      DeprecationWarning
+      SyntaxWarning
+      FutureWarning
+      RuntimeWarning
+      UserWarning
+      UnicodeWarning
+      BytesWarning
+      PendingDeprecationWarning
+      ResourceWarning
+      ImportWarning
+    RuntimeError
+      RecursionError
+      NotImplementedError
+      _DeadlockError
+    LookupError
+      IndexError
+      KeyError
+      CodecRegistryError
+    EOFError
+  GeneratorExit
+  KeyboardInterrupt
+  SystemExit
+[[/code]]
 
 [[# raise-exc-note]]
 ++ [#raise-exc raise exception]
@@ -4505,8 +4834,8 @@ PHP exceptions when caught must always be assigned a variable name.
 
 A block of statements that is guaranteed to be executed even if an exception is thrown or caught.
 
-[[# concurrency-note]]
-+ [#concurrency Concurrency]
+[[# threads-note]]
++ [#threads Threads]
 
 [[# start-thread-note]]
 ++ [#start-thread start thread]

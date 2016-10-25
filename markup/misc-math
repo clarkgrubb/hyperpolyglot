@@ -315,7 +315,7 @@ quit||##gray|//none//##||
 ||[[# cmd-subst]][#cmd-subst-note command substitution]||ls_output = system("ls")||##gray|//none//##||
 ||||||~ [[# optimization]][#optimization-note optimization]||
 ||~ ||~ gnuplot||~ glpk||
-||linear minimization|| ||var x1; _
+||[[# linear-min]][#linear-min-note linear minimization]|| ||var x1; _
 var x2; _
 var x3; _
  _
@@ -328,7 +328,7 @@ c3: x1 + x3 >= 1; _
 solve; _
 display obj, x1, x2, x3; _
 end;||
-||array of input variables|| ||set I := {1 .. 3}; _
+||[[# decision-var-array]][#decision-vary-array-note decision variable array]|| ||set I := {1 .. 3}; _
 var x{I}; _
  _
 minimize obj: sum{i in I} x[i]; _
@@ -340,7 +340,7 @@ c3: x[1] + x[3] >= 1; _
 solve; _
 display obj, x; _
 end;||
-||linear maximization|| ||set I := {1 .. 3}; _
+||[[# linear-max]][#linear-max-note linear maximization]|| ||set I := {1 .. 3}; _
 var x{I}; _
  _
 maximize obj: sum{i in I} x[i]; _
@@ -352,7 +352,7 @@ c3: x[1] + x[3] <= 1; _
 solve; _
 display obj, x; _
 end;||
-||variable constraints|| ||set I := {1 .. 3}; _
+||[[# var-declaration-constraint]][#var-declaration-constraint-note constraint in variable declaration]|| ||set I := {1 .. 3}; _
 var x{I} >= 0; _
  _
 minimize obj: sum{i in I} x[i]; _
@@ -364,9 +364,10 @@ c3: -x[1] + x[3] >= 1; _
 solve; _
 display obj, x; _
 end;||
-||unbounded behavior|| ||##gray|# Stops execution after solve statement with "LP HAS UNBOUNDED PRIMAL SOLUTION" message.##||
-||infeasible behavior|| ||##gray|# Stops execution after solve statement with "LP HAS NO PRIMAL FEASIBLE SOLUTION" message.##||
-||integer variables|| ||set I := {1 .. 3}; _
+||[[# opt-unbounded-behavior]][#opt-unbounded-behavior-note unbounded behavior] _
+@<&nbsp;>@|| ||##gray|# Stops execution after solve statement with "LP HAS UNBOUNDED PRIMAL SOLUTION" message.##||
+||[[# opt-infeasible-behavior]][#opt-infeasible-behavior-note infeasible behavior]|| ||##gray|# Stops execution after solve statement with "LP HAS NO PRIMAL FEASIBLE SOLUTION" message.##||
+||[[# int-decision-var]][#int-decision-var-note integer decision variable]|| ||set I := {1 .. 3}; _
 var x{I} integer; _
  _
 minimize obj: sum{i in I} x[i]; _
@@ -378,7 +379,7 @@ c3: x[1] + x[3] >= 1; _
 solve; _
 display obj, x; _
 end;||
-||binary variables|| ||set I := {1 .. 3}; _
+||[[# int-binary-var]][#int-binary-var-note binary decision variable]|| ||set I := {1 .. 3}; _
 var x{I} binary; _
  _
 minimize obj: sum{i in I} x[i]; _

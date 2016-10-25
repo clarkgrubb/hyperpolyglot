@@ -1,700 +1,875 @@
 [[# top]]//a side-by-side reference sheet//
 
-**[[[scripting|sheet one]]]:** [[[scripting#grammar-invocation|grammar and invocation]]] | [[[scripting#var-expr|variables and expressions]]] | [[[scripting#arithmetic-logic|arithmetic and logic]]] | [[[scripting#strings|strings]]] | [[[scripting#regexes|regexes]]] | [[[scripting#dates-time|dates and time]]] | [[[scripting#arrays|arrays]]] | [[[scripting#dictionaries|dictionaries]]] | [[[scripting#functions|functions]]] | [[[scripting#execution-control|execution control]]] | [[[scripting#exceptions|exceptions]]] | [[[scripting#concurrency|concurrency]]] 
+**[[[scripting|sheet one]]]:** [[[scripting#grammar-invocation|grammar and invocation]]] | [[[scripting#var-expr|variables and expressions]]] | [[[scripting#arithmetic-logic|arithmetic and logic]]] | [[[scripting#strings|strings]]] | [[[scripting#regexes|regexes]]] | [[[scripting#dates-time|dates and time]]] | [[[scripting#arrays|arrays]]] | [[[scripting#dictionaries|dictionaries]]] | [[[scripting#functions|functions]]] | [[[scripting#execution-control|execution control]]] | [[[scripting#exceptions|exceptions]]] | [[[scripting#threads|threads]]]
 
-**sheet two:** [#streams streams] | [#files files] | [#file-fmt file formats] | [#directories directories ] | [#processes-environment processes and environment] | [#option-parsing option parsing] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#reflection reflection] | [#net-web net and web] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling] | [#java-interop java interop]
+**sheet two:** [#streams streams] | [#async asynchronous events] | [#files files] | [#file-fmt file formats] | [#directories directories ] | [#processes-environment processes and environment] | [#option-parsing option parsing] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#reflection reflection] | [#net-web net and web] | [#databases databases] | [#unit-tests unit tests] | [#logging logging] | [#debugging debugging]
 
 ||||||||||~ [[# streams]][#streams-note streams]||
 ||~  ||~ node.js||~ php||~ python||~ ruby||
-||[[# std-file-handles]][#std-file-handles-note standard file handles]||process.stdin _
-process.stdout _
-process.stderr||##gray|//only set by CLI; not set when reading script from stdin://## _
-##teal|STDIN STDOUT STDERR##||sys.stdin sys.stdout sys.stderr||##peru|$stdin $stdout $stderr##||
-||[[# read-line-stdin]][#read-line-stdin-note read line from stdin] _
-@<&nbsp;>@|| ||$##peru|line## = fgets(##teal|STDIN##);||##peru|line## = sys.stdin.readline()||line = gets||
-||[[# eof]][#eof-note end-of-file behavior]|| ||##gray|//returns string without newline or// FALSE##||##gray|//returns string without newline or// ''##||##gray|//returns non-empty string without newline or raises// EOFError##||
-||[[# chomp]][#chomp-note chomp] _
-@<&nbsp;>@|| ||chop($##peru|line##);||##peru|line## = line.rstrip(##maroon|'\r\n'##)||line.chomp!||
-||[[# write-line-stdout]][#write-line-stdout-note write line to stdout] _
-@<&nbsp;>@||console.log("Hello, World");||##purple|echo## ##maroon|"Hello, World!\n"##;||##purple|print##(##maroon|'Hello, World!'##)||puts ##maroon|"Hello, World!"##||
-||[[# printf]][#printf-note write formatted string to stdout]|| ||printf(##maroon|"%.2f\n"##, ##teal|M_PI##);||##purple|import## math _
+||[[# read-stdin]][#read-stdin-note read from stdin] _
+@<&nbsp;>@||let readline = require('readline'); _
  _
-##purple|print##(##maroon|'%.2f'## % math.pi)||printf(##maroon|"%.2f\n"##, ##green|Math##::##green|PI##)||
-||[[# open-file]][#open-file-note open file for reading] _
-@<&nbsp;>@|| ||$##peru|f## = fopen(##maroon|"/etc/hosts"##, ##maroon|"r"##);||##peru|f##  = ##purple|open##(##maroon|'/etc/hosts'##)||f = ##green|File##.open(##maroon|"/etc/hosts"##)||
-||[[# open-file-write]][#open-file-write-note open file for writing] _
-@<&nbsp;>@||var f = fs.openSync("/tmp/test", "w");||$##peru|f## = fopen(##maroon|"/tmp/test"##, ##maroon|"w"##);||##peru|f## = ##purple|open##(##maroon|'/tmp/test'##, ##maroon|'w'##)||f = ##green|File##.open(##maroon|"/tmp/test"##, ##maroon|"w"##)||
-||[[# file-encoding]][#file-encoding-note set file handle encoding]|| || ||##purple|import## codecs _
+let rl = readline.createInterface({ _
+@<&nbsp;&nbsp;>@input: process.stdin _
+}); _
+rl.on('line', (line) => { _
+@<&nbsp;&nbsp;>@##gray|@@//@@ this code executes once for each line## _
+});||$stdin = fopen('php:@@//@@stdin', 'r'); _
+$line = rtrim(fgets($stdin));||line = sys.stdin.readline() _
+s = line.rstrip('\r\n')||line = gets _
+s = line.chomp||
+||[[# write-stdout]][#write-stdout-note write to stdout] _
+@<&nbsp;>@||console.log('Hello, World!');||echo "Hello, World!\n";||print('Hello, World!') _
  _
-##peru|fin## = codecs.##purple|open##(##maroon|'/tmp/foo'##, _
-@<&nbsp;&nbsp;>@encoding=##maroon|'utf-8'##) _
+sys.stdout.write('Hello, World!\n')||puts "Hello, World!" _
  _
-##peru|fout## = codecs.##purple|open##(##maroon|'/tmp/bar'##, ##maroon|'w'##, _
-@<&nbsp;&nbsp;>@encoding=##maroon|'utf-8'##)||fin = ##green|File##.open(##maroon|"/tmp/foo"##, ##maroon|"r:utf-8"##) _
+$stdout.write("Hello, World!\n")||
+||[[# write-fmt-stdout]][#write-fmt-stdout-note write format to stdout]|| ||printf("%.2f\n", M_PI);||import math _
  _
-fout = ##green|File##.open(##maroon|"/tmp/bar"##, ##maroon|"w:utf-8"##)||
-||[[# open-file-append]][#open-file-append-note open file for appending]|| ||$##peru|f## = fopen(##maroon|"/tmp/test"##, ##maroon|"a"##);||##peru|f## = ##purple|open##(##maroon|'/tmp/err.log'##, ##maroon|'a'##)||f = ##green|File##.open(##maroon|"/tmp/err.log"##, ##maroon|"a"##)||
-||[[# close-file]][#close-file-note close file] _
-@<&nbsp;>@|| ||fclose($##peru|f##);||f.close()||f.close||
-||[[# close-file-implicitly]][#close-file-implicitly-note close file implicitly]|| ||##gray|//none//##||##purple|with open##(##maroon|'/tmp/test'##, ##maroon|'w'##) ##purple|as## f: _
-@<&nbsp;&nbsp;>@f.write(##maroon|'lorem ipsum\n'##)||##green|File##.open(##maroon|"/tmp/test"##, ##maroon|"w"##) ##purple|do## |f| _
-@<&nbsp;&nbsp;>@f.puts(##maroon|"lorem ipsum"##) _
-end||
-||[[# io-err]][#io-err-note i/o error]|| ||##gray|//return false value and write warning to stderr//##||##gray|//raise// IOError //exception//##||##gray|//raise// IOError //or subclass of// SystemCallError //exception//##||
-||[[# encoding-err]][#encoding-err-note encoding error]|| || ||##gray|//raise// UnicodeDecodeError //on read; raise// UnicodeEncodeError //on write//##|| ||
+print('%.2f' % math.pi)||printf("%.2f\n", Math::PI)||
+||[[# write-stderr]][#write-stderr-note write to stderr]||console.error('bam!');||$stderr = fopen('php:@@//@@stderr', 'w'); _
+fwrite($stderr, "bam!\n");||sys.stderr.write('bam!\n')||$stderr.puts "bam!" _
+ _
+$stderr.write("bam!\n")||
+||[[# open-read]][#open-read-note open for reading] _
+@<&nbsp;>@|| ||$f = fopen("/etc/hosts", "r");||f  = open('/etc/hosts', _
+@<&nbsp;&nbsp;>@encoding='utf-8') _
+ _
+##gray|# Python 2: use codecs.open()##||f = File.open("/etc/hosts",  "r:utf-8")||
+||[[# open-read-bytes]][#open-read-bytes-note open for reading bytes]||let fs = require('fs'); _
+ _
+let f = fs.openSync("/etc/hosts", "r");||$f = fopen("/etc/hosts", "r");||f = open('/etc/hosts', 'rb')||f = File.open("/etc/hosts", "rb")||
 ||[[# read-line]][#read-line-note read line] _
-@<&nbsp;>@|| ||$##peru|line## = fgets($##peru|f##);||f.readline()||f.gets||
-||[[# file-iterate]][#file-iterate-note iterate over file by line] _
-@<&nbsp;>@|| ||##purple|while## (!feof($##peru|f##)) { _
-@<&nbsp;&nbsp;>@$##peru|line## = fgets($##peru|f##); _
-@<&nbsp;&nbsp;>@##purple|echo## $##peru|line##; _
-}||##purple|for## line ##purple|in## f: _
-@<&nbsp;&nbsp;>@##purple|print##(line)||f.each ##purple|do## |line| _
+@<&nbsp;>@|| ||$line = fgets($f);||f.readline()||f.gets||
+||[[# iterate-by-line]][#iterate-by-line-note iterate by line] _
+@<&nbsp;>@||const readline = require('readline'); _
+const fs = require('fs'); _
+ _
+let f = fs.createReadStream('/etc/hosts'); _
+const rl = readline.createInterface({ _
+@<&nbsp;&nbsp;>@input: f _
+}); _
+rl.on('line', (line) => { _
+@<&nbsp;&nbsp;>@console.log(line); _
+});||while (!feof($f)) { _
+@<&nbsp;&nbsp;>@$line = fgets($f); _
+@<&nbsp;&nbsp;>@echo $line; _
+}||for line in f: _
+@<&nbsp;&nbsp;>@print(line)||f.each do |line| _
 @<&nbsp;&nbsp;>@print(line) _
-##purple|end##||
-||[[# read-file-array]][#read-file-array-note read file into array of strings]|| ||$##peru|a## = file(##maroon|"/etc/hosts"##);||##peru|a## = f.readlines()||a = f.lines.to_a||
-||[[# read-file-str]][#read-file-str-note read file into string]||var fs = require('fs'); _
+end||
+||[[# read-file-str]][#read-file-str-note read file into string]||let fs = require('fs'); _
  _
-var s = fs.readFileSync('/etc/hosts', 'utf8');||$##peru|s## = file_get_contents( _
-@<&nbsp;&nbsp;>@##maroon|"/etc/hosts"##);||##peru|s## = f.read()||s = f.read||
+let s = fs.readFileSync('/etc/hosts', 'utf8');||$s = file_get_contents( _
+@<&nbsp;&nbsp;>@"/etc/hosts");||s = f.read()||s = f.read||
+||[[# read-file-array]][#read-file-array-note read file into array of strings]|| ||$a = file("/etc/hosts");||a = f.readlines()||a = f.lines.to_a||
+||[[# read-fixed-len]][#read-fixed-len-note read fixed length]||let buf = Buffer.alloc(100); _
+##gray|@@//@@ 3rd arg is offset into buf:## _
+let n = fs.readSync(f, buf, 0, 100); _
+let s = buf.toString('utf-8', 0, n);||$s = fread($f, 100);||s = f.read(100)||s = f.read(100)||
+||[[# read-char]][#read-char-note read char] _
+@<&nbsp;>@|| ||$ch = fread($f, 1);||ch = f.read(1)||ch = f.readchar||
+||[[# read-serialized-data]][#read-serialized-data-note read serialized data]||let fs = require('fs'); _
+ _
+let s = fs.readFileSync("/tmp/data.json"); _
+let data = JSON.parse(s);||$s = file_get_contents("/tmp/data"); _
+$data = unserialize($s);||import pickle _
+ _
+with open('/tmp/data.pickle', 'rb') as f: _
+@<&nbsp;&nbsp;>@data = pickle.load(f)||File.open('/tmp/data.marshal') do |f| _
+@<&nbsp;&nbsp;>@data = Marshal.load(f) _
+end||
+||[[# open-write]][#open-write-note open for writing] _
+@<&nbsp;>@||let fs = require('fs'); _
+ _
+let f = fs.openSync("/tmp/test", "w");||$f = fopen("/tmp/test", "w");||f = open('/tmp/test', 'w' _
+@<&nbsp;&nbsp;>@encoding='utf-8') _
+ _
+##gray|# Python 2: use codecs.open()##||f = File.open("/tmp/test", "w:utf-8")||
+||[[# open-write-bytes]][#open-write-bytes-note open for writing bytes]||let fs = require('fs'); _
+ _
+let f = fs.openSync("/tmp/test", "w");||$f = fopen("/tmp/test", "w");||f = open('/tmp/test', 'wb')||f = File.open("/tmp/test", "wb")||
+||[[# open-append]][#open-append-note open for appending]||et fs = require('fs'); _
+ _
+let f = fs.openSync("/tmp/test", "a");||$f = fopen("/tmp/test", "a");||f = open('/tmp/err.log', 'a')||f = File.open("/tmp/err.log", "a")||
 ||[[# write-str]][#write-str-note write string] _
-@<&nbsp;>@|| ||fwrite($##peru|f##, ##maroon|"lorem ipsum"##); || f.write(##maroon|'lorem ipsum'##)||f.write(##maroon|"lorem ipsum"##)||
-||[[# write-line]][#write-line-note write line] _
-@<&nbsp;>@|| ||fwrite($##peru|f##, ##maroon|"lorem ipsum\n"##);||f.write(##maroon|'lorem ipsum\n'##)||f.puts(##maroon|"lorem ipsum"##)||
-||[[# flush]][#flush-note flush file handle] _
-@<&nbsp;>@|| ||##gray|//CLI output isn't buffered//## _
-fflush($##peru|f##);|| f.flush()||f.flush||
-||[[# eof-test]][#eof-test-note end-of-file test] _
-@<&nbsp;>@|| ||feof($##peru|f##)||##gray|//none//##||f.eof?||
-||[[# seek]][#seek-note file handle position] _
+@<&nbsp;>@||fs.writeSync(f, 'lorem ipsum'); _
  _
-##gray|//get, set//##|| ||ftell($##peru|f##) _
-fseek($##peru|f##, 0);||f.tell() _
+##gray|@@//@@ writeSync() takes String or Buffer arg. _
+@@//@@ A String is encoded as UTF-8.##||fwrite($f, "lorem ipsum"); || f.write('lorem ipsum')||f.write("lorem ipsum")||
+||[[# write-line]][#write-line-note write line] _
+@<&nbsp;>@||fs.writeSync(f, 'lorem ipsum\n');||fwrite($f, "lorem ipsum\n");||f.write('lorem ipsum\n')||f.puts("lorem ipsum")||
+||[[# write-fmt]][#write-fmt-note write format]|| ||fprintf($f, "%.2f\n", M_PI);||import math _
+ _
+f.write('%.2f\n', math.pi)||f.printf("%.2f\n", Math::PI)||
+||[[# write-char]][#write-char-note write char] _
+@<&nbsp;>@|| ||fwrite($f, "A");||f.write('A')||f.putc('A')||
+||[[# write-serialized-data]][#write-serialized-data-note write serialized data]||let fs = require('fs'); _
+ _
+let s = JSON.stringify({foo: [1, 2, 3]}); _
+fs.writeFileSync("/tmp/data.json", s);||$f = fopen("/tmp/data", "w"); _
+$data = ["foo" => [1, 2, 3]]; _
+fwrite($f, serialize($data)); _
+fclose($f);||import pickle _
+ _
+with open('/tmp/data.pickle', 'wb') as f: _
+@<&nbsp;&nbsp;>@pickle.dump({'foo': [1, 2, 3]}, f)||File.open('/tmp/data.marshal', 'w') do |f| _
+@<&nbsp;&nbsp;>@Marshal.dump({'foo': [1, 2, 3]}, f) _
+end||
+||[[# close]][#close-note close] _
+@<&nbsp;>@||fs.closeSync(f);||fclose($f);||f.close()||f.close||
+||[[# close-block-exit]][#close-block-exit-note close on block exit]|| ||##gray|//none//##||with open('/tmp/test', 'w') as f: _
+@<&nbsp;&nbsp;>@f.write('lorem ipsum\n')||File.open("/tmp/test", "w") do |f| _
+@<&nbsp;&nbsp;>@f.puts("lorem ipsum") _
+end||
+||[[# flush]][#flush-note flush] _
+@<&nbsp;>@||##gray|writeSync() //isn't buffered//##||##gray|# CLI output isn't buffered## _
+fflush($f);|| f.flush()||f.flush||
+||[[# seek]][#seek-note position] _
+ _
+##gray|//get, set//##||##gray|@@//@@ no get## _
+ _
+let buf = Buffer.alloc(100); _
+##gray|@@//@@ 5th arg is where in file to start read:## _
+fs.readSync(f, buf, 0, 100, 0); _
+##gray|@@//@@ 3rd arg is where in file to start write:## _
+fs.writeSync(f2, buf, 0);||ftell($f) _
+fseek($f, 0);||f.tell() _
 f.seek(0)||f.tell _
 f.seek(0) _
  _
 f.pos _
 f.pos = 0||
-||[[# tmp-file]][#tmp-file-note open temporary file]|| ||$##peru|f## = tmpfile(); _
+||[[# tmp-file]][#tmp-file-note open temporary file]||##gray|@@//@@ npm install tmp## _
+let tmp = require('tmp'); _
+let fs = require('fs'); _
  _
-fwrite($##peru|f##, ##maroon|"lorem ipsum\n"##); _
- _
+let file = tmp.fileSync(); _
+fs.writeSync(file.fd, 'lorem ipsum'); _
+console.log(@@`@@tmp file: ${file.name}@@`@@); _
+fs.closeSync(file.fd);||$f = tmpfile(); _
+fwrite($f, "lorem ipsum\n"); _
 ##gray|# no way to get file name## _
+fclose($f); _
  _
-fclose($##peru|f##); _
+##gray|# file is removed when file handle is closed##||import tempfile _
  _
-##gray|//file is removed when file handle is closed//##||##purple|import## tempfile _
- _
-##peru|f## = tempfile.NamedTemporaryFile() _
- _
-f.write(##maroon|'lorem ipsum\n'##) _
- _
-##purple|print##(##maroon|"tmp file: %s"## % f.name) _
- _
+f = tempfile.NamedTemporaryFile() _
+f.write('lorem ipsum\n') _
+print("tmp file: %s" % f.name) _
 f.close() _
  _
-##gray|//file is removed when file handle is closed//##||require ##maroon|'tempfile'## _
+##gray|# file is removed when file handle is closed##||require 'tempfile' _
  _
-f = ##green|Tempfile##.new(##maroon|''##) _
- _
-f.puts ##maroon|"lorem ipsum"## _
- _
-puts ##maroon|"tmp file: #{f.path}"## _
- _
+f = Tempfile.new('') _
+f.puts "lorem ipsum" _
+puts "tmp file: #{f.path}" _
 f.close _
  _
-##gray|//file is removed when file handle is garbage-collected or interpreter exits//##||
-||[[# stringio]][#stringio-note in memory file]|| ||$##peru|meg## = 1024 * 1024; _
-$##peru|mem## = ##maroon|"php:@@//@@temp/maxmemory:$meg"##; _
-$##peru|f## = fopen($##peru|mem##, ##maroon|"r+"##); _
-fputs($##peru|f##, ##maroon|"lorem ipsum"##); _
-rewind($##peru|f##); _
-$##peru|s## = fread($##peru|f##, $##peru|meg##);||##purple|from## StringIO ##purple|import## StringIO _
+##gray|# file removed when file handle _
+# garbage-collected or interpreter exits##||
+||[[# open-in-memory-file]][#open-in-memory-file-note open in memory file]|| ||$meg = 1024 * 1024; _
+$mem = "php:@@//@@temp/maxmemory:$meg"; _
+$f = fopen($mem, "r+"); _
+fputs($f, "lorem ipsum"); _
+rewind($f); _
+$s = fread($f, $meg);||import io _
  _
-##peru|f## = StringIO() _
-f.write(##maroon|'lorem ipsum\n'##) _
-##peru|s## = f.getvalue() _
+f = io.StringIO() _
+f.write('lorem ipsum\n') _
+s = f.getvalue() _
  _
-##gray|//Python 3 moved// StringIO //to the// io //module//##||require ##maroon|'stringio'## _
+##gray|# Python2: in StringIO module##||require 'stringio' _
  _
-f = ##green|StringIO##.new _
-f.puts(##maroon|"lorem ipsum"##) _
+f = StringIO.new _
+f.puts("lorem ipsum") _
 f.rewind _
 s = f.read||
+||||||||||~ [[# async]][#async-note asynchronous events]||
+||~  ||~ node.js||~ php||~ python||~ ruby||
+||[[# start-event-loop]][#start-event-loop-note start event loop]|| || ||##gray|# Python 3.4 and later:## _
+import asyncio _
+ _
+asyncio.BaseEventLoop.run_forever()|| ||
+||[[# read-file-async]][#read-file-async-note read file asynchronously]|| || || || ||
+||[[# write-file-async]][#write-file-async-note write file asynchronously]|| || || || ||
+||[[# promise]][#promise-note promise]|| || || || ||
 ||||||||||~ [[# files]][#files-note files]||
 ||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# file-test]][#file-test-note file exists test, file regular test] _
-@<&nbsp;>@||var fs = require('fs'); _
+@<&nbsp;>@||let fs = require('fs'); _
  _
-var qry = fs.existsSync('/etc/hosts'); _
- _
-var stat = fs.statSync('/etc/hosts'); _
-var qry2 = stat.isFile();||file_exists(##maroon|"/etc/hosts"##) _
-is_file(##maroon|"/etc/hosts"##)||os.path.exists(##maroon|'/etc/hosts'##) _
-os.path.isfile(##maroon|'/etc/hosts'##)||##green|File##.exists?(##maroon|"/etc/hosts"##) _
-##green|File##.file?(##maroon|"/etc/hosts"##)||
+let exists = fs.existsSync('/etc/hosts'); _
+let stat = fs.statSync('/etc/hosts'); _
+let regular = stat.isFile();||file_exists("/etc/hosts") _
+is_file("/etc/hosts")||os.path.exists('/etc/hosts') _
+os.path.isfile('/etc/hosts')||File.exists?("/etc/hosts") _
+File.file?("/etc/hosts")||
 ||[[# file-size]][#file-size-note file size] _
-@<&nbsp;>@||var fs = require('fs'); _
+@<&nbsp;>@||let fs = require('fs'); _
  _
-var stat = fs.statSync('/etc/hosts'); _
-var sz = stat.size;||filesize(##maroon|"/etc/hosts"##)||os.path.getsize(##maroon|'/etc/hosts'##)||##green|File##.size(##maroon|"/etc/hosts"##)||
-||[[# readable-writable-executable]][#readable-writable-executable-note is file readable, writable, executable]|| ||is_readable(##maroon|"/etc/hosts"##) _
-is_writable(##maroon|"/etc/hosts"##) _
-is_executable(##maroon|"/etc/hosts"##)||os.access(##maroon|'/etc/hosts'##, os.R_OK) _
-os.access(##maroon|'/etc/hosts'##, os.W_OK) _
-os.access(##maroon|'/etc/hosts'##, os.X_OK)||##green|File##.readable?(##maroon|"/etc/hosts"##) _
-##green|File##.writable?(##maroon|"/etc/hosts"##) _
-##green|File##.executable?(##maroon|"/etc/hosts"##)||
+let stat = fs.statSync('/etc/hosts'); _
+let size = stat.size;||filesize("/etc/hosts")||os.path.getsize('/etc/hosts')||File.size("/etc/hosts")||
+||[[# readable-writable-executable]][#readable-writable-executable-note is file readable, writable, executable]||let fs = require('fs'); _
+ _
+##gray|@@//@@ no return values; exception thrown _
+@@//@@ if not readable, writable, or executable:## _
+fs.accessSync('/etc/hosts', _
+@<&nbsp;&nbsp;>@fs.constants.R_OK); _
+fs.accessSync('/etc/hosts', _
+@<&nbsp;&nbsp;>@fs.constants.W_OK); _
+fs.accessSync('/etc/hosts', _
+@<&nbsp;&nbsp;>@fs.constants.X_OK);||is_readable("/etc/hosts") _
+is_writable("/etc/hosts") _
+is_executable("/etc/hosts")||os.access('/etc/hosts', os.R_OK) _
+os.access('/etc/hosts', os.W_OK) _
+os.access('/etc/hosts', os.X_OK)||File.readable?("/etc/hosts") _
+File.writable?("/etc/hosts") _
+File.executable?("/etc/hosts")||
 ||[[# chmod]][#chmod-note set file permissions] _
-@<&nbsp;>@||var fs = require('fs'); _
+@<&nbsp;>@||let fs = require('fs'); _
  _
-fs.chmodSync('/tmp/foo', _
-@<&nbsp;&nbsp;>@parseInt('755', 8));||chmod(##maroon|"/tmp/foo"##, 0755);||os.chmod(##maroon|'/tmp/foo'##, 0755)||##green|File##.chmod(0755, ##maroon|"/tmp/foo"##)||
-||[[# last-modification-time]][#last-modification-time-note last modification time]||var fs = require('fs'); _
+fs.chmodSync('/tmp/foo', parseInt('755', 8));||chmod("/tmp/foo", 0755);||os.chmod('/tmp/foo', 0755)||File.chmod(0755, "/tmp/foo")||
+||[[# last-modification-time]][#last-modification-time-note last modification time]||let fs = require('fs'); _
  _
-var stat = fs.statSync('/etc/hosts'); _
-var dt = stat.mtime;||##gray|# unix epoch:## _
-$##peru|t## = stat(##maroon|'/etc/passwd'##)[##maroon|'mtime'##]; _
+let stat = fs.statSync('/etc/hosts'); _
+let dt = stat.mtime;||##gray|# unix epoch:## _
+$t = stat('/etc/passwd')['mtime']; _
  _
 ##gray|# DateTime object:## _
-$##peru|t2## = ##purple|new## ##green|DateTime##(##maroon|'UTC'##); _
-$##peru|t2##->setTimestamp($##peru|t##);||##purple|from## datetime ##purple|import## datetime ##purple|as## dt _
+$t2 = new DateTime('UTC'); _
+$t2->setTimestamp($t);||from datetime import datetime as dt _
  _
 ##gray|# unix epoch:## _
-##peru|t## = os.stat(##maroon|'/etc/passwd'##).st_mtime _
+t = os.stat('/etc/passwd').st_mtime _
  _
 ##gray|# datetime object:## _
-##peru|t2## = dt.fromtimestamp(t)||##gray|# Time object:## _
-t2 = ##green|File##.stat(##maroon|'/etc/passwd'##).mtime _
+t2 = dt.fromtimestamp(t)||##gray|# Time object:## _
+t2 = File.stat('/etc/passwd').mtime _
  _
 ##gray|# unix epoch:## _
 t = t2.to_i||
-||[[# file-cp-rm-mv]][#file-cp-rm-mv-note copy file, remove file, rename file]||##gray|# npm install fs-extra## _
-var fs = require('fs-extra'); _
+||[[# file-cp-rm-mv]][#file-cp-rm-mv-note copy file, remove file, rename file]||##gray|@@//@@ npm install fs-extra## _
+let fs = require('fs-extra'); _
  _
 fs.copySync('/tmp/foo', '/tmp/bar'); _
 fs.unlinkSync('/tmp/foo'); _
-fs.renameSync('/tmp/bar', '/tmp/foo');||copy(##maroon|"/tmp/foo"##, ##maroon|"/tmp/bar"##); _
-unlink(##maroon|"/tmp/foo"##); _
-rename(##maroon|"/tmp/bar"##, ##maroon|"/tmp/foo"##);||##purple|import## shutil _
+fs.renameSync('/tmp/bar', '/tmp/foo');||copy("/tmp/foo", "/tmp/bar"); _
+unlink("/tmp/foo"); _
+rename("/tmp/bar", "/tmp/foo");||import shutil _
  _
-shutil.copy(##maroon|'/tmp/foo'##, ##maroon|'/tmp/bar'##) _
-os.remove(##maroon|'/tmp/foo'##) _
-shutil.move(##maroon|'/tmp/bar'##, ##maroon|'/tmp/foo'##)||require ##maroon|'fileutils'## _
+shutil.copy('/tmp/foo', '/tmp/bar') _
+os.remove('/tmp/foo') _
+shutil.move('/tmp/bar', '/tmp/foo')||require 'fileutils' _
  _
-##green|FileUtils##.cp(##maroon|"/tmp/foo"##, ##maroon|"/tmp/bar"##) _
-##green|FileUtils##.rm(##maroon|"/tmp/foo"##) _
-##green|FileUtils##.mv(##maroon|"/tmp/bar"##, ##maroon|"/tmp/foo"##)||
-||[[# symlink]][#symlink-note create symlink, symlink test, readlink]||var fs = require('fs'); _
+FileUtils.cp("/tmp/foo", "/tmp/bar") _
+FileUtils.rm("/tmp/foo") _
+FileUtils.mv("/tmp/bar", "/tmp/foo")||
+||[[# symlink]][#symlink-note create symlink, symlink test, readlink]||let fs = require('fs'); _
  _
-fs.symlinkSync('/etc/hosts', _
-@<&nbsp;&nbsp;>@'/tmp/hosts'); _
-var stat = fs.statSync('/tmp/hosts'); _
-stat.isSymbolicLink(); _
-var path = fs.readlinkSync( _
-@<&nbsp;&nbsp;>@'/tmp/hosts');||symlink(##maroon|"/etc/hosts"##, ##maroon|"/tmp/hosts"##); _
-is_link(##maroon|"/etc/hosts"##) _
-readlink(##maroon|"/tmp/hosts"##)||os.symlink(##maroon|'/etc/hosts'##, ##maroon|'/tmp/hosts'##) _
-os.path.islink(##maroon|'/tmp/hosts'##) _
-os.path.realpath(##maroon|'/tmp/hosts'##)||##green|File##.symlink(##maroon|"/etc/hosts"##, ##maroon|"/tmp/hosts"##) _
-##green|File##.symlink?(##maroon|"/etc/hosts"##) _
-##green|File##.realpath(##maroon|"/tmp/hosts"##)||
-||[[# unused-file-name]][#unused-file-name-note generate unused file name]|| ||$##peru|path## = tempnam(##maroon|"/tmp"##, ##maroon|"foo"##); _
-$##peru|f## = fopen($##peru|path##, ##maroon|"w"##);||##purple|import## tempfile _
+fs.symlinkSync('/etc/hosts', '/tmp/hosts'); _
+let lstat = fs.lstatSync('/tmp/hosts'); _
+let isLink = lstat.isSymbolicLink(); _
+let path = fs.readlinkSync('/tmp/hosts');||symlink("/etc/hosts", "/tmp/hosts"); _
+is_link("/etc/hosts") _
+readlink("/tmp/hosts")||os.symlink('/etc/hosts', '/tmp/hosts') _
+os.path.islink('/tmp/hosts') _
+os.path.realpath('/tmp/hosts')||File.symlink("/etc/hosts", "/tmp/hosts") _
+File.symlink?("/etc/hosts") _
+File.realpath("/tmp/hosts")||
+||[[# unused-file-name]][#unused-file-name-note generate unused file name]||##gray|@@//@@ npm install tempfile## _
+let tempfile = require('tempfile'); _
+let path = tempfile();||$path = tempnam("/tmp", "foo"); _
+$f = fopen($path, "w");||import tempfile _
  _
 f, path = tempfile.mkstemp( _
-@<&nbsp;&nbsp;>@prefix=##maroon|'foo'##, _
-@<&nbsp;&nbsp;>@dir=##maroon|'/tmp'##)|| ||
+@<&nbsp;&nbsp;>@prefix='foo', _
+@<&nbsp;&nbsp;>@dir='/tmp')|| ||
 ||||||||||~ [[# file-fmt]][#file-fmt-note file formats]||
 ||~  ||~ node.js||~ php||~ python||~ ruby||
-||[[# parse-csv]][#parse-csv-note parse csv]||var fs = require('fs'); _
-##gray|# npm install csv## _
-var csv = require('csv'); _
+||[[# parse-csv]][#parse-csv-note parse csv]||let fs = require('fs'); _
+##gray|@@//@@ npm install csv## _
+let csv = require('csv'); _
  _
-var s = fs.readFileSync('no-header.csv'); _
-var a; _
-csv().from.string(s).to.array(function(d) { a = d });||$##peru|f## = fopen(##maroon|"no-header.csv"##, ##maroon|"r"##); _
-##purple|while## (($##peru|row## = fgetcsv($##peru|f##)) != ##teal|FALSE##) { _
-@<&nbsp;&nbsp;>@##purple|echo## implode(##maroon|"\t"##, $##peru|row##) . ##maroon|"\n"##; _
-}||##purple|import## csv _
+let path = 'no-header.csv'; _
+let f = fs.createReadStream(path); _
+f.pipe(csv.parse()).pipe( _
+@<&nbsp;&nbsp;>@csv.transform(function (record) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@console.log(record.join('\t')); _
+@<&nbsp;&nbsp;>@}) _
+);||$f = fopen("no-header.csv", "r"); _
+while (($row = fgetcsv($f)) != FALSE) { _
+@<&nbsp;&nbsp;>@echo implode("\t", $row) . "\n"; _
+}||import csv _
  _
-##purple|with open##(##maroon|'foo.csv'##) ##purple|as## f: _
-@<&nbsp;&nbsp;>@##peru|cr## = csv.reader(f) _
-@<&nbsp;&nbsp;>@##purple|for## row ##purple|in## cr: _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|print##(##maroon|'\t'##.join(row))||require ##maroon|'csv'## _
+with open('foo.csv') as f: _
+@<&nbsp;&nbsp;>@cr = csv.reader(f) _
+@<&nbsp;&nbsp;>@for row in cr: _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print('\t'.join(row))||require 'csv' _
  _
-##green|CSV##.foreach(##maroon|"foo.csv"##) ##purple|do## |row| _
-@<&nbsp;&nbsp;>@puts row.join(##maroon|"\t"##) _
-##purple|end##||
-||[[# generate-csv]][#generate-csv-note generate csv]||##gray|# npm install csv## _
-var csv = require('csv'); _
+CSV.foreach("foo.csv") do |row| _
+@<&nbsp;&nbsp;>@puts row.join("\t") _
+end||
+||[[# generate-csv]][#generate-csv-note generate csv]|| || ||import csv _
  _
-var a = [['one', 'une', 'uno'], _
-['two', 'deux', 'dos']]; _
+with open('foo.csv', 'w') as f: _
+@<&nbsp;&nbsp;>@cw = csv.writer(f) _
+@<&nbsp;&nbsp;>@cw.writerow(['one', 'une', 'uno']) _
+@<&nbsp;&nbsp;>@cw.writerow(['two', 'deux', 'dos'])||require 'csv' _
  _
-var s; _
-csv().from.array(a).to.string(function (o) { s = o; });|| ||##purple|import## csv _
+CSV.open("foo.csv", "w") do |csv| _
+@<&nbsp;&nbsp;>@csv @@<<@@ ["one", "une", "uno"] _
+@<&nbsp;&nbsp;>@csv @@<<@@ ["two", "deux", "dos"] _
+end||
+||[[# parse-json]][#parse-json-note parse json]||let s = '{"t":1,"f":0}'; _
+let data = JSON.parse(s);||$s1 = '{"t":1,"f":0}'; _
+$a1 = json_decode($s1, TRUE);||import json _
  _
-##purple|with open##(##maroon|'foo.csv'##, ##maroon|'w'##) ##purple|as## f: _
-@<&nbsp;&nbsp;>@##peru|cw## = csv.writer(f) _
-@<&nbsp;&nbsp;>@cw.writerow([##maroon|'one'##, ##maroon|'une'##, ##maroon|'uno'##]) _
-@<&nbsp;&nbsp;>@cw.writerow([##maroon|'two'##, ##maroon|'deux'##, ##maroon|'dos'##])||require ##maroon|'csv'## _
+d = json.loads('{"t":1,"f":0}')||require 'json' _
  _
-##green|CSV##.open(##maroon|"foo.csv"##, ##maroon|"w"##) ##purple|do## |csv| _
-@<&nbsp;&nbsp;>@csv @@<<@@ [##maroon|"one"##, ##maroon|"une"##, ##maroon|"uno"##] _
-@<&nbsp;&nbsp;>@csv @@<<@@ [##maroon|"two"##, ##maroon|"deux"##, ##maroon|"dos"##] _
-##purple|end##||
-||[[# parse-json]][#parse-json-note parse json]||var s1 = '{"t":1,"f":0}'; _
-var d1 = JSON.parse(s1);||$##peru|s1## = ##maroon|'{"t":1,"f":0}'##; _
-$##peru|a1## = json_decode($##peru|s1##, ##teal|TRUE##);||##purple|import## json _
+d = JSON.parse('{"t":1,"f":0}')||
+||[[# generate-json]][#generate-json-note generate json]||let data = {'t': 1, 'f': 0}; _
+let s = JSON.stringify(data);||$a2 = array("t" => 1, "f" => 0); _
+$s2 = json_encode($a2);||import json _
  _
-##CD853F|d## = json.loads(##maroon|'{"t":1,"f":0}'##)||require ##maroon|'json'## _
+s = json.dumps({'t': 1, 'f': 0})||require 'json' _
  _
-d = ##green|JSON##.parse(##maroon|'{"t":1,"f":0}'##)||
-||[[# generate-json]][#generate-json-note generate json]||var d2 = {'t': 1, 'f': 0}; _
-var s2 = JSON.stringify(d1);||$##CD853F|a2## = array(##maroon|"t"## => 1, ##maroon|"f"## => 0); _
-$##CD853F|s2## = json_encode($##CD853F|a2##);||##purple|import## json _
- _
-##CD853F|s## = json.dumps({##maroon|'t'##: 1, ##maroon|'f'##: 0})||require ##maroon|'json'## _
- _
-s = {##maroon|'t'## => 1,##maroon|'f'## => 0}.to_json||
+s = {'t' => 1,'f' => 0}.to_json||
 ||[[# parse-yaml]][#parse-yaml-note parse yaml]|| || ||##gray|# sudo pip install PyYAML## _
-##purple|import## yaml _
+import yaml _
  _
-##peru|data## = yaml.safe_load(##maroon|'{f: 0, t: 1}\n'##)||##gray|# sudo gem install safe_yaml## _
-require ##maroon|'safe_yaml'## _
+data = yaml.safe_load('{f: 0, t: 1}\n')||##gray|# sudo gem install safe_yaml## _
+require 'safe_yaml' _
  _
-data = ##green|YAML##.safe_load(##maroon|"---\nt: 1\nf: 0\n"##)||
+data = YAML.safe_load("@@---@@\nt: 1\nf: 0\n")||
 ||[[# generate-yaml]][#generate-yaml-note generate yaml]|| || ||##gray|# sudo pip install PyYAML## _
-##purple|import## yaml _
+import yaml _
  _
-##peru|s## = yaml.safe_dump({##maroon|'t'##: 1, ##maroon|'f'##: 0})||##gray|# sudo gem install safe_yaml## _
+s = yaml.safe_dump({'t': 1, 'f': 0})||##gray|# sudo gem install safe_yaml## _
 require 'safe_yaml' _
  _
 s = YAML.dump({'t' => 1, 'f' => 0})||
 ||[[# parse-xml]][#parse-xml-note parse xml] _
-##gray|//all nodes matching xpath query; first node matching xpath query//##||##gray|# npm install xmldom xpath## _
-var dom = require('xmldom').DOMParser; _
-var xpath = require('xpath'); _
+##gray|//all nodes matching xpath query; first node matching xpath query//##||##gray|@@//@@ npm install xmldom xpath## _
+let dom = require('xmldom').DOMParser; _
+let xpath = require('xpath'); _
  _
-var xml = '<a><b><c ref="3">foo</c></b></a>'; _
-var doc = new dom().parseFromString(xml); _
-var nodes = xpath.select('/a/b/c', doc); _
+let xml = '<a><b><c ref="3">foo</c></b></a>'; _
+let doc = new dom().parseFromString(xml); _
+let nodes = xpath.select('/a/b/c', doc); _
 nodes.length; _
-nodes[0].firstChild.data;||$##CD853F|xml## = ##maroon|"<a><b><c ref='3'>foo</c></b></a>"##; _
+nodes[0].firstChild.data;||$xml = "<a><b><c ref='3'>foo</c></b></a>"; _
  _
 ##gray|# returns NULL and emits warning if not _
 # well-formed:## _
-$##CD853F|doc## = simplexml_load_string($##CD853F|xml##); _
+$doc = simplexml_load_string($xml); _
  _
-$##CD853F|nodes## = $##CD853F|doc##->xpath(##maroon|"/a/b/c"##); _
-##purple|echo## count($##peru|nodes##); _
-##purple|echo## $##CD853F|nodes##[0]; _
+$nodes = $doc->xpath("/a/b/c"); _
+echo count($nodes); _
+echo $nodes[0]; _
  _
-$##peru|node## = $##peru|nodes##[0]; _
-##purple|echo## $##peru|node##; _
-##purple|echo## $##peru|node##[##maroon|"ref"##];||##purple|from## xml.etree ##purple|import## ElementTree _
+$node = $nodes[0]; _
+echo $node; _
+echo $node["ref"];||from xml.etree import ElementTree _
  _
-##CD853F|xml## = ##maroon|'<a><b><c ref="3">foo</c></b></a>'## _
+xml = '<a><b><c ref="3">foo</c></b></a>' _
  _
 ##gray|# raises xml.etree.ElementTree.ParseError _
 # if not well-formed:## _
-##CD853F|doc## = ElementTree.fromstring(xml) _
+doc = ElementTree.fromstring(xml) _
  _
-##peru|nodes## = doc.findall(##maroon|'b/c'##) _
-##purple|print##(len(nodes)) _
-##purple|print##(nodes[0].text) _
+nodes = doc.findall('b/c') _
+print(len(nodes)) _
+print(nodes[0].text) _
  _
-##CD853F|node## = doc.find(##maroon|'b/c'##) _
-##purple|print##(node.text) _
-##purple|print##(node.attrib[##maroon|'ref'##])||require ##maroon|'rexml/document'## _
-include ##green|REXML## _
+node = doc.find('b/c') _
+print(node.text) _
+print(node.attrib['ref'])||require 'rexml/document' _
+include REXML _
  _
-xml = ##maroon|"<a><b><c ref='3'>foo</c></b></a>"## _
+xml = "<a><b><c ref='3'>foo</c></b></a>" _
  _
 ##gray|# raises REXML::ParseException if _
 # not well-formed:## _
-doc = ##green|Document##.new(xml) _
+doc = Document.new(xml) _
  _
-nodes = ##green|XPath##.match(doc,##maroon|"/a/b/c"##) _
+nodes = XPath.match(doc,"/a/b/c") _
 puts nodes.size _
 puts nodes[0].text _
  _
-node = ##green|XPath##.first(doc,##maroon|"/a/b/c"##) _
+node = XPath.first(doc,"/a/b/c") _
 puts node.text _
-puts node.attributes[##maroon|"ref"##]||
-||[[# generate-xml]][#generate-xml-note generate xml]||##gray|# npm install xmlbuilder## _
-var builder = require('xmlbuilder'); _
+puts node.attributes["ref"]||
+||[[# generate-xml]][#generate-xml-note generate xml]||##gray|@@//@@ npm install xmlbuilder## _
+let builder = require('xmlbuilder'); _
  _
-var xml = builder.create('a').ele('b', {id: 123}, 'foo').end();||$##CD853F|xml## = ##maroon|"<a></a>"##; _
-$##CD853F|sxe## = ##purple|new## ##green|SimpleXMLElement##($##CD853F|xml##); _
-$b = $##CD853F|sxe##->addChild(##maroon|"b"##, ##maroon|"foo"##); _
+let xml = builder.create('a').ele('b', {id: 123}, 'foo').end();||$xml = "<a></a>"; _
+$sxe = new SimpleXMLElement($xml); _
+$b = $sxe->addChild("b", "foo"); _
 $b->addAttribute("id", "123"); _
  _
 ##gray|# <a><b id="123">foo</b></a>:## _
-##purple|echo## $##CD853F|sxe##->asXML();||##purple|import## xml.etree.ElementTree ##purple|as## ET _
+echo $sxe->asXML();||import xml.etree.ElementTree as ET _
  _
-##peru|builder## = ET.TreeBuilder() _
-builder.start(##maroon|'a'##, {}) _
-builder.start(##maroon|'b'##, {'id': '123'}) _
-builder.data(##maroon|'foo'##) _
-builder.end(##maroon|'b'##) _
-builder.end(##maroon|'a'##) _
-##peru|et## = builder.close() _
+builder = ET.TreeBuilder() _
+builder.start('a', {}) _
+builder.start('b', {'id': '123'}) _
+builder.data('foo') _
+builder.end('b') _
+builder.end('a') _
+et = builder.close() _
  _
 ##gray|# <a><b id="123">foo</b></a>:## _
 print(ET.tostring(et))||##gray|# gem install builder## _
-require ##maroon|'builder'## _
+require 'builder' _
  _
-builder = ##green|Builder##::##green|XmlMarkup##.new _
-xml = builder.a ##purple|do## |child| _
-@<&nbsp;&nbsp;>@child.b(##maroon|"foo"##, :id=>"123") _
-##purple|end## _
+builder = Builder::XmlMarkup.new _
+xml = builder.a do |child| _
+@<&nbsp;&nbsp;>@child.b("foo", :id=>"123") _
+end _
  _
 ##gray|# <a><b id="123">foo</b></a>:## _
-##purple|puts## xml||
-||[[# parse-html]][#parse-html-note parse html]|| ||$##peru|html## = file_get_contents(##maroon|"foo.html"##); _
-$##peru|doc## = ##purple|new## ##green|DOMDocument##; _
-$##peru|doc##->loadHTML($##peru|html##); _
-$##peru|xpath## = ##purple|new## ##green|DOMXPath##($##peru|doc##); _
+puts xml||
+||[[# parse-html]][#parse-html-note parse html]|| ||$html = file_get_contents("foo.html"); _
+$doc = new DOMDocument; _
+$doc->loadHTML($html); _
+$xpath = new DOMXPath($doc); _
  _
-$##peru|nodes## = $##peru|xpath##->query(##maroon|"@@//@@a/@href"##); _
-##purple|foreach##($##peru|nodes## ##purple|as## $##peru|href##) { _
-@<&nbsp;&nbsp;>@##purple|echo## $##peru|href##->##peru|nodeValue##; _
+$nodes = $xpath->query("@@//@@a/@href"); _
+foreach($nodes as $href) { _
+@<&nbsp;&nbsp;>@echo $href->nodeValue; _
 }||##gray|# pip install beautifulsoup4## _
-##purple|import## bs4 _
+import bs4 _
  _
-##peru|html## = ##purple|open##(##maroon|'foo.html'##).read() _
-##peru|doc## = bs4.BeautifulSoup(html) _
+html = open('foo.html').read() _
+doc = bs4.BeautifulSoup(html) _
  _
-##purple|for## link ##purple|in## doc.find_all(##maroon|'a'##): _
-@<&nbsp;&nbsp;>@print(link.get(##maroon|'href'##))||##gray|# gem install nokogiri## _
-require ##maroon|'nokogiri'## _
+for link in doc.find_all('a'): _
+@<&nbsp;&nbsp;>@print(link.get('href'))||##gray|# gem install nokogiri## _
+require 'nokogiri' _
  _
-html = ##green|File##.open(##maroon|"foo.html"##).read _
-doc = ##green|Nokogiri##::##green|HTML##(html) _
-doc = doc.xpath(##maroon|"@@//@@a"##).each ##purple|do## |link| _
-@<&nbsp;&nbsp;>@puts link[##maroon|"href"##] _
-##purple|end##||
+html = File.open("foo.html").read _
+doc = Nokogiri::HTML(html) _
+doc = doc.xpath("@@//@@a").each do |link| _
+@<&nbsp;&nbsp;>@puts link["href"] _
+end||
 ||||||||||~ [[# directories]][#directories-note directories]||
 ||~  ||~ node.js||~ php||~ python||~ ruby||
-||[[# working-dir]][#working-dir-note working directory]||var old_dir = process.cwd(); _
+||[[# working-dir]][#working-dir-note working directory]||let old_dir = process.cwd(); _
  _
-process.chdir("/tmp");||$##peru|old_dir## = getcwd(); _
+process.chdir("/tmp");||$old_dir = getcwd(); _
  _
-chdir(##maroon|"/tmp"##);||##peru|old_dir## = os.path.abspath(##maroon|'.'##) _
+chdir("/tmp");||old_dir = os.path.abspath('.') _
  _
-os.chdir(##maroon|'/tmp'##)||old_dir = ##green|Dir##.pwd _
+os.chdir('/tmp')||old_dir = Dir.pwd _
  _
-##green|Dir##.chdir(##maroon|"/tmp"##)||
-||[[# build-pathname]][#build-pathname-note build pathname]||var path = require('path'); _
+Dir.chdir("/tmp")||
+||[[# build-pathname]][#build-pathname-note build pathname]||let path = require('path'); _
  _
-path.join('/etc', 'hosts');||##maroon|"/etc"## . ##teal|DIRECTORY_SEPARATOR## . ##maroon|"hosts"##||os.path.join(##maroon|'/etc'##, ##maroon|'hosts'##)||##green|File##.join(##maroon|"/etc"##, ##maroon|"hosts"##)||
-||[[# dirname-basename]][#dirname-basename-note dirname and basename]||var path = require('path'); _
+path.join('/etc', 'hosts');||"/etc" . DIRECTORY_SEPARATOR . "hosts"||os.path.join('/etc', 'hosts')||File.join("/etc", "hosts")||
+||[[# dirname-basename]][#dirname-basename-note dirname and basename]||let path = require('path'); _
  _
 path.dirname('/etc/hosts') _
-path.basename('/etc/hosts')||dirname(##maroon|"/etc/hosts"##) _
-basename(##maroon|"/etc/hosts"##)||os.path.dirname(##maroon|'/etc/hosts'##) _
-os.path.basename(##maroon|'/etc/hosts'##)||##green|File##.dirname(##maroon|"/etc/hosts"##) _
-##green|File##.basename(##maroon|"/etc/hosts"##)||
+path.basename('/etc/hosts')||dirname("/etc/hosts") _
+basename("/etc/hosts")||os.path.dirname('/etc/hosts') _
+os.path.basename('/etc/hosts')||File.dirname("/etc/hosts") _
+File.basename("/etc/hosts")||
 ||[[# absolute-pathname]][#absolute-pathname-note absolute pathname] _
 ##gray|//and tilde expansion//##|| ||##gray|# file must exist; symbolic links are _
 # resolved: ## _
-realpath(##maroon|"foo"##)  _
-realpath(##maroon|"/foo"##)  _
-realpath(##maroon|"../foo"##) _
-realpath(##maroon|"./foo"##) _
+realpath("foo")  _
+realpath("/foo")  _
+realpath("../foo") _
+realpath("./foo") _
 ##gray|# no function for tilde expansion##||##gray|# symbolic links are not resolved: ## _
-os.path.abspath(##maroon|'foo'##) _
-os.path.abspath(##maroon|'/foo'##) _
-os.path.abspath(##maroon|'../foo'##) _
-os.path.abspath(##maroon|'./foo'##) _
-os.path.expanduser(##maroon|'~/foo'##)||##gray|# symbolic links are not resolved: ## _
-##green|File##.expand_path(##maroon|"foo"##) _
-##green|File##.expand_path(##maroon|"/foo"##) _
-##green|File##.expand_path(##maroon|"../foo"##) _
-##green|File##.expand_path(##maroon|"./foo"##) _
-##green|File##.expand_path(##maroon|"~/foo"##)||
-||[[# dir-iterate]][#dir-iterate-note iterate over directory by file]||var fs = require('fs'); _
+os.path.abspath('foo') _
+os.path.abspath('/foo') _
+os.path.abspath('../foo') _
+os.path.abspath('./foo') _
+os.path.expanduser('~/foo')||##gray|# symbolic links are not resolved: ## _
+File.expand_path("foo") _
+File.expand_path("/foo") _
+File.expand_path("../foo") _
+File.expand_path("./foo") _
+File.expand_path("~/foo")||
+||[[# dir-iterate]][#dir-iterate-note iterate over directory by file]||let fs = require('fs'); _
  _
 fs.readdirSync('/etc').forEach( _
 @<&nbsp;&nbsp;>@function(s) { console.log(s); } _
-);||if ($##peru|dir## = opendir(##maroon|"/etc"##)) { _
-@<&nbsp;&nbsp;>@##purple|while## ($##peru|file## = readdir($##peru|dir##)) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"$file\n"##; _
+);||if ($dir = opendir("/etc")) { _
+@<&nbsp;&nbsp;>@while ($file = readdir($dir)) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@echo "$file\n"; _
 @<&nbsp;&nbsp;>@} _
-@<&nbsp;&nbsp;>@closedir($##peru|dir##); _
-}||##purple|for## filename ##purple|in## os.listdir(##maroon|'/etc'##): _
-@<&nbsp;&nbsp;>@##purple|print##(filename)||##green|Dir##.open(##maroon|"/etc"##).each ##purple|do## |file| _
+@<&nbsp;&nbsp;>@closedir($dir); _
+}||for filename in os.listdir('/etc'): _
+@<&nbsp;&nbsp;>@print(filename)||Dir.open("/etc").each do |file| _
 @<&nbsp;&nbsp;>@puts file _
-##purple|end##||
-||[[# glob]][#glob-note glob paths]|| ||##purple|foreach## (glob(##maroon|"/etc/*"##) ##purple|as## $##peru|file##) { _
-@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"$file\n"##; _
-}||##purple|import## glob _
+end||
+||[[# glob]][#glob-note glob paths]|| ||foreach (glob("/etc/*") as $file) { _
+@<&nbsp;&nbsp;>@echo "$file\n"; _
+}||import glob _
  _
-##purple|for## path ##purple|in## glob.glob(##maroon|'/etc/*'##): _
-@<&nbsp;&nbsp;>@##purple|print##(path)||##green|Dir##.glob(##maroon|"/etc/*"##).each ##purple|do## |path| _
+for path in glob.glob('/etc/*'): _
+@<&nbsp;&nbsp;>@print(path)||Dir.glob("/etc/*").each do |path| _
 @<&nbsp;&nbsp;>@puts path _
-##purple|end##||
-||[[# mkdir]][#mkdir-note make directory]|| ||mkdir(##maroon|"/tmp/foo/bar"##, 0755, ##teal|TRUE##);||##peru|dirname## = ##maroon|'/tmp/foo/bar'## _
-##purple|if not## os.path.isdir(dirname): _
-@<&nbsp;&nbsp;>@os.makedirs(dirname)||require ##maroon|'fileutils'## _
+end||
+||[[# mkdir]][#mkdir-note make directory]|| ||mkdir("/tmp/foo/bar", 0755, TRUE);||dirname = '/tmp/foo/bar' _
+if not os.path.isdir(dirname): _
+@<&nbsp;&nbsp;>@os.makedirs(dirname)||require 'fileutils' _
  _
-##green|FileUtils##.mkdir_p(##maroon|"/tmp/foo/bar"##)||
-||[[# recursive-cp]][#recursive-cp-note recursive copy]|| ||##gray|//none//##||##purple|import## shutil _
+FileUtils.mkdir_p("/tmp/foo/bar")||
+||[[# recursive-cp]][#recursive-cp-note recursive copy]|| ||##gray|//none//##||import shutil _
  _
-shutil.copytree(##maroon|'/tmp/foodir'##, _
-@<&nbsp;&nbsp;>@##maroon|'/tmp/bardir'##)||require ##maroon|'fileutils'## _
+shutil.copytree('/tmp/foodir', _
+@<&nbsp;&nbsp;>@'/tmp/bardir')||require 'fileutils' _
  _
-##green|FileUtils##.cp_r(##maroon|"/tmp/foodir"##, _
+FileUtils.cp_r("/tmp/foodir", _
 @<&nbsp;&nbsp;>@"/tmp/bardir")||
-||[[# rmdir]][#rmdir-note remove empty directory]|| ||rmdir(##maroon|"/tmp/foodir"##);||os.rmdir(##maroon|'/tmp/foodir'##)||##green|File##.rmdir(##maroon|"/tmp/foodir"##)||
-||[[# rm-rf]][#rm-rf-note remove directory and contents]|| ||##gray|//none//##||##purple|import## shutil _
+||[[# rmdir]][#rmdir-note remove empty directory]|| ||rmdir("/tmp/foodir");||os.rmdir('/tmp/foodir')||File.rmdir("/tmp/foodir")||
+||[[# rm-rf]][#rm-rf-note remove directory and contents]|| ||##gray|//none//##||import shutil _
  _
-shutil.rmtree(##maroon|'/tmp/foodir'##)||require ##maroon|'fileutils'## _
+shutil.rmtree('/tmp/foodir')||require 'fileutils' _
  _
-##green|FileUtils##.rm_rf(##maroon|"/tmp/foodir"##)||
+FileUtils.rm_rf("/tmp/foodir")||
 ||[[# dir-test]][#dir-test-note directory test] _
-@<&nbsp;>@|| ||is_dir(##maroon|"/tmp"##)||os.path.isdir(##maroon|'/tmp'##)||##green|File##.directory?(##maroon|"/tmp"##)||
-||[[# unused-dir]][#unused-dir-note generate unused directory]|| || ||##purple|import## tempfile _
+@<&nbsp;>@|| ||is_dir("/tmp")||os.path.isdir('/tmp')||File.directory?("/tmp")||
+||[[# unused-dir]][#unused-dir-note generate unused directory]|| || ||import tempfile _
  _
-##peru|path## = tempfile.mkdtemp(dir=##maroon|'/tmp'##, _
-@<&nbsp;&nbsp;>@prefix=##maroon|'foo'##)||require ##maroon|'tmpdir'## _
+path = tempfile.mkdtemp(dir='/tmp', _
+@<&nbsp;&nbsp;>@prefix='foo')||require 'tmpdir' _
  _
-path = ##green|Dir##.mktmpdir(##maroon|"/tmp/foo"##)||
-||[[# system-tmp-dir]][#system-tmp-dir-note system temporary file directory]|| ||sys_get_temp_dir()||##purple|import## tempfile _
+path = Dir.mktmpdir("/tmp/foo")||
+||[[# system-tmp-dir]][#system-tmp-dir-note system temporary file directory]|| ||sys_get_temp_dir()||import tempfile _
  _
-tempfile.gettempdir()||require ##maroon|'tmpdir'## _
+tempfile.gettempdir()||require 'tmpdir' _
  _
-##green|Dir##.tmpdir||
+Dir.tmpdir||
 ||||||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
 ||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# cmd-line-arg]][#cmd-line-arg-note command line arguments] _
 ##gray|//and script name//##||process.argv.slice(2) _
 process.argv[1] _
-##gray|@@//@@ process.argv[0] contains "node"##||$##peru|argv## _
-$##teal|_SERVER##[##maroon|"SCRIPT_NAME"##]||sys.argv[1:] _
-sys.argv[0]||##green|ARGV## _
-##green|$PROGRAM_NAME##||
+##gray|@@//@@ process.argv[0] contains "node"##||$argv _
+$_SERVER["SCRIPT_NAME"]||sys.argv[1:] _
+sys.argv[0]||ARGV _
+$PROGRAM_NAME||
 ||[[# env-var]][#env-var-note environment variable] _
  _
 ##gray|//get, set//##||process.env["HOME"] _
  _
-process.env["PATH"] = "/bin";||getenv(##maroon|"HOME"##) _
+process.env["PATH"] = "/bin";||getenv("HOME") _
  _
-putenv(##maroon|"PATH=/bin"##);||os.getenv(##maroon|'HOME'##) _
+putenv("PATH=/bin");||os.getenv('HOME') _
  _
-os.environ[##maroon|'PATH'##] = ##maroon|'/bin'##||##green|ENV##[##maroon|"HOME"##] _
+os.environ['PATH'] = '/bin'||ENV["HOME"] _
  _
-##green|ENV##[##maroon|"PATH"##] = ##maroon|"/bin"##||
+ENV["PATH"] = "/bin"||
 ||[[# pid]][#pid-note get pid, parent pid]||process.pid _
 ##gray|//none//##||posix_getpid() _
 posix_getppid()||os.getpid() _
-os.getppid()||##green|Process##.pid _
-##green|Process##.ppid||
-||[[# user-id-name]][#user-id-name-note user id and name]|| ||$##peru|uid## = posix_getuid(); _
-$##peru|uinfo## = posix_getpwuid($##peru|uid##); _
-$##peru|username## = $##peru|uinfo##[##maroon|"name"##];||##purple|import## getpass _
+os.getppid()||Process.pid _
+Process.ppid||
+||[[# user-id-name]][#user-id-name-note user id and name]|| ||$uid = posix_getuid(); _
+$uinfo = posix_getpwuid($uid); _
+$username = $uinfo["name"];||import getpass _
  _
 os.getuid() _
-getpass.getuser()||require ##maroon|'etc'## _
+getpass.getuser()||require 'etc' _
  _
-##green|Process##.uid _
-##green|Etc##.getpwuid(##green|Process##.uid)[##maroon|"name"##]||
+Process.uid _
+Etc.getpwuid(Process.uid)["name"]||
 ||[[# exit]][#exit-note exit] _
-@<&nbsp;>@||process.exit(0);||##purple|exit##(0);||sys.exit(0)||exit(0)||
+@<&nbsp;>@||process.exit(0);||exit(0);||sys.exit(0)||exit(0)||
 ||[[# signal-handler]][#signal-handler-note set signal handler] _
-@<&nbsp;>@|| || ||##purple|import## signal _
+@<&nbsp;>@|| || ||import signal _
  _
-##purple|def## ##0000CD|handler##(signo, frame): _
-@<&nbsp;&nbsp;>@##purple|print##(##maroon|'exiting@@...@@'##) _
-@<&nbsp;&nbsp;>@##purple|sys.exit##(1) _
+def handler(signo, frame): _
+@<&nbsp;&nbsp;>@print('exiting@@...@@') _
+@<&nbsp;&nbsp;>@sys.exit(1) _
  _
- signal.signal(signal.SIGINT, handler)||##green|Signal##.trap(##maroon|"INT"##, _
-@<&nbsp;&nbsp;>@lambda ##purple|do## |signo| _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@puts ##maroon|"exiting@@...@@"## _
+ signal.signal(signal.SIGINT, handler)||Signal.trap("INT", _
+@<&nbsp;&nbsp;>@lambda do |signo| _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@puts "exiting@@...@@" _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@exit 1 _
-@<&nbsp;&nbsp;>@##purple|end## _
+@<&nbsp;&nbsp;>@end _
 )||
 ||[[# external-cmd]][#external-cmd-note external command] _
-@<&nbsp;>@|| ||system(##maroon|"ls -l /tmp"##, $##peru|retval##); _
-##purple|if## ($##peru|retval##) { _
-@<&nbsp;&nbsp;>@##purple|throw## ##purple|new## ##green|Exception##(##maroon|"ls failed"##); _
-}||##purple|if## os.system(##maroon|'ls -l /tmp'##): _
-@<&nbsp;&nbsp;>@##purple|raise## ##green|Exception##(##maroon|'ls failed'##)||##purple|unless## system(##maroon|"ls -l /tmp"##) _
-@<&nbsp;&nbsp;>@##purple|raise## ##maroon|"ls failed"## _
-##purple|end##||
+@<&nbsp;>@|| ||system("ls -l /tmp", $retval); _
+if ($retval) { _
+@<&nbsp;&nbsp;>@throw new Exception("ls failed"); _
+}||if os.system('ls -l /tmp'): _
+@<&nbsp;&nbsp;>@raise Exception('ls failed')||unless system("ls -l /tmp") _
+@<&nbsp;&nbsp;>@raise "ls failed" _
+end||
 ||[[# shell-esc-external-cmd]][#shell-esc-external-cmd-note shell-escaped external command] _
-@<&nbsp;>@|| ||$##peru|path## = chop(fgets(##teal|STDIN##)); _
-$##peru|safe## = escapeshellarg($##peru|path##); _
-system("ls -l " . $##peru|safe##, $##peru|retval##); _
-##purple|if## ($##peru|retval##) { _
-@<&nbsp;&nbsp;>@##purple|throw## ##purple|new## ##green|Exception##(##maroon|"ls failed"##); _
-}||##purple|import## subprocess _
+@<&nbsp;>@|| ||$path = chop(fgets(STDIN)); _
+$safe = escapeshellarg($path); _
+system("ls -l " . $safe, $retval); _
+if ($retval) { _
+@<&nbsp;&nbsp;>@throw new Exception("ls failed"); _
+}||import subprocess _
  _
-##peru|cmd## = [##maroon|'ls'##, ##maroon|'-l'##, ##maroon|'/tmp'##] _
-##purple|if## subprocess.call(cmd): _
-@<&nbsp;&nbsp;>@##purple|raise## ##green|Exception##(##maroon|'ls failed'##)||path = gets _
+cmd = ['ls', '-l', '/tmp'] _
+if subprocess.call(cmd): _
+@<&nbsp;&nbsp;>@raise Exception('ls failed')||path = gets _
 path.chomp! _
-##purple|unless## system(##maroon|"ls"##, ##maroon|"-l"##, path) _
-@<&nbsp;&nbsp;>@##purple|raise## ##maroon|"ls failed"## _
-##purple|end##||
+unless system("ls", "-l", path) _
+@<&nbsp;&nbsp;>@raise "ls failed" _
+end||
 ||[[# cmd-subst]][#cmd-subst-note command substitution] _
-@<&nbsp;>@|| ||$##peru|files## = ##maroon|@@`@@ls -l /tmp@@`@@##;||##purple|import## subprocess _
+@<&nbsp;>@|| ||$files = @@`@@ls -l /tmp@@`@@;||import subprocess _
  _
-##peru|cmd## = [##maroon|'ls'##, ##maroon|'-l'##, ##maroon|'/tmp'##] _
-##peru|files## = subprocess.check_output(cmd)||files = ##maroon|@@`@@ls -l /tmp@@`@@## _
-##purple|unless## ##peru|$?##.success? _
-@<&nbsp;&nbsp;>@##purple|raise## ##maroon|"ls failed"## _
-##purple|end## _
+cmd = ['ls', '-l', '/tmp'] _
+files = subprocess.check_output(cmd)||files = @@`@@ls -l /tmp@@`@@ _
+unless $?.success? _
+@<&nbsp;&nbsp;>@raise "ls failed" _
+end _
  _
 files = %x(ls) _
-##purple|unless## ##peru|$?##.success? _
-@<&nbsp;&nbsp;>@##purple|raise## ##maroon|"ls failed"## _
-##purple|end##||
+unless $?.success? _
+@<&nbsp;&nbsp;>@raise "ls failed" _
+end||
 ||||||||||~ [[# option-parsing]][#option-parsing-note option parsing]||
 ||~  ||~ node.js||~ php||~ python||~ ruby||
-||[[# cmd-line-options]][#cmd-line-options-note command line options] _
-##gray|//boolean option, option with argument, usage//##||##gray|@@//@@ $ npm install commander## _
+||boolean flag||##gray|@@//@@ npm install commander## _
 program = require('commander'); _
  _
-program.option('-f, --file <file>') _
-@<&nbsp;&nbsp;>@.option('-v, --verbose') _
+program.option('-v, @@--@@verbose') _
 @<&nbsp;&nbsp;>@.parse(process.argv); _
  _
-var file = program.file; _
-var verbose = program.verbose; _
+let verbose = program.verbose;||$opts = getopt("v", ["verbose"]); _
  _
-##gray|@@//@@ The flags -h and @@--@@help are generated _
-@@//@@ automatically. _
-@@//@@ _
-@@//@@ Processing stops at the first positional _
-@@//@@ argument. _
-@@//@@  _
-@@//@@ Positional arguments are available _
-@@//@@ in program.args.##||$##peru|usage## = ##maroon|"usage: "## . _
-@<&nbsp;&nbsp;>@$##teal|_SERVER##[##maroon|"SCRIPT_NAME"##] . _
-@<&nbsp;&nbsp;>@##maroon|" [-f FILE] [-v] [ARG @@...@@]\n"##; _
+if (array_key_exists("v", $opts) @@||@@ _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@array_key_exists("verbose", $opts)) { _
+@<&nbsp;&nbsp;>@$verbose = TRUE; _
+}||import argparse _
  _
-$##peru|opts## = getopt(##maroon|"f:hv"##, _
-@<&nbsp;&nbsp;>@array(##maroon|"file:"##, ##maroon|"help"##, ##maroon|"verbose"##)); _
+parser = argparse.ArgumentParser() _
+parser.add_argument('@@--@@verbose', '-v', _
+@<&nbsp;&nbsp;>@dest='verbose', _
+@<&nbsp;&nbsp;>@action='store_true') _
+args = parser.parse_args() _
  _
-##purple|if## (array_key_exists(##maroon|"h"##, $##peru|opts##) @@||@@ _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@array_key_exists(##maroon|"help"##, $##peru|opts##)) { _
-@<&nbsp;&nbsp;>@##purple|echo## $##peru|usage##; _
-@<&nbsp;&nbsp;>@##purple|exit##(0); _
-} _
+if args.verbose: _
+@<&nbsp;&nbsp;>@print('Setting output to verbose.')||require 'optparse' _
  _
-$##peru|file## = $##peru|opts##[##maroon|"f"##] ? $##peru|opts##[##maroon|"f"##] : _
-@<&nbsp;&nbsp;>@$##peru|opts##[##maroon|"file"##]; _
+options = {} _
+OptionParser.new do |opts| _
+@<&nbsp;&nbsp;>@opts.on('-v', '@@--@@verbose') do |arg| _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@options[:verbose] = arg _
+@<&nbsp;&nbsp;>@end _
+end.parse! _
  _
-##purple|if## (array_key_exists(##maroon|"v"##, $##peru|opts##) @@||@@ _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@array_key_exists(##maroon|"verbose"##, $##peru|opts##)) { _
-@<&nbsp;&nbsp;>@$##peru|verbose## = ##teal|TRUE##; _
-} _
+verbose = options[:verbose]||
+||string option||##gray|@@//@@ npm install commander## _
+program = require('commander'); _
  _
-##gray|# Processing stops at first positional _
-# argument. _
+program.option('-f, @@--@@file <file>') _
+@<&nbsp;&nbsp;>@.parse(process.argv); _
+ _
+let file = program.file;||$opts = getopt("f:", ["file:"]); _
+ _
+$file = $opts["f"] ? $opts["f"] : _
+@<&nbsp;&nbsp;>@$opts["file"];||import argparse _
+ _
+parser = argparse.ArgumentParser() _
+parser.add_argument('@@--@@input', '-i', _
+@<&nbsp;&nbsp;>@dest='input') _
+args = parser.parse_args() _
+ _
+if args.input: _
+@<&nbsp;&nbsp;>@f = open(args.input) _
+else: _
+@<&nbsp;&nbsp;>@f = sys.stdin||require 'optparse' _
+ _
+options = {} _
+OptionParser.new do |opts| _
+@<&nbsp;&nbsp;>@opts.on('-i', '@@--@@input PATH') do |arg| _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@options[:input] = arg _
+@<&nbsp;&nbsp;>@end _
+end.parse! _
+ _
+if options[:input].nil? _
+@<&nbsp;&nbsp;>@f = $stdin _
+else _
+@<&nbsp;&nbsp;>@f = File.open(options[:input]) _
+end||
+||numeric option|| || ||import argparse _
+ _
+parser = argparse.ArgumentParser() _
+parser.add_argument('@@--@@count', '-c', _
+@<&nbsp;&nbsp;>@dest='count', type=int) _
+parser.add_argument('@@--@@ratio', '-r', _
+@<&nbsp;&nbsp;>@dest='ratio', type=float) _
+args = parser.parse_args() _
+ _
+if args.count: _
+@<&nbsp;&nbsp;>@print('Count: %d' % args.count) _
+if args.ratio: _
+@<&nbsp;&nbsp;>@print('Ratio: %.3f' % args.ratio)|| ||
+||unrecognized option behavior|| ||##gray|# Unrecognized options are ignored.  _
 # _
-# Unrecognized options are ignored.  _
-# An option declared to have an _
+# Also, an option declared to have an _
 # argument is ignored if the argument _
-# is not provided on the command line. _
+# is not provided on the command line.##||##gray|# print usage and exit with nonzero status##|| ||
+||required option|| || ||import argparse _
+ _
+parser = argparse.ArgumentParser() _
+parser.add_argument('@@--@@input', '-i', _
+@<&nbsp;&nbsp;>@dest='input', required=True) _
+args = parser.parse_args() _
+ _
+f = open(args.input)|| ||
+||default option|| || ||import argparse _
+ _
+parser = argparse.ArgumentParser() _
+parser.add_argument('@@--@@hosts', '-H', _
+@<&nbsp;&nbsp;>@dest='hosts', default='/etc/hosts') _
+args = parser.parse_args() _
+ _
+f = open(args.hosts)|| ||
+||repeated and delimited options|| || ||import argparse _
+ _
+parser = argparse.ArgumentParser() _
+##gray|# Take all arguments up to next flag. _
+# Use '+' to require at least one argument:## _
+parser.add_argument('@@--@@words', '-w', _
+@<&nbsp;&nbsp;>@dest='words', nargs='*') _
+ _
+##gray|# twiddle -w one two three## _
+args = parser.parse_args() _
+##gray|# ['one', 'two', 'three']:## _
+args.words|| ||
+||positional parameters||##gray|@@//@@ Processing stops at first positional arg. _
+@@//@@  _
+@@//@@ Positional arguments are _
+@@//@@ in program.args.##||##gray|# Processing stops at first positional arg. _
 # _
 # getopt() does not modify $argv or _
 # provide means to identify positional _
-# arguments.##||##purple|import## argparse _
- _
-##peru|parser## = argparse.ArgumentParser() _
-parser.add_argument(##maroon|'positional_args'##, _
-@<&nbsp;&nbsp;>@nargs=##maroon|'*'##, _
-@<&nbsp;&nbsp;>@metavar=##maroon|'ARG'##) _
-parser.add_argument(##maroon|'@@--@@file'##, ##maroon|'-f'##, _
-@<&nbsp;&nbsp;>@dest=##maroon|'file'##) _
-parser.add_argument(##maroon|'@@--@@verbose'##, ##maroon|'-v'##, _
-@<&nbsp;&nbsp;>@dest=##maroon|'verbose'##, _
-@<&nbsp;&nbsp;>@action=##maroon|'store_true'##) _
- _
-##peru|args## = parser.parse_args() _
- _
-##peru|the_file## = args.file _
-##peru|verbose## = args.verbose _
- _
-##gray|# The flags -h and @@--@@help and the _
-# usage message are generated _
-# automatically. _
+# arguments.##||##gray|# Options can follow positional args. _
 # _
 # Positional arguments are in _
-# args.positional_args _
-# _
-# Options can follow positional _
-# arguments.##||require ##maroon|'optparse'## _
+# args.positional_args##||##gray|# Options can follow positional args. _
+#  _
+# After calling OptionParser.parse! only _
+# positional arguments are in ARGV.##||
+||usage||##gray|@@//@@ npm install commander## _
+program = require('commander'); _
+ _
+##gray|// The flags -h and @@--@@help are generated _
+// automatically.## _
+program.option('-i, @@--@@input <input>') _
+@<&nbsp;&nbsp;>@.parse(process.argv); _
+ _
+let input = program.input; _
+ _
+if (!input) { _
+@<&nbsp;&nbsp;>@program.outputHelp(); _
+@<&nbsp;&nbsp;>@process.exit(1); _
+}||$usage = "usage: " . _
+@<&nbsp;&nbsp;>@$_SERVER["SCRIPT_NAME"] . _
+@<&nbsp;&nbsp;>@" [-f FILE] [-v] [ARG @@...@@]\n"; _
+ _
+$opts = getopt("i:h", _
+@<&nbsp;&nbsp;>@array("input:", "help")); _
+ _
+if (array_key_exists("h", $opts) @@||@@ _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@array_key_exists("help", $opts)) { _
+@<&nbsp;&nbsp;>@echo $usage; _
+@<&nbsp;&nbsp;>@exit(1); _
+} _
+ _
+$input = $opts["i"] ? $opts["i"] : _
+@<&nbsp;&nbsp;>@$opts["input"];||import argparse _
+ _
+parser = argparse.ArgumentParser( _
+@<&nbsp;&nbsp;>@description='Twiddles data') _
+parser.add_argument('@@--@@input', '-i', _
+@<&nbsp;&nbsp;>@dest='input', help='path of input file') _
+args = parser.parse_args() _
+ _
+if not args.input: _
+@<&nbsp;&nbsp;>@parser.print_help() _
+@<&nbsp;&nbsp;>@sys.exit(1)||require 'optparse' _
  _
 options = {} _
-##green|OptionParser##.new do |opts| _
+OptionParser.new do |opts| _
 @<&nbsp;&nbsp;>@opts.banner = _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##maroon|"usage: #{$0} [OPTIONS] [ARG @@...@@]"## _
- _
-@<&nbsp;&nbsp;>@opts.on(##maroon|"-f"##, ##maroon|"@@--@@file FILE"##) ##purple|do## |arg| _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@options[##teal|:file##] = arg _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@"usage: #{$PROGRAM_NAME} [OPTIONS] [ARG @@...@@]" _
+@<&nbsp;&nbsp;>@opts.on('-i', '@@--@@input PATH') do |arg| _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@options[:input] = arg _
 @<&nbsp;&nbsp;>@end _
+@<&nbsp;&nbsp;>@if options[:input].nil? _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@puts opts _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@exit 1 _
+@<&nbsp;&nbsp;>@end _
+end.parse!||
+||subcommand|| || ||import argparse _
  _
-@<&nbsp;&nbsp;>@opts.on(##maroon|"-v"##, ##maroon|"@@--@@verbose"##) ##purple|do## |arg| _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@options[##teal|:verbose##] = arg _
-@<&nbsp;&nbsp;>@##purple|end## _
-##purple|end##.parse! _
+def show(args): _
+@<&nbsp;&nbsp;>@print('showing@@...@@') _
  _
-file = options[##teal|:file##] _
-verbose = options[##teal|:verbose##] _
+def submit(args): _
+@<&nbsp;&nbsp;>@print('submitting {}@@...@@'.format(args.name)) _
  _
-##gray|# The flags -h and @@--@@help and the _
-# usage message are generated _
-# automatically. _
-# _
-# After calling OptionParser.parse! only _
-# positional arguments are in ARGV. _
-# _
-# Options can follow positional args.##||
+parser = argparse.ArgumentParser() _
+sub_ps = parser.add_subparsers() _
+ _
+show_p = sub_ps.add_parser('show') _
+show_p.set_defaults(func=show) _
+ _
+submit_p = sub_ps.add_parser('submit') _
+submit_p.add_argument('--name', '-n', _
+@<&nbsp;&nbsp;>@dest='name', required=True) _
+submit_p.set_defaults(func=submit) _
+ _
+args = parser.parse_args() _
+if hasattr(args, 'func'): _
+@<&nbsp;&nbsp;>@args.func(args) _
+else: _
+@<&nbsp;&nbsp;>@parser.print_help() _
+@<&nbsp;&nbsp;>@sys.exit(1)|| ||
 ||||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
 ||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# load-lib]][#load-lib-note load library] _
-@<&nbsp;>@||var foo = require('./foo.js'); _
+@<&nbsp;>@||let foo = require('./foo.js'); _
  _
-var foo = require('foo');||##purple|require_once##(##maroon|"foo.php"##);||##gray|# searches sys.path for foo.pyc or foo.py:## _
-##purple|import## foo||require ##maroon|'foo.rb'## _
+let foo = require('foo');||require_once("foo.php");||##gray|# searches sys.path for foo.pyc or foo.py:## _
+import foo||require 'foo.rb' _
  _
 ##gray|# searches $LOAD_PATH for foo.rb, foo.so, _
 # foo.o, foo.dll:## _
-require ##maroon|'foo'##||
-||[[# load-lib-subdir]][#load-lib-subdir-note load library in subdirectory]||var bar = require('./foo/bar.js');||##purple|require_once##(##maroon|'foo/bar.php'##);||##gray|# foo must contain @@__init__@@.py file## _
-##purple|import## foo.bar||require ##maroon|'foo/bar.rb'## _
+require 'foo'||
+||[[# load-lib-subdir]][#load-lib-subdir-note load library in subdirectory]||let bar = require('./foo/bar.js');||require_once('foo/bar.php');||##gray|# foo must contain @@__init__@@.py file## _
+import foo.bar||require 'foo/bar.rb' _
  _
-require ##maroon|'foo/bar'##||
+require 'foo/bar'||
 ||[[# hot-patch]][#hot-patch-note hot patch] _
 @<&nbsp;>@||delete require.cache[require.resolve('./foo.js')]; _
-var foo = require('./foo.js');||##purple|require##(##maroon|"foo.php"##);||##purple|reload##(foo)||load ##maroon|'foo.rb'##||
+let foo = require('./foo.js');||require("foo.php");||reload(foo)||load 'foo.rb'||
 ||[[# load-err]][#load-err-note load error]||##gray|//raises// Errror //exception//##||##gray|require //and// require_once //raise fatal error if library not found;// include //and// include_once emit warnings##||##gray|//raises// ImportError //if library not found; exceptions generated when parsing library propagate to client//##||##gray|//raises// LoadError //if library not found; exceptions generated when parsing library propagate to client//##||
 ||[[# main-in-lib]][#main-in-lib-note main routine in library]||if (require.main == module) { _
 @<&nbsp;&nbsp;>@##gray|//code//## _
-}||##gray|//none//##||##purple|if @@__name__@@## == ##maroon|'@@__main__@@'##: _
-@<&nbsp;&nbsp;>@##gray|//code//##||##purple|if## ##peru|$PROGRAM_NAME## == @@__FILE__@@ _
+}||##gray|//none//##||if @@__name__@@ == '@@__main__@@': _
+@<&nbsp;&nbsp;>@##gray|//code//##||if $PROGRAM_NAME == @@__FILE__@@ _
 @<&nbsp;&nbsp;>@##gray|//code//## _
-##purple|end##||
-||[[# lib-path]][#lib-path-note library path]||##gray|//none//##||$##peru|libpath## = ini_get(##maroon|"include_path"##); _
+end||
+||[[# lib-path]][#lib-path-note library path]||##gray|//none//##||$libpath = ini_get("include_path"); _
  _
-ini_set(##maroon|"include_path"##, _
-@<&nbsp;&nbsp;>@$##peru|libpath## . ##maroon|":/some/path"##);||sys.path _
+ini_set("include_path", _
+@<&nbsp;&nbsp;>@$libpath . ":/some/path");||sys.path _
  _
-sys.path.append(##maroon|'/some/path'##)||##gray|# $: is synonym for $LOAD_PATH:## _
-##peru|$LOAD_PATH _
+sys.path.append('/some/path')||##gray|# $: is synonym for $LOAD_PATH:## _
+$LOAD_PATH _
  _
-$LOAD_PATH## @@<<@@ ##maroon|"/some/path"##||
+$LOAD_PATH @@<<@@ "/some/path"||
 ||[[# lib-path-env]][#lib-path-env-note library path environment variable]||$ NODE_PATH=~/lib node foo.js||##gray|//none//##||$ PYTHONPATH=~/lib python foo.py||$ RUBYLIB=~/lib ruby foo.rb||
 ||[[# lib-path-cmd-line]][#lib-path-cmd-line-note library path command line option]||##gray|//none//##||##gray|//none//##||##gray|//none//##||$ ruby -I ~/lib foo.rb||
 ||[[# simple-global-identifiers]][#simple-global-identifiers-note simple global identifiers]|| ||##gray|//variables defined outside of functions or with// global //keyword//##||##gray|//built-in functions//##||##gray|//variables which start with// $##||
 ||[[# multiple-label-identifiers]][#multiple-label-identifiers-note multiple label identifiers]|| ||##gray|//classes, interfaces, functions, and constants//##||##gray|//modules//##||##gray|//constants, classes, and modules//##||
 ||[[# label-separator]][#label-separator-note label separator] _
-@<&nbsp;>@|| ||\Foo\Bar\baz();||foo.bar.baz()||##green|Foo##::##green|Bar##.baz||
+@<&nbsp;>@|| ||\Foo\Bar\baz();||foo.bar.baz()||Foo::Bar.baz||
 ||[[# root-namespace]][#root-namespace-note root namespace definition]|| ||\foo||##gray|//none//##||##gray|# outside of class or module; only _
 # constants in root namespace:## _
 FOO = 3 _
@@ -702,41 +877,41 @@ FOO = 3 _
 ##gray|# inside class or module:## _
 ::FOO = 3||
 ||[[# namespace-decl]][#namespace-decl-note namespace declaration] _
-@<&nbsp;>@|| ||namespace Foo;||##gray|//put declarations in// foo.py##||##purple|class## ##green|Foo## _
+@<&nbsp;>@|| ||namespace Foo;||##gray|//put declarations in// foo.py##||class Foo _
 @<&nbsp;&nbsp;>@##gray|# class definition## _
-##purple|end## _
+end _
  _
-##purple|module## ##green|Foo## _
+module Foo _
 @<&nbsp;&nbsp;>@##gray|# module definition## _
-##purple|end##||
+end||
 ||[[# child-namespace-decl]][#child-namespace-decl-note child namespace declaration]|| ||namespace Foo\Bar;||##gray|foo //must be in// sys.path:## _
 $ mkdir foo _
 $ touch foo/@@__init__@@.py _
-$ touch foo/bar.py||##purple|module## ##green|Foo##::##green|Bar## _
+$ touch foo/bar.py||module Foo::Bar _
 @<&nbsp;&nbsp;>@##gray|# module definitions## _
-##purple|end## _
+end _
  _
-##purple|module## ##green|Foo## _
-@<&nbsp;&nbsp;>@##purple|module## ##green|Bar## _
+module Foo _
+@<&nbsp;&nbsp;>@module Bar _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##gray|# module definitions## _
-@<&nbsp;&nbsp;>@##purple|end## _
-##purple|end## _
+@<&nbsp;&nbsp;>@end _
+end _
  _
 ##gray|# classes can nest inside classes or _
 # modules; modules can nest in classes##||
 ||[[# import-def]][#import-def-note import definitions] _
-@<&nbsp;>@|| ||##gray|//only class names can be imported//##||##purple|from## foo ##purple|import## bar, baz||##gray|//none//##||
+@<&nbsp;>@|| ||##gray|//only class names can be imported//##||from foo import bar, baz||##gray|//none//##||
 ||[[# import-namespace]][#import-namespace-note import all definitions in namespace] _
-@<&nbsp;>@|| ||##gray|//none//##||##purple|from## foo ##purple|import## *||##gray|# inside class or module:## _
-##purple|include## ##green|Foo##||
+@<&nbsp;>@|| ||##gray|//none//##||from foo import *||##gray|# inside class or module:## _
+include Foo||
 ||[[# import-all-subnamespaces]][#import-all-subnamespaces-note import all subnamespaces]|| || ||##gray|# subnamespaces in list @@__all__@@ of _
 # @@foo/__init__.py@@ are imported## _
-##purple|from## foo ##purple|import## *|| ||
+from foo import *|| ||
 ||[[# shadow-avoidance]][#shadow-avoidance-note shadow avoidance]|| ||use Foo as Fu;||##gray|# rename namespace:## _
-##purple|import## foo ##purple|as## fu _
+import foo as fu _
  _
 ##gray|# rename identifier:## _
-##purple|from## sys ##purple|import## path ##purple|as## the_path||Fu = Foo.dup _
+from sys import path as the_path||Fu = Foo.dup _
  _
 include Fu||
 ||[[# pkg-management]][#pkg-management-note list installed packages, install a package] _
@@ -748,52 +923,52 @@ $ gem install rails||
  _
 ##gray|#!/usr/bin/env python## _
  _
-##purple|from## distutils.core ##purple|import## setup _
+from distutils.core import setup _
  _
 setup( _
-@<&nbsp;&nbsp;>@name=##maroon|'foo'##, _
-@<&nbsp;&nbsp;>@author=##maroon|'Joe Foo'##, _
-@<&nbsp;&nbsp;>@version=##maroon|'1.0'##, _
-@<&nbsp;&nbsp;>@description=##maroon|'a package'##, _
-@<&nbsp;&nbsp;>@py_modules=[##maroon|'foo'##])||##gray|//in// foo.gemspec:## _
+@<&nbsp;&nbsp;>@name='foo', _
+@<&nbsp;&nbsp;>@author='Joe Foo', _
+@<&nbsp;&nbsp;>@version='1.0', _
+@<&nbsp;&nbsp;>@description='a package', _
+@<&nbsp;&nbsp;>@py_modules=['foo'])||##gray|//in// foo.gemspec:## _
  _
-spec = ##green|Gem##::##green|Specification##.new do |s| _
-@<&nbsp;&nbsp;>@s.name = ##maroon|"foo"## _
-@<&nbsp;&nbsp;>@s.authors = ##maroon|"Joe Foo"## _
-@<&nbsp;&nbsp;>@s.version = ##maroon|"1.0"## _
-@<&nbsp;&nbsp;>@s.summary = ##maroon|"a gem"## _
-@<&nbsp;&nbsp;>@s.files = Dir[##maroon|"lib/*.rb"##] _
+spec = Gem::Specification.new do |s| _
+@<&nbsp;&nbsp;>@s.name = "foo" _
+@<&nbsp;&nbsp;>@s.authors = "Joe Foo" _
+@<&nbsp;&nbsp;>@s.version = "1.0" _
+@<&nbsp;&nbsp;>@s.summary = "a gem" _
+@<&nbsp;&nbsp;>@s.files = Dir["lib/*.rb"] _
 end||
 ||||||||||~ [[# objects]][#objects-note objects]||
 ||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# def-class]][#def-class-note define class] _
 @<&nbsp;>@||function Int(i) { _
 @<&nbsp;&nbsp;>@this.value = i === undefined ? 0 : i; _
-}||##purple|class## ##green|Int## _
+}||class Int _
 { _
-@<&nbsp;&nbsp;>@##purple|public## $##peru|value##; _
-@<&nbsp;&nbsp;>@##purple|function## ##mediumblue|__construct##($##peru|int##=0) _
+@<&nbsp;&nbsp;>@public $value; _
+@<&nbsp;&nbsp;>@function @@__@@construct($int=0) _
 @<&nbsp;&nbsp;>@{ _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@$##teal|this##->##peru|value## = $##peru|int##; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@$this->value = $int; _
 @<&nbsp;&nbsp;>@} _
-}||##purple|class## ##green|Int##(##darkslateblue|object##): _
-@<&nbsp;&nbsp;>@##purple|def## ##0000CD|@@__init__@@##(##purple|self##, v=0): _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|self##.value = v||##purple|class## ##green|Int## _
-@<&nbsp;&nbsp;>@attr_accessor ##teal|:value## _
-@<&nbsp;&nbsp;>@##purple|def## initialize(i=0) _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##peru|@value## = i _
-@<&nbsp;&nbsp;>@##purple|end## _
-##purple|end##||
+}||class Int(object): _
+@<&nbsp;&nbsp;>@def @@__init__@@(self, v=0): _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@self.value = v||class Int _
+@<&nbsp;&nbsp;>@attr_accessor :value _
+@<&nbsp;&nbsp;>@def initialize(i=0) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@value = i _
+@<&nbsp;&nbsp;>@end _
+end||
 ||[[# create-obj]][#create-obj-note create object] _
-@<&nbsp;>@||var i = new Int(); _
-var i2 = new Int(7);||$##peru|i## = ##purple|new## ##green|Int##(); _
-$##peru|i2## = ##purple|new## ##green|Int##(7);||##peru|i## = Int() _
-##peru|i2## = Int(7)||i = ##green|Int##.new _
-i2 = ##green|Int##.new(7)||
+@<&nbsp;>@||let i = new Int(); _
+let i2 = new Int(7);||$i = new Int(); _
+$i2 = new Int(7);||i = Int() _
+i2 = Int(7)||i = Int.new _
+i2 = Int.new(7)||
 ||[[# getter-setter]][#getter-setter-note get and set instance variable] _
-@<&nbsp;>@||var v = i.value; _
-i.value = v + 1;||$##peru|v## = $##peru|i##->##peru|value##; _
-$##peru|i##->##peru|value## = $##peru|v## + 1;||##peru|v## = i.value _
+@<&nbsp;>@||let v = i.value; _
+i.value = v + 1;||$v = $i->value; _
+$i->value = $v + 1;||v = i.value _
 i.value = v + 1||v = i.value _
 i.value = v + 1||
 ||[[# instance-var]][#instance-var-note instance variable visibility]||##gray|//public//##||##gray|//visibility must be declared//##||##gray|//public; attributes starting with underscore private by convention//##||##gray|//private by default; use// attr_reader, attr_writer, attr_accessor //to make public//##||
@@ -806,24 +981,24 @@ this.plus = function(v) { _
 ##gray|@@//@@ outside constructor:## _
 Int.prototype.plus = function (v) { _
 @<&nbsp;&nbsp;>@return this.value + v; _
-}||##purple|function## ##0000CD|plus##($##peru|i##) _
+}||function plus($i) _
 { _
-@<&nbsp;&nbsp;>@##purple|return## $##teal|this##->##peru|value## + $##peru|i##; _
-}||##purple|def## ##0000CD|plus##(##purple|self##,v): _
-@<&nbsp;&nbsp;>@##purple|return self##.value + v||##purple|def## ##0000CD|plus##(i) _
+@<&nbsp;&nbsp;>@return $this->value + $i; _
+}||def plus(self,v): _
+@<&nbsp;&nbsp;>@return self.value + v||def plus(i) _
 @<&nbsp;&nbsp;>@value + i _
-##purple|end##||
+end||
 ||[[# invoke-method]][#invoke-method-note invoke method] _
-@<&nbsp;>@||i.plus(3);||$##peru|i##->plus(7)||i.plus(7)||i.plus(7)||
-||[[# def-class-method]][#def-class-method-note define class method]|| || ||##green|@classmethod## _
-##purple|def## ##mediumblue|get_instances##(cls): _
-@<&nbsp;&nbsp;>@##purple|return## Counter.instances||class Foo _
+@<&nbsp;>@||i.plus(3);||$i->plus(7)||i.plus(7)||i.plus(7)||
+||[[# def-class-method]][#def-class-method-note define class method]|| || ||@classmethod _
+def get_instances(cls): _
+@<&nbsp;&nbsp;>@return Counter.instances||class Foo _
 @<&nbsp;&nbsp;>@def Foo.one _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@puts "one" _
 @<&nbsp;&nbsp;>@end _
 end||
 ||[[# invoke-class-method]][#invoke-class-method-note invoke class method] _
-@<&nbsp;>@|| ||##green|Counter##::getInstances()||Counter.get_instances()||Foo.one||
+@<&nbsp;>@|| ||Counter::getInstances()||Counter.get_instances()||Foo.one||
 ||[[# def-classs-var]][#def-class-var-note define class variable]|| || ||class Foo: _
 @<&nbsp;&nbsp;>@instances = 0||class Foo _
 @<&nbsp;&nbsp;>@@<@@>@instances = 1 _
@@ -836,97 +1011,91 @@ end||
 @<&nbsp;&nbsp;>@end _
 end||
 ||[[# method-missing]][#method-missing-note handle undefined method invocation] _
-@<&nbsp;>@|| ||##purple|function## ##0000CD|@@__@@call##($##peru|name##, $##peru|args##) _
+@<&nbsp;>@|| ||function @@__@@call($name, $args) _
 { _
-@<&nbsp;&nbsp;>@$##peru|argc## = count($##peru|args##); _
-@<&nbsp;&nbsp;>@echo ##maroon|"no def: $name "## . _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##maroon|"arity: $argc\n"##; _
-}||##purple|def## ##0000CD|@@__getattr__@@##(##purple|self##, name): _
-@<&nbsp;&nbsp;>@s = ##maroon|'no def: '## + name + ##maroon|' arity: %d'## _
+@<&nbsp;&nbsp;>@$argc = count($args); _
+@<&nbsp;&nbsp;>@echo "no def: $name " . _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@"arity: $argc\n"; _
+}||def @@__getattr__@@(self, name): _
+@<&nbsp;&nbsp;>@s = 'no def: ' + name + ' arity: %d' _
  _
-@<&nbsp;&nbsp;>@##purple|return lambda## *a: ##purple|print##(s % ##purple|len##(a))||##purple|def## ##0000CD|method_missing##(name, *a) _
-@<&nbsp;&nbsp;>@puts ##maroon|"no def:## ##peru|#{name}####maroon|"## + _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##maroon|" arity:## ##peru|#{a.size}####maroon|"## _
-##purple|end##||
-||[[# method-alias]][#method-alias-note alias method]|| || || ||##purple|class## ##green|Point## _
+@<&nbsp;&nbsp;>@return lambda *a: print(s % len(a))||def method_missing(name, *a) _
+@<&nbsp;&nbsp;>@puts "no def: #{name}" + _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@" arity: #{a.size}" _
+end||
+||[[# method-alias]][#method-alias-note alias method]|| || || ||class Point _
  _
-@<&nbsp;&nbsp;>@attr_reader ##teal|:x##, ##teal|:y##, ##teal|:color## _
+@<&nbsp;&nbsp;>@attr_reader :x, :y, :color _
  _
-@<&nbsp;&nbsp;>@##purple|alias_method## ##teal|:colour##, ##teal|:color## _
+@<&nbsp;&nbsp;>@alias_method :colour, :color _
  _
-@<&nbsp;&nbsp;>@##purple|def## ##mediumblue|initialize##(x, y, color=##teal|:black##) _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##peru|@x##, ##peru|@y## = x, y _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##peru|@color## = color _
-@<&nbsp;&nbsp;>@##purple|end## _
-##purple|end##||
+@<&nbsp;&nbsp;>@def initialize(x, y, color=:black) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@x, @y = x, y _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@color = color _
+@<&nbsp;&nbsp;>@end _
+end||
 ||[[# destructor]][#destructor-note destructor] _
-@<&nbsp;>@|| ||##purple|function## ##0000CD|@@__@@destruct##() _
+@<&nbsp;>@|| ||function @@__@@destruct() _
 { _
-@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"bye, $this->value\n"##; _
-}||##purple|def## ##0000CD|@@__del__@@##(##purple|self##): _
-@<&nbsp;&nbsp;>@##purple|print##(##maroon|'bye, %d'## % ##purple|self##.value)||val = i.value _
-##green|ObjectSpace##.define_finalizer(int) { _
-@<&nbsp;&nbsp;>@puts ##maroon|"bye, #{val}"## _
+@<&nbsp;&nbsp;>@echo "bye, $this->value\n"; _
+}||def @@__del__@@(self): _
+@<&nbsp;&nbsp;>@print('bye, %d' % self.value)||val = i.value _
+ObjectSpace.define_finalizer(int) { _
+@<&nbsp;&nbsp;>@puts "bye, #{val}" _
 }||
 ||||||||||~ [[# inheritance-polymorphism]][#inheritance-polymorphism-note inheritance and polymorphism]||
 ||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# inheritance]][#inheritance-note subclass] _
-@<&nbsp;>@|| ||##purple|class## ##green|Counter## ##purple|extends## ##green|Int## _
+@<&nbsp;>@|| ||class Counter extends Int _
 { _
-@<&nbsp;&nbsp;>@##purple|private static## $##peru|instances## = 0; _
-@<&nbsp;&nbsp;>@##purple|function## ##0000CD|@@__@@construct##($##peru|int##=0) _
+@<&nbsp;&nbsp;>@private static $instances = 0; _
+@<&nbsp;&nbsp;>@function @@__@@construct($int=0) _
 @<&nbsp;&nbsp;>@{ _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##green|Counter##::$##peru|instances## += 1; _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##teal|parent##::@@__@@construct($##peru|int##); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Counter::$instances += 1; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@parent::@@__@@construct($int); _
 @<&nbsp;&nbsp;>@} _
-@<&nbsp;&nbsp;>@##purple|function## ##0000CD|incr##() _
+@<&nbsp;&nbsp;>@function incr() _
 @<&nbsp;&nbsp;>@{ _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@$##teal|this##->##peru|value##++; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@$this->value++; _
 @<&nbsp;&nbsp;>@} _
-@<&nbsp;&nbsp;>@##purple|static function## ##0000CD|getInstances##() _
+@<&nbsp;&nbsp;>@static function getInstances() _
 @<&nbsp;&nbsp;>@{ _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|return## $##peru|instances##; _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return $instances; _
 @<&nbsp;&nbsp;>@} _
-}||##purple|class## ##green|Counter##(Int): _
+}||class Counter(Int): _
  _
 @<&nbsp;&nbsp;>@instances = 0 _
  _
-@<&nbsp;&nbsp;>@##purple|def## ##0000CD|@@__init__@@##(##purple|self##, v=0): _
+@<&nbsp;&nbsp;>@def @@__init__@@(self, v=0): _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Counter.instances += 1 _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Int.@@__init__@@(##purple|self##, v) _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Int.@@__init__@@(self, v) _
  _
-@<&nbsp;&nbsp;>@##purple|def## ##0000CD|incr##(##purple|self##): _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|self##.value += 1||##purple|class## ##green|Counter## < ##green|Int## _
+@<&nbsp;&nbsp;>@def incr(self): _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@self.value += 1||class Counter < Int _
  _
-@<&nbsp;&nbsp;>@##peru|@@instances## = 0 _
+@<&nbsp;&nbsp;>@@<@@>@instances = 0 _
  _
-@<&nbsp;&nbsp;>@##purple|def## initialize _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##peru|@@instances## += 1 _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|super## _
-@<&nbsp;&nbsp;>@##purple|end## _
+@<&nbsp;&nbsp;>@def initialize _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<@@>@instances += 1 _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@super _
+@<&nbsp;&nbsp;>@end _
  _
-@<&nbsp;&nbsp;>@##purple|def## incr _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##peru|self##.value += 1 _
-@<&nbsp;&nbsp;>@##purple|end## _
+@<&nbsp;&nbsp;>@def incr _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@self.value += 1 _
+@<&nbsp;&nbsp;>@end _
  _
-@<&nbsp;&nbsp;>@##purple|def## ##peru|self##.instances _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##peru|@@instances## _
-@<&nbsp;&nbsp;>@##purple|end## _
-##purple|end##||
-||[[# mixin]][#mixin-note mixin]|| || || || ||
-||[[# op-overload]][#op-overload-note overload operator]|| || || ||##purple|class## ##green|Fixnum## _
-@<&nbsp;&nbsp;>@##purple|def## ##mediumblue|/##(n) _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##peru|self##.fdiv(n) _
-@<&nbsp;&nbsp;>@##purple|end## _
-##purple|end##||
+@<&nbsp;&nbsp;>@def self.instances _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<@@>@instances _
+@<&nbsp;&nbsp;>@end _
+end||
 ||||||||||~ [[# reflection]][#reflection-note reflection]||
 ||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# object-id]][#object-id-note object id] _
 @<&nbsp;>@||##gray|//none//##|| ||id(o)||o.object_id||
 ||[[# inspect-type]][#inspect-type-note inspect type] _
-@<&nbsp;>@||typeof([]) === 'object'||gettype(array()) == ##maroon|"array"## _
+@<&nbsp;>@||typeof([]) === 'object'||gettype(array()) == "array" _
  _
-##gray|//returns// object //for objects//##||##purple|type##([]) == ##purple|list##||[].class == ##green|Array##||
+##gray|//returns// object //for objects//##||type([]) == list||[].class == Array||
 ||[[# types]][#types-note basic types]||number _
 string _
 boolean _
@@ -934,7 +1103,7 @@ undefined _
 function _
 object _
  _
-##gray|# these evaluate as 'object':## _
+##gray|@@//@@ these evaluate as 'object':## _
 typeof(null) _
 typeof([]) _
 typeof({})||NULL _
@@ -972,37 +1141,37 @@ Object _
 File||
 ||[[# inspect-class]][#inspect-class-note inspect class]||##gray|@@//@@ returns prototype object:## _
 Object.getPrototypeOf(o)||##gray|//returns// FALSE //if not an object://## _
-get_class($##peru|o##) == ##maroon|"Foo"##||o.@@__class__@@ == Foo _
-isinstance(o, Foo)||o.class == ##green|Foo## _
-o.instance_of?(##green|Foo##)||
-||[[# inspect-class-hierarchy]][#inspect-class-hierarchy-note inspect class hierarchy]||var pa = Object.getPrototypeOf(o) _
-##gray|@@//@@prototype's of prototype object:## _
-var grandpa = Object.getPrototypeOf(pa)||get_parent_class($##peru|o##)||o.@@__class__@@.@@__bases__@@||o.class.superclass _
+get_class($o) == "Foo"||o.@@__class__@@ == Foo _
+isinstance(o, Foo)||o.class == Foo _
+o.instance_of?(Foo)||
+||[[# inspect-class-hierarchy]][#inspect-class-hierarchy-note inspect class hierarchy]||let pa = Object.getPrototypeOf(o) _
+##gray|@@//@@ prototype's of prototype object:## _
+let grandpa = Object.getPrototypeOf(pa)||get_parent_class($o)||o.@@__class__@@.@@__bases__@@||o.class.superclass _
 o.class.included_modules||
 ||[[# has-method]][#has-method-note has method?] _
-@<&nbsp;>@||o.reverse && typeof(o.reverse) === 'function'||method_exists($##peru|o##, ##maroon|"reverse"##)||##purple|hasattr##(o, ##maroon|'reverse'##)||o.respond_to?(##maroon|"reverse"##)||
+@<&nbsp;>@||o.reverse && typeof(o.reverse) === 'function'||method_exists($o, "reverse")||hasattr(o, 'reverse')||o.respond_to?("reverse")||
 ||[[# msg-passing]][#msg-passing-note message passing] _
-@<&nbsp;>@||##gray|//not a standard feature//##||##purple|for## ($##peru|i## = 1; $##peru|i## <= 10; $##peru|i##++) { _
-@<&nbsp;&nbsp;>@call_user_func(array($##peru|o##, _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##maroon|"phone$i"##), ##teal|NULL##); _
-}||##purple|for## i ##purple|in range##(1,10): _
-@<&nbsp;&nbsp;>@##purple|getattr##(o, ##maroon|'phone'##+##purple|str##(i))(##teal|None##)||(1..9).each ##purple|do## |i| _
-@<&nbsp;&nbsp;>@o.send(##maroon|"phone#{i}="##, ##peru|nil##) _
-##purple|end##||
+@<&nbsp;>@||##gray|//not a standard feature//##||for ($i = 1; $i <= 10; $i++) { _
+@<&nbsp;&nbsp;>@call_user_func(array($o, _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@"phone$i"), NULL); _
+}||for i in range(1,10): _
+@<&nbsp;&nbsp;>@getattr(o, 'phone'+str(i))(None)||(1..9).each do |i| _
+@<&nbsp;&nbsp;>@o.send("phone#{i}=", nil) _
+end||
 ||[[# eval]][#eval-note eval] _
 @<&nbsp;>@||eval('1 + 1')||##gray|eval //evaluates to argument of// return //statement or// NULL:## _
-##purple|while## ($##peru|line## = fgets(##teal|STDIN##)) { _
-@<&nbsp;&nbsp;>@##purple|echo## eval($##peru|line##) . ##maroon|"\n"##; _
+while ($line = fgets(STDIN)) { _
+@<&nbsp;&nbsp;>@echo eval($line) . "\n"; _
 }||##gray|//argument of// eval //must be an expression://## _
-##purple|while True##: _
-@<&nbsp;&nbsp;>@##purple|print##(##purple|eval##(sys.stdin.readline()))||loop ##purple|do## _
+while True: _
+@<&nbsp;&nbsp;>@print(eval(sys.stdin.readline()))||loop do _
 @<&nbsp;&nbsp;>@puts eval(gets) _
-##purple|end##||
+end||
 ||[[# list-obj-methods]][#list-obj-methods-note list object methods] _
-@<&nbsp;>@|| ||get_class_methods($##peru|o##)||[m ##purple|for## m ##purple|in dir##(o) _
-@<&nbsp;&nbsp;>@##purple|if callable##(##purple|getattr##(o,m))]||o.methods||
+@<&nbsp;>@|| ||get_class_methods($o)||[m for m in dir(o) _
+@<&nbsp;&nbsp;>@if callable(getattr(o,m))]||o.methods||
 ||[[# list-obj-attr]][#list-obj-attr-note list object attributes] _
-@<&nbsp;>@|| ||get_object_vars($##peru|o##)||##purple|dir##(o)||o.instance_variables||
+@<&nbsp;>@|| ||get_object_vars($o)||dir(o)||o.instance_variables||
 ||[[# list-loaded-lib]][#list-loaded-lib-note list loaded libraries]|| || || ||##gray|# relative to directory in lib path:## _
 $LOADED_FEATURES _
 $"||
@@ -1017,23 +1186,23 @@ URI.constants _
 URI.methods _
 URI.class_variables||
 ||[[# pretty-print]][#pretty-print-note pretty-print] _
-@<&nbsp;>@||var d = {"lorem": 1, "ipsum": [2, 3]}; _
-console.log(JSON.stringify(d, null, 2));||$##peru|d## = array(##maroon|"lorem"##=>1, _
-@<&nbsp;&nbsp;>@##maroon|"ipsum"##=>array(2,3)); _
+@<&nbsp;>@||let d = {"lorem": 1, "ipsum": [2, 3]}; _
+console.log(JSON.stringify(d, null, 2));||$d = array("lorem"=>1, _
+@<&nbsp;&nbsp;>@"ipsum"=>array(2,3)); _
  _
-print_r($##peru|d##);||##purple|import## pprint _
+print_r($d);||import pprint _
  _
-##peru|d## = {##maroon|'lorem'##:1, ##maroon|'ipsum'##:[2,3]} _
+d = {'lorem':1, 'ipsum':[2,3]} _
  _
-pprint.PrettyPrinter().pprint(d)||require ##maroon|'pp'## _
+pprint.PrettyPrinter().pprint(d)||require 'pp' _
  _
-d = {##maroon|'lorem'## => 1, ##maroon|'ipsum'## => [2, 3]} _
+d = {'lorem' => 1, 'ipsum' => [2, 3]} _
  _
 pp d||
-||[[# src-line-file]][#src-line-file-note source line number and file name]|| ||##teal|@@__LINE__@@ _
-@@__FILE__@@##||##purple|import## inspect _
+||[[# src-line-file]][#src-line-file-note source line number and file name]|| ||@@__LINE__@@ _
+@@__FILE__@@||import inspect _
  _
-##peru|cf## = inspect.currentframe() _
+cf = inspect.currentframe() _
 cf.f_lineno _
 cf.f_code.co_filename||@@__LINE__@@ _
 @@__FILE__@@||
@@ -1043,24 +1212,24 @@ $ ri Math _
 $ ri Math.atan2||
 ||||||||||~ [[# net-web]][#net-web-note net and web]||
 ||~  ||~ node.js||~ php||~ python||~ ruby||
-||[[# hostname-ip]][#hostname-ip-note get local hostname, dns lookup, reverse dns lookup]|| ||$##peru|host## = gethostname(); _
-$##peru|ip## = gethostbyname($##peru|host##); _
-$##peru|host2## = gethostbyaddr($##peru|ip##);||##purple|import## socket _
+||[[# hostname-ip]][#hostname-ip-note get local hostname, dns lookup, reverse dns lookup]|| ||$host = gethostname(); _
+$ip = gethostbyname($host); _
+$host2 = gethostbyaddr($ip);||import socket _
  _
-##peru|host## = socket.gethostname() _
-##peru|ip## = socket.gethostbyname(host) _
-##peru|host2## = socket.gethostbyaddr(ip)[0]||require ##maroon|'socket'## _
+host = socket.gethostname() _
+ip = socket.gethostbyname(host) _
+host2 = socket.gethostbyaddr(ip)[0]||require 'socket' _
  _
-hostname = ##green|Socket##.gethostname _
+hostname = Socket.gethostname _
  _
-ip = ##green|Socket##.getaddrinfo( _
-@<&nbsp;&nbsp;>@##green|Socket##.gethostname, _
-@<&nbsp;&nbsp;>@##maroon|"echo"##)[0][3] _
+ip = Socket.getaddrinfo( _
+@<&nbsp;&nbsp;>@Socket.gethostname, _
+@<&nbsp;&nbsp;>@"echo")[0][3] _
  _
-host2 = ##green|Socket##.gethostbyaddr(ip)[0]||
+host2 = Socket.gethostbyaddr(ip)[0]||
 ||[[# http-get]][#http-get-note http get] _
 @<&nbsp;>@||##gray|@@//@@ npm install request## _
-var request = require('request'); _
+let request = require('request'); _
  _
 request('@@http://www.google.com@@', _
 @<&nbsp;&nbsp;>@function(err, resp, body) { _
@@ -1068,77 +1237,77 @@ request('@@http://www.google.com@@', _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@console.log(body); _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@} _
 @<&nbsp;&nbsp;>@} _
-);||$##CD853F|url## = ##maroon|'@@http://www.google.com@@'##; _
-$##peru|s## = file_get_contents($##peru|url##);||##purple|import## httplib _
+);||$url = '@@http://www.google.com@@'; _
+$s = file_get_contents($url);||import httplib _
  _
-##CD853F|url## = ##maroon|'www.google.com'## _
-##CD853F|conn## = httplib.HTTPConnection(url) _
-conn.request(##maroon|"GET"##, ##maroon|'/'##) _
+url = 'www.google.com' _
+conn = httplib.HTTPConnection(url) _
+conn.request("GET", '/') _
 resp = conn.getresponse() _
 if resp.status == httplib.OK: _
-@<&nbsp;&nbsp;>@##peru|s## = resp.read()||require ##maroon|'net/http'## _
+@<&nbsp;&nbsp;>@s = resp.read()||require 'net/http' _
  _
-url = ##maroon|"www.google.com"## _
-r = ##green|Net##::##green|HTTP##.start(url, 80) ##purple|do## |f| _
-@<&nbsp;&nbsp;>@f.get(##maroon|"/"##) _
-##purple|end## _
-##purple|if## r.code == ##maroon|"200"## _
+url = "www.google.com" _
+r = Net::HTTP.start(url, 80) do |f| _
+@<&nbsp;&nbsp;>@f.get("/") _
+end _
+if r.code == "200" _
 @<&nbsp;&nbsp;>@s = r.body _
-##purple|end##||
+end||
 ||[[# http-post]][#http-post-note http post] _
-@<&nbsp;>@|| || ||##purple|import## httplib _
-##purple|import## urllib _
+@<&nbsp;>@|| || ||import httplib _
+import urllib _
  _
-##peru|url## = ##maroon|'www.acme.com'## _
-##peru|conn## = httplib.HTTPConnection(url) _
-##peru|data## = urllib.urlencode({ _
-@<&nbsp;&nbsp;>@##maroon|'item'##: ##maroon|'anvil'##, _
-@<&nbsp;&nbsp;>@##maroon|'qty'##: 1})  _
-conn.request(##maroon|'POST'##, ##maroon|'/orders'##, data) _
+url = 'www.acme.com' _
+conn = httplib.HTTPConnection(url) _
+data = urllib.urlencode({ _
+@<&nbsp;&nbsp;>@'item': 'anvil', _
+@<&nbsp;&nbsp;>@'qty': 1})  _
+conn.request('POST', '/orders', data) _
 resp = conn.getresponse() _
 if resp.status == httplib.OK: _
-@<&nbsp;&nbsp;>@##peru|s## = resp.read()|| ||
+@<&nbsp;&nbsp;>@s = resp.read()|| ||
 ||[[# serve-pwd]][#serve-pwd-note serve working directory]|| ||$ php -S localhost:8000||$ python -m SimpleHTTPServer 8000||$ ruby -rwebrick -e \ _
 'WEBrick::HTTPServer.new(:Port => 8000, '\ _
 ':DocumentRoot => Dir.pwd).start'||
 ||[[# absolute-url]][#absolute-url-note absolute url] _
-##gray|//from base and relative url//##|| ||##gray|//none//##||##purple|import## urlparse _
+##gray|//from base and relative url//##|| ||##gray|//none//##||import urlparse _
  _
-urlparse.urljoin(##maroon|@@'http://google.com'@@##, _
-@<&nbsp;&nbsp;>@##maroon|'analytics'##)||require ##maroon|'uri'## _
+urlparse.urljoin(@@'http://google.com'@@, _
+@<&nbsp;&nbsp;>@'analytics')||require 'uri' _
  _
-##green|URI##.join(##maroon|@@"http://google.com"@@##, ##maroon|"analytics"##)||
-||[[# parse-url]][#parse-url-note parse url]|| ||$##peru|url## = ##maroon|@@"http://google.com:80/foo?q=3#bar"@@##; _
-$##peru|up## = parse_url($##peru|url##); _
+URI.join(@@"http://google.com"@@, "analytics")||
+||[[# parse-url]][#parse-url-note parse url]|| ||$url = @@"http://google.com:80/foo?q=3#bar"@@; _
+$up = parse_url($url); _
  _
-$##peru|protocol## = $##peru|up##[##maroon|"scheme"##]; _
-$##peru|hostname## = $##peru|up##[##maroon|"host"##]; _
-$##peru|port## = $##peru|up##[##maroon|"port"##]; _
-$##peru|path## = $##peru|up##[##maroon|"path"##]; _
-$##peru|query_str## = $##peru|up##[##maroon|"query"##]; _
-$##peru|fragment## = $##peru|up##[##maroon|"fragment"##]; _
+$protocol = $up["scheme"]; _
+$hostname = $up["host"]; _
+$port = $up["port"]; _
+$path = $up["path"]; _
+$query_str = $up["query"]; _
+$fragment = $up["fragment"]; _
  _
 ##gray|# $params is associative array; if keys _
 # are reused, later values overwrite _
 # earlier values## _
-parse_str($##peru|query_str##, $##peru|params##);||##gray|# Python 3 location: urllib.parse## _
-##purple|import## urlparse _
+parse_str($query_str, $params);||##gray|# Python 3 location: urllib.parse## _
+import urlparse _
  _
-##peru|url## = ##maroon|@@'http://google.com:80/foo?q=3#bar'@@## _
-##peru|up## = urlparse.urlparse(url) _
+url = @@'http://google.com:80/foo?q=3#bar'@@ _
+up = urlparse.urlparse(url) _
  _
-##peru|protocol## = up.scheme _
-##peru|hostname## = up.hostname _
-##peru|port## = up.port _
-##peru|path## = up.path _
-##peru|query_str## = up.query _
-##peru|fragment## = up.fragment _
+protocol = up.scheme _
+hostname = up.hostname _
+port = up.port _
+path = up.path _
+query_str = up.query _
+fragment = up.fragment _
  _
 ##gray|# returns dict of lists:## _
-##peru|params## = urlparse.parse_qs(query_str)||require ##maroon|'uri'## _
+params = urlparse.parse_qs(query_str)||require 'uri' _
  _
-url = ##maroon|@@"http://google.com:80/foo?q=3#bar"@@## _
-up = ##green|URI##(url) _
+url = @@"http://google.com:80/foo?q=3#bar"@@ _
+up = URI(url) _
  _
 protocol = up.scheme _
 hostname = up.host _
@@ -1148,17 +1317,17 @@ query_str = up.query _
 fragment = up.fragment _
  _
 ##gray|# Ruby 1.9; returns array of pairs:## _
-params = ##green|URI##.decode_www_form(query_str)||
+params = URI.decode_www_form(query_str)||
 ||[[# url-encode]][#url-encode-note url encode/decode] _
-@<&nbsp;>@|| ||urlencode(##maroon|"lorem ipsum?"##) _
-urldecode(##maroon|"lorem+ipsum%3F"##)||##gray|# Python 3 location: urllib.parse## _
-##purple|import## urllib _
+@<&nbsp;>@|| ||urlencode("lorem ipsum?") _
+urldecode("lorem+ipsum%3F")||##gray|# Python 3 location: urllib.parse## _
+import urllib _
  _
-urllib.quote_plus(##maroon|"lorem ipsum?"##) _
-urllib.unquote_plus(##maroon|"lorem+ipsum%3F"##)||require ##maroon|'cgi'## _
+urllib.quote_plus("lorem ipsum?") _
+urllib.unquote_plus("lorem+ipsum%3F")||require 'cgi' _
  _
-##green|CGI##::escape(##maroon|"lorem ipsum?"##) _
-##green|CGI##::unescape(##maroon|"lorem+ipsum%3F"##)||
+CGI::escape("lorem ipsum?") _
+CGI::unescape("lorem+ipsum%3F")||
 ||[[# html-escape]][#html-escape-note html escape] _
 ##gray|//escape character data, escape attribute value, unescape html entities//##|| ||$s = htmlspecialchars("<>&"); _
  _
@@ -1174,17 +1343,71 @@ s3 = HTMLParser().unescape(s2)||require 'cgi' _
  _
 s2 = CGI.escapeHTML('<>&"') _
 s3 = CGI.unescapeHTML(s2)||
-||[[# base64]][#base64-note base64 encode/decode]|| ||$##peru|s## = file_get_contents(##maroon|"foo.png"##); _
-$##peru|b64## = base64_encode($##peru|s##); _
-$##peru|s2## = base64_decode($##peru|b64##);||##purple|import## base64 _
+||[[# base64]][#base64-note base64 encode/decode]|| ||$s = file_get_contents("foo.png"); _
+$b64 = base64_encode($s); _
+$s2 = base64_decode($b64);||import base64 _
  _
-##peru|s## = ##purple|open##(##maroon|'foo.png'##).read() _
-##peru|b64## = base64.b64encode(s) _
-##peru|s2## = base64.b64decode(b64)||require ##maroon|'base64'## _
+s = open('foo.png').read() _
+b64 = base64.b64encode(s) _
+s2 = base64.b64decode(b64)||require 'base64' _
  _
-s = ##green|File##.open(##maroon|"foo.png"##).read _
-b64 = ##green|Base64##.encode64(s) _
-s2 = ##green|Base64##.decode64(b64)||
+s = File.open("foo.png").read _
+b64 = Base64.encode64(s) _
+s2 = Base64.decode64(b64)||
+||routing||##gray|@@//@@ npm install express##|| ||##gray|# pip install Flask##||##gray|# gem install sinatra##||
+||template||##gray|@@//@@ npm install handlebars##|| ||##gray|# pip install jinja2##|| ||
+||||||||||~ [[# databases]][#databases-note databases]||
+||~  ||~ node.js||~ php||~ python||~ ruby||
+||mysql|| || ||##gray|# install MySQL dev files, then _
+# $ sudo pip install MySQL-python## _
+import MySQLdb _
+ _
+conn = MySQLdb.Connect( _
+@<&nbsp;&nbsp;>@db='customers', _
+@<&nbsp;&nbsp;>@user='joe', _
+@<&nbsp;&nbsp;>@passwd='xyz123', _
+@<&nbsp;&nbsp;>@host='127.0.0.1') _
+sql = 'select id from cust where name = %s' _
+cur.execute(sql, ('Bob',)) _
+for row in cur: _
+@<&nbsp;&nbsp;>@print('id: ' + row[0]) _
+conn.close()||##gray|# $ sudo gem install mysql## _
+require 'mysql' _
+ _
+conn = Mysql.new _
+conn.select_db("customers") _
+sql = 'select id from cust where name = ?' _
+stmt = con.prepare(sql) _
+stmt.execute('Bob') _
+stmt.each do |row| _
+@<&nbsp;&nbsp;>@puts row[0] _
+end||
+||mongodb|| || ||##gray|# $ sudo pip install pymongo## _
+import pymongo _
+ _
+client = pymongo.Connection('localhost') _
+db = conn['customers'] _
+cur = db.find() _
+for doc in cur: _
+@<&nbsp;&nbsp;>@print(doc)||##gray|# $ sudo gem install mongo bson_ext## _
+require 'mongo' _
+ _
+host = 'localhost' _
+port = 27017 _
+conn = Mongo::MongoClient.new(host, port) _
+db = conn['customers'] _
+coll = db['cust'] _
+coll.find().each {|doc| puts doc}||
+||redis|| || ||##gray|# $ sudo pip install redis## _
+import redis _
+ _
+conn = redis.Redis( _
+@<&nbsp;&nbsp;>@host='localhost', _
+@<&nbsp;&nbsp;>@port=6379, _
+@<&nbsp;&nbsp;>@password='xyz123') _
+conn.set('Bob', 123) _
+value = conn.get('Bob') _
+print(value)|| ||
 ||||||||||~ [[# unit-tests]][#unit-tests-note unit tests]||
 ||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# test-class]][#test-class-note test class]||##gray|@@//@@ npm install -g nodeunit## _
@@ -1195,29 +1418,29 @@ exports.testFoo = function(test) { _
 }||##gray|# pear install pear.phpunit.de/PHPUnit _
  _
 <?php## _
-##purple|Class## ##green|FooTest## ##purple|extends## _
-@<&nbsp;&nbsp;>@##green|PHPUnit_Framework_TestCase## _
+Class FooTest extends _
+@<&nbsp;&nbsp;>@PHPUnit_Framework_TestCase _
 { _
-@<&nbsp;&nbsp;>@##purple|public function## ##mediumblue|test_01##() _
+@<&nbsp;&nbsp;>@public function test_01() _
 @<&nbsp;&nbsp;>@{ _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@$##teal|this##->assertTrue(##teal|true##, _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##maroon|"not true!"##); _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@$this->assertTrue(true, _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@"not true!"); _
 @<&nbsp;&nbsp;>@} _
 } _
-##gray|?>##||##purple|import## unittest _
+##gray|?>##||import unittest _
  _
-##purple|class## ##green|TestFoo##(unittest.TestCase): _
-@<&nbsp;&nbsp;>@##purple|def## ##mediumblue|test_01##(##purple|self##): _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@##purple|self##.assertTrue(##purple|True##, ##maroon|'not True!'##) _
+class TestFoo(unittest.TestCase): _
+@<&nbsp;&nbsp;>@def test_01(self): _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@self.assertTrue(True, 'not True!') _
  _
-##purple|if @@__name__@@## == ##maroon|'@@__main__@@'##: _
-@<&nbsp;&nbsp;>@unittest.main()||require ##maroon|'test/unit'## _
+if @@__name__@@ == '@@__main__@@': _
+@<&nbsp;&nbsp;>@unittest.main()||require 'test/unit' _
  _
-##purple|class## ##green|TestFoo## < ##green|Test##::##green|Unit##::##green|TestCase## _
-@<&nbsp;&nbsp;>@##purple|def## ##mediumblue|test_01## _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@assert(##peru|true##, ##maroon|"not true!"##) _
-@<&nbsp;&nbsp;>@##purple|end## _
-##purple|end##||
+class TestFoo < Test::Unit::TestCase _
+@<&nbsp;&nbsp;>@def test_01 _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@assert(true, "not true!") _
+@<&nbsp;&nbsp;>@end _
+end||
 ||[[# run-test]][#run-test-note run tests, run test method]||$ nodeunit test_foo.js _
  _
 $ nodeunit -t testFoo test_foo.js||$ phpunit test_foo.php _
@@ -1225,186 +1448,153 @@ $ nodeunit -t testFoo test_foo.js||$ phpunit test_foo.php _
 $ phpunit @@--@@filter test_01 test_foo.php||$ python test_foo.py _
 $ python test_foo.py TestFoo.test_01||$ ruby test_foo.rb _
 $ ruby test_foo.rb -n test_01||
-||[[# assert-equal]][#assert-equal-note equality assertion]||var s = 'do re mi'; _
-test.equals(s, 'do re mi');||$##peru|s## = ##maroon|"do re me"##; _
-$##teal|this##->assertEquals($##peru|s##, ##maroon|"do re mi"##); _
+||[[# assert-equal]][#assert-equal-note equality assertion]||let s = 'do re mi'; _
+test.equals(s, 'do re mi');||$s = "do re me"; _
+$this->assertEquals($s, "do re mi"); _
  _
 ##gray|# also asserts args have same type:## _
-$##teal|this##->assertSame($##peru|s##, ##maroon|"do re mi"##);||##peru|s## = ##maroon|'do re me'## _
-##purple|self##.assertEqual(##maroon|'do re me'##, _
+$this->assertSame($s, "do re mi");||s = 'do re me' _
+self.assertEqual('do re me', _
 @<&nbsp;&nbsp;>@s, _
-@<&nbsp;&nbsp;>@##maroon|'s: {}'##.format(s))||s = ##maroon|"do re me"## _
-assert_equal(##maroon|"do re me"##, s)||
-||[[# assert-approx]][#assert-approx-note approximate assertion]|| ||$##peru|x## = 10.0 * (1.0 / 3.0); _
-$##peru|y## = 10.0 / 3.0; _
+@<&nbsp;&nbsp;>@'s: {}'.format(s))||s = "do re me" _
+assert_equal("do re me", s)||
+||[[# assert-approx]][#assert-approx-note approximate assertion]|| ||$x = 10.0 * (1.0 / 3.0); _
+$y = 10.0 / 3.0; _
  _
-$##teal|this##->assertEquals($##peru|x##, $##peru|y##, _
-@<&nbsp;&nbsp;>@##maroon|"not within delta"##, _
-@<&nbsp;&nbsp;>@pow(0.1, 6));||##peru|x## = 10.0 * (1.0 / 3.0) _
-##peru|y## = 10.0 / 3.0 _
+$this->assertEquals($x, $y, _
+@<&nbsp;&nbsp;>@"not within delta", _
+@<&nbsp;&nbsp;>@pow(0.1, 6));||x = 10.0 * (1.0 / 3.0) _
+y = 10.0 / 3.0 _
  _
 ##gray|# default for delta is 0.1@@**@@7## _
-##purple|self##.assertAlmostEqual(x, y, delta=0.1@@**@@6)||x = 10.0 * (1.0 / 3.0) _
+self.assertAlmostEqual(x, y, delta=0.1@@**@@6)||x = 10.0 * (1.0 / 3.0) _
 y = 10.0 / 3.0 _
  _
 ##gray|# default for delta is 0.001## _
 assert_in_delta(x, y, 0.1**6)||
-||[[# assert-regex]][#assert-regex-note regex assertion]|| ||$##peru|s## = ##maroon|"lorem ipsum"##; _
-$##teal|this##->assertRegExp(##maroon|"/lorem/"##, $##peru|s##);||##peru|s## = ##maroon|'lorem ipsum'## _
+||[[# assert-regex]][#assert-regex-note regex assertion]|| ||$s = "lorem ipsum"; _
+$this->assertRegExp("/lorem/", $s);||s = 'lorem ipsum' _
 ##gray|# uses re.search, not re.match:## _
-##purple|self##.assertRegexpMatches(s, ##maroon|'lorem'##)||s = ##maroon|"lorem ipsum"## _
-assert_match(##maroon|/lorem/##, s)||
-||[[# assert-exc]][#assert-exc-note exception assertion]|| ||##purple|class## ##green|Bam## ##purple|extends## ##green|Exception## {}; _
+self.assertRegexpMatches(s, 'lorem')||s = "lorem ipsum" _
+assert_match(/lorem/, s)||
+||[[# assert-exc]][#assert-exc-note exception assertion]|| ||class Bam extends Exception {}; _
  _
-##purple|public function## ##mediumblue|test_exc## { _
-@<&nbsp;&nbsp;>@$##teal|this##->SetExpectedException(##maroon|"Bam"##); _
-@<&nbsp;&nbsp;>@##purple|throw new## ##green|Bam##(##maroon|"bam!"##); _
-}||##peru|a## = [] _
-##purple|with self##.assertRaises(##green|IndexError##): _
-@<&nbsp;&nbsp;>@a[0]||assert_raises(##green|ZeroDivisionError##) ##purple|do## _
+public function test_exc { _
+@<&nbsp;&nbsp;>@$this->SetExpectedException("Bam"); _
+@<&nbsp;&nbsp;>@throw new Bam("bam!"); _
+}||a = [] _
+with self.assertRaises(IndexError): _
+@<&nbsp;&nbsp;>@a[0]||assert_raises(ZeroDivisionError) do _
 @<&nbsp;&nbsp;>@1 / 0 _
-##purple|end##||
-||[[# mock-method]][#mock-method-note mock method]|| ||$##peru|mock## = $##teal|this##->getMock(##maroon|'Foo'##, [##maroon|'foo'##]); _
-$##peru|mock##->expects($##teal|this##->once()) _
-@<&nbsp;&nbsp;>@->method(##maroon|'foo'##) _
+end||
+||[[# mock-method]][#mock-method-note mock method]|| ||$mock = $this->getMock('Foo', ['foo']); _
+$mock->expects($this->once()) _
+@<&nbsp;&nbsp;>@->method('foo') _
 @<&nbsp;&nbsp;>@->with(13) _
-@<&nbsp;&nbsp;>@->will($##teal|this##->returnValue(7)); _
+@<&nbsp;&nbsp;>@->will($this->returnValue(7)); _
  _
-$##peru|mock##->foo(13);||##gray|# pip install mock## _
-##purple|import## mock _
+$mock->foo(13);||##gray|# pip install mock## _
+import mock _
  _
-##peru|foo## = Foo() _
+foo = Foo() _
 foo.run = mock.MagicMock(return_value=7) _
  _
-##pruple|self##.assertEqual(7, foo.run(13)) _
+self.assertEqual(7, foo.run(13)) _
 foo.run.assert_called_once_with(13)||##gray|# gem install mocha## _
-require ##maroon|'mocha'## _
+require 'mocha' _
  _
 foo = mock() _
-foo.expects(##teal|:run##).returns(7).with(13).once _
+foo.expects(:run).returns(7).with(13).once _
  _
 foo.run(13)||
 ||[[# test-setup]][#test-setup-note setup]||exports.setUp = function(callback) { _
 @<&nbsp;&nbsp;>@console.log('setting up@@...@@'); _
 @<&nbsp;&nbsp;>@callback(); _
-}||##purple|public function## ##mediumblue|setUp##() _
+}||public function setUp() _
 { _
-@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"setting up\n"##; _
+@<&nbsp;&nbsp;>@echo "setting up\n"; _
 }||##gray|# in class TestFoo:## _
-##purple|def## ##mediumblue|setUp##(##purple|self##): _
-@<&nbsp;&nbsp;>@##purple|print##(##maroon|'setting up'##)||##gray|# in class TestFoo:## _
-##purple|def## ##mediumblue|setup## _
-@<&nbsp;&nbsp;>@puts ##maroon|"setting up"## _
-##purple|end##||
+def setUp(self): _
+@<&nbsp;&nbsp;>@print('setting up')||##gray|# in class TestFoo:## _
+def setup _
+@<&nbsp;&nbsp;>@puts "setting up" _
+end||
 ||[[# test-teardown]][#test-teardown-note teardown]||exports.tearDown = function(callback) { _
 @<&nbsp;&nbsp;>@console.log('tearing down@@...@@'); _
 @<&nbsp;&nbsp;>@callback(); _
-}||##purple|public function## ##mediumblue|tearDown##() _
+}||public function tearDown() _
 { _
-@<&nbsp;&nbsp;>@##purple|echo## ##maroon|"tearing down\n"##; _
+@<&nbsp;&nbsp;>@echo "tearing down\n"; _
 }||##gray|# in class TestFoo:## _
-##purple|def## ##mediumblue|tearDown##(##purple|self##): _
-@<&nbsp;&nbsp;>@##purple|print##(##maroon|'tearing down'##)||##gray|# in class TestFoo:## _
-##purple|def## ##mediumblue|teardown## _
-@<&nbsp;&nbsp;>@puts ##maroon|"tearing down"## _
-##purple|end##||
-||||||||||~ [[# debugging-profiling]][#debugging-profiling-note debugging and profiling]||
+def tearDown(self): _
+@<&nbsp;&nbsp;>@print('tearing down')||##gray|# in class TestFoo:## _
+def teardown _
+@<&nbsp;&nbsp;>@puts "tearing down" _
+end||
+||||||||||~ [[# logging]][#logging-note logging]||
+||~  ||~ node.js||~ php||~ python||~ ruby||
+||initialize application logger|| ||ini_set("log_errors", 1); _
+ini_set("error_log", "/tmp/php-error.log");||import logging _
+ _
+logging.basicConfig(format=FORMAT)||require 'logger' _
+ _
+$logger = Logger.new($stderr)||
+||log error||##gray|@@//@@ npm install winston## _
+const winston = require('winston'); _
+ _
+winston.error('bam!');||error_log("bam!");||import logging _
+ _
+logging.error('bam!')||$logger.error 'bam!'||
+||set log format|| || || || ||
+||initialize library logger|| || || || ||
+||severity levels|| || || || ||
+||set severity level|| || || || ||
+||set log handler|| || || || ||
+||||||||||~ [[# debugging]][#debugging-note debugging]||
 ||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# check-syntax]][#check-syntax-note check syntax] _
-@<&nbsp;>@|| ||$ php -l foo.php||##purple|import## py_compile _
+@<&nbsp;>@||$ node -c foo.js||$ php -l foo.php||import py_compile _
  _
 ##gray|# precompile to bytecode:## _
-py_compile.compile(##maroon|'foo.py'##)||$ ruby -c foo.rb||
-||[[# warnings-flag]][#warnings-flag-note flags for stronger and strongest warnings]|| ||##gray|//none//##||$ python -t foo.py _
-$ python -3t foo.py||$ ruby -w foo.rb _
-$ ruby -W2 foo.rb||
-||[[# lint]][#lint-note lint]||$ npm install jshint _
-$ ##gray|//NODE_MODULES//##/jshint/bin/jshint foo.js|| ||$ sudo pip install pylint _
+py_compile.compile('foo.py')||$ ruby -c foo.rb||
+||[[# check-for-errors]][#check-for-errors-note check for errors]||$ npm install -g semistandard _
+$ semistandard foo.js|| ||$ sudo pip install pylint _
 $ pylint foo.py||$ sudo gem install rubocop _
 $ rubocop -D foo.rb||
-||[[# src-cleanup]][#src-cleanup-note source cleanup]|| || ||$ sudo pip install pep8 _
+||[[# check-style]][#check-style-note check style]||$ npm install -g semistandard _
+$ semistandard foo.js|| ||$ sudo pip install pep8 _
 $ pep8 foo.py||$ sudo gem install rubocop _
 $ rubocop -D foo.rb||
-||[[# debugger]][#debugger-note run debugger]||$ npm install node-inspector _
-##gray|//launches a browser://## _
-$ node-debug foo.js|| ||$ python -m pdb foo.py||$ sudo gem install ruby-debug _
+||[[# debugger]][#debugger-note run debugger]||$ node debug foo.js|| ||$ python -m pdb foo.py||$ sudo gem install ruby-debug _
 $ rdebug foo.rb||
-||[[# debugger-cmds]][#debugger-cmds-note debugger commands]|| || ||h l n s b c w u d p q||h l n s b c w u down p q||
-||[[# benchmark]][#benchmark-note benchmark code]|| || ||##purple|import## timeit _
+||[[# benchmark]][#benchmark-note benchmark code]||console.time('product'); _
+let n = 1; _
+for (let i = 1; i < 1000*1000; ++i) { _
+@<&nbsp;&nbsp;>@n = n * i; _
+} _
+console.timeEnd('product');|| ||import timeit _
  _
-timeit.timeit(##maroon|'i += 1'##, _
-@<&nbsp;&nbsp;>@##maroon|'i = 0'##, _
-@<&nbsp;&nbsp;>@##peru|number##=1000000)||require ##maroon|'benchmark'## _
+timeit.timeit('i += 1', _
+@<&nbsp;&nbsp;>@'i = 0', _
+@<&nbsp;&nbsp;>@number=1000000)||require 'benchmark' _
  _
 n = 1_000_000 _
 i = 0 _
-puts ##green|Benchmark##.measure ##purple|do## _
+puts Benchmark.measure do _
 @<&nbsp;&nbsp;>@n.times { i += 1 } _
-##purple|end##||
-||[[# profile]][#profile-note profile code]||##gray|//node 0.10 and earlier//## _
- _
-##gray|//install and build://## _
-$ npm install profiler _
-$ ##gray|//NODE_MODULES//##/profiler/tools/build-nprof _
- _
-##gray|//profile//## _
-$ node @@--@@prof foo.js _
-$ nprof|| ||$ python -m cProfile foo.py||$ sudo gem install ruby-prof _
+end||
+||[[# profile]][#profile-note profile code]||$ node @@--@@prof foo.js _
+$ node @@--@@prof-process *v8.log|| ||$ python -m cProfile foo.py||$ sudo gem install ruby-prof _
 $ ruby-prof foo.rb||
-||||||||||~ [[# java-interop]][#java-interop-note java interoperation]||
-||~  ||~ node.js||~ php||~ python||~ ruby||
-||[[# java-version]][#java-version-note version] _
-@<&nbsp;>@|| || ||##gray|//Jython 2.5 _
-compatible with Python 2.5 :(//##||##gray|//JRuby 1.7 _
-compatible with Ruby 1.9//##||
-||[[# java-repl]][#java-repl-note repl] _
-@<&nbsp;>@|| || ||$ jython||$ jirb||
-||[[# java-interpreter]][#java-interpreter-note interpreter] _
-@<&nbsp;>@|| || ||$ jython||$ jruby||
-||[[# java-compiler]][#java-compiler-note compiler] _
-@<&nbsp;>@|| || ||##gray|//none//##||$ jrubyc||
-||[[# java-prologue]][#java-prologue-note prologue] _
-@<&nbsp;>@|| || ||##purple|import## java||##gray|//none//##||
-||[[# java-new]][#java-new-note new] _
-@<&nbsp;>@|| || ||##CD853F|rnd## = java.util.Random()||rnd = java.util.##green|Random##.new||
-||[[# java-method]][#java-method-note method] _
-@<&nbsp;>@|| || ||rnd.nextFloat()||rnd.next_float||
-||[[# java-import]][#java-import-note import] _
-@<&nbsp;>@|| || ||##purple|from## java.util ##purple|import## Random _
- _
-##CD853F|rnd## = Random()||java_import java.util.##green|Random## _
-rnd = ##green|Random##.new||
-||[[# java-non-bundled]][#java-non-bundled-note non-bundled java libraries] _
-@<&nbsp;>@|| || ||##purple|import## sys _
- _
-sys.path.append(##maroon|'path/to/mycode.jar'##) _
-##purple|import## MyClass|| require ##maroon|'path/to/mycode.jar'##||
-||[[# java-shadow]][#java-shadow-note shadowing avoidance] _
-@<&nbsp;>@|| || ||##purple|import## java.io as javaio||##purple|module## ##green|JavaIO## _
-@<&nbsp;&nbsp;>@include_package ##maroon|"java.io"## _
-##purple|end##||
-||[[# java-to-array]][#java-to-array-note convert native array to java array] _
-@<&nbsp;>@|| || ||##purple|import## jarray _
- _
-jarray.array([1, 2, 3], ##maroon|'i'##)||[1, 2, 3].to_java(##green|Java##::int)||
-||[[# java-subclassable]][#java-subclassable-note are java classes subclassable?] _
-@<&nbsp;>@|| || ||##gray|//yes//##||##gray|//yes//##||
-||[[# java-open]][#java-open-note are java class open?] _
-@<&nbsp;>@|| || ||##gray|//no//##||##gray|//yes//##||
-||~ ||~ ##EFEFEF|@@____________________________________________@@##||~ ##EFEFEF|@@____________________________________________@@##||~ ##EFEFEF|@@____________________________________________@@##||~ ##EFEFEF|@@____________________________________________@@##||
+||~ ||~ ##efefef|@@____________________________________________________@@##||~ ##efefef|@@____________________________________________________@@##||~ ##efefef|@@____________________________________________________@@##||~ ##efefef|@@____________________________________________________@@##||
 
 
 
 [[# streams-note]]
 + [#streams Streams]
 
-[[# std-file-handles-note]]
-++ [#std-file-handles standard file handles]
-
-The names for standard input, standard output, and standard error.
-
-[[# read-line-stdin-note]]
-++ [#read-line-stdin read line from stdin]
+[[# read-stdin-note]]
+++ [#read-stdin read line from stdin]
 
 How to read a line from standard input.
 
@@ -1418,13 +1608,14 @@ The illustrated function read the standard input stream until a end-of-line mark
 
 {{gets}} takes an optional parameter to specify the maximum line length.  If the length limit is encountered before a newline, the string returned will not be newline terminated.
 
-[[# eof-note]]
-++ [#eof end-of-file behavior]
+There are both global variable and constant names for the standard file handles:
 
-What happens when attempting to read a line and the seek point is after the last newline or at the end of the file.
+||$stdin||STDIN||
+||$stdout||STDOUT||
+||$stderr||STDERR||
 
 [[# chomp-note]]
-++ [#chomp chomp]
+++ [#chomp remove end-of-line]
 
 Remove a newline, carriage return, or carriage return newline pair from the end of a line if there is one.
 
@@ -1441,8 +1632,8 @@ Python strings are immutable.  //rstrip// returns a modified copy of the string.
 
 //chomp!// modifies the string in place.  //chomp// returns a modified copy.
 
-[[# write-line-stdout-note]]
-++ [#write-line-stdout write line to stdout]
+[[# write-stdout-note]]
+++ [#write-stdout write to stdout]
 
 How to write a line to standard out.  The line will be terminated by an operating system appropriate end of line marker.
 
@@ -1460,92 +1651,99 @@ print "Hello, World!"
 
 //puts// appends a newline to the output.  //print// does not.
 
-[[# printf-note]]
-++ [#printf write formatted string to stdout]
+[[# write-fmt-stdout-note]]
+++ [#write-fmt-stdout write format to stdout]
 
 How to format variables and write them to standard out.
 
 The function {{printf}} from the C standard library is a familiar example.  It has a notation for format strings which uses percent signs %.  Many other languages provide an implementation of {{printf}}.
 
-[[# open-file-note]]
-++ [#open-file open file for reading]
+[[# write-stderr-note]]
+++ [#write-stderr write to stderr]
+
+How to write a string to standard out.
+
+[[# open-read-note]]
+++ [#open-read open file for reading]
 
 How to open a file for reading.
+
+**python:**
+
+The {{open}} function returns an IO object with a {{read}} method which returns {{str}} objects.  In Python 3, these are strings of Unicode characters, but in Python 2 they are arrays of bytes.
+
+In Python 2, to get an IO object with a {{read}} method which returns {{unicode}} objects, use {{codecs.open()}}:
+
+[[code]]
+import codecs
+
+f = codecs.open('/etc/hosts', encoding='utf-8')
+[[/code]]
 
 **ruby:**
 
 When //File.open// is given a block, the file is closed when the block terminates.
 
-[[# open-file-write-note]]
-++ [#open-file-write open file for writing]
-
-How to open a file for writing.  If the file exists its contents will be overwritten.
-
-[[# file-encoding-note]]
-++ [#file-encoding set file handle encoding]
-
-How to open a file and specify the character encoding.
-
-**python:**
-
-The encoding of a file handle can be changed after it is opened:
-
-[[code]]
-find.encoding = 'UTF-8'
-[[/code]]
-
-If the encoding is set to UTF-8, but the file contains byte sequences that are not a possible UTF-8 encoding, Python will raise a {{UnicodeDecodeError}}.
-
-[[# open-file-append-note]]
-++ [#open-file-append open file for appending]
-
-How to open a file with the seek point at the end of the file.  If the file exists its contents will be preserved.
-
-[[# close-file-note]]
-++ [#close-file close file]
-
-How to close a file.
-
-[[# close-file-implicitly-note]]
-++ [#close-file-implicitly close file implicitly]
-
-How to have a file closed when a block is exited.
-
-**python:**
-
-File handles are closed when the variable holding them is garbage collected, but there is no guarantee when or if a variable will be garbage collected.
-
-**ruby:**
-
-File handles are closed when the variable holding them is garbage collected, but there is no guarantee when or if a variable will be garbage collected.
-
-[[# io-err-note]]
-++ [#io-err i/o error]
-
-How I/O errors are treated.
-
-[[# encoding-err-note]]
-++ [#encoding-err encoding error]
+[[# open-read-bytes-note]]
+++ [#open-read-bytes open for reading bytes]
 
 [[# read-line-note]]
 ++ [#read-line read line]
 
 How to read up to the next newline in a file.
 
-[[# file-iterate-note]]
-++ [#file-iterate iterate over file by line]
+[[# iterate-by-line-note]]
+++ [#iterate-by-line iterate by line]
 
 How to iterate over a file line by line.
+
+[[# read-file-str-note]]
+++ [#read-file-str read file into string]
+
+How to put the contents of a file into a single string.
 
 [[# read-file-array-note]]
 ++ [#read-file-array read file into array of string]
 
 How to put the lines of a file into an array of strings.
 
-[[# read-file-str-note]]
-++ [#read-file-str read file into string]
+[[# read-fixed-len-note]]
+++ [#read-fixed-len read fixed length]
 
-How to put the contents of a file into a single string.
+How to read up to a pre-specified number of bytes or characters from a file.
+
+**node:**
+
+Node allows reading a pre-specified max number of bytes.  It is possible that the last byte can be an incomplete part of a character. {{buf.toString('utf-8')}} returns a malformed string with an incomplete character at the end.
+
+{{readSync()}} returns the number of bytes read.  If this is less than the length of the buffer, then the remaining bytes are not overwritten. 
+
+{{Buffer.alloc}} can take an optional 2nd arg to indicate the fill byte value; the bytes are zero-filled by default.
+
+[[# read-char-note]]
+++ [#read-char read char]
+
+How to read a character from a stream.
+
+All the languages in this stream represent characters with strings of length one.
+
+[[# read-serialized-data-note]]
+++ [#read-serialized-data read serialized data]
+
+How to read serialized data from a file, using a language-specific serialization method.
+
+[[# open-write-note]]
+++ [#open-write open for writing]
+
+How to open a file for writing.  If the file exists its contents will be overwritten.
+
+[[# open-write-bytes-note]]
+++ [#open-write-bytes open for writing bytes]
+
+[[# open-append-note]]
+++ [#open-append open for appending]
+
+How to open a file with the seek point at the end of the file.  If the file exists its contents will be preserved.
 
 [[# write-str-note]]
 ++ [#write-str write string]
@@ -1567,18 +1765,43 @@ When file handles are opened with the mode strings 'r', 'w', or 'a', the file ha
 
 When file handles are opened with the mode strings 'rb', 'rw', or 'ra', the file handle is in binary mode and line terminator translation is not performed.  The operating system line terminator is available in {{os.linesep}}.
 
+[[# write-fmt-note]]
+++ [#write-fmt write format]
+
+[[# write-char-note]]
+++ [#write-char write char]
+
+[[# write-serialized-data-note]]
+++ [#write-serialized-data write serialized data]
+
+
+[[# close-note]]
+++ [#close close]
+
+How to close an open file.
+
+[[# close-block-exit-note]]
+++ [#close-block-exit close on block exit]
+
+How to have an open file closed when a block is exited.
+
+**python:**
+
+File handles are closed when the variable holding them is garbage collected, but there is no guarantee when or if a variable will be garbage collected.
+
+**ruby:**
+
+File handles are closed when the variable holding them is garbage collected, but there is no guarantee when or if a variable will be garbage collected.
+
 [[# flush-note]]
-++ [#flush flush file handle]
+++ [#flush flush]
 
 How to flush a file handle that has been written to.
 
-[[# eof-test-note]]
-++ [#eof-test end-of-file test]
-
-How to test whether the seek point of a file handle is at the end of the file.
+File handles often have buffering built into them.  A buffer collects the result of multiple writes and the data is later written to disk with a single system call write.  A flush ensures that the data is on disk, or at least in the operating system disk cache, so that other processes can see it.
 
 [[# seek-note]]
-++ [#seek file handle position]
+++ [#seek position]
 
 How to get or set the file handle seek point.
 
@@ -1615,8 +1838,8 @@ f = tempfile.TemporaryFile()
 [[/code]]
 
 
-[[# stringio-note]]
-++ [#stringio in memory file]
+[[# open-in-memory-file-note]]
+++ [#open-in-memory-file open in memory file]
 
 How to create a file descriptor which writes to an in-memory buffer.
 
@@ -1630,6 +1853,9 @@ f.write('lorem ipsum\n')
 f.seek(0)
 r.read()
 [[/code]]
+
+[[# async-note]]
++ [#async Asynchronous Events]
 
 [[# files-note]]
 + [#files Files]
@@ -2407,14 +2633,6 @@ It is sometimes useful to define superclass which is never instantiated.  Such a
 
 How to use inheritance.
 
-[[# mixin-note]]
-++ [#mixin mixin]
-
-[[# op-overload-note]]
-++ [#op-overload operator overloading]
-
-How to define the behavior of the binary operators.
-
 [[# reflection-note]]
 + [#reflection Reflection]
 
@@ -2665,6 +2883,9 @@ If the input does not consist of a multiple of three characters, then the output
 
 Whitespace can inserted freely into Base64 output; this is necessary to support transmission by email.  When converting Base64 back to binary whitespace is ignored.
 
+[[# databases-note]]
++ [#databases Unit Databases]
+
 [[# unit-tests-note]]
 + [#unit-tests Unit Tests]
 
@@ -2762,32 +2983,26 @@ How to define a setup method which gets called before every test.
 
 How to define a cleanup method which gets called after every test.
 
-[[# debugging-profiling-note]]
-+ [#debugging-profiling Debugging and Profiling]
+[[# logging-note]]
++ [#logging Logging]
+
+[[# debugging-note]]
++ [#debugging Debugging]
 
 [[# check-syntax-note]]
 ++ [#check-syntax check syntax]
 
 How to check the syntax of code without executing it.
 
-[[# warnings-flag-note]]
-++ [#warnings-flag flags for stronger and strongest warnings]
+[[# check-for-errors-note]]
+++ [#check-for-errors check for errors]
 
-Flags to increase the warnings issued by the interpreter.
+How to perform static analysis on the code to detect probably errors.
 
-**python:**
+[[# check-style-note]]
+++ [#check-style check style]
 
-The -t flag warns about inconsistent use of tabs in the source code.  The -3 flag is a Python 2.X option which warns about syntax which is no longer valid in Python 3.X.
-
-[[# lint-note]]
-++ [#lint lint]
-
-A lint tool.
-
-[[# src-cleanup-note]]
-++ [#src-cleanup source cleanup]
-
-A tool which detects or removes semantically insignificant variation in the source code.
+How to detect or remove semantically insignificant variation in the source code.
 
 [[# debugger-note]]
 ++ [#debugger run debugger]
@@ -2799,23 +3014,35 @@ How to run a script under the debugger.
 
 A selection of commands available when running the debugger.  The gdb commands are provided for comparison.
 
-||~ cmd||~ perl -d||~ python -m pdb||~ rdebug||~ gdb||
-||help||h||h||h||h||
-||list||l [##gray|//first//##, ##gray|//last//##]||l [##gray|//first//##, ##gray|//last//##]||l [##gray|//first//##, ##gray|//last//##]||l [##gray|//first//##, ##gray|//last//##]||
+||~ cmd||~ node debug||~ python -m pdb||~ rdebug||~ gdb||
+||help||help||h||h||h||
+||list||list(##gray|//lines_of_context//##)||l [##gray|//first//##, ##gray|//last//##]||l [##gray|//first//##, ##gray|//last//##]||l [##gray|//first//##, ##gray|//last//##]||
 ||next statement||n||n||n||n||
 ||step into function||s||s||s||s||
-||set breakpoint||b||b [##gray|//file//##:]##gray|//line//## _
+||step out of function||o|| || || ||
+||set breakpoint||sb([##gray|//file//,## ]##gray|//line//##)||b [##gray|//file//##:]##gray|//line//## _
 b ##gray|//function//##||b [##gray|//file//##:]##gray|//line//## _
 b ##gray|//class//##[.##gray|//method//##]||b [##gray|//file//##:]##gray|//line//##||
-||list breakpoints||L||b||info b||i b||
-||delete breakpoint||B ##gray|//num//##||cl ##gray|//num//##||del ##gray|//num//##||d ##gray|//num//##||
+||list breakpoints||breakpoints||b||info b||i b||
+||delete breakpoint||cb(##gray|//file//##, ##gray|//line//##)||cl ##gray|//num//##||del ##gray|//num//##||d ##gray|//num//##||
 ||continue||c||c||c||c||
-||show backtrace||T||w||w||bt||
+||show backtrace||bt||w||w||bt||
 ||move up stack|| ||u||u||u||
 ||move down stack|| ||d||down||do||
-||print expression||p ##gray|//expr//##||p ##gray|//expr//##||p ##gray|//expr//##||p ##gray|//expr//##||
-||(re)run||R||restart [##gray|//arg1//##[, ##gray|//arg2//## ...]]||restart [##gray|//arg1//##[, ##gray|//arg2//## ...]]||r [##gray|//arg1//##[, ##gray|//arg2//## ...]]||
-||quit debugger||q||q||q||q||
+||print expression||repl _
+ _
+##gray|//Inside repl use console.log() to _
+print expression; ^C to exit.//##||p ##gray|//expr//##||p ##gray|//expr//##||p ##gray|//expr//##||
+||(re)run||restart||restart [##gray|//arg1//##[, ##gray|//arg2//## ...]]||restart [##gray|//arg1//##[, ##gray|//arg2//## ...]]||r [##gray|//arg1//##[, ##gray|//arg2//## ...]]||
+||quit debugger||quit||q||q||q||
+
+**node:**
+
+One can insert a breakpoint by adding this statement to the source code:
+
+[[code]]
+debugger;
+[[/code]]
 
 [[# benchmark-note]]
 ++ [#benchmark benchmark code]
@@ -2826,71 +3053,3 @@ How to run a snippet of code repeatedly and get the user, system, and total wall
 ++ [#profile profile code]
 
 How to run the interpreter on a script and get the number of calls and total execution time for each function or method.
-
-[[# java-interop-note]]
-+ [#java-interop Java Interoperation]
-
-[[# java-version-note]]
-++ [#java-version version]
-
-Version of the scripting language JVM implementation used in this reference sheet.
-
-[[# java-repl-note]]
-++ [#java-repl repl]
-
-Command line name of the repl.
-
-[[# java-interpreter-note]]
-++ [#java-interpreter interpreter]
-
-Command line name of the interpreter.
-
-[[# java-compiler-note]]
-++ [#java-compiler compiler]
-
-Command line name of the tool which compiles source to java byte code.
-
-[[# java-prologue-note]]
-++ [#java-prologue prologue]
-
-Code necessary to make java code accessible.
-
-[[# java-new-note]]
-++ [#java-new new]
-
-How to create a java object.
-
-[[# java-method-note]]
-++ [#java-method method]
-
-How to invoke a java method.
-
-[[# java-import-note]]
-++ [#java-import import]
-
-How to import names into the current namespace.
-
-[[# java-non-bundled-note]]
-++ [#java-non-bundled import non-bundled java library]
-
-How to import a non-bundled Java library
-
-[[# java-shadow-note]]
-++ [#java-shadow shadowing avoidance]
-
-How to import Java names which are the same as native names.
-
-[[# java-to-array-note]]
-++ [#java-to-array convert native array to java array]
-
-How to convert a native array to a Java array.
-
-[[# java-subclassable-note]]
-++ [#java-subclassable are java classes subclassable?]
-
-Can a Java class be subclassed?
-
-[[# java-open-note]]
-++ [#java-open are java classes open?]
-
-Can a Java array be monkey patched?

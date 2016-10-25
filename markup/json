@@ -1,4 +1,4 @@
-[[# top]][#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arith-logic arithmetic and logic] | [#strings strings] | [#regex regular expressions] | [#dates-time dates and time] | [#arrays arrays] | [#dictionaries dictionaries] | [#functions functions] | [#exec-control execution control] | [#exceptions exceptions] | [#streams streams] | [#file-fmt file formats] | [#processes-env processes and environment] | [#lib-namespaces libraries and namespaces]
+[[# top]][#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arith-logic arithmetic and logic] | [#strings strings] | [#regex regular expressions] | [#dates-time dates and time] | [#arrays arrays] | [#dictionaries dictionaries] | [#functions functions] | [#exec-control execution control] | [#exceptions exceptions] | [#streams streams] | [#file-fmt file formats] | [#processes-env processes and environment] | [#lib-namespaces libraries and namespaces] | [#reflection reflection]
 
 ||||~ [[# version]]version||
 ||~ ||~ [#jq jq]||
@@ -273,6 +273,15 @@ def triple: 3 * .; _
 def quadruple; 4 * .; _
  _
 $ echo 3 | jq 'import "multiples" as mult; mult::double'||
+||||~ [[# reflection]]reflection||
+||~ ||~ jq||
+||[[# inspect-type]][#inspect-type-note inspect type]||$ echo '{"foo": 1}' | jq '.foo | type'||
+||[[# basic-types]][#basic-types-note basic types]||"number" _
+"boolean" _
+"array" _
+"object" _
+"null" _
+"string"||
 ||~ ||~ ##EFEFEF|@@___________________________________________________________________@@##||
 
 [[# jq]]
