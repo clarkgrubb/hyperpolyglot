@@ -13,7 +13,7 @@
 $ python @@--@@version||$ ruby @@--@@version||
 ||[[# implicit-prologue]][#implicit-prologue-note implicit prologue] _
 @<&nbsp;>@||##gray|@@//@@ npm install lodash## _
-let _ = require('lodash');||##gray|# sudo apt install php-mbstring##||import os, re, sys||##gray|//none//##||
+const _ = require('lodash');||##gray|# sudo apt install php-mbstring##||import os, re, sys||##gray|//none//##||
 ||||||||||~ [[# grammar-execution]][#grammar-execution-note grammar and execution]||
 ||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# interpreter]][#interpreter-note interpreter] _
