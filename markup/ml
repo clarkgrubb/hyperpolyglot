@@ -517,12 +517,14 @@ sort [1, 3, 2, 4]||
 ||[[# fold-list-right]][#fold-list-right-note fold from right] _
 @<&nbsp;>@|| ||List.fold_right (-) [1; 2; 3] 0||List.foldr (op -) 0 [1, 2, 3];||foldr (-) 0 [1, 2, 3]||
 ||[[# list-member]][#list-member-note membership] _
-@<&nbsp;>@|| || || ||elem 3 [1, 2, 3]||
+@<&nbsp;>@|| ||List.mem 3 [1; 2; 3]|| ||elem 3 [1, 2, 3]||
 ||[[# universal-test-list]][#universal-test-list-note universal test] _
 @<&nbsp;>@|| ||List.for_all (fun x -> x > 2) [1; 2; 3];;||List.forall (fun x -> x > 2) [1; 2; 3]||all (\x -> x > 2) [1, 2, 3]||
 ||[[# existential-test-list]][#existential-test-list-note existential test] _
 @<&nbsp;>@|| ||List.exists (fun x -> x > 2) [1; 2; 3];;||List.exists (fun x -> x > 2) [1; 2; 3]||any (\x -> x > 2) [1, 2, 3]||
-||[[# zip-list]][#zip-list-note zip lists]|| || || ||##gray|@@--@@ list of tuples:## _
+||[[# zip-list]][#zip-list-note zip lists]|| ||##gray|@@(*@@ list of tuples *)## _
+List.combine [1; 2; 3] ['a'; 'b'; 'c'] _
+|| ||##gray|@@--@@ list of tuples:## _
 zip [1, 2, 3] ['a', 'b', 'c']||
 ||||||||||~ [[# tuples]][#tuples-note tuples]||
 ||~ ||~ sml||~ ocaml||~ f#||~ haskell||
