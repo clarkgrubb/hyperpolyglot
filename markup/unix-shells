@@ -1527,13 +1527,13 @@ The remarks above on [#if if] conditions also apply to the while loop condition.
 ||~ ||~ [#bash bash]||~ [#fish fish]||~ [#ksh ksh]||~ [#tcsh tcsh]||~ [#zsh zsh]||
 ||stdin from file||tr a-z A-Z < ##gray|//file//##||tr a-z A-Z < ##gray|//file//##||tr a-z A-Z < ##gray|//file//##||tr a-z A-Z < ##gray|//file//##||tr a-z A-Z < ##gray|//file//##||
 ||stdout to file||ls > ##gray|//file//##||ls > ##gray|//file//##||ls > ##gray|//file//##||ls > ##gray|//file//##||ls > ##gray|//file//##||
-||stderr to file||ls /not_a_file 2> ##gray|//file//##||s /not_a_file 2> ##gray|//file//##||ls /not_a_file 2> ##gray|//file//##||##gray|//none//##||ls /not_a_file 2> ##gray|//file//##||
-||stdout and stderr to file||ls > ##gray|//file//## 2>&1||ls > ##gray|//file//## 2>&1||ls > ##gray|//file//## 2>&1||ls >& ##gray|//file//##||ls > ##gray|//file//## 2>&1||
+||stderr to file||ls /not_a_file 2> ##gray|//file//##||ls /not_a_file ^ ##gray|//file//##||ls /not_a_file 2> ##gray|//file//##||##gray|//none//##||ls /not_a_file 2> ##gray|//file//##||
+||stdout and stderr to file||ls > ##gray|//file//## 2>&1||ls > ##gray|//file//## ^&1||ls > ##gray|//file//## 2>&1||ls >& ##gray|//file//##||ls > ##gray|//file//## 2>&1||
 ||append stdout to file||ls @@>>@@ ##gray|//file//##||ls @@>>@@ ##gray|//file//##||ls @@>>@@ ##gray|//file//##||ls @@>>@@ ##gray|//file//##||ls @@>>@@ ##gray|//file//##||
-||append stderr to file||ls 2@@>>@@ ##gray|//file//##||ls 2@@>>@@ ##gray|//file//##||ls 2@@>>@@ ##gray|//file//##||##gray|//none//##||ls 2@@>>@@ ##gray|//file//##||
-||append stdout and stderr to file||ls @@>>@@ /tmp/bash.out 2>&1||ls @@>>@@ /tmp/bash.out 2>&1||ls @@>>@@ /tmp/bash.out 2>&1||ls @@>>@@& ##gray|//file//##||ls @@>>@@ /tmp/zsh.out 2>&1||
+||append stderr to file||ls 2@@>>@@ ##gray|//file//##||ls ^^ ##gray|//file//##||ls 2@@>>@@ ##gray|//file//##||##gray|//none//##||ls 2@@>>@@ ##gray|//file//##||
+||append stdout and stderr to file||ls @@>>@@ /tmp/bash.out 2>&1||ls @@>>@@ /tmp/bash.out ^&1||ls @@>>@@ /tmp/bash.out 2>&1||ls @@>>@@& ##gray|//file//##||ls @@>>@@ /tmp/zsh.out 2>&1||
 ||stdout to pipe||ls | wc||ls | wc||ls | wc||ls | wc||ls | wc||
-||sdout and stderr to pipe||ls 2>&1 | wc||ls 2>&1 | wc||ls 2>&1 | wc||ls |& wc||ls 2>&1 | wc||
+||sdout and stderr to pipe||ls 2>&1 | wc||ls ^&1 | wc||ls 2>&1 | wc||ls |& wc||ls 2>&1 | wc||
 ||stdin from here-document||wc @@<<@@ EOF _
 do _
 re _
