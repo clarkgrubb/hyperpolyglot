@@ -35,7 +35,19 @@ Hello, World!||
 $ erlc +native foo.erl|| ||
 ||[[# bytecode-compiler]][#bytecode-compiler-note bytecode compiler] _
 @<&nbsp;>@|| ||$ erlc foo.erl|| ||
-||[[# interpreter]][#interpreter-note interpreter]|| ||$ cat arg-analyzer _
+||[[# interpreter]][#interpreter-note interpreter]||$ cat arg-analyzer _
+#!/usr/bin/env swipl _
+ _
+main :- _
+@<&nbsp;&nbsp;>@current_prolog_flag(argv, Args), _
+@<&nbsp;&nbsp;>@(@<&nbsp;&nbsp;>@ Args = [Arg] _
+@<&nbsp;&nbsp;>@-> format('argument was: ~w~n', [Arg]) _
+@<&nbsp;&nbsp;>@;@<&nbsp;&nbsp;>@ format('Usage: arg-analyzer ARG~n') ). _
+ _
+:- main, halt(0). _
+ _
+$ swipl -s arg-analyzer foo _
+argument was: foo||$ cat arg-analyzer _
 %%! _
 main([String]) -> _
 @<&nbsp;&nbsp;>@io:format("argument was: ~s\n", [String]); _
@@ -44,7 +56,18 @@ main(_) -> _
  _
 $ escript arg-analyzer foo _
 argument was: foo|| ||
-||[[# shebang]][#shebang-note shebang]|| ||$ cat arg-analyzer _
+||[[# shebang]][#shebang-note shebang]||$ cat arg-analyzer _
+#!/usr/bin/env swipl _
+ _
+main :- _
+@<&nbsp;&nbsp;>@current_prolog_flag(argv, Args), _
+@<&nbsp;&nbsp;>@(@<&nbsp;&nbsp;>@ Args = [Arg] _
+@<&nbsp;&nbsp;>@-> format('argument was: ~w~n', [Arg]) _
+@<&nbsp;&nbsp;>@;@<&nbsp;&nbsp;>@ format('Usage: arg-analyzer ARG~n') ). _
+ _
+:- main, halt(0). _
+$ ./arg-analyzer foo _
+argument was: foo||$ cat arg-analyzer _
 #!/usr/bin/env escript _
 %%! _
 main([String]) -> _
@@ -56,7 +79,7 @@ $ ./arg-analyzer foo _
 argument was: foo|| ||
 ||[[# invoke-repl]][#invoke-repl-note repl] _
 @<&nbsp;>@||$ swipl||$ erl||$ iex||
-||[[# block-delimiters]][#block-delimiters-note block delimiters]|| ||if ; end _
+||[[# block-delimiters]][#block-delimiters-note block delimiters]||( )||if ; end _
 case ; end _
 try catch end _
 fun ; end _
@@ -69,7 +92,7 @@ receive end||do ; end||
 comment line//## */|| || ||
 ||||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
 ||~ ||~ prolog||~ erlang||~ elixir||
-||[[# var-def]][#var-def-note variable identifier]||##gray|//upper case letter followed by alphanumeric characters//##||##gray|//upper case letter following by alphanumeric characters and underscores.//##|| ||
+||[[# var-def]][#var-def-note variable identifier]||##gray|//upper case letter followed by alphanumeric characters and underscores//##||##gray|//upper case letter following by alphanumeric characters and underscores.//##|| ||
 ||[[# write-once-var]][#write-once-var write once variable]|| ||##gray|//previously unused variables on the left side of an equal sign will be assigned to values that make the left match the right//##|| ||
 ||[[# assignment]][#assignment-note assignment]||X = 3. _
 4 = Y.||X = 3.||x = 3||
@@ -81,12 +104,19 @@ foo(X, Y) = foo(1, 2).||{X, Y} = {1, 2}. _
 [z, w] = [1, 2]||
 ||[[# non-referential-id]][#non-referential-id-note non-referential identifier]||##gray|//lower case letter followed by alphanumeric characters; can also include underscore: _//##||##gray|//lower case letter followed by alphanumeric characters; can also include period: . at-sign: @ underscore: _//##|| ||
 ||[[# quoted-non-referential-id]][#quoted-non-referential-id-note quoted non-referential identifier]||##gray|//any printable characters inside single quotes; use backslash to escape a single quote.//##||##gray|//any printable characters inside single quotes; use backslash or two single quotes to escape a single quote.//##|| ||
-||[[# cond-expr]][#cond-expr-note conditional expression]|| ||if _
+||[[# cond-expr]][#cond-expr-note conditional expression]||(@<&nbsp;&nbsp;>@X > 0 -> Result = 1 _
+;@<&nbsp;&nbsp;>@X = 0 -> Result = X _
+;@<&nbsp;&nbsp;>@X < 0 -> Result = -1 ).||if _
 @<&nbsp;&nbsp;>@X > 0 -> 1; _
 @<&nbsp;&nbsp;>@X == 0 -> X; _
 @<&nbsp;&nbsp;>@X < 0 -> -1 _
 end|| if x > 0 do 1 else if x < 0 do -1 else 0 end end||
-||[#case case]|| ||case X of _
+||[#case case]||(@<&nbsp;&nbsp;>@X = 1 -> Result = true _
+;@<&nbsp;&nbsp;>@X = 0 -> Result = false ). _
+##gray|//or://## _
+member(X-Result, [ _
+ @<&nbsp;&nbsp;>@1-true, _
+ @<&nbsp;&nbsp;>@0-false]).||case X of _
 @<&nbsp;&nbsp;>@1 -> true; _
 @<&nbsp;&nbsp;>@0 -> false _
 end||case x do _
@@ -110,22 +140,22 @@ and or not _
 ||[[# relational-op]][#relational-op-note relational operators]||=:= \= < > =< >=||== /= < > =< >= _
 ##gray|//no numeric conversion://## _
 =:= =/=|| ||
-||[[# arith-expr]][#arith-expr-note arithmetic expression]||is(X, 2 + 2).||2 + 2||2 + 2||
+||[[# arith-expr]][#arith-expr-note arithmetic expression]||X is 2 + 2.||2 + 2||2 + 2||
 ||[[# arith-op]][#arith-op-note arithmetic operators] _
  _
 ##gray|//addition, subtraction, multiplication, float division, integer division, remainder//##||+ - * / @@//@@ mod||+ - * / div rem||+ - * / div rem _
  _
 ##gray|//div and rem are functions, not operators//##||
-||[[# int-div]][#int-div-note integer division]||is(X, 7 @@//@@ 3).||7 div 3.||div 7, 3 _
+||[[# int-div]][#int-div-note integer division]||X is 7 @@//@@ 3.||7 div 3.||div 7, 3 _
 div(7, 3)||
 ||[[# int-div-zero]][#int-div-zero-note integer division by zero]||##gray|zero_divisor //error//##||##gray|//bad argument exception//##||##gray|//raises// ArithmeticError##||
 ||[[# float-div]][#float-div-note float division] _
-@<&nbsp;>@||is(X, 7 / 3).||7 / 3.||7 / 3||
+@<&nbsp;>@||X is 7 / 3.||7 / 3.||7 / 3||
 ||[[# float-div-zero]][#float-div-zero-note float division by zero]||##gray|zero_divisor //error//##||##gray|//bad argument exception//##||##gray|//raises// ArithmeticError##||
 ||[[# power]][#power-note power] _
-@<&nbsp;>@||is(X, 2**32).||math:pow(2, 32).||:math.pow(2, 32)||
+@<&nbsp;>@||X is 2**32.||math:pow(2, 32).||:math.pow(2, 32)||
 ||[[# sqrt]][#sqrt-note sqrt] _
-@<&nbsp;>@||is(X, sqrt(2)).||math:sqrt(2).||:math.sqrt(2)||
+@<&nbsp;>@||X is sqrt(2).||math:sqrt(2).||:math.sqrt(2)||
 ||[[# sqrt-negative-one]][#sqrt-negative-one-note sqrt -1] _
 @<&nbsp;>@||##gray|//arithmetic evaluation error: undefined//##||##gray|//raises bad argument exception//##||##gray|//raises// ArithmeticError##||
 ||[[# transcendental-func]][#transcendental-func-note transcendental functions]||exp log _
@@ -150,8 +180,8 @@ round(2.7) _
 ##gray|# 2.0, 3.0:## _
 Float.floor(2.7) _
 Float.ceil(2.7)||
-||[[# absolute-val]][#absolute-val-note absolute value]||is(X, abs(-3)). _
-is(X, abs(-3.2)).||abs(-3) _
+||[[# absolute-val]][#absolute-val-note absolute value]||X is abs(-3). _
+X is abs(-3.2).||abs(-3) _
 abs(-3.2)||abs(-3) _
 abs(-3.2)||
 ||[[# int-overflow]][#int-overflow-note integer overflow]|| || || ||
@@ -159,19 +189,18 @@ abs(-3.2)||
 -2.0E-2||2.0e2 _
 -2.0E-2||2.0e2 _
 -2.0e-2||
-||[[# random-num]][#random-num-note random number]||is(X, random(100)). _
-##gray|//??//##||random:uniform(). _
+||[[# random-num]][#random-num-note random number]||X is random(100).||random:uniform(). _
 random:uniform(100).||:random.uniform _
 :random.uniform(100)||
 ||[[# random-seed]][#random-seed-note random seed] _
 @<&nbsp;>@||set_random(seed(17)).||random:seed(17, 17, 17).||:random.seed(17, 17, 17)||
 ||[#random-seed-default result of not seeding]||##gray|//seeded using// /dev/random //or system time//##||##gray|//interpreter uses same seed at startup.//##|| ||
-||[[# bit-op]][#bit-op-note bit operators]||is(X, 5 @@<<@@ 1). _
-is(X, 5 @@>>@@ 1). _
-is(X, 5 /\ 1). _
-is(X, 5 \/ 1). _
-is(X, 5 xor 1). _
-is(X, 5 \ 1).||5 bsl 1 _
+||[[# bit-op]][#bit-op-note bit operators]||X is 5 @@<<@@ 1. _
+X is 5 @@>> @@ 1. _
+X is 5 /\ 1. _
+X is 5 \/ 1. _
+X is 5 xor 1. _
+X is 5 \ 1.||5 bsl 1 _
 5 bsr 1 _
 5 band 1 _
 5 bor 1 _
@@ -184,7 +213,9 @@ bnot 5||import Bitwise _
 @@5 ||| 1@@ _
 @@5 ^^^ 1@@ _
 @@~~~5@@||
-||[[# binary-octal-hex-literals]][#binary-octal-hex-literals-note binary, octal, and hex literals]|| ||2#101010 _
+||[[# binary-octal-hex-literals]][#binary-octal-hex-literals-note binary, octal, and hex literals]||2'101010 _
+8'52 _
+16'2A||2#101010 _
 8#52 _
 16#2A||0b101010 _
 0o52 _
@@ -207,20 +238,30 @@ string:concat("one ", string:concat("two ", "three")) _
 ##gray|//concatenates double quoted string literals only://## _
 "one " "two " "three"||"one " <> "two " <> "three"||
 ||[[# str-replicate]][#str-replicate-note replicate] _
-@<&nbsp;>@|| ||Hbar = string:copies("-", 80).||:binary.copy("-", 80)||
+@<&nbsp;>@||##gray|//list from single characters://## _
+length(Hbar, 80), maplist(=('-'), Hbar).||Hbar = string:copies("-", 80).||:binary.copy("-", 80)||
 ||[[# trim]][#trim-note trim] _
-##gray|//both sides, left side, right side//##|| ||string:strip(" lorem ") _
+##gray|//both sides, left side, right side//##||normalize_space(string(Result), "   lorem  "). ||string:strip(" lorem ") _
 string:strip(" lorem", left) _
 string:strip("lorem ", right)||String.trim(" lorem ")||
 ||[[# pad]][#pad-note pad] _
-##gray|//on right, on left, both sides//##|| ||string:right("lorem", 10, $ ) _
+##gray|//on right, on left, both sides//##||format(string(Result), 'lorem~10|', []). _
+##gray|//Result = "lorem@<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>@".//## _
+ _
+format(string(Result), '~tlorem~10|', []). _
+##gray|//Result = "@<&nbsp;&nbsp;&nbsp;&nbsp&nbsp;>@lorem".//## _
+ _
+format(string(Result), '~tlorem~t~10|', []). _
+##gray|//Result = "@<&nbsp;&nbsp;>@lorem@<&nbsp;&nbsp;&nbsp;>@".//##||string:right("lorem", 10, $ ) _
 string:left("lorem", 10, $ ) _
 string:centre("lorem", 10, $ )||String.pad_leading("lorem", 10, ["$"]) _
 String.pad_trailing("lorem", 10, ["$"])||
-||[[# num-to-str]][#num-to-str-note number to string]|| ||"value: " ++ integer_to_list(8) _
+||[[# num-to-str]][#num-to-str-note number to string]||number_string(8, String). _
+number_string(3.14, String).||"value: " ++ integer_to_list(8) _
 "value: " ++ float_to_list(3.14)||"value: " <> Integer.to_string(8) _
 "value: " <> Float.to_string(3.14)||
-||[[# str-to-num]][#str-to-num-note string to number]|| ||7 + list_to_integer("12") _
+||[[# str-to-num]][#str-to-num-note string to number]||number_string(N, "12"), X is 7 + N. _
+number_string(N, "0.039"), X is 73.9 + N.||7 + list_to_integer("12") _
  73.9 + list_to_float("0.039")||7 + String.to_integer("12") _
 73.9 + String.to_float("0.039")||
 ||[[# atom-to-str]][#atom-to-str-note non-referential identifier to string]||name(foo, X).||atom_to_list(foo)||Atom.to_string(:foo)||
@@ -231,20 +272,23 @@ downcase_atom('LOREM', X).||string:to_upper("lorem") _
 string:to_lower("LOREM")||String.downcase("LOREM") _
 String.upcase("lorem") _
 String.capitalize("lorem")||
-||[[# split]][#split-note split]|| ||string:tokens("foo bar baz", " ") _
+||[[# split]][#split-note split]||split_string("foo bar baz", " ", "", Result).||string:tokens("foo bar baz", " ") _
  _
 {ok, Rx} = re:compile("\s+"). _
 re:split("foo bar baz", Rx, [{return, list}])||String.split("foo bar baz") _
 Regex.split(~r/ /, "foo bar baz")||
 ||[[# join]][#join-note join] _
-@<&nbsp;>@|| ||string:join(["foo", "bar", "baz"], " ")||String.join(["foo", "bar", "baz"])||
+@<&nbsp;>@||atomics_to_string(["foo", "bar", "baz"], " ", Result).||string:join(["foo", "bar", "baz"], " ")||String.join(["foo", "bar", "baz"])||
 ||[#character-literal character literal] _
-@<&nbsp;>@||##gray|//none//##||$A||'A'||
+@<&nbsp;>@||0'A ##gray|//(character code 65)//## _
+'A' ##gray|//(atom 'A')//##||$A||'A'||
 ||[#string-length string length]||length("hello", X). _
  _
 atom_length('hello', X).||length("hello")||String.length("hello")||
 ||[[# index-substr]][#index-substr-note index of substring] _
-##gray|//first, last//##|| ||##gray|% 5:## _
+##gray|//first, last//##||sub_string("foo bar bar", CharsBefore, _, _, "bar"), _
+Index is CharsBefore + 1. _
+##gray|//all solutions enumerated on backtracking: CharsBefore = 4, Index = 5 ; CharsBefore = 8, Index = 9//##||##gray|% 5:## _
 string:str("foo bar bar", "bar") _
  _
 ##gray|% 9:## _
@@ -252,7 +296,7 @@ string:rstr("foo bar bar", "bar")||##gray|# {4, 3}:## _
 :binary.match("foo bar baz", "bar") _
  _
 ##gray|//??//##||
-||[[# extract-substr]][#extract-substr-note extract substring]|| ||string:substr("foo bar bar", 5, 3)||String.slice("foo bar baz", 5..3)||
+||[[# extract-substr]][#extract-substr-note extract substring]||sub_string("foo bar bar", 4, 3, _, Result).||string:substr("foo bar bar", 5, 3)||String.slice("foo bar baz", 5..3)||
 ||[#chr-ord chr and ord]||char_code(X, 65). _
 char_code('A', X).||[65] _
 lists:nth(1, "A")||List.to_string([65]) _
@@ -314,7 +358,8 @@ Opts = [{return, list}]. _
 S2 = re:replace(S, Rx, "\\2 \\1", Opts).|| ||
 ||||||||~ [[# date-time]][#date-time-note dates and time]||
 ||~ ||~ prolog||~ erlang||~ elixir||
-||current date/time|| ||@@{@@{YYYY,MM,DD}, {HH,MI,SS@@}@@} = calendar:universal_time(). _
+||current date/time|| get_time(TimeStamp), stamp_date_time(TimeStamp, date(YY,MM,DD,H,M,S,_,_,_), local). _
+get_time(TimeStamp), stamp_date_time(TimeStamp, date(YY,MM,DD,H,M,S,_,_,_), 'UTC').||@@{@@{YYYY,MM,DD}, {HH,MI,SS@@}@@} = calendar:universal_time(). _
 @@{@@{YYYY,MM,DD}, {HH,MI,SS@@}@@} = calendar:local_time().||DateTime.utc_now||
 ||||||||~ [[# lists]][#lists-note lists]||
 ||~ ||~ prolog||~ erlang||~ elixir||
@@ -348,8 +393,9 @@ lists:foldr(fun(X, Y) -> X - Y end, 0, [1, 2, 3, 4]).||##gray|# 2:## _
 Enum.reduce([1, 2, 3], fn x, y -> x - y end)||
 ||||||||~ [[# tuples]][#tuples-note tuples]||
 ||~ ||~ prolog||~ erlang||~ elixir||
-||[#tuple-literal tuple literal]||(1, "hello", 3.14)||{1, "foo", 3.14}||{1, "foo", 3.14}||
-||[#tuple-access tuple element access]|| ||##gray|% "foo":## _
+||[#tuple-literal tuple literal]||(1, "hello", 3.14)  ##gray|//or any arbitrary function symbol//##||{1, "foo", 3.14}||{1, "foo", 3.14}||
+||[#tuple-access tuple element access]||arg(2, tuple(1, "foo", 3.14), Element). _
+##gray|//Element = "foo".//##||##gray|% "foo":## _
 element(1, {1, "foo", 3.14}) _
  _
 ##gray|% {1, "bar", 3.14}:## _
@@ -358,7 +404,8 @@ elem({1, "foo", 3.14}, 2) _
  _
 ##gray|# 1, "bar", 3.14}:## _
 put_elem({1, "foo", 3.14}, 2, "bar") ||
-||[#tuple-length tuple length]|| ||tuple_size({1, "foo", 3.14})||tuple_size({1, "foo", 3.14})||
+||[#tuple-length tuple length]||functor(tuple(1, "foo", 3.14), _, Length). _
+##gray|//Length = 3.//##||tuple_size({1, "foo", 3.14})||tuple_size({1, "foo", 3.14})||
 ||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
 ||~ ||~ prolog||~ erlang||~ elixir||
 ||literal|| || ||%{"t" => 1, "f" => 0}||
@@ -373,10 +420,11 @@ put_elem({1, "foo", 3.14}, 2, "bar") ||
 ||~ ||~ prolog||~ erlang||~ elixir||
 ||||||||~ [[# functions]][#functions-note functions]||
 ||[#function-definition function definition]||factorial(0,1). _
-factorial(N, F) :- is(N1, N - 1), factorial(N1, F1), is(F, N * F1).||factorial(0) -> 1; _
+factorial(N, F) :- N1 is N - 1, factorial(N1, F1), F is N * F1.||factorial(0) -> 1; _
 factorial(N) -> N * factorial(N-1).||def factorial(0), do: 1 _
 def factorial(n), do: n * factorial(n - 1)||
-||[#function-definition-guards function definition with guards]|| ||factorial(N) when N > 0 -> N * factorial(N-1); _
+||[#function-definition-guards function definition with guards]||factorial(N, F) :- N > 0, N1 is N - 1, factorial(N1, F1), F is N * F1. _
+factorial(0, 1).||factorial(N) when N > 0 -> N * factorial(N-1); _
 factorial(0) -> 1.||def factorial(n) when n > 0, do: n * factorial(n - 1) _
 def factorial(0), do: 1||
 ||[#anonymous-function anonymous function]|| ||fun(X, Y) -> X + Y end||fn(x, y) -> x + y end||
@@ -385,7 +433,9 @@ def factorial(0), do: 1||
 end|| ||
 ||||||||~ [[# execution-control]][#execution-control-note execution control]||
 ||~ ||~ prolog||~ erlang||~ elixir||
-||[#if if]|| ||if _
+||[#if if]||( X = 0 -> format('no hits~n') _
+; X = 1 -> format('one hit~n') _
+; X > 1 -> format('~w hits~n', [X]) ).||if _
 @<&nbsp;&nbsp;>@X == 0 -> io:format("no hits~n"); _
 @<&nbsp;&nbsp;>@X == 1 -> io:format("one hit~n"); _
 @<&nbsp;&nbsp;>@X > 1 -> io:format("~w hits~n", [X]) _
@@ -394,8 +444,11 @@ end.||if x == 0 do _
 else _
 @<&nbsp;&nbsp;>@IO.puts "hits" _
 end||
-||[#for for]|| || ||for x <- 1..10, do: IO.puts(x)||
-||[#try-catch try/catch]|| ||X = 0. _
+||[#for for]||between(1, 10, X), writeln(X), false; true.|| ||for x <- 1..10, do: IO.puts(x)||
+||[#try-catch try/catch]||X = 0, _
+catch(Y is 7 div X, _
+@<&nbsp;&nbsp;>@error(evaluation_error(zero_divisor), _), _
+@<&nbsp;&nbsp;>@Y is 0).||X = 0. _
 try (7 div X) of _
 @<&nbsp;&nbsp;>@Val -> Val _
 catch _
@@ -470,7 +523,7 @@ current_prolog_flag(argv, Argv).||##gray|//when invoked by// escript //the comma
 [data]. _
 ['data.pl']. _
 consult(data)|| || ||
-||[#define-namespace define namespace]|| ||##gray|//in file// factorial.erl## _
+||[#define-namespace define namespace]||:- module(factorial, [factorial/1]).||##gray|//in file// factorial.erl## _
 -module(factorial). _
 -export([factorial/1]). _
 ##gray|//definition of// factorial##||defmodule Factorial do _
@@ -481,7 +534,8 @@ end||
 ||~ ||~ prolog||~ erlang||~ elixir||
 ||[#inspect-namespace inspect namespace]|| ||factorial:module_info().|| ||
 ||||||||~ [[# repl]][#repl-note repl]||
-||help|| ||help().||h||
+||help||help. _
+apropos(keyword).||help().||h||
 ||[#clear-variable clear variable]|| ||f(X).|| ||
 ||[#clear-all-variables clear all variables]|| ||f().|| ||
 ||[#display-processes display processes]|| ||i().|| ||
