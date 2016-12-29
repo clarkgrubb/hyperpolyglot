@@ -7,7 +7,7 @@
 ||create session and attach||$ screen||$ tmux||
 ||create session //foo// and attach||$ screen -S foo||$ tmux new -s foo||
 ||create detached session //foo//||$ screen -S foo -d -m||$ tmux new -s foo -d||
-||list sessions|| ||$ tmux ls||
+||list sessions||$ screen -list||$ tmux ls||
 ||attach||$ screen -r||$ tmux attach||
 ||attach to session //foo//||$ screen -r foo||$ tmux attach -t foo||
 ||attach to session by pid||$ screen -r ##gray|//pid//##|| ||
