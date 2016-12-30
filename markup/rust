@@ -2,7 +2,7 @@
 
 ||~ ||~ [#rust rust]||~ [#swift swift]||~ [#scala scala]||
 ||[[# version-used]][#version-used-note version used] _
-@<&nbsp;>@||##gray|//1.5//##||##gray|//2.1//##||##gray|//2.11//##||
+@<&nbsp;>@||##gray|//1.13//##||##gray|//2.1//##||##gray|//2.11//##||
 ||[[# version]][#version-note show version] _
 @<&nbsp;>@||$ rustc @@--@@version||$ swift @@--@@version||$ scala -version||
 ||[[# implicit-prologue]][#implicit-prologue-note implicit prologue]||##gray|//none//##||import Foundation||##gray|//none; but these libraries always available:// _
@@ -40,7 +40,9 @@ object Hello { _
  _
 $ scalac Hello.scala _
 $ scala Hello||
-||[[# statement-terminator]][#statement-terminator-note statement terminator]|| ||; ##gray|//or sometimes newline _
+||[[# statement-terminator]][#statement-terminator-note statement terminator]||; _
+ _
+##gray|//Newlines are not statement terminators; they are permitted wherever spaces or tabs are permitted to separate tokens.//##||; ##gray|//or sometimes newline _
  _
 A newline does not terminate a statement when: _
 @<&nbsp;&nbsp;>@(1) inside [ ] of an array literal, _
@@ -79,12 +81,23 @@ n += 1 _
  _
 ##gray|@@//@@ evaluates 1 + 2 each time n is used:## _
 def n = 1 + 2||
-||[[# assignment]][#assignment-note assignment]|| ||var i = 0 _
+||[[# assignment]][#assignment-note assignment]||let mut i: i32 = 0; _
+ _
+##gray|@@//@@ compiler warns if assignment value not used## _
+i = 3;||var i = 0 _
  _
 i = 3|| ||
-||[[# parallel-assignment]][#parallel-assignment-note parallel assignment]|| ||var (m, n) = (3, 7)|| val (m, n) = (3, 7) ||
-||[[# swap]][#swap-note swap]|| ||(x, y) = (y, x)|| ||
-||[[# compound-assignment]][#compound-assignment-note compound assignment]|| ||##gray|//arithmetic://## _
+||[[# parallel-assignment]][#parallel-assignment-note parallel assignment]||##gray|@@//@@ only in variable definition:## _
+let (m, n) = (3, 7);||var (m, n) = (3, 7)|| val (m, n) = (3, 7) ||
+||[[# swap]][#swap-note swap]||let tmp; _
+tmp = x; _
+x = y; _
+y = tmp;||(x, y) = (y, x)|| ||
+||[[# compound-assignment]][#compound-assignment-note compound assignment]||##gray|//arithmetic://## _
++= -= *= /= %= _
+ _
+##gray|//string//:## _
++=||##gray|//arithmetic://## _
 += -= *= /= %= _
  _
 ##gray|//string://## _
@@ -99,28 +112,37 @@ i = 3|| ||
  _
 ##gray|//bit://## _
 @@<<= >>= &= |= ^=@@||
-||[[# unit]][#unit-note unit type and value]|| ||Void _
+||[[# unit]][#unit-note unit type and value]||() _
+()||Void _
 ()||Unit _
 ()||
 ||[[# conditional-expression]][#conditional-expression-note conditional expression]||if x > 0 { x } else { -x }||x > 0 ? x : -x||val n = -3 _
 if (n < 0) -n else n||
-||[[# branch-type-mismatch]][#branch-type-mismatch-note branch type mismatch]|| ||##gray|@@//@@ syntax error:## _
+||[[# branch-type-mismatch]][#branch-type-mismatch-note branch type mismatch]||##gray|@@//@@ does not compile:## _
+if true { "hello" } else { 3 }||##gray|@@//@@ syntax error:## _
 true ? "hello" : 3||##gray|// expression has type Any:## _
 if (true) { "hello" } else { 3 }||
 ||[[# null]][#null-note null] _
-@<&nbsp;>@|| ||##gray|@@//@@ option types only:## _
+@<&nbsp;>@||##gray|@@//@@ Option types only:## _
+None||##gray|@@//@@ option types only:## _
 nil||null||
-||[[# nullable-type]][#nullable-type-note nullable type]|| || ||val list = List(Some(3), null, Some(-4))||
-||[[# null-test]][#null-test-note null test]|| || || ||
-||[[# coalesce]][#coalesce-note coalesce]|| || || ||
+||[[# nullable-type]][#nullable-type-note nullable type]|| let a: Vec<Option<i32@@>>@@ = _
+@<&nbsp;&nbsp;>@vec![Some(3_i32), None, Some(-4_i32)];|| ||val a = List(Some(3), null, Some(-4))||
+||[[# null-test]][#null-test-note null test]||let a = vec![Some(1_i32), None]; _
+ _
+match a[0] { _
+@<&nbsp;&nbsp;>@None => println!("a[0] is none"), _
+@<&nbsp;&nbsp;>@Some(i) => println!("a[0]: {}", i), _
+} _
+ _
+##gray|@@//@@ simple comparison also works:## _
+if a[1] == None { _
+@<&nbsp;&nbsp;>@println!("a[1] is none"); _
+}|| || ||
+||[[# coalesce]][#coalesce-note coalesce]||let a = vec![Some(1_i32), None]; _
+let i: i32 = a[1].unwrap_or(0_i32);|| || ||
 ||[[# nullif]][#nullif-note nullif]|| || || ||
 ||[[# expr-type-declaration]][#expr-type-decl-note expression type declaration]|| || ||1: Double||
-||[[# let-in]][#let-in-note let ... in ...]|| || ||val z = { _
-@<&nbsp;&nbsp;>@val x = 3.0 _
-@<&nbsp;&nbsp;>@val y = 2.0 * x _
-@<&nbsp;&nbsp;>@x * y _
-}||
-||[[# where]][#where-note where]|| || ||##gray|//none//##||
 ||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
 ||~ ||~ rust||~ swift||~ scala||
 ||[[# boolean-type]][#boolean-type-note boolean type] _
@@ -128,7 +150,9 @@ nil||null||
 ||[[# true-false]][#true-false-note true and false] _
 @<&nbsp;>@||true false||true false||true false||
 ||[[# falsehoods]][#falsehoods-note falsehoods]||false||false||false||
-||[[# logical-op]][#logical-op-note logical operators]||@@&& || !@@||@@&& || !@@||&& @@||@@ !||
+||[[# logical-op]][#logical-op-note logical operators]||@@&& || !@@ _
+ _
+##gray|//@@&& and ||@@ are short-circuit operators.//##||@@&& || !@@||&& @@||@@ !||
 ||[[# relational-op]][#relational-op-note relational operators]||== != < > <= >=||== != < > <= >=||== != < > <= >=||
 ||[[# min-max]][#min-max-note min and max]|| || ||math.min 1 2 _
 math.max 1 2||
@@ -187,15 +211,24 @@ let x2 = 3.14_f64.powf(3.5_f64);||pow(2.0, 32.0)||math.pow(2, 32)||
 @@//@@ precedence that a method, so this is -1:## _
 let y = -1_f64.sqrt();||##gray|// NaN:## _
 sqrt(-1)||##gray|math.sqrt(-1) //evaluates to// NaN, //a value which has no literal//##||
-||[[# transcendental-func]][#transcendental-func-note transcendental functions]|| ||exp log log2 log10 _
+||[[# transcendental-func]][#transcendental-func-note transcendental functions]||let x = 0.5_f64; _
+ _
+x.exp() x.ln() x.log2() x.log10() _
+x.sin() x.cos() x.tan() _
+x.asin() x.acos() x.atan() _
+x.atan2(3.1_f64)||exp log log2 log10 _
 sin cos tan _
 asin acos atan _
 atan2||math.exp math.log _
 math.sin math.cos math.tan _
 math.asin math.acos math.atan math.atan2||
-||[[# transcendental-const]][#transcendental-const-note transcendental constants]|| || ||math.Pi _
+||[[# transcendental-const]][#transcendental-const-note transcendental constants]||std::f64::consts::PI _
+std::f64::consts::E|| ||math.Pi _
 math.E||
-||[[# float-truncation]][#float-truncation-note float truncation]|| ||Int(3.77) _
+||[[# float-truncation]][#float-truncation-note float truncation]||3.77_f64.trunc() _
+3.77_f64.round() _
+3.77_f64.floor() _
+3.77_f64.ceil()||Int(3.77) _
 Int(round(3.77)) _
 Int(floor(3.77)) _
 Int(ceil(3.77))||##gray|//??//## _
@@ -203,11 +236,14 @@ Int(ceil(3.77))||##gray|//??//## _
 3.14.floor ##gray|//returns Double//## _
 3.14.ceil ##gray|//returns Double//##||
 ||[[# abs-val]][#abs-val-note absolute value] _
-##gray|//and signum//##|| ||abs(-7) _
+##gray|//and signum//##||-7_i32.abs() _
+-7.1_f64.abs() _
+-7_i32.signum() _
+-7.1_f64.signum()||abs(-7) _
 fabs(-7.77)||math.abs(-7) _
 math.signum(-7)||
-||[[# int-overflow]][#int-overflow-note integer overflow]|| || ||##gray|//modular arithmetic for all types except//## BigInt||
-||[[# float-overflow]][#float-overflow-note float overflow]|| || ||##gray|//evaluates to// Infinity, //a value which has no literal//##||
+||[[# int-overflow]][#int-overflow-note integer overflow]||##gray|//panic//##|| ||##gray|//modular arithmetic for all types except//## BigInt||
+||[[# float-overflow]][#float-overflow-note float overflow]||##gray|//evaluates to// std::f32::INFINITY //or// std::f64::INFINITY##|| ||##gray|//evaluates to// Infinity, //a value which has no literal//##||
 ||[[# arbitrary-len-int]][#arbitrary-len-int-note arbitrary length integer]|| || ||val n = BigInt(7) _
 val m = BigInt(12)||
 ||[[# arbitrary-len-int-op]][#arbitrary-len-int-op-note arbitrary length integer operators]|| || ||n + m _
@@ -242,13 +278,15 @@ val rnd = Random _
 rnd.setSeed(17) _
 ##gray|//none//## _
 ##gray|//none//##||
-||[[# bit-op]][#bit-op-note bit operators]|| ||@<<< >> & | ^ ~>@||1@@ << @@ 4 _
+||[[# bit-op]][#bit-op-note bit operators]||@<<< >> & | ^ !>@||@<<< >> & | ^ ~>@||1@@ << @@ 4 _
 1 @@ >> @@ 4 _
 1 & 3 _
 1 | 3 _
 1 ^ 3 _
 ~ 1||
-||[[# binary-octal-hex-literals]][#binary-octal-hex-literals-note binary, octal, and hex literals]|| || ||##gray|//none//## _
+||[[# binary-octal-hex-literals]][#binary-octal-hex-literals-note binary, octal, and hex literals]||0b101010 _
+0o52 _
+0x21|| ||##gray|//none//## _
 052 _
 0x2a||
 ||[[# radix]][#radix-note radix]|| || ||Integer.toString(42, 7) _
@@ -261,11 +299,16 @@ Integer.parseInt("60", 7)||
 ##gray|//string reference://## _
 &str||String||java.lang.String||
 ||[[# str-literal]][#str-literal-note string literal] _
-@<&nbsp;>@||"don't say \"no\""||"hello"||"Hello, World!" _
+@<&nbsp;>@||let s: &str = "don't say \"no\""; _
+let s2: String = "don't say \"no\"".to_string();||"hello"||"Hello, World!" _
  _
 """Hello, World!"""||
 ||[[# newline-in-str-literal]][#newline-in-str-literal-note newline in literal]||let s: &str = "first line _
-second line";||##gray|//no//##||##gray|//in triple quote literal only//##||
+second line"; _
+ _
+##gray|@@//@@ foobar:## _
+let s2: &str = "foo\ _
+@<&nbsp;&nbsp;>@bar";||##gray|//no//##||##gray|//in triple quote literal only//##||
 ||[[# str-esc]][#str-esc-note literal escapes]||\0 \\ \t \n \r \" \\ _
 \x##gray|//hh//## \u##gray|//hhhh//## \U##gray|//hhhhhhhh//##||\0 \\ \t \n \r \" \' _
 \x##gray|//hh//## \u##gray|//hhhh//## \U##gray|//hhhhhhhh//##||\b \f \n \r \t \" \' _
@@ -277,12 +320,15 @@ val n = 3 _
 val m = 5 _
 val msg = s"$n + $m is ${n + m}"||
 ||[[# str-concat]][#str-concat-note concatenate] _
-@<&nbsp;>@|| ||"hello" + " world"||"Hello" + ", " + "World!"||
+@<&nbsp;>@||let s1: String  = "hello".to_string(); _
+let s2: &str = " world"; _
+let s: String = s1 + s2;||"hello" + " world"||"Hello" + ", " + "World!"||
 ||[[# str-replicate]][#str-replicate-note replicate] _
 @<&nbsp;>@|| ||let ch: Character = "-" _
 let hbar = String(count: 80, repeatedValue: ch)||val hbar = "-" * 80||
 ||[[# translate-case]][#translate-case-note translate case] _
-##gray|//to upper, to lower//##|| ||let s = "hello" _
+##gray|//to upper, to lower//##||s.to_uppercase() _
+s.to_lowercase()||let s = "hello" _
 let s2 = s.uppercaseString _
  _
 let s3 = "HELLO" _
@@ -298,7 +344,11 @@ let s4 = s3.lowercaseString||"hello".toUpperCase _
 ||[[# num-to-str]][#num-to-str-note number to string]|| ||let n = String(17) _
 let x = String(17.3)||"two: " + 2.toString _
 "pi: " + 3.14.toString||
-||[[# str-to-num]][#str-to-num-note string to number]|| ||"17".toInt() _
+||[[# str-to-num]][#str-to-num-note string to number]||let n = "12".parse::<i32>().unwrap(); _
+let x = ".037".parse::<f64>().unwrap(); _
+ _
+##gray|@@//@@ parse() returns an Option type. _
+@@//@@ unrwap() panics if parse() returns None.##||"17".toInt() _
  _
 ##gray|// evaluates to nil:## _
 "17foo".toInt() _
@@ -322,15 +372,26 @@ let x = String(17.3)||"two: " + 2.toString _
 97.toChar||
 ||||||||~ [[# dates-time]][#dates-time-note dates and time]||
 ||~ ||~ rust||~ swift||~ scala||
-||[[# dates-time-types]][#dates-time-types-note date and time types]|| || ||java.util.Date||
-||[[# current-date-time]][#current-date-time-note current date and time]|| || ||import java.util.Date _
+||[[# dates-time-types]][#dates-time-types-note date and time types]||extern crate chrono; _
+ _
+chrono::DateTime|| ||java.util.Date||
+||[[# current-date-time]][#current-date-time-note current date and time]||extern crate chrono; _
+ _
+let dt = Local::now(); _
+let dt_utc = UTC::now();|| ||import java.util.Date _
  _
 val dt = new Date()||
-||[[# current-unix-epoch]][#current-unix-epoch-note current unix epoch]|| || ||dt.getTime / 1000||
-||to unix epoch, from unix epoch|| || ||dt.getTime / 1000 _
+||[[# current-unix-epoch]][#current-unix-epoch-note current unix epoch]||extern crate chrono; _
+ _
+let dt = UTC::now(); _
+let t = dt.timestamp();|| ||dt.getTime / 1000||
+||to unix epoch, from unix epoch||extern crate chrono; _
+ _
+let t = dt.timestamp(); _
+let dt2 = chrono::NaiveDateTime::from_timestamp(t, 0);|| ||dt.getTime / 1000 _
  _
 val dt2 = new Date(1451600610 * 1000)||
-||format date|| || ||import java.text.SimpleDateFormat _
+||format date||dt.format("%Y-%m-%d %H:%M:%S")|| ||import java.text.SimpleDateFormat _
  _
 val fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss") _
 val s = fmt.format(dt)||
@@ -368,29 +429,32 @@ val cal = new GregorianCalendar(2015, 12, 31, 23, 59, 59) _
 val dt = cal.getTime||
 ||||||||~ [[# fixed-length-arrays]][#fixed-length-arrays-note fixed-length arrays]||
 ||~ ||~ rust||~ swift||~ scala||
-||[[# array-literal]][#array-literal-note literal]||let nums = [1i, 2i, 3i];|| ||val a = Array(1, 2, 3)||
+||[[# array-literal]][#array-literal-note literal]||let nums = [1i32, 2i32, 3i32];|| ||val a = Array(1, 2, 3)||
 ||[[# array-size]][#array-size-note size]|| || ||a.size||
 ||[[# array-lookup]][#array-lookup-note lookup]||nums[0]|| ||val n = a(0)||
-||[[# array-update]][#array-update-note update]||let mut nums = [1i, 2i, 3i]; _
+||[[# array-update]][#array-update-note update]||let mut nums = [1i32, 2i32, 3i32]; _
  _
 a[2] = 4;|| ||a(2) = 4||
 ||[[# array-out-of-bounds]][#array-out-of-bounds-notes out-of-bounds]||##gray|//compilation error//##|| ||##gray|//raises//## java.lang.ArrayIndexOutOfBounds||
 ||||||||~ [[# resizable-arrays]][#resizable-arrays-note resizable arrays]||
 ||~ ||~ rust||~ swift||~ scala||
-||[[# declare-array]][#declare-array-note declare]|| ||let a: Array<Int> = [] _
+||[[# declare-array]][#declare-array-note declare]||let mut a = Vec::new(); _
+let mut a2: Vec<i32> = Vec::new();||let a: Array<Int> = [] _
 let a2: Int[] = []|| ||
-||[[# allocate-array-on-stack]][#allocate-array-on-stack-note allocate on stack]|| ||##gray|//compiler decides location in memory//##|| ||
-||[[# allocate-array-on-heap]][#allocate-array-on-heap-note allocate on heap]|| ||##gray|//compiler decides location in memory//##|| ||
-||[[# free-array-on-heap]][#free-array-on-heap-note free heap] _
-@<&nbsp;>@|| ||##gray|//none; garbage collected//##|| ||
-||[[# array-literal]][#array-literal-note literal]|| ||##gray|@@//@@ array is mutable; variable is not:## _
+||[[# array-literal]][#array-literal-note literal]||let mut a = vec![1, 2, 3];||##gray|@@//@@ array is mutable; variable is not:## _
 let a = [1, 2, 3]||import scala.collection.mutable.ArrayBuffer _
  _
 val a = ArrayBuffer(1, 2, 3)||
-||[[# array-size]][#array-size-note size]|| ||a.count||a.length||
-||[[# array-lookup]][#array-lookup-note lookup]|| ||a[0]||a(0)||
-||[[# array-update]][#array-update-note update]|| ||a[0] = 4||a(0) = 4||
-||[[# array-out-of-bounds]][#array-out-of-bounds-notes out-of-bounds]|| ||##gray|//raises// SIGILL##||##gray|//raises// java.lang.ArrayIndexOutOfBoundsException##||
+||[[# array-size]][#array-size-note size]||a.len()||a.count||a.length||
+||[[# array-lookup]][#array-lookup-note lookup]||a[0]||a[0]||a(0)||
+||[[# array-update]][#array-update-note update]||a[0] = 4;||a[0] = 4||a(0) = 4||
+||[[# array-out-of-bounds]][#array-out-of-bounds-notes out-of-bounds]||let mut a = vec![1, 2, 3]; _
+ _
+##gray|@@//@@ thread panics:## _
+let n = a[7]; _
+ _
+##gray|@@//@@ returns None:## _
+let n = a.get(7);||##gray|//raises// SIGILL##||##gray|//raises// java.lang.ArrayIndexOutOfBoundsException##||
 ||[[# array-element-index]][#array-element-index-note element index]|| || ||a.indexOf(3)||
 ||[[# slice-array]][#slice-array-note slice]|| ||var a = ["a", "b", "c", "d", "e"] _
  _
@@ -402,7 +466,9 @@ a[2..4]||val a = ArrayBuffer("a", "b", "c", "d", "e") _
 a.slice(2, 4)||
 ||[[# slice-array-to-end]][#slice-array-to-end-note slice to end]|| || ||##gray|@@//@@ ArrayBuffer("c", "d", "e"):## _
 a.drop(2)||
-||[[# array-back]][#array-back-note manipulate back]|| ||let a = [1, 2, 3] _
+||[[# array-back]][#array-back-note manipulate back]||let mut a: Vec<i32> = vec![1, 2, 3]; _
+a.push(4); _
+let n = a.pop();||let a = [1, 2, 3] _
 a.append(4) _
 ##gray|@@//@@ sets num to 4:## _
 let num = a.removeLast()||##gray|@@//@@ two ways to append:## _
@@ -437,7 +503,10 @@ val a2 = a1 ++ a2 _
  _
 ##gray|@@//@@ add elements to a1:## _
 a1 ++= a2||
-||[[# copy-array]][#copy-array-note copy]|| ||let a = [1, 2, 3] _
+||[[# copy-array]][#copy-array-note copy]||let a: Vec<i32> = vec![1, 2, 3]; _
+let mut a2 = a.clone(); _
+##gray|@@//@@ a[0] does not change:## _
+a2[0] = 4;||let a = [1, 2, 3] _
  _
 let a2 = a _
 ##gray|@@//@@ also modifies a[0]:## _
@@ -448,46 +517,53 @@ a3 = Array(a) _
 a3[0] = 5||val a = ArrayBuffer(1, 2, 3) _
 val a2 = ArrayBuffer[Int]() _
 a2 ++= a||
-||[[# iterate-over-array]][#iterate-over-array-note iterate over elements]|| || ||for (n <- a) _
+||[[# iterate-over-array]][#iterate-over-array-note iterate over elements]||let a: Vec<i32> = vec![1, 2, 3]; _
+for i in a { _
+@<&nbsp;&nbsp;>@println!("i: {}", i); _
+}|| ||for (n <- a) _
 @<&nbsp;&nbsp;>@println(n)||
 ||[[# iterate-indices-elem]][#iterate-indices-elem-note iterate over indices and elements]|| || ||for ((n, i) <- a.zipWithIndex) { _
 @<&nbsp;&nbsp;>@println(s"item: $n is at: $i") _
 }||
-||[[# reverse-array]][#reverse-array-note reverse]|| ||let a = [1, 2, 3] _
+||[[# reverse-array]][#reverse-array-note reverse]||let mut a: Vec<i32> = vec![1, 2, 3]; _
+a.reverse();||let a = [1, 2, 3] _
 let a2 = a.reverse()||val a2 = a.reverse||
-||[[# sort-array]][#sort-array-note sort]|| ||let a = [1, 3, 2, 4] _
+||[[# sort-array]][#sort-array-note sort]||let mut a: Vec<i32> = vec![3, 1, 4, 2]; _
+a.sort();||let a = [1, 3, 2, 4] _
  _
 ##gray|@@//@@ modifies a in-place and returns it:## _
 sort(a)||val a = ArrayBuffer(3, 1, 4, 2) _
 val a2 = a.sortWith(_ < _)||
-||dedupe|| || ||ArrayBuffer(1, 2, 3, 3).distinct _
+||[[# array-dedupe]][#array-dedupe-note dedupe]|| || ||ArrayBuffer(1, 2, 3, 3).distinct _
  _
 ##gray|@@//@@ scala.collection.immutable.Set[Int]:## _
 val set = a.toSet||
-||membership|| || ||ArrayBuffer(1, 2, 3).contains(7)||
-||intersection|| || ||val a1 = ArrayBuffer(1, 2) _
+||[[# array-membership]][#array-membership-note membership]||if a.contains(&7) { _
+@<&nbsp;&nbsp;>@println!("contains 7"); _
+}|| ||ArrayBuffer(1, 2, 3).contains(7)||
+||[[# array-intersection]][#array-intersection-note intersection]|| || ||val a1 = ArrayBuffer(1, 2) _
 val a2 = ArrayBuffer(2, 3, 4) _
 ##gray|@@//@@ multiset intersection:## _
 a1.intersect(a2)||
-||union|| || ||val a1 = ArrayBuffer(1, 2) _
+||[[# array-union]][#array-union-note union]|| || ||val a1 = ArrayBuffer(1, 2) _
 val a2 = ArrayBuffer(2, 3, 4) _
 ##gray|@@//@@ multiset union:## _
 a1.union(a2)||
-||relative complement|| || ||val a1 = ArrayBuffer(1, 2) _
+||[[# array-relative-complement]][#array-relative-complement-note relative complement]|| || ||val a1 = ArrayBuffer(1, 2) _
 val a2 = ArrayBuffer(2, 3, 4) _
 ##gray|@@//@@ multiset difference:## _
 a1.diff(a2)||
 ||[[# map]][#map-note map]|| || ||a.map(x => x * x)||
 ||[[# filter]][#filter-note filter]|| || ||a.filter(_ > 2)||
-||fold left|| || ||##gray|@@//@@ -6:## _
+||[[# array-fold-left]][#array-fold-left-note fold left]|| || ||##gray|@@//@@ -6:## _
 ArrayBuffer(1, 2, 3).foldLeft(0)(_ - _)||
-||fold right|| || ||##gray|@@//@@ -2:## _
+||[[# array-fold-right]][#array-fold-right-note fold right]|| || ||##gray|@@//@@ -2:## _
 ArrayBuffer(1, 2, 3).foldRight(0)(_ - _)||
-||shuffle|| || ||val rand = scala.util.Random _
+||[[# array-shuffle]][#array-shuffle-note shuffle]|| || ||val rand = scala.util.Random _
 val a = rand.shuffle(ArrayBuffer(1, 2, 3, 4))||
-||flatten|| || ||val a = ArrayBuffer(ArrayBuffer(1, 2), ArrayBuffer(3, 4)) _
+||[[# array-flatten]][#array-flatten-note flatten]|| || ||val a = ArrayBuffer(ArrayBuffer(1, 2), ArrayBuffer(3, 4)) _
 val a2 = a.flatten||
-||zip|| || ||ArrayBuffer(1, 2, 3).zip(ArrayBuffer("a", "b", "c"))||
+||[[# array-zip]][#array-zip-note zip]|| || ||ArrayBuffer(1, 2, 3).zip(ArrayBuffer("a", "b", "c"))||
 ||||||||~ [[# lists]][#lists-note lists]||
 ||~ ||~ rust||~ swift||~ scala||
 ||[[# list-literal]][#list-literal-note literal]|| || ||##gray|@@//@@ none; use constructor:## _
@@ -583,13 +659,16 @@ tup match { _
 }||
 ||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
 ||~ ||~ rust||~ swift||~ scala||
-||[[# declare-dict]][#declare-dict-note declare]|| ||let dict = Dictionary<String, Int>()||import scala.collection.mutable _
+||[[# declare-dict]][#declare-dict-note declare]||let mut dict = std::collections::HashMap::new();||let dict = Dictionary<String, Int>()||import scala.collection.mutable _
  _
 val dict = mutable.Map.empty[String, Int]||
-||[[# dict-literal]][#dict-literal-note literal]|| ||let dict = ["t": 1, "f": 0]||##gray|@@//@@ scala.collection.immutable.Map[String,Int]:## _
+||[[# dict-literal]][#dict-literal-note literal]||##gray|@@//@@ no dict literal## _
+let mut dict = std::collections::HashMap::new(); _
+dict.insert("t", 1); _
+dict.insert("f", 0);||let dict = ["t": 1, "f": 0]||##gray|@@//@@ scala.collection.immutable.Map[String,Int]:## _
 val dict = Map("t" -> 1, "f" -> 0)||
 ||[[# dict-size]][#dict-size-note size] _
-@<&nbsp;>@|| ||dict.count||dict.size||
+@<&nbsp;>@||dict.len()||dict.count||dict.size||
 ||[[# dict-lookup]][#dict-lookup-note lookup]|| ||dict["t"]||dict("f") _
  _
 ##gray|@@//@@ returns Option[Int]:## _
@@ -707,13 +786,11 @@ logarithm(10, base = 2)||
 ||[[# multiple-retval]][#multiple-retval-note multiple return values]|| ||func divmod(dividend: Int, divisor: Int) -> (Int, Int) { _
 @<&nbsp;&nbsp;>@return (dividend / divisor, dividend % divisor) _
 }|| ||
-||[#piecewise-defined-function piecewise defined function]|| || ||##gray|//none//##||
 ||[#recursive-function recursive function]|| || || def range(a:Int, b:Int): List[Int] = _
 @<&nbsp;&nbsp;>@if (a > b) _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@List() _
 @<&nbsp;&nbsp;>@else _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@a :: range(a + 1, b)||
-||[#mutually-recursive-functions mutually-recursive-functions]|| || || ||
 ||[#anonymous-func anonymous function]|| ||let add_one = {(n: Int) -> Int in n + 1}||(x: Double, y: Double) => (x + y) / 2.0||
 ||[[# invoke-anonymous-func]][#invoke-anonymous-func-note invoke anonymous function]|| ||add_one(2)|| ||
 ||[[# func-as-val]][#func-as-val-note function as value]|| ||func add(n: Int, m: Int) -> Int { _
@@ -727,12 +804,9 @@ let f = add|| ||
 plus(3)(7) _
 def plus2 = plus(2) _
 plus2(7)||
-||[#composition composition]|| || || ||
-||[#function-composition function composition operator]|| || ||##gray|//none//##||
 ||[#lazy-evaluation lazy evaluation]|| || ||def arg1(x: => Int, y: => Int): Int = x  _
  _
 arg1(7, 1 / 0)||
-||[#strict-evaluation strict evaluation]|| || ||##gray|//default behavior//##||
 ||||||||~ [[# execution-control]][#execution-control-note execution control]||
 ||~ ||~ rust||~ swift||~ scala||
 ||[[# if]][#if-note if]||let signum: i32; _
@@ -797,8 +871,15 @@ for (i <- 1 to 10) _
 ##gray|@@//@@ there is no continue statement##||
 ||||||||~ [[# exceptions]][#exceptions-note exceptions]||
 ||~ ||~ rust||~ swift||~ scala||
-||[#raise-error raise error]|| || ||throw new Exception("bam!")||
-||[#handle-error handle error]|| || ||import java.lang._ _
+||[#raise-error raise error]||panic!("bam!");|| ||throw new Exception("bam!")||
+||[#handle-error handle error]||##gray|@@//@@ does not catch all panics:## _
+let result = std::panic::catch_unwind(@@||@@ { _
+@<&nbsp;&nbsp;>@panic!("bam!"); _
+}); _
+ _
+if result.is_ok() { _
+@<&nbsp;&nbsp;>@println!("no panic"); _
+}|| ||import java.lang._ _
 @<&nbsp;>@ _
 val x = try { _
 @<&nbsp;&nbsp;>@1 / 0 _
@@ -806,9 +887,6 @@ val x = try { _
 catch { _
 @<&nbsp;&nbsp;>@case e: ArithmeticException => 0 _
 }||
-||finally|| || || ||
-||[#exception-type type of exceptions]|| || || ||
-||[#user-exception user defined exception]|| || || ||
 ||[#standard-exceptions standard exceptions]|| || ||##gray|//defined in// java.lang:## _
  _
 Throwable _
@@ -831,7 +909,7 @@ Throwable _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@NullPointerException _
  _
 ##gray|Error, RuntimeException, //and subclasses theoreof are normally unrecoverable//##||
-||[#assert assert]|| || ||assert(1 == 0)||
+||[#assert assert]||assert!(1 == 0);|| ||assert(1 == 0)||
 ||||||||~ [[# concurrency]][#concurrency-note concurrency]||
 ||~ ||~ rust||~ swift||~ scala||
 ||||||||~ [[# file-handles]][#file-handles-note file handles]||
@@ -1181,7 +1259,22 @@ $ find target -name '*.class' | xargs jar cf App.jar _
  _
 $ CLASSPATH=App.jar scala foo.bar.A||
 ||inspect package|| || ||$ jar tf App.jar||
-||install package|| || ||$ cat build.sbt _
+||install package||$ cat Cargo.toml _
+[package] _
+name = "main" _
+version = "0.1.0" _
+authors = ["Bob @<<bob@foo.com>>@"] _
+[dependencies] _
+chrono = "0.2.25" _
+ _
+$ cat src/main.rs _
+extern crate chrono; _
+fn main() { _
+@<&nbsp;&nbsp;>@let t = chrono::UTC::now(); _
+@<&nbsp;&nbsp;>@println!("t: {}", t.format("%Y-%m-%d")); _
+} _
+ _
+$ cargo build|| ||$ cat build.sbt _
 libraryDependencies += "commons-io" % "commons-io" % "2.4" _
  _
 $ sbt package||

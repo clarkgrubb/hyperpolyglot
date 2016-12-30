@@ -168,7 +168,7 @@ $ echo '"2016-12-15 11:30:00"' | jq 'strptime("%Y-%m-%d %H:%M:%S")'||
 ||~ ||~ jq||
 ||lookup||##gray|# 6:## _
 $ echo '[6, 7, 8, 9'] | jq '.[0]'||
-||not an array behavior||##gray|# error:## _
+||not-an-array behavior||##gray|# error:## _
 $ echo 1 | jq '.[0]' _
  _
 ##gray|# no error and no output:## _

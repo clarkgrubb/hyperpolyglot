@@ -2752,7 +2752,7 @@ As the factorial function grows rapidly with //n//, it is useful to be aware of 
 [[# binomial-coefficient-note]]
 ++ [#binomial-coefficient binomial coefficient]
 
-The binomial coefficient can be defined using the factorial function:
+A binomial coefficient can be computed using the factorial function:
 
 [[math]]
 {n \choose k} = \frac{n!}{(n-k)! k!}
@@ -2768,6 +2768,20 @@ The binomial cofficient [[$ { n \choose k } $]] is the number of sets of size //
 
 [[# multinomial-coefficient-note]]
 ++ [#multinomial-coefficient multinomial coefficient]
+
+The multinomial coefficient generalizes the binomial cofficient:
+
+[[math]]
+{n \choose k_1, \ldots, k_m} = \frac{n!}{(k_1! \cdots k_m!}
+[[/math]]
+
+It appears in the multinomial theorem:
+
+[[math]]
+(x_1 + \cdots + x_m)^n = \sum_{k_1 + \cdots + k_m = n} {n \choose k_1, \ldots, k_m} \prod_{t=1}^m x_t^{k_t}
+[[/math]]
+
+The multinomial cofficient [[$ { n \choose k_1,ldots,k_m } $]] is the number of ways to partition a set of //n// elements into subsets of size //k,,1,,//, ..., //k,,m,,// where the //k,,i,,// sum to //n//.
 
 [[# rising-falling-factorial-note]]
 ++ [#rising-falling-factorial rising and falling factorial]

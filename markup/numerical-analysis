@@ -1,6 +1,6 @@
 [[# top]]//a side-by-side reference sheet//
 
-**sheet one:** [#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#tuples tuples] | [#arrays arrays] | [#arithmetic-sequences arithmetic sequences] | [#two-d-arrays 2d arrays] | [#three-d-arrays 3d arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#file-handle file handles] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#reflection reflection]
+**sheet one:** [#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#tuples tuples] | [#arrays arrays] | [#arithmetic-sequences arithmetic sequences] | [#two-d-arrays 2d arrays] | [#three-d-arrays 3d arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#file-handle file handles] | [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] | [#reflection reflection] | [#debugging debugging]
 
 **[[[numerical-analysis2|sheet two]]]:** [[[numerical-analysis2#tables|tables]]] | [[[numerical-analysis2#import-export|import and export]]] | [[[numerical-analysis2#relational-algebra|relational algebra]]] | [[[numerical-analysis2#aggregation|aggregation]]]
 
@@ -737,7 +737,7 @@ linspace(3.7, 19.4, 100) _
 ##gray|% 100 is default num. of elements:## _
 linspace(3.7, 19.4)|| ||numpy.linspace(3.7, 19.4, 100) || ||
 ||[[# iter-over-arith-seq]][#iter-over-arith-seq-note iterate]|| || ||##gray|# range replaces xrange in Python 3:## _
-n = 0 _
+n = 0; _
 for i in xrange(1, 1000001): _
 @<&nbsp;&nbsp;>@n += i||n = 0 _
 for i in 1:1000000 _
@@ -1199,10 +1199,10 @@ end||add = function (@@...@@) { _
 @<&nbsp;&nbsp;>@ret = x + y; _
 end _
  _
-##gray|% If a return variable is declared, the value assigned _
-% to it is returned.  Otherwise the value of the last _
-% statement will be used if it does not end with a _
-% semicolon.##||##gray|return //argument or last expression evaluated.//  NULL //if// return //called without an argument.//##|| ||##gray|return //argument or last expression evaluated.//  Void //if// return //called without an argument.//##||
+##gray|% If a return variable is declared, the _
+% value assigned to it is returned.  Otherwise _
+% the value of the last statement will be _
+% used if it does not end with a semicolon.##||##gray|return //argument or last expression evaluated.//  NULL //if// return //called without an argument.//##|| ||##gray|return //argument or last expression evaluated.//  Void //if// return //called without an argument.//##||
 ||[[# multiple-retval]][#multiple-retval-note multiple return values]||function [x, y] = first_two(a) _
 @<&nbsp;&nbsp;>@x = a(1); _
 @<&nbsp;&nbsp;>@y = a(2); _
@@ -1469,6 +1469,18 @@ ls.str()||dir()||whos()||
 ?tan||math.tan.@@__doc__@@||?tan||
 ||[[# ls-lib]][#ls-lib-note list library functions]||##gray|//none//##||ls("package:moments")||dir(stats)||whos(Base)||
 ||[[# grep-doc]][#grep-doc-note search documentation]||docsearch tan||??tan||$ pydoc -k tan||apropos("tan")||
+||||||||||~ [[# debugging]][#debugging-note debugging]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
+||[[# benchmark-code]][#benchmark-code-note benchmark code]||tic _
+n = 0 _
+for i = 1:1000*1000 _
+@<&nbsp;&nbsp;>@n = n + 1; _
+end _
+toc|| ||import timeit _
+ _
+timeit.timeit('i += 1', _
+@<&nbsp;&nbsp;>@'i = 0', _
+@<&nbsp;&nbsp;>@number=1000000)|| ||
 ||~ ||~ ##EFEFEF|@@__________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________@@##||
 
 [[[numerical-analysis2#tables|tables]]] | [[[numerical-analysis2#import-export|import and export]]] | [[[numerical-analysis2#relational-algebra|relational algebra]]] | [[[numerical-analysis2#aggregation|aggregation]]]
@@ -2676,6 +2688,14 @@ How to list the functions and other definitions in a library.
 ++ [#grep-doc search documentation]
 
 How to search the documentation by keyword.
+
+[[# debugging-note]]
++ [#debugging Debugging]
+
+[[# benchmark-code-note]]
+++ [#benchmark-code benchmark code]
+
+How to benchmark code.
 
 
 [[# matlab]]

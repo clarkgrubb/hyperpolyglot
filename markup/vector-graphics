@@ -490,6 +490,29 @@ Pixels are used if the unit of length is not specified explicitly.  High pixel d
 [[# paths-note]]
 + [#paths Paths]
 
+The SVG {{path}} element has a {{d}} attribute which can contain the following commands:
+
+||M ##gray|//X Y//##||move to (##gray|//X, Y//##)||
+||m ##gray|//DX DY//##||move relative to current location||
+||L ##gray|//X Y//##||draw line to (##gray|//X, Y//##)||
+||l ##gray|//DX DY//##||draw line to point defined relative to current location.||
+||H ##gray|//X//##||draw horizontal line to x-coordinate ##gray|//X//##.||
+||h ##gray|//DX//##||draw horizontal line of length ##gray|//DX//##.||
+||V ##gray|//Y//##||draw vertical line to y-coordinate ##gray|//Y//##.||
+||v ##gray|//DY//##||draw vertical line of length ##gray|//DY//##.||
+||C ##gray|//X1 Y1 X2 Y2 X Y//##||draw bezier curve to (##gray|//X, Y//##) with control points at (##gray|//X1, Y1//##) and (##gray|//X2, Y2//##).||
+||c ##gray|//X1 Y1 X2 Y2 DX DY//##||Like C, except that the end point is defined relative to the current location.||
+||S|| ||
+||s|| ||
+||Q|| ||
+||q|| ||
+||T|| ||
+||t|| ||
+||A ##gray|//RX RY ROT F1 F2 X Y//##||draw an arc along an ellipse with x-radius ##gray|//RX//## and y-radius ##gray|//RY//##.  The orientation of the ellipse is rotated ##gray|//ROT//## degrees.  The current location and the point (##gray|//X Y//##) define the start and end of the arc.  If ##gray|//F1//## and ##gray|//F2//## are both 0, the shorter distance along the ellipse is drawn.  If ##gray|//F1//## and ##gray|//F2//## are both 1, the longer distance along the ellipse is drawn.||
+||a ##gray|//RX RY ROT F1 F2 DX DY//##||Like A, except that the end of the arc is defined relative to the current location.||
+||Z||draw line from current location to starting location||
+||z||draw line from current location to starting location||
+
 [[# line-note]]
 ++ [#line line]
 
@@ -652,7 +675,7 @@ The "italic" and "oblique" styles are not always different.  When they are diffe
 ++ [#utf-8 utf-8]
 
 [[# text-path-note]]
-++ [#text-path text-path]
+++ [#text-path text path]
 
 [[# groups-note]]
 + [#groups Groups]

@@ -1570,7 +1570,7 @@ $ rdebug foo.rb||
 ||[[# benchmark]][#benchmark-note benchmark code]||console.time('product'); _
 let n = 1; _
 for (let i = 1; i < 1000*1000; ++i) { _
-@<&nbsp;&nbsp;>@n = n * i; _
+@<&nbsp;&nbsp;>@++n; _
 } _
 console.timeEnd('product');|| ||import timeit _
  _
