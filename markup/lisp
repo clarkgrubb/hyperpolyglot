@@ -1224,7 +1224,7 @@ begin begin0 ##gray|//none//##||do ##gray|//none//## ##gray|//none//##||progn pr
 ||[[# recursive-cp]][#recursive-cp-note recursive copy]|| ||(copy-directory/files "/tmp/foo.d" _
 @<&nbsp;&nbsp;>@"/tmp/bar.d")|| || ||
 ||[[# rmdir]][#rmdir-note remove empty directory]||(uiop:delete-empty-directory "/tmp/foo.d")||(delete-directory "/tmp/foo.d")||(clojure.java.io/delete-file "/tmp/foo.d")||(delete-directory "/tmp/foo.d")||
-||[[# rm-rf]][#rm-rf-note remove directory and contents]||(uiop:delete-directory-tree (make-pathname :directory '(:absolute "tmp" "foo.d")) :validate t)||(delete-directory/files "/tmp/foo.d")|| ||(delete-directory "/tmp/foo.d" t)||
+||[[# rm-rf]][#rm-rf-note remove directory and contents]||(uiop:delete-directory-tree (uiop:ensure-directory-pathname "/tmp/foo.d") :validate t)||(delete-directory/files "/tmp/foo.d")|| ||(delete-directory "/tmp/foo.d" t)||
 ||[[# dir-test]][#dir-test-note directory test]||(uiop:directory-exists-p "/etc")||(directory-exists? "/etc")||(.isDirectory (io/file "/etc"))||(file-directory-p "/etc")||
 ||||||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
 ||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
