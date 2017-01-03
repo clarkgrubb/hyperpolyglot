@@ -1209,7 +1209,7 @@ begin begin0 ##gray|//none//##||do ##gray|//none//## ##gray|//none//##||progn pr
 @<&nbsp;&nbsp;>@"/etc/hosts")||
 ||[[# abs-pathname]][#abs-pathname-note absolute pathname]|| ||(simplify-path _
 @<&nbsp;&nbsp;>@(path->complete-path ".."))||(.getCanonicalPath (java.io.File. ".."))||(expand-file-name "..")||
-||[[# iterate-dir]][#iterate-dir-note iterate over directory by file]||(dolist (file (uiop:directory-files "/tmp/")) (format t "~a~%" file))||(for ([path (directory-list "/etc")]) _
+||[[# iterate-dir]][#iterate-dir-note iterate over directory by file]||(dolist (file (uiop:directory-files (uiop:ensure-directory-pathname "/tmp"))) (format t "~a~%" file))||(for ([path (directory-list "/etc")]) _
 @<&nbsp;&nbsp;>@(write-string _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(path->string path)))||##gray|; file-seq returns java.io.File objects for files _
 ; in arg directory and any subdirs recursively.## _
