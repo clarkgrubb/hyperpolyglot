@@ -1132,8 +1132,7 @@ begin begin0 ##gray|//none//##||do ##gray|//none//## ##gray|//none//##||progn pr
 (set-mark (point))||
 ||||||||||~ [[# files]][#files-note files]||
 ||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
-||[[# file-test]][#file-test-note file test, regular file test]||(osicat:file-exists-p "/tmp/foo") _
-(osicat:regular-file-exists-p "/tmp/foo")||##gray|//??//## _
+||[[# file-test]][#file-test-note file test, regular file test]||(uiop:file-exists-p "/tmp/foo")||##gray|//??//## _
 (file-exists? "/etc/hosts")||(.exists (io/file "/etc/hosts"))||(file-exists-p "/etc/hosts") _
  _
 (file-regular-p "/etc/hosts")||
@@ -1158,8 +1157,8 @@ begin begin0 ##gray|//none//##||do ##gray|//none//## ##gray|//none//##||progn pr
 @<&nbsp;&nbsp;>@#o755)|| ||(set-file-modes "/tmp/foo" #o755)||
 ||[[# last-modification-time]][#last-modification-time-note last modification time]|| ||(file-or-directory-modify-seconds "/tmp/foo")||##gray|; Unix epoch in milliseconds:## _
 (.lastModified (java.io.File. "/tmp/foo"))|| ||
-||[[# cp-rm-mv]][#cp-rm-mv-note copy file, remove file, rename file]||(cl-fad:copy-file #P"/tmp/foo" _
-@<&nbsp;&nbsp;>@#P"/tmp/bar") _
+||[[# cp-rm-mv]][#cp-rm-mv-note copy file, remove file, rename file]||(uiop:copy-file "/tmp/foo" _
+@<&nbsp;&nbsp;>@"/tmp/bar") _
  _
 (delete-file #P"/tmp/foo") _
  _
@@ -1176,7 +1175,7 @@ begin begin0 ##gray|//none//##||do ##gray|//none//## ##gray|//none//##||progn pr
 @<&nbsp;&nbsp;>@(java.io.File. "/tmp/foo"))||(copy-file "/tmp/foo" "/tmp/bar") _
 (delete-file "/tmp/foo") _
 (rename-file "/tmp/bar" "/tmp/foo")||
-||[[# symlink]][#symlink-note create symlink, symlink test, get target]||(osicat:make-link "/tmp/hosts" :target "/etc/hosts")||(make-file-or-directory-link _
+||[[# symlink]][#symlink-note create symlink, symlink test, get target]|| ||(make-file-or-directory-link _
 @<&nbsp;&nbsp;>@"/etc/hosts" _
 @<&nbsp;&nbsp;>@"/tmp/hosts") _
 (link-exists? "/tmp/hosts") _
@@ -1210,7 +1209,7 @@ begin begin0 ##gray|//none//##||do ##gray|//none//## ##gray|//none//##||progn pr
 @<&nbsp;&nbsp;>@"/etc/hosts")||
 ||[[# abs-pathname]][#abs-pathname-note absolute pathname]|| ||(simplify-path _
 @<&nbsp;&nbsp;>@(path->complete-path ".."))||(.getCanonicalPath (java.io.File. ".."))||(expand-file-name "..")||
-||[[# iterate-dir]][#iterate-dir-note iterate over directory by file]||(dolist (file (osicat:list-directory "/tmp")) (format t "~a~%" file))||(for ([path (directory-list "/etc")]) _
+||[[# iterate-dir]][#iterate-dir-note iterate over directory by file]||(dolist (file (uiop:directory-files "/tmp/")) (format t "~a~%" file))||(for ([path (directory-list "/etc")]) _
 @<&nbsp;&nbsp;>@(write-string _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@(path->string path)))||##gray|; file-seq returns java.io.File objects for files _
 ; in arg directory and any subdirs recursively.## _
@@ -1224,20 +1223,20 @@ begin begin0 ##gray|//none//##||do ##gray|//none//## ##gray|//none//##||progn pr
 (make-directory "/tmp/foo/bar" t)||
 ||[[# recursive-cp]][#recursive-cp-note recursive copy]|| ||(copy-directory/files "/tmp/foo.d" _
 @<&nbsp;&nbsp;>@"/tmp/bar.d")|| || ||
-||[[# rmdir]][#rmdir-note remove empty directory]||(delete-directory "/tmp/foo.d")||(delete-directory "/tmp/foo.d")||(clojure.java.io/delete-file "/tmp/foo.d")||(delete-directory "/tmp/foo.d")||
-||[[# rm-rf]][#rm-rf-note remove directory and contents]|| (osicat:delete-directory-and-files "/tmp/foo.d")||(delete-directory/files "/tmp/foo.d")|| ||(delete-directory "/tmp/foo.d" t)||
-||[[# dir-test]][#dir-test-note directory test]||(osicat:directory-exists-p #P"/etc")||(directory-exists? "/etc")||(.isDirectory (io/file "/etc"))||(file-directory-p "/etc")||
+||[[# rmdir]][#rmdir-note remove empty directory]||(uiop:delete-empty-directory "/tmp/foo.d")||(delete-directory "/tmp/foo.d")||(clojure.java.io/delete-file "/tmp/foo.d")||(delete-directory "/tmp/foo.d")||
+||[[# rm-rf]][#rm-rf-note remove directory and contents]||(uiop:delete-directory-tree (make-pathname :directory '(:absolute "tmp" "foo.d")) :validate t)||(delete-directory/files "/tmp/foo.d")|| ||(delete-directory "/tmp/foo.d" t)||
+||[[# dir-test]][#dir-test-note directory test]||(uiop:directory-exists-p "/etc")||(directory-exists? "/etc")||(.isDirectory (io/file "/etc"))||(file-directory-p "/etc")||
 ||||||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
 ||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
-||[[# cmd-line-arg]][#cmd-line-arg-note command line arguments]||*posix-argv*||current-command-line-arguments||*command-line-args*||##gray|//in shebang mode only://## _
+||[[# cmd-line-arg]][#cmd-line-arg-note command line arguments]||uiop:*command-line-arguments*||current-command-line-arguments||*command-line-args*||##gray|//in shebang mode only://## _
 command-line-args ##gray|//or//## argv||
 ||[[# program-name]][#program-name-note program name]|| || || || ||
-||[[# env-var]][#env-var-note environment variables]||(posix-getenv "HOME")||(getenv "HOME")||(System/getenv "HOME")||(getenv "HOME")||
+||[[# env-var]][#env-var-note environment variables]||(uiop:getenv "HOME")||(getenv "HOME")||(System/getenv "HOME")||(getenv "HOME")||
 ||[[# user-id-name]][#user-id-name-note user id and name]|| || || || ||
 ||[[# exit]][#exit-note exit]|| || || || ||
-||[[# external-cmd]][#external-cmd-note external command]||(run-program "ls" '( "/etc"))||(require scheme/system) _
+||[[# external-cmd]][#external-cmd-note external command]||(uiop:run-program "ls /etc")||(require scheme/system) _
 (system "ls /etc")||(.exec (Runtime/getRuntime) "ls")||(shell-command "ls /etc")||
-||[[# cmd-subst]][#cmd-subst-note command substitution]|| || || ||(shell-command-to-string "ls /etc")||
+||[[# cmd-subst]][#cmd-subst-note command substitution]||(uiop:run-program "ls /etc" :output '(:string :stripped t))|| || ||(shell-command-to-string "ls /etc")||
 ||||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
 ||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
 ||complete example|| || ||$ cat b/a.clj _
@@ -1282,7 +1281,7 @@ $ raco pkg install @@--@@help|| || ||
 ||search packages||(ql:system-apropos "time")||[http://pkgs.racket-lang.org http://pkgs.racket-lang.org]|| ||M-x list-packages||
 ||install package||##gray|; install quicklisp## _
 (load "~/quicklisp/setup.lisp") _
-(ql:quickload "osicat")||$ raco pkg install @@--@@deps search-auto srfi|| ||##gray|//Use// M-x list-packages //to bring up the package menu;// i //to select a package to install, and// x //to install it.//##||
+(ql:quickload "cl-ppcre")||$ raco pkg install @@--@@deps search-auto srfi|| ||##gray|//Use// M-x list-packages //to bring up the package menu;// i //to select a package to install, and// x //to install it.//##||
 ||remove package|| ||$ raco pkg remove srfi|| ||##gray|//In the package menu, use// d //to select a package to uninstall and// x //to uninstall it.//##||
 ||||||||||~ [[# objects]][#objects-note objects]||
 ||~ ||~ common lisp||~ racket||~ clojure||~ emacs lisp||
@@ -2866,6 +2865,8 @@ The //format// statement returns the generated string.  When used for i/o, it pr
 
 [[# file-test-note]]
 ++ [#file-test file test, regular file test]
+
+If there is a distinction between a file test and a regular file test, the latter excludes directories while the former includes them.
 
 [[# file-size-note]]
 ++ [#file-size file size]
