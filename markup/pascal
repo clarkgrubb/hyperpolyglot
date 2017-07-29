@@ -1040,7 +1040,7 @@ Files use lower case letters and underscores, but are otherwise named after the 
 [[# plpgsql]]
 + [#top PL/SQL]
 
-[http://www.postgresql.org/docs/9.1/interactive/plpgsql.html PostgreSQL 9.1 Documention: PL/pgSQL]
+[http://www.postgresql.org/docs/9.1/interactive/plpgsql.html PostgreSQL 9.1 Documentation: PL/pgSQL]
 [http://www.postgresql.org/docs/9.1/interactive/plpgsql-porting.html Porting from PL/SQL to PL/pgSQL]
 
 Execute statement with no result:

@@ -2131,7 +2131,7 @@ If a matrix //A// is symmetric, then a spectral decomposition //P ⋅ D ⋅ P^^-
 [[# svd-note]]
 ++ [#svd singular value decomposition]
 
-A singluar value decomposition of a matrix //A// is a factorization into a diagonal matrix //S// and unitary matrices //U// and //V// such that //A = U ⋅ S ⋅ V^^*^^//.
+A singular value decomposition of a matrix //A// is a factorization into a diagonal matrix //S// and unitary matrices //U// and //V// such that //A = U ⋅ S ⋅ V^^*^^//.
 
 Unlike the spectral decomposition, an SVD always exists, even if //A// is not square.  The values on the diagonal of //S// are called the singular values, and they are the eigenvalues of //A ⋅ A^^*^^//.
 
@@ -2149,7 +2149,7 @@ A factorization of a square matrix into a unitary matrix //U// and a positive de
 
 All invertible matrices have a polar decomposition.
 
-A unitary matrix corresponds to a linear transformation representing a rotation, reflection, or a combination of the two.  It is distance perserving, in that it maps vectors to vectors of the same length.  A real valued unitary matrix is called an orthogonal matrix.
+A unitary matrix corresponds to a linear transformation representing a rotation, reflection, or a combination of the two.  It is distance preserving, in that it maps vectors to vectors of the same length.  A real valued unitary matrix is called an orthogonal matrix.
 
 [[# combinatorics-note]]
 + [#combinatorics Combinatorics]
@@ -3036,7 +3036,7 @@ How to change the size of the symbols used to mark points.
 [[# scatter-plot-matrix-note]]
 ++ [#scatter-plot-matrix scatter plot matrix]
 
-A scatter plot matrix is a way of displaying a multivariate data set by means of a grid of scatter plots.  Off-diagonal plots are scatter plots of two of the variables.  On-diagonal plots can be used to to display the name or a histogram of one of the variables.
+A scatter plot matrix is a way of displaying a multivariate data set by means of a grid of scatter plots.  Off-diagonal plots are scatter plots of two of the variables.  On-diagonal plots can be used to display the name or a histogram of one of the variables.
 
 [[# scatter-plot-3d-note]]
 ++ [#scatter-plot-3d 3d scatter plot]

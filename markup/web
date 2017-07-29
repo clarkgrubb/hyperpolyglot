@@ -520,7 +520,7 @@ List a2 = new List<String>.from(a.reversed);||
 ||[[# array-sort]][#array-sort-note sort] _
 ##gray|//non-destructive, _
 in-place, _
-custom comparision//##||var a = [3, 1, 4, 2]; _
+custom comparison//##||var a = [3, 1, 4, 2]; _
 a.sort();||var a = [3, 1, 4, 2]; _
 a.sort();||
 ||[[# array-dedupe]][#array-dedupe-note dedupe] _

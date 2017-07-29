@@ -1109,7 +1109,7 @@ The syntax for a conditional expression.
 
 **tcl**
 
-To evaluate a relational expression outside of the the conditional of an {{if}} statement, the {{expr}} command can be used.
+To evaluate a relational expression outside of the conditional of an {{if}} statement, the {{expr}} command can be used.
 
 Use square brackets to make an expression an argument of a command:
 

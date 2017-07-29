@@ -70,7 +70,7 @@ param pi := 3.14;||
 @@&& || !@@||
 ||[[# relational-op]][#relational-op-note relational operators]||== != < > <= >= _
  _
-##gray|# string comparision:## _
+##gray|# string comparison:## _
 eq ne||@@=@@ <> < > <= >= _
  _
 == ##gray|//and//## != ##gray|//are synonyms of//## = ##gray|//and//## <> ||

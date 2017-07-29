@@ -1400,7 +1400,7 @@ Query information_schema.  This requires a language which can branch.
 [[# postgresql]]
 + [#top PostgreSQL]
 
-* [http://www.postgresql.org/docs/9.1/static/index.html PostgresSQL 9.1 Documentation]
+* [http://www.postgresql.org/docs/9.1/static/index.html PostgreSQL 9.1 Documentation]
 
 [[# mysql]]
 + [#top MySQL]

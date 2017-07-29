@@ -438,7 +438,7 @@ if (test-path -pathtype leaf) { _
 ||[[# readable-writeable-executable]][#readable-writeable-executable-note is readable, is writeable, is executable]||if [ -r /etc/passwd ]; then echo readable; fi _
 if [ -w /tmp ]; then echo writeable; fi _
 if [ -x /bin/ls ]; then echo executable; fi|| || ||
-||[[# chmod]][#chmod-note set file permisions]||chmod 0600 foo.txt|| || ||
+||[[# chmod]][#chmod-note set file permissions]||chmod 0600 foo.txt|| || ||
 ||[[# last-modification-time]][#last-modification-time-note last modification time]||ls -l foo.txt||dir foo.txt||get-childitem foo.txt||
 ||[[# file-cp-rm-mv]][#file-cp-rm-mv-note copy file, remove file, rename file]||cp /tmp/foo.txt /tmp/bar.txt _
 rm /tmp/foo.txt _

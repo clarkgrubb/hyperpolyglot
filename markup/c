@@ -98,7 +98,7 @@ func baz() { _
  _
 @<&nbsp;&nbsp;>@fmt.Println(foo.X + y + z) _
 }||
-||[[# uninitialized-var]][#uninitialized-var-note uninitialized variable]||##gray|//The behavior of reading from uninitialized stack variables or unitialized memory allocated by// malloc //is undefined. _
+||[[# uninitialized-var]][#uninitialized-var-note uninitialized variable]||##gray|//The behavior of reading from uninitialized stack variables or uninitialized memory allocated by// malloc //is undefined. _
  _
 Global and static variables are zero-initialized. _
  _
@@ -1243,7 +1243,7 @@ caller() { _
 ##gray|/* seconds */## _
 int retval = sleep(10); _
 if (retval != 0) { _
-@<&nbsp;&nbsp;>@printf("interupted with %d s to go", retval); _
+@<&nbsp;&nbsp;>@printf("interrupted with %d s to go", retval); _
 } _
  _
 ##gray|/* microseconds */## _
@@ -2375,7 +2375,7 @@ Unsigned integer types.
 
 **c:**
 
-Whether //char// is a signed or unsigned type depends on the implmentation.
+Whether //char// is a signed or unsigned type depends on the implementation.
 
 [[# float-type-note]]
 ++ [#float-type float type]
@@ -2424,7 +2424,7 @@ The square root function.
 [[# sqrt-negative-one-note]]
 ++ [#sqrt-negative-one sqrt -1]
 
-The result of attempting to find the square root of a negative nubmer.
+The result of attempting to find the square root of a negative number.
 
 [[# transcendental-func-note]]
 ++ [#transcendental-func transcendental functions]
@@ -2645,7 +2645,7 @@ The list of regular expression metacharacters.
 A regular expression that does not contain any metacharacters matches itself as a string.
 
 [[# char-class-abbrev-note]]
-++ [#char-class-abbrev character class abbrevations]
+++ [#char-class-abbrev character class abbreviations]
 
 Abbreviations for character classes.
 

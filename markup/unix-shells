@@ -919,7 +919,7 @@ end||false() { _
 @<&nbsp;&nbsp;>@set -l bar 7 _
 end _
  _
-##gray|//without the -l flag, the the variable will _
+##gray|//without the -l flag, the variable will _
 be global if already defined, otherwise local//##||##gray|//none//##||##gray|//none//##||foo() { _
 @<&nbsp;&nbsp;>@local bar=7 _
 } _

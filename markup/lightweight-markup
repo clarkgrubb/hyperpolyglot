@@ -206,7 +206,7 @@ ii. roman numeral two||##gray|//numbers in source are used://## _
 2 ) numbered two _
  _
 i) roman numeral one _
-ii) roma numberal two||# numbered one _
+ii) roma numeral two||# numbered one _
 # numbered two||##gray|//error if values in markup are not sequential starting from one://## _
 1. numbered one _
 2. numbered two|| ||

@@ -208,7 +208,7 @@ Shift can be logical, circular, or arithmetic.  In logical shift the new bits ar
 ##gray|//left, right, both ends//##||#trim||Also called stripping.  But prefer trimming, since stripping can mean removing internal occurrences of a character||
 ||[[# pad]][#pad-note pad] _
 ##gray|//left, right, both ends//##||#pad|| ||
-||[[# num-to-str]][#num-to-str-note number to string]||#num-to-str||precision and zero padding; explict conversion and operators which perform implicit conversion||
+||[[# num-to-str]][#num-to-str-note number to string]||#num-to-str||precision and zero padding; explicit conversion and operators which perform implicit conversion||
 ||[[# str-to-num]][#str-to-num-note string to number]||#str-to-num||notes on whether full string must parse and what happen if conversion fails; explicit conversion and operators which perform implicit conversion||
 ||[[# str-join]][#str-join-note string join] _
 @<&nbsp;>@||#str-join|| ||
@@ -351,7 +351,7 @@ how boundary delimiters are handled||
  _
 permitted type of expression in switch: integer, any _
  _
-type of comparision in case: equality test, regex match||
+type of comparison in case: equality test, regex match||
 ||[[# while]][#while-note while] _
 @<&nbsp;>@||#while||iterate over i and print the numbers 0 to 9 _
  _
