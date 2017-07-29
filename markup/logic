@@ -4,7 +4,7 @@
 
 ||~ ||~ [#prolog prolog]||~ [#erlang erlang]||~ [#elixir elixir]||
 ||[[# version-used]][#version-used-note version used] _
-@<&nbsp;>@||##gray|//SWI Prolog 5.10//##||##gray|//8.0//##||##gray|//1.3//##||
+@<&nbsp;>@||##gray|//SWI Prolog 7.2//##||##gray|//8.0//##||##gray|//1.3//##||
 ||[[# show-version]][#show-version-note show version] _
 @<&nbsp;>@||$ swipl @@--@@version||$ erl -version||$ elixir -v||
 ||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
@@ -36,8 +36,6 @@ $ erlc +native foo.erl|| ||
 ||[[# bytecode-compiler]][#bytecode-compiler-note bytecode compiler] _
 @<&nbsp;>@|| ||$ erlc foo.erl|| ||
 ||[[# interpreter]][#interpreter-note interpreter]||$ cat arg-analyzer _
-#!/usr/bin/env swipl _
- _
 main :- _
 @<&nbsp;&nbsp;>@current_prolog_flag(argv, Args), _
 @<&nbsp;&nbsp;>@(@<&nbsp;&nbsp;>@ Args = [Arg] _
@@ -66,6 +64,7 @@ main :- _
 @<&nbsp;&nbsp;>@;@<&nbsp;&nbsp;>@ format('Usage: arg-analyzer ARG~n') ). _
  _
 :- main, halt(0). _
+ _
 $ ./arg-analyzer foo _
 argument was: foo||$ cat arg-analyzer _
 #!/usr/bin/env escript _
@@ -104,9 +103,11 @@ foo(X, Y) = foo(1, 2).||{X, Y} = {1, 2}. _
 [z, w] = [1, 2]||
 ||[[# non-referential-id]][#non-referential-id-note non-referential identifier]||##gray|//lower case letter followed by alphanumeric characters; can also include underscore: _//##||##gray|//lower case letter followed by alphanumeric characters; can also include period: . at-sign: @ underscore: _//##|| ||
 ||[[# quoted-non-referential-id]][#quoted-non-referential-id-note quoted non-referential identifier]||##gray|//any printable characters inside single quotes; use backslash to escape a single quote.//##||##gray|//any printable characters inside single quotes; use backslash or two single quotes to escape a single quote.//##|| ||
-||[[# cond-expr]][#cond-expr-note conditional expression]||(@<&nbsp;&nbsp;>@X > 0 -> Result = 1 _
-;@<&nbsp;&nbsp;>@X = 0 -> Result = X _
-;@<&nbsp;&nbsp;>@X < 0 -> Result = -1 ).||if _
+||[[# cond-expr]][#cond-expr-note conditional expression]||X = -3, ( _
+@<&nbsp;&nbsp;>@X > 0 -> Result = 1; _
+@<&nbsp;&nbsp;>@X = 0 -> Result = X; _
+@<&nbsp;&nbsp;>@X < 0 -> Result = -1 _
+).||if _
 @<&nbsp;&nbsp;>@X > 0 -> 1; _
 @<&nbsp;&nbsp;>@X == 0 -> X; _
 @<&nbsp;&nbsp;>@X < 0 -> -1 _
@@ -200,7 +201,7 @@ X is 5 @@>> @@ 1. _
 X is 5 /\ 1. _
 X is 5 \/ 1. _
 X is 5 xor 1. _
-X is 5 \ 1.||5 bsl 1 _
+X is \ 5.||5 bsl 1 _
 5 bsr 1 _
 5 band 1 _
 5 bor 1 _
@@ -231,7 +232,7 @@ bnot 5||import Bitwise _
 ||[[# char-esc]][#char-esc-note character escapes]||\a \b \e \f \n \r \s \t \v \x##gray|//hh...//##\ \u##gray|//hhhh//## \U##gray|//hhhhhhhh//## \##gray|//ooo//## \\ \' \"||##gray|\d //is delete;// \s //is space//## _
 \b \d \e \f \n \q \r \s \t \u \v \x##gray|//hh//## \x{##gray|//hh...//##} \##gray|//ooo//## \' \" \\||\" \' \\ \a \b \d \e \f \n \r \s \t \v \0 _
 \x##gray|//hh//## \u##gray|//hhhh//## \u{##gray|//h//##...}||
-||[[# str-concat]][#str-concat-note concatenate]||append("one ","two ",Y), append(Y,"three",X).||"one " ++ "two " ++ "three" _
+||[[# str-concat]][#str-concat-note concatenate]||append("one ", "two ", Y), append(Y, "three", X).||"one " ++ "two " ++ "three" _
  _
 string:concat("one ", string:concat("two ", "three")) _
  _
@@ -602,6 +603,24 @@ How blocks are delimited.   A block is a sequence of statements which are execut
 ++ [#stmt-terminator statement terminator]
 
 How statements are terminated.
+
+**prolog:**
+
+A prolog program consists of //facts//, //rules//, and //goals//.
+
+Facts define the data of a Prolog program. They are analogous to variable definitions in other languages.
+
+Rules define facts in a recursive manner. In this sheet they are discussed in the section on functions.
+
+Facts and rules usually found in files; they are not entered in the interactive toplevel directly. A fact typed directly into the toplevel is treated as a goal. A rule directly typed into the toplevel results in an error message. However, the {{assert}} goal can be used to create a fact or rule in the top level.
+
+Goals are either //queries// or they have a side effect.
+
+Queries are handled by the Prolog infererence engine. If the query has an unbound variable, the inference engine searches for values which make the query true. If the query does not have an unbound variable, the inference engine determines whether the query is true or false. Queries are a distinctive feature of logic programming and have no analog in other languages.
+
+Goals with side effect are analogous to statements with side effect in other languages. They are used in Prolog for I/O. They are used to give instructions to the infererence engine, e.g. the {{cut}} goal which prevents backtracking. Also, the {{assert} goal described above is a goal with side effect.
+
+Goals can be typed directly into the toplevel. They can also be placed in a file when preceded by the {{:-}} notation.
 
 [[# eol-comment-note]]
 ++ [#eol-comment end-of-line comment]

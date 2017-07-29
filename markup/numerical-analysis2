@@ -4,7 +4,7 @@
 
 **sheet two:** [#tables tables] | [#import-export import and export] | [#relational-algebra relational algebra] | [#aggregation aggregation]
 
-[#vectors vectors] | [#matrices matrices] | [#sparse-matrices sparse matrices] | [#optimization optimization] | [#polynomials polynomials] | [#descriptive-statistics descriptive statistics] | [#distributions distributions] | [#linear-regression linear regression] | [#statistical-tests statistical tests] | [#time-series time series] | [#fast-fourier-transform fast fourier transform] | [#clustering clustering]
+[#vectors vectors] | [#matrices matrices] | [#sparse-matrices sparse matrices] | [#optimization optimization] | [#polynomials polynomials] | [#descriptive-statistics descriptive statistics] | [#distributions distributions] | [#linear-regression linear regression] | [#statistical-tests statistical tests] | [#time-series time series] | [#fast-fourier-transform fast fourier transform] | [#clustering clustering] | [#images images] | [#sound sound]
 
 [#bar-charts bar charts] | [#scatter-plots scatter plots] | [#line-charts line charts] | [#surface-charts surface charts] | [#chart-options chart options]
 
@@ -1208,6 +1208,29 @@ dm = squareform(pdist(pts, 'euclidean'))|| || || ||
 ||dendogram|| || || || ||
 ||silhouette plot|| || || || ||
 ||k-means|| || || || ||
+||||||||||~ [[# images]][#images-note images]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
+||load from file||X = imread('cat.jpg');|| || || ||
+||display image||imshow(X)|| || || ||
+||image info||whos X _
+ _
+imfinfo('cat.jpg')|| || || ||
+||write to file||imwrite(X, 'cat2.jpg')|| || || || ||
+||||||||||~ [[# sound]][#sound-note sound]||
+||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
+||read from file||[y, fs] = audioread('speech.flac')|| || || ||
+||record clip||recObj = audiorecorder _
+##gray|% record 5 seconds:## _
+recordblocking(recObj, 5) _
+y = getaudiodata(recOjb);|| || || ||
+||write to file|| || || || ||
+||clip info||info = audioinfo('speech.flac') _
+ _
+info.NumChannels _
+info.SampleRate _
+info.TotalSamples _
+info.Duration|| || || ||
+||play clip||sound(y, fs)|| || || ||
 ||||||||||~ [[# bar-charts]][#bar-charts-note bar charts]||
 ||~ ||~ [#matlab matlab]||~ [#r r]||~ [#numpy numpy]||~ [#julia julia]||
 ||[[# vertical-bar-chart]][[image http://cdn.hyperpolyglot.org/images/vertical-bar-chart.jpg]] _
@@ -1590,13 +1613,16 @@ open new plot||hist(rnorm(100)) _
 dev.new() _
 hist(rnorm(100))|| || ||
 ||[[# close-plot-windows]][#close-plot-windows-note close all plot windows]||close all||graphics.off()|| || ||
-||[[# save-plot-as-png]][#save-plot-as-png-note save plot as png]|| f = figure _
+||[[# save-plot-as-png]][#save-plot-as-png-note save plot as png]||f = figure _
 hist(randn(100)) _
 print(f, '-dpng', 'histogram.png')||png('hist.png') _
 hist(rnorm(100)) _
 dev.off()||y = randn(50) _
 plot(y) _
 savefig('line-plot.png')|| ||
+||[[# save-plot-as-svg]][#save-plot-as-svg-note save plot as svg]|| ||svg('hist.svg') _
+hist(rnorm(100)) _
+dev.off()|| || ||
 ||~ ||~ ##EFEFEF|@@__________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________@@##||~ ##EFEFEF|@@__________________________________________________@@##||
 
 
@@ -2586,6 +2612,12 @@ How to get a data point in a time series by its ordinal position.
 
 [[# clustering-note]]
 + [#clustering Clustering]
+
+[[# images-note]]
++ [#images Images]
+
+[[# sound-note]]
++ [#sound Sound]
 
 [[# bar-charts-note]]
 + [#bar-charts Bar Charts]

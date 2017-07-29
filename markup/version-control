@@ -47,10 +47,10 @@ $ git help||$ hg [-v] help _
 ||list remote repositories||$ git [@@[@@-v] show] remote _
  _
 ##gray|-v: //show url of remote//##||$ hg paths||
-||add remote repository||$ git add [-t [#BRANCH BRANCH]] ... [#NAME NAME] [#URL URL] _
-$ git add [-m [#BRANCH BRANCH]] [#NAME NAME] [#URL URL]||##gray|//edit the// [paths] //section of// .hg/hgrc##||
-||remove remote repository||$ git rm [#REMOTE REMOTE]|| ||
-||rename remote repository||$ git rename [#REMOTE REMOTE] [#NAME NAME] || ||
+||add remote repository||$ git remote add [-t [#BRANCH BRANCH]] ... [#NAME NAME] [#URL URL] _
+$ git remote add [-m [#BRANCH BRANCH]] [#NAME NAME] [#URL URL]||##gray|//edit the// [paths] //section of// .hg/hgrc##||
+||remove remote repository||$ git remote rm [#REMOTE REMOTE]|| ||
+||rename remote repository||$ git remote rename [#REMOTE REMOTE] [#NAME NAME] || ||
 ||show remote repository details||$ git remote show [-n] [#REMOTE REMOTE] _
  _
 ##gray|-n: //do not connect to remote repo//##|| ||

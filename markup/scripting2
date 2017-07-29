@@ -505,7 +505,14 @@ fs.readdirSync('/etc').forEach( _
 @<&nbsp;&nbsp;>@print(filename)||Dir.open("/etc").each do |file| _
 @<&nbsp;&nbsp;>@puts file _
 end||
-||[[# glob]][#glob-note glob paths]|| ||foreach (glob("/etc/*") as $file) { _
+||[[# glob]][#glob-note glob paths]||##gray|@@//@@ npm install glob## _
+let glob = require('glob'); _
+ _
+glob('/etc/*', function(err, paths) { _
+@<&nbsp;&nbsp;>@paths.forEach(function(path) { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@console.log(path); _
+@<&nbsp;&nbsp;>@}); _
+});||foreach (glob("/etc/*") as $file) { _
 @<&nbsp;&nbsp;>@echo "$file\n"; _
 }||import glob _
  _
@@ -513,7 +520,12 @@ for path in glob.glob('/etc/*'): _
 @<&nbsp;&nbsp;>@print(path)||Dir.glob("/etc/*").each do |path| _
 @<&nbsp;&nbsp;>@puts path _
 end||
-||[[# mkdir]][#mkdir-note make directory]|| ||mkdir("/tmp/foo/bar", 0755, TRUE);||dirname = '/tmp/foo/bar' _
+||[[# mkdir]][#mkdir-note make directory]||const fs = require('fs'); _
+ _
+if (!fs.existsSync('/tmp/foo')) { _
+@<&nbsp;&nbsp;>@fs.mkdirSync('/tmp/foo', 0755); _
+} _
+fs.mkdirSync('/tmp/foo/bar', 0755);||mkdir("/tmp/foo/bar", 0755, TRUE);||dirname = '/tmp/foo/bar' _
 if not os.path.isdir(dirname): _
 @<&nbsp;&nbsp;>@os.makedirs(dirname)||require 'fileutils' _
  _
@@ -525,7 +537,9 @@ shutil.copytree('/tmp/foodir', _
  _
 FileUtils.cp_r("/tmp/foodir", _
 @<&nbsp;&nbsp;>@"/tmp/bardir")||
-||[[# rmdir]][#rmdir-note remove empty directory]|| ||rmdir("/tmp/foodir");||os.rmdir('/tmp/foodir')||File.rmdir("/tmp/foodir")||
+||[[# rmdir]][#rmdir-note remove empty directory]||const fs = require('fs'); _
+ _
+fs.rmdirSync('/tmp/foodir');||rmdir("/tmp/foodir");||os.rmdir('/tmp/foodir')||File.rmdir("/tmp/foodir")||
 ||[[# rm-rf]][#rm-rf-note remove directory and contents]|| ||##gray|//none//##||import shutil _
  _
 shutil.rmtree('/tmp/foodir')||require 'fileutils' _
@@ -533,7 +547,9 @@ shutil.rmtree('/tmp/foodir')||require 'fileutils' _
 FileUtils.rm_rf("/tmp/foodir")||
 ||[[# dir-test]][#dir-test-note directory test] _
 @<&nbsp;>@|| ||is_dir("/tmp")||os.path.isdir('/tmp')||File.directory?("/tmp")||
-||[[# unused-dir]][#unused-dir-note generate unused directory]|| || ||import tempfile _
+||[[# unused-dir]][#unused-dir-note generate unused directory]||const fs = require('fs'); _
+ _
+const dir = fs.mkdtemp('/tmp/foo');|| ||import tempfile _
  _
 path = tempfile.mkdtemp(dir='/tmp', _
 @<&nbsp;&nbsp;>@prefix='foo')||require 'tmpdir' _
@@ -1267,7 +1283,7 @@ conn.request('POST', '/orders', data) _
 resp = conn.getresponse() _
 if resp.status == httplib.OK: _
 @<&nbsp;&nbsp;>@s = resp.read()|| ||
-||[[# serve-pwd]][#serve-pwd-note serve working directory]|| ||$ php -S localhost:8000||$ python -m SimpleHTTPServer 8000||$ ruby -rwebrick -e \ _
+||[[# serve-pwd]][#serve-pwd-note serve working directory]|| ||$ php -S localhost:8000||$ python -m http.server 8000||$ ruby -rwebrick -e \ _
 'WEBrick::HTTPServer.new(:Port => 8000, '\ _
 ':DocumentRoot => Dir.pwd).start'||
 ||[[# absolute-url]][#absolute-url-note absolute url] _
