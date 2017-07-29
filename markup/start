@@ -67,11 +67,11 @@
 [[/row]]
 
 [[row]]
-[[cell]]**Computer Algebra Software I:**[[/cell]][[cell]][[[computer-algebra|Mathematica, Maple, Maxima, Sage, SymPy]]][[/cell]]
+[[cell]]**Computer Algebra Software I:**[[/cell]][[cell]][[[computer-algebra|Mathematica, SymPy, Sage, Maxima]]][[/cell]]
 [[/row]]
 
 [[row]]
-[[cell]]**Computer Algebra Software II:**[[/cell]][[cell]][[[more-computer-algebra|Magma, GAP, Singular, Pari/GP]]][[/cell]]
+[[cell]]**Computer Algebra Software II:**[[/cell]][[cell]][[[more-computer-algebra|Pari/GP, Magma, GAP, Singular]]][[/cell]]
 [[/row]]
 
 [[row]]
@@ -100,7 +100,7 @@
 [[/row]]
 
 [[row]]
-[[cell]]**Build Tools:**[[/cell]][[cell]][[[build|Make, Rake, Ant, Sbt]]][[/cell]]
+[[cell]]**Build Tools:**[[/cell]][[cell]][[[build|Make, Rake, Ant, Gradle]]][[/cell]]
 [[/row]]
 
 [[row]]
@@ -120,7 +120,7 @@
 [[/row]]
 
 [[row]]
-[[cell]]**2D Vector Graphics:**[[/cell]][[cell]][[[vector-graphics|PostScript, Processing, SVG]]][[/cell]]
+[[cell]]**2D Vector Graphics:**[[/cell]][[cell]][[[vector-graphics|PostScript, SVG, ImageMagick]]][[/cell]]
 [[/row]]
 
 [[/table]]

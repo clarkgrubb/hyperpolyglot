@@ -4,62 +4,62 @@
  
 [#vectors vectors] | [#matrices matrices] |  [#combinatorics combinatorics] | [#number-theory number theory] | [#elliptic-curves elliptic curves] | [#rational-algebraic-numbers rational and algebraic numbers] | [#polynomials polynomials] | [#special-functions special functions] | [#permutations permutations] | [#groups groups] | [#subgroups subgroups] | [#group-homomorphisms group homomorphisms] | [#actions actions]
 
-||~ ||~ [#magma magma]||~ [#gap gap]||~ [#singular singular]||~ [#pari-gp pari/gp]||
+||~ ||~ [#pari-gp pari/gp]||~ [#magma magma]||~ [#gap gap]||~ [#singular singular]||
 ||[[# version-used]][#version-used-note version used] _
-@<&nbsp;>@||##gray|//2.21//##||##gray|//4.7//##||##gray|//4.0//##||##gray|//2.7//##||
+@<&nbsp;>@||##gray|//2.7//##||##gray|//2.21//##||##gray|//4.7//##||##gray|//4.0//##||
 ||[[# show-version]][#show-version-note show version] _
-@<&nbsp;>@|| ||$ gap -h||$ singular -vb||$ gp @@--@@version||
+@<&nbsp;>@||$ gp @@--@@version|| ||$ gap -h||$ singular -vb||
 ||||||||||~ [[# grammar-invocation]][#grammar-invocation-note grammar and invocation]||
-||~ ||~ magma||~ gap||~ singular||~ pari/gp||
+||~ ||~ pari/gp||~ magma||~ gap||~ singular||
 ||[[# interpreter]][#interpreter-note interpreter] _
-@<&nbsp;>@|| || ||$ singular -b ##gray|//foo//##.sing||$ cat hello.gp _
+@<&nbsp;>@||$ cat hello.gp _
 print("Hello, World!") _
 quit _
  _
 $ gp -q hello.gp _
-Hello, World!||
+Hello, World!|| || ||$ singular -b ##gray|//foo//##.sing||
 ||[[# repl]][#repl-note repl] _
-@<&nbsp;>@||[http://magma.maths.usyd.edu.au/calc/ online calculator]||$ gap||$ singular||$ gp||
+@<&nbsp;>@||$ gp||[http://magma.maths.usyd.edu.au/calc/ online calculator]||$ gap||$ singular||
 ||[[# block-delimiters]][#block-delimiters-note block delimiters] _
-@<&nbsp;>@|| ||function( ) ##gray|//...//## end _
+@<&nbsp;>@||{ ##gray|//...//## } _
+ _
+##gray|//braces cannot be nested//##|| ||function( ) ##gray|//...//## end _
 if then ##gray|//...//## elif then ##gray|//...//##  else ##gray|//...//## fi _
 while do ##gray|//...//## od _
-for do ##gray|//...//## od||{ ##gray|//...//## }||{ ##gray|//...//## } _
- _
-##gray|//braces cannot be nested//##||
-||[[# stmt-separator]][#stmt-separator-note statement separator]||; _
- _
-##gray|//A line can be broken anywhere, even inside a numeric literal or string, if the newline is preceded by a backslash:// \##||; _
- _
-##gray|//Two trailing semicolons// ;;  //suppress echoing value of previous expression.//##||;||##gray|//newline or//## ; _
+for do ##gray|//...//## od||{ ##gray|//...//## }||
+||[[# stmt-separator]][#stmt-separator-note statement separator]||##gray|//newline or//## ; _
  _
 ##gray|//Newlines don't separate statements inside braces.//## _
  _
-##gray|//A semicolon suppresses echoing value of previous expression.//##||
+##gray|//A semicolon suppresses echoing value of previous expression.//##||; _
+ _
+##gray|//A line can be broken anywhere, even inside a numeric literal or string, if the newline is preceded by a backslash:// \##||; _
+ _
+##gray|//Two trailing semicolons// ;;  //suppress echoing value of previous expression.//##||;||
 ||[[# eol-comment]][#eol-comment-note end-of-line comment] _
-@<&nbsp;>@||1 + 1; ##gray|@@//@@ addition##||1 + 1; ##gray|# addition##||// ##gray|//comment//##||1 + 1 ##gray|\\ addition##||
+@<&nbsp;>@||1 + 1 ##gray|\\ addition##||1 + 1; ##gray|@@//@@ addition##||1 + 1; ##gray|# addition##||// ##gray|//comment//##||
 ||[[# multiple-line-comment]][#multiple-line-comment-note multiple line comment] _
-@<&nbsp;>@||1 + ##gray|/* addition */## 1;||##gray|//none//##||/* ##gray|//comment line _
-another comment//## */||1 + ##gray|/* addition */## 1||
+@<&nbsp;>@||1 + ##gray|/* addition */## 1||1 + ##gray|/* addition */## 1;||##gray|//none//##||/* ##gray|//comment line _
+another comment//## */||
 ||||||||||~ [[# var-expr]][#var-expr-note variables and expressions]||
-||~ ||~ magma||~ gap||~ singular||~ pari/gp||
-||[[# assignment]][#assignment-note assignment]||a := 3;||a := 3;||int a; _
+||~ ||~ pari/gp||~ magma||~ gap||~ singular||
+||[[# assignment]][#assignment-note assignment]||x = 3.14||a := 3;||a := 3;||int a; _
 a = 3; _
  _
-##gray|@@//@@ It is an error to assign to undeclared variable.##||x = 3.14||
-||[[# parallel-assignment]][#parallel-assignment-note parallel assignment]|| ||##gray|//none//##||int a, b; _
-a, b = 3, 4;||[a, b] = [3, 4]||
-||[[# compound-assignment]][#compound-assignment-note compound assignment]|| ||##gray|//none//##||##gray|//none//##||+= -= *= /= \= \/= %= _
+##gray|@@//@@ It is an error to assign to undeclared variable.##||
+||[[# parallel-assignment]][#parallel-assignment-note parallel assignment]||[a, b] = [3, 4]|| ||##gray|//none//##||int a, b; _
+a, b = 3, 4;||
+||[[# compound-assignment]][#compound-assignment-note compound assignment]||+= -= *= /= \= \/= %= _
  _
 ##gray|@@\\@@ bit operations:## _
-@@<<= >>=@@||
-||[[# incr-decr]][#incr-decr-note increment and decrement]|| ||##gray|//none//##||@@x++ x--@@||##gray|//postmodifiers://## _
-x++ x@@--@@||
-||[[# non-referential-id]][#non-referential-id-note non-referential identifier]||##gray|//none//##||##gray|//none//##||##gray|//none//##||##gray|//any unassigned identifier is non-referential//##||
-||[[# id-as-val]][#id-as-val-note identifier as value]|| || || ||x = 3 _
-y = 'x||
-||[[# global-var]][#global-var-note global variable]|| || || ||##gray|//variables are global by default//##||
-||[[# local-var]][#local-var-note local variable]|| || || ||tmp = 19 _
+@@<<= >>=@@|| ||##gray|//none//##||##gray|//none//##||
+||[[# incr-decr]][#incr-decr-note increment and decrement]||##gray|//postmodifiers://## _
+x++ x@@--@@|| ||##gray|//none//##||@@x++ x--@@||
+||[[# non-referential-id]][#non-referential-id-note non-referential identifier]||##gray|//any unassigned identifier is non-referential//##||##gray|//none//##||##gray|//none//##||##gray|//none//##||
+||[[# id-as-val]][#id-as-val-note identifier as value]||x = 3 _
+y = 'x|| || || ||
+||[[# global-var]][#global-var-note global variable]||##gray|//variables are global by default//##|| || || ||
+||[[# local-var]][#local-var-note local variable]||tmp = 19 _
  _
 add(x, y, z) = { _
 @<&nbsp;&nbsp;>@##gray|@@\\@@ don't overwrite global tmp:## _
@@ -67,37 +67,37 @@ add(x, y, z) = { _
 @<&nbsp;&nbsp;>@tmp + z _
 } _
  _
-##gray|@@\\@@ local keyword declares dynamic scope##||
+##gray|@@\\@@ local keyword declares dynamic scope##|| || || ||
 ||[[# null]][#null-note null] _
-@<&nbsp;>@|| || || ||##gray|//none//##||
+@<&nbsp;>@||##gray|//none//##|| || || ||
 ||[[# null-test]][#null-test-note null test] _
-@<&nbsp;>@|| || || ||##gray|//none//##||
+@<&nbsp;>@||##gray|//none//##|| || || ||
 ||[[# undef-var]][#undef-var-note undefined variable access] _
-@<&nbsp;>@|| ||##gray|//error//##|| ||##gray|//treated as an unknown number//##||
-||[[# rm-var-binding]][#rm-var-binding-note remove variable binding]||delete x;|| || ||kill(x)||
+@<&nbsp;>@||##gray|//treated as an unknown number//##|| ||##gray|//error//##|| ||
+||[[# rm-var-binding]][#rm-var-binding-note remove variable binding]||kill(x)||delete x;|| || ||
 ||[[# cond-expr]][#cond-expr-note conditional expression] _
-@<&nbsp;>@||if x lt 0 then -x; else x; end if;|| || ||if(x > 0, x, -x)||
+@<&nbsp;>@||if(x > 0, x, -x)||if x lt 0 then -x; else x; end if;|| || ||
 ||||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
-||~ ||~ magma||~ gap||~ singular||~ pari/gp||
+||~ ||~ pari/gp||~ magma||~ gap||~ singular||
 ||[[# true-false]][#true-false-note true and false] _
-@<&nbsp;>@||true false||true false||1 0||1 0||
+@<&nbsp;>@||1 0||true false||true false||1 0||
 ||[[# falsehoods]][#falsehoods-note falsehoods] _
-@<&nbsp;>@||false||false||0||0 _
+@<&nbsp;>@||0 _
 0.0 _
 Mod(0, 5) _
 Pol([0]) _
 [0, 0, 0] _
 [0, 0; 0, 0] _
-[[0, 0], 0]||
-||[[# logical-op]][#logical-op-note logical operators]||not true or (true and false);||not true or (true and false)||! 1 @@||@@ (1 && 0)||@@&& || !@@||
-||[[# relational-op]][#relational-op-note relational operators]||eq ne lt gt le ge _
+[[0, 0], 0]||false||false||0||
+||[[# logical-op]][#logical-op-note logical operators]||@@&& || !@@||not true or (true and false);||not true or (true and false)||! 1 @@||@@ (1 && 0)||
+||[[# relational-op]][#relational-op-note relational operators]||== != > < >= <=||eq ne lt gt le ge _
  _
 ##gray|eq //raises an error when the operands are of different type.//## _
  _
 ##gray|cmpeq //does not.//##||@@=@@ <> < > <= >=||== != < > <= >= _
  _
-<> ##gray|//is a synonym for//## !=||== != > < >= <=||
-||[[# arith-op]][#arith-op-note arithmetic operators]||+ - * / mod||+ - * / mod _
+<> ##gray|//is a synonym for//## !=||
+||[[# arith-op]][#arith-op-note arithmetic operators]||+ - * / %||+ - * / mod||+ - * / mod _
  _
 ##gray|//the operators// + - * / //are overloaded for integers, rationals, and floats; other arithmetic functions aren't and there are no implicit conversions; use constructors to convert://## _
 Rat(3.1) _
@@ -106,56 +106,57 @@ Float(31/10)||##gray|//Operators are for integers only unless _
 base ring with coefficient field is declared.//## _
 @@+ - * / %@@ _
  _
-##gray|mod //is synonym for// %##||+ - * / %||
+##gray|mod //is synonym for// %##||
 ||[[# int-div]][#int-div-note integer division] _
-@<&nbsp;>@||a := 7; _
+@<&nbsp;>@||a \ b _
+divrem(a, b)[1] _
+ _
+##gray|@@\\@@ rounded integer division:## _
+a \/ b||a := 7; _
 b := 3; _
  _
 div(a, b);||QuoInt(a, b);||int a, b = 7, 3; _
 a div b; _
  _
 ##gray|@@//@@ a / b also performs integer division when _
-@@//@@ no base ring is declared.##||a \ b _
-divrem(a, b)[1] _
- _
-##gray|@@\\@@ rounded integer division:## _
-a \/ b||
-||[[# int-div-zero]][#int-div-zero-note integer division by zero]||##gray|//User error//##||##gray|//error//##||##gray|//error//##||##gray|//error//##||
-||[[# float-div]][#float-div-note float division]|| ||##gray|//depending upon the types of a and b, the value can be an exact rational, a machine float, or an arbitrary precision float://## _
+@@//@@ no base ring is declared.##||
+||[[# int-div-zero]][#int-div-zero-note integer division by zero]||##gray|//error//##||##gray|//User error//##||##gray|//error//##||##gray|//error//##||
+||[[# float-div]][#float-div-note float division]||7 / 3|| ||##gray|//depending upon the types of a and b, the value can be an exact rational, a machine float, or an arbitrary precision float://## _
 a / b||ring r = real,(x,y,z),(dp); _
  _
-3.1 / 7.2;||7 / 3||
-||[[# float-div-zero]][#float-div-zero-note float division by zero]||##gray|//Runtime error//##||##gray|//error//##||##gray|//error//##||##gray|//error//##||
-||[[# power]][#power-note power]||2 ^ 32;||2 ^ 32||2 ^ 16 _
-2 ** 16||2 ^ 32||
+3.1 / 7.2;||
+||[[# float-div-zero]][#float-div-zero-note float division by zero]||##gray|//error//##||##gray|//Runtime error//##||##gray|//error//##||##gray|//error//##||
+||[[# power]][#power-note power]||2 ^ 32||2 ^ 32;||2 ^ 32||2 ^ 16 _
+2 ** 16||
 ||[[# sqrt]][#sqrt-note sqrt] _
-@<&nbsp;>@||Sqrt(2);||2.0 ^ 0.5||##gray|//none//##||sqrt(2)||
+@<&nbsp;>@||sqrt(2)||Sqrt(2);||2.0 ^ 0.5||##gray|//none//##||
 ||[[# sqrt-negative-one]][#sqrt-negative-one-note sqrt -1] _
-@<&nbsp;>@|| ||##gray|-1.0 ^ 0.5 //evaluates to// -1.##||##gray|//none//##||1.000 * I||
-||[[# transcendental-func]][#transcendental-func-note transcendental functions]||Exp Log _
+@<&nbsp;>@||1.000 * I|| ||##gray|-1.0 ^ 0.5 //evaluates to// -1.##||##gray|//none//##||
+||[[# transcendental-func]][#transcendental-func-note transcendental functions]||exp log ##gray|//none//## _
+sin cos tan _
+asin acos atan _
+##gray|//none//##||Exp Log _
 Sin Cos Tan _
 Arcsin Arccos Arctan _
 Arctan2||##gray|//arguments must be floats; no implicit conversion of integers to floats://## _
 Exp Log _
 Sin Cos Tan _
 Asin Acos Atan _
-Atan2(##gray|//y//##, ##gray|//x//##)||##gray|//none//##||exp log ##gray|//none//## _
-sin cos tan _
-asin acos atan _
-##gray|//none//##||
+Atan2(##gray|//y//##, ##gray|//x//##)||##gray|//none//##||
 ||[[# transcendental-const]][#transcendental-const-note transcendental constants] _
-##gray|//π and Euler's number//##|| ||FLOAT.PI FLOAT.E||LIB "general.lib"; _
+##gray|//π and Euler's number//##||Pi exp(1)|| ||FLOAT.PI FLOAT.E||LIB "general.lib"; _
  _
 ##gray|@@//@@ print specified number of digits:## _
 number_pi(100); _
-number_e(100);||Pi exp(1)||
+number_e(100);||
 ||[[# float-truncation]][#float-truncation-note float truncation] _
-##gray|//round towards zero, round to nearest integer, round down, round up//##|| ||Trunc Round Floor Ceil|| ||truncate(x) _
+##gray|//round towards zero, round to nearest integer, round down, round up//##||truncate(x) _
 round(x) _
 floor(x) _
-ceil(x)||
+ceil(x)|| ||Trunc Round Floor Ceil|| ||
 ||[[# absolute-val]][#absolute-val-note absolute value] _
-##gray|//and signum//##|| ||AbsInt _
+##gray|//and signum//##||abs(x) _
+sign(x)|| ||AbsInt _
 ##gray|//no absolute value for floats?//## _
 SignInt _
 SignFloat||LIB "general.lib"; _
@@ -163,153 +164,154 @@ SignFloat||LIB "general.lib"; _
 absValue(-7); _
  _
 ring r = real,(x,y,z),(dp); _
-absValue(-7.1);||abs(x) _
-sign(x)||
+absValue(-7.1);||
 ||[[# int-overflow]][#int-overflow-note integer overflow] _
-@<&nbsp;>@||##gray|//none, has arbitrary length integer type//##||##gray|//none, has arbitrary length integer type//##||##gray|//modular arithmetic with warning//##||##gray|//none, has arbitrary length integer type//##||
+@<&nbsp;>@||##gray|//none, has arbitrary length integer type//##||##gray|//none, has arbitrary length integer type//##||##gray|//none, has arbitrary length integer type//##||##gray|//modular arithmetic with warning//##||
 ||[[# float-overflow]][#float-overflow-note float overflow] _
-@<&nbsp;>@|| ||##gray|# prints as inf:## _
-FLOAT.INFINTY|| ||##gray|//error//##||
-||[[# rational-construction]][#rational-construction-note rational construction]||2 / 7;||2 / 7|| ||2 / 7||
+@<&nbsp;>@||##gray|//error//##|| ||##gray|# prints as inf:## _
+FLOAT.INFINTY|| ||
+||[[# rational-construction]][#rational-construction-note rational construction]||2 / 7||2 / 7;||2 / 7|| ||
 ||[[# rational-decomposition]][#rational-decomposition-note rational decomposition] _
-@<&nbsp;>@||Numerator(2 / 7); _
+@<&nbsp;>@||x = 2 / 7 _
+numerator(x) _
+denominator(x)||Numerator(2 / 7); _
 Denominator(2 / 7 );||x := 2 / 7; _
 NumeratorRat(x); _
-DenominatorRat(x);|| ||x = 2 / 7 _
-numerator(x) _
-denominator(x)||
-||[[# decimal-approx]][#decimal-approx-note decimal approximation]|| || || ||2 / 7 + 0. _
+DenominatorRat(x);|| ||
+||[[# decimal-approx]][#decimal-approx-note decimal approximation]||2 / 7 + 0. _
  _
 ##gray|@@\\@@ change precision to 100:## _
 \p 100 _
-2 / 7 + 0.||
+2 / 7 + 0.|| || || ||
 ||[[# complex-construction]][#complex-construction-note complex construction] _
-@<&nbsp;>@|| ||##gray|//none//##|| ||1 + 3 * I||
+@<&nbsp;>@||1 + 3 * I|| ||##gray|//none//##|| ||
 ||[[# complex-decomposition]][#complex-decomposition-note complex decomposition] _
-##gray|//real and imaginary part, argument and modulus, conjugate//##|| ||##gray|//none//##|| ||real(z) imag(z) _
+##gray|//real and imaginary part, argument and modulus, conjugate//##||real(z) imag(z) _
 arg(z) abs(z) _
-conj(z)||
+conj(z)|| ||##gray|//none//##|| ||
 ||[[# random-num]][#random-num-note random number] _
-##gray|//uniform integer, uniform float//##||Random(0, 99); _
+##gray|//uniform integer, uniform float//##||random(100) _
+random(1.0)||Random(0, 99); _
 ##gray|//??//##||rs := RandomSource(IsMersenneTwister); _
 Random(rs, 0, 99); _
-##gray|//??//##|| ||random(100) _
-random(1.0)||
+##gray|//??//##|| ||
 ||[[# random-seed]][#random-seed-note random seed] _
-##gray|//set, get//##||SetSeed(42); _
+##gray|//set, get//##||setrand(17) _
+getrand()||SetSeed(42); _
 seed := GetSeed(();||rs := RandomSource(IsMersenneTwister, 17); _
-State(rs);|| ||setrand(17) _
-getrand()||
-||[[# bit-op]][#bit-op-note bit operators]|| ||##gray|//none//##|| ||##gray|@@\\@@ left shift:## _
+State(rs);|| ||
+||[[# bit-op]][#bit-op-note bit operators]||##gray|@@\\@@ left shift:## _
 5 @@<<@@ 1 _
 ##gray|@@\\@@ right shift:## _
-5 @@>>@@ 1||
-||[[# binary-octal-hex-literals]][#binary-octal-hex-literals-note binary, octal, and hex literals]|| ||##gray|//none//##|| || ||
-||[[# radix]][#radix-note radix]||IntegerToString(42, 7);||##gray|//none//##|| ||##gray|@@\\@@ 42 as powers of 7 up to 9th power:## _
-42 + O(7^10)||
-||[[# to-array-of-digits]][#to-array-of-digits-note to array of digits]|| ||ListOfDigits(1234); _
- _
-##gray|# other bases?##|| ||##gray|@@\\@@ base 10:## _
+5 @@>>@@ 1|| ||##gray|//none//##|| ||
+||[[# binary-octal-hex-literals]][#binary-octal-hex-literals-note binary, octal, and hex literals]|| || ||##gray|//none//##|| ||
+||[[# radix]][#radix-note radix]||##gray|@@\\@@ 42 as powers of 7 up to 9th power:## _
+42 + O(7^10)||IntegerToString(42, 7);||##gray|//none//##|| ||
+||[[# to-array-of-digits]][#to-array-of-digits-note to array of digits]||##gray|@@\\@@ base 10:## _
 digits(1234) _
 ##gray|@@\\@@ base 2:## _
 digits(1234, 2) _
 ##gray|@@\\@@ number of digits in base 10:## _
-sizedigits(1234)||
-||||||||||~ [[# strings]][#strings-note strings]||
-||~ ||~ magma||~ gap||~ singular||~ pari/gp||
-||[[# str-literal]][#str-literal-note string literal] _
-@<&nbsp;>@||"don't say \"no\""||"don't say \"no\""||string s = "don't say \"no\"";||"don't say \"no\""||
-||[[# newline-in-str-literal]][#newline-in-str-literal-note newline in literal] _
-@<&nbsp;>@||##gray|//A line break in a string literal results in a newline in the string unless preceded by a backslash.//##||##gray|//no//##||##gray|//Yes; runaway strings are possible; there is a predefined string variable newline which contains a single newline character.//##||##gray|//no; use \n escape//##||
-||[[# str-literal-esc]][#str-literal-esc-note literal escapes]||\" \\ \n \r \t||\b \c \n \r \" \' \\ \##gray|//ooo//## _
+sizedigits(1234)|| ||ListOfDigits(1234); _
  _
-##gray|//when writing to a buffered output stream, encountering a// \c //causes a flush of output.//##||\" \\||\n \t \" \\||
+##gray|# other bases?##|| ||
+||||||||||~ [[# strings]][#strings-note strings]||
+||~ ||~ pari/gp||~ magma||~ gap||~ singular||
+||[[# str-literal]][#str-literal-note string literal] _
+@<&nbsp;>@||"don't say \"no\""||"don't say \"no\""||"don't say \"no\""||string s = "don't say \"no\"";||
+||[[# newline-in-str-literal]][#newline-in-str-literal-note newline in literal] _
+@<&nbsp;>@||##gray|//no; use \n escape//##||##gray|//A line break in a string literal results in a newline in the string unless preceded by a backslash.//##||##gray|//no//##||##gray|//Yes; runaway strings are possible; there is a predefined string variable newline which contains a single newline character.//##||
+||[[# str-literal-esc]][#str-literal-esc-note literal escapes]||\n \t \" \\||\" \\ \n \r \t||\b \c \n \r \" \' \\ \##gray|//ooo//## _
+ _
+##gray|//when writing to a buffered output stream, encountering a// \c //causes a flush of output.//##||\" \\||
 ||[[# str-concat]][#str-concat-note concatenate] _
-@<&nbsp;>@||"one " cat "two " cat "three"; _
+@<&nbsp;>@||Str("one ", "two ", "three") _
+concat("one ", "two ", "three")||"one " cat "two " cat "three"; _
 "one " * "two " * "three"; _
 &cat ["one ", "two ", "three "]; _
-&* ["one ", "two ", "three "];||Concatenation("one ", "two ", "three");||string s = "one" + "two" + "three";||Str("one ", "two ", "three") _
-concat("one ", "two ", "three")||
-||[[# str-replicate]][#str-replicate-note replicate]||hbar := "-" ^ 80;|| || || ||
-||[[# translate-case]][#translate-case-note translate case]|| ||UppercaseString("foo"); _
-LowercaseString("FOO");|| || ||
+&* ["one ", "two ", "three "];||Concatenation("one ", "two ", "three");||string s = "one" + "two" + "three";||
+||[[# str-replicate]][#str-replicate-note replicate]|| ||hbar := "-" ^ 80;|| || ||
+||[[# translate-case]][#translate-case-note translate case]|| || ||UppercaseString("foo"); _
+LowercaseString("FOO");|| ||
 ||[[# trim]][#trim-note trim] _
-@<&nbsp;>@|| ||##gray|//none//##|| || ||
+@<&nbsp;>@|| || ||##gray|//none//##|| ||
 ||[[# num-to-str]][#num-to-str-note number to string] _
-@<&nbsp;>@||"value: " * IntegerToString(8);||Concatenation("value: ", String(8));||"value: " + string(8)||Str(8) _
+@<&nbsp;>@||Str(8) _
  _
 ##gray|@@\\@@ implicit conversion to string:## _
-concat("value: ", 8)||
-||[[# str-to-num]][#str-to-num-note string to number]|| ||7 + Int("12"); _
-73.9 + Float(".037");|| ||7 + eval("12") _
-73.9 + eval(".037")||
-||[[# str-join]][#str-join-note string join]|| ||a := ["foo", "bar", "baz"]; _
-JoinStringsWithSeparator(a, ","); || || ||
+concat("value: ", 8)||"value: " * IntegerToString(8);||Concatenation("value: ", String(8));||"value: " + string(8)||
+||[[# str-to-num]][#str-to-num-note string to number]||7 + eval("12") _
+73.9 + eval(".037")|| ||7 + Int("12"); _
+73.9 + Float(".037");|| ||
+||[[# str-join]][#str-join-note string join]|| || ||a := ["foo", "bar", "baz"]; _
+JoinStringsWithSeparator(a, ","); || ||
 ||[[# split]][#split-note split] _
-@<&nbsp;>@||Split("foo,bar,baz", ",");||SplitString("foo,bar,baz", ",");|| || ||
-||[[# str-subst]][#str-subst-note substitute]|| ||##gray|# replace all occurrences:## _
-ReplacedString("do re mi mi", "mi", "ma");|| || ||
+@<&nbsp;>@|| ||Split("foo,bar,baz", ",");||SplitString("foo,bar,baz", ",");|| ||
+||[[# str-subst]][#str-subst-note substitute]|| || ||##gray|# replace all occurrences:## _
+ReplacedString("do re mi mi", "mi", "ma");|| ||
 ||[[# str-len]][#str-len-note length] _
-@<&nbsp;>@||# "hello";||Length("hello");||size("hello");||length("hello") _
-#"hello"||
-||[[# index-substr]][#index-substr-note index of substring]||Index("hello", "el"); _
+@<&nbsp;>@||length("hello") _
+#"hello"||# "hello";||Length("hello");||size("hello");||
+||[[# index-substr]][#index-substr-note index of substring]|| ||Index("hello", "el"); _
 Position("hello", "el"); _
 ##gray|/* both return 0 if substring not found */##|| ||##gray|// evaluates to 2:## _
-find("hello", "el");|| ||
-||[[# extract-substr]][#extract-substr-note extract substring]||Substring("hello", 2, 2);||s := "hello"; _
+find("hello", "el");||
+||[[# extract-substr]][#extract-substr-note extract substring]|| ||Substring("hello", 2, 2);||s := "hello"; _
 s{[2..3]};||##gray|// start index and substring length:## _
-"hello"[2, 2]|| ||
+"hello"[2, 2]||
 ||[[# char-literal]][#char-literal-note character literal] _
-@<&nbsp;>@|| ||'h'|| || ||
-||[[# lookup-char]][#lookup-char-note character lookup]|| ||s := "hello"; _
+@<&nbsp;>@|| || ||'h'|| ||
+||[[# lookup-char]][#lookup-char-note character lookup]|| || ||s := "hello"; _
 ##gray|# the character 'h':## _
 s[1]; _
  _
 ##gray|# cannot use index notation on string literal##||##gray|// the character h:## _
-"hello"[1]|| ||
-||[[# chr-ord]][#chr-ord-note chr and ord]|| ||CharInt(65) _
-IntChar('A')|| ||Strchr([65]) _
-Vecsmall("A")||
-||[[# delete-char]][#delete-char-note delete characters]|| ||s := "disemvowel me"; _
+"hello"[1]||
+||[[# chr-ord]][#chr-ord-note chr and ord]||Strchr([65]) _
+Vecsmall("A")|| ||CharInt(65) _
+IntChar('A')|| ||
+||[[# delete-char]][#delete-char-note delete characters]|| || ||s := "disemvowel me"; _
 ##gray|# no retval; modifies s in place:## _
-RemoveCharacters(s, "aeiou"); || || ||
+RemoveCharacters(s, "aeiou"); || ||
 ||||||||||~ [[# arrays]][#arrays-note arrays]||
-||~ ||~ magma||~ gap||~ singular||~ pari/gp||
-||[[# array-literal]][#array-literal-note literal]||a := [1, 2, 3];||[1, 2, 3]; _
+||~ ||~ pari/gp||~ magma||~ gap||~ singular||
+||[[# array-literal]][#array-literal-note literal]||##gray|\\ [1, 2, 3] is a vector literal:## _
+List([1, 2, 3])||a := [1, 2, 3];||[1, 2, 3]; _
  _
 ##gray|# creates array with gap at fourth index; _
 # reading a[4] causes an error:## _
 a := [1, 2, 3, , 5];||list a= 1, 2, 3; _
 list a = list(1, 2, 3); _
  _
-##gray|@@//@@ Singular lists are fixed length.##||##gray|\\ [1, 2, 3] is a vector literal:## _
-List([1, 2, 3])||
+##gray|@@//@@ Singular lists are fixed length.##||
 ||[[# array-size]][#array-size-note size] _
-@<&nbsp;>@||# [1, 2, 3];||Length([1, 2, 3]);||size(a);||length(List([1, 2, 3])) _
-#List([1, 2, 3])||
-||[[# array-lookup]][#array-lookup-note lookup]||##gray|@@//@@ indices start at one:## _
+@<&nbsp;>@||length(List([1, 2, 3])) _
+#List([1, 2, 3])||# [1, 2, 3];||Length([1, 2, 3]);||size(a);||
+||[[# array-lookup]][#array-lookup-note lookup]||##gray|\\ access time is O(1).## _
+##gray|\\ indices start at one:## _
+List([1, 2, 3])[1]||##gray|@@//@@ indices start at one:## _
 [6, 7, 8][1];||##gray|# indices start at one:## _
 a := [1, 2, 3]; _
 a[1];||##gray|@@//@@ indices start at one:## _
-a[1];||##gray|\\ access time is O(1).## _
-##gray|\\ indices start at one:## _
-List([1, 2, 3])[1]||
+a[1];||
 ||[[# array-update]][#array-update-note update] _
-@<&nbsp;>@||a[1] := 7;||a[1] := 7;||a[1] = 7;||listput(a, 7, 1)||
-||[[# array-out-of-bounds]][#array-out-of-bounds-note out-of-bounds behavior]||##gray|//Runtime error on lookup.//## _
+@<&nbsp;>@||listput(a, 7, 1)||a[1] := 7;||a[1] := 7;||a[1] = 7;||
+||[[# array-out-of-bounds]][#array-out-of-bounds-note out-of-bounds behavior]||##gray|//out of allowed range error//##||##gray|//Runtime error on lookup.//## _
  _
 ##gray|//For update, size of array is increased if necessary; runtime error to look up unassigned slot in between assigned slots.//##||##gray|//Lookups result in errors; arrays can have gaps which also cause lookup errors. _
  _
-An update will expand the array, possibly creating gaps.//##||##gray|//error//##||##gray|//out of allowed range error//##||
-||[[# array-element-index]][#array-element-index-note element index]|| ||##gray|# returns 3:## _
+An update will expand the array, possibly creating gaps.//##||##gray|//error//##||
+||[[# array-element-index]][#array-element-index-note element index]||##gray|//none//##|| ||##gray|# returns 3:## _
 Position([7, 8, 9, 9], 9); _
  _
 ##gray|# returns [3, 4]:## _
-Positions([7, 8, 9, 9], 9);|| ||##gray|//none//##||
+Positions([7, 8, 9, 9], 9);|| ||
 ||[[# array-slice]][#array-slice-note slice] _
-@<&nbsp;>@|| || || ||##gray|//none//##||
-||[[# array-of-integers-as-index]][#array-of-integers-as-index-note array of integers as index]|| || || ||##gray|//none//##||
-||[[# array-back]][#array-back-note manipulate back]||a := [6, 7, 8]; _
+@<&nbsp;>@||##gray|//none//##|| || || ||
+||[[# array-of-integers-as-index]][#array-of-integers-as-index-note array of integers as index]||##gray|//none//##|| || || ||
+||[[# array-back]][#array-back-note manipulate back]||a = List([6, 7, 8]) _
+listput(a, 9) _
+elem = listpop(a)||a := [6, 7, 8]; _
  _
 ##gray|@@//@@ a not modified:## _
 a2 := Append(a, 9); _
@@ -322,96 +324,98 @@ Add(a, 9); _
 elem := Remove(a);||list a = list(6, 7, 8); _
 list a2 = insert(a, 9, size(a)); _
 int popme = a2[size(a2)]; _
-list a3 = delete(a2, size(a2));||a = List([6, 7, 8]) _
-listput(a, 9) _
-elem = listpop(a)||
-||[[# array-front]][#array-front-note manipulate front]|| || || ||a = List([6, 7, 8]); _
+list a3 = delete(a2, size(a2));||
+||[[# array-front]][#array-front-note manipulate front]||a = List([6, 7, 8]); _
 listinsert(a, 5, 1); _
 elem = a[1]; _
-listpop(a, 1);||
+listpop(a, 1);|| || || ||
 ||[[# array-head]][#array-head-note head] _
-@<&nbsp;>@|| || || ||List([1, 2, 3])[1]||
+@<&nbsp;>@||List([1, 2, 3])[1]|| || || ||
 ||[[# array-tail]][#array-tail-note tail] _
-@<&nbsp;>@|| || || ||##gray|//none//##||
-||[[# array-cons]][#array-cons-note cons]|| || || ||a = List([1, 2, 3]); _
-listinsert(a, 1, 1);||
+@<&nbsp;>@||##gray|//none//##|| || || ||
+||[[# array-cons]][#array-cons-note cons]||a = List([1, 2, 3]); _
+listinsert(a, 1, 1);|| || || ||
 ||[[# array-concatenate]][#array-concatenate-note concatenate] _
-@<&nbsp;>@|| ||Concatenation([1, 2, 3], [4, 5, 6]);||list a1 = 1, 2, 3; _
+@<&nbsp;>@||concat(List([1, 2, 3]), List([4, 5, 6]))|| ||Concatenation([1, 2, 3], [4, 5, 6]);||list a1 = 1, 2, 3; _
 list a2 = 4, 5, 6; _
-list a3 = a1 + a2;||concat(List([1, 2, 3]), List([4, 5, 6]))||
+list a3 = a1 + a2;||
 ||[[# array-replicate]][#array-replicate-note replicate] _
 @<&nbsp;>@|| || || || ||
 ||[[# copy-array]][#copy-array-note copy] _
-@<&nbsp;>@|| || || ||a2 = a||
+@<&nbsp;>@||a2 = a|| || || ||
 ||[[# iterate-over-array]][#iterate-over-array-note iterate] _
-@<&nbsp;>@|| ||Perform([1, 2, 3], function(x) Print(x); Print("\n"); end);|| ||a = List([1, 2, 3]) _
+@<&nbsp;>@||a = List([1, 2, 3]) _
  _
-for(i=1, length(a), print(a[i]))||
+for(i=1, length(a), print(a[i]))|| ||Perform([1, 2, 3], function(x) Print(x); Print("\n"); end);|| ||
 ||[[# reverse-array]][#reverse-array-note reverse] _
-@<&nbsp;>@|| ||Reversed([1, 2, 3])|| ||a = List([1, 2, 3]) _
+@<&nbsp;>@||a = List([1, 2, 3]) _
 a2 = listcreate() _
-while(i > 0, listput(a2, a[i]); i--)||
-||[[# sort-array]][#sort-array-note sort]|| ||A := [3, 1, 4, 2] _
-Sort(A);|| ||a = List([3,1,4,2]) _
+while(i > 0, listput(a2, a[i]); i--)|| ||Reversed([1, 2, 3])|| ||
+||[[# sort-array]][#sort-array-note sort]||a = List([3,1,4,2]) _
 listsort(a) _
-a||
+a|| ||A := [3, 1, 4, 2] _
+Sort(A);|| ||
 ||[[# dedupe-array]][#dedupe-array-note dedupe] _
-@<&nbsp;>@|| ||Set([1, 2, 2, 3]); _
-Unique([1, 2, 2, 3]);|| ||Set([1, 2, 2, 3])||
+@<&nbsp;>@||Set([1, 2, 2, 3])|| ||Set([1, 2, 2, 3]); _
+Unique([1, 2, 2, 3]);|| ||
 ||[[# membership]][#membership-note membership] _
-@<&nbsp;>@|| ||2 in [1, 2, 3]|| ||##gray|@@\\@@ returns 1-based index of first occurrence _
+@<&nbsp;>@||##gray|@@\\@@ returns 1-based index of first occurrence _
 @@\\@@ or 0 if not found:## _
-setsearch([1, 2, 3], 2)||
+setsearch([1, 2, 3], 2)|| ||2 in [1, 2, 3]|| ||
 ||[[# intersection]][#intersection-note intersection] _
-@<&nbsp;>@|| ||Intersection(Set([1, 2]), Set([2, 3, 4]));|| ||setintersect([1, 2], [2, 3, 4])||
+@<&nbsp;>@||setintersect([1, 2], [2, 3, 4])|| ||Intersection(Set([1, 2]), Set([2, 3, 4]));|| ||
 ||[[# union]][#union-note union] _
-@<&nbsp;>@|| ||Union(Set([1, 2]), Set([2, 3, 4]));|| ||setunion([1, 2], [2, 3, 4])||
-||[[# set-diff]][#set-diff-note relative complement, symmetric difference]|| || || ||setminus([1, 2, 3], [2]) _
-##gray|//??//##||
-||[[# map]][#map-note map]|| ||A := [1, 2, 3]; _
+@<&nbsp;>@||setunion([1, 2], [2, 3, 4])|| ||Union(Set([1, 2]), Set([2, 3, 4]));|| ||
+||[[# set-diff]][#set-diff-note relative complement, symmetric difference]||setminus([1, 2, 3], [2]) _
+##gray|//??//##|| || || ||
+||[[# map]][#map-note map]||apply(x -> x * x, [1, 2, 3])|| ||A := [1, 2, 3]; _
  _
 ##gray|# modifies A:## _
-Apply(A, x -> x * x);|| ||apply(x -> x * x, [1, 2, 3])||
+Apply(A, x -> x * x);|| ||
 ||[[# filter]][#filter-note filter] _
-@<&nbsp;>@|| || || ||select(x -> x > 2, [1, 2, 3])||
+@<&nbsp;>@||select(x -> x > 2, [1, 2, 3])|| || || ||
 ||[[# reduce]][#reduce-note reduce] _
 @<&nbsp;>@|| || || || ||
 ||[[# universal-existential-test]][#universal-existential-test-note universal and existential tests]|| || || || ||
-||[[# min-max-elem]][#min-max-elem-note min and max element]|| ||Minimum([1, 2, 3]) _
-Maximum([1, 2, 3])|| ||vecmin([1, 2, 3]) _
-vecmax([1, 2, 3])||
-||[[# shuffle-sample]][#shuffle-sample-note shuffle and sample]|| ||Shuffle([1, 2, 3, 4])|| || ||
+||[[# min-max-elem]][#min-max-elem-note min and max element]||vecmin([1, 2, 3]) _
+vecmax([1, 2, 3])|| ||Minimum([1, 2, 3]) _
+Maximum([1, 2, 3])|| ||
+||[[# shuffle-sample]][#shuffle-sample-note shuffle and sample]|| || ||Shuffle([1, 2, 3, 4])|| ||
 ||[[# flatten]][#flatten-note flatten] _
-##gray|//one level, completely//##|| ||##gray|# completely:## _
-Flat([1, [2, [3, 4]]])|| || ||
+##gray|//one level, completely//##|| || ||##gray|# completely:## _
+Flat([1, [2, [3, 4]]])|| ||
 ||[[# zip]][#zip-note zip]|| || || || ||
-||[[# cartesian-product]][#cartesian-product-note cartesian product]|| ||Cartesian([1, 2, 3], ["a", "b", "c"])|| || ||
+||[[# cartesian-product]][#cartesian-product-note cartesian product]|| || ||Cartesian([1, 2, 3], ["a", "b", "c"])|| ||
 ||||||||||~ [[# sets]][#sets-note sets]||
-||~ ||~ magma||~ gap||~ singular||~ pari/gp||
-||[[# set-literal]][#set-literal-note literal]||{1, 2, 3};|| || || ||
-||[[# set-size]][#set-size-note size]||# {1, 2, 3};|| || || ||
-||[[# set-add-elem]][#set-add-elem-note add element]||s := {1, 2, 3}; _
-Inlude(~s, 4);|| || || ||
-||[[# set-rm-elem]][#set-rm-elem-note remove element]||s := {1, 2, 3}; _
-Exclude(~s, 1);|| || || ||
-||[[# set-membership]][#set-membership-note membership test]||7 in {6, 7, 8};|| || || ||
-||[[# disjoint-test]][#disjoint-test-note disjoint test]||IsDisjoint({1, 2, 3}, {2, 3, 4});|| || || ||
-||[[# set-unino]][#set-union-note union]||##gray|@@//@@ {1, 2, 3, 4}:## _
-s := {1, 2, 3} join {2, 3, 4};|| || || ||
-||[[# set-intersection]][#set-intersection-note intersection]||##gray|@@//@@ {2, 3}:## _
-s := {1, 2, 3} meet {2, 3, 4};|| || || ||
-||[[# set-relative-complement]][#set-relative-complement-note relative complement]||##gray|@@//@@ {1}:## _
-s := {1, 2, 3} diff {2, 3, 4};|| || || ||
+||~ ||~ pari/gp||~ magma||~ gap||~ singular||
+||[[# set-literal]][#set-literal-note literal]||##gray|@@\\@@ sets are vectors whose _
+@@\\@@ elements are strictly increasing## _
+Set([1, 2, 3])||{1, 2, 3};|| || ||
+||[[# set-size]][#set-size-note size]||#Set([1, 2, 3])||# {1, 2, 3};|| || ||
+||[[# set-add-elem]][#set-add-elem-note add element]|| ||s := {1, 2, 3}; _
+Inlude(~s, 4);|| || ||
+||[[# set-rm-elem]][#set-rm-elem-note remove element]|| ||s := {1, 2, 3}; _
+Exclude(~s, 1);|| || ||
+||[[# set-membership]][#set-membership-note membership test]||##gray|@@\\@@ returns 1-based index of first occurrence _
+@@\\@@ or 0 if not found:## _
+setsearch([1, 2, 3], 2)||7 in {6, 7, 8};|| || ||
+||[[# disjoint-test]][#disjoint-test-note disjoint test]|| ||IsDisjoint({1, 2, 3}, {2, 3, 4});|| || ||
+||[[# set-union]][#set-union-note union]||setunion([1, 2], [2, 3, 4])||##gray|@@//@@ {1, 2, 3, 4}:## _
+s := {1, 2, 3} join {2, 3, 4};|| || ||
+||[[# set-intersection]][#set-intersection-note intersection]||setintersect([1, 2], [2, 3, 4])||##gray|@@//@@ {2, 3}:## _
+s := {1, 2, 3} meet {2, 3, 4};|| || ||
+||[[# set-relative-complement]][#set-relative-complement-note relative complement]||setminus([1, 2, 3], [2])||##gray|@@//@@ {1}:## _
+s := {1, 2, 3} diff {2, 3, 4};|| || ||
 ||||||||||~ [[# arith-seq]][#arith-seq-note arithmetic sequences]||
-||~ ||~ magma||~ gap||~ singular||~ pari/gp||
-||[#range unit difference]||[1 .. 100];||[1 .. 100]|| ||[1 .. 100] _
-vector(100, i, i)||
-||[#arithmetic-sequence-integer difference of 10]||[1 .. 100 by 10];||[1,11 .. 91]|| ||vector(10, i, 10 * i  - 9)||
-||[#airthmetic-sequence-float difference of 0.1]||[0.1 * i: i in [1 .. 1000]];||##gray|//none//##|| ||vector(1000 - 9, i, i / 10 + 9 / 10)||
+||~ ||~ pari/gp||~ magma||~ gap||~ singular||
+||[#range unit difference]||[1 .. 100] _
+vector(100, i, i)||[1 .. 100];||[1 .. 100]|| ||
+||[#arithmetic-sequence-integer difference of 10]||vector(10, i, 10 * i  - 9)||[1 .. 100 by 10];||[1,11 .. 91]|| ||
+||[#airthmetic-sequence-float difference of 0.1]||vector(1000 - 9, i, i / 10 + 9 / 10)||[0.1 * i: i in [1 .. 1000]];||##gray|//none//##|| ||
 ||||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
-||~ ||~ magma||~ gap||~ singular||~ pari/gp||
+||~ ||~ pari/gp||~ magma||~ gap||~ singular||
 ||[[# dict-literal]][#dict-literal-note literal] _
-@<&nbsp;>@||##gray|@@//@@ None, just empty constructor:## _
+@<&nbsp;>@||d = Map(["t", 1; "f", 0])||##gray|@@//@@ None, just empty constructor:## _
 d := AssociativeArray(); _
 d["t"] := 1; _
 d["f"] := 0;||##gray|# dictionary constructor; type of keys derived _
@@ -424,45 +428,55 @@ AddDictionary(d, "f", 0); _
 r := rec(t := 1, f := 0); _
  _
 ##gray|# record literal with string keys:## _
-r2 := rec(("t") := 1, ("f") := 0);|| || ||
+r2 := rec(("t") := 1, ("f") := 0);|| ||
 ||[[# dict-size]][#dict-size-note size] _
-@<&nbsp;>@||# d;||##gray|# no way to get size of dictionary?## _
+@<&nbsp;>@||#d||# d;||##gray|# no way to get size of dictionary?## _
   _
-Length(RecNames(r));|| || ||
+Length(RecNames(r));|| ||
 ||[[# dict-lookup]][#dict-lookup-note lookup] _
-@<&nbsp;>@||d["t"];||LookupDictionary(d, "t"); _
+@<&nbsp;>@||mapget(d, "t")||d["t"];||LookupDictionary(d, "t"); _
  _
 ##gray|# the same key can be looked up with identifier _
 # or string notation:## _
 r.t; _
-r.("t");|| || ||
-||[[# dict-update]][#dict-update-note update]||d["f"] := -1;||AddDictionary(d, "f", -1); _
+r.("t");|| ||
+||[[# dict-update]][#dict-update-note update]||mapput(d, "f", -1)||d["f"] := -1;||AddDictionary(d, "f", -1); _
  _
 r.f := -1; _
-r2.("f") := -1;|| || ||
+r2.("f") := -1;|| ||
 ||[[# dict-missing-key]][#dict-missing-key-note missing key behavior] _
-@<&nbsp;>@||##gray|//Runtime error//##||##gray|# returns special object "fail":## _
+@<&nbsp;>@||##gray|mapget //raises error//##||##gray|//Runtime error//##||##gray|# returns special object "fail":## _
 LookupDictionary(d, "not_a_key"); _
  _
 ##gray|# raises an error:## _
-r.not_a_key;|| || ||
+r.not_a_key;|| ||
 ||[[# dict-key-check]][#dict-key-check-note is key present] _
-@<&nbsp;>@||IsDefined(d, "t");||KnowsDictionary(d, "t"); _
+@<&nbsp;>@||mapisdefined(d, "t")||IsDefined(d, "t");||KnowsDictionary(d, "t"); _
  _
 ##gray|# RecNames returns keys as strings:## _
-"t" in RecNames(r);|| || ||
-||[[# dict-del]][#dict-del-note delete]||Remove(~d, "t");|| || || ||
+"t" in RecNames(r);|| ||
+||[[# dict-del]][#dict-del-note delete]||mapdelete(d, "t")||Remove(~d, "t");|| || ||
 ||[[# dict-iter]][#dict-iter-note iterate] _
-@<&nbsp;>@|| ||##gray|# no way to iterate over dictionary?## _
+@<&nbsp;>@|| || ||##gray|# no way to iterate over dictionary?## _
  _
 for i in RecNames(r) do _
 @<&nbsp;&nbsp;>@Print(r.(i)); _
-od;|| || ||
-||[[# dict-key-val]][#dict-key-val-note keys and values as arrays]||Keys(d); _
-##gray|//??//##||RecNames(r);|| || ||
+od;|| ||
+||[[# dict-key-val]][#dict-key-val-note keys and values as arrays]|| ||Keys(d); _
+##gray|//??//##||RecNames(r);|| ||
 ||||||||||~ [[# functions]][#functions-note functions]||
-||~ ||~ magma||~ gap||~ singular||~ pari/gp||
-||[#function-definition define function]||add := function(a, b) _
+||~ ||~ pari/gp||~ magma||~ gap||~ singular||
+||[#function-definition define function]||add(x, y) = x + y _
+ _
+##gray|@@\\@@ function body w/ sequence of statements:## _
+say(s1, s2, s3) = print(s1); print(s2); print(s3) _
+ _
+##gray|@@\\@@ function body w/ newlines:## _
+dire(s1, s2, s3) = { _
+@<&nbsp;&nbsp;>@print(s1); _
+@<&nbsp;&nbsp;>@print(s2); _
+@<&nbsp;&nbsp;>@print(s3); _
+}||add := function(a, b) _
 @<&nbsp;&nbsp;>@return a + b; _
 end function; _
  _
@@ -473,25 +487,15 @@ end procedure;||add := function(x, y) _
 @<&nbsp;&nbsp;>@return x + y; _
 end;||proc add(int x, int y) { _
 @<&nbsp;&nbsp;>@return(x + y); _
-}||add(x, y) = x + y _
- _
-##gray|@@\\@@ function body w/ sequence of statements:## _
-say(s1, s2, s3) = print(s1); print(s2); print(s3) _
- _
-##gray|@@\\@@ function body w/ newlines:## _
-dire(s1, s2, s3) = { _
-@<&nbsp;&nbsp;>@print(s1); _
-@<&nbsp;&nbsp;>@print(s2); _
-@<&nbsp;&nbsp;>@print(s3); _
 }||
-||[#function-invocation invoke function]||add(3, 7);||add(3, 7);||add(3, 7);||add(3, 7)||
-||[[# undef-func]][#undef-func-note undefine function]|| || || ||kill(add)||
-||[[# redefine-func]][#redefine-func-note redefine function]|| || || ||add(x, y, z) = x + y + z||
-||[[# overload-func]][#overload-func-note overload function]|| || || ||##gray|//none//##||
-||[[# missing-func]][#missing-func-note missing function behavior]|| || || ||##gray|//"not a function" error//##||
-||[[# missing-arg]][#missing-arg-note missing argument behavior]|| || || ||##gray|//set to zero//##||
-||[[# extra-arg]][#extra-arg-note extra argument behavior]|| || || ||##gray|//"too many parameters" error//##||
-||[[# default-arg]][#default-arg-note default argument]|| || || ||mylog(x = 1, base = 10) = log(x) / log(base) _
+||[#function-invocation invoke function]||add(3, 7)||add(3, 7);||add(3, 7);||add(3, 7);||
+||[[# undef-func]][#undef-func-note undefine function]||kill(add)|| || || ||
+||[[# redefine-func]][#redefine-func-note redefine function]||add(x, y, z) = x + y + z|| || || ||
+||[[# overload-func]][#overload-func-note overload function]||##gray|//none//##|| || || ||
+||[[# missing-func]][#missing-func-note missing function behavior]||##gray|//"not a function" error//##|| || || ||
+||[[# missing-arg]][#missing-arg-note missing argument behavior]||##gray|//set to zero//##|| || || ||
+||[[# extra-arg]][#extra-arg-note extra argument behavior]||##gray|//"too many parameters" error//##|| || || ||
+||[[# default-arg]][#default-arg-note default argument]||mylog(x = 1, base = 10) = log(x) / log(base) _
  _
 ##gray|@@\\@@ log10(3):## _
 mylog(3) _
@@ -501,19 +505,23 @@ mylog(3, exp(1)) _
 mylog(, exp(1)) _
  _
 ##gray|@@\\@@ If neither caller nor function definition _
-@@\\@@ provide a value, zero is used.##||
+@@\\@@ provide a value, zero is used.##|| || || ||
 ||[[# retval]][#retval-note return value]|| || || || ||
-||[#anonymous-function anonymous function]|| ||##gray|# unary functions only?## _
+||[#anonymous-function anonymous function]||f = (x, y) -> x + y _
+ _
+f(1, 2)|| ||##gray|# unary functions only?## _
 f := x -> x * x; _
  _
-f2 := function(x, y) return 2 * x + 3 * y; end;|| ||f = (x, y) -> x + y _
- _
-f(1, 2)||
+f2 := function(x, y) return 2 * x + 3 * y; end;|| ||
 ||[#variable-number-arguments variable number of arguments]|| || || || ||
 ||[[# expand-array]][#expand-array-note pass array elements as separate arguments]|| || || || ||
 ||||||||||~ [[# execution-control]][#execution-control-note execution control]||
-||~ ||~ magma||~ gap||~ singular||~ pari/gp||
-||[#if if]||if n gt 0 then _
+||~ ||~ pari/gp||~ magma||~ gap||~ singular||
+||[#if if]||if(x > 0, \ _
+@<&nbsp;&nbsp;>@print("positive"), \ _
+@<&nbsp;&nbsp;>@if(x < 0, \ _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print("negative"), \ _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print("zero")))||if n gt 0 then _
 @<&nbsp;&nbsp;>@print "positive"; _
 else _
 @<&nbsp;&nbsp;>@if n lt 0 then _
@@ -535,12 +543,9 @@ if (x > 0) { _
 @<&nbsp;&nbsp;>@} else { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print("zero"); _
 @<&nbsp;&nbsp;>@} _
-};||if(x > 0, \ _
-@<&nbsp;&nbsp;>@print("positive"), \ _
-@<&nbsp;&nbsp;>@if(x < 0, \ _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print("negative"), \ _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print("zero")))||
-||[#while while]||i := 0; _
+};||
+||[#while while]||i = 0 _
+while(i < 10, print(i); i++)||i := 0; _
 while i lt 10 do _
 @<&nbsp;&nbsp;>@print i; _
 @<&nbsp;&nbsp;>@i := i + 1; _
@@ -552,298 +557,297 @@ od;||int i = 0; _
 while (i < 10) { _
 @<&nbsp;&nbsp;>@print(i); _
 @<&nbsp;&nbsp;>@i++; _
-};||i = 0 _
-while(i < 10, print(i); i++)||
-||[#for for]||for i := 0 to 9 by 1 do _
+};||
+||[#for for]||for(i = 0, 9, print(i))||for i := 0 to 9 by 1 do _
 @<&nbsp;&nbsp;>@print i; _
 end for;||for i in [0..9] do _
 @<&nbsp;&nbsp;>@Print(i, "\n"); _
 od;||int i; _
 for (i = 0; i < 10; i++) { _
 @<&nbsp;&nbsp;>@print(i); _
-};||for(i = 0, 9, print(i))||
-||[#break break]|| ||break||break||break||
-||[#continue continue]|| ||continue||continue||next||
+};||
+||[#break break]||break|| ||break||break||
+||[#continue continue]||next|| ||continue||continue||
 ||||||||||~ [[# exceptions]][#exceptions-note exceptions]||
-||~ ||~ magma||~ gap||~ singular||~ pari/gp||
-||[[# raise-exc]][#raise-exc-note raise exception]||error "failed";||Error("failed");|| ||error("failed")||
-||[[# handle-exc]][#handle-exc-note handle exception]||try _
+||~ ||~ pari/gp||~ magma||~ gap||~ singular||
+||[[# raise-exc]][#raise-exc-note raise exception]||error("failed")||error "failed";||Error("failed");|| ||
+||[[# handle-exc]][#handle-exc-note handle exception]||iferr(error("failed"), E, \ _
+@<&nbsp;&nbsp;>@print(errname(E), ": ", component(E, 1)))||try _
 @<&nbsp;&nbsp;>@error "failed"; _
 catch e _
 @<&nbsp;&nbsp;>@print "caught error"; _
-end try;|| || ||iferr(error("failed"), E, \ _
-@<&nbsp;&nbsp;>@print(errname(E), ": ", component(E, 1)))||
-||[[# uncaught-exc]][#uncaught-exc-note uncaught exception behavior]|| ||##gray|Error() //invokes the GAP debugger.  Type// _
+end try;|| || ||
+||[[# uncaught-exc]][#uncaught-exc-note uncaught exception behavior]|| || ||##gray|Error() //invokes the GAP debugger.  Type// _
  _
 @<&nbsp;&nbsp;>@Quit; _
  _
-//to return to REPL.//##|| || ||
+//to return to REPL.//##|| ||
 ||||||||||~ [[# streams]][#streams-note streams]||
-||~ ||~ magma||~ gap||~ singular||~ pari/gp||
-||[[# write-line-stdout]][#write-line-stdout-note write line to stdout]||print "hello";||Print("hello");||print("hello");||print("hello")||
-||[#read-file-string-array read file into array of strings]|| || || ||a = readstr("/etc/hosts")||
+||~ ||~ pari/gp||~ magma||~ gap||~ singular||
+||[[# write-line-stdout]][#write-line-stdout-note write line to stdout]||print("hello")||print "hello";||Print("hello");||print("hello");||
+||[#read-file-string-array read file into array of strings]||a = readstr("/etc/hosts")|| || || ||
 ||||||||||~ [[# processes-env]][#processes-env-note processes and environment]||
-||~ ||~ magma||~ gap||~ singular||~ pari/gp||
-||[[# env-var]][#env-var-note environment variable]|| || || ||getenv("HOME")||
-||[[#external-cmd]][#external-cmd-note external command]|| || || ||system("ls /etc")||
-||[[# cmd-subst]][#cmd-subst-note command substitution]|| || || ||##gray|@@\\@@ array of output lines:## _
-lines = externstr("ls /etc")||
+||~ ||~ pari/gp||~ magma||~ gap||~ singular||
+||[[# env-var]][#env-var-note environment variable]||getenv("HOME")|| || || ||
+||[[#external-cmd]][#external-cmd-note external command]||system("ls /etc")|| || || ||
+||[[# cmd-subst]][#cmd-subst-note command substitution]||##gray|@@\\@@ array of output lines:## _
+lines = externstr("ls /etc")|| || || ||
 ||||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
-||~ ||~ magma||~ gap||~ singular||~ pari/gp||
-||[[# load-lib]][#load-lib-note load library]|| ||Read('foo.g');||LIB "add.sing";|| ||
-||[[# def-lib]][#def-lib-note define library]|| || ||$ cat add.sing _
+||~ ||~ pari/gp||~ magma||~ gap||~ singular||
+||[[# load-lib]][#load-lib-note load library]|| || ||Read('foo.g');||LIB "add.sing";||
+||[[# def-lib]][#def-lib-note define library]|| || || ||$ cat add.sing _
 version="1.0" _
 category="misc" _
 info="an add function" _
  _
 proc add(int x, int y) { _
 @<&nbsp;&nbsp;>@return(x + y); _
-}|| ||
-||[[# lib-path]][#lib-path-note library path]|| || ||##gray|//Searches current directory; additional directories can be added to the search path by adding them separated by colons to the/ SINGULARPATH //environment variable.//##|| ||
+}||
+||[[# lib-path]][#lib-path-note library path]|| || || ||##gray|//Searches current directory; additional directories can be added to the search path by adding them separated by colons to the/ SINGULARPATH //environment variable.//##||
 ||||||||||~ [[# reflection]][#reflection-note reflection]||
-||~ ||~ magma||~ gap||~ singular||~ pari/gp||
-||[#list-function-documentation list function documentation]|| || || ||?||
-||[#function-documentation get function documentation]|| || ||help killall;||? tan||
-||[#data-type query data type]||Type(x);|| ||typeof(x);||type(x)||
-||[[# list-types]][#list-types-note list types]|| || || ||\t||
-||[#list-variables list variables in scope]|| || ||listvar();||variable()||
-||[[# list-built-in-func]][#list-built-in-func-note list built-in functions]|| || || ||?*||
-||[[# list-metacmds]][#list-metacmds-note list metacommands]|| || || ||?\||
-||[[# search-doc]][#search-doc-note search documentation]|| ||??DirectProduct|| ||??? modulus||
+||~ ||~ pari/gp||~ magma||~ gap||~ singular||
+||[#list-function-documentation list function documentation]||?|| || || ||
+||[#function-documentation get function documentation]||? tan|| || ||help killall;||
+||[#data-type query data type]||type(x)||Type(x);|| ||typeof(x);||
+||[[# list-types]][#list-types-note list types]||\t|| || || ||
+||[#list-variables list variables in scope]||variable()|| || ||listvar();||
+||[[# list-built-in-func]][#list-built-in-func-note list built-in functions]||?*|| || || ||
+||[[# list-metacmds]][#list-metacmds-note list metacommands]||?\|| || || ||
+||[[# search-doc]][#search-doc-note search documentation]||??? modulus|| ||??DirectProduct|| ||
 ||||||||||~ [[# vectors]][#vectors-note vectors]||
-||~ ||~ magma||~ gap||~ singular||~ pari/gp||
-||[[# vec-literal]][#vec-literal-note vector literal]|| ||##gray|# row vector is same as array:## _
+||~ ||~ pari/gp||~ magma||~ gap||~ singular||
+||[[# vec-literal]][#vec-literal-note vector literal]||[1, 2, 3]|| ||##gray|# row vector is same as array:## _
 [1, 2, 3]||##gray|@@//@@ A ring must be declared.  The elements of the vector are not _
 @@//@@ limited to the coefficient field, but can be any element of _
 @@//@@ the ring.## _
 ring r = read, (x), dp; _
  _
-vector v= [1.5, 3.2, 7.1];||[1, 2, 3]||
+vector v= [1.5, 3.2, 7.1];||
 ||[[# const-vec]][#const-vec-note constant vector] _
  _
-##gray|//all zeros, all ones//##|| || || ||vector(100, i, 0) _
-vector(100, i, 1)||
-||[[# vec-coordinate]][#vec-coordinate-note vector coordinate]|| ||vec := [1, 2, 3]; _
+##gray|//all zeros, all ones//##||vector(100, i, 0) _
+vector(100, i, 1)|| || || ||
+||[[# vec-coordinate]][#vec-coordinate-note vector coordinate]||##gray|@@\\@@ indices start at one:## _
+[1, 2, 3][1]|| ||vec := [1, 2, 3]; _
 ##gray|# indices start at one:## _
-v[1];||v[1];||##gray|@@\\@@ indices start at one:## _
-[1, 2, 3][1]||
+v[1];||v[1];||
 ||[[# vec-dim]][#vec-dim-note vector dimension] _
-@<&nbsp;>@|| ||Length([1, 2, 3])||nrows(v);||length([1, 2, 3]) _
-#[1, 2, 3]||
-||[[# vec-element-wise]][#vec-element-wise-note element-wise arithmetic operators]|| ||+ - * /||+ -||+ -||
+@<&nbsp;>@||length([1, 2, 3]) _
+#[1, 2, 3]|| ||Length([1, 2, 3])||nrows(v);||
+||[[# vec-element-wise]][#vec-element-wise-note element-wise arithmetic operators]||+ -|| ||+ - * /||+ -||
 ||[[# vec-length-mismatch]][#vec-length-mismatch-note vector length mismatch] _
-@<&nbsp;>@|| ||##gray|//shorter vector is zero-padded//##||##gray|//shorter vector is zero-padded//##||##gray|//error//##||
-||[[# vec-scalar]][#vec-scalar-note scalar multiplication]|| ||3 * [1, 2, 3]; _
+@<&nbsp;>@||##gray|//error//##|| ||##gray|//shorter vector is zero-padded//##||##gray|//shorter vector is zero-padded//##||
+||[[# vec-scalar]][#vec-scalar-note scalar multiplication]||3 * [1, 2, 3] _
+[1, 2, 3] * 3|| ||3 * [1, 2, 3]; _
 [1, 2, 3] * 3;||3 * v; _
 v * 3; _
  _
 ##gray|@@//@@ Scalar can be any ring element:## _
-(1 + x) * v;||3 * [1, 2, 3] _
-[1, 2, 3] * 3||
-||[[# vec-dot]][#vec-dot-note dot product]|| ||[1, 1, 1] * [2, 2, 2]|| ||[1, 1, 1] * [2, 2, 2] ~||
+(1 + x) * v;||
+||[[# vec-dot]][#vec-dot-note dot product]||[1, 1, 1] * [2, 2, 2] ~|| ||[1, 1, 1] * [2, 2, 2]|| ||
 ||[[# vec-cross]][#vec-cross-note cross product]|| || || || ||
-||[[# vec-norms]][#vec-norms-note norms]|| || || ||vec = [1, 2, 3] _
+||[[# vec-norms]][#vec-norms-note norms]||vec = [1, 2, 3] _
  _
 normlp(vec, 1) _
 normlp(vec, 2) _
-normlp(vec)||
+normlp(vec)|| || || ||
 ||[[# orthonormal-basis]][#orthonormal-basis-note orthonormal basis]|| || || || ||
 ||||||||||~ [[# matrices]][#matrices-note matrices]||
-||~ ||~ magma||~ gap||~ singular||~ pari/gp||
-||[[# matrix-literal-constructor]][#matrix-literal-constructor-note literal]|| ||[[1, 2], [3, 4]]||##gray|@@//@@ A ring must be declared.  The elements of the matrix are not _
-@@//@@ limited to the coefficient field, but can be any element of _
-@@//@@ the ring.## _
-ring r = read, (x), dp; _
- _
-matrix m[2][2] = 1, 2, 3, 4;||[1, 2; 3, 4] _
+||~ ||~ pari/gp||~ magma||~ gap||~ singular||
+||[[# matrix-literal-constructor]][#matrix-literal-constructor-note literal]||[1, 2; 3, 4] _
  _
 ##gray|@@\\@@ from rows:## _
 row1 = [1, 2] _
 row2 = [3, 4] _
-matconcat([row1; row2])||
-||[[# matrix-from-cols]][#matrix-from-cols-note construct from columns]|| || || ||col1 = [1, 3]~ _
+matconcat([row1; row2])|| ||[[1, 2], [3, 4]]||##gray|@@//@@ A ring must be declared.  The elements of the matrix are not _
+@@//@@ limited to the coefficient field, but can be any element of _
+@@//@@ the ring.## _
+ring r = read, (x), dp; _
+ _
+matrix m[2][2] = 1, 2, 3, 4;||
+||[[# matrix-from-cols]][#matrix-from-cols-note construct from columns]||col1 = [1, 3]~ _
 col2 = [2, 4]~ _
-matconcat([col1, col2])||
-||[[# matrix-from-submatrices]][#matrix-from-submatrices-note construct from submatrices]|| || || ||A = [1, 2; 3, 4] _
+matconcat([col1, col2])|| || || ||
+||[[# matrix-from-submatrices]][#matrix-from-submatrices-note construct from submatrices]||A = [1, 2; 3, 4] _
 B = [4, 3; 2, 1] _
 ##gray|@@\\@@ 4x4 matrix:## _
-C = matconcat([A, B; B, A])||
-||[[# const-matrices]][#const-matrices-note constant matrices]|| || || ||matrix(3, 3, i, j, 0) _
+C = matconcat([A, B; B, A])|| || || ||
+||[[# const-matrices]][#const-matrices-note constant matrices]||matrix(3, 3, i, j, 0) _
 matrix(3, 3, i, j, 1) _
  _
 ##gray|@@\\@@ 3x3 Hilbert matrix:## _
-matrix(3, 3, i, j, 1 / (i + j - 1))||
+matrix(3, 3, i, j, 1 / (i + j - 1))|| || || ||
 ||[[# diagonal-matrices]][#diagonal-matrices-note diagonal matrices] _
-##gray|//and identity//##|| ||DiagonalMat([1, 2, 3]) _
-IdentityMat(3)|| ||matdiagonal([1, 2, 3]) _
-matid(3)||
-||[[# matrix-dim]][#matrix-dim-note dimensions]|| ||##gray|# returns [3, 2]:## _
+##gray|//and identity//##||matdiagonal([1, 2, 3]) _
+matid(3)|| ||DiagonalMat([1, 2, 3]) _
+IdentityMat(3)|| ||
+||[[# matrix-dim]][#matrix-dim-note dimensions]||##gray|@@\\@@ [3, 2]:## _
+matsize([1, 2; 3, 4; 5, 6])|| ||##gray|# returns [3, 2]:## _
 DimensionsMat([[1, 2], [3, 4], [5, 6]])||nrows(m); _
-ncols(m);||##gray|@@\\@@ [3, 2]:## _
-matsize([1, 2; 3, 4; 5, 6])||
-||[[# element-lookup]][#element-lookup-note element lookup]|| ||A := [[1, 2], [3, 4]];  _
+ncols(m);||
+||[[# element-lookup]][#element-lookup-note element lookup]||##gray|@@\\@@ top left corner:## _
+A[1, 1]|| ||A := [[1, 2], [3, 4]];  _
  _
 ##gray|# top left corner:## _
 A[1][1]||matrix m[2][2] = 1, 2, 3, 4; _
  _
-m[1][1];||##gray|@@\\@@ top left corner:## _
-A[1, 1]||
-||[[# extract-matrix-row]][#extract-matrix-row-note extract row]|| || || ||##gray|@@\\@@ first row:## _
-[1, 2; 3, 4][1, ]||
-||[[# extract-matrix-col]][#extract-matrix-col-note extract column]|| || || ||##gray|@@\\@@ first column:## _
-[1, 2; 3, 4][, 1]||
-||[[# extract-submatrix]][#extract-submatrix-note extract submatrix]|| || || ||A = [1, 2, 3; 4, 5, 6; 7, 8, 9] _
+m[1][1];||
+||[[# extract-matrix-row]][#extract-matrix-row-note extract row]||##gray|@@\\@@ first row:## _
+[1, 2; 3, 4][1, ]|| || || ||
+||[[# extract-matrix-col]][#extract-matrix-col-note extract column]||##gray|@@\\@@ first column:## _
+[1, 2; 3, 4][, 1]|| || || ||
+||[[# extract-submatrix]][#extract-submatrix-note extract submatrix]||A = [1, 2, 3; 4, 5, 6; 7, 8, 9] _
  _
-vecextract(A, "1..2", "1..2")||
-||[[# matrix-elem-wise-op]][#matrix-elem-wise-op-note element-wise operators]|| ||+ -||+ -||+ -||
-||[[# matrix-mult]][#matrix-mult-note product]|| ||A := [[1, 2], [3, 4]]; _
+vecextract(A, "1..2", "1..2")|| || || ||
+||[[# matrix-elem-wise-op]][#matrix-elem-wise-op-note element-wise operators]||+ -|| ||+ -||+ -||
+||[[# matrix-mult]][#matrix-mult-note product]||A = [1, 2; 3, 4] _
+B = [4, 3; 2, 1] _
+A * B|| ||A := [[1, 2], [3, 4]]; _
 B := [[4, 3], [2, 1]]; _
 A * B;||matrix m[2][2] = 1, 2, 3, 4; _
 matrix m2[2][2] = 4, 3, 2, 1; _
  _
-m * m2;||A = [1, 2; 3, 4] _
-B = [4, 3; 2, 1] _
-A * B||
-||[[# matrix-power]][#matrix-power-note power]|| || [[1, 2], [3, 4]] ^ 3|| ||[1, 2; 3, 4] ^ 3||
+m * m2;||
+||[[# matrix-power]][#matrix-power-note power]||[1, 2; 3, 4] ^ 3|| || [[1, 2], [3, 4]] ^ 3|| ||
 ||[[# matrix-exponential]][#matrix-exponential-note exponential]|| || || || ||
 ||[[# matrix-log]][#matrix-log-note log]|| || || || ||
-||[[# kronecker-prod]][#kronecker-prod-note kronecker product]|| ||A := [[1, 2], [3, 4]]; _
+||[[# kronecker-prod]][#kronecker-prod-note kronecker product]|| || ||A := [[1, 2], [3, 4]]; _
 B := [[4, 3], [2, 1]]; _
-KroneckerProduct(A, B);|| || ||
+KroneckerProduct(A, B);|| ||
 ||[[# matrix-norm]][#matrix-norm-note norms]|| || || || ||
-||[[# matrix-transpose]][#matrix-transpose-note transpose]|| || || ||A~ _
-mattranspose(A)||
-||[[# matrix-conjugate-transpose]][#matrix-conjugate-transpose-note conjugate transpose]|| || || ||conj([1, I; 2, -I] ~)||
-||[[# matrix-inverse]][#matrix-inverse-note inverse]|| ||Inverse([[1, 2], [3, 4]])|| ||[1, 2; 3, 4] ^ -1 _
-1 /  [1, 2; 3, 4]||
+||[[# matrix-transpose]][#matrix-transpose-note transpose]||A~ _
+mattranspose(A)|| || || ||
+||[[# matrix-conjugate-transpose]][#matrix-conjugate-transpose-note conjugate transpose]||conj([1, I; 2, -I] ~)|| || || ||
+||[[# matrix-inverse]][#matrix-inverse-note inverse]||[1, 2; 3, 4] ^ -1 _
+1 /  [1, 2; 3, 4]|| ||Inverse([[1, 2], [3, 4]])|| ||
 ||[[# row-echelon-form]][#row-echelon-form-note row echelon form]|| || || || ||
 ||[[# pseudoinverse]][#pseudoinverse-note pseudoinverse]|| || || || ||
-||[[# determinant]][#determinant-note determinant]|| ||Determinant([[1, 2], [3, 4]])||matrix m[2][2] = 1, 2, 3, 4; _
+||[[# determinant]][#determinant-note determinant]||matdet([1, 2; 3, 4])|| ||Determinant([[1, 2], [3, 4]])||matrix m[2][2] = 1, 2, 3, 4; _
  _
-det(m);||matdet([1, 2; 3, 4])||
-||[[# trace]][#trace-note trace]|| ||Trace([[1, 2], [3, 4]])||matrix m[2][2] = 1, 2, 3, 4; _
+det(m);||
+||[[# trace]][#trace-note trace]||trace([1, 2; 3, 4])|| ||Trace([[1, 2], [3, 4]])||matrix m[2][2] = 1, 2, 3, 4; _
  _
-trace(m);||trace([1, 2; 3, 4])||
-||[[# matrix-rank]][#matrix-rank-note rank]|| ||RankMat([[1, 1], [0, 0]])|| ||matrank([1, 1; 0, 0])||
-||[[# nullspace-basis]][#nullspace-basis-note nullspace basis]|| || || ||matker([1, 1; 0, 0])||
-||[[# range-basis]][#range-basis-note range basis]|| ||matimage([1, 1; 0, 0])|| || ||
-||[[# eigenval]][#eigenval-note eigenvalues]|| || || ||[vals, vecs] = mateigen([1, 2; 3, 4], flag=1)||
-||[[# eigenvec]][#eigenvec-note eigenvectors]|| || || ||mateigen([1, 2; 3, 4])||
+trace(m);||
+||[[# matrix-rank]][#matrix-rank-note rank]||matrank([1, 1; 0, 0])|| ||RankMat([[1, 1], [0, 0]])|| ||
+||[[# nullspace-basis]][#nullspace-basis-note nullspace basis]||matker([1, 1; 0, 0])|| || || ||
+||[[# range-basis]][#range-basis-note range basis]|| || ||matimage([1, 1; 0, 0])|| ||
+||[[# eigenval]][#eigenval-note eigenvalues]||[vals, vecs] = mateigen([1, 2; 3, 4], flag=1)|| || || ||
+||[[# eigenvec]][#eigenvec-note eigenvectors]||mateigen([1, 2; 3, 4])|| || || ||
 ||[[# svd]][#svd-note singular value decomposition]|| || || || ||
-||[[# qr-decomposition]][#qr-decomposition-note qr decomposition]|| || || ||matqr([1, 2; 3, 4])||
-||[[# solve-linear-eqns]][#solve-linear-eqns-note solve system of equations]|| || || ||A = [1, 2; 3, 4] _
-matsolve(A, [2, 3]~)||
+||[[# qr-decomposition]][#qr-decomposition-note qr decomposition]||matqr([1, 2; 3, 4])|| || || ||
+||[[# solve-linear-eqns]][#solve-linear-eqns-note solve system of equations]||A = [1, 2; 3, 4] _
+matsolve(A, [2, 3]~)|| || || ||
 ||||||||||~ [[# combinatorics]][#combinatorics-note combinatorics]||
-||~ ||~ magma||~ gap||~ singular||~ pari/gp||
-||[[# factorial]][#factorial-note factorial]||Factorial(10);||Factorial(10);||LIB "general.lib"; _
+||~ ||~ pari/gp||~ magma||~ gap||~ singular||
+||[[# factorial]][#factorial-note factorial]||10!||Factorial(10);||Factorial(10);||LIB "general.lib"; _
  _
-factorial(10);||10!||
-||[[# binomial-coefficient]][#binomial-coefficient-note binomial coefficient]||Binomial(10, 3);||Binomial(10, 3);||LIB "general.lib"; _
+factorial(10);||
+||[[# binomial-coefficient]][#binomial-coefficient-note binomial coefficient]||binomial(10, 3)||Binomial(10, 3);||Binomial(10, 3);||LIB "general.lib"; _
  _
-binomial(10, 3);||binomial(10, 3)||
-||[[# multinomial-coefficient]][#multinomial-coefficient-note multinomial coefficient]||Multinomial(12, [3, 4, 5]);|| || || ||
+binomial(10, 3);||
+||[[# multinomial-coefficient]][#multinomial-coefficient-note multinomial coefficient]|| ||Multinomial(12, [3, 4, 5]);|| || ||
 ||[[# int-partitions]][#int-partitions-note integer partitions] _
  _
-##gray|//and count//##||Partitions(10); _
+##gray|//and count//##||partitions(10) _
+ _
+length(partitions(10))||Partitions(10); _
  _
 NumberOfPartitions(10);||Partitions(10); _
  _
-NrPartitions(10);|| ||partitions(10) _
- _
-length(partitions(10))||
+NrPartitions(10);|| ||
 ||[[# set-partitions]][#set-partitions-note set partitions] _
  _
-##gray|//and Bell number//##||StirlingSecond(10, 3); _
+##gray|//and Bell number//##||stirling(10, 3, 2) _
+sum(i=1, 10, stirling(10, i, 2))||StirlingSecond(10, 3); _
  _
-Bell(10);|| || ||stirling(10, 3, 2) _
-sum(i=1, 10, stirling(10, i, 2))||
-||[[# permutations-k-disjoint-cycles]][#permutations-k-disjoint-cycles-note permutations with k disjoint cycles]||Abs(StirlingFirst(n, k));|| || ||abs(stirling(n, k, 1))||
+Bell(10);|| || ||
+||[[# permutations-k-disjoint-cycles]][#permutations-k-disjoint-cycles-note permutations with k disjoint cycles]||abs(stirling(n, k, 1))||Abs(StirlingFirst(n, k));|| || ||
 ||[[# fibonacci-num]][#fibonacci-num-note fibonacci number] _
  _
-##gray|//and lucas number//##||Fibonacci(10); _
-Lucas(10);|| || ||fibonacci(10)||
-||[[# bernoulli-num]][#bernoulli-num-note bernoulli number]||BernoulliNumber(100);|| || ||bernfrac(100)||
-||[[# catalan-num]][#catalan-num-note catalan number]||Catalan(10);|| || || ||
+##gray|//and lucas number//##||fibonacci(10)||Fibonacci(10); _
+Lucas(10);|| || ||
+||[[# bernoulli-num]][#bernoulli-num-note bernoulli number]||bernfrac(100)||BernoulliNumber(100);|| || ||
+||[[# catalan-num]][#catalan-num-note catalan number]|| ||Catalan(10);|| || ||
 ||||||||||~ [[# number-theory]][#number-theory-note number theory]||
-||~ ||~ magma||~ gap||~ singular||~ pari/gp||
-||[[# pseudoprime-test]][#pseudoprime-test-note pseudoprime test]||IsProbablyPrime(7);||IsPrimeInt(7);|| ||ispseudoprime(7)||
+||~ ||~ pari/gp||~ magma||~ gap||~ singular||
+||[[# pseudoprime-test]][#pseudoprime-test-note pseudoprime test]||ispseudoprime(7)||IsProbablyPrime(7);||IsPrimeInt(7);|| ||
 ||[[# true-prime-test]][#true-prime-test-note true prime test] _
-@<&nbsp;>@||IsPrime(7);|| || ||isprime(7)||
-||[[# divisors]][#divisors-note divisors]||##gray|@@//@@ [1, 2, 4, 5, 10, 20, 25, 50, 100]:## _
-Divisors(100); ||DivisorsInt(100);|| ||divisors(100)||
-||[[# prime-factors]][#prime-factors prime factors]||##gray|@@//@@ [2, 3, 7]:## _
+@<&nbsp;>@||isprime(7)||IsPrime(7);|| || ||
+||[[# divisors]][#divisors-note divisors]||divisors(100)||##gray|@@//@@ [1, 2, 4, 5, 10, 20, 25, 50, 100]:## _
+Divisors(100); ||DivisorsInt(100);|| ||
+||[[# prime-factors]][#prime-factors prime factors]||##gray|@@\\@@ [2,2; 3,1; 7,1]:## _
+factor(84)||##gray|@@//@@ [2, 3, 7]:## _
 PrimeDivisors(84);||##gray|# [ 2, 2, 3, 7 ]:## _
-FactorsInt(84);|| ||##gray|@@\\@@ [2,2; 3,1; 7,1]:## _
-factor(84)||
+FactorsInt(84);|| ||
 ||[[# next-prime]][#next-prime-note next prime] _
  _
-##gray|//and preceding//##||NextPrime(1000); _
+##gray|//and preceding//##||nextprime(1000) _
+precprime(1000)||NextPrime(1000); _
 PreviousPrime(1000);||NextPrimeInt(1000); _
 PrevPrimeInt(1000);||##gray|//?//## _
-prime(1000);||nextprime(1000) _
-precprime(1000)||
-||[[# nth-prime]][#nth-prime-note nth prime]||NthPrime(100);|| || ||##gray|@@\\@@ first 100 primes: primes(100)## _
-primes(100)[100]||
-||[[# prime-counting-func]][#prime-counting-func-note prime counting function]|| || ||LIB "general.lib"; _
+prime(1000);||
+||[[# nth-prime]][#nth-prime-note nth prime]||##gray|@@\\@@ first 100 primes: primes(100)## _
+primes(100)[100]||NthPrime(100);|| || ||
+||[[# prime-counting-func]][#prime-counting-func-note prime counting function]||primepi(100)|| || ||LIB "general.lib"; _
  _
-size(primes(1, 100));||primepi(100)||
+size(primes(1, 100));||
 ||[[# divmod]][#divmod-note divmod] _
-@<&nbsp;>@|| || || ||divrem(7, 3)||
+@<&nbsp;>@||divrem(7, 3)|| || || ||
 ||[[# gcd]][#gcd-note greatest common divisor] _
  _
-##gray|//and relatively prime test//##||Gcd(14, 21); _
+##gray|//and relatively prime test//##||gcd(14, 21) _
+gcd(gcd(14, 21), 777)||Gcd(14, 21); _
 Gcd(Gcd(14, 21), 777);||GcdInt(14, 21); _
-GcdInt(GcdInt(14, 21), 777);|| ||gcd(14, 21) _
-gcd(gcd(14, 21), 777)||
-||[[# extended-euclidean-algorithm]][#extended-euclidean-algorithm-note extended euclidean algorithm]|| ||ret := Gcdex(3, 5); _
+GcdInt(GcdInt(14, 21), 777);|| ||
+||[[# extended-euclidean-algorithm]][#extended-euclidean-algorithm-note extended euclidean algorithm]||##gray|@@\\@@ [2, -1, 1]:## _
+gcdext(3, 5)|| ||ret := Gcdex(3, 5); _
  _
 ##gray|# 2:## _
 ret.coeff1; _
 ##gray|# -1:## _
 ret.coeff2; _
 ##gray|# 1:## _
-ret.gcd;|| ||##gray|@@\\@@ [2, -1, 1]:## _
-gcdext(3, 5)||
-||[[# lcm]][#lcm-note least common multiple]||Lcm(14, 21);||LcmInt(14, 21);|| ||lcm(14, 21)||
-||[[# int-residues]][#int-residues-note integer residues]|| ||r := ZmodnZ(5); _
-fam := ElementsFamily(FamilyObj(r));; _
- _
-ZmodnZObj(fam, 2) + ZmodnZObj(fam, 3);|| ||Mod(2, 5) + Mod(3, 5) _
+ret.gcd;|| ||
+||[[# lcm]][#lcm-note least common multiple]||lcm(14, 21)||Lcm(14, 21);||LcmInt(14, 21);|| ||
+||[[# int-residues]][#int-residues-note integer residues]||Mod(2, 5) + Mod(3, 5) _
 Mod(2, 5) - Mod(3, 5) _
 Mod(2, 5) * Mod(3, 5) _
-Mod(2, 5)^2||
-||[[# mult-inverse]][#mult-inverse-note multiplicative inverse]|| ||r := ZmodnZ(7); _
+Mod(2, 5)^2|| ||r := ZmodnZ(5); _
 fam := ElementsFamily(FamilyObj(r));; _
  _
-ZmodnZObj(2, 7)^-1;|| ||Mod(2, 7)^-1 _
+ZmodnZObj(fam, 2) + ZmodnZObj(fam, 3);|| ||
+||[[# mult-inverse]][#mult-inverse-note multiplicative inverse]||Mod(2, 7)^-1 _
  _
 ##gray|@@\\@@ raises error:## _
-Mod(2, 4)^-1||
-||[[# chinese-remainder-thm]][#chinese-remainder-thm-note chinese remainder theorem]|| ||##gray|# 173:## _
-ChineseRem([17, 11], [3, 8]);|| ||##gray|@@\\@@ Mod(173, 187):## _
-chinese(Mod(3, 17), Mod(8, 11))||
-||[[# lift-int-residue]][#lift-int-residue-note lift integer residue]|| || || ||##gray|@@\\@@ 7:## _
+Mod(2, 4)^-1|| ||r := ZmodnZ(7); _
+fam := ElementsFamily(FamilyObj(r));; _
+ _
+ZmodnZObj(2, 7)^-1;|| ||
+||[[# chinese-remainder-thm]][#chinese-remainder-thm-note chinese remainder theorem]||##gray|@@\\@@ Mod(173, 187):## _
+chinese(Mod(3, 17), Mod(8, 11))|| ||##gray|# 173:## _
+ChineseRem([17, 11], [3, 8]);|| ||
+||[[# lift-int-residue]][#lift-int-residue-note lift integer residue]||##gray|@@\\@@ 7:## _
 lift(-17, 12) _
 ##gray|@@\\@@ -5:## _
-centerlift(-17, 12)||
+centerlift(-17, 12)|| || || ||
 ||[[# euler-totient]][#euler-totient-note euler totient] _
-@<&nbsp;>@|| ||Phi(256);|| ||eulerphi(256)||
-||[[# mult-order]][#mult-order-note multiplicative order]|| ||OrderMod(7, 108);|| ||znorder(Mod(7, 108))||
-||[[# primitive-roots]][#primitive-roots-note primitive roots]|| ||PrimitiveRootMod(11);|| ||znprimroot(11)||
-||[[# discrete-log]][#discrete-log-note discrete logarithm]|| ||##gray|# arg: 10, base: 2, modulus: 11## _
-LogMod(10, 2, 11);|| ||znlog(10, Mod(2, 11)) _
-znlog(Mod(10, 11), Mod(2, 11))||
-||[[# carmichael-func]][#carmichael-func-note carmichael function]|| ||Lambda(561);|| ||lcm(znstar(561)[2])||
+@<&nbsp;>@||eulerphi(256)|| ||Phi(256);|| ||
+||[[# mult-order]][#mult-order-note multiplicative order]||znorder(Mod(7, 108))|| ||OrderMod(7, 108);|| ||
+||[[# primitive-roots]][#primitive-roots-note primitive roots]||znprimroot(11)|| ||PrimitiveRootMod(11);|| ||
+||[[# discrete-log]][#discrete-log-note discrete logarithm]||znlog(10, Mod(2, 11)) _
+znlog(Mod(10, 11), Mod(2, 11))|| ||##gray|# arg: 10, base: 2, modulus: 11## _
+LogMod(10, 2, 11);|| ||
+||[[# carmichael-func]][#carmichael-func-note carmichael function]||lcm(znstar(561)[2])|| ||Lambda(561);|| ||
 ||[[# kronecker-symbol]][#kronecker-symbol-note kronecker symbol] _
  _
-##gray|//and jacobi symbol//##|| ||Jacobi(3, 5);|| ||kronecker(3, 5)||
-||[[# moebius-func]][#moebius-func-note moebius function]||MoebiusMu(11);||MoebiusMu(11);|| ||moebius(11)||
-||[[# riemann-zeta-func]][#riemann-zeta-func-note riemann zeta function]|| || || ||zeta(2)||
+##gray|//and jacobi symbol//##||kronecker(3, 5)|| ||Jacobi(3, 5);|| ||
+||[[# moebius-func]][#moebius-func-note moebius function]||moebius(11)||MoebiusMu(11);||MoebiusMu(11);|| ||
+||[[# riemann-zeta-func]][#riemann-zeta-func-note riemann zeta function]||zeta(2)|| || || ||
 ||[[# mangoldt-lambda]][#mangoldt-lambda-note mangoldt lambda]|| || || || ||
 ||[[# dirichlet-char]][#dirichlet-char-note dirichlet character]|| || || || ||
 ||||||||||~ [[# elliptic-curves]][#elliptic-curves-note elliptic curves]||
-||~ ||~ magma||~ gap||~ singular||~ pari/gp||
-||elliptic curve from coefficients|| || || ||##gray|@@\\@@ ellinit([a, b, c, d, e]) where _
+||~ ||~ pari/gp||~ magma||~ gap||~ singular||
+||elliptic curve from coefficients||##gray|@@\\@@ ellinit([a, b, c, d, e]) where _
 @@\\@@ _
 @@\\@@@<&nbsp;&nbsp;&nbsp;>@y^2 + axy + by = x^3 + cx^2 + dx + e _
 @@\\@@## _
@@ -853,35 +857,35 @@ e0 = ellinit([0,0,1,-7,6]) _
 @@\\@@ _
 @@\\@@@<&nbsp;&nbsp;&nbsp;>@y^2 = x^3 + ax + b _
 @@\\@@## _
-e1 = ellinit([-1, 0])||
-||discriminant|| || || ||e0.disc||
-||conductor|| || || ||ellglobalred(e0)[1]||
-||singularity test|| || || ||e0.disc == 0||
-||convert to minimal model|| || || ||e0 = ellinit([6, -3, 9, -16, -14]) _
-e = ellminimalmodel(e0)||
-||coordinate transformation on point|| || || ||e0 = ellinit([6, -3, 9, -16, -14]) _
+e1 = ellinit([-1, 0])|| || || ||
+||discriminant||e0.disc|| || || ||
+||conductor||ellglobalred(e0)[1]|| || || ||
+||singularity test||e0.disc == 0|| || || ||
+||convert to minimal model||e0 = ellinit([6, -3, 9, -16, -14]) _
+e = ellminimalmodel(e0)|| || || ||
+||coordinate transformation on point||e0 = ellinit([6, -3, 9, -16, -14]) _
 e = ellminimalmodel(e0, &v) _
 ##gray|@@\\@@ minimal to original:## _
 ellchangepointinv([0, 0], v) _
 ##gray|@@\\@@ original to minimal:## _
-ellchangepoint([-2, 2], v)||
-||coordinate transformation on curve: ellchangecurve|| || || ||e0 = ellinit([6, -3, 9, -16, -14]) _
+ellchangepoint([-2, 2], v)|| || || ||
+||coordinate transformation on curve: ellchangecurve||e0 = ellinit([6, -3, 9, -16, -14]) _
 e = ellminimalmodel(e0, &v) _
 ##gray|@@\\@@ same as e0:## _
-ellchangecurve(e, v)||
-||point on curve test|| || || ||ellisoncurve(e, [0, 2])||
-||abscissa to ordinates|| || || ||##gray|@@\\@@ vector of size 0, 1, or 2:## _
-ellordinate(e, 0)||
-||group identity|| || || ||[0]||
-||group operation|| || || ||elladd(e, [0, 2], [1, -1])||
-||group inverse|| || || ||ellneg(e, [0, 2])||
-||group multiplication|| || || ||ellmul(e, [0, 2], 3)||
-||canonical height of point|| || || ||ellheight(e, [0, -3])||
-||order of point|| || || ||##gray|@@\\@@ returns 0 for infinite order:## _
+ellchangecurve(e, v)|| || || ||
+||point on curve test||ellisoncurve(e, [0, 2])|| || || ||
+||abscissa to ordinates||##gray|@@\\@@ vector of size 0, 1, or 2:## _
+ellordinate(e, 0)|| || || ||
+||group identity||[0]|| || || ||
+||group operation||elladd(e, [0, 2], [1, -1])|| || || ||
+||group inverse||ellneg(e, [0, 2])|| || || ||
+||group multiplication||ellmul(e, [0, 2], 3)|| || || ||
+||canonical height of point||ellheight(e, [0, -3])|| || || ||
+||order of point||##gray|@@\\@@ returns 0 for infinite order:## _
 ellorder(e, [0, 2]) _
  _
-ellorder(e1, [0, 0])||
-||torsion subgroup|| || || ||e1 = ellinit([-1, 0]) _
+ellorder(e1, [0, 0])|| || || ||
+||torsion subgroup||e1 = ellinit([-1, 0]) _
  _
 ##gray|@@\\@@ returns [t, v1, v2]: _
 @@\\@@ _
@@ -889,126 +893,126 @@ ellorder(e1, [0, 0])||
 @@\\@@@<&nbsp;&nbsp;&nbsp;>@v1: orders of component cyclic groups _
 @@\\@@@<&nbsp;&nbsp;&nbsp;>@v2: generators of same cyclic groups _
 @@\\@@## _
-elltors(e1)||
-||analytic rank|| || || ||##gray|@@\\@@ first value is rank:## _
+elltors(e1)|| || || ||
+||analytic rank||##gray|@@\\@@ first value is rank:## _
 [a, b] = ellanalyticrank(e) _
  _
 ##gray|@@\\@@ recompute second value to higher precision:## _
 \p 100 _
-b = ellL1(e, a)||
-||L-function value|| || || ||elllseries(e, 1 + I)||
-||L-function coefficients|| || || ||##gray|@@\\@@ tenth coefficient:## _
+b = ellL1(e, a)|| || || ||
+||L-function value||elllseries(e, 1 + I)|| || || ||
+||L-function coefficients||##gray|@@\\@@ tenth coefficient:## _
 ellak(e, 10) _
 ##gray|@@\\@@ first ten coefficients:## _
-ellan(e, 10)||
+ellan(e, 10)|| || || ||
 ||||||||||~ [[# rational-algebraic-numbers]][#rational-algebraic-numbers-note rational and algebraic numbers]||
-||~ ||~ magma||~ gap||~ singular||~ pari/gp||
-||to continued fraction|| || || ||\p 100 _
-contfrac(Pi)||
+||~ ||~ pari/gp||~ magma||~ gap||~ singular||
+||to continued fraction||\p 100 _
+contfrac(Pi)|| || || ||
 ||from continued fraction|| || || || ||
-||p-adic number|| || || ||##gray|@@\\@@ p is 2 and precision in powers of 2 is 100:## _
-1/2 + O(2^100)||
-||lift p-adic to rational|| || || ||lift(1/2 + O(2^100))||
-||gaussian integer norm|| || || ||norm(1 + I)||
-||quadratic extension|| || || ||##gray|@@\\@@ make w equal to sqrt(D)/4:## _
+||p-adic number||##gray|@@\\@@ p is 2 and precision in powers of 2 is 100:## _
+1/2 + O(2^100)|| || || ||
+||lift p-adic to rational||lift(1/2 + O(2^100))|| || || ||
+||gaussian integer norm||norm(1 + I)|| || || ||
+||quadratic extension||##gray|@@\\@@ make w equal to sqrt(D)/4:## _
 D = -4 _
-w = quadgen(D)||
-||quadratic number|| || || ||(1 + w)^2||
+w = quadgen(D)|| || || ||
+||quadratic number||(1 + w)^2|| || || ||
 ||||||||||~ [[# polynomials]][#polynomials-note polynomials]||
-||~ ||~ magma||~ gap||~ singular||~ pari/gp||
-||from expression with indeterminates|| || ||##gray|@@//@@ A ring must be declared before a polynomial can be defined. _
+||~ ||~ pari/gp||~ magma||~ gap||~ singular||
+||from expression with indeterminates||(x - 1) * (x - 2) _
+ _
+(1+x)^2 * (2+y)^3|| || ||##gray|@@//@@ A ring must be declared before a polynomial can be defined. _
 @@//@@ To define a ring, one specifies (1) the coefficient field _
 @@//@@ (or ring), (2) the indeterminate variables, and (3) the term _
 @@//@@ ordering.## _
 ring r = integer, (x, y), dp; _
  _
 poly p1 = (x - 1) * (x - 2); _
-poly p2 = (1 + x)^2 * (2 + y)^3;||(x - 1) * (x - 2) _
- _
-(1+x)^2 * (2+y)^3||
-||from coefficient array|| || || ||Pol([1, -3, 2]) _
+poly p2 = (1 + x)^2 * (2 + y)^3;||
+||from coefficient array||Pol([1, -3, 2]) _
  _
 ##gray|@@\\@ zero-degree coefficient first:## _
-Polrev([2, -3, 1])||
-||to coefficient array|| || ||poly p = (1 + x)^10; _
-coeffs(p, x);||Vec((x+1)^10)||
-||lookup coefficient|| || || ||polcoeff((x+1)^10, 3)||
-||substitute indeterminate|| || ||subst((x - 1) * (x - 2), x, 3); _
- _
-subst((x - 1) * (x - 2), x, (x - 1));||##gray|@@\\@@ replace x with 3:## _
+Polrev([2, -3, 1])|| || || ||
+||to coefficient array||Vec((x+1)^10)|| || ||poly p = (1 + x)^10; _
+coeffs(p, x);||
+||lookup coefficient||polcoeff((x+1)^10, 3)|| || || ||
+||substitute indeterminate||##gray|@@\\@@ replace x with 3:## _
 subst((x-1)*(x-2), x, 3) _
 ##gray|@@\\@@ replace x with (x-1):## _
-subst((x-1)*(x-2), x, (x-1))||
-||degree|| || ||poly p = (1 + x)^10; _
-deg(p);||poldegree((x-1)^10)||
-||operations|| || || ||+ - * /||
+subst((x-1)*(x-2), x, (x-1))|| || ||subst((x - 1) * (x - 2), x, 3); _
+ _
+subst((x - 1) * (x - 2), x, (x - 1));||
+||degree||poldegree((x-1)^10)|| || ||poly p = (1 + x)^10; _
+deg(p);||
+||operations||+ - * /|| || || ||
 ||division and remainder|| || || || ||
-||[#expand-polynomial expand polynomial]|| || ||##gray|//Polynomials are displayed in expanded form.//##|| ||
-||[#factor-polynomial factor polynomial]|| || || ring r = 7, (x), dp; _
+||[#expand-polynomial expand polynomial]|| || || ||##gray|//Polynomials are displayed in expanded form.//##||
+||[#factor-polynomial factor polynomial]|| || || || ring r = 7, (x), dp; _
  _
 ##gray|@@//@@ Doesn't work in ring with real or int. coefficients:## _
-factorize(x^2 + 3*x + 2);|| ||
-||collect terms|| || ||ring r = integer, (x, y), dp; _
+factorize(x^2 + 3*x + 2);||
+||collect terms|| || || ||ring r = integer, (x, y), dp; _
  _
-coeffs((x + 2*y + 1)^10, x);|| ||
-||factor|| || || ||factor(x^2-1)||
-||roots|| || || ||polroots(x^3+3*x^2+2*x-1)||
-||greatest common divisor|| || || ||p1 = x^3 + 2*x^2 -x -2 _
+coeffs((x + 2*y + 1)^10, x);||
+||factor||factor(x^2-1)|| || || ||
+||roots||polroots(x^3+3*x^2+2*x-1)|| || || ||
+||greatest common divisor||p1 = x^3 + 2*x^2 -x -2 _
 p2 = x^3 -7*x + 6 _
-gcd(p1, p2)||
-||resultant|| || || ||polresultant((x-1)*(x-2), (x-3)^2)||
-||discriminant|| || || ||poldisc((x+1)*(x-2))||
-||homogenity test|| || ||homog((x + y)^2);|| ||
-||groebner basis|| || || ||##gray|//none//##||
-||specify ordering|| || || ||##gray|//none//##||
-||symmetric polynomial|| || || ||##gray|//none//##||
-||cyclotomic polynomial|| || || ||polcyclo(10)||
-||hermite polynomial|| || || ||polhermite(4)||
+gcd(p1, p2)|| || || ||
+||resultant||polresultant((x-1)*(x-2), (x-3)^2)|| || || ||
+||discriminant||poldisc((x+1)*(x-2))|| || || ||
+||homogenity test|| || || ||homog((x + y)^2);||
+||groebner basis||##gray|//none//##|| || || ||
+||specify ordering||##gray|//none//##|| || || ||
+||symmetric polynomial||##gray|//none//##|| || || ||
+||cyclotomic polynomial||polcyclo(10)|| || || ||
+||hermite polynomial||polhermite(4)|| || || ||
 ||chebyshev polynomial _
  _
-##gray|//first and second kind//##|| || || ||polchebyshev(4, 1) _
-polychebyshev(4, 2)||
-||interpolation polynomial|| || || ||polinterpolate([1, 2, 3], [2, 4, 7])||
-||characteristic polynomial|| || || ||charpoly([1, 2; 3, 4])||
+##gray|//first and second kind//##||polchebyshev(4, 1) _
+polychebyshev(4, 2)|| || || ||
+||interpolation polynomial||polinterpolate([1, 2, 3], [2, 4, 7])|| || || ||
+||characteristic polynomial||charpoly([1, 2; 3, 4])|| || || ||
 ||minimal polynomial|| || || || ||
 ||piecewise polynomial|| || || || ||
-||rational function|| || || ||(x - 1) / (x - 2)^2||
+||rational function||(x - 1) / (x - 2)^2|| || || ||
 ||[#add-fractions add fractions]|| || || || ||
 ||[#partial-fraction-decomposition partial fraction decomposition]|| || || || ||
 ||||||||||~ [[# special-functions]][#special-functions-note special functions]||
-||~ ||~ magma||~ gap||~ singular||~ pari/gp||
-||gamma|| || || ||gamma(1/2)||
-||hyperbolic|| || || ||sinh cosh tanh||
+||~ ||~ pari/gp||~ magma||~ gap||~ singular||
+||gamma||gamma(1/2)|| || || ||
+||hyperbolic||sinh cosh tanh|| || || ||
 ||elliptic integerals|| || || || ||
-||bessel functions|| || || ||besselh1 besselh2 besseli besselj besseljh besselk besseln||
-||[[# riemann-zeta]][#riemann-zeta-note Riemann zeta]|| || || ||zeta(2)||
+||bessel functions||besselh1 besselh2 besseli besselj besseljh besselk besseln|| || || ||
+||[[# riemann-zeta]][#riemann-zeta-note Riemann zeta]||zeta(2)|| || || ||
 ||||||||||~ [[# permutations]][#permutations-note permutations]||
-||~ ||~ magma||~ gap||~ singular||~ pari/gp||
-||permutation from disjoint cycles||S4 := Sym(4); _
-p := S4!(1, 2)(3, 4);||p := (1, 2)(3, 4);|| || ||
-||permutation from list||S4 := Sym(4); _
-p2 := elt<S4 | 2, 1, 4, 3>;||p2 := PermList([2, 1, 4, 3]);|| || ||
-||permutation from two lists|| ||##gray|# must be positive integers:## _
-p := MappingPermListList([6, 8, 4, 2], [2, 4, 6, 8])|| || ||
-||act on element|| ||1 ^ p; _
+||~ ||~ pari/gp||~ magma||~ gap||~ singular||
+||permutation from disjoint cycles|| ||S4 := Sym(4); _
+p := S4!(1, 2)(3, 4);||p := (1, 2)(3, 4);|| ||
+||permutation from list|| ||S4 := Sym(4); _
+p2 := elt<S4 | 2, 1, 4, 3>;||p2 := PermList([2, 1, 4, 3]);|| ||
+||permutation from two lists|| || ||##gray|# must be positive integers:## _
+p := MappingPermListList([6, 8, 4, 2], [2, 4, 6, 8])|| ||
+||act on element|| || ||1 ^ p; _
  _
 ##gray|# preimage of 1 under p:## _
-1 / p;|| || ||
+1 / p;|| ||
 ||act on list|| || || || ||
-||compose||S4 := Sym(4); _
+||compose|| ||S4 := Sym(4); _
  _
-S4!(1,2)(3,4) * S4!(1,3);||(1, 2)(3, 4) * (1, 3);|| || ||
-||invert||S3 := Sym(3); _
+S4!(1,2)(3,4) * S4!(1,3);||(1, 2)(3, 4) * (1, 3);|| ||
+||invert|| ||S3 := Sym(3); _
  _
 S3!(1,2,3) ^ -1; _
-Inverse(S3!(1,2,3));||(1, 2, 3) ^ -1;|| || ||
-||power||S5 := Sym(5); _
+Inverse(S3!(1,2,3));||(1, 2, 3) ^ -1;|| ||
+||power|| ||S5 := Sym(5); _
  _
-S5!(1,2,3,4,5) ^ 3;||(1, 2, 3, 4, 5) ^ 3;|| || ||
-||order||S3 := Sym(3); _
+S5!(1,2,3,4,5) ^ 3;||(1, 2, 3, 4, 5) ^ 3;|| ||
+||order|| ||S3 := Sym(3); _
  _
-Order(S3!(1,2,3));||Order((1, 2, 3));|| || ||
-||support|| ||MovedPoints((1, 3, 5)(7, 8));|| || ||
+Order(S3!(1,2,3));||Order((1, 2, 3));|| ||
+||support|| || ||MovedPoints((1, 3, 5)(7, 8));|| ||
 ||number of inversions|| || || || ||
 ||parity|| || || || ||
 ||to inversion vector|| || || || ||
@@ -1016,10 +1020,10 @@ Order(S3!(1,2,3));||Order((1, 2, 3));|| || ||
 ||all permutations|| || || || ||
 ||random permutation|| || || || ||
 ||||||||||~ [[# groups]][#groups-note groups]||
-||~ ||~ magma||~ gap||~ singular||~ pari/gp||
+||~ ||~ pari/gp||~ magma||~ gap||~ singular||
 ||[[# named-groups]][#named-groups-note named groups] _
  _
-##gray|//symmetric, alternating, cyclic, dihedral//##||S4 := Sym(4); _
+##gray|//symmetric, alternating, cyclic, dihedral//##|| ||S4 := Sym(4); _
 A4 := AlternatingGroup(4); _
 Z5 := CyclicGroup(5); _
 D10 := DihedralGroup(10);||S4 := SymmetricGroup(4); _
@@ -1027,41 +1031,41 @@ A4 := AlternatingGroup(4); _
 Z5 := CyclicGroup(5); _
 ##gray|# argument is order of group, not vertices _
 # of polygon:## _
-D10 := DihedralGroup(2 * 10);|| || ||
-||[[# group-by-order]][#group-by-order-note group by order]||NumberOfSmallGroups(8); _
+D10 := DihedralGroup(2 * 10);|| ||
+||[[# group-by-order]][#group-by-order-note group by order]|| ||NumberOfSmallGroups(8); _
  _
 ##gray|@@//@@ first group of order 8:## _
 G := SmallGroup(8, 1);||##gray|# number of groups of order 8:## _
 Length(AllSmallGroups(8)); _
  _
 ##gray|# first group of order 8:## _
-G := AllSmallGroups(8)[1];|| || ||
-||[[# group-from-permutation-generators]][#group-from-permutation-generators-note group from permutation generators]||S5 := Sym(5); _
+G := AllSmallGroups(8)[1];|| ||
+||[[# group-from-permutation-generators]][#group-from-permutation-generators-note group from permutation generators]|| ||S5 := Sym(5); _
 p1 := S5!(1, 3, 5, 2); _
 p2 := S5!(1, 2); _
 G := PermutationGroup<5 | p1, p2>;||G := Group((1, 3, 5, 2), (1, 2)); _
  _
 ##gray|# or## _
-G := GroupWithGenerators([(1, 3, 5, 2), (1, 2)]);|| || ||
-||[[# direct-prod]][#direct-prod-note direct product]||Z3 := CyclicGroup(3); _
+G := GroupWithGenerators([(1, 3, 5, 2), (1, 2)]);|| ||
+||[[# direct-prod]][#direct-prod-note direct product]|| ||Z3 := CyclicGroup(3); _
 A4 := AlternatingGroup(4); _
 G := DirectProduct(z3, a4);||Z3 := CyclicGroup(3); _
 A4 := AlternatingGroup(4); _
-G := DirectProduct(Z3, A4);|| || ||
+G := DirectProduct(Z3, A4);|| ||
 ||[[# free-prod]][#free-prod-note free product] _
-@<&nbsp;>@|| ||F := FreeProduct(CyclicGroup(3), CyclicGroup(2));|| || ||
-||[[# free-group]][#free-group-note free group]|| ||##gray|# integers under addition:## _
+@<&nbsp;>@|| || ||F := FreeProduct(CyclicGroup(3), CyclicGroup(2));|| ||
+||[[# free-group]][#free-group-note free group]|| || ||##gray|# integers under addition:## _
 Z := FreeGroup(1); _
  _
 ##gray|# free group with 2 generators:## _
-F := FreeGroup("a", "b");|| || ||
-||[[# group-from-presentation]][#group-from-presentation-note group from presentation]|| ||F := FreeGroup( "a", "b" ); _
-G := F / [ F.1^2, F.2^3, (F.1 * F.2)^5 ];|| || ||
-||[[# all-group-elem]][#all-group-elem-note all elements]|| ||Perform(Enumerator(Z3), function(e) _
+F := FreeGroup("a", "b");|| ||
+||[[# group-from-presentation]][#group-from-presentation-note group from presentation]|| || ||F := FreeGroup( "a", "b" ); _
+G := F / [ F.1^2, F.2^3, (F.1 * F.2)^5 ];|| ||
+||[[# all-group-elem]][#all-group-elem-note all elements]|| || ||Perform(Enumerator(Z3), function(e) _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Print(e); _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Print("\n"); _
-@<&nbsp;&nbsp;>@end);|| || ||
-||[[# group-generators]][#group-generators-note generators]||S10 := Sym(10); _
+@<&nbsp;&nbsp;>@end);|| ||
+||[[# group-generators]][#group-generators-note generators]|| ||S10 := Sym(10); _
 Generators(s10); _
  _
 ##gray|@@//@@ notation for individual generators:## _
@@ -1072,121 +1076,122 @@ GeneratorsOfGroup(S10); _
  _
 ##gray|# notation for individual generators:## _
 S10.1; _
-S10.2;|| || ||
-||[[# group-identity-elem]][#group-identity-elem-note identity element]||Id(G);||Identity(G); _
-One(G);|| || ||
-||[[# random-group-elem]][#random-group-elem-note random element]||Random(G);||Random(G)|| || ||
-||[[# group-op]][#group-op-note group operation]||e1 := Random(G); _
+S10.2;|| ||
+||[[# group-identity-elem]][#group-identity-elem-note identity element]|| ||Id(G);||Identity(G); _
+One(G);|| ||
+||[[# random-group-elem]][#random-group-elem-note random element]|| ||Random(G);||Random(G)|| ||
+||[[# group-op]][#group-op-note group operation]|| ||e1 := Random(G); _
 e2 := Random(G); _
 e1 * e2;||e1 := Random(G); _
 e2 := Random(G); _
-e1 * e2;|| || ||
-||[[# inverse-group-elem]][#inverse-group-elem-note inverse element]||Inverse(e1); _
+e1 * e2;|| ||
+||[[# inverse-group-elem]][#inverse-group-elem-note inverse element]|| ||Inverse(e1); _
 ##gray|@@//@@ or:## _
 e1 ^ -1;||Inverse(e1); _
 ##gray|# or:## _
-e1^-1;|| || ||
-||[[# generator-word-for-elem]][#generator-word-for-elem-note generator word for element]|| ||S10 := SymmetricGroup(10); _
-Factorization(S10, (1,3,8,10,5,9,2,7));|| || ||
-||[[# elem-by-generator-word-len]][#elem-by-generator-word-len-note elements by generator word length]|| ||S6 := SymmetricGroup(6); _
-GrowthFunctionOfGroup(S6);|| || ||
-||[[# group-elem-order]][#group-elem-order-note element order]||D10 := DihedralGroup(10); _
+e1^-1;|| ||
+||[[# generator-word-for-elem]][#generator-word-for-elem-note generator word for element]|| || ||S10 := SymmetricGroup(10); _
+Factorization(S10, (1,3,8,10,5,9,2,7));|| ||
+||[[# elem-by-generator-word-len]][#elem-by-generator-word-len-note elements by generator word length]|| || ||S6 := SymmetricGroup(6); _
+GrowthFunctionOfGroup(S6);|| ||
+||[[# group-elem-order]][#group-elem-order-note element order]|| ||D10 := DihedralGroup(10); _
 Order(D10.1); _
 Order(D10.2);||D10 := DihedralGroup(2 * 10); _
  _
 Order(D10.1); _
-Order(D10.2);|| || ||
-||[[# identify-group]][#identify-group-note identify group]||##gray|@@//@@ C2*C4:## _
+Order(D10.2);|| ||
+||[[# identify-group]][#identify-group-note identify group]|| ||##gray|@@//@@ C2*C4:## _
 GroupName(SmallGroup(8, 2)); _
  _
 ##gray|@@//@@ <8, 1>:## _
 IdentifyGroup(CyclicGroup(8));||##gray|# C4 x C2:## _
-StructureDescription(AllSmallGroups(8)[2]);|| || ||
-||[[# group-to-presentation]][#group-to-presentation-note group to presentation]||FPGroup(AlternatingGroup(10));|| || || ||
-||[[# group-order]][#group-order-note group order]||Order(Sym(4));||Size(SymmetricGroup(4));|| || ||
-||[[# cyclic-test]][#cyclic-test-note cyclic test]||IsCyclic(AlternatingGroup(10));||IsCyclic(AlternatingGroup(10));|| || ||
-||[[# abelian-test]][#abelian-test-note abelian test]||IsAbelian(CyclicGroup(10));||IsAbelian(CyclicGroup(10)); || || ||
+StructureDescription(AllSmallGroups(8)[2]);|| ||
+||[[# group-to-presentation]][#group-to-presentation-note group to presentation]|| ||FPGroup(AlternatingGroup(10));|| || ||
+||[[# group-order]][#group-order-note group order]|| ||Order(Sym(4));||Size(SymmetricGroup(4));|| ||
+||[[# cyclic-test]][#cyclic-test-note cyclic test]|| ||IsCyclic(AlternatingGroup(10));||IsCyclic(AlternatingGroup(10));|| ||
+||[[# abelian-test]][#abelian-test-note abelian test]|| ||IsAbelian(CyclicGroup(10));||IsAbelian(CyclicGroup(10)); || ||
 ||||||||||~ [[# subgroups]][#subgroups-note subgroups]||
-||~ ||~ magma||~ gap||~ singular||~ pari/gp||
-||[[# all-subgroups]][#all-subgroups-note all subgroups]||Subgroups(Sym(4));||AllSubgroups(SymmetricGroup(4));|| || ||
-||[[# subgroup-lattice]][#subgroup-lattice-note subgroup lattice]||SubgroupLattice(Sym(4));||S4 := SymmetricGroup(4); _
+||~ ||~ pari/gp||~ magma||~ gap||~ singular||
+||[[# all-subgroups]][#all-subgroups-note all subgroups]|| ||Subgroups(Sym(4));||AllSubgroups(SymmetricGroup(4));|| ||
+||[[# subgroup-lattice]][#subgroup-lattice-note subgroup lattice]|| ||SubgroupLattice(Sym(4));||S4 := SymmetricGroup(4); _
 lat := LatticeSubgroups(S4); _
 DotFileLatticeSubgroups(lat, "lattice.dot"); _
-##gray|#  dot -Tpng < lattice.dot > lattice.png##|| || ||
-||[[# maximal-subgroups]][#maximal-subgroups-note maximal subgroups]||MaximalSubgroups(Sym(4));||MaximalSubgroups(S4);|| || ||
-||[[# frattini-subgroup]][#frattini-subgroup-note frattini subgroup]||D4 := DihedralGroup(4); _
-FrattiniSubgroup(D4);||FrattiniSubgroup(DihedralGroup(2 * 4));|| || ||
-||[[# subgroup-from-generators]][#subgroup-from-generators-note subgroup from generators]|| ||G := Group((1, 3, 5, 7), (2, 4)); _
-H := Subgroup(G, [(2, 4)]);|| || ||
-||[[# normal-subgroups]][#normal-subgroups-note normal subgroups]||NormalSubgroups(Sym(4));||NormalSubgroups(S4);|| || ||
-||cosets|| ||RightCoset() _
+##gray|#  dot -Tpng < lattice.dot > lattice.png##|| ||
+||[[# maximal-subgroups]][#maximal-subgroups-note maximal subgroups]|| ||MaximalSubgroups(Sym(4));||MaximalSubgroups(S4);|| ||
+||[[# frattini-subgroup]][#frattini-subgroup-note frattini subgroup]|| ||D4 := DihedralGroup(4); _
+FrattiniSubgroup(D4);||FrattiniSubgroup(DihedralGroup(2 * 4));|| ||
+||[[# subgroup-from-generators]][#subgroup-from-generators-note subgroup from generators]|| || ||G := Group((1, 3, 5, 7), (2, 4)); _
+H := Subgroup(G, [(2, 4)]);|| ||
+||[[# normal-subgroups]][#normal-subgroups-note normal subgroups]|| ||NormalSubgroups(Sym(4));||NormalSubgroups(S4);|| ||
+||cosets|| || ||RightCoset() _
 CanonicalRightCosetElement() _
 CosetDecomposition() _
-RightTraversal(G, U)|| || ||
+RightTraversal(G, U)|| ||
 ||quotient group|| || || || ||
-||center||Z4 := CyclicGroup(4); _
+||center|| ||Z4 := CyclicGroup(4); _
 D6 := DihedralGroup(6); _
 G := DirectProduct(Z4, D6); _
 center := Centre(G);||g := DirectProduct(CyclicGroup(4), DihedralGroup(2 * 6)); _
-Center(g);|| || ||
-||centralizer|| ||g := SymmetricGroup(5); _
-h := Centralizer(g, (1, 3)(4, 5));|| || ||
-||normalizer|| ||S4 := SymmetricGroup(4); _
+Center(g);|| ||
+||centralizer|| || ||g := SymmetricGroup(5); _
+h := Centralizer(g, (1, 3)(4, 5));|| ||
+||normalizer|| || ||S4 := SymmetricGroup(4); _
 G := Group([(1,2)(3,4)]); _
-Normalizer(S4, G);|| || ||
-||[[# commutator]][#commutator-note commutator]|| ||##gray|# e1^-1 * e2^-1 * e1 * e2:## _
-Comm(e1, e2);|| || ||
-||commutator subgroup|| ||G1 := Group((1,2,3),(1,2)); _
+Normalizer(S4, G);|| ||
+||[[# commutator]][#commutator-note commutator]|| || ||##gray|# e1^-1 * e2^-1 * e1 * e2:## _
+Comm(e1, e2);|| ||
+||commutator subgroup|| || ||G1 := Group((1,2,3),(1,2)); _
 G2 := Group((2,3,4),(3,4)); _
-CommutatorSubgroup(G1, G2);|| || ||
+CommutatorSubgroup(G1, G2);|| ||
 ||subgroup test|| || || || ||
-||subgroup index||Index(Sym(4), AlternatingGroup(4));||Index(G, H);|| || ||
-||normal test|| ||IsNormal(G, H);|| || ||
-||subnormal test|| ||IsSubnormal(G, H);|| || ||
-||nonabelian simple groups|| ||##gray|# argument is list of orders:## _
-AllSmallNonabelianSimpleGroups([1..10000]);|| || ||
-||simple test|| ||IsSimple(SymmetricGroup(4));|| || ||
-||solvable test|| ||IsSolvable(SymmetricGroup(4));|| || ||
-||derived series|| ||DerivedSeriesOfGroup(SymmetricGroup(4));|| || ||
-||characteristic test|| ||S4 := SymmetricGroup(4); _
+||subgroup index|| ||Index(Sym(4), AlternatingGroup(4));||Index(G, H);|| ||
+||normal test|| || ||IsNormal(G, H);|| ||
+||subnormal test|| || ||IsSubnormal(G, H);|| ||
+||nonabelian simple groups|| || ||##gray|# argument is list of orders:## _
+AllSmallNonabelianSimpleGroups([1..10000]);|| ||
+||simple test|| || ||IsSimple(SymmetricGroup(4));|| ||
+||solvable test|| || ||IsSolvable(SymmetricGroup(4));|| ||
+||derived series|| || ||DerivedSeriesOfGroup(SymmetricGroup(4));|| ||
+||characteristic test|| || ||S4 := SymmetricGroup(4); _
 H := Subgroup(s4, [(1,4)(2,3), (1,3)(2,4), (2,4,3)]); _
-IsCharacteristicSubgroup(S4, H);|| || ||
+IsCharacteristicSubgroup(S4, H);|| ||
 ||semidirect product|| || || || ||
 ||||||||||~ [[# group-homomorphisms]][#group-homomorphisms-note group homomorphisms]||
-||~ ||~ magma||~ gap||~ singular||~ pari/gp||
-||all homomorphisms|| ||S4 := SymmetricGroup(4); _
+||~ ||~ pari/gp||~ magma||~ gap||~ singular||
+||all homomorphisms|| || ||S4 := SymmetricGroup(4); _
 S3 := SymmetricGroup(3); _
-AllHomomorphisms(S3, S4);|| || ||
-||all homomorphims classes|| ||AllHomomorphismClasses(S3, S4);|| || ||
-||endomorphisms and automorphisms|| ||AllEndomorphisms(S4); _
-AllAutomorphisms(S4);|| || ||
-||homomorphism from generator images|| ||hom := GroupHomomorphismByImages(S3, S4, _
+AllHomomorphisms(S3, S4);|| ||
+||all homomorphims classes|| || ||AllHomomorphismClasses(S3, S4);|| ||
+||endomorphisms and automorphisms|| || ||AllEndomorphisms(S4); _
+AllAutomorphisms(S4);|| ||
+||homomorphism from generator images|| || ||hom := GroupHomomorphismByImages(S3, S4, _
 @<&nbsp;&nbsp;>@[(1,2,3), (1,2)], _
 @<&nbsp;&nbsp;>@[(2,3,4), (2,3)]); _
  _
 ##gray|# uses generators of S3:## _
 hom := GroupHomomorphismByImages(S3, S4, _
-@<&nbsp;&nbsp;>@[(2,3,4), (2,3)]);|| || ||
-||surjective test|| ||IsSurjective(hom);|| || ||
-||injective test|| ||IsInjective(hom);|| || ||
-||bijective test|| ||IsBijective(hom);|| || ||
-||kernel|| ||Kernel(AllHomomorphisms(S3, S4)[1]);|| || ||
-||image|| ||Image(AllHomomorphisms(S3, S4)[1]);|| || ||
+@<&nbsp;&nbsp;>@[(2,3,4), (2,3)]);|| ||
+||surjective test|| || ||IsSurjective(hom);|| ||
+||injective test|| || ||IsInjective(hom);|| ||
+||bijective test|| || ||IsBijective(hom);|| ||
+||kernel|| || ||Kernel(AllHomomorphisms(S3, S4)[1]);|| ||
+||image|| || ||Image(AllHomomorphisms(S3, S4)[1]);|| ||
 ||||||||||~ [[# actions]][#actions-note actions]||
-||~ ||~ magma||~ gap||~ singular||~ pari/gp||
-||conjugate element|| ||##gray|# (1,2,3)^-1 * (1,2) * (1,2,3):## _
-(1,2)^(1,2,3)|| || ||
-||conjugate set|| ||S3 := SymmetricGroup(3); _
+||~ ||~ pari/gp||~ magma||~ gap||~ singular||
+||conjugate element|| || ||##gray|# (1,2,3)^-1 * (1,2) * (1,2,3):## _
+(1,2)^(1,2,3)|| ||
+||conjugate set|| || ||S3 := SymmetricGroup(3); _
 S3^(3,4); _
-(3,4)^S3;|| || ||
-||conjugacy class|| ||S4 := SymmetricGroup(4); _
-AsList(ConjugacyClass(S4, (1,2,3)));|| || ||
-||conjugate group|| ||ConjugateGroup(SymmetricGroup(4), (4, 5));|| || ||
-||conjugacy classes|| ||ConjugacyClasses(SymmetricGroup(4));|| || ||
+(3,4)^S3;|| ||
+||conjugacy class|| || ||S4 := SymmetricGroup(4); _
+AsList(ConjugacyClass(S4, (1,2,3)));|| ||
+||conjugate group|| || ||ConjugateGroup(SymmetricGroup(4), (4, 5));|| ||
+||conjugacy classes|| || ||ConjugacyClasses(SymmetricGroup(4));|| ||
 ||stabilizer|| || || || ||
 ||orbit|| || || || ||
 ||transitive test|| || || || ||
 ||~ ||~ ##EFEFEF|@@_______________________________________________________@@##||~ ##EFEFEF|@@_______________________________________________________@@##||~ ##EFEFEF|@@_______________________________________________________@@##||~ ##EFEFEF|@@_______________________________________________________@@##||
+
 
 [[# grammar-invocation-note]]
 + [#grammar-invocation Grammar and Invocation]
@@ -1518,6 +1523,13 @@ A group G is said to //act// on a set A if there is an operation ⋅: G × A →
 * g₁⋅(g₂⋅a) = (g₁*g₂)⋅a for all g₁, g₂ ∈ G and a ∈ A
 * e⋅a = a for all a ∈ A where e is the identity in A
 
+[[# pari-gp]]
++ [#top Pari/GP]
+
+[https://pari.math.u-bordeaux.fr/pub/pari/manuals/2.9.0/tutorial.pdf A Tutorial for Pari/GP (pdf)]
+[https://pari.math.u-bordeaux.fr/dochtml/html/ Pari/GP Functions by Category]
+[http://www.staff.science.uu.nl/~beuke106/boek/refcard.pdf Pari/GP Reference Card (pdf)]
+
 [[# magma]]
 + [#top Magma]
 
@@ -1533,10 +1545,3 @@ A group G is said to //act// on a set A if there is an operation ⋅: G × A →
 + [#top Singular]
 
 [http://www.singular.uni-kl.de/Manual/latest/index.htm Singular Manual]
-
-[[# pari-gp]]
-+ [#top Pari/GP]
-
-[http://pari.math.u-bordeaux.fr/pub/pari/manuals/2.5.0/tutorial.pdf A Tutorial for Pari/GP (pdf)]
-[http://pari.math.u-bordeaux.fr/dochtml/html.stable/ Pari/GP Functions by Category]
-[http://www.staff.science.uu.nl/~beuke106/boek/refcard.pdf Pari/GP Reference Card (pdf)]

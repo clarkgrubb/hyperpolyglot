@@ -217,7 +217,7 @@ tip //refers to the most recent revision in the repository.//##||
 ||list tags||$ git tag||$ hg tags||
 ||||||~ [[# branch-merge]][#branch-merge-note branch and merge]||
 ||~ ||~ [#git git]||~ [#hg hg]||
-||current branch||$ git rev-parse --abbrev-ref HEAD|| ||
+||current branch||$ git rev-parse @@--@@abbrev-ref HEAD|| ||
 ||list branches||$ git branch [-r|-a] _
  _
 ##gray|-r: list remote tracking branches _
