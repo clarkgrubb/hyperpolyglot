@@ -3,7 +3,7 @@
 [[# cmd-line-opts]]
 ++ Command Line Options
 
-||~ ||~ [#screen screen]||~ [#tmux tmux]||
+||~ ||~ screen||~ tmux||
 ||create session and attach||$ screen||$ tmux||
 ||create session //foo// and attach||$ screen -S foo||$ tmux new -s foo||
 ||create detached session //foo//||$ screen -S foo -d -m||$ tmux new -s foo -d||
@@ -21,7 +21,7 @@
 
 [#sessions sessions] | [#windows windows] | [#regions regions] | [#panes panes] | [#paste-buffer paste buffer] | [#copy-mode copy mode] 
 
-||~ ||||~ [#screen screen]||||~ [#tmux tmux]||
+||~ ||||~ screen||||~ tmux||
 ||~ ||~ C-a ##gray|//cmd//##||~  command||~ C-b ##gray|//cmd//##||~ command||
 ||help||?||:help||?||:list-keys||
 ||send prefix to app||a||:meta||C-b||:send-prefix||
@@ -83,7 +83,7 @@ C-l||:redisplay||r||:refresh-client||
 :resize -##gray|//n//##|| || ||
 ||make current region ##gray|//n//## rows tall|| ||:resize ##gray|//n//##|| || ||
 ||||||||||~ [[# panes]]panes||
-||~ ||||~ screen||||||~ tmux||
+||~ ||||~ screen||||~ tmux||
 ||~ ||~ C-a ##gray|//cmd//##||~  command||~ C-b ##gray|//cmd//##||~ command||
 ||split into left and right panes|| || ||%||:split-window -h||
 ||split into top and bottom panes|| || ||"||:split-window||
@@ -211,7 +211,7 @@ If the shell had any process groups running when it exits, they are sent a {{SIG
 
 A simple solution to the {{SIGHUP}} problem is to run each job with {{nohup}}.   Optionally, shells such as {{bash}} and {{zsh}} have a {{disown}} built-in which can be used on a process that is already running, should the user have neglected to run it with {{nohup}}.
 
-The {{fish}} shell, when invoking a process in the background with {{&}} will set the signal handling state of the process to ignore {{SIGHUP}}.  Some say it will also do the same if the process is suspended with {{^Z}} and then put in the background with {{bg}}, though it is not obvious to me how the operating system makes this possible.
+The {{fish}} shell when invoking a process in the background with {{&}} sets the signal handling state of the process to ignore {{SIGHUP}}.  It will do the same if the process is suspended with {{^Z}} and then put in the background with {{bg}}.
 
 Multiplexers offer a solution which protects the shell instead of the job.  The user doesn't need to remember to run each job with {{nohup}}.  As an added benefit any state kept by the shell is preserved.  
 
@@ -225,9 +225,9 @@ The multiplexer server creates pseudo-terminals which are used for running and i
 
 To see the output of a shell the user must connect to the multiplexer server with a multiplexer client process.
 
-If the multiplexer is being run on a remote machine and the user's connection is lost, the server and its terminals and controlling processes will persist, but the client process will exit.
+If the multiplexer is being run on a remote machine and the user's connection is lost, the server and its terminals and controlling processes persist, but the client process exits.
 
-When multiple client processes connect to the same server they can see the same output.  This is a way to share a display across computers.
+When multiple client processes connect to the same server they see the same output.  This is a way to share a display across computers.
 
 [[# def-session]]**session:**
 
@@ -302,10 +302,3 @@ The //Tmux// calls copy/scrollback mode simply copy mode.  The keybindings are b
 When a //Screen// window is split into multiple regions, a caption line is placed at the bottom of each region.  When a window contains a single region, //Screen// by default does not display a caption.  The caption, when present, contains information from //Screen//.  The information that is displayed can be customized.
 
 //Tmux// calls the line at the bottom of a window the status line.  By default it is always displayed, though it can be turned off.  The status line contains information from //Tmux// which can be customized.
-
-[[# screen]][[# tmux]][[# doc]]
-++ Documentation
-
-[http://linux.die.net/man/1/nohup man nohup]
-[http://www.gnu.org/software/screen/manual/screen.html Screen User's Manual]
-[http://manpages.ubuntu.com/manpages/precise/man1/tmux.1.html man tmux]
