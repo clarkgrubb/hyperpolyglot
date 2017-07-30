@@ -338,7 +338,7 @@ tip //refers to the most recent revision in the repository.//##||
  _
 $ git log -g|| ||
 ||difference between commit and its parent||$ git diff @@[--@@name-only@@]@@ [#COMMIT COMMIT]^ [#COMMIT COMMIT] [@@--@@] [PATH ...]||$ hg diff -c [#HG-REV REV] @@[@@[#HG-PATH PATH] ...]||
-||difference between two comits||$ git diff @@[--@@name-only@@]@@ [#COMMIT COMMIT1] [#COMMIT COMMIT2] [@@--@@] [PATH ...]||$ hg diff -r [#HG-REV REV1] -r [#HG-REV REV2] @@[@@[#HG-PATH PATH] ...]||
+||difference between two commits||$ git diff @@[--@@name-only@@]@@ [#COMMIT COMMIT1] [#COMMIT COMMIT2] [@@--@@] [PATH ...]||$ hg diff -r [#HG-REV REV1] -r [#HG-REV REV2] @@[@@[#HG-PATH PATH] ...]||
 ||diff options||##gray|@@--@@name-only: list modified file names _
 @@--@@name-status: status (M, A, D, R, ..) and modified file names _
 @@--@@stat: histogram of changes by file _
@@ -598,7 +598,7 @@ Git has three types of objects: commits, trees, and blobs.  Each is assigned a u
 
 Commit hashes are the hashes the user most commonly sees and needs to reference.  Only as many of the digits that are necessary to uniquely identify an object in the object database need to be provided to a git command; usually the first 6 or 7 is sufficient.
 
-HEAD is a special name which refers to the most recent commit of the current branch.  It is stored in {{.git/HEAD}}. The previous commit is HEAD^ and the commit before that is HEAD@@^^@@.  The is also numerical notation: HEAD~4 is 4 commits ahead of HEAD.  If HEAD is the result of a merge, then the antecedents can be be referenced with HEAD^1 and HEAD^2.
+HEAD is a special name which refers to the most recent commit of the current branch.  It is stored in {{.git/HEAD}}. The previous commit is HEAD^ and the commit before that is HEAD@@^^@@.  There is also a numerical notation: HEAD~4 is 4 commits ahead of HEAD.  If HEAD is the result of a merge, then the antecedents can be be referenced with HEAD^1 and HEAD^2.
 
 **hg**
 

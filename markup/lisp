@@ -1578,12 +1578,12 @@ Code with balanced parens can be commented out in the following manner:
 [[# id-note]]
 ++ [#id identifier]
 
-Are identifiers case sensitive; which characters can be used in identifers.
+Are identifiers case sensitive; which characters can be used in identifiers.
 
 In Lisp, identifiers are called //symbols//.
 
 [[# quoted-id-note]]
-++ [#quoted-id quoted identifer]
+++ [#quoted-id quoted identifier]
 
 How to quote or escape characters in identifiers which are otherwise prohibited.
 

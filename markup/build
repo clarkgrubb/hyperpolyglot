@@ -345,7 +345,7 @@ task :default => [:foo] _
  _
 task :foo do _
 @<&nbsp;&nbsp;>@puts "foo" _
-end||##gray|<!@@--@@ if no target specifed on cmd line _
+end||##gray|<!@@--@@ if no target specified on cmd line _
 or as a default ant does nothing successfully @@--@@>## _
 <project default="foo"> _
 @<&nbsp;&nbsp;>@<target name="foo"> _
@@ -1021,7 +1021,7 @@ How to define a target with multiple recipes.  If the target is invoked, all rec
 
 If a target has multiple recipes, all of them must use the double colon syntax.  The recipes are executed in the order in which they are defined in the Makefile.
 
-Each recipe can have its own prerequisites.  Recipes for which the the prerequisites exist and the target is newer than the prerequisites will not execute.
+Each recipe can have its own prerequisites.  Recipes for which the prerequisites exist and the target is newer than the prerequisites will not execute.
 
 [[# empty-recipe-note]]
 ++ [#empty-recipe empty recipe]

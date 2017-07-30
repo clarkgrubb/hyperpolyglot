@@ -657,7 +657,7 @@ $s = = preg_replace('/(\s)+/', '\1', $s);||re.sub('(\s)+', r'\1', _
 \S@<&nbsp;&nbsp;>@[^ \t\r\n\f] _
 \w@<&nbsp;&nbsp;>@[A-Za-z0-9_] _
 \W@<&nbsp;&nbsp;>@[^A-Za-z0-9_]||
-||[[# unicode-char-class-abbrev]][#unicode-char-class-abbrev-note unicode character class abbreviations]||##gray|//none//##||##gray|//POSIX character classes such as// [[:alpha:]] //are available, but they match sets of ASCII characters.  General category values (e.g.// \p{L}, \p{Lu}//) can be used.  Morever, they can be used inside character classes (.e.g.// [\p{L}\p{N}]//).//##||.@<&nbsp;&nbsp;&nbsp;>@[^\n]@<&nbsp;&nbsp;>@##gray|//with// re.S //modifier matches all chars//## _
+||[[# unicode-char-class-abbrev]][#unicode-char-class-abbrev-note unicode character class abbreviations]||##gray|//none//##||##gray|//POSIX character classes such as// [[:alpha:]] //are available, but they match sets of ASCII characters.  General category values (e.g.// \p{L}, \p{Lu}//) can be used.  Moreover, they can be used inside character classes (.e.g.// [\p{L}\p{N}]//).//##||.@<&nbsp;&nbsp;&nbsp;>@[^\n]@<&nbsp;&nbsp;>@##gray|//with// re.S //modifier matches all chars//## _
 \d@<&nbsp;&nbsp;>@[##gray|//Nd//##]@<&nbsp;&nbsp;>@##gray|Nd: //Number, decimal digit//## _
 \D@<&nbsp;&nbsp;>@[^##gray|//Nd//##] _
 \s@<&nbsp;&nbsp;>@[##gray|//Z//##\t\n\r\f\v\x1c\x1d\x1e\x1f\x85] _
@@ -1127,7 +1127,7 @@ a.reverse _
 ||[[# array-sort]][#array-sort-note sort] _
 ##gray|//non-destructive, _
 in-place, _
-custom comparision//##||let a = [3, 1, 4, 2]; _
+custom comparison//##||let a = [3, 1, 4, 2]; _
  _
 let a2 = a.slice(0).sort(); _
 a.sort();||$a = ["b", "A", "a", "B"]; _
@@ -1138,7 +1138,7 @@ sort($a); _
  _
 sorted(a) _
 a.sort() _
-##gray|# custom binary comparision _
+##gray|# custom binary comparison _
 # removed from Python 3:## _
 a.sort(key=str.lower)||a = %w(b A a B) _
  _
@@ -3458,7 +3458,7 @@ The first day in the Gregorian calendar was 15 October 1582.  The //proleptic Gr
 
 An //ordinal date// is a broken-down date consisting of a year, followed by the day of the year.  The ISO 8601 standard recommends that it be written in {{YYYY-DDD}} or {{YYYYDDD}} format.  The corresponding {{strftime}} formats are {{%Y-%j}} and {{%Y%j}}.
 
-A //week date// is a type of calendar which uses the year, week of the year, and day of the week to refer to to dates.  In the ISO 8601 week date, the first week of the year is the week starting from Monday which contains January 4th. An ISO 8601 week date can thus have a different year number than the corresponding Gregorian date.  The first week of the year is numbered {{01}}, and the first day of the week, Monday, is numbered {{1}}.  Weeks are written in {{YYYY-Www-D}} or {{YYYYWwwD}} format, where the upper case W is literal.  The corresponding {{strftime}} literals are {{%G-W%V-%u}} and {{%GW%V%u}}.
+A //week date// is a type of calendar which uses the year, week of the year, and day of the week to refer to dates.  In the ISO 8601 week date, the first week of the year is the week starting from Monday which contains January 4th. An ISO 8601 week date can thus have a different year number than the corresponding Gregorian date.  The first week of the year is numbered {{01}}, and the first day of the week, Monday, is numbered {{1}}.  Weeks are written in {{YYYY-Www-D}} or {{YYYYWwwD}} format, where the upper case W is literal.  The corresponding {{strftime}} literals are {{%G-W%V-%u}} and {{%GW%V%u}}.
 
 Common years have 365 days and leap years have 366 days.  The extra day in February 29th.  Leap years are years divisible by 4 but not 100, or years divisible by 400.
 
@@ -3549,7 +3549,7 @@ The format specifiers used by the {{strftime}} function from the standard C libr
 %r is %I:%M:%S %p||
 ||**date and time**|| ||%c||locale dependent||
 ||**date, time, and tmz**|| ||%+||locale dependent||
-||**time zone name**|| ||%Z||the ambiguous 3 letter abbrevation; e.g. "PST"||
+||**time zone name**|| ||%Z||the ambiguous 3 letter abbreviation; e.g. "PST"||
 ||**time zone offset**||%z|| ||"-0800" for Pacific Standard Time||
 ||**percent sign**|| ||%%|| ||
 ||**newline**|| ||%n|| ||
@@ -3743,7 +3743,7 @@ A negative index refers to the //length - index// element.
 
 **ruby:**
 
-A negative index refers to to the //length - index// element.
+A negative index refers to the //length - index// element.
 
 [[# array-update-note]]
 ++ [#array-update update]
@@ -3932,7 +3932,7 @@ usort($a, "cmp");
 
 **python:**
 
-In Python 2 it is possible to specify a binary comparision function when calling {{sort}}:
+In Python 2 it is possible to specify a binary comparison function when calling {{sort}}:
 
 [[code]]
 a = [(1, 3), (2, 2), (3, 1)]

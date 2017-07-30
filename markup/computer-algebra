@@ -275,7 +275,7 @@ numeric. */##||
 @<&nbsp;>@||StringSplit["foo,bar,baz", ","]|| || ||split("foo,bar,baz", ",");||
 ||[[# str-subst]][#str-subst-note substitute] _
  _
-##gray|//first occurrence, all occurences//## ||s = "do re mi mi" _
+##gray|//first occurrence, all occurrences//## ||s = "do re mi mi" _
 re = RegularExpression["mi"] _
  _
 StringReplace[s, re -> "ma", 1] _
@@ -1198,7 +1198,7 @@ How to test whether a value is an element of a list.
 [[# intersection-note]]
 ++ [#intersection intersection]
 
-How to to find the intersection of two lists.
+How to find the intersection of two lists.
 
 [[# union-note]]
 ++ [#union union]

@@ -93,7 +93,7 @@ frot||3 -1 roll||
 f= f<> f> f< f>= f<=||eq ne gt lt ge le||
 ||[[# min-max]][#min-max-note min and max]||1 2 min _
 1 2 max|| ||
-||[[# three-val-comparision]][#three-val-comparison-note three value comparison]|| || ||
+||[[# three-val-comparison]][#three-val-comparison-note three value comparison]|| || ||
 ||[[# float-literal]][#float-literal-note float literal]||##gray|//must contain an// e:## _
 3.14e0||3.14 _
 3.14e0||

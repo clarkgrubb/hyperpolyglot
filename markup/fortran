@@ -283,7 +283,7 @@ write(*, *) 'elapsed time: ', t2 - t1||##gray|//none//##||
 ||[[# allocate-array-on-stack]][#allocate-array-on-stack-note allocate on stack]||##gray|! uninitialized values get zero values:## _
 integer, dimension(3) :: a _
 integer :: a2(3)||##gray|//none//##||
-||[[# allocate-array-on-heap]][#allocate-array-on-heap-note allocate on heap]||##gray|! unitialized values get zero values:## _
+||[[# allocate-array-on-heap]][#allocate-array-on-heap-note allocate on heap]||##gray|! uninitialized values get zero values:## _
 integer, dimension(:), allocatable :: a _
 allocate(a(3))||##gray|//all data is stored on heap//##||
 ||[[# free-array-on-heap]][#free-array-on-heap-note free heap]||##gray|! usually not necessary, since memory is freed _

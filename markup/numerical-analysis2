@@ -1315,7 +1315,7 @@ points(rnorm(20) + 1, rnorm(20) + 1, _
 'v': triangle (down) _
 '^': triangle (up) _
 '<': triangle (left) _
-'>': traingle (right) _
+'>': triangle (right) _
 'p': pentagram _
 'h': hexagram##||##gray|//Integer values for// pch //parameter:// _
  _
@@ -1986,7 +1986,7 @@ How to compute the 1-norm, the 2-norm, the infinity norm, and the frobenius norm
 
 How to construct a sparse matrix using coordinate format.
 
-Coordinate format specifies a matrix with three arrays: the row indices, the the column indices, and the values.
+Coordinate format specifies a matrix with three arrays: the row indices, the column indices, and the values.
 
 [[# sparse-matrix-decomposition-note]]
 ++ [#sparse-matrix-decomposition sparse matrix decomposition]
@@ -2378,7 +2378,7 @@ The probability density, cumulative distribution, quantile, and random number ge
 
 The uniform distribution is described by the parameters //a// and //b// which delimit the interval on which the density function is nonzero.
 
-The uniform distribution the is maximum entropy probability distribution with support //[a, b]//.  
+The uniform distribution is the maximum entropy probability distribution with support //[a, b]//.  
 
 Consider the uniform distribution on //[0, b]//.  Suppose that we take //k// samples from it, and //m// is the largest of the samples. The minimum variance unbiased estimator for //b// is
 

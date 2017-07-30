@@ -392,7 +392,7 @@ TAB||M-x indent-for-tab-command|| ||
 ||remove all whitespace on left of region|| || ||M-x delete-whitespace-rectangle|| ||
 ||vertically align parts in region matching regexp|| || ||M-x align-regexp|| ||
 ||prepend string to each line of rectangle|| ||C-x r t RET ##gray|//str//##||M-x string-insert|| ||
-||replace each line of rectange with string|| ||  ||M-x string-rectangle|| ||
+||replace each line of rectangle with string|| ||  ||M-x string-rectangle|| ||
 ||insert blank rectangle||C-v ##gray|//...//## I ##gray|//...//## ESC||C-x r o||M-x open-rectangle|| ||
 ||delete rectangle||C-v ##gray|//...//## d||C-x r k||M-x kill-rectangle|| ||
 ||paste rectangle|| ||C-x r y||M-x yank-rectangle|| ||
@@ -1151,7 +1151,7 @@ The variable {{sentence-end}} can be set to a regular expression to customize th
 [[# next-sentence-note]]
 ++ [#next-sentence next sentence]
 
-If the point is mid-sentence, how to go the the end of the sentence.  If already at the end of the sentence, how to go the end of the following sentence.
+If the point is mid-sentence, how to go the end of the sentence.  If already at the end of the sentence, how to go the end of the following sentence.
 
 [[# start-paragraph-note]]
 ++ [#start-paragraph start of paragraph]

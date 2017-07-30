@@ -2279,7 +2279,7 @@ The parens are necessary because compound assignment has lower precedence than t
 
 The caveat about primitive types is necessary because the {{++}} operator can be overloaded.  In fact the prefix and postfix versions can be overloaded separately.
 
-In the case of the the postfix operator, the following are equivalent for primitive types:
+In the case of the postfix operator, the following are equivalent for primitive types:
 
 [[code]]
 cout << i-- << endl;
@@ -3051,7 +3051,7 @@ How to iterate over a resizable array.
 
 **C++**
 
-The range-based for loop was introduced in C++11.  It it can be used to iterate over an initialization list:
+The range-based for loop was introduced in C++11.  It can be used to iterate over an initialization list:
 
 [[code]]
 for (const auto& n: {1, 2, 3}) {
