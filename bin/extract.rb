@@ -21,15 +21,6 @@ puts '<link rel="icon" type="image/gif" href="/favicon.gif"/>'
 puts '<link rel="apple-touch-icon" sizes="120x120" href="touch-icon-iphone-retina.png" />'
 puts '<link rel="apple-touch-icon" sizes="152x152" href="touch-icon-ipad-retina.png" />'
 noko.xpath('//head//title').each { |node| puts node.to_xhtml }
-puts <<EOF
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-  (adsbygoogle = window.adsbygoogle || []).push({
-    google_ad_client: "ca-pub-4658173209343852",
-    enable_page_level_ads: true
-  });
-</script>
-EOF
 if math
   puts <<EOF
 <script type="text/javascript"
