@@ -1,11 +1,11 @@
 [[# top]]//a side-by-side reference sheet//
 
-[#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#fixed-length-arrays fixed-length-arrays] | [#resizable-arrays resizable arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#concurrency concurrency] | [#file-handles file handles] | [#files files] | [#directories directories] | [#processes-environment processes and environment] | [#option-parsing option parsing] | [#libraries-namespaces libraries and namespaces] | [#user-defined-types user-defined types] | [#cpp-macros c preprocessor macros] | [#net-web net and web] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling]
+[#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#fixed-length-arrays fixed-length-arrays] | [#resizable-arrays resizable arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#concurrency concurrency] | [#file-handles file handles] | [#files files] | [#file-fmt file formats] | [#directories directories] | [#processes-environment processes and environment] | [#option-parsing option parsing] | [#libraries-namespaces libraries and namespaces] | [#user-defined-types user-defined types] | [#cpp-macros c preprocessor macros] | [#net-web net and web] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling]
 
 ||||||~ [[# version]][#version-note version]||
 ||~ ||~ [#c c]||~ [#go go]||
 ||[[# version-used]][#version-used-note version used] _
-@<&nbsp;>@||##gray|//C11//, //gcc 4.8//, //clang 3.5//##||##gray|//1.4//##||
+@<&nbsp;>@||##gray|//C11//, //gcc 4.8//, //clang 3.5//##||##gray|//1.10//##||
 ||[[# show-version]][#show-version-note show version] _
 @<&nbsp;>@||$ gcc @@--@@version||$ go version||
 ||[[# implicit-prologue]][#implicit-prologue-note implicit prologue]||#include <errno.h> _
@@ -39,7 +39,7 @@ $ go build hello.go _
 $ ./hello _
 Hello, World!||
 ||[[# file-suffixes]][#file-suffixes-note file suffixes] _
-##gray|//source, header, object file//##||.c .h .o|| ||
+##gray|//source, header, object file//##||.c .h .o||.go ##gray|//none//## ##gray|//none//##||
 ||[[# stmt-separator]][#stmt-separator-note statement separator]||;||; ##gray|//or sometimes newline//## _
  _
 ##gray|//a new line terminates a statement when the last token on the line is _
@@ -105,7 +105,8 @@ Global and static variables are zero-initialized. _
 Heap variables allocated by// calloc //have their bytes zeroed.//##||##gray|//Every type has a zero value.  For numeric types it is zero and for strings it is the empty string.//##||
 ||[[# compile-time-const]][#compile-time-const-note compile time constant]||##gray|/* usually preprocessor is used: */## _
 #define PI 3.14||const Pi = 3.14||
-||[[# immutable-var]][#immutable-var-note immutable variable]||const int i = rand();||##gray|//none//##||
+||[[# immutable-var]][#immutable-var-note immutable variable] _
+@<&nbsp;>@||const int i = rand();||##gray|//none//##||
 ||[[# assignment]][#assignment-note assignment]||i = 3;||##gray|@@//@@ defines variable of appropriate type:## _
 i := 3 _
  _
@@ -340,13 +341,22 @@ x := rand.Float64()||
 rand.Seed(17)||
 ||[[# bit-op]][#bit-op-note bit operators] _
 @<&nbsp;>@||@@ << >> & | ^ ~ @@||@@<< >> & |@@ ##gray|//none//## ^||
+||[[# binary-octal-hex]][#binary-octal-hex-note binary, octal, and hex literals]||##gray|//none//## _
+052 _
+0x2a||##gray|//none//## _
+052 _
+0x2a||
 ||||||~ [[# strings]][#strings-note strings]||
 ||~ ||~ c||~ go||
 ||[[# str-type]][#str-type-note string type] _
 @<&nbsp;>@||char * _
 wchar_t * _
  _
-##gray|wchar_t //is typically 32 bits on Linux and 16 bits on Windows.//##||string||
+##gray|wchar_t //is typically 32 bits on Linux and 16 bits on Windows.//##||##gray|@@//@@ immutable:## _
+string _
+ _
+##gray|@@//@@ mutable:## _
+[]byte||
 ||[[# str-literal]][#str-literal-note string literal] _
 @<&nbsp;>@||##gray|/* string in initialized data segment: */## _
 char *s = "hello"; _
@@ -360,7 +370,10 @@ wchar_t *ws2 = wcsdup(ws); _
 @<&nbsp;&nbsp;&nbsp;>@errno to ENOMEM. */##||"hello" _
  _
 ##gray|@@//@@ raw string literal:## _
-@@`hello`@@||
+@@`hello`@@ _
+ _
+##gray|@@//@@ convert literal to mutable string:## _
+[]byte("hello")||
 ||[[# newline-in-str-literal]][#newline-in-str-literal-note newline in string literal]||##gray|/* compiler concatenates literals _
 @<&nbsp;&nbsp;&nbsp;>@separated by whitespace: */## _
 char *s = "first line\n" _
@@ -372,7 +385,6 @@ second line@@`@@||
  _
 \a \b \f \n \r \t \v \\ \" _
 \##gray|//ooo//## \x##gray|//hh//## \u##gray|//hhhh//## \U##gray|//hhhhhhhh//##||
-||[[# expr-interpolation]][#expr-interpolation-note expression interpolation]||##gray|//none//##|| ||
 ||[[# compare-str]][#compare-str-note compare strings]||##gray|/* == and < compare memory addresses: */## _
  _
 strcmp("hello", "world") == 0 _
@@ -478,7 +490,7 @@ strings.Index("hello", "ll")||
 snprintf(buf, 100, "%s: %d", "Spain", 7); _
  _
 wchar_t buf2[100]; _
-swprintf(buf2, 100, L"%S: %d", L"Spain", 7);|| ||
+swprintf(buf2, 100, L"%S: %d", L"Spain", 7);||buf := fmt.Sprintf("%s: %d", "Spain", 7)||
 ||[[# translate-case]][#translate-case-note translate case] _
  _
 ##gray|//to upper, to lower//##||char *s = strdup("hello"); _
@@ -521,16 +533,38 @@ snprintf(buf, 100, "%-10s", "hello"); _
 ##gray|/* pad left: */## _
 snprintf(buf, 100, "%10s", "hello"); _
  _
-##gray|/* also swprintf */##|| ||
+##gray|/* also swprintf */##||right_pad := fmt.Sprintf("%-10s\n", "hello") _
+left_pad := fmt.Sprintf("%10s\n", "hello")||
 ||[[# str-len]][#str-len-note length] _
 @<&nbsp;>@||strlen("hello") _
-wcslen(L"hello")||len("hello")||
+wcslen(L"hello")||s := "αλφα" _
+ _
+char_length := 0 _
+##gray|@@//@@ iterate over characters, setting i to index and rune_val _
+@@//@@ to Unicode point. Bad bytes get code point 0xFFFD:## _
+for i, rune_val := range s { _
+@<&nbsp;&nbsp;>@fmt.Printf("%d %d\n", i, rune_val) _
+@<&nbsp;&nbsp;>@char_length += 1 _
+} _
+ _
+fmt.Printf("bytes: %d chars: %d\n", len(s), char_length)||
 ||[[# char-type]][#char-type-note character type]||char _
-wchar_t||rune||
+wchar_t||byte _
+rune||
 ||[[# char-literal]][#char-literal-note character literal]||'A' _
-L'A'|| ||
+L'A'||##gray|//none//##||
 ||[[# char-lookup]][#char-lookup-note character lookup]||"lorem ipsum"[6] _
-L"lorem ipsum"[6]|| ||
+L"lorem ipsum"[6]||##gray|@@//@@ 7th byte:## _
+"lorem ipsum"[6] _
+ _
+##gray|@@//@@ 7th char:## _
+s := "αλφα βητα" _
+var ch rune _
+for i, rune_val := range s { _
+@<&nbsp;&nbsp;>@if i == 6 { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@ch = rune_val _
+@<&nbsp;&nbsp;>@} _
+}||
 ||[[# char-index]][#char-index-note character index]||char *s = "aaa bbb ccc"; _
 char *p; _
 size_t n; _
@@ -551,20 +585,29 @@ printf("first %ld chars not in set\n", n); _
 ||[[# char-tests]][#char-tests-note character tests]||#include <ctype.h> _
 #include <wctype.h> _
  _
-isascii _
-isrune _
-iscntrl _
-isgraph _
-isalpha _
-isspace _
-isupper _
-islower _
-isalnum _
-isdigit _
-isxdigit _
-ispunct _
+isascii(ch) _
+isrune(ch) _
+iscntrl(ch) _
+isgraph(ch) _
+isalpha(ch) _
+isspace(ch) _
+isupper(ch) _
+islower(ch) _
+isalnum(ch) _
+isdigit(ch) _
+isxdigit(ch) _
+ispunct(ch) _
  _
-##gray|/* also: iswascii, iswrune, @@...@@ */##|| ||
+##gray|/* also: iswascii, iswrune, @@...@@ */##||import "unicode" _
+ _
+unicode.IsControl(ch) _
+unicode.IsGraphic(ch) _
+unicode.IsLetter(ch) _
+unicode.IsSpace(ch) _
+unicode.IsUpper(ch) _
+unicode.IsLower(ch) _
+unicode.IsDigit(ch) _
+unicode.IsPunct(ch)||
 ||[[# chr-ord]][#chr-ord-note chr and ord]||##gray|/* Character types are integer types so no conversion is necessary.  Use %c and %C to print a character like a string of length one. */## _
 char ch = 'A'; _
 wchar_t ch2 = L'A'; _
@@ -572,7 +615,9 @@ wchar_t ch2 = L'A'; _
 int i = ch + 7; _
 int i2 = ch2 + 7; _
  _
-wprintf(L"%c %d %C %d\n", ch, ch, ch2, ch2);|| ||
+wprintf(L"%c %d %C %d\n", ch, ch, ch2, ch2);||##gray|/* Character types are integer types so no conversion is necessary.  Use %c to print a character like a string of length one. */## _
+ _
+fmt.Printf("lambda: %c\n", 0x3bb)||
 ||||||~ [[# regexes]][#regexes-note regular expressions]||
 ||~ ||~ c||~ go||
 ||[[# regex-metachar]][#regex-metachar-note metacharacters]||##gray|/* REG_BASIC: */## _
@@ -790,9 +835,9 @@ int *a = calloc(10, sizeof *a);||##gray|//compiler decides location in memory//#
 ||[[# free-array-on-heap]][#free-array-on-heap-note free heap] _
 @<&nbsp;>@||free(a);||##gray|//none; garbage collected//##||
 ||[[# array-literal]][#array-literal-note literal] _
-@<&nbsp;>@||int a[] = {1, 2, 3};||a := []int{1, 2, 3}||
+@<&nbsp;>@||int a[] = {1, 2, 3};||##gray|//none//##||
 ||[[# array-size]][#array-size-note size] _
-@<&nbsp;>@|| ||len(a)||
+@<&nbsp;>@||sizeof(a) / sizeof(a[0])||len(a)||
 ||[[# array-lookup]][#array-lookup-note lookup] _
 @<&nbsp;>@||a[0]||a[0]||
 ||[[# array-update]][#array-update-note update] _
@@ -808,7 +853,10 @@ for (i = 0; i < 3; ++i) { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@loc = i; _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@break; _
 @<&nbsp;&nbsp;>@} _
-}||a := []string{"foo", "bar", "baz"} _
+}||var a [3]string _
+a[0] = "foo" _
+a[1] = "bar" _
+a[2] = "baz" _
 loc := -1 _
  _
 for i, val := range a { _
@@ -816,20 +864,10 @@ for i, val := range a { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@loc = i _
 @<&nbsp;&nbsp;>@} _
 }||
-||[[# slice-array]][#slice-array-note slice]||int *a2; _
+||[[# copy-array]][#copy-array-note copy]||int a[3] = {1, 2, 3}; _
+int b[3]; _
  _
-a2 = a[2];||a := []string{"a", "b", "c", "d", "e"} _
- _
-##gray|@@//@@ {"c", "d"}:## _
-a2 := a[2:4]||
-||[[# slice-array-to-end]][#slice-array-to-end-note slice to end]|| ||a := []string{"a", "b", "c", "d", "e"} _
- _
-##gray|@@//@@ {"c", "d", "e"}:## _
-a2 := a[2:]||
-||[[# concatenate-array]][#concatenate-array-note concatenate]|| ||a := []int{1, 2, 3} _
-a2 := []int{4, 5, 6} _
-a3 := append(a, a2@@...@@)||
-||[[# copy-array]][#copy-array-note copy]|| ||a := []int{1, 2, 3} _
+memcpy(b, a, sizeof(a));||a := []int{1, 2, 3} _
  _
 a2 := a _
 ##gray|@@//@@ also sets a[0] to 4:## _
@@ -843,12 +881,14 @@ a3[0] = 5||
  _
 for (i = 0; i < 10; ++i ) { _
 @<&nbsp;&nbsp;>@a[i] = i * i; _
-}|| ||
-||[[# iterate-indices-elem]][#iterate-indices-elem-note iterate over indices and elements]|| || ||
-||[[# reverse-array]][#reverse-array-note reverse]|| ||import "sort" _
+}||var a [10]int _
  _
-a := []int{1, 2, 3} _
-sort.Sort(sort.Reverse(sort.IntSlice(a)))||
+for i, _ := range a { _
+@<&nbsp;&nbsp;>@a[i] = i * i _
+} _
+for _, num := range a { _
+@<&nbsp;&nbsp;>@fmt.Printf("%d\n", num) _
+}||
 ||[[# sort-array]][#sort-array-note sort]||int _
 compare(const void *a, const void *b) { _
 @<&nbsp;&nbsp;>@if (*(int *)a < *(int *)b) { _
@@ -865,26 +905,35 @@ compare(const void *a, const void *b) { _
 int a[5] = {6, 8, 10, 9, 7}; _
  _
 ##gray|/* 2nd arg is array length; 3rd arg is element size */## _
-qsort(a, 5, sizeof (int), &compare);|| ||
+qsort(a, 5, sizeof (int), &compare);||##gray|//convert to resizable array//##||
 ||||||~ [[# resizable-arrays]][#resizable-arrays-note resizable arrays]||
 ||~ ||~ c||~ go||
-||[[# declare-array]][#declare-array-note declare]|| ||##gray|@@//@@ slice of length 5; capacity 10:## _
-a := make([]int, 5, 10)||
-||[[# array-literal]][#array-literal-note literal]|| ||a := []int{1, 2, 3}||
-||[[# array-size]][#array-size-note size] _
+||[[# declare-resizable-array]][#declare-resizable-array-note declare]|| ||##gray|@@//@@ Resizable arrays are called slices. _
+@@//@@ To declare a slice instead of a fixed-length array, _
+@@//@@ omit the length from the type:## _
+var a []int _
+##gray|@@//@@ slice of length 5; capacity 10:## _
+a = make([]int, 5, 10)||
+||[[# resizable-array-literal]][#resizable-array-literal-note literal] _
+@<&nbsp;>@|| ||a := []int{1, 2, 3}||
+||[[# resizable-array-size]][#resizable-array-size-note size] _
 @<&nbsp;>@|| ||len(a) _
  _
 ##gray|@@//@@ number of elements that can be stored in allocated memory; _
 @@//@@ runtime reallocates when needed:## _
 cap(a)||
-||[[# array-lookup]][#array-lookup-note lookup] _
+||[[# resizable-array-lookup]][#resizable-array-lookup-note lookup] _
 @<&nbsp;>@|| ||a[0]||
-||[[# array-update]][#array-update-note update] _
+||[[# resizable-array-update]][#resizable-array-update-note update] _
 @<&nbsp;>@|| ||a[0] = 4||
-||[[# array-out-of-bounds]][#array-out-of-bounds-note out-of-bounds behavior]|| ||##gray|panic: index out of range## _
- _
-##gray|//if compiler detects a problem the code won't compile//##||
-||[[# array-element-index]][#array-element-index-note element index]|| ||a := []string{"foo", "bar", "baz"} _
+||[[# resizable-to-fixed]][#resizable-to-fixed-note resizable to fixed array]|| ||resizable := []int{1, 2, 3} _
+var fixed [3]int _
+copy(fixed[:], resizable)||
+||[[# fixed-to-resizable]][#fixed-to-resizable-note fixed to resizable array]|| ||var resizable2 []int _
+resizable2 = fixed[:]||
+||[[# resizable-array-out-of-bounds]][#resizable-array-out-of-bounds-note out-of-bounds behavior] _
+@<&nbsp;>@|| ||##gray|//Both lookups and updates cause panics when out-of-bounds//##|| 
+||[[# resizable-array-element-index]][#resizable-array-element-index-note element index]|| ||a := []string{"foo", "bar", "baz"} _
 loc := -1 _
  _
 for i, val := range a { _
@@ -892,24 +941,28 @@ for i, val := range a { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@loc = i _
 @<&nbsp;&nbsp;>@} _
 }||
-||[[# slice-array]][#slice-array-note slice]|| ||a := []string{"a", "b", "c", "d", "e"} _
+||[[# slice-resizable-array]][#slice-resizable-array-note slice]|| ||a := []string{"a", "b", "c", "d", "e"} _
  _
 ##gray|@@//@@ {"c", "d"}:## _
 a2 := a[2:4]||
-||[[# slice-array-to-end]][#slice-array-to-end-note slice to end]|| ||a := []string{"a", "b", "c", "d", "e"} _
+||[[# slice-resizable-array-to-end]][#slice-resizable-array-to-end-note slice to end]|| ||a := []string{"a", "b", "c", "d", "e"} _
  _
 ##gray|@@//@@ {"c", "d", "e"}:## _
 a2 := a[2:]||
-||[[# array-back]][#array-back-note manipulate back]|| ||a := []int{1, 2, 3} _
+||[[# resizable-array-back]][#resizable-array-back-note manipulate back]|| ||a := []int{1, 2, 3} _
  _
 a = append(a, 4) _
 num := a[len(a) - 1] _
 a = a[:len(a) - 1]||
-||[[# array-front]][#array-front-note manipulate front]|| || ||
-||[[# concatenate-array]][#concatenate-array-note concatenate]|| ||a := []int{1, 2, 3} _
+||[[# resizable-array-front]][#resizable-array-front-note manipulate front]|| ||a := []int{1, 2, 3} _
+ _
+a = append([]int{0}, a@@...@@) _
+num := a[0] _
+a = a[1:]||
+||[[# concatenate-resizable-array]][#concatenate-resizable-array-note concatenate]|| ||a := []int{1, 2, 3} _
 a2 := []int{4, 5, 6} _
 a3 := append(a, a2@@...@@)||
-||[[# copy-array]][#copy-array-note copy]|| ||a := []int{1, 2, 3} _
+||[[# copy-resizable-array]][#copy-resizable-array-note copy]|| ||a := []int{1, 2, 3} _
  _
 a2 := a _
 ##gray|@@//@@ also sets a[0] to 4:## _
@@ -919,7 +972,7 @@ a3 := make([]int, len(a)) _
 copy(a3, a) _
 ##gray|@@//@@ a[0] is unchanged:## _
 a3[0] = 5||
-||[[# iterate-over-array]][#iterate-over-array-note iterate over elements]|| ||a := []string{"do", "re", "mi"} _
+||[[# iterate-over-resizable-array]][#iterate-over-resizable-array-note iterate over elements]|| ||a := []string{"do", "re", "mi"} _
 for _, s := range(a) { _
 @<&nbsp;&nbsp;>@fmt.Printf("value: %s\n", s) _
 }||
@@ -927,14 +980,22 @@ for _, s := range(a) { _
 for i, s := range(a) { _
 @<&nbsp;&nbsp;>@fmt.Printf("value at %d: %s\n", i, s) _
 }||
-||[[# reverse-array]][#reverse-array-note reverse]|| ||import "sort" _
+||[[# reverse-resizable-array]][#reverse-resizable-array-note reverse]|| ||import "sort" _
  _
 a := []int{1, 2, 3} _
 sort.Sort(sort.Reverse(sort.IntSlice(a)))||
-||[[# sort-array]][#sort-array-note sort]|| || ||
-||[[# map]][#map-note map]|| ||##gray|//none//##||
-||[[# filter]][#filter-note filter]|| ||##gray|//none//##||
-||[[# reduce]][#reduce-note reduce]|| ||##gray|//none//##||
+||[[# sort-resizable-array]][#sort-resizable-array-note sort]|| ||unsortedInts := []int{3, 1, 4, 2} _
+sortedInts := sort.IntSlice(unsortedInts) _
+sort.Sort(sortedInts) _
+##gray|@@//@@ sortedInts is now []int{1, 2, 3, 4}## _
+ _
+floats := []float64{3.0, 1.0, 4.0, 2.0} _
+sort.Float64s(floats) _
+##gray|@@//@@ floats is now []float64{1.0, 2.0, 3.0, 4.0}## _
+ _
+strs := []string{"b", "a", "d", "c"} _
+sort.Strings(strs) _
+##gray|@@//@@ strs is now []string{"a", "b", "c", "d"}##||
 ||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
 ||~ ||~ c||~ go||
 ||[[# declare-dict]][#declare-dict-note declare] _
@@ -957,7 +1018,6 @@ val, ok = d["y"]]||
 ||[[# dict-iter]][#dict-iter-note iterate]|| ||for k, v := range d { _
 @<&nbsp;&nbsp;>@fmt.Printf("%s: %d\n", k, v) _
 }||
-||[[# dict-key-val-arrays]][#dict-key-val-arrays-note keys and values as arrays]|| || ||
 ||||||~ [[# functions]][#functions-note functions]||
 ||~ ||~ c||~ go||
 ||[[# def-func]][#def-func-note define function]||int add(int n, int m) { _
@@ -987,9 +1047,12 @@ fmt.Printf("%f\n", add(2.2, 3.5)) _
 func add(n float32, m float32) float32 { _
 @<&nbsp;&nbsp;>@return n + m _
 }||
-||[[# overload-func]][#overload-func-note overload function]||##gray|//not permitted//##||##gray|//not permitted//##||
-||[[# nest-func]][#nest-func-note nest function]||##gray|//not permitted//##||##gray|//not permitted//##||
-||[[# default-val-param]][#default-val-param-note default value for parameter]||##gray|//none//##||##gray|//none//##||
+||[[# overload-func]][#overload-func-note overload function] _
+@<&nbsp;>@||##gray|//not permitted//##||##gray|//not permitted//##||
+||[[# nest-func]][#nest-func-note nest function] _
+@<&nbsp;>@||##gray|//not permitted//##||##gray|//not permitted//##||
+||[[# default-val-param]][#default-val-param-note default value for parameter] _
+@<&nbsp;>@||##gray|//none//##||##gray|//none//##||
 ||[[# variable-num-arg]][#variable-num-arg-note variable number of arguments]||#include <stdarg.h> _
  _
 char* concat(int cnt,  @@...@@) { _
@@ -1025,27 +1088,41 @@ char *s = concat(4, "Hello", ", ", "World", "!");||func concat(strs @@...@@strin
  _
 @<&nbsp;&nbsp;>@return ret _
 }||
-||[[# named-param]][#named-param-note named parameters]||##gray|//none//##||##gray|//none//##||
-||[[# pass-by-val]][#pass-by-val-note pass by value]||void use_integer(int i) { _
-@<&nbsp;&nbsp;>@##gray|//function body//## _
+||[[# named-param]][#named-param-note named parameters] _
+@<&nbsp;>@||##gray|//none//##||##gray|//none//##||
+||[[# pass-by-val]][#pass-by-val-note pass by value]||void print_integer(int i) { _
+@<&nbsp;&nbsp;>@printf("integer: %d\n", i); _
+} _
+ _
+int i = 7; _
+print_integer(i);||func print_integer(i int) { _
+@<&nbsp;>@fmt.Printf("integer: %d\n", i) _
+} _
+ _
+i := 7 _
+print_integer(i)||
+||[[# pass-by-addr]][#pass-by-addr-note pass by address]||void print_iptr(int *i) { _
+@<&nbsp;&nbsp;>@printf("integer: %d\n", *i); _
 } _
  _
 int i = 7; _
  _
-use_integer(i);|| ||
-||[[# pass-by-addr]][#pass-by-addr-note pass by address]||void use_iptr(int *i) { _
-@<&nbsp;&nbsp;>@##gray|//function body//## _
+print_iptr(&i);||func print_iptr(i *int) { _
+@<&nbsp;&nbsp;>@fmt.Printf("integer: %d\n", *i); _
 } _
  _
-int i = 7; _
- _
-use_iptr(&i);|| ||
-||[[# pass-by-ref]][#pass-by-ref-note pass by reference]||##gray|//not possible//##|| ||
+i := 7 _
+print_iptr(&i)||
 ||[[# retval]][#retval-note return value]||##gray|return //arg//##||##gray|return //arg.  If return values have names and no arguments are provided to// return //the values assigned to the return variables are used.//##||
 ||[[# no-retval]][#no-retval-note no return value]||##gray|/* declare function void: */## _
 void print_err(char *msg) { _
 @<&nbsp;&nbsp;>@fprintf(stderr, msg); _
-}|| ||
+}||import "os" _
+ _
+func print_err(msg string) { _
+@<&nbsp;&nbsp;>@os.Stderr.WriteString(msg) _
+@<&nbsp;&nbsp;>@os.Stderr.WriteString("\n") _
+}||
 ||[[# multiple-retval]][#multiple-retval-note multiple return values]||##gray|//not permitted//##||func divmod(m, n int) (int, int) { _
 @<&nbsp;&nbsp;>@return m / n, m % n _
 } _
@@ -1067,14 +1144,27 @@ func x_is_7() { _
 @<&nbsp;&nbsp;>@x = 8 _
 @<&nbsp;&nbsp;>@defer os.Stdout.WriteString("x is ") _
 }||
-||[[# anonymous-func-literal]][#anonymous-func-literal-note anonymous function literal]||##gray|//none//##||  ||
-||[[# invoke-anonymous-func]][#invoke-anonymous-func-note invoke anonymous function]|| || ||
+||[[# anonymous-func-literal]][#anonymous-func-literal-note anonymous function literal]||##gray|//none//##||square := func(i int) int { _
+@<&nbsp;&nbsp;>@return i * i _
+}||
+||[[# invoke-anonymous-func]][#invoke-anonymous-func-note invoke anonymous function] _
+@<&nbsp;>@||##gray|//none//##||square(7)||
 ||[[# func-private-state]][#func-private-state-note function with private state]||int _
 counter() { _
 @<&nbsp;&nbsp;>@static int n = 0; _
  _
 @<&nbsp;&nbsp;>@return ++n; _
-}|| ||
+}||##gray|//none//##||
+||[[# closure]][#closure-note closure]||##gray|//none//##||func make_counter() func() int { _
+@<&nbsp;&nbsp;>@i := 0 _
+@<&nbsp;&nbsp;>@return func() int { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@i += 1 _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return i _
+@<&nbsp;&nbsp;>@} _
+} _
+ _
+counter := make_counter() _
+fmt.Printf("%d\n", counter())||
 ||[[# func-as-val]][#func-as-val-note function as value]||int _
 add(int m, int n) { _
 @<&nbsp;&nbsp;>@return m + n; _
@@ -1084,7 +1174,7 @@ add(int m, int n) { _
 @<&nbsp;&nbsp;>@its address can */## _
 int (* fp)(int, int) = &add; _
  _
-printf("1 + 2: %d\n", (*fp)(1, 2));|| ||
+printf("1 + 2: %d\n", (*fp)(1, 2));||##gray|//Cannot get the address of a named function.//##||
 ||||||~ [[# execution-control]][#execution-control-note execution control]||
 ||~ ||~ c||~ go||
 ||[[# if]][#if-note if]||int signum; _
@@ -1235,7 +1325,8 @@ caller() { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@printf("unexpected setjump value\n"); _
 @<&nbsp;&nbsp;>@} _
 }||##gray|//none//##||
-||[[# finally-block]][#finally-block-note finally block]|| || ||
+||[[# finally-block]][#finally-block-note finally block] _
+@<&nbsp;>@||##gray|//none//##||##gray|//none, but see// "execute on return"##||
 ||||||~ [[# concurrency]][#concurrency-note concurrency]||
 ||~ ||~ c||~ go||
 ||[[# sleep]][#sleep-note sleep]||#include <unistd.h> _
@@ -1565,6 +1656,27 @@ if err == nil { _
 @<&nbsp;&nbsp;>@fmt.Printf("writing to: %s\n", f.Name()) _
 @<&nbsp;&nbsp;>@f.WriteString("foo content") _
 }||
+||||||~ [[# file-fmt]][#file-fmt-note file formats]||
+||~ ||~ c||~ go||
+||[[# parse-json]][#parse-json-note parse json]|| ||import "encoding/json" _
+ _
+type TruthTable struct { _
+@<&nbsp;&nbsp;>@T int @@`json:T`@@ _
+@<&nbsp;&nbsp;>@F int @@`json:F`@@ _
+} _
+ _
+bytes := []byte(`{"T": 1, "F": 0}`) _
+var truthTable TruthTable _
+err := json.Unmarshal(bytes, &truthTable)||
+||[[# generate-json]][#generate-json-note generate json]|| ||import "encoding/json" _
+ _
+type TruthTable struct { _
+@<&nbsp;&nbsp;>@T int @@`json:T`@@ _
+@<&nbsp;&nbsp;>@F int @@`json:F`@@ _
+} _
+ _
+truthTable := TruthTable{T: 1, F: 0} _
+bytes, err := json.Marshal(truthTable)||
 ||||||~ [[# directories]][#directories-note directories]||
 ||~ ||~ c||~ go||
 ||[[# working-dir]][#working-dir-note working directory]|| ||import "os" _
@@ -2506,6 +2618,9 @@ The bit operations: right shift, left shift, and, or, exclusive or, and not.
 
 Note that ^ is bit-not and not exclusive-or like in C.
 
+[[# binary-octal-hex-note]]
+++ [#binary-octal-hex binary, octal, and hex literals]
+
 [[# strings-note]]
 + [#strings Strings]
 
@@ -2546,9 +2661,6 @@ char *metavars = "foo"
 ++ [#str-literal-esc string escapes]
 
 Escape sequences in string literals.
-
-[[# expr-interpolation-note]]
-++ [#expr-interpolation expression interpolation]
 
 [[# compare-str-note]]
 ++ [#compare-str compare strings]
@@ -2863,9 +2975,6 @@ for (i=0; a[i]; i++) {
 }
 [[/code]]
 
-[[# iterate-indices-elem-note]]
-++ [#iterate-indices-elem iterate over indices and elements]
-
 [[# reverse-array-note]]
 ++ [#reverse-array reverse]
 
@@ -2876,50 +2985,26 @@ How to reverse the elements of an array.
 
 How to sort the elements of an array.
 
-[[# map-note]]
-++ [#map map]
-
-[[# filter-note]]
-++ [#filter filter]
-
-[[# reduce-note]]
-++ [#reduce reduce]
-
 [[# resizable-arrays-note]]
 + [#resizable-arrays Resizable Arrays]
 
-[[# declare-array-note]]
-++ [#declare-array declare]
+[[# declare-resizable-array-note]]
+++ [#declare-resizable-array declare]
 
-How to declare an array variable.
+How to declare a resizable array variable.
 
-[[# allocate-array-on-stack-note]]
-++ [#allocate-array-on-stack allocate on stack]
+[[# resizable-array-literal-note]]
+++ [#resizable-array-literal literal]
 
-How to allocate an array on the stack.
+Syntax for a resizable array literal.
 
-[[# allocate-array-on-heap-note]]
-++ [#allocate-array-on-heap allocate on heap]
+[[# resizable-array-size-note]]
+++ [#resizable-array-size size]
 
-How to allocate an array on the heap.
+How many elements are stored in a resizable array.
 
-[[# free-array-on-heap-note]]
-++ [#free-array-on-heap free heap]
-
-How to free an array that was allocated on the heap.
-
-[[# array-literal-note]]
-++ [#array-literal literal]
-
-Syntax for an array literal.
-
-[[# array-size-note]]
-++ [#array-size size]
-
-How many elements are stored in an array.
-
-[[# array-lookup-note]]
-++ [#array-lookup lookup]
+[[# resizable-array-lookup-note]]
+++ [#resizable-array-lookup lookup]
 
 How to get an element by index.
 
@@ -2933,41 +3018,65 @@ int x = a[4];
 int y = *(a+4);
 [[/code]]
 
-[[# array-update-note]]
-++ [#array-update update]
+[[# resizable-array-update-note]]
+++ [#resizable-array-update update]
 
 How to set or change the element stored at an index.
 
-[[# array-out-of-bounds-note]]
-++ [#array-out-of-bounds out-of-bounds behavior]
+[[# resizable-to-fixed-note]]
+++ [#resizable-to-fixed resizable to fixed array]
+
+How to convert a resizable array to a fixed array.
+
+[[# fixed-to-resizable-note]]
+++ [#fixed-to-resizable fixed to resizable array]
+
+How to convert a fixed array to a resizable array.
+
+[[# resizable-array-out-of-bounds-note]]
+++ [#resizable-array-out-of-bounds out-of-bounds behavior]
 
 What happens when an attempt is made to access an element at an invalid index.
 
-[[# array-element-index-note]]
-++ [#array-element-index element index]
+[[# resizable-array-element-index-note]]
+++ [#resizable-array-element-index element index]
 
-[[# slice-array-note]]
-++ [#slice-array slice]
+How to get the index of an element in a resizable array.
 
-[[# slice-array-to-end-note]]
-++ [#slice-array-to-end slice to end]
+[[# slice-resizable-array-note]]
+++ [#slice-resizable-array slice]
 
-[[# array-back-note]]
-++ [#array-back manipulate back]
+How to slice a resizable array.
 
-[[# array-front-note]]
-++ [#array-front manipulate front]
+[[# slice-resizable-array-to-end-note]]
+++ [#slice-resizable-array-to-end slice to end]
 
-[[# concatenate-array-note]]
-++ [#concatenate-array concatenate]
+How to slice a resizable array to the end.
 
-[[# copy-array-note]]
-++ [#copy-array copy]
+[[# resizable-array-back-note]]
+++ [#resizable-array-back manipulate back]
 
-[[# iterate-over-array-note]]
-++ [#iterate-over-array iterate over elements]
+How to add and remove elements from the back of a resizable array.
 
-How to iterate over the elements of an array.
+[[# resizable-array-front-note]]
+++ [#resizable-array-front manipulate front]
+
+How to add and remove elements from the front of a resizable array.
+
+[[# concatenate-resizable-array-note]]
+++ [#concatenate-resizable-array concatenate]
+
+How to concatenate resizable arrays.
+
+[[# copy-resizable-array-note]]
+++ [#copy-resizable-array copy]
+
+How to copy a resizable array.
+
+[[# iterate-over-resizable-array-note]]
+++ [#iterate-over-resizable-array iterate over elements]
+
+How to iterate over the elements of a resizable array.
 
 **c:**
 
@@ -2984,24 +3093,17 @@ for (i=0; a[i]; i++) {
 [[# iterate-indices-elem-note]]
 ++ [#iterate-indices-elem iterate over indices and elements]
 
-[[# reverse-array-note]]
-++ [#reverse-array reverse]
+How to iterate over the indices and elements of a resizable array.
 
-How to reverse the elements of an array.
+[[# reverse-resizable-array-note]]
+++ [#reverse-resizable-array reverse]
 
-[[# sort-array-note]]
-++ [#sort-array sort]
+How to reverse the elements of a resizable array.
 
-How to sort the elements of an array.
+[[# sort-resizable-array-note]]
+++ [#sort-resizable-array sort]
 
-[[# map-note]]
-++ [#map map]
-
-[[# filter-note]]
-++ [#filter filter]
-
-[[# reduce-note]]
-++ [#reduce reduce]
+How to sort the elements of a resizable array.
 
 [[# dictionaries-note]]
 + [#dictionaries Dictionaries]
@@ -3032,9 +3134,6 @@ How to sort the elements of an array.
 
 [[# dict-iter-note]]
 ++ [#dict-iter iterate]
-
-[[# dict-key-val-arrays]]
-++ [#dict-key-val-arrays keys and values as arrays]
 
 [[# functions-note]]
 + [#functions Functions]
@@ -3132,9 +3231,6 @@ string *s = concat("Hello", ", ", "World", "!", NULL);
 [[# pass-by-addr-note]]
 ++ [#pass-by-addr pass by address]
 
-[[# pass-by-ref-note]]
-++ [#pass-by-ref pass by reference]
-
 [[# retval-note]]
 ++ [#retval return value]
 
@@ -3184,6 +3280,9 @@ Multiple on-return functions are evaluated in LIFO order.
 
 [[# func-private-state-note]]
 ++ [#func-private-state function with private state]
+
+[[# closure-note]]
+++ [#closure closure]
 
 [[# func-as-val-note]]
 ++ [#func-as-val function as value]
@@ -3428,6 +3527,9 @@ Can the process read, write, or executable the file?
 
 [[# unused-file-name-note]]
 ++ [#unused-file-name generate unused file name]
+
+[[# file-fmt-note]]
++ [#file-fmt File Formats]
 
 [[# directories-note]]
 + [#directories Directories]
