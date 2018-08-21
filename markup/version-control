@@ -262,11 +262,11 @@ tip //refers to the most recent revision in the repository.//##||
 ||abort rebase||$ git rebase @@--@@abort|| ||
 ||squash commits||$ git rebase -i COMMIT _
  _
-##gray|//commits after COMMIT can be squashed//##|| ||
+##gray|commits after COMMIT can be squashed; change all after first from "pick" to "squash"##|| ||
 ||apply commit to current branch||$ git cherry-pick COMMIT ||$ hg graft -r REV||
 ||continue cherry pick||$ git cherry-pick @@--@@continue|| ||
 ||abort cherry pick||$ git cherry-pick @@--@@abort|| ||
-||create detached head from branch and sequence of commits||$ git rebase --onto BRANCH COMMIT1 COMMIT2|| ||
+||create detached head from branch and sequence of commits||$ git rebase @@--@@onto BRANCH COMMIT1 COMMIT2|| ||
 ||||||~ [[# history]][#history-note history]||
 ||~ ||~ [#git git]||~ [#hg hg]||
 ||write version of file to standard out||$ git show COMMIT:FILE||$ hg cat -r REV FILE||
@@ -301,7 +301,7 @@ tip //refers to the most recent revision in the repository.//##||
 ##gray|-f: //follow copied and renamed files//##||
 ||commits which touched lines||$ git log -L NUM,NUM:PATH|| ||
 ||one line commits||$ git log @@--@@oneline|| ||
-||format string for commit||$ git log --pretty=format:FORMAT _
+||format string for commit||$ git log @@--@@pretty=format:FORMAT _
  _
 ##gray|//format string specifiers:// _
  _
