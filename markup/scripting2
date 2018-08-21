@@ -1,11 +1,11 @@
 [[# top]]//a side-by-side reference sheet//
 
-**[[[scripting|sheet one]]]:** [[[scripting#grammar-invocation|grammar and invocation]]] | [[[scripting#var-expr|variables and expressions]]] | [[[scripting#arithmetic-logic|arithmetic and logic]]] | [[[scripting#strings|strings]]] | [[[scripting#regexes|regexes]]] | [[[scripting#dates-time|dates and time]]] | [[[scripting#arrays|arrays]]] | [[[scripting#dictionaries|dictionaries]]] | [[[scripting#functions|functions]]] | [[[scripting#execution-control|execution control]]] | [[[scripting#exceptions|exceptions]]] | [[[scripting#threads|threads]]]
+**[[[scripting|sheet one]]]:** [[[scripting#version|version]]] | [[[scripting#grammar-invocation|grammar and invocation]]] | [[[scripting#var-expr|variables and expressions]]] | [[[scripting#arithmetic-logic|arithmetic and logic]]] | [[[scripting#strings|strings]]] | [[[scripting#regexes|regexes]]] | [[[scripting#dates-time|dates and time]]] | [[[scripting#arrays|arrays]]] | [[[scripting#dictionaries|dictionaries]]] | [[[scripting#functions|functions]]] | [[[scripting#execution-control|execution control]]] | [[[scripting#exceptions|exceptions]]] | [[[scripting#threads|threads]]]
 
-**sheet two:** [#streams streams] | [#async asynchronous events] | [#files files] | [#file-fmt file formats] | [#directories directories ] | [#processes-environment processes and environment] | [#option-parsing option parsing] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#inheritance-polymorphism inheritance and polymorphism] | [#reflection reflection] | [#net-web net and web] | [#databases databases] | [#unit-tests unit tests] | [#logging logging] | [#debugging debugging]
+**sheet two:** [#streams streams] | [#async asynchronous events] | [#files files] | [#file-fmt file formats] | [#directories directories ] | [#processes-environment processes and environment] | [#option-parsing option parsing] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#reflection reflection] | [#net-web net and web] | [#databases databases] | [#unit-tests unit tests] | [#debugging debugging]
 
 ||||||||||~ [[# streams]][#streams-note streams]||
-||~  ||~ node.js||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ python||~ php||~ ruby||
 ||[[# read-stdin]][#read-stdin-note read from stdin] _
 @<&nbsp;>@||let readline = require('readline'); _
  _
@@ -14,33 +14,33 @@ let rl = readline.createInterface({ _
 }); _
 rl.on('line', (line) => { _
 @<&nbsp;&nbsp;>@##gray|@@//@@ this code executes once for each line## _
-});||$stdin = fopen('php:@@//@@stdin', 'r'); _
-$line = rtrim(fgets($stdin));||line = sys.stdin.readline() _
-s = line.rstrip('\r\n')||line = gets _
+});||line = sys.stdin.readline() _
+s = line.rstrip('\r\n')||$stdin = fopen('php:@@//@@stdin', 'r'); _
+$line = rtrim(fgets($stdin));||line = gets _
 s = line.chomp||
 ||[[# write-stdout]][#write-stdout-note write to stdout] _
-@<&nbsp;>@||console.log('Hello, World!');||echo "Hello, World!\n";||print('Hello, World!') _
+@<&nbsp;>@||console.log('Hello, World!');||print('Hello, World!') _
  _
-sys.stdout.write('Hello, World!\n')||puts "Hello, World!" _
+sys.stdout.write('Hello, World!\n')||echo "Hello, World!\n";||puts "Hello, World!" _
  _
 $stdout.write("Hello, World!\n")||
-||[[# write-fmt-stdout]][#write-fmt-stdout-note write format to stdout]|| ||printf("%.2f\n", M_PI);||import math _
+||[[# write-fmt-stdout]][#write-fmt-stdout-note write format to stdout]|| ||import math _
  _
-print('%.2f' % math.pi)||printf("%.2f\n", Math::PI)||
-||[[# write-stderr]][#write-stderr-note write to stderr]||console.error('bam!');||$stderr = fopen('php:@@//@@stderr', 'w'); _
-fwrite($stderr, "bam!\n");||sys.stderr.write('bam!\n')||$stderr.puts "bam!" _
+print('%.2f' % math.pi)||printf("%.2f\n", M_PI);||printf("%.2f\n", Math::PI)||
+||[[# write-stderr]][#write-stderr-note write to stderr]||console.error('bam!');||sys.stderr.write('bam!\n')||$stderr = fopen('php:@@//@@stderr', 'w'); _
+fwrite($stderr, "bam!\n");||$stderr.puts "bam!" _
  _
 $stderr.write("bam!\n")||
 ||[[# open-read]][#open-read-note open for reading] _
-@<&nbsp;>@|| ||$f = fopen("/etc/hosts", "r");||f  = open('/etc/hosts', _
+@<&nbsp;>@|| ||f  = open('/etc/hosts', _
 @<&nbsp;&nbsp;>@encoding='utf-8') _
  _
-##gray|# Python 2: use codecs.open()##||f = File.open("/etc/hosts",  "r:utf-8")||
+##gray|# Python 2: use codecs.open()##||$f = fopen("/etc/hosts", "r");||f = File.open("/etc/hosts",  "r:utf-8")||
 ||[[# open-read-bytes]][#open-read-bytes-note open for reading bytes]||let fs = require('fs'); _
  _
-let f = fs.openSync("/etc/hosts", "r");||$f = fopen("/etc/hosts", "r");||f = open('/etc/hosts', 'rb')||f = File.open("/etc/hosts", "rb")||
+let f = fs.openSync("/etc/hosts", "r");||f = open('/etc/hosts', 'rb')||$f = fopen("/etc/hosts", "r");||f = File.open("/etc/hosts", "rb")||
 ||[[# read-line]][#read-line-note read line] _
-@<&nbsp;>@|| ||$line = fgets($f);||f.readline()||f.gets||
+@<&nbsp;>@|| ||f.readline()||$line = fgets($f);||f.gets||
 ||[[# iterate-by-line]][#iterate-by-line-note iterate by line] _
 @<&nbsp;>@||const readline = require('readline'); _
 const fs = require('fs'); _
@@ -51,80 +51,80 @@ const rl = readline.createInterface({ _
 }); _
 rl.on('line', (line) => { _
 @<&nbsp;&nbsp;>@console.log(line); _
-});||while (!feof($f)) { _
+});||for line in f: _
+@<&nbsp;&nbsp;>@print(line)||while (!feof($f)) { _
 @<&nbsp;&nbsp;>@$line = fgets($f); _
 @<&nbsp;&nbsp;>@echo $line; _
-}||for line in f: _
-@<&nbsp;&nbsp;>@print(line)||f.each do |line| _
+}||f.each do |line| _
 @<&nbsp;&nbsp;>@print(line) _
 end||
 ||[[# read-file-str]][#read-file-str-note read file into string]||let fs = require('fs'); _
  _
-let s = fs.readFileSync('/etc/hosts', 'utf8');||$s = file_get_contents( _
-@<&nbsp;&nbsp;>@"/etc/hosts");||s = f.read()||s = f.read||
-||[[# read-file-array]][#read-file-array-note read file into array of strings]|| ||$a = file("/etc/hosts");||a = f.readlines()||a = f.lines.to_a||
+let s = fs.readFileSync('/etc/hosts', 'utf8');||s = f.read()||$s = file_get_contents( _
+@<&nbsp;&nbsp;>@"/etc/hosts");||s = f.read||
+||[[# read-file-array]][#read-file-array-note read file into array of strings]|| ||a = f.readlines()||$a = file("/etc/hosts");||a = f.lines.to_a||
 ||[[# read-fixed-len]][#read-fixed-len-note read fixed length]||let buf = Buffer.alloc(100); _
 ##gray|@@//@@ 3rd arg is offset into buf:## _
 let n = fs.readSync(f, buf, 0, 100); _
-let s = buf.toString('utf-8', 0, n);||$s = fread($f, 100);||s = f.read(100)||s = f.read(100)||
+let s = buf.toString('utf-8', 0, n);||s = f.read(100)||$s = fread($f, 100);||s = f.read(100)||
 ||[[# read-char]][#read-char-note read char] _
-@<&nbsp;>@|| ||$ch = fread($f, 1);||ch = f.read(1)||ch = f.readchar||
+@<&nbsp;>@|| ||ch = f.read(1)||$ch = fread($f, 1);||ch = f.readchar||
 ||[[# read-serialized-data]][#read-serialized-data-note read serialized data]||let fs = require('fs'); _
  _
 let s = fs.readFileSync("/tmp/data.json"); _
-let data = JSON.parse(s);||$s = file_get_contents("/tmp/data"); _
-$data = unserialize($s);||import pickle _
+let data = JSON.parse(s);||import pickle _
  _
 with open('/tmp/data.pickle', 'rb') as f: _
-@<&nbsp;&nbsp;>@data = pickle.load(f)||File.open('/tmp/data.marshal') do |f| _
+@<&nbsp;&nbsp;>@data = pickle.load(f)||$s = file_get_contents("/tmp/data"); _
+$data = unserialize($s);||File.open('/tmp/data.marshal') do |f| _
 @<&nbsp;&nbsp;>@data = Marshal.load(f) _
 end||
 ||[[# open-write]][#open-write-note open for writing] _
 @<&nbsp;>@||let fs = require('fs'); _
  _
-let f = fs.openSync("/tmp/test", "w");||$f = fopen("/tmp/test", "w");||f = open('/tmp/test', 'w' _
+let f = fs.openSync("/tmp/test", "w");||f = open('/tmp/test', 'w' _
 @<&nbsp;&nbsp;>@encoding='utf-8') _
  _
-##gray|# Python 2: use codecs.open()##||f = File.open("/tmp/test", "w:utf-8")||
+##gray|# Python 2: use codecs.open()##||$f = fopen("/tmp/test", "w");||f = File.open("/tmp/test", "w:utf-8")||
 ||[[# open-write-bytes]][#open-write-bytes-note open for writing bytes]||let fs = require('fs'); _
  _
-let f = fs.openSync("/tmp/test", "w");||$f = fopen("/tmp/test", "w");||f = open('/tmp/test', 'wb')||f = File.open("/tmp/test", "wb")||
+let f = fs.openSync("/tmp/test", "w");||f = open('/tmp/test', 'wb')||$f = fopen("/tmp/test", "w");||f = File.open("/tmp/test", "wb")||
 ||[[# open-append]][#open-append-note open for appending]||et fs = require('fs'); _
  _
-let f = fs.openSync("/tmp/test", "a");||$f = fopen("/tmp/test", "a");||f = open('/tmp/err.log', 'a')||f = File.open("/tmp/err.log", "a")||
+let f = fs.openSync("/tmp/test", "a");||f = open('/tmp/err.log', 'a')||$f = fopen("/tmp/test", "a");||f = File.open("/tmp/err.log", "a")||
 ||[[# write-str]][#write-str-note write string] _
 @<&nbsp;>@||fs.writeSync(f, 'lorem ipsum'); _
  _
 ##gray|@@//@@ writeSync() takes String or Buffer arg. _
-@@//@@ A String is encoded as UTF-8.##||fwrite($f, "lorem ipsum"); || f.write('lorem ipsum')||f.write("lorem ipsum")||
+@@//@@ A String is encoded as UTF-8.##|| f.write('lorem ipsum')||fwrite($f, "lorem ipsum"); ||f.write("lorem ipsum")||
 ||[[# write-line]][#write-line-note write line] _
-@<&nbsp;>@||fs.writeSync(f, 'lorem ipsum\n');||fwrite($f, "lorem ipsum\n");||f.write('lorem ipsum\n')||f.puts("lorem ipsum")||
-||[[# write-fmt]][#write-fmt-note write format]|| ||fprintf($f, "%.2f\n", M_PI);||import math _
+@<&nbsp;>@||fs.writeSync(f, 'lorem ipsum\n');||f.write('lorem ipsum\n')||fwrite($f, "lorem ipsum\n");||f.puts("lorem ipsum")||
+||[[# write-fmt]][#write-fmt-note write format]|| ||import math _
  _
-f.write('%.2f\n', math.pi)||f.printf("%.2f\n", Math::PI)||
+f.write('%.2f\n', math.pi)||fprintf($f, "%.2f\n", M_PI);||f.printf("%.2f\n", Math::PI)||
 ||[[# write-char]][#write-char-note write char] _
-@<&nbsp;>@|| ||fwrite($f, "A");||f.write('A')||f.putc('A')||
+@<&nbsp;>@|| ||f.write('A')||fwrite($f, "A");||f.putc('A')||
 ||[[# write-serialized-data]][#write-serialized-data-note write serialized data]||let fs = require('fs'); _
  _
 let s = JSON.stringify({foo: [1, 2, 3]}); _
-fs.writeFileSync("/tmp/data.json", s);||$f = fopen("/tmp/data", "w"); _
-$data = ["foo" => [1, 2, 3]]; _
-fwrite($f, serialize($data)); _
-fclose($f);||import pickle _
+fs.writeFileSync("/tmp/data.json", s);||import pickle _
  _
 with open('/tmp/data.pickle', 'wb') as f: _
-@<&nbsp;&nbsp;>@pickle.dump({'foo': [1, 2, 3]}, f)||File.open('/tmp/data.marshal', 'w') do |f| _
+@<&nbsp;&nbsp;>@pickle.dump({'foo': [1, 2, 3]}, f)||$f = fopen("/tmp/data", "w"); _
+$data = ["foo" => [1, 2, 3]]; _
+fwrite($f, serialize($data)); _
+fclose($f);||File.open('/tmp/data.marshal', 'w') do |f| _
 @<&nbsp;&nbsp;>@Marshal.dump({'foo': [1, 2, 3]}, f) _
 end||
 ||[[# close]][#close-note close] _
-@<&nbsp;>@||fs.closeSync(f);||fclose($f);||f.close()||f.close||
-||[[# close-block-exit]][#close-block-exit-note close on block exit]|| ||##gray|//none//##||with open('/tmp/test', 'w') as f: _
-@<&nbsp;&nbsp;>@f.write('lorem ipsum\n')||File.open("/tmp/test", "w") do |f| _
+@<&nbsp;>@||fs.closeSync(f);||f.close()||fclose($f);||f.close||
+||[[# close-block-exit]][#close-block-exit-note close on block exit]|| ||with open('/tmp/test', 'w') as f: _
+@<&nbsp;&nbsp;>@f.write('lorem ipsum\n')||##gray|//none//##||File.open("/tmp/test", "w") do |f| _
 @<&nbsp;&nbsp;>@f.puts("lorem ipsum") _
 end||
 ||[[# flush]][#flush-note flush] _
-@<&nbsp;>@||##gray|writeSync() //isn't buffered//##||##gray|# CLI output isn't buffered## _
-fflush($f);|| f.flush()||f.flush||
+@<&nbsp;>@||##gray|writeSync() //isn't buffered//##|| f.flush()||##gray|# CLI output isn't buffered## _
+fflush($f);||f.flush||
 ||[[# seek]][#seek-note position] _
  _
 ##gray|//get, set//##||##gray|@@//@@ no get## _
@@ -133,9 +133,9 @@ let buf = Buffer.alloc(100); _
 ##gray|@@//@@ 5th arg is where in file to start read:## _
 fs.readSync(f, buf, 0, 100, 0); _
 ##gray|@@//@@ 3rd arg is where in file to start write:## _
-fs.writeSync(f2, buf, 0);||ftell($f) _
-fseek($f, 0);||f.tell() _
-f.seek(0)||f.tell _
+fs.writeSync(f2, buf, 0);||f.tell() _
+f.seek(0)||ftell($f) _
+fseek($f, 0);||f.tell _
 f.seek(0) _
  _
 f.pos _
@@ -147,17 +147,17 @@ let fs = require('fs'); _
 let file = tmp.fileSync(); _
 fs.writeSync(file.fd, 'lorem ipsum'); _
 console.log(@@`@@tmp file: ${file.name}@@`@@); _
-fs.closeSync(file.fd);||$f = tmpfile(); _
-fwrite($f, "lorem ipsum\n"); _
-##gray|# no way to get file name## _
-fclose($f); _
- _
-##gray|# file is removed when file handle is closed##||import tempfile _
+fs.closeSync(file.fd);||import tempfile _
  _
 f = tempfile.NamedTemporaryFile() _
 f.write('lorem ipsum\n') _
 print("tmp file: %s" % f.name) _
 f.close() _
+ _
+##gray|# file is removed when file handle is closed##||$f = tmpfile(); _
+fwrite($f, "lorem ipsum\n"); _
+##gray|# no way to get file name## _
+fclose($f); _
  _
 ##gray|# file is removed when file handle is closed##||require 'tempfile' _
  _
@@ -168,48 +168,48 @@ f.close _
  _
 ##gray|# file removed when file handle _
 # garbage-collected or interpreter exits##||
-||[[# open-in-memory-file]][#open-in-memory-file-note open in memory file]|| ||$meg = 1024 * 1024; _
-$mem = "php:@@//@@temp/maxmemory:$meg"; _
-$f = fopen($mem, "r+"); _
-fputs($f, "lorem ipsum"); _
-rewind($f); _
-$s = fread($f, $meg);||import io _
+||[[# open-in-memory-file]][#open-in-memory-file-note open in memory file]|| ||import io _
  _
 f = io.StringIO() _
 f.write('lorem ipsum\n') _
 s = f.getvalue() _
  _
-##gray|# Python2: in StringIO module##||require 'stringio' _
+##gray|# Python2: in StringIO module##||$meg = 1024 * 1024; _
+$mem = "php:@@//@@temp/maxmemory:$meg"; _
+$f = fopen($mem, "r+"); _
+fputs($f, "lorem ipsum"); _
+rewind($f); _
+$s = fread($f, $meg);||require 'stringio' _
  _
 f = StringIO.new _
 f.puts("lorem ipsum") _
 f.rewind _
 s = f.read||
 ||||||||||~ [[# async]][#async-note asynchronous events]||
-||~  ||~ node.js||~ php||~ python||~ ruby||
-||[[# start-event-loop]][#start-event-loop-note start event loop]|| || ||##gray|# Python 3.4 and later:## _
+||~  ||~ node.js||~ python||~ php||~ ruby||
+||[[# start-event-loop]][#start-event-loop-note start event loop]|| ||##gray|# Python 3.4 and later:## _
 import asyncio _
  _
-asyncio.BaseEventLoop.run_forever()|| ||
+asyncio.BaseEventLoop.run_forever()|| || ||
 ||[[# read-file-async]][#read-file-async-note read file asynchronously]|| || || || ||
 ||[[# write-file-async]][#write-file-async-note write file asynchronously]|| || || || ||
 ||[[# promise]][#promise-note promise]|| || || || ||
 ||||||||||~ [[# files]][#files-note files]||
-||~  ||~ node.js||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ python||~ php||~ ruby||
 ||[[# file-test]][#file-test-note file exists test, file regular test] _
 @<&nbsp;>@||let fs = require('fs'); _
  _
 let exists = fs.existsSync('/etc/hosts'); _
 let stat = fs.statSync('/etc/hosts'); _
-let regular = stat.isFile();||file_exists("/etc/hosts") _
-is_file("/etc/hosts")||os.path.exists('/etc/hosts') _
-os.path.isfile('/etc/hosts')||File.exists?("/etc/hosts") _
+let regular = stat.isFile();||os.path.exists('/etc/hosts') _
+os.path.isfile('/etc/hosts')||file_exists("/etc/hosts") _
+is_file("/etc/hosts")||File.exists?("/etc/hosts") _
 File.file?("/etc/hosts")||
 ||[[# file-size]][#file-size-note file size] _
 @<&nbsp;>@||let fs = require('fs'); _
  _
 let stat = fs.statSync('/etc/hosts'); _
-let size = stat.size;||filesize("/etc/hosts")||os.path.getsize('/etc/hosts')||File.size("/etc/hosts")||
+let size = stat.size;||os.path.getsize('/etc/hosts')||filesize("/etc/hosts")||File.size("/etc/hosts")||
 ||[[# readable-writable-executable]][#readable-writable-executable-note is file readable, writable, executable]||let fs = require('fs'); _
  _
 ##gray|@@//@@ no return values; exception thrown _
@@ -219,32 +219,32 @@ fs.accessSync('/etc/hosts', _
 fs.accessSync('/etc/hosts', _
 @<&nbsp;&nbsp;>@fs.constants.W_OK); _
 fs.accessSync('/etc/hosts', _
-@<&nbsp;&nbsp;>@fs.constants.X_OK);||is_readable("/etc/hosts") _
-is_writable("/etc/hosts") _
-is_executable("/etc/hosts")||os.access('/etc/hosts', os.R_OK) _
+@<&nbsp;&nbsp;>@fs.constants.X_OK);||os.access('/etc/hosts', os.R_OK) _
 os.access('/etc/hosts', os.W_OK) _
-os.access('/etc/hosts', os.X_OK)||File.readable?("/etc/hosts") _
+os.access('/etc/hosts', os.X_OK)||is_readable("/etc/hosts") _
+is_writable("/etc/hosts") _
+is_executable("/etc/hosts")||File.readable?("/etc/hosts") _
 File.writable?("/etc/hosts") _
 File.executable?("/etc/hosts")||
 ||[[# chmod]][#chmod-note set file permissions] _
 @<&nbsp;>@||let fs = require('fs'); _
  _
-fs.chmodSync('/tmp/foo', parseInt('755', 8));||chmod("/tmp/foo", 0755);||os.chmod('/tmp/foo', 0755)||File.chmod(0755, "/tmp/foo")||
+fs.chmodSync('/tmp/foo', parseInt('755', 8));||os.chmod('/tmp/foo', 0755)||chmod("/tmp/foo", 0755);||File.chmod(0755, "/tmp/foo")||
 ||[[# last-modification-time]][#last-modification-time-note last modification time]||let fs = require('fs'); _
  _
 let stat = fs.statSync('/etc/hosts'); _
-let dt = stat.mtime;||##gray|# unix epoch:## _
-$t = stat('/etc/passwd')['mtime']; _
- _
-##gray|# DateTime object:## _
-$t2 = new DateTime('UTC'); _
-$t2->setTimestamp($t);||from datetime import datetime as dt _
+let dt = stat.mtime;||from datetime import datetime as dt _
  _
 ##gray|# unix epoch:## _
 t = os.stat('/etc/passwd').st_mtime _
  _
 ##gray|# datetime object:## _
-t2 = dt.fromtimestamp(t)||##gray|# Time object:## _
+t2 = dt.fromtimestamp(t)||##gray|# unix epoch:## _
+$t = stat('/etc/passwd')['mtime']; _
+ _
+##gray|# DateTime object:## _
+$t2 = new DateTime('UTC'); _
+$t2->setTimestamp($t);||##gray|# Time object:## _
 t2 = File.stat('/etc/passwd').mtime _
  _
 ##gray|# unix epoch:## _
@@ -254,13 +254,13 @@ let fs = require('fs-extra'); _
  _
 fs.copySync('/tmp/foo', '/tmp/bar'); _
 fs.unlinkSync('/tmp/foo'); _
-fs.renameSync('/tmp/bar', '/tmp/foo');||copy("/tmp/foo", "/tmp/bar"); _
-unlink("/tmp/foo"); _
-rename("/tmp/bar", "/tmp/foo");||import shutil _
+fs.renameSync('/tmp/bar', '/tmp/foo');||import shutil _
  _
 shutil.copy('/tmp/foo', '/tmp/bar') _
 os.remove('/tmp/foo') _
-shutil.move('/tmp/bar', '/tmp/foo')||require 'fileutils' _
+shutil.move('/tmp/bar', '/tmp/foo')||copy("/tmp/foo", "/tmp/bar"); _
+unlink("/tmp/foo"); _
+rename("/tmp/bar", "/tmp/foo");||require 'fileutils' _
  _
 FileUtils.cp("/tmp/foo", "/tmp/bar") _
 FileUtils.rm("/tmp/foo") _
@@ -270,23 +270,23 @@ FileUtils.mv("/tmp/bar", "/tmp/foo")||
 fs.symlinkSync('/etc/hosts', '/tmp/hosts'); _
 let lstat = fs.lstatSync('/tmp/hosts'); _
 let isLink = lstat.isSymbolicLink(); _
-let path = fs.readlinkSync('/tmp/hosts');||symlink("/etc/hosts", "/tmp/hosts"); _
-is_link("/etc/hosts") _
-readlink("/tmp/hosts")||os.symlink('/etc/hosts', '/tmp/hosts') _
+let path = fs.readlinkSync('/tmp/hosts');||os.symlink('/etc/hosts', '/tmp/hosts') _
 os.path.islink('/tmp/hosts') _
-os.path.realpath('/tmp/hosts')||File.symlink("/etc/hosts", "/tmp/hosts") _
+os.path.realpath('/tmp/hosts')||symlink("/etc/hosts", "/tmp/hosts"); _
+is_link("/etc/hosts") _
+readlink("/tmp/hosts")||File.symlink("/etc/hosts", "/tmp/hosts") _
 File.symlink?("/etc/hosts") _
 File.realpath("/tmp/hosts")||
 ||[[# unused-file-name]][#unused-file-name-note generate unused file name]||##gray|@@//@@ npm install tempfile## _
 let tempfile = require('tempfile'); _
-let path = tempfile();||$path = tempnam("/tmp", "foo"); _
-$f = fopen($path, "w");||import tempfile _
+let path = tempfile();||import tempfile _
  _
 f, path = tempfile.mkstemp( _
 @<&nbsp;&nbsp;>@prefix='foo', _
-@<&nbsp;&nbsp;>@dir='/tmp')|| ||
+@<&nbsp;&nbsp;>@dir='/tmp')||$path = tempnam("/tmp", "foo"); _
+$f = fopen($path, "w");|| ||
 ||||||||||~ [[# file-fmt]][#file-fmt-note file formats]||
-||~  ||~ node.js||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ python||~ php||~ ruby||
 ||[[# parse-csv]][#parse-csv-note parse csv]||let fs = require('fs'); _
 ##gray|@@//@@ npm install csv## _
 let csv = require('csv'); _
@@ -297,55 +297,55 @@ f.pipe(csv.parse()).pipe( _
 @<&nbsp;&nbsp;>@csv.transform(function (record) { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@console.log(record.join('\t')); _
 @<&nbsp;&nbsp;>@}) _
-);||$f = fopen("no-header.csv", "r"); _
-while (($row = fgetcsv($f)) != FALSE) { _
-@<&nbsp;&nbsp;>@echo implode("\t", $row) . "\n"; _
-}||import csv _
+);||import csv _
  _
 with open('foo.csv') as f: _
 @<&nbsp;&nbsp;>@cr = csv.reader(f) _
 @<&nbsp;&nbsp;>@for row in cr: _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print('\t'.join(row))||require 'csv' _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print('\t'.join(row))||$f = fopen("no-header.csv", "r"); _
+while (($row = fgetcsv($f)) != FALSE) { _
+@<&nbsp;&nbsp;>@echo implode("\t", $row) . "\n"; _
+}||require 'csv' _
  _
 CSV.foreach("foo.csv") do |row| _
 @<&nbsp;&nbsp;>@puts row.join("\t") _
 end||
-||[[# generate-csv]][#generate-csv-note generate csv]|| || ||import csv _
+||[[# generate-csv]][#generate-csv-note generate csv]|| ||import csv _
  _
 with open('foo.csv', 'w') as f: _
 @<&nbsp;&nbsp;>@cw = csv.writer(f) _
 @<&nbsp;&nbsp;>@cw.writerow(['one', 'une', 'uno']) _
-@<&nbsp;&nbsp;>@cw.writerow(['two', 'deux', 'dos'])||require 'csv' _
+@<&nbsp;&nbsp;>@cw.writerow(['two', 'deux', 'dos'])|| ||require 'csv' _
  _
 CSV.open("foo.csv", "w") do |csv| _
 @<&nbsp;&nbsp;>@csv @@<<@@ ["one", "une", "uno"] _
 @<&nbsp;&nbsp;>@csv @@<<@@ ["two", "deux", "dos"] _
 end||
 ||[[# parse-json]][#parse-json-note parse json]||let s = '{"t":1,"f":0}'; _
-let data = JSON.parse(s);||$s1 = '{"t":1,"f":0}'; _
-$a1 = json_decode($s1, TRUE);||import json _
+let data = JSON.parse(s);||import json _
  _
-d = json.loads('{"t":1,"f":0}')||require 'json' _
+d = json.loads('{"t":1,"f":0}')||$s1 = '{"t":1,"f":0}'; _
+$a1 = json_decode($s1, TRUE);||require 'json' _
  _
 d = JSON.parse('{"t":1,"f":0}')||
 ||[[# generate-json]][#generate-json-note generate json]||let data = {'t': 1, 'f': 0}; _
-let s = JSON.stringify(data);||$a2 = array("t" => 1, "f" => 0); _
-$s2 = json_encode($a2);||import json _
+let s = JSON.stringify(data);||import json _
  _
-s = json.dumps({'t': 1, 'f': 0})||require 'json' _
+s = json.dumps({'t': 1, 'f': 0})||$a2 = array("t" => 1, "f" => 0); _
+$s2 = json_encode($a2);||require 'json' _
  _
 s = {'t' => 1,'f' => 0}.to_json||
-||[[# parse-yaml]][#parse-yaml-note parse yaml]|| || ||##gray|# sudo pip install PyYAML## _
+||[[# parse-yaml]][#parse-yaml-note parse yaml]|| ||##gray|# sudo pip install PyYAML## _
 import yaml _
  _
-data = yaml.safe_load('{f: 0, t: 1}\n')||##gray|# sudo gem install safe_yaml## _
+data = yaml.safe_load('{f: 0, t: 1}\n')|| ||##gray|# sudo gem install safe_yaml## _
 require 'safe_yaml' _
  _
 data = YAML.safe_load("@@---@@\nt: 1\nf: 0\n")||
-||[[# generate-yaml]][#generate-yaml-note generate yaml]|| || ||##gray|# sudo pip install PyYAML## _
+||[[# generate-yaml]][#generate-yaml-note generate yaml]|| ||##gray|# sudo pip install PyYAML## _
 import yaml _
  _
-s = yaml.safe_dump({'t': 1, 'f': 0})||##gray|# sudo gem install safe_yaml## _
+s = yaml.safe_dump({'t': 1, 'f': 0})|| ||##gray|# sudo gem install safe_yaml## _
 require 'safe_yaml' _
  _
 s = YAML.dump({'t' => 1, 'f' => 0})||
@@ -358,19 +358,7 @@ let xml = '<a><b><c ref="3">foo</c></b></a>'; _
 let doc = new dom().parseFromString(xml); _
 let nodes = xpath.select('/a/b/c', doc); _
 nodes.length; _
-nodes[0].firstChild.data;||$xml = "<a><b><c ref='3'>foo</c></b></a>"; _
- _
-##gray|# returns NULL and emits warning if not _
-# well-formed:## _
-$doc = simplexml_load_string($xml); _
- _
-$nodes = $doc->xpath("/a/b/c"); _
-echo count($nodes); _
-echo $nodes[0]; _
- _
-$node = $nodes[0]; _
-echo $node; _
-echo $node["ref"];||from xml.etree import ElementTree _
+nodes[0].firstChild.data;||from xml.etree import ElementTree _
  _
 xml = '<a><b><c ref="3">foo</c></b></a>' _
  _
@@ -384,7 +372,19 @@ print(nodes[0].text) _
  _
 node = doc.find('b/c') _
 print(node.text) _
-print(node.attrib['ref'])||require 'rexml/document' _
+print(node.attrib['ref'])||$xml = "<a><b><c ref='3'>foo</c></b></a>"; _
+ _
+##gray|# returns NULL and emits warning if not _
+# well-formed:## _
+$doc = simplexml_load_string($xml); _
+ _
+$nodes = $doc->xpath("/a/b/c"); _
+echo count($nodes); _
+echo $nodes[0]; _
+ _
+$node = $nodes[0]; _
+echo $node; _
+echo $node["ref"];||require 'rexml/document' _
 include REXML _
  _
 xml = "<a><b><c ref='3'>foo</c></b></a>" _
@@ -403,13 +403,7 @@ puts node.attributes["ref"]||
 ||[[# generate-xml]][#generate-xml-note generate xml]||##gray|@@//@@ npm install xmlbuilder## _
 let builder = require('xmlbuilder'); _
  _
-let xml = builder.create('a').ele('b', {id: 123}, 'foo').end();||$xml = "<a></a>"; _
-$sxe = new SimpleXMLElement($xml); _
-$b = $sxe->addChild("b", "foo"); _
-$b->addAttribute("id", "123"); _
- _
-##gray|# <a><b id="123">foo</b></a>:## _
-echo $sxe->asXML();||import xml.etree.ElementTree as ET _
+let xml = builder.create('a').ele('b', {id: 123}, 'foo').end();||import xml.etree.ElementTree as ET _
  _
 builder = ET.TreeBuilder() _
 builder.start('a', {}) _
@@ -420,7 +414,13 @@ builder.end('a') _
 et = builder.close() _
  _
 ##gray|# <a><b id="123">foo</b></a>:## _
-print(ET.tostring(et))||##gray|# gem install builder## _
+print(ET.tostring(et))||$xml = "<a></a>"; _
+$sxe = new SimpleXMLElement($xml); _
+$b = $sxe->addChild("b", "foo"); _
+$b->addAttribute("id", "123"); _
+ _
+##gray|# <a><b id="123">foo</b></a>:## _
+echo $sxe->asXML();||##gray|# gem install builder## _
 require 'builder' _
  _
 builder = Builder::XmlMarkup.new _
@@ -430,7 +430,14 @@ end _
  _
 ##gray|# <a><b id="123">foo</b></a>:## _
 puts xml||
-||[[# parse-html]][#parse-html-note parse html]|| ||$html = file_get_contents("foo.html"); _
+||[[# parse-html]][#parse-html-note parse html]|| ||##gray|# pip install beautifulsoup4## _
+import bs4 _
+ _
+html = open('foo.html').read() _
+doc = bs4.BeautifulSoup(html) _
+ _
+for link in doc.find_all('a'): _
+@<&nbsp;&nbsp;>@print(link.get('href'))||$html = file_get_contents("foo.html"); _
 $doc = new DOMDocument; _
 $doc->loadHTML($html); _
 $xpath = new DOMXPath($doc); _
@@ -438,14 +445,7 @@ $xpath = new DOMXPath($doc); _
 $nodes = $xpath->query("@@//@@a/@href"); _
 foreach($nodes as $href) { _
 @<&nbsp;&nbsp;>@echo $href->nodeValue; _
-}||##gray|# pip install beautifulsoup4## _
-import bs4 _
- _
-html = open('foo.html').read() _
-doc = bs4.BeautifulSoup(html) _
- _
-for link in doc.find_all('a'): _
-@<&nbsp;&nbsp;>@print(link.get('href'))||##gray|# gem install nokogiri## _
+}||##gray|# gem install nokogiri## _
 require 'nokogiri' _
  _
 html = File.open("foo.html").read _
@@ -454,39 +454,39 @@ doc = doc.xpath("@@//@@a").each do |link| _
 @<&nbsp;&nbsp;>@puts link["href"] _
 end||
 ||||||||||~ [[# directories]][#directories-note directories]||
-||~  ||~ node.js||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ python||~ php||~ ruby||
 ||[[# working-dir]][#working-dir-note working directory]||let old_dir = process.cwd(); _
  _
-process.chdir("/tmp");||$old_dir = getcwd(); _
+process.chdir("/tmp");||old_dir = os.path.abspath('.') _
  _
-chdir("/tmp");||old_dir = os.path.abspath('.') _
+os.chdir('/tmp')||$old_dir = getcwd(); _
  _
-os.chdir('/tmp')||old_dir = Dir.pwd _
+chdir("/tmp");||old_dir = Dir.pwd _
  _
 Dir.chdir("/tmp")||
 ||[[# build-pathname]][#build-pathname-note build pathname]||let path = require('path'); _
  _
-path.join('/etc', 'hosts');||"/etc" . DIRECTORY_SEPARATOR . "hosts"||os.path.join('/etc', 'hosts')||File.join("/etc", "hosts")||
+path.join('/etc', 'hosts');||os.path.join('/etc', 'hosts')||"/etc" . DIRECTORY_SEPARATOR . "hosts"||File.join("/etc", "hosts")||
 ||[[# dirname-basename]][#dirname-basename-note dirname and basename]||let path = require('path'); _
  _
 path.dirname('/etc/hosts') _
-path.basename('/etc/hosts')||dirname("/etc/hosts") _
-basename("/etc/hosts")||os.path.dirname('/etc/hosts') _
-os.path.basename('/etc/hosts')||File.dirname("/etc/hosts") _
+path.basename('/etc/hosts')||os.path.dirname('/etc/hosts') _
+os.path.basename('/etc/hosts')||dirname("/etc/hosts") _
+basename("/etc/hosts")||File.dirname("/etc/hosts") _
 File.basename("/etc/hosts")||
 ||[[# absolute-pathname]][#absolute-pathname-note absolute pathname] _
-##gray|//and tilde expansion//##|| ||##gray|# file must exist; symbolic links are _
+##gray|//and tilde expansion//##|| ||##gray|# symbolic links are not resolved: ## _
+os.path.abspath('foo') _
+os.path.abspath('/foo') _
+os.path.abspath('../foo') _
+os.path.abspath('./foo') _
+os.path.expanduser('~/foo')||##gray|# file must exist; symbolic links are _
 # resolved: ## _
 realpath("foo")  _
 realpath("/foo")  _
 realpath("../foo") _
 realpath("./foo") _
 ##gray|# no function for tilde expansion##||##gray|# symbolic links are not resolved: ## _
-os.path.abspath('foo') _
-os.path.abspath('/foo') _
-os.path.abspath('../foo') _
-os.path.abspath('./foo') _
-os.path.expanduser('~/foo')||##gray|# symbolic links are not resolved: ## _
 File.expand_path("foo") _
 File.expand_path("/foo") _
 File.expand_path("../foo") _
@@ -496,13 +496,13 @@ File.expand_path("~/foo")||
  _
 fs.readdirSync('/etc').forEach( _
 @<&nbsp;&nbsp;>@function(s) { console.log(s); } _
-);||if ($dir = opendir("/etc")) { _
+);||for filename in os.listdir('/etc'): _
+@<&nbsp;&nbsp;>@print(filename)||if ($dir = opendir("/etc")) { _
 @<&nbsp;&nbsp;>@while ($file = readdir($dir)) { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@echo "$file\n"; _
 @<&nbsp;&nbsp;>@} _
 @<&nbsp;&nbsp;>@closedir($dir); _
-}||for filename in os.listdir('/etc'): _
-@<&nbsp;&nbsp;>@print(filename)||Dir.open("/etc").each do |file| _
+}||Dir.open("/etc").each do |file| _
 @<&nbsp;&nbsp;>@puts file _
 end||
 ||[[# glob]][#glob-note glob paths]||##gray|@@//@@ npm install glob## _
@@ -512,12 +512,12 @@ glob('/etc/*', function(err, paths) { _
 @<&nbsp;&nbsp;>@paths.forEach(function(path) { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@console.log(path); _
 @<&nbsp;&nbsp;>@}); _
-});||foreach (glob("/etc/*") as $file) { _
-@<&nbsp;&nbsp;>@echo "$file\n"; _
-}||import glob _
+});||import glob _
  _
 for path in glob.glob('/etc/*'): _
-@<&nbsp;&nbsp;>@print(path)||Dir.glob("/etc/*").each do |path| _
+@<&nbsp;&nbsp;>@print(path)||foreach (glob("/etc/*") as $file) { _
+@<&nbsp;&nbsp;>@echo "$file\n"; _
+}||Dir.glob("/etc/*").each do |path| _
 @<&nbsp;&nbsp;>@puts path _
 end||
 ||[[# mkdir]][#mkdir-note make directory]||const fs = require('fs'); _
@@ -525,118 +525,118 @@ end||
 if (!fs.existsSync('/tmp/foo')) { _
 @<&nbsp;&nbsp;>@fs.mkdirSync('/tmp/foo', 0755); _
 } _
-fs.mkdirSync('/tmp/foo/bar', 0755);||mkdir("/tmp/foo/bar", 0755, TRUE);||dirname = '/tmp/foo/bar' _
+fs.mkdirSync('/tmp/foo/bar', 0755);||dirname = '/tmp/foo/bar' _
 if not os.path.isdir(dirname): _
-@<&nbsp;&nbsp;>@os.makedirs(dirname)||require 'fileutils' _
+@<&nbsp;&nbsp;>@os.makedirs(dirname)||mkdir("/tmp/foo/bar", 0755, TRUE);||require 'fileutils' _
  _
 FileUtils.mkdir_p("/tmp/foo/bar")||
-||[[# recursive-cp]][#recursive-cp-note recursive copy]|| ||##gray|//none//##||import shutil _
+||[[# recursive-cp]][#recursive-cp-note recursive copy]|| ||import shutil _
  _
 shutil.copytree('/tmp/foodir', _
-@<&nbsp;&nbsp;>@'/tmp/bardir')||require 'fileutils' _
+@<&nbsp;&nbsp;>@'/tmp/bardir')||##gray|//none//##||require 'fileutils' _
  _
 FileUtils.cp_r("/tmp/foodir", _
 @<&nbsp;&nbsp;>@"/tmp/bardir")||
 ||[[# rmdir]][#rmdir-note remove empty directory]||const fs = require('fs'); _
  _
-fs.rmdirSync('/tmp/foodir');||rmdir("/tmp/foodir");||os.rmdir('/tmp/foodir')||File.rmdir("/tmp/foodir")||
-||[[# rm-rf]][#rm-rf-note remove directory and contents]|| ||##gray|//none//##||import shutil _
+fs.rmdirSync('/tmp/foodir');||os.rmdir('/tmp/foodir')||rmdir("/tmp/foodir");||File.rmdir("/tmp/foodir")||
+||[[# rm-rf]][#rm-rf-note remove directory and contents]|| ||import shutil _
  _
-shutil.rmtree('/tmp/foodir')||require 'fileutils' _
+shutil.rmtree('/tmp/foodir')||##gray|//none//##||require 'fileutils' _
  _
 FileUtils.rm_rf("/tmp/foodir")||
 ||[[# dir-test]][#dir-test-note directory test] _
-@<&nbsp;>@|| ||is_dir("/tmp")||os.path.isdir('/tmp')||File.directory?("/tmp")||
+@<&nbsp;>@|| ||os.path.isdir('/tmp')||is_dir("/tmp")||File.directory?("/tmp")||
 ||[[# unused-dir]][#unused-dir-note generate unused directory]||const fs = require('fs'); _
  _
-const dir = fs.mkdtemp('/tmp/foo');|| ||import tempfile _
+const dir = fs.mkdtemp('/tmp/foo');||import tempfile _
  _
 path = tempfile.mkdtemp(dir='/tmp', _
-@<&nbsp;&nbsp;>@prefix='foo')||require 'tmpdir' _
+@<&nbsp;&nbsp;>@prefix='foo')|| ||require 'tmpdir' _
  _
 path = Dir.mktmpdir("/tmp/foo")||
-||[[# system-tmp-dir]][#system-tmp-dir-note system temporary file directory]|| ||sys_get_temp_dir()||import tempfile _
+||[[# system-tmp-dir]][#system-tmp-dir-note system temporary file directory]|| ||import tempfile _
  _
-tempfile.gettempdir()||require 'tmpdir' _
+tempfile.gettempdir()||sys_get_temp_dir()||require 'tmpdir' _
  _
 Dir.tmpdir||
 ||||||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
-||~  ||~ node.js||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ python||~ php||~ ruby||
 ||[[# cmd-line-arg]][#cmd-line-arg-note command line arguments] _
 ##gray|//and script name//##||process.argv.slice(2) _
 process.argv[1] _
-##gray|@@//@@ process.argv[0] contains "node"##||$argv _
-$_SERVER["SCRIPT_NAME"]||sys.argv[1:] _
-sys.argv[0]||ARGV _
+##gray|@@//@@ process.argv[0] contains "node"##||sys.argv[1:] _
+sys.argv[0]||$argv _
+$_SERVER["SCRIPT_NAME"]||ARGV _
 $PROGRAM_NAME||
 ||[[# env-var]][#env-var-note environment variable] _
  _
 ##gray|//get, set//##||process.env["HOME"] _
  _
-process.env["PATH"] = "/bin";||getenv("HOME") _
+process.env["PATH"] = "/bin";||os.getenv('HOME') _
  _
-putenv("PATH=/bin");||os.getenv('HOME') _
+os.environ['PATH'] = '/bin'||getenv("HOME") _
  _
-os.environ['PATH'] = '/bin'||ENV["HOME"] _
+putenv("PATH=/bin");||ENV["HOME"] _
  _
 ENV["PATH"] = "/bin"||
 ||[[# pid]][#pid-note get pid, parent pid]||process.pid _
-##gray|//none//##||posix_getpid() _
-posix_getppid()||os.getpid() _
-os.getppid()||Process.pid _
+##gray|//none//##||os.getpid() _
+os.getppid()||posix_getpid() _
+posix_getppid()||Process.pid _
 Process.ppid||
-||[[# user-id-name]][#user-id-name-note user id and name]|| ||$uid = posix_getuid(); _
-$uinfo = posix_getpwuid($uid); _
-$username = $uinfo["name"];||import getpass _
+||[[# user-id-name]][#user-id-name-note user id and name]|| ||import getpass _
  _
 os.getuid() _
-getpass.getuser()||require 'etc' _
+getpass.getuser()||$uid = posix_getuid(); _
+$uinfo = posix_getpwuid($uid); _
+$username = $uinfo["name"];||require 'etc' _
  _
 Process.uid _
 Etc.getpwuid(Process.uid)["name"]||
 ||[[# exit]][#exit-note exit] _
-@<&nbsp;>@||process.exit(0);||exit(0);||sys.exit(0)||exit(0)||
+@<&nbsp;>@||process.exit(0);||sys.exit(0)||exit(0);||exit(0)||
 ||[[# signal-handler]][#signal-handler-note set signal handler] _
-@<&nbsp;>@|| || ||import signal _
+@<&nbsp;>@|| ||import signal _
  _
 def handler(signo, frame): _
 @<&nbsp;&nbsp;>@print('exiting@@...@@') _
 @<&nbsp;&nbsp;>@sys.exit(1) _
  _
- signal.signal(signal.SIGINT, handler)||Signal.trap("INT", _
+ signal.signal(signal.SIGINT, handler)|| ||Signal.trap("INT", _
 @<&nbsp;&nbsp;>@lambda do |signo| _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@puts "exiting@@...@@" _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@exit 1 _
 @<&nbsp;&nbsp;>@end _
 )||
 ||[[# external-cmd]][#external-cmd-note external command] _
-@<&nbsp;>@|| ||system("ls -l /tmp", $retval); _
+@<&nbsp;>@|| ||if os.system('ls -l /tmp'): _
+@<&nbsp;&nbsp;>@raise Exception('ls failed')||system("ls -l /tmp", $retval); _
 if ($retval) { _
 @<&nbsp;&nbsp;>@throw new Exception("ls failed"); _
-}||if os.system('ls -l /tmp'): _
-@<&nbsp;&nbsp;>@raise Exception('ls failed')||unless system("ls -l /tmp") _
+}||unless system("ls -l /tmp") _
 @<&nbsp;&nbsp;>@raise "ls failed" _
 end||
 ||[[# shell-esc-external-cmd]][#shell-esc-external-cmd-note shell-escaped external command] _
-@<&nbsp;>@|| ||$path = chop(fgets(STDIN)); _
+@<&nbsp;>@|| ||import subprocess _
+ _
+cmd = ['ls', '-l', '/tmp'] _
+if subprocess.call(cmd): _
+@<&nbsp;&nbsp;>@raise Exception('ls failed')||$path = chop(fgets(STDIN)); _
 $safe = escapeshellarg($path); _
 system("ls -l " . $safe, $retval); _
 if ($retval) { _
 @<&nbsp;&nbsp;>@throw new Exception("ls failed"); _
-}||import subprocess _
- _
-cmd = ['ls', '-l', '/tmp'] _
-if subprocess.call(cmd): _
-@<&nbsp;&nbsp;>@raise Exception('ls failed')||path = gets _
+}||path = gets _
 path.chomp! _
 unless system("ls", "-l", path) _
 @<&nbsp;&nbsp;>@raise "ls failed" _
 end||
 ||[[# cmd-subst]][#cmd-subst-note command substitution] _
-@<&nbsp;>@|| ||$files = @@`@@ls -l /tmp@@`@@;||import subprocess _
+@<&nbsp;>@|| ||import subprocess _
  _
 cmd = ['ls', '-l', '/tmp'] _
-files = subprocess.check_output(cmd)||files = @@`@@ls -l /tmp@@`@@ _
+files = subprocess.check_output(cmd)||$files = @@`@@ls -l /tmp@@`@@;||files = @@`@@ls -l /tmp@@`@@ _
 unless $?.success? _
 @<&nbsp;&nbsp;>@raise "ls failed" _
 end _
@@ -646,19 +646,14 @@ unless $?.success? _
 @<&nbsp;&nbsp;>@raise "ls failed" _
 end||
 ||||||||||~ [[# option-parsing]][#option-parsing-note option parsing]||
-||~  ||~ node.js||~ php||~ python||~ ruby||
-||boolean flag||##gray|@@//@@ npm install commander## _
+||~  ||~ node.js||~ python||~ php||~ ruby||
+||[[# opt-boolean]][#opt-boolean-note boolean flag]||##gray|@@//@@ $ npm install commander## _
 program = require('commander'); _
  _
 program.option('-v, @@--@@verbose') _
 @<&nbsp;&nbsp;>@.parse(process.argv); _
  _
-let verbose = program.verbose;||$opts = getopt("v", ["verbose"]); _
- _
-if (array_key_exists("v", $opts) @@||@@ _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@array_key_exists("verbose", $opts)) { _
-@<&nbsp;&nbsp;>@$verbose = TRUE; _
-}||import argparse _
+let verbose = program.verbose;||import argparse _
  _
 parser = argparse.ArgumentParser() _
 parser.add_argument('@@--@@verbose', '-v', _
@@ -667,7 +662,12 @@ parser.add_argument('@@--@@verbose', '-v', _
 args = parser.parse_args() _
  _
 if args.verbose: _
-@<&nbsp;&nbsp;>@print('Setting output to verbose.')||require 'optparse' _
+@<&nbsp;&nbsp;>@print('Setting output to verbose.')||$opts = getopt("v", ["verbose"]); _
+ _
+if (array_key_exists("v", $opts) @@||@@ _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@array_key_exists("verbose", $opts)) { _
+@<&nbsp;&nbsp;>@$verbose = TRUE; _
+}||require 'optparse' _
  _
 options = {} _
 OptionParser.new do |opts| _
@@ -677,16 +677,13 @@ OptionParser.new do |opts| _
 end.parse! _
  _
 verbose = options[:verbose]||
-||string option||##gray|@@//@@ npm install commander## _
+||[[# opt-str]][#opt-str-note string option]||##gray|@@//@@ $ npm install commander## _
 program = require('commander'); _
  _
 program.option('-f, @@--@@file <file>') _
 @<&nbsp;&nbsp;>@.parse(process.argv); _
  _
-let file = program.file;||$opts = getopt("f:", ["file:"]); _
- _
-$file = $opts["f"] ? $opts["f"] : _
-@<&nbsp;&nbsp;>@$opts["file"];||import argparse _
+let file = program.file;||import argparse _
  _
 parser = argparse.ArgumentParser() _
 parser.add_argument('@@--@@input', '-i', _
@@ -696,7 +693,10 @@ args = parser.parse_args() _
 if args.input: _
 @<&nbsp;&nbsp;>@f = open(args.input) _
 else: _
-@<&nbsp;&nbsp;>@f = sys.stdin||require 'optparse' _
+@<&nbsp;&nbsp;>@f = sys.stdin||$opts = getopt("f:", ["file:"]); _
+ _
+$file = $opts["f"] ? $opts["f"] : _
+@<&nbsp;&nbsp;>@$opts["file"];||require 'optparse' _
  _
 options = {} _
 OptionParser.new do |opts| _
@@ -710,7 +710,18 @@ if options[:input].nil? _
 else _
 @<&nbsp;&nbsp;>@f = File.open(options[:input]) _
 end||
-||numeric option|| || ||import argparse _
+||[[# opt-num]][#opt-num-note numeric option]||##gray|@@//@@ $ npm install commander## _
+program = require('commander'); _
+program.option('-c, @@--@@count <n>', _
+@<&nbsp;&nbsp;>@'a count', parseInt); _
+program.option('-r, @@--@@ratio <n>', _
+@<&nbsp;&nbsp;>@'a ratio', parseFloat); _
+program.parse(process.argv); _
+ _
+if (program.count) _
+@<&nbsp;&nbsp;>@console.log(program.count); _
+if (program.ratio) _
+@<&nbsp;&nbsp;>@console.log(program.ratio);||import argparse _
  _
 parser = argparse.ArgumentParser() _
 parser.add_argument('@@--@@count', '-c', _
@@ -722,29 +733,59 @@ args = parser.parse_args() _
 if args.count: _
 @<&nbsp;&nbsp;>@print('Count: %d' % args.count) _
 if args.ratio: _
-@<&nbsp;&nbsp;>@print('Ratio: %.3f' % args.ratio)|| ||
-||unrecognized option behavior|| ||##gray|# Unrecognized options are ignored.  _
+@<&nbsp;&nbsp;>@print('Ratio: %.3f' % args.ratio)|| || ||
+||[[# opt-unrecognized]][#opt-unrecognized-note unrecognized option behavior]||##gray|@@//@@ error message and exit _
+@@//@@ with nonzero status##||##gray|# print usage and exit with nonzero status##||##gray|# Unrecognized options are ignored.  _
 # _
 # Also, an option declared to have an _
 # argument is ignored if the argument _
-# is not provided on the command line.##||##gray|# print usage and exit with nonzero status##|| ||
-||required option|| || ||import argparse _
+# is not provided on the command line.##|| ||
+||[[# opt-required]][#opt-required-note required option]||const fs = require('fs'); _
+##gray|@@//@@ $ npm install commander## _
+const program = require('commander'); _
+ _
+program.option('-i, @@--@@input <input>') _
+program.parse(process.argv); _
+ _
+if (program.input) { _
+@<&nbsp;&nbsp;>@let f = fs.openSync(program.input, 'r'); _
+} else { _
+@<&nbsp;&nbsp;>@console.log('required: @@--@@input'); _
+@<&nbsp;&nbsp;>@program.outputHelp(); _
+@<&nbsp;&nbsp;>@process.exit(1); _
+}||import argparse _
  _
 parser = argparse.ArgumentParser() _
 parser.add_argument('@@--@@input', '-i', _
 @<&nbsp;&nbsp;>@dest='input', required=True) _
 args = parser.parse_args() _
  _
-f = open(args.input)|| ||
-||default option|| || ||import argparse _
+f = open(args.input)|| || ||
+||[[# opt-default]][#opt-default-note default option]||##gray|@@//@@ $ npm install commander:## _
+const program = require('commander'); _
+ _
+program.option('-H, @@--@@hosts <hosts>', _
+@<&nbsp;&nbsp;>@'the hosts file', '/etc/hosts'); _
+program.parse(process.argv); _
+console.log('hosts: ' + program.hosts);||import argparse _
  _
 parser = argparse.ArgumentParser() _
 parser.add_argument('@@--@@hosts', '-H', _
 @<&nbsp;&nbsp;>@dest='hosts', default='/etc/hosts') _
 args = parser.parse_args() _
  _
-f = open(args.hosts)|| ||
-||repeated and delimited options|| || ||import argparse _
+f = open(args.hosts)|| || ||
+||[[# opt-delimited]][#opt-delimited-note delimited options]||##gray|@@//@@ $ npm install commander## _
+const program = require('commander'); _
+ _
+function comma_split(val) { _
+@<&nbsp;&nbsp;>@return val.split(','); _
+} _
+ _
+program.option('-w, @@--@@words <words>', _
+@<&nbsp;&nbsp;>@'comma-delimited', comma_split); _
+program.parse(process.argv); _
+console.log(program.words.length);||import argparse _
  _
 parser = argparse.ArgumentParser() _
 ##gray|# Take all arguments up to next flag. _
@@ -755,22 +796,57 @@ parser.add_argument('@@--@@words', '-w', _
 ##gray|# twiddle -w one two three## _
 args = parser.parse_args() _
 ##gray|# ['one', 'two', 'three']:## _
-args.words|| ||
-||positional parameters||##gray|@@//@@ Processing stops at first positional arg. _
+args.words|| || ||
+||[[# opt-repeated]][#opt-repeated-note repeated options]||##gray|@@//@@ $ npm install commander## _
+const program = require('commander'); _
+ _
+function collect(val, memo) { _
+@<&nbsp;&nbsp;>@memo.push(val); _
+@<&nbsp;&nbsp;>@return memo; _
+} _
+ _
+##gray|@@//@@ $ node twiddle.js -w one -w two -w three## _
+program.option('-w, @@--@@words <words>', _
+@<&nbsp;&nbsp;>@'repeatable flag', collect, []); _
+program.parse(process.argv); _
+console.log(program.words.length);||import argparse _
+ _
+parser = argparse.ArgumentParser() _
+parser.add_argument('@@--@@word', '-w', _
+@<&nbsp;&nbsp;>@dest='words', action='append') _
+ _
+##gray|# twiddle -w one -w two -w three## _
+args = parser.parse_args() _
+##gray|# ['one', 'two', 'three']:## _
+args.words|| || ||
+||[[# opt-positional]][#opt-positional-note positional parameters]||##gray|@@//@@ Processing stops at _
+@@//@@ first positional arg. _
 @@//@@  _
 @@//@@ Positional arguments are _
-@@//@@ in program.args.##||##gray|# Processing stops at first positional arg. _
+@@//@@ in program.args.##||import argparse _
+ _
+parser = argparse.ArgumentParser() _
+parser.add_argument('foo') _
+parser.add_argument('bar') _
+args = parser.parse_args() _
+print('foo: {}'.format(args.foo)) _
+print('bar: {}'.format(args.bar))||##gray|# Processing stops at first positional arg. _
 # _
 # getopt() does not modify $argv or _
 # provide means to identify positional _
 # arguments.##||##gray|# Options can follow positional args. _
-# _
-# Positional arguments are in _
-# args.positional_args##||##gray|# Options can follow positional args. _
 #  _
 # After calling OptionParser.parse! only _
 # positional arguments are in ARGV.##||
-||usage||##gray|@@//@@ npm install commander## _
+||[[# opt-positional-array]][#opt-positional-array-note positional parameters as array]|| ||import argparse _
+ _
+parser = argparse.ArgumentParser() _
+##gray|# '*' for zero or more args; _
+# '+' for 1 or more args:## _
+parser.add_argument('foo', nargs='*') _
+args = parser.parse_args() _
+print(len(args.foo))|| || ||
+||[[# opt-usage]][#opt-usage-note usage]||##gray|@@//@@ $ npm install commander## _
 program = require('commander'); _
  _
 ##gray|// The flags -h and @@--@@help are generated _
@@ -783,7 +859,17 @@ let input = program.input; _
 if (!input) { _
 @<&nbsp;&nbsp;>@program.outputHelp(); _
 @<&nbsp;&nbsp;>@process.exit(1); _
-}||$usage = "usage: " . _
+}||import argparse _
+ _
+parser = argparse.ArgumentParser( _
+@<&nbsp;&nbsp;>@description='Twiddles data') _
+parser.add_argument('@@--@@input', '-i', _
+@<&nbsp;&nbsp;>@dest='input', help='path of input file') _
+args = parser.parse_args() _
+ _
+if not args.input: _
+@<&nbsp;&nbsp;>@parser.print_help() _
+@<&nbsp;&nbsp;>@sys.exit(1)||$usage = "usage: " . _
 @<&nbsp;&nbsp;>@$_SERVER["SCRIPT_NAME"] . _
 @<&nbsp;&nbsp;>@" [-f FILE] [-v] [ARG @@...@@]\n"; _
  _
@@ -797,17 +883,7 @@ if (array_key_exists("h", $opts) @@||@@ _
 } _
  _
 $input = $opts["i"] ? $opts["i"] : _
-@<&nbsp;&nbsp;>@$opts["input"];||import argparse _
- _
-parser = argparse.ArgumentParser( _
-@<&nbsp;&nbsp;>@description='Twiddles data') _
-parser.add_argument('@@--@@input', '-i', _
-@<&nbsp;&nbsp;>@dest='input', help='path of input file') _
-args = parser.parse_args() _
- _
-if not args.input: _
-@<&nbsp;&nbsp;>@parser.print_help() _
-@<&nbsp;&nbsp;>@sys.exit(1)||require 'optparse' _
+@<&nbsp;&nbsp;>@$opts["input"];||require 'optparse' _
  _
 options = {} _
 OptionParser.new do |opts| _
@@ -821,13 +897,13 @@ OptionParser.new do |opts| _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@exit 1 _
 @<&nbsp;&nbsp;>@end _
 end.parse!||
-||subcommand|| || ||import argparse _
+||[[# opt-subcmd]][#opt-subcmd-note subcommand]|| ||import argparse _
  _
 def show(args): _
 @<&nbsp;&nbsp;>@print('showing@@...@@') _
  _
 def submit(args): _
-@<&nbsp;&nbsp;>@print('submitting {}@@...@@'.format(args.name)) _
+@<&nbsp;&nbsp;>@print('submitting {}'.format(args.name)) _
  _
 parser = argparse.ArgumentParser() _
 sub_ps = parser.add_subparsers() _
@@ -836,7 +912,7 @@ show_p = sub_ps.add_parser('show') _
 show_p.set_defaults(func=show) _
  _
 submit_p = sub_ps.add_parser('submit') _
-submit_p.add_argument('--name', '-n', _
+submit_p.add_argument('@@--@@name', '-n', _
 @<&nbsp;&nbsp;>@dest='name', required=True) _
 submit_p.set_defaults(func=submit) _
  _
@@ -845,65 +921,65 @@ if hasattr(args, 'func'): _
 @<&nbsp;&nbsp;>@args.func(args) _
 else: _
 @<&nbsp;&nbsp;>@parser.print_help() _
-@<&nbsp;&nbsp;>@sys.exit(1)|| ||
+@<&nbsp;&nbsp;>@sys.exit(1)|| || ||
 ||||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
-||~  ||~ node.js||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ python||~ php||~ ruby||
 ||[[# load-lib]][#load-lib-note load library] _
 @<&nbsp;>@||let foo = require('./foo.js'); _
  _
-let foo = require('foo');||require_once("foo.php");||##gray|# searches sys.path for foo.pyc or foo.py:## _
-import foo||require 'foo.rb' _
+let foo = require('foo');||##gray|# searches sys.path for foo.pyc or foo.py:## _
+import foo||require_once("foo.php");||require 'foo.rb' _
  _
 ##gray|# searches $LOAD_PATH for foo.rb, foo.so, _
 # foo.o, foo.dll:## _
 require 'foo'||
-||[[# load-lib-subdir]][#load-lib-subdir-note load library in subdirectory]||let bar = require('./foo/bar.js');||require_once('foo/bar.php');||##gray|# foo must contain @@__init__@@.py file## _
-import foo.bar||require 'foo/bar.rb' _
+||[[# load-lib-subdir]][#load-lib-subdir-note load library in subdirectory]||let bar = require('./foo/bar.js');||##gray|# foo must contain @@__init__@@.py file## _
+import foo.bar||require_once('foo/bar.php');||require 'foo/bar.rb' _
  _
 require 'foo/bar'||
 ||[[# hot-patch]][#hot-patch-note hot patch] _
 @<&nbsp;>@||delete require.cache[require.resolve('./foo.js')]; _
-let foo = require('./foo.js');||require("foo.php");||reload(foo)||load 'foo.rb'||
-||[[# load-err]][#load-err-note load error]||##gray|//raises// Errror //exception//##||##gray|require //and// require_once //raise fatal error if library not found;// include //and// include_once emit warnings##||##gray|//raises// ImportError //if library not found; exceptions generated when parsing library propagate to client//##||##gray|//raises// LoadError //if library not found; exceptions generated when parsing library propagate to client//##||
+let foo = require('./foo.js');||reload(foo)||require("foo.php");||load 'foo.rb'||
+||[[# load-err]][#load-err-note load error]||##gray|//raises// Errror //exception//##||##gray|//raises// ImportError //if library not found; exceptions generated when parsing library propagate to client//##||##gray|require //and// require_once //raise fatal error if library not found;// include //and// include_once emit warnings##||##gray|//raises// LoadError //if library not found; exceptions generated when parsing library propagate to client//##||
 ||[[# main-in-lib]][#main-in-lib-note main routine in library]||if (require.main == module) { _
 @<&nbsp;&nbsp;>@##gray|//code//## _
-}||##gray|//none//##||if @@__name__@@ == '@@__main__@@': _
-@<&nbsp;&nbsp;>@##gray|//code//##||if $PROGRAM_NAME == @@__FILE__@@ _
+}||if @@__name__@@ == '@@__main__@@': _
+@<&nbsp;&nbsp;>@##gray|//code//##||##gray|//none//##||if $PROGRAM_NAME == @@__FILE__@@ _
 @<&nbsp;&nbsp;>@##gray|//code//## _
 end||
-||[[# lib-path]][#lib-path-note library path]||##gray|//none//##||$libpath = ini_get("include_path"); _
+||[[# lib-path]][#lib-path-note library path]||##gray|//none//##||sys.path _
+ _
+sys.path.append('/some/path')||$libpath = ini_get("include_path"); _
  _
 ini_set("include_path", _
-@<&nbsp;&nbsp;>@$libpath . ":/some/path");||sys.path _
- _
-sys.path.append('/some/path')||##gray|# $: is synonym for $LOAD_PATH:## _
+@<&nbsp;&nbsp;>@$libpath . ":/some/path");||##gray|# $: is synonym for $LOAD_PATH:## _
 $LOAD_PATH _
  _
 $LOAD_PATH @@<<@@ "/some/path"||
-||[[# lib-path-env]][#lib-path-env-note library path environment variable]||$ NODE_PATH=~/lib node foo.js||##gray|//none//##||$ PYTHONPATH=~/lib python foo.py||$ RUBYLIB=~/lib ruby foo.rb||
+||[[# lib-path-env]][#lib-path-env-note library path environment variable]||$ NODE_PATH=~/lib node foo.js||$ PYTHONPATH=~/lib python foo.py||##gray|//none//##||$ RUBYLIB=~/lib ruby foo.rb||
 ||[[# lib-path-cmd-line]][#lib-path-cmd-line-note library path command line option]||##gray|//none//##||##gray|//none//##||##gray|//none//##||$ ruby -I ~/lib foo.rb||
-||[[# simple-global-identifiers]][#simple-global-identifiers-note simple global identifiers]|| ||##gray|//variables defined outside of functions or with// global //keyword//##||##gray|//built-in functions//##||##gray|//variables which start with// $##||
-||[[# multiple-label-identifiers]][#multiple-label-identifiers-note multiple label identifiers]|| ||##gray|//classes, interfaces, functions, and constants//##||##gray|//modules//##||##gray|//constants, classes, and modules//##||
+||[[# simple-global-identifiers]][#simple-global-identifiers-note simple global identifiers]|| ||##gray|//built-in functions//##||##gray|//variables defined outside of functions or with// global //keyword//##||##gray|//variables which start with// $##||
+||[[# multiple-label-identifiers]][#multiple-label-identifiers-note multiple label identifiers]|| ||##gray|//modules//##||##gray|//classes, interfaces, functions, and constants//##||##gray|//constants, classes, and modules//##||
 ||[[# label-separator]][#label-separator-note label separator] _
-@<&nbsp;>@|| ||\Foo\Bar\baz();||foo.bar.baz()||Foo::Bar.baz||
-||[[# root-namespace]][#root-namespace-note root namespace definition]|| ||\foo||##gray|//none//##||##gray|# outside of class or module; only _
+@<&nbsp;>@|| ||foo.bar.baz()||\Foo\Bar\baz();||Foo::Bar.baz||
+||[[# root-namespace]][#root-namespace-note root namespace definition]|| ||##gray|//none//##||\foo||##gray|# outside of class or module; only _
 # constants in root namespace:## _
 FOO = 3 _
  _
 ##gray|# inside class or module:## _
 ::FOO = 3||
 ||[[# namespace-decl]][#namespace-decl-note namespace declaration] _
-@<&nbsp;>@|| ||namespace Foo;||##gray|//put declarations in// foo.py##||class Foo _
+@<&nbsp;>@|| ||##gray|//put declarations in// foo.py##||namespace Foo;||class Foo _
 @<&nbsp;&nbsp;>@##gray|# class definition## _
 end _
  _
 module Foo _
 @<&nbsp;&nbsp;>@##gray|# module definition## _
 end||
-||[[# child-namespace-decl]][#child-namespace-decl-note child namespace declaration]|| ||namespace Foo\Bar;||##gray|foo //must be in// sys.path:## _
+||[[# child-namespace-decl]][#child-namespace-decl-note child namespace declaration]|| ||##gray|foo //must be in// sys.path:## _
 $ mkdir foo _
 $ touch foo/@@__init__@@.py _
-$ touch foo/bar.py||module Foo::Bar _
+$ touch foo/bar.py||namespace Foo\Bar;||module Foo::Bar _
 @<&nbsp;&nbsp;>@##gray|# module definitions## _
 end _
  _
@@ -916,26 +992,26 @@ end _
 ##gray|# classes can nest inside classes or _
 # modules; modules can nest in classes##||
 ||[[# import-def]][#import-def-note import definitions] _
-@<&nbsp;>@|| ||##gray|//only class names can be imported//##||from foo import bar, baz||##gray|//none//##||
+@<&nbsp;>@|| ||from foo import bar, baz||##gray|//only class names can be imported//##||##gray|//none//##||
 ||[[# import-namespace]][#import-namespace-note import all definitions in namespace] _
-@<&nbsp;>@|| ||##gray|//none//##||from foo import *||##gray|# inside class or module:## _
+@<&nbsp;>@|| ||from foo import *||##gray|//none//##||##gray|# inside class or module:## _
 include Foo||
-||[[# import-all-subnamespaces]][#import-all-subnamespaces-note import all subnamespaces]|| || ||##gray|# subnamespaces in list @@__all__@@ of _
+||[[# import-all-subnamespaces]][#import-all-subnamespaces-note import all subnamespaces]|| ||##gray|# subnamespaces in list @@__all__@@ of _
 # @@foo/__init__.py@@ are imported## _
-from foo import *|| ||
-||[[# shadow-avoidance]][#shadow-avoidance-note shadow avoidance]|| ||use Foo as Fu;||##gray|# rename namespace:## _
+from foo import *|| || ||
+||[[# shadow-avoidance]][#shadow-avoidance-note shadow avoidance]|| ||##gray|# rename namespace:## _
 import foo as fu _
  _
 ##gray|# rename identifier:## _
-from sys import path as the_path||Fu = Foo.dup _
+from sys import path as the_path||use Foo as Fu;||Fu = Foo.dup _
  _
 include Fu||
 ||[[# pkg-management]][#pkg-management-note list installed packages, install a package] _
-@<&nbsp;>@|| ||$ pear list _
-$ pear install Math_BigInteger||$ pip freeze _
-$ pip install jinja2||$ gem list _
+@<&nbsp;>@|| ||$ pip freeze _
+$ pip install jinja2||$ pear list _
+$ pear install Math_BigInteger||$ gem list _
 $ gem install rails||
-||[[# pkg-spec]][#pkg-spec-note package specification format]|| || ||##gray|//in// setup.py:## _
+||[[# pkg-spec]][#pkg-spec-note package specification format]|| ||##gray|//in// setup.py:## _
  _
 ##gray|#!/usr/bin/env python## _
  _
@@ -946,7 +1022,7 @@ setup( _
 @<&nbsp;&nbsp;>@author='Joe Foo', _
 @<&nbsp;&nbsp;>@version='1.0', _
 @<&nbsp;&nbsp;>@description='a package', _
-@<&nbsp;&nbsp;>@py_modules=['foo'])||##gray|//in// foo.gemspec:## _
+@<&nbsp;&nbsp;>@py_modules=['foo'])|| ||##gray|//in// foo.gemspec:## _
  _
 spec = Gem::Specification.new do |s| _
 @<&nbsp;&nbsp;>@s.name = "foo" _
@@ -956,20 +1032,20 @@ spec = Gem::Specification.new do |s| _
 @<&nbsp;&nbsp;>@s.files = Dir["lib/*.rb"] _
 end||
 ||||||||||~ [[# objects]][#objects-note objects]||
-||~  ||~ node.js||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ python||~ php||~ ruby||
 ||[[# def-class]][#def-class-note define class] _
 @<&nbsp;>@||function Int(i) { _
 @<&nbsp;&nbsp;>@this.value = i === undefined ? 0 : i; _
-}||class Int _
+}||class Int(object): _
+@<&nbsp;&nbsp;>@def @@__init__@@(self, v=0): _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@self.value = v||class Int _
 { _
 @<&nbsp;&nbsp;>@public $value; _
 @<&nbsp;&nbsp;>@function @@__@@construct($int=0) _
 @<&nbsp;&nbsp;>@{ _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@$this->value = $int; _
 @<&nbsp;&nbsp;>@} _
-}||class Int(object): _
-@<&nbsp;&nbsp;>@def @@__init__@@(self, v=0): _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@self.value = v||class Int _
+}||class Int _
 @<&nbsp;&nbsp;>@attr_accessor :value _
 @<&nbsp;&nbsp;>@def initialize(i=0) _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@value = i _
@@ -977,17 +1053,17 @@ end||
 end||
 ||[[# create-obj]][#create-obj-note create object] _
 @<&nbsp;>@||let i = new Int(); _
-let i2 = new Int(7);||$i = new Int(); _
-$i2 = new Int(7);||i = Int() _
-i2 = Int(7)||i = Int.new _
+let i2 = new Int(7);||i = Int() _
+i2 = Int(7)||$i = new Int(); _
+$i2 = new Int(7);||i = Int.new _
 i2 = Int.new(7)||
 ||[[# getter-setter]][#getter-setter-note get and set instance variable] _
 @<&nbsp;>@||let v = i.value; _
-i.value = v + 1;||$v = $i->value; _
+i.value = v + 1;||v = i.value _
+i.value = v + 1||$v = $i->value; _
 $i->value = $v + 1;||v = i.value _
-i.value = v + 1||v = i.value _
 i.value = v + 1||
-||[[# instance-var]][#instance-var-note instance variable visibility]||##gray|//public//##||##gray|//visibility must be declared//##||##gray|//public; attributes starting with underscore private by convention//##||##gray|//private by default; use// attr_reader, attr_writer, attr_accessor //to make public//##||
+||[[# instance-var]][#instance-var-note instance variable visibility]||##gray|//public//##||##gray|//public; attributes starting with underscore private by convention//##||##gray|//visibility must be declared//##||##gray|//private by default; use// attr_reader, attr_writer, attr_accessor //to make public//##||
 ||[[# def-method]][#def-method-note define method] _
 @<&nbsp;>@||##gray|@@//@@ inside constructor:## _
 this.plus = function(v) { _
@@ -997,45 +1073,45 @@ this.plus = function(v) { _
 ##gray|@@//@@ outside constructor:## _
 Int.prototype.plus = function (v) { _
 @<&nbsp;&nbsp;>@return this.value + v; _
-}||function plus($i) _
+}||def plus(self,v): _
+@<&nbsp;&nbsp;>@return self.value + v||function plus($i) _
 { _
 @<&nbsp;&nbsp;>@return $this->value + $i; _
-}||def plus(self,v): _
-@<&nbsp;&nbsp;>@return self.value + v||def plus(i) _
+}||def plus(i) _
 @<&nbsp;&nbsp;>@value + i _
 end||
 ||[[# invoke-method]][#invoke-method-note invoke method] _
-@<&nbsp;>@||i.plus(3);||$i->plus(7)||i.plus(7)||i.plus(7)||
-||[[# def-class-method]][#def-class-method-note define class method]|| || ||@classmethod _
+@<&nbsp;>@||i.plus(3);||i.plus(7)||$i->plus(7)||i.plus(7)||
+||[[# def-class-method]][#def-class-method-note define class method]|| ||@classmethod _
 def get_instances(cls): _
-@<&nbsp;&nbsp;>@return Counter.instances||class Foo _
+@<&nbsp;&nbsp;>@return Counter.instances|| ||class Foo _
 @<&nbsp;&nbsp;>@def Foo.one _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@puts "one" _
 @<&nbsp;&nbsp;>@end _
 end||
 ||[[# invoke-class-method]][#invoke-class-method-note invoke class method] _
-@<&nbsp;>@|| ||Counter::getInstances()||Counter.get_instances()||Foo.one||
-||[[# def-classs-var]][#def-class-var-note define class variable]|| || ||class Foo: _
-@<&nbsp;&nbsp;>@instances = 0||class Foo _
+@<&nbsp;>@|| ||Counter.get_instances()||Counter::getInstances()||Foo.one||
+||[[# def-classs-var]][#def-class-var-note define class variable]|| ||class Foo: _
+@<&nbsp;&nbsp;>@instances = 0|| ||class Foo _
 @<&nbsp;&nbsp;>@@<@@>@instances = 1 _
 end||
-||[[# class-var-getter-setter]][#class-var-getter-setter-note get and set class variable]|| || ||class Foo: _
+||[[# class-var-getter-setter]][#class-var-getter-setter-note get and set class variable]|| ||class Foo: _
 @<&nbsp;&nbsp;>@def __init__(self): _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Foo.instances += 1||class Foo _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Foo.instances += 1|| ||class Foo _
 @<&nbsp;&nbsp;>@def initialize _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<@@>@instances += 1 _
 @<&nbsp;&nbsp;>@end _
 end||
 ||[[# method-missing]][#method-missing-note handle undefined method invocation] _
-@<&nbsp;>@|| ||function @@__@@call($name, $args) _
+@<&nbsp;>@|| ||def @@__getattr__@@(self, name): _
+@<&nbsp;&nbsp;>@s = 'no def: ' + name + ' arity: %d' _
+ _
+@<&nbsp;&nbsp;>@return lambda *a: print(s % len(a))||function @@__@@call($name, $args) _
 { _
 @<&nbsp;&nbsp;>@$argc = count($args); _
 @<&nbsp;&nbsp;>@echo "no def: $name " . _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@"arity: $argc\n"; _
-}||def @@__getattr__@@(self, name): _
-@<&nbsp;&nbsp;>@s = 'no def: ' + name + ' arity: %d' _
- _
-@<&nbsp;&nbsp;>@return lambda *a: print(s % len(a))||def method_missing(name, *a) _
+}||def method_missing(name, *a) _
 @<&nbsp;&nbsp;>@puts "no def: #{name}" + _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@" arity: #{a.size}" _
 end||
@@ -1051,18 +1127,25 @@ end||
 @<&nbsp;&nbsp;>@end _
 end||
 ||[[# destructor]][#destructor-note destructor] _
-@<&nbsp;>@|| ||function @@__@@destruct() _
+@<&nbsp;>@|| ||def @@__del__@@(self): _
+@<&nbsp;&nbsp;>@print('bye, %d' % self.value)||function @@__@@destruct() _
 { _
 @<&nbsp;&nbsp;>@echo "bye, $this->value\n"; _
-}||def @@__del__@@(self): _
-@<&nbsp;&nbsp;>@print('bye, %d' % self.value)||val = i.value _
+}||val = i.value _
 ObjectSpace.define_finalizer(int) { _
 @<&nbsp;&nbsp;>@puts "bye, #{val}" _
 }||
-||||||||||~ [[# inheritance-polymorphism]][#inheritance-polymorphism-note inheritance and polymorphism]||
-||~  ||~ node.js||~ php||~ python||~ ruby||
 ||[[# inheritance]][#inheritance-note subclass] _
-@<&nbsp;>@|| ||class Counter extends Int _
+@<&nbsp;>@|| ||class Counter(Int): _
+ _
+@<&nbsp;&nbsp;>@instances = 0 _
+ _
+@<&nbsp;&nbsp;>@def @@__init__@@(self, v=0): _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Counter.instances += 1 _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Int.@@__init__@@(self, v) _
+ _
+@<&nbsp;&nbsp;>@def incr(self): _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@self.value += 1||class Counter extends Int _
 { _
 @<&nbsp;&nbsp;>@private static $instances = 0; _
 @<&nbsp;&nbsp;>@function @@__@@construct($int=0) _
@@ -1078,16 +1161,7 @@ ObjectSpace.define_finalizer(int) { _
 @<&nbsp;&nbsp;>@{ _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@return $instances; _
 @<&nbsp;&nbsp;>@} _
-}||class Counter(Int): _
- _
-@<&nbsp;&nbsp;>@instances = 0 _
- _
-@<&nbsp;&nbsp;>@def @@__init__@@(self, v=0): _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Counter.instances += 1 _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Int.@@__init__@@(self, v) _
- _
-@<&nbsp;&nbsp;>@def incr(self): _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@self.value += 1||class Counter < Int _
+}||class Counter < Int _
  _
 @<&nbsp;&nbsp;>@@<@@>@instances = 0 _
  _
@@ -1105,13 +1179,13 @@ ObjectSpace.define_finalizer(int) { _
 @<&nbsp;&nbsp;>@end _
 end||
 ||||||||||~ [[# reflection]][#reflection-note reflection]||
-||~  ||~ node.js||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ python||~ php||~ ruby||
 ||[[# object-id]][#object-id-note object id] _
-@<&nbsp;>@||##gray|//none//##|| ||id(o)||o.object_id||
+@<&nbsp;>@||##gray|//none//##||id(o)|| ||o.object_id||
 ||[[# inspect-type]][#inspect-type-note inspect type] _
-@<&nbsp;>@||typeof([]) === 'object'||gettype(array()) == "array" _
+@<&nbsp;>@||typeof([]) === 'object'||type([]) == list||gettype(array()) == "array" _
  _
-##gray|//returns// object //for objects//##||type([]) == list||[].class == Array||
+##gray|//returns// object //for objects//##||[].class == Array||
 ||[[# types]][#types-note basic types]||number _
 string _
 boolean _
@@ -1122,15 +1196,7 @@ object _
 ##gray|@@//@@ these evaluate as 'object':## _
 typeof(null) _
 typeof([]) _
-typeof({})||NULL _
-boolean _
-integer _
-double _
-string _
-array _
-object _
-resource _
-unknown type||NoneType _
+typeof({})||NoneType _
 bool _
 int _
 long _
@@ -1142,7 +1208,15 @@ list _
 array _
 dict _
 object _
-file||NilClass _
+file||NULL _
+boolean _
+integer _
+double _
+string _
+array _
+object _
+resource _
+unknown type||NilClass _
 TrueClass _
 FalseClass _
 Fixnum _
@@ -1156,85 +1230,85 @@ Hash _
 Object _
 File||
 ||[[# inspect-class]][#inspect-class-note inspect class]||##gray|@@//@@ returns prototype object:## _
-Object.getPrototypeOf(o)||##gray|//returns// FALSE //if not an object://## _
-get_class($o) == "Foo"||o.@@__class__@@ == Foo _
-isinstance(o, Foo)||o.class == Foo _
+Object.getPrototypeOf(o)||o.@@__class__@@ == Foo _
+isinstance(o, Foo)||##gray|//returns// FALSE //if not an object://## _
+get_class($o) == "Foo"||o.class == Foo _
 o.instance_of?(Foo)||
 ||[[# inspect-class-hierarchy]][#inspect-class-hierarchy-note inspect class hierarchy]||let pa = Object.getPrototypeOf(o) _
 ##gray|@@//@@ prototype's of prototype object:## _
-let grandpa = Object.getPrototypeOf(pa)||get_parent_class($o)||o.@@__class__@@.@@__bases__@@||o.class.superclass _
+let grandpa = Object.getPrototypeOf(pa)||o.@@__class__@@.@@__bases__@@||get_parent_class($o)||o.class.superclass _
 o.class.included_modules||
 ||[[# has-method]][#has-method-note has method?] _
-@<&nbsp;>@||o.reverse && typeof(o.reverse) === 'function'||method_exists($o, "reverse")||hasattr(o, 'reverse')||o.respond_to?("reverse")||
+@<&nbsp;>@||o.reverse && typeof(o.reverse) === 'function'||hasattr(o, 'reverse')||method_exists($o, "reverse")||o.respond_to?("reverse")||
 ||[[# msg-passing]][#msg-passing-note message passing] _
-@<&nbsp;>@||##gray|//not a standard feature//##||for ($i = 1; $i <= 10; $i++) { _
+@<&nbsp;>@||##gray|//not a standard feature//##||for i in range(1,10): _
+@<&nbsp;&nbsp;>@getattr(o, 'phone'+str(i))(None)||for ($i = 1; $i <= 10; $i++) { _
 @<&nbsp;&nbsp;>@call_user_func(array($o, _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@"phone$i"), NULL); _
-}||for i in range(1,10): _
-@<&nbsp;&nbsp;>@getattr(o, 'phone'+str(i))(None)||(1..9).each do |i| _
+}||(1..9).each do |i| _
 @<&nbsp;&nbsp;>@o.send("phone#{i}=", nil) _
 end||
 ||[[# eval]][#eval-note eval] _
-@<&nbsp;>@||eval('1 + 1')||##gray|eval //evaluates to argument of// return //statement or// NULL:## _
+@<&nbsp;>@||eval('1 + 1')||##gray|//argument of// eval //must be an expression://## _
+while True: _
+@<&nbsp;&nbsp;>@print(eval(sys.stdin.readline()))||##gray|eval //evaluates to argument of// return //statement or// NULL:## _
 while ($line = fgets(STDIN)) { _
 @<&nbsp;&nbsp;>@echo eval($line) . "\n"; _
-}||##gray|//argument of// eval //must be an expression://## _
-while True: _
-@<&nbsp;&nbsp;>@print(eval(sys.stdin.readline()))||loop do _
+}||loop do _
 @<&nbsp;&nbsp;>@puts eval(gets) _
 end||
 ||[[# list-obj-methods]][#list-obj-methods-note list object methods] _
-@<&nbsp;>@|| ||get_class_methods($o)||[m for m in dir(o) _
-@<&nbsp;&nbsp;>@if callable(getattr(o,m))]||o.methods||
+@<&nbsp;>@|| ||[m for m in dir(o) _
+@<&nbsp;&nbsp;>@if callable(getattr(o,m))]||get_class_methods($o)||o.methods||
 ||[[# list-obj-attr]][#list-obj-attr-note list object attributes] _
-@<&nbsp;>@|| ||get_object_vars($o)||dir(o)||o.instance_variables||
+@<&nbsp;>@|| ||dir(o)||get_object_vars($o)||o.instance_variables||
 ||[[# list-loaded-lib]][#list-loaded-lib-note list loaded libraries]|| || || ||##gray|# relative to directory in lib path:## _
 $LOADED_FEATURES _
 $"||
-||[[# list-loaded-namespaces]][#list-loaded-namespaces-note list loaded namespaces]|| || ||dir()||Class.constants.select do |c| _
+||[[# list-loaded-namespaces]][#list-loaded-namespaces-note list loaded namespaces]|| ||dir()|| ||Class.constants.select do |c| _
 @<&nbsp;&nbsp;>@Module.const_get(c).class == Class _
 end||
-||[[# inspect-namespace]][#inspect-namespace-note inspect namespace]|| || ||import urlparse _
+||[[# inspect-namespace]][#inspect-namespace-note inspect namespace]|| ||import urlparse _
  _
-dir(urlparse)||require 'uri' _
+dir(urlparse)|| ||require 'uri' _
  _
 URI.constants _
 URI.methods _
 URI.class_variables||
 ||[[# pretty-print]][#pretty-print-note pretty-print] _
 @<&nbsp;>@||let d = {"lorem": 1, "ipsum": [2, 3]}; _
-console.log(JSON.stringify(d, null, 2));||$d = array("lorem"=>1, _
-@<&nbsp;&nbsp;>@"ipsum"=>array(2,3)); _
- _
-print_r($d);||import pprint _
+console.log(JSON.stringify(d, null, 2));||import pprint _
  _
 d = {'lorem':1, 'ipsum':[2,3]} _
  _
-pprint.PrettyPrinter().pprint(d)||require 'pp' _
+pprint.PrettyPrinter().pprint(d)||$d = array("lorem"=>1, _
+@<&nbsp;&nbsp;>@"ipsum"=>array(2,3)); _
+ _
+print_r($d);||require 'pp' _
  _
 d = {'lorem' => 1, 'ipsum' => [2, 3]} _
  _
 pp d||
-||[[# src-line-file]][#src-line-file-note source line number and file name]|| ||@@__LINE__@@ _
-@@__FILE__@@||import inspect _
+||[[# src-line-file]][#src-line-file-note source line number and file name]|| ||import inspect _
  _
 cf = inspect.currentframe() _
 cf.f_lineno _
 cf.f_code.co_filename||@@__LINE__@@ _
+@@__FILE__@@||@@__LINE__@@ _
 @@__FILE__@@||
-||[[# cmd-line-doc]][#cmd-line-doc-note command line documentation]|| ||##gray|//none//##||$ pydoc math _
-$ pydoc math.atan2||$ ri -c _
+||[[# cmd-line-doc]][#cmd-line-doc-note command line documentation]|| ||$ pydoc math _
+$ pydoc math.atan2||##gray|//none//##||$ ri -c _
 $ ri Math _
 $ ri Math.atan2||
 ||||||||||~ [[# net-web]][#net-web-note net and web]||
-||~  ||~ node.js||~ php||~ python||~ ruby||
-||[[# hostname-ip]][#hostname-ip-note get local hostname, dns lookup, reverse dns lookup]|| ||$host = gethostname(); _
-$ip = gethostbyname($host); _
-$host2 = gethostbyaddr($ip);||import socket _
+||~  ||~ node.js||~ python||~ php||~ ruby||
+||[[# hostname-ip]][#hostname-ip-note get local hostname, dns lookup, reverse dns lookup]|| ||import socket _
  _
 host = socket.gethostname() _
 ip = socket.gethostbyname(host) _
-host2 = socket.gethostbyaddr(ip)[0]||require 'socket' _
+host2 = socket.gethostbyaddr(ip)[0]||$host = gethostname(); _
+$ip = gethostbyname($host); _
+$host2 = gethostbyaddr($ip);||require 'socket' _
  _
 hostname = Socket.gethostname _
  _
@@ -1253,15 +1327,15 @@ request('@@http://www.google.com@@', _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@console.log(body); _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@} _
 @<&nbsp;&nbsp;>@} _
-);||$url = '@@http://www.google.com@@'; _
-$s = file_get_contents($url);||import httplib _
+);||import httplib _
  _
 url = 'www.google.com' _
 conn = httplib.HTTPConnection(url) _
 conn.request("GET", '/') _
 resp = conn.getresponse() _
 if resp.status == httplib.OK: _
-@<&nbsp;&nbsp;>@s = resp.read()||require 'net/http' _
+@<&nbsp;&nbsp;>@s = resp.read()||$url = '@@http://www.google.com@@'; _
+$s = file_get_contents($url);||require 'net/http' _
  _
 url = "www.google.com" _
 r = Net::HTTP.start(url, 80) do |f| _
@@ -1271,7 +1345,7 @@ if r.code == "200" _
 @<&nbsp;&nbsp;>@s = r.body _
 end||
 ||[[# http-post]][#http-post-note http post] _
-@<&nbsp;>@|| || ||import httplib _
+@<&nbsp;>@|| ||import httplib _
 import urllib _
  _
 url = 'www.acme.com' _
@@ -1282,31 +1356,18 @@ data = urllib.urlencode({ _
 conn.request('POST', '/orders', data) _
 resp = conn.getresponse() _
 if resp.status == httplib.OK: _
-@<&nbsp;&nbsp;>@s = resp.read()|| ||
-||[[# serve-pwd]][#serve-pwd-note serve working directory]|| ||$ php -S localhost:8000||$ python -m http.server 8000||$ ruby -rwebrick -e \ _
+@<&nbsp;&nbsp;>@s = resp.read()|| || ||
+||[[# serve-pwd]][#serve-pwd-note serve working directory]|| ||$ python -m http.server 8000||$ php -S localhost:8000||$ ruby -rwebrick -e \ _
 'WEBrick::HTTPServer.new(:Port => 8000, '\ _
 ':DocumentRoot => Dir.pwd).start'||
 ||[[# absolute-url]][#absolute-url-note absolute url] _
-##gray|//from base and relative url//##|| ||##gray|//none//##||import urlparse _
+##gray|//from base and relative url//##|| ||import urlparse _
  _
 urlparse.urljoin(@@'http://google.com'@@, _
-@<&nbsp;&nbsp;>@'analytics')||require 'uri' _
+@<&nbsp;&nbsp;>@'analytics')||##gray|//none//##||require 'uri' _
  _
 URI.join(@@"http://google.com"@@, "analytics")||
-||[[# parse-url]][#parse-url-note parse url]|| ||$url = @@"http://google.com:80/foo?q=3#bar"@@; _
-$up = parse_url($url); _
- _
-$protocol = $up["scheme"]; _
-$hostname = $up["host"]; _
-$port = $up["port"]; _
-$path = $up["path"]; _
-$query_str = $up["query"]; _
-$fragment = $up["fragment"]; _
- _
-##gray|# $params is associative array; if keys _
-# are reused, later values overwrite _
-# earlier values## _
-parse_str($query_str, $params);||##gray|# Python 3 location: urllib.parse## _
+||[[# parse-url]][#parse-url-note parse url]|| ||##gray|# Python 3 location: urllib.parse## _
 import urlparse _
  _
 url = @@'http://google.com:80/foo?q=3#bar'@@ _
@@ -1320,7 +1381,20 @@ query_str = up.query _
 fragment = up.fragment _
  _
 ##gray|# returns dict of lists:## _
-params = urlparse.parse_qs(query_str)||require 'uri' _
+params = urlparse.parse_qs(query_str)||$url = @@"http://google.com:80/foo?q=3#bar"@@; _
+$up = parse_url($url); _
+ _
+$protocol = $up["scheme"]; _
+$hostname = $up["host"]; _
+$port = $up["port"]; _
+$path = $up["path"]; _
+$query_str = $up["query"]; _
+$fragment = $up["fragment"]; _
+ _
+##gray|# $params is associative array; if keys _
+# are reused, later values overwrite _
+# earlier values## _
+parse_str($query_str, $params);||require 'uri' _
  _
 url = @@"http://google.com:80/foo?q=3#bar"@@ _
 up = URI(url) _
@@ -1335,46 +1409,44 @@ fragment = up.fragment _
 ##gray|# Ruby 1.9; returns array of pairs:## _
 params = URI.decode_www_form(query_str)||
 ||[[# url-encode]][#url-encode-note url encode/decode] _
-@<&nbsp;>@|| ||urlencode("lorem ipsum?") _
-urldecode("lorem+ipsum%3F")||##gray|# Python 3 location: urllib.parse## _
+@<&nbsp;>@|| ||##gray|# Python 3 location: urllib.parse## _
 import urllib _
  _
 urllib.quote_plus("lorem ipsum?") _
-urllib.unquote_plus("lorem+ipsum%3F")||require 'cgi' _
+urllib.unquote_plus("lorem+ipsum%3F")||urlencode("lorem ipsum?") _
+urldecode("lorem+ipsum%3F")||require 'cgi' _
  _
 CGI::escape("lorem ipsum?") _
 CGI::unescape("lorem+ipsum%3F")||
 ||[[# html-escape]][#html-escape-note html escape] _
-##gray|//escape character data, escape attribute value, unescape html entities//##|| ||$s = htmlspecialchars("<>&"); _
- _
-$s2 = htmlspecialchars("<>&\"'", _
-@<&nbsp;&nbsp;>@ENT_NOQUOTES | ENT_QUOTES); _
- _
-$s3 = htmlspecialchars_decode($s2);||import cgi _
+##gray|//escape character data, escape attribute value, unescape html entities//##|| ||import cgi _
 from HTMLParser import HTMLParser _
  _
 s = cgi.escape('<>&') _
 s2 = cgi.escape('<>&"', True) _
-s3 = HTMLParser().unescape(s2)||require 'cgi' _
+s3 = HTMLParser().unescape(s2)||$s = htmlspecialchars("<>&"); _
+ _
+$s2 = htmlspecialchars("<>&\"'", _
+@<&nbsp;&nbsp;>@ENT_NOQUOTES | ENT_QUOTES); _
+ _
+$s3 = htmlspecialchars_decode($s2);||require 'cgi' _
  _
 s2 = CGI.escapeHTML('<>&"') _
 s3 = CGI.unescapeHTML(s2)||
-||[[# base64]][#base64-note base64 encode/decode]|| ||$s = file_get_contents("foo.png"); _
-$b64 = base64_encode($s); _
-$s2 = base64_decode($b64);||import base64 _
+||[[# base64]][#base64-note base64 encode/decode]|| ||import base64 _
  _
 s = open('foo.png').read() _
 b64 = base64.b64encode(s) _
-s2 = base64.b64decode(b64)||require 'base64' _
+s2 = base64.b64decode(b64)||$s = file_get_contents("foo.png"); _
+$b64 = base64_encode($s); _
+$s2 = base64_decode($b64);||require 'base64' _
  _
 s = File.open("foo.png").read _
 b64 = Base64.encode64(s) _
 s2 = Base64.decode64(b64)||
-||routing||##gray|@@//@@ npm install express##|| ||##gray|# pip install Flask##||##gray|# gem install sinatra##||
-||template||##gray|@@//@@ npm install handlebars##|| ||##gray|# pip install jinja2##|| ||
 ||||||||||~ [[# databases]][#databases-note databases]||
-||~  ||~ node.js||~ php||~ python||~ ruby||
-||mysql|| || ||##gray|# install MySQL dev files, then _
+||~  ||~ node.js||~ python||~ php||~ ruby||
+||mysql|| ||##gray|# install MySQL dev files, then _
 # $ sudo pip install MySQL-python## _
 import MySQLdb _
  _
@@ -1387,7 +1459,7 @@ sql = 'select id from cust where name = %s' _
 cur.execute(sql, ('Bob',)) _
 for row in cur: _
 @<&nbsp;&nbsp;>@print('id: ' + row[0]) _
-conn.close()||##gray|# $ sudo gem install mysql## _
+conn.close()|| ||##gray|# $ sudo gem install mysql## _
 require 'mysql' _
  _
 conn = Mysql.new _
@@ -1398,14 +1470,14 @@ stmt.execute('Bob') _
 stmt.each do |row| _
 @<&nbsp;&nbsp;>@puts row[0] _
 end||
-||mongodb|| || ||##gray|# $ sudo pip install pymongo## _
+||mongodb|| ||##gray|# $ sudo pip install pymongo## _
 import pymongo _
  _
 client = pymongo.Connection('localhost') _
 db = conn['customers'] _
 cur = db.find() _
 for doc in cur: _
-@<&nbsp;&nbsp;>@print(doc)||##gray|# $ sudo gem install mongo bson_ext## _
+@<&nbsp;&nbsp;>@print(doc)|| ||##gray|# $ sudo gem install mongo bson_ext## _
 require 'mongo' _
  _
 host = 'localhost' _
@@ -1414,7 +1486,7 @@ conn = Mongo::MongoClient.new(host, port) _
 db = conn['customers'] _
 coll = db['cust'] _
 coll.find().each {|doc| puts doc}||
-||redis|| || ||##gray|# $ sudo pip install redis## _
+||redis|| ||##gray|# $ sudo pip install redis## _
 import redis _
  _
 conn = redis.Redis( _
@@ -1423,15 +1495,22 @@ conn = redis.Redis( _
 @<&nbsp;&nbsp;>@password='xyz123') _
 conn.set('Bob', 123) _
 value = conn.get('Bob') _
-print(value)|| ||
+print(value)|| || ||
 ||||||||||~ [[# unit-tests]][#unit-tests-note unit tests]||
-||~  ||~ node.js||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ python||~ php||~ ruby||
 ||[[# test-class]][#test-class-note test class]||##gray|@@//@@ npm install -g nodeunit## _
  _
 exports.testFoo = function(test) { _
 @<&nbsp;&nbsp;>@test.ok(true, 'not true!.'); _
 @<&nbsp;&nbsp;>@test.done(); _
-}||##gray|# pear install pear.phpunit.de/PHPUnit _
+}||import unittest _
+ _
+class TestFoo(unittest.TestCase): _
+@<&nbsp;&nbsp;>@def test_01(self): _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@self.assertTrue(True, 'not True!') _
+ _
+if @@__name__@@ == '@@__main__@@': _
+@<&nbsp;&nbsp;>@unittest.main()||##gray|# pear install pear.phpunit.de/PHPUnit _
  _
 <?php## _
 Class FooTest extends _
@@ -1443,14 +1522,7 @@ Class FooTest extends _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@"not true!"); _
 @<&nbsp;&nbsp;>@} _
 } _
-##gray|?>##||import unittest _
- _
-class TestFoo(unittest.TestCase): _
-@<&nbsp;&nbsp;>@def test_01(self): _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@self.assertTrue(True, 'not True!') _
- _
-if @@__name__@@ == '@@__main__@@': _
-@<&nbsp;&nbsp;>@unittest.main()||require 'test/unit' _
+##gray|?>##||require 'test/unit' _
  _
 class TestFoo < Test::Unit::TestCase _
 @<&nbsp;&nbsp;>@def test_01 _
@@ -1459,22 +1531,26 @@ class TestFoo < Test::Unit::TestCase _
 end||
 ||[[# run-test]][#run-test-note run tests, run test method]||$ nodeunit test_foo.js _
  _
-$ nodeunit -t testFoo test_foo.js||$ phpunit test_foo.php _
+$ nodeunit -t testFoo test_foo.js||$ python test_foo.py _
+$ python test_foo.py TestFoo.test_01||$ phpunit test_foo.php _
  _
-$ phpunit @@--@@filter test_01 test_foo.php||$ python test_foo.py _
-$ python test_foo.py TestFoo.test_01||$ ruby test_foo.rb _
+$ phpunit @@--@@filter test_01 test_foo.php||$ ruby test_foo.rb _
 $ ruby test_foo.rb -n test_01||
 ||[[# assert-equal]][#assert-equal-note equality assertion]||let s = 'do re mi'; _
-test.equals(s, 'do re mi');||$s = "do re me"; _
+test.equals(s, 'do re mi');||s = 'do re me' _
+self.assertEqual('do re me', _
+@<&nbsp;&nbsp;>@s, _
+@<&nbsp;&nbsp;>@'s: {}'.format(s))||$s = "do re me"; _
 $this->assertEquals($s, "do re mi"); _
  _
 ##gray|# also asserts args have same type:## _
-$this->assertSame($s, "do re mi");||s = 'do re me' _
-self.assertEqual('do re me', _
-@<&nbsp;&nbsp;>@s, _
-@<&nbsp;&nbsp;>@'s: {}'.format(s))||s = "do re me" _
+$this->assertSame($s, "do re mi");||s = "do re me" _
 assert_equal("do re me", s)||
-||[[# assert-approx]][#assert-approx-note approximate assertion]|| ||$x = 10.0 * (1.0 / 3.0); _
+||[[# assert-approx]][#assert-approx-note approximate assertion]|| ||x = 10.0 * (1.0 / 3.0) _
+y = 10.0 / 3.0 _
+ _
+##gray|# default for delta is 0.1@@**@@7## _
+self.assertAlmostEqual(x, y, delta=0.1@@**@@6)||$x = 10.0 * (1.0 / 3.0); _
 $y = 10.0 / 3.0; _
  _
 $this->assertEquals($x, $y, _
@@ -1482,41 +1558,37 @@ $this->assertEquals($x, $y, _
 @<&nbsp;&nbsp;>@pow(0.1, 6));||x = 10.0 * (1.0 / 3.0) _
 y = 10.0 / 3.0 _
  _
-##gray|# default for delta is 0.1@@**@@7## _
-self.assertAlmostEqual(x, y, delta=0.1@@**@@6)||x = 10.0 * (1.0 / 3.0) _
-y = 10.0 / 3.0 _
- _
 ##gray|# default for delta is 0.001## _
 assert_in_delta(x, y, 0.1**6)||
-||[[# assert-regex]][#assert-regex-note regex assertion]|| ||$s = "lorem ipsum"; _
-$this->assertRegExp("/lorem/", $s);||s = 'lorem ipsum' _
+||[[# assert-regex]][#assert-regex-note regex assertion]|| ||s = 'lorem ipsum' _
 ##gray|# uses re.search, not re.match:## _
-self.assertRegexpMatches(s, 'lorem')||s = "lorem ipsum" _
+self.assertRegexpMatches(s, 'lorem')||$s = "lorem ipsum"; _
+$this->assertRegExp("/lorem/", $s);||s = "lorem ipsum" _
 assert_match(/lorem/, s)||
-||[[# assert-exc]][#assert-exc-note exception assertion]|| ||class Bam extends Exception {}; _
+||[[# assert-exc]][#assert-exc-note exception assertion]|| ||a = [] _
+with self.assertRaises(IndexError): _
+@<&nbsp;&nbsp;>@a[0]||class Bam extends Exception {}; _
  _
 public function test_exc { _
 @<&nbsp;&nbsp;>@$this->SetExpectedException("Bam"); _
 @<&nbsp;&nbsp;>@throw new Bam("bam!"); _
-}||a = [] _
-with self.assertRaises(IndexError): _
-@<&nbsp;&nbsp;>@a[0]||assert_raises(ZeroDivisionError) do _
+}||assert_raises(ZeroDivisionError) do _
 @<&nbsp;&nbsp;>@1 / 0 _
 end||
-||[[# mock-method]][#mock-method-note mock method]|| ||$mock = $this->getMock('Foo', ['foo']); _
-$mock->expects($this->once()) _
-@<&nbsp;&nbsp;>@->method('foo') _
-@<&nbsp;&nbsp;>@->with(13) _
-@<&nbsp;&nbsp;>@->will($this->returnValue(7)); _
- _
-$mock->foo(13);||##gray|# pip install mock## _
-import mock _
+||[[# mock-method]][#mock-method-note mock method]|| ||##gray|# added in Python 3.3:## _
+from unittest import mock _
  _
 foo = Foo() _
 foo.run = mock.MagicMock(return_value=7) _
  _
 self.assertEqual(7, foo.run(13)) _
-foo.run.assert_called_once_with(13)||##gray|# gem install mocha## _
+foo.run.assert_called_once_with(13)||$mock = $this->getMock('Foo', ['foo']); _
+$mock->expects($this->once()) _
+@<&nbsp;&nbsp;>@->method('foo') _
+@<&nbsp;&nbsp;>@->with(13) _
+@<&nbsp;&nbsp;>@->will($this->returnValue(7)); _
+ _
+$mock->foo(13);||##gray|# gem install mocha## _
 require 'mocha' _
  _
 foo = mock() _
@@ -1526,73 +1598,54 @@ foo.run(13)||
 ||[[# test-setup]][#test-setup-note setup]||exports.setUp = function(callback) { _
 @<&nbsp;&nbsp;>@console.log('setting up@@...@@'); _
 @<&nbsp;&nbsp;>@callback(); _
-}||public function setUp() _
+}||##gray|# in class TestFoo:## _
+def setUp(self): _
+@<&nbsp;&nbsp;>@print('setting up')||public function setUp() _
 { _
 @<&nbsp;&nbsp;>@echo "setting up\n"; _
 }||##gray|# in class TestFoo:## _
-def setUp(self): _
-@<&nbsp;&nbsp;>@print('setting up')||##gray|# in class TestFoo:## _
 def setup _
 @<&nbsp;&nbsp;>@puts "setting up" _
 end||
 ||[[# test-teardown]][#test-teardown-note teardown]||exports.tearDown = function(callback) { _
 @<&nbsp;&nbsp;>@console.log('tearing down@@...@@'); _
 @<&nbsp;&nbsp;>@callback(); _
-}||public function tearDown() _
+}||##gray|# in class TestFoo:## _
+def tearDown(self): _
+@<&nbsp;&nbsp;>@print('tearing down')||public function tearDown() _
 { _
 @<&nbsp;&nbsp;>@echo "tearing down\n"; _
 }||##gray|# in class TestFoo:## _
-def tearDown(self): _
-@<&nbsp;&nbsp;>@print('tearing down')||##gray|# in class TestFoo:## _
 def teardown _
 @<&nbsp;&nbsp;>@puts "tearing down" _
 end||
-||||||||||~ [[# logging]][#logging-note logging]||
-||~  ||~ node.js||~ php||~ python||~ ruby||
-||initialize application logger|| ||ini_set("log_errors", 1); _
-ini_set("error_log", "/tmp/php-error.log");||import logging _
- _
-logging.basicConfig(format=FORMAT)||require 'logger' _
- _
-$logger = Logger.new($stderr)||
-||log error||##gray|@@//@@ npm install winston## _
-const winston = require('winston'); _
- _
-winston.error('bam!');||error_log("bam!");||import logging _
- _
-logging.error('bam!')||$logger.error 'bam!'||
-||set log format|| || || || ||
-||initialize library logger|| || || || ||
-||severity levels|| || || || ||
-||set severity level|| || || || ||
-||set log handler|| || || || ||
 ||||||||||~ [[# debugging]][#debugging-note debugging]||
-||~  ||~ node.js||~ php||~ python||~ ruby||
+||~  ||~ node.js||~ python||~ php||~ ruby||
 ||[[# check-syntax]][#check-syntax-note check syntax] _
-@<&nbsp;>@||$ node -c foo.js||$ php -l foo.php||import py_compile _
+@<&nbsp;>@||$ node -c foo.js||import py_compile _
  _
 ##gray|# precompile to bytecode:## _
-py_compile.compile('foo.py')||$ ruby -c foo.rb||
+py_compile.compile('foo.py')||$ php -l foo.php||$ ruby -c foo.rb||
 ||[[# check-for-errors]][#check-for-errors-note check for errors]||$ npm install -g semistandard _
-$ semistandard foo.js|| ||$ sudo pip install pylint _
-$ pylint foo.py||$ sudo gem install rubocop _
+$ semistandard foo.js||$ sudo pip install pylint _
+$ pylint foo.py|| ||$ sudo gem install rubocop _
 $ rubocop -D foo.rb||
 ||[[# check-style]][#check-style-note check style]||$ npm install -g semistandard _
-$ semistandard foo.js|| ||$ sudo pip install pep8 _
-$ pep8 foo.py||$ sudo gem install rubocop _
+$ semistandard foo.js||$ sudo pip install pep8 _
+$ pep8 foo.py|| ||$ sudo gem install rubocop _
 $ rubocop -D foo.rb||
-||[[# debugger]][#debugger-note run debugger]||$ node debug foo.js|| ||$ python -m pdb foo.py||$ sudo gem install ruby-debug _
+||[[# debugger]][#debugger-note run debugger]||$ node debug foo.js||$ python -m pdb foo.py|| ||$ sudo gem install ruby-debug _
 $ rdebug foo.rb||
 ||[[# benchmark]][#benchmark-note benchmark code]||console.time('product'); _
 let n = 1; _
 for (let i = 1; i < 1000*1000; ++i) { _
 @<&nbsp;&nbsp;>@++n; _
 } _
-console.timeEnd('product');|| ||import timeit _
+console.timeEnd('product');||import timeit _
  _
 timeit.timeit('i += 1', _
 @<&nbsp;&nbsp;>@'i = 0', _
-@<&nbsp;&nbsp;>@number=1000000)||require 'benchmark' _
+@<&nbsp;&nbsp;>@number=1000000)|| ||require 'benchmark' _
  _
 n = 1_000_000 _
 i = 0 _
@@ -1600,11 +1653,9 @@ puts Benchmark.measure do _
 @<&nbsp;&nbsp;>@n.times { i += 1 } _
 end||
 ||[[# profile]][#profile-note profile code]||$ node @@--@@prof foo.js _
-$ node @@--@@prof-process *v8.log|| ||$ python -m cProfile foo.py||$ sudo gem install ruby-prof _
+$ node @@--@@prof-process *v8.log||$ python -m cProfile foo.py|| ||$ sudo gem install ruby-prof _
 $ ruby-prof foo.rb||
 ||~ ||~ ##efefef|@@____________________________________________________@@##||~ ##efefef|@@____________________________________________________@@##||~ ##efefef|@@____________________________________________________@@##||~ ##efefef|@@____________________________________________________@@##||
-
-
 
 [[# streams-note]]
 + [#streams Streams]
@@ -2266,9 +2317,6 @@ file = os.popen('ls -l /tmp').read()
 [[# option-parsing-note]]
 + [#option-parsing Option Parsing]
 
-[[# cmd-line-options-note]]
-++ [#cmd-line-options command line options]
-
 How to process command line options.
 
 We describe the style used by {{getopt_long}} from the C standard library.  The characteristics of this style are:
@@ -2281,24 +2329,47 @@ We describe the style used by {{getopt_long}} from the C standard library.  The 
 
 The option processing function should identify the positional arguments.  These are the command line arguments which are not options, option arguments, or the double hyphen used to terminate option processing.  {{getopt_long}} permits options to occur after positional arguments.
 
-**python:**
+[[# opt-boolean-note]]
+++ [#opt-boolean boolean flag]
 
-The type of an argument can be specified using the named parameter {{type}}:
+How to define a option flag which sets a boolean variable.
 
-[[code]]
-parser.add_argument('--count', '-c', dest='count', type=int)
-parser.add_argument('--ratio', '-r', dest='ratio', type=float)
-[[/code]]
+[[# opt-str-note]]
+++ [#opt-str string option]
 
-If the argument cannot be converted to the type, the script prints out a usage statement and exits with a non-zero value.
+How to define an option flag which takes an argument and sets a string variable.
 
-The default value is {{None}}, but this can be changed using the named parameter {{default}}:
+[[# opt-num-note]]
+++ [#opt-num numeric option]
 
-[[code]]
-parser.add_argument('--file', '-f', dest='file', default='tmpfile')
-parser.add_argument('--count', '-c', dest='count', type=int, default=1)
-parser.add_argument('--ratio', '-r', dest='ratio', type=float, default=0.5)
-[[/code]]
+How to define an option flag which takes an argument and sets a numeric variable.
+
+[[# opt-unrecognized-note]]
+++ [#opt-unrecognized unrecognized option behavior]
+
+[[# opt-required-note]]
+++ [#opt-required required option]
+
+[[# opt-default-note]]
+++ [#opt-default default option]
+
+[[# opt-delimited-note]]
+++ [#opt-delimited delimited options]
+
+[[# opt-repeated-note]]
+++ [#opt-repeated repeated options]
+
+[[# opt-positional-note]]
+++ [#opt-positional positional parameters]
+
+[[# opt-positional-array-note]]
+++ [#opt-positional positional parameters as array]
+
+[[# opt-usage-note]]
+++ [#opt-usage usage]
+
+[[# opt-subcmd-note]]
+++ [#opt-subcmd subcommand]
 
 [[# libraries-namespaces-note]]
 + [#libraries-namespaces Libraries and Namespaces]
@@ -2637,17 +2708,12 @@ How to create an alias for a method.
 
 Ruby provides the keyword {{alias}} and the method {{alias_method}} in the class {{Module}}.  Inside a class body they behave idenitically.  When called from inside a method {{alias}} has no effect but {{alias_method}} works as expected.  Hence some recommend always using {{alias_method}}.
 
-[[# inheritance-polymorphism-note]]
-+ [#inheritance-polymorphism Inheritance and Polymorphism]
+[[# inheritance-note]]
+++ [#inheritance subclass]
 
 A //subclass// is a class whose objects contain all of the methods from another class called the //superclass//.  Objects in the subclass should in principle be usable anywhere objects in the superclass can be used.  The subclass may have extra methods which are not found in the superclass.  Moreover it may replace method definitions in the superclass with its own definitions provided the signature remains the same.  This is called //overriding//.
 
 It is sometimes useful to define superclass which is never instantiated.  Such a class is called an //abstract class//.  An abstract class is way to share code between two or more subclasses or to define the API that two or more subclasses should implement.
-
-[[# inheritance-note]]
-++ [#inheritance inheritance]
-
-How to use inheritance.
 
 [[# reflection-note]]
 + [#reflection Reflection]
@@ -2998,9 +3064,6 @@ How to define a setup method which gets called before every test.
 ++ [#test-teardown teardown]
 
 How to define a cleanup method which gets called after every test.
-
-[[# logging-note]]
-+ [#logging Logging]
 
 [[# debugging-note]]
 + [#debugging Debugging]
