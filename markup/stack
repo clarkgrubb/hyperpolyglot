@@ -1,6 +1,6 @@
 //a side-by-side reference sheet//
 
-[#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#stack stack] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regex regexes] _
+[#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#stack stack] | [#arithmetic-logic arithmetic and logic] | [#strings strings] _
 [#dates-time dates and time] | [#arrays arrays] | [#heap heap] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#exceptions exceptions] | [#file-handles file handles] | [#files files] _
 [#directories directories] | [#processes-environment processes and environment] | [#libraries-namespaces libraries and namespaces] |  [#reflection reflection] | [#graphics graphics]
 
@@ -168,20 +168,6 @@ s\" don't say \"no\""||(don't say "no") _
 ||string to number|| || ||
 ||[#case-manipulation case manipulation]|| || ||
 ||[#sprintf sprintf]|| || ||
-||||||~ [[# regex]][#regex-note regular expressions]||
-||~ ||~ forth||~ postscript||
-||[[# regex-literal]][#regex-literal-note literal]|| || ||
-||[[# char-class-abbrev]][#char-class-abbrev-note character class abbreviations]|| || ||
-||[[# regex-anchors]][#regex-anchors-note anchors] _
-@<&nbsp;>@|| || ||
-||[[# regex-test]][#regex-test-note match test]|| || ||
-||[[# case-insensitive-regex]][#case-insensitive-regex-note case insensitive match test]|| || ||
-||[[# regex-modifiers]][#regex-modifiers-note modifiers] _
-@<&nbsp;>@|| || ||
-||[[# subst]][#subst-note substitution]|| || ||
-||[[# group-capture]][#group-capture-note group capture] _
-@<&nbsp;>@|| || ||
-||[[# regex-back-ref]][#regex-back-ref-note back reference in match and substitution]|| || ||
 ||||||~ [[# dates-time]][#dates-time-note dates and time]||
 ||~ ||~ forth||~ postscript||
 ||[[# broken-down-date-time-type]][#broken-down-date-time-type-note broken-down date and time type]|| || ||
@@ -506,39 +492,6 @@ Paren delimited comments do not nest.
 
 [[# strings-note]]
 + [#strings Strings]
-
-[[# regex-note]]
-+ [#regex Regular Expressions]
-
-[[# regex-literal-note]]
-++ [#regex-literal literal]
-
-The syntax for a regular expression value.
-
-[[# char-class-abbrev-note]]
-++ [#char-class-abbrev character class abbreviations]
-
-
-[[# regex-anchors-note]]
-++ [#regex-anchors anchors]
-
-[[# regex-test-note]]
-++ [#regex-test match test]
-
-[[# case-insensitive-regex-note]]
-++ [#case-insensitive-regex case insensitive match test]
-
-[[# regex-modifiers-note]]
-++ [#regex-modifiers modifiers]
-
-[[# subst-note]]
-++ [#subst substitution]
-
-[[# group-capture-note]]
-++ [#group-capture group capture]
-
-[[# regex-back-ref-note]]
-++ [#regex-back-ref back reference in match and substitution]
 
 [[# dates-time-note]]
 + [#dates-time Dates and Time]
