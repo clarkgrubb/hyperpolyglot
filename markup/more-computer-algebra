@@ -589,7 +589,7 @@ end try;|| || ||
 ||||||||||~ [[# processes-env]][#processes-env-note processes and environment]||
 ||~ ||~ pari/gp||~ magma||~ gap||~ singular||
 ||[[# env-var]][#env-var-note environment variable]||getenv("HOME")|| || || ||
-||[[#external-cmd]][#external-cmd-note external command]||system("ls /etc")|| || || ||
+||[[# external-cmd]][#external-cmd-note external command]||system("ls /etc")|| || || ||
 ||[[# cmd-subst]][#cmd-subst-note command substitution]||##gray|@@\\@@ array of output lines:## _
 lines = externstr("ls /etc")|| || || ||
 ||||||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
