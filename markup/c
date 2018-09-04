@@ -1,6 +1,6 @@
 [[# top]]//a side-by-side reference sheet//
 
-[#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#fixed-length-arrays fixed-length-arrays] | [#resizable-arrays resizable arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#concurrency concurrency] | [#file-handles file handles] | [#files files] | [#file-fmt file formats] | [#directories directories] | [#processes-environment processes and environment] | [#option-parsing option parsing] | [#libraries-namespaces libraries and namespaces] | [#user-defined-types user-defined types] | [#cpp-macros c preprocessor macros] | [#net-web net and web] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling]
+[#grammar-invocation grammar and invocation] | [#variables-expressions variables and expressions] | [#arithmetic-logic arithmetic and logic] | [#strings strings] | [#regexes regexes] | [#dates-time dates and time] | [#fixed-length-arrays fixed-length-arrays] | [#resizable-arrays resizable arrays] | [#dictionaries dictionaries] | [#functions functions] | [#execution-control execution control] | [#concurrency concurrency] | [#file-handles file handles] | [#files files] | [#file-fmt file formats] | [#directories directories] | [#processes-environment processes and environment] | [#option-parsing option parsing] | [#libraries-namespaces libraries and namespaces] | [#objects objects] | [#user-defined-types user-defined types] | [#cpp-macros c preprocessor macros] | [#net-web net and web] | [#unit-tests unit tests] | [#debugging-profiling debugging and profiling]
 
 ||||||~ [[# version]][#version-note version]||
 ||~ ||~ [#c c]||~ [#go go]||
@@ -1050,7 +1050,7 @@ func add(n float32, m float32) float32 { _
 ||[[# overload-func]][#overload-func-note overload function] _
 @<&nbsp;>@||##gray|//not permitted//##||##gray|//not permitted//##||
 ||[[# nest-func]][#nest-func-note nest function] _
-@<&nbsp;>@||##gray|//not permitted//##||##gray|//not permitted//##||
+@<&nbsp;>@||##gray|//not permitted//##||##gray|//the normal function declaration syntax cannot be nested, but see anonymous functions below//##||
 ||[[# default-val-param]][#default-val-param-note default value for parameter] _
 @<&nbsp;>@||##gray|//none//##||##gray|//none//##||
 ||[[# variable-num-arg]][#variable-num-arg-note variable number of arguments]||#include <stdarg.h> _
@@ -1441,17 +1441,24 @@ os.Stdout.WriteString("Hello, World!\n")||
 @<&nbsp;>@||printf("count: %d\n", 7); _
 wprintf(L"count: %d\n", 7);||fmt.Printf("count: %d\n", 7)||
 ||[[# open-file]][#open-file-note open file for reading]||##gray|/* returns NULL on error */## _
-FILE *f = fopen("/etc/hosts", "r");||raw, err := os.Open("/etc/hosts") _
+FILE *f = fopen("/etc/hosts", "r");||import "os" _
+ _
+raw, err := os.Open("/etc/hosts") _
 if err == nil { _
-@<&nbsp;&nbsp;>@f := bufio.NewReader(f) _
+@<&nbsp;&nbsp;>@f := bufio.NewReader(raw) _
 }||
 ||[[# open-file-write]][#open-file-write-note open file for writing]||##gray|/* returns NULL on error */## _
-FILE *f = fopen("/tmp/test", "w");|| ||
+FILE *f = fopen("/tmp/test", "w");||import "os" _
+ _
+perms := os.O_RDWR | os.O_CREATE _
+f, err := os.OpenFile("/tmp/test", perms, 0644)||
 ||[[# open-file-append]][#open-file-append-note open file for appending]||##gray|/* returns NULL on error */## _
-FILE *f = fopen("/tmp/err.log", "a");|| ||
+FILE *f = fopen("/tmp/err.log", "a");||import "os" _
+ _
+perms := os.O_RDWR | os.O_CREATE | os.O_APPEND _
+f, err := os.OpenFile("/tmp/test", perms, 0644)||
 ||[[# close-file]][#close-file-note close file]||##gray|/* returns EOF on error */## _
-int retval = fclose(f);|| ||
-||[[# close-file-implicitly]][#close-file-implicitly-note close file implicitly]||##gray|//none//##||##gray|//defer//##||
+int retval = fclose(f);||err := f.Close()||
 ||[[# io-err]][#io-err-note i/o errors]||##gray|//Functions return values such as// EOF, NULL, //or// -1 //to indicate error. Some functions return the value of// errno.  //In some cases errors are not distinguished from end-of-file.  The functions// ferror() //and// feof() //can be used to test a file handle. _
  _
 The type of error is stored in// errno.  strerror(errno) //or the thread safe// strerror_r(errno, buf, buflen) //convert the errors code to a string and// perror() //writes its argument to// stderr //with// sterror(errno).##|| ||
@@ -1477,12 +1484,16 @@ if (fgets(line, BUFSIZ, f) == NULL) { _
 ||[[# read-file-array]][#read-file-array-note read file into array of strings]|| || ||
 ||[[# read-file-str]][#read-file-str-note read file into string]|| || ||
 ||[[# write-str]][#write-str-note write string]||##gray|/* returns EOF on error */## _
-int retval = fputs("Hello, World!", f);|| ||
+int retval = fputs("Hello, World!", f);||bytes_written, err := f.WriteString("Hello, World!") _
+ _
+bytes_written, err := f.Write(byte[]("Hello, World!"))||
 ||[[# write-line]][#write-line-note write line]||##gray|/* returns EOF on error */## _
-int retval = fputs("Hello, World!\n", f);|| ||
+int retval = fputs("Hello, World!\n", f);||bytes_written, err := f.WriteString("Hello, World!\n") _
+ _
+bytes_written, err := f.Write(byte[]("Hello, World!\n"))||
 ||[[# flush]][#flush-note flush file handle]||if (fflush(f) == EOF) { _
 @<&nbsp;&nbsp;>@perror("fflush failed"); _
-}|| ||
+}||err := f.Sync()||
 ||[[# eof-test]][#eof-test-note end-of-file test] _
 @<&nbsp;>@||feof(f)|| ||
 ||[[# seek]][#seek-note get and set file handle position]||long pos; _
@@ -1964,7 +1975,16 @@ if (optind != argc - 1) { _
 } _
 else { _
 @<&nbsp;&nbsp;>@file = argv[optind]; _
-}|| ||
+}||var debug bool _
+var threshold int _
+ _
+flag.BoolVar(&debug, "debug", false, "debug mode") _
+flag.IntVar(&threshold, "threshold", 100, "threshold value") _
+flag.Parse() _
+ _
+##gray|@@//@@ e.g. could call executable with _
+@@//@@ _
+@@//@@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@-debug -threshold 200##||
 ||||||~ [[# libraries-namespaces]][#libraries-namespaces-note libraries and namespaces]||
 ||~ ||~ c||~ go||
 ||[[# load-lib]][#load-lib-note load library]||##gray|/* The library must also be linked: _
@@ -1986,7 +2006,7 @@ $ gcc -I/home/fred/include foo.c _
 ##gray|//Add directory to path searched by -l (lowercase L) option://## _
 $ gcc -L/home/fred/lib -lbar foo.c||##gray|//The installation libraries are in the// GOROOT //directory.  Additional directories can be listed in the// GOPATH //environment variable.  The directories are separated by colons (semicolons) on Unix (Windows). _
  _
-Each directory contains a// src //subdirectory containing source code and a// pkg/ARCH //subdirectory containing compiled libraries.//##||
+Each directory contains a// src //subdirectory containing source code and potentially a// pkg/ARCH //subdirectory containing compiled libraries.//##||
 ||[[# declare-namespace]][#declare-namespace-note declare namespace]||##gray|//none//##||##gray|@@//@@ A package declaration must be first statement _
 @@//@@ in every source file..## _
 package foo||
@@ -1996,10 +2016,46 @@ package foo||
 ||unqualified import of definitions|| || ||
 ||[[# pkg-manager]][#pkg-manager-note package manager] _
 ##gray|//search, install, list installed//##|| || ||
+||||||~ [[# objects]][#objects-note objects]||
+||~ ||~ c||~ go||
+||[[# def-class]][#def-class-note define class]|| ||##gray|@@//@@ Methods can be defined for any Go type. _
+@@//@@ Thus a type definition can be regarded as a class definition.## _
+type Counter struct { _
+@<&nbsp;&nbsp;>@value int _
+}||
+||[[# create-object]][#create-object-note create object] _
+@<&nbsp;>@|| ||	cnt := Counter{value: 7}||
+||[[# def-method]][#def-method-note define method]|| ||func (cnt Counter) Value() int { _
+@<&nbsp;&nbsp;>@return cnt.value _
+} _
+ _
+##gray|@@//@@ receiver must be pointer if method modifies it:## _
+func (cnt *Counter) Incr() { _
+@<&nbsp;&nbsp;>@cnt.value++ _
+}||
+||[[# invoke-method]][#invoke-method-note invoke method]|| ||##gray|@@//@@ same syntax for pointer and non-pointer receiver:## _
+cnt.Incr()||
+||[[# subclass]][#subclass-note subclass]|| ||##gray|@@//@@ An abstract superclass can be declared _
+@@//@@ using the interface keyword:## _
+type Incrementable interface { _
+@<&nbsp;&nbsp;>@Incr() _
+@<&nbsp;&nbsp;>@Value() int _
+} _
+ _
+func IncrAndPrint(incr Incrementable) { ) _
+@<&nbsp;&nbsp;>@incr.Incr() _
+@<&nbsp;&nbsp;>@fmt.Printf("incr: %d\n", incr.Value()) _
+} _
+ _
+cnt := Counter{value: 8} _
+IncrAndPrint(&cnt)||
 ||||||~ [[# user-defined-types]][#user-defined-types-note user-defined types]||
 ||~ ||~ c||~ go||
 ||[[# typedef]][#typedef-note typedef]||typedef int customer_id; _
-customer_id cid = 3;|| ||
+customer_id cid = 3;||type customer_id int _
+ _
+var cid customer_id _
+cid = 3||
 ||[[# enum]][#enum-note enum]||enum day_of_week { _
 @<&nbsp;&nbsp;>@mon, tue, wed, thu, fri, sat, sun _
 }; _
@@ -2095,7 +2151,7 @@ if err == nil { _
 }||
 ||||||~ [[# unit-tests]][#unit-tests-note unit tests]||
 ||~ ||~ c||~ go||
-||unit test example||$ sudo apt-get install check _
+||[[# unit-test-example]][#unit-test-example-note example]||$ sudo apt-get install check _
  _
 $ cat > check_foo.c _
 #include <check.h> _
@@ -2134,22 +2190,30 @@ $ gcc -o check_foo check_foo.c -lcheck _
 $  ./check_foo _
 Running suite(s): foo _
 0%: Checks: 1, Failures: 1, Errors: 0 _
-check_foo.c:4:F:foo:test_foo:0: not equal|| ||
-||equality assertion||fail_unless(1 == 2, "integers not equal"); _
+check_foo.c:4:F:foo:test_foo:0: not equal||$ cat foo_test.go _
+package foo _
  _
-char *s = "lorem"; _
-fail_unless(strcmp(s, "ipsum"), "strings not equal");|| ||
-||setup and teardown|| || ||
-||unit test coverage|| || ||
+import "testing" _
+ _
+func TestFoo(t *testing.T) { _
+@<&nbsp;&nbsp;>@t.Errorf("always fails") _
+} _
+ _
+$ go test _
+--- FAIL: TestFoo (0.00s) _
+@<&nbsp;&nbsp;>@foo_test.go:6: always fails _
+FAIL _
+exit status 1 _
+FAIL	_/Users/john/Lang/Go 0.007s||
 ||||||~ [[# debugging-profiling]][#debugging-profiling-note debugging and profiling]||
 ||~ ||~ c||~ go||
-||[[# check-syntax]][#check-syntax-note check syntax]||$ gcc -fsyntax-only foo.c|| ||
+||[[# check-syntax]][#check-syntax-note check syntax]||$ gcc -fsyntax-only foo.c||$ go vet||
 ||[[# stronger-warnings]][#stronger-warnings-note flag for stronger warnings]||$ gcc -Wall foo.c|| ||
 ||[[# suppress-warnings]][#suppress-warnings-note suppress warnings]||$ gcc -w foo.c|| ||
 ||[[# warnings-as-err]][#warnings-as-err-note treat warnings as errors]||$ gcc -Werror foo.c|| ||
 ||[[# lint]][#lint-note lint]||$ sudo apt-get install splint _
 $ splint foo.c|| ||
-||[[# src-cleanup]][#src-cleanup-note source cleanup]|| || ||
+||[[# src-cleanup]][#src-cleanup-note source cleanup]|| ||$ go fmt||
 ||[[# debugger]][#debugger-note run debugger]||$ gcc -g -o foo foo.c _
 $ gdb foo|| ||
 ||[[# debugger-cmds]][#debugger-cmds-note debugger commands] _
@@ -2168,7 +2232,7 @@ $ gdb foo|| ||
 @@>@@ p ##gray|EXPR## _
 @@>@@ r ##gray|[ARG1[, [ARG2 @@...@@]]## _
 @@>@@ q|| ||
-||[[# cpu-usage]][#cpu-usage-note cpu usage]||#include <sys/times.h> _
+||[[# benchmark]][#benchmark-note benchmark code]||#include <sys/times.h> _
 #include <unistd.h>@<&nbsp;&nbsp;>@##gray|/* sysconf */## _
  _
 struct tms start, end; _
@@ -2200,11 +2264,51 @@ clock_t system = end.tms_stime - start.tms_stime; _
  _
 printf("wall: %f s\n", wall / ticks_per_s); _
 printf("user: %f s\n", user / ticks_per_s); _
-printf("system: %f s\n", system / ticks_per_s);|| ||
+printf("system: %f s\n", system / ticks_per_s);||$ cat foo_test.go _
+package foo _
+ _
+import "testing" _
+ _
+func BenchmarkFoo(b *testing.B) { _
+@<&nbsp;&nbsp;>@for i := 0; i < 1000 * 1000 * 1000; i++ { _
+@<&nbsp;&nbsp;>@} _
+} _
+ _
+$ go test -bench . _
+goos: darwin _
+goarch: amd64 _
+BenchmarkFoo-8@<&nbsp;&nbsp;>@1000000000@<&nbsp;&nbsp;>@0.29 ns/op _
+PASS _
+ok _/Users/john/Lang/go 3.709s||
 ||[[# profile]][#profile-note profile code]||##gray|//does not work on Mac OS X//## _
 $ gcc -pg -o foo foo.c _
 $ ./foo _
-$ gprof foo|| ||
+$ gprof foo||$ cat foo_test.go _
+package foo _
+ _
+import "flag" _
+import "fmt" _
+import "testing" _
+ _
+var cpuprofile = flag.String("cpuprofile", "", "") _
+ _
+func Foo() int { _
+@<&nbsp;&nbsp;>@for j := 0; j < 100; j++ { _
+@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@return 1 _
+} _
+ _
+func BenchmarkFoo(b *testing.B) { _
+@<&nbsp;&nbsp;>@for i := 0; i < 1000 * 1000 * 10; i++ { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@j := Foo() _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@if j > 10 { _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@fmt.Printf("Unexpected") _
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@} _
+@<&nbsp;&nbsp;>@} _
+} _
+ _
+$  go tool pprof cpu.prof _
+##gray|//type "top" to see profile//##||
 ||[[# memory-tool]][#memory-tool-note memory tool]||$ sudo apt-get install valgrind _
 $ gcc -o foo foo.c _
 $ valgrind foo|| ||
@@ -3693,6 +3797,25 @@ It also allows a client to use two different libraries which declare the same na
 
 How to import all the identifiers in a library so that the client can refer to them without the namespace prefix.
 
+[[# objects-note]]
++ [#objects Objects]
+
+[[# def-class-note]]
+++ [#def-class define class]
+
+[[# create-object-note]]
+++ [#create-object create object]
+
+[[# def-method-note]]
+++ [#def-method define method]
+
+[[# invoke-method-note]]
+++ [#invoke-method invoke method]
+
+[[# subclass-note]]
+++ [#subclass subclass]
+
+
 [[# user-defined-types-note]]
 + [#user-defined-types User-Defined Types]
 
@@ -3798,6 +3921,9 @@ How to make an HTTP GET request.
 
 [[# unit-tests-note]]
 + [#unit-tests Unit Tests]
+
+[[# unit-test-example-note]]
+++ [#unit-test-example example]
 
 [[# debugging-profiling-note]]
 + [#debugging-profiling Debugging and Profiling]
