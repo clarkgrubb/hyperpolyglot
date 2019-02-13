@@ -1774,19 +1774,9 @@ end||
 @<&nbsp;&nbsp;>@echo "$i\n"; _
 }||##gray|//none//##||
 ||[[# break]][#break-note break] _
-@<&nbsp;>@||for (let i = 30; i < 50; ++i) { _
-@<&nbsp;&nbsp;>@if (i % 7 === 0) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@console.log('first multiple: ' + i); _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@break; _
-@<&nbsp;&nbsp;>@} _
-}||break||break||break||
+@<&nbsp;>@||break||break||break||break||
 ||[[# continue]][#continue-note continue] _
-@<&nbsp;>@||for (let i = 30; i < 50; ++i) { _
-@<&nbsp;&nbsp;>@if (i % 7 === 0) { _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@continue; _
-@<&nbsp;&nbsp;>@} _
-@<&nbsp;&nbsp;>@console.log('not divisible: ' + i); _
-}||continue||continue||next||
+@<&nbsp;>@||continue||continue||continue||next||
 ||[[# statement-modifiers]][#statement-modifiers-note statement modifiers] _
 @<&nbsp;>@||##gray|//none//##||##gray|//none//##||##gray|//none//##||puts "positive" if i > 0 _
 puts "nonzero" unless i == 0||
