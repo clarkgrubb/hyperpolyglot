@@ -165,7 +165,7 @@ int *ip = malloc(sizeof(int));||##gray|@@//@@ Primitive types are stack allocate
 @@//@@ heap:## _
 Integer i = new Integer(0);||object i = 0;||
 ||[[# uninitialized-heap]][#uninitialized-heap-note uninitialized heap]||##gray|//Memory allocated by the// new //operator is zero-initialized.//##|| ||##gray|//zero-initialized//##|| ||
-||[[# free-heap]][#free-heap-note free heap]||delete i;||#include <stdlib.h> _
+||[[# free-heap]][#free-heap-note free heap]||delete ip;||#include <stdlib.h> _
  _
 free(ip);||##gray|//garbage collected//##||##gray|//garbage collected//##||
 ||[[# null]][#null-note null] _

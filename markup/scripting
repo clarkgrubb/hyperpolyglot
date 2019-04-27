@@ -932,7 +932,7 @@ import datetime _
 tmz = pytz.timezone('Asia/Tokyo') _
 utc = datetime.datetime.utcnow() _
 utc_dt = datetime.datetime( _
-@<&nbsp;&nbsp;>@*utc.timetuple()[0:5], _
+@<&nbsp;&nbsp;>@*utc.timetuple()[0:6], _
 @<&nbsp;&nbsp;>@tzinfo=pytz.utc) _
 jp_dt = utc_dt.astimezone(tmz)|| ||##gray|# gem install tzinfo## _
 require 'tzinfo' _
