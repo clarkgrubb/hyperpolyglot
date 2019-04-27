@@ -1364,12 +1364,20 @@ payload pl = {3}; _
 if (pthread_create(&thr, NULL, &thread, (void*)&pl)) { _
 @<&nbsp;&nbsp;>@printf("failed to create thead\n"); _
 @<&nbsp;&nbsp;>@exit(1); _
-}|| ||
+}||type Payload struct { _
+@<&nbsp;&nbsp;>@id int _
+} _
+ _
+func thread(arg Payload) { _
+@<&nbsp;&nbsp;>@fmt.Printf("the value is %d\n", arg.id) _
+} _
+ _
+go thread(Payload{7})||
 ||[[# terminate-current-thread]][#terminate-current-thread-note terminate current thread]||#include <pthread.h> _
  _
 payload pl = {7}; _
  _
-pthread_exit((void*)&pl);|| ||
+pthread_exit((void*)&pl);||##gray|//return from function which defines thread//##||
 ||[[# terminate-other-thread]][#terminate-other-thread-note terminate other thread]||#include <pthread> _
  _
 pthread_t thr; _
@@ -1386,12 +1394,16 @@ if (pthread_cancel(thr)) { _
 @<&nbsp;&nbsp;>@printf("failed to cancel thread\n"); _
 @<&nbsp;&nbsp;>@exit (1); _
 }|| ||
-||[[# list-threads]][#list-threads-note list threads]||##gray|//no portable way//##|| ||
 ||[[# wait-on-thread]][#wait-on-thread-note wait on thread]|| || ||
 ||[[# lock]][#lock-note lock]|| || ||
-||[[# create-msg-queue]][#create-message-queue-note create message queue]|| || ||
-||[[# send-msg]][#send-msg-note send message]|| || ||
-||[[# receive-msg]][#receive-msg-note receive message]|| || ||
+||[[# msg-queue]][#msg-queue-note message queue]|| ||func thread(c chan int) { _
+@<&nbsp;&nbsp;>@i := <- c _
+@<&nbsp;&nbsp;>@fmt.Printf("the value is %d\n", i) _
+} _
+ _
+c := make(chan int) _
+go thread(c) _
+c <- 7||
 ||||||~ [[# file-handles]][#file-handles-note file handles]||
 ||~ ||~ c||~ go||
 ||[[# std-file-handles]][#std-file-handles-note standard file handles]||stdin stdout stderr||import "os" _
