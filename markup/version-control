@@ -86,7 +86,7 @@ $ git remote set-branches [#REMOTE REMOTE] [@@--@@add] \
 ##gray|-p: //remove untracked files// _
  _
 //without// -p //untracked files are listed//##||
-||move working directory changes to shelf||$ git stash [save @@[@@[#STR STR]]]||$ hg [-n STR] shelve||
+||move working directory changes to shelf||$ git stash [push @@[@@-m [#STR STR]]]||$ hg [-n STR] shelve||
 ||list sets of changes in shelf||$ git stash list||$ hg shelve @@--@@list [-p] _
  _
 ##gray|-p: //show each set of changes as diff//##||
@@ -222,10 +222,11 @@ tip //refers to the most recent revision in the repository.//##||
  _
 ##gray|-r: list remote tracking branches _
 -a: list local and remote tracking branches##||$ hg bookmarks||
-||list branches by commit||$ git branch (@@--@@contains|@@--@@merged) COMMIT _
+||list branches containing commit||$ git branch (@@--@@contains|@@--@@merged) COMMIT _
  _
 ##gray|@@--@@contains: branches descended from COMMIT _
 @@--@@merged:branches ancestors of COMMIT##|| ||
+||list branches by most recent commit||$ git branch --sort=-committerdate|| ||
 ||checkout branch||$ git checkout BRANCH _
  _
 ##gray|-f: discard changes in index and working directory##||$ hg update BRANCH _
