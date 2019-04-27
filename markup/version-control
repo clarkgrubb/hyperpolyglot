@@ -226,7 +226,7 @@ tip //refers to the most recent revision in the repository.//##||
  _
 ##gray|@@--@@contains: branches descended from COMMIT _
 @@--@@merged:branches ancestors of COMMIT##|| ||
-||list branches by most recent commit||$ git branch --sort=-committerdate|| ||
+||list branches by most recent commit||$ git branch @@--@@sort=-committerdate|| ||
 ||checkout branch||$ git checkout BRANCH _
  _
 ##gray|-f: discard changes in index and working directory##||$ hg update BRANCH _
