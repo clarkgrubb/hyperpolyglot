@@ -379,7 +379,8 @@ gu||C-x C-l||M-x downcase-region|| ||
 @<&nbsp;>@|| || ||M-x capitalize-region|| ||
 ||||||||||~ [[# indentation]]**[#indentation-note indentation and rectangles]**||
 ||~  ||~ vim||~ emacs||~ emacs||~ nano||
-||indent line||@@>>@@|| || || ||
+||insert tab at beginning of line||@@>>@@|| || || ||
+||remove tab from beginning of line||@@<<@@|| || || ||
 ||indent region||##gray|//visual mode://## _
 @@>@@|| || || ||
 ||syntactically indent line|| ||##gray|//but electric-indent default in 24.4://## _
