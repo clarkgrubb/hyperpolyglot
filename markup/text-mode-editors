@@ -252,23 +252,23 @@ M-x ido-write-file||C-o ##gray|//path//##||
 M-x ido-insert-file||C-r||
 ||||||||||~ [[# minibuffer]]**[#minibuffer-note minibuffer]**||
 ||~  ||~ vim||~ emacs||~ emacs||~ nano||
-||enter minibuffer||:||##gray|//use command which prompts for an argument//##|| || ||
-||move cursor _
+||[[# enter-minibuffer]][#enter-minibuffer-note enter minibuffer]||:||##gray|//use command which prompts for an argument//##|| || ||
+||[[# move-cursor]][#move-cursor-note move cursor] _
 ##gray|//left, right//##||← _
 →|| || || ||
-||delete previous char||DEL||DEL|| || ||
-||delete previous word||C-w||M-DEL||backward-kill-word|| ||
-||go to beginning of command line||C-b||C-a||move-beginning-of-line|| ||
-||go to end of command line||C-e||C-e||move-end-of-line|| ||
-||clear buffer||C-u||C-a C-k|| || ||
-||cancel command||ESC _
+||[[# delete-prev-char]][#delete-prev-char-note delete previous char]||DEL||DEL|| || ||
+||[[# delete-prev-word]][#delete-prev-word-note delete previous word]||C-w||M-DEL||backward-kill-word|| ||
+||[[# begin-cmd-line]][#begin-cmd-line-note go to beginning of line]||C-b||C-a||move-beginning-of-line|| ||
+||[[# end-cmd-line]][#end-cmd-line-note go to end of line]||C-e||C-e||move-end-of-line|| ||
+||[[# clear-buf]][#clear-buf-note clear buffer]||C-u||C-a C-k|| || ||
+||[[# cancel-cmd]][#cancel-cmd-note cancel command]||ESC _
 C-c||C-g||abort-recursive-edit|| ||
-||complete||TAB||TAB||minibuffer-complete|| ||
-||display completions||C-d||?||minibuffer-completion-help|| ||
-||select completions buffer|| ||M-v||switch-to-completions|| ||
-||show history||:history|| || || ||
-||go back in history|| ||M-p||previous-history-element|| ||
-||go forward in history|| ||M-n||next-history-element|| ||
+||[[# complete]][#complete-note complete]||TAB||TAB||minibuffer-complete|| ||
+||[[# display-completitions]][#display-completions-note display completions]||C-d||?||minibuffer-completion-help|| ||
+||[[# select-completions-buf]][#select-completions-buf-note select completions buffer]|| ||M-v||switch-to-completions|| ||
+||[[# show-history]][#show-history-note show history]||:history|| || || ||
+||[[# go-back-history]][#go-back-history-note go back in history]|| ||M-p||previous-history-element|| ||
+||[[# go-forward-history]][#go-forward-history-note go forward in history]|| ||M-n||next-history-element|| ||
 ||||||||||~ [[# ido]]**[#ido-note ido]**||
 ||~  ||~ vim||~ emacs||~ emacs||~ nano||
 ||select first match|| ||RET||ido-exit-minibuffer|| ||
