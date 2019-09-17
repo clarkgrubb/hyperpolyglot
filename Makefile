@@ -153,6 +153,8 @@ clean: clean.math clean.html
 clobber: clean
 	rm -f $(wiki)
 
+wikidot_to_html = ./bin/wikidot_to_html.py
+
 build:
 	mkdir -p $@
 
@@ -162,7 +164,7 @@ build/%.html: markup/% | build
 	( echo '<% title="Lorem Ipsum"; math=true %>' \
 	  && cat header.html.erb ) \
 	| erb > $@
-	./wikidot-to-html/src/wikidot_to_html.py < $< >> $@
+	$(wikidot_to_html) < $< >> $@
 	( echo '<% foo=false %> ' \
 	  && cat footer.html.erb ) \
 	| erb >> $@
