@@ -18,7 +18,7 @@
 ||[[# simple-cmd-redirect]][#simple-cmd-redirect-note simple command with redirect]||ls > /tmp/ls.out||ls > /tmp/ls.out||ls > /tmp/ls.out||ls > /tmp/ls.out||ls > /tmp/ls.out||
 ||[[# simple-cmd-env-var]][#simple-cmd-env-var-note simple command with environment variable]||EDITOR=vi git commit||env EDITOR=vi git commit||EDITOR=vi git commit||env EDITOR=vi git commit||EDITOR=vi git commit||
 ||[[# pipeline]][#pipeline-note pipeline]||ls | wc||ls | wc||ls | wc||ls | wc||ls | wc||
-||[[# sublist-separators]][#sublist-separators-note sublist separators]||&& @@||@@||##gray|//none//##||&& @@||@@||&& @@||@@||&& @@||@@||
+||[[# sublist-separators]][#sublist-separators-note sublist separators]||&& @@||@@||&& @@||@@||&& @@||@@||&& @@||@@||&& @@||@@||
 ||[[# list-terminators]][#list-terminators-note list terminators]||; &||; &||; &||; &||; & ||
 ||[[# group-cmd]][#group-cmd-note group command]||{ ls; ls;} | wc||begin; ls; ls; end | wc||{ ls; ls;} | wc||##gray|//none//##||{ ls; ls;} | wc||
 ||[[# subshell]][#subshell-note subshell]||(ls; ls) | wc||fish -c 'ls; ls' | wc||(ls; ls) | wc||(ls; ls) | wc||(ls; ls) | wc||
