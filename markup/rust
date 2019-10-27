@@ -89,10 +89,7 @@ i = 3;||var i = 0 _
 i = 3|| ||
 ||[[# parallel-assignment]][#parallel-assignment-note parallel assignment]||##gray|@@//@@ only in variable definition:## _
 let (m, n) = (3, 7);||var (m, n) = (3, 7)|| val (m, n) = (3, 7) ||
-||[[# swap]][#swap-note swap]||let tmp; _
-tmp = x; _
-x = y; _
-y = tmp;||(x, y) = (y, x)|| ||
+||[[# swap]][#swap-note swap]||let (x, y) = (y, x);||(x, y) = (y, x)|| ||
 ||[[# compound-assignment]][#compound-assignment-note compound assignment]||##gray|//arithmetic://## _
 += -= *= /= %= _
  _
