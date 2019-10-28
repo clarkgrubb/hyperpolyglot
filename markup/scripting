@@ -1772,7 +1772,9 @@ end||
 }||for i in range(1, 11): _
 @<&nbsp;&nbsp;>@print(i)||for ($i = 1; $i <= 10; $i++) { _
 @<&nbsp;&nbsp;>@echo "$i\n"; _
-}||##gray|//none//##||
+}||for i in 1..11 do _
+@<&nbsp;&nbsp;>@puts i _
+end||
 ||[[# break]][#break-note break] _
 @<&nbsp;>@||for (let i = 30; i < 50; ++i) { _
 @<&nbsp;&nbsp;>@if (i % 7 === 0) { _
