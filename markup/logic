@@ -111,8 +111,11 @@ foo(X, Y) = foo(1, 2).||{X, Y} = {1, 2}. _
 @<&nbsp;&nbsp;>@X > 0 -> 1; _
 @<&nbsp;&nbsp;>@X == 0 -> X; _
 @<&nbsp;&nbsp;>@X < 0 -> -1 _
-end|| if x > 0 do 1 else if x < 0 do -1 else 0 end end||
-||[#case case]||(@<&nbsp;&nbsp;>@X = 1 -> Result = true _
+end||cond _
+@<&nbsp;&nbsp;>@x > 0 -> 1
+@<&nbsp;&nbsp;>@x == 0 -> x
+@<&nbsp;&nbsp;>@x < 0 -> -1
+end||[#case case]||(@<&nbsp;&nbsp;>@X = 1 -> Result = true _
 ;@<&nbsp;&nbsp;>@X = 0 -> Result = false ). _
 ##gray|//or://## _
 member(X-Result, [ _
