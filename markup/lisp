@@ -43,7 +43,7 @@ SP ( ) " , ' @@`@@ : ; # | \ _
 SP ( ) [ ] { } " , ' @@`@@ ; # | \||##gray|//case sensitive, cannot start with digit//## _
  _
 ##gray|//permitted characters://## _
-A-Z a-z 0-9 * + ! -  _ ? _
+A-Z a-z 0-9 * + ! -  _ ? _ ' < > =
  _
 ##gray|//these have special meaning or are reserved://## _
 / . :||##gray|//case sensitive, cannot start with digit//## _
