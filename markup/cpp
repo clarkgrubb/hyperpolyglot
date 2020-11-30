@@ -49,7 +49,7 @@ $ java Hello||$ cat hello.cs _
 using System; _
  _
 public class Hello { _
-@<&nbsp;&nbsp;>@public static void Main() { _
+@<&nbsp;&nbsp;>@public static void Main(string[] args) { _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@Console.WriteLine("Hello, World!"); _
 @<&nbsp;&nbsp;>@} _
 } _
