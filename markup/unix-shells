@@ -511,7 +511,7 @@ ${foo:r}|| ||
 ||~ ||~ [#bash bash]||~ [#fish fish]||~ [#ksh ksh]||~ [#tcsh tcsh]||~ [#zsh zsh]||
 ||brace expansion: list||echo {foo,bar}||echo {foo,bar}||echo {foo,bar}||echo {foo,bar}||echo {foo,bar}||
 ||brace expansion: sequence||echo {1..10}||##gray|//none//##||echo {1..10}||##gray|//none//##||echo {1..10}||
-||brace expansion: character sequence||echo {a..z}||##gray|//none//##||echo {a..z}||##gray|//none//##||##gray|//none//##||
+||brace expansion: character sequence||echo {a..z}||##gray|//none//##||echo {a..z}||##gray|//none//##||echo {a..z}||
 ||tilde expansion||echo ~/bin||echo ~/bin||echo ~/bin||echo ~/bin||echo ~/bin||
 ||command expansion: dollar parens||echo $(ls)||echo (ls)||echo $(ls)||##gray|//none//##||echo $(ls)||
 ||command expansion: backticks||echo @@`ls`@@||##gray|//none//##||echo @@`ls`@@||echo @@`ls`@@||echo @@`ls`@@||
