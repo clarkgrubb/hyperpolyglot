@@ -20,7 +20,8 @@ const _ = require('lodash');||import os, re, sys||##gray|# sudo apt install php-
 @<&nbsp;>@||$ node foo.js||$ python foo.py||$ php -f foo.php||$ ruby foo.rb||
 ||[[# repl]][#repl-note repl] _
 @<&nbsp;>@||$ node||$ python||$ php -a||$ irb||
-||[[# cmd-line-program]][#cmd-line-program-note command line program]||$ node -e "console.log('hi!');"||$ python -c 'print("hi!")'||$ php -r 'echo "hi!\n";'||$ ruby -e 'puts "hi!"'||
+||[[# cmd-line-program]][#cmd-line-program-note command line program]||$ node -e "console.log('hi!');"
+$ node -p "'hi!'"||$ python -c 'print("hi!")'||$ php -r 'echo "hi!\n";'||$ ruby -e 'puts "hi!"'||
 ||[[# block-delimiters]][#block-delimiters-note block delimiters] _
 @<&nbsp;>@||{}||: ##gray|//and offside rule//##||{}||{} _
 do end||
