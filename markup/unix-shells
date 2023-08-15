@@ -2009,14 +2009,22 @@ If PAT=REP is specified then each occurrence of PAT will be replaced with REP in
 ||~ ||~ [#bash bash]||~ [#fish fish]||~ [#ksh ksh]||~ [#tcsh tcsh]||~ [#zsh zsh]||
 ||most recent command||!!||##gray|//none//##||##gray|//none//##||!!||!!||
 ||n-th command||!##gray|//n//##||##gray|//none//##||##gray|//none//##||!##gray|//n//##||!##gray|//n//##||
+||n-th most recent command||!-##gray|//n//##|| || || ||!-##gray|//n//##||
 ||most recent command starting with str||!##gray|//str//##||##gray|//none//##||##gray|//none//##||!##gray|//str//##||!##gray|//str//##||
 ||most recent command with substitution||^##gray|//pattern//##^##gray|//replacement//##||##gray|//none//##||##gray|//none//##||^##gray|//pattern//##^##gray|//replacement//##||^##gray|//pattern//##^##gray|//replacement//##||
-||nth command with substitution||!##gray|//n//##:s/##gray|//pattern//##/##gray|//replacement//##/||##gray|//none//##||##gray|//none//##||!##gray|//n//##:s/##gray|//pattern//##/##gray|//replacement//##/||!##gray|//n//##:s/##gray|//pattern//##/##gray|//replacement//##/||
+||n-th command with substitution||!##gray|//n//##:s/##gray|//pattern//##/##gray|//replacement//##/||##gray|//none//##||##gray|//none//##||!##gray|//n//##:s/##gray|//pattern//##/##gray|//replacement//##/||!##gray|//n//##:s/##gray|//pattern//##/##gray|//replacement//##/||
 ||n-th command with global substitution||!##gray|//n//##:gs/##gray|//pattern//##/##gray|//replacement//##/||##gray|//none//##||##gray|//none//##||!##gray|//n//##:gs/##gray|//pattern//##/##gray|//replacement//##/||!##gray|//n//##:gs/##gray|//pattern//##/##gray|//replacement//##/||
+||all arguments in the previous command||!*||##gray|//none//##||##gray|//none//##|| ||!*||
+||first argument in the previous command||!^||##gray|//none//##||##gray|//none//##|| ||!^||
+||last argument in the previous command||!$||##gray|//none//##||##gray|//none//##|| ||!$||
+||n-th argument in the previous command||!:##gray|//n//##||##gray|//none//##||##gray|//none//##|| ||!:##gray|//n//##||
+||range of arguments in the previous command||!:##gray|//n//##-##gray|//m//##||##gray|//none//##||##gray|//none//##|| ||!:##gray|//n//##-##gray|//m//##||
+||all arguments in the current command||!#:*||##gray|//none//##||##gray|//none//##|| ||!#:*||
+||first argument in the current command||!#:^||##gray|//none//##||##gray|//none//##|| ||!#:^||
+||last argument in the current command||!#:$||##gray|//none//##||##gray|//none//##|| ||!#:$||
+||n-th argument in the current command||!#:##gray|//n//##||##gray|//none//##||##gray|//none//##|| ||!#:##gray|//n//##||
+||range of arguments in the current command||!#:##gray|//n//##-##gray|//m//##||##gray|//none//##||##gray|//none//##|| ||!#:##gray|//n//##-##gray|//m//##||
 ||most recent arguments||!*||##gray|//none//##||##gray|//none//##|| ||!*||
-||first of most recent arguments||!:1||##gray|//none//##||##gray|//none//##|| ||!:1||
-||range of most recent arguments||!:##gray|//n//##-##gray|//m//##||##gray|//none//##||##gray|//none//##|| ||!:##gray|//n//##-##gray|//m//##||
-||last of most recent arguments||!$||##gray|//none//##||##gray|//none//##|| ||!$||
 ||most recent command without arguments||!:0||##gray|//none//##||##gray|//none//##|| ||!:0||
 ||m-th argument of n-th command||!##gray|//n//##:##gray|//m//##||##gray|//none//##||##gray|//none//##|| ||!##gray|//n//##:##gray|//m//##||
 
