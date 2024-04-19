@@ -141,8 +141,7 @@ if a[1] == None { _
 }|| || ||
 ||[[# coalesce]][#coalesce-note coalesce]||let a = vec![Some(1_i32), None]; _
 let i: i32 = a[1].unwrap_or(0_i32);|| || ||
-||[[# nullif]][#nullif-note nullif]|| || || ||
-||[[# expr-type-declaration]][#expr-type-decl-note expression type declaration]|| || ||1: Double||
+||[[# expr-type-declaration]][#expr-type-decl-note expression type declaration]||1_f64|| ||1: Double||
 ||||||||~ [[# arithmetic-logic]][#arithmetic-logic-note arithmetic and logic]||
 ||~ ||~ rust||~ swift||~ scala||
 ||[[# boolean-type]][#boolean-type-note boolean type] _
