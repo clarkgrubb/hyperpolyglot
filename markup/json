@@ -1,24 +1,27 @@
 [[# top]][#grammar-invocation grammar and invocation] | [#var-expr variables and expressions] | [#arith-logic arithmetic and logic] | [#strings strings] | [#regex regular expressions] | [#dates-time dates and time] | [#arrays arrays] | [#dictionaries dictionaries] | [#functions functions] | [#exec-control execution control] | [#exceptions exceptions] | [#streams streams] | [#file-fmt file formats] | [#processes-env processes and environment] | [#lib-namespaces libraries and namespaces] | [#reflection reflection]
 
-||||~ [[# version]]version||
-||~ ||~ [#jq jq]||
+||||||~ [[# version]]version||
+||~ ||~ [#jq jq]||~ [#jsonnet jsonnet]||
 ||[[# version-used]][#version-used-note version used] _
-@<&nbsp;>@||##gray|//1.5//##||
+@<&nbsp;>@||##gray|//1.5//##||##gray|//0.20//##||
 ||[[# show-version]][#show-version-note show version] _
-@<&nbsp;>@||$ jq @@--@@version||
-||||~ [[# grammar-invocation]]grammar and execution||
-||~ ||~ [#jq jq]||
+@<&nbsp;>@||$ jq @@--@@version||$ jsoneet @@--@@version||
+||||||~ [[# grammar-invocation]]grammar and execution||
+||~ ||~ [#jq jq]||~ [#jsonnet jsonnet]||
 ||[[# interpreter]][#interpreter-note interpreter]||$ cat > hello.jq _
 "Hello, World!" _
  _
 ##gray|# -n: use single "null" as input _
-# -r: write string content instead of quoted string literal to stdout## _
+# -r: write string content instead of quoted string literal## _
 $ jq -nr -f hello.jq _
-Hello, World!||
+Hello, World!||##gray|# -e: interpret 1st argument as expression## _
+##gray|# -S: write string content instead of quoted string literal## _
+$ jsonnet -eS '"Hello, World!"' _
+Hellow, World!||
 ||[[# cmd-line-program]][#cmd-line-program-note command line program]||$ echo '1 2 3' | jq '. * .' _
  _
 ##gray|# no stdin:## _
-$ jq -n '1 + 1' ||
+$ jq -n '1 + 1' || ||
 ||[[# stmt-separator]][#stmt-separator-note statement separator]||##gray|A program consists of filter expressions separated by commas and pipes: , | _
  _
 A filter expressions acts on its input and produces output. _
@@ -27,13 +30,15 @@ The pipe separator makes the output of the left expression the input of the righ
  _
 The comma separator, which concatenates the output of two filters, has higher precedence than the pipe separator. _
  _
-A function definition, include statement, or import statement is terminated by a semicolon: ;##||
+A function definition, include statement, or import statement is terminated by a semicolon: ;##||##gray|A program consists of zero or more local expressions followed by semicolons, with a final non-local expression##||
 ||[[# block-delimiters]][#block-delimiters-note block delimiters] _
 @<&nbsp;>@||##gray|# Use parens to change precedence:## _
 $ jq -n '2, (3 | . * .)' _
-$ jq -n '2, 3 | . * .'||
+$ jq -n '2, 3 | . * .'|| ||
 ||[[# eol-comment]][#eol-comment-note end of line comment] _
-@<&nbsp;>@||##gray|# comment##||
+@<&nbsp;>@||##gray|# comment##||##gray|# python-style comment## _
+ _
+##gray|@@//@@ C++-style comment##||
 ||||~ [[# var-expr]]variables and expressions||
 ||~ ||~ jq||
 ||[[# assignment]][#assignment-note assignment]||$ echo '[1,2,3]' | jq 'length as $x | map(. * $x)' _
@@ -288,3 +293,12 @@ $ echo 3 | jq 'import "multiples" as mult; mult::double'||
 + Jq
 
 [http://manpages.ubuntu.com/manpages/xenial/man1/jq.1.html jq man page]
+
+{{jq}} programs transform streams of JSON data.
+
+[[# jsonnet]
++ Jsonnet
+
+[https://jsonnet.org/ jsonnet.org]
+
+Jsonnet is an extension of JSON which adds variables and functions (hygienic macros). The Jsonnet iterpreter converts a Jsonnet program to JSON.
