@@ -422,7 +422,7 @@ Real.toString 3.14||7 + int_of_string "12" _
 ||[[# str-len]][#str-len-note length] _
 @<&nbsp;>@||size "hello"||String.length "hello"||"hello".Length||length "hello"||
 ||[[# index-substr]][#index-substr-note index of substring]|| || ||"hello".IndexOf("hell")|| ||
-||[[# substr]][#substr-note extract substring]||substring ("hello",0,4)||String.sub "hello" 0 4||"hello".Substring(0, 4)||drop 0 (take 4 "hello")||
+||[[# substr]][#substr-note extract substring]||substring ("hello",0,4)||String.sub "hello" 0 4||"hello".Substring(0, 4)||take 4 (drop 0 "hello")||
 ||[[# extract-char]][#extract-char-note extract character]||String.sub ("hello", 0)||"hello".[0]||"hello".[0]||"hello" !! 0||
 ||[[# chr-ord]][#chr-ord-note chr and ord]||ord #"a" _
 chr 97||Char.code 'a' _
