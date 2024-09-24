@@ -111,7 +111,7 @@ command substitution//##||foo=7 _
 "foo is $foo"||foo=7 _
 "foo is $foo"||
 ||[[# interpolating-quotes-esc]][#interpolating-quotes-esc-note interpolating quotes escape sequences]||\$ \\ @@\`@@ \"||\" \$ \\||\$ \\ @@\`@@||##gray|//none//##||\$ \\ @@\`@@ \"||
-||[[# c-esc-quotes]][#c-esc-quotes-note quotes with backslash escapes]||$'foo\n'||##gray|//none//##||$'foo'||##gray|//none//##||$'foo'||
+||[[# c-esc-quotes]][#c-esc-quotes-note quotes with backslash escapes]||$'foo\n'||##gray|//none//##||$'foo\n'||##gray|//none//##||$'foo\n'||
 ||[[# c-esc]][#c-esc-note quoted backslash escapes]||\a \b \e \E \f \n \r \t \v _
 \\ \' \" \##gray|//ooo//## \x##gray|//hh//## \c##gray|//ctrl//##||##gray|//none//##||\a \b \e \E \f \n \r \t \v _
 \\ \' \" \##gray|//ooo//## \x##gray|//hh//## \c##gray|//ctrl//##||##gray|//none//##||\a \b \e \E \f \n \r \t \v _
