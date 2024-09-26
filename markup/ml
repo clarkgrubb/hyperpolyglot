@@ -413,9 +413,9 @@ Real.toString 3.14||7 + int_of_string "12" _
 73.9 + (read "0.037")::Double _
 ##gray|//raises exception if string doesn't completely parse//##||
 ||[[# join]][#join-note join] _
-@<&nbsp;>@|| || ||System.String.Join(" ", ["do"; "re"; "mi"])|| ||
+@<&nbsp;>@|| ||String.concat "_" ["a"; "b"; "c"; "d"]||System.String.Join(" ", ["do"; "re"; "mi"])|| ||
 ||[[# split]][#split-note split] _
-@<&nbsp;>@|| || ||"do re mi".Split(' ')|| ||
+@<&nbsp;>@|| ||Str.split_delim (Str.regexp " ") "do re mi"||"do re mi".Split(' ')|| ||
 ||[[# char-type]][#char-type-note character type] _
 @<&nbsp;>@||char||char||char||Char||
 ||[[# char-literal]][#char-literal-note character literal]||#"h"||'h'||'h'||'h'||
