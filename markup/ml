@@ -1067,6 +1067,8 @@ c#get;;|| || ||
 ||[#inheritance inheritance]|| || || || ||
 ||||||||||~ [[# net-web]][#net-web-note net and web]||
 ||~ ||~ sml||~ ocaml||~ f#||~ haskell||
+||[#hello-world web server and hello world]||@<&nbsp;>@||@<&nbsp;>@||open Suave _
+startWebServer defaultConfig (OK "Hello World")||@<&nbsp;>@||@<&nbsp;>@||
 ||||||||||~ [[# unit-tests]][#unit-tests-note unit test]||
 ||~ ||~ sml||~ ocaml||~ f#||~ haskell||
 ||||||||||~ [[# debugging-profiling]][#debugging-profiling-note debugging and profiling]||
