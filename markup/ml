@@ -91,7 +91,7 @@ n := 4 _
 if x < 0 then ~x else x;||let n = -3;; _
 let absn = if n < 0 then -n else n;;||let n = -3 _
 let absn = if n < 0 then -n else n||n = -3 _
-let absn = if n < 0 then -n else n||[if [> x 0] x [- x]]||
+let absn = if n < 0 then -n else n||[if [> x 0] "pos" "neg"]||
 ||[[# branch-type-mismatch]][#branch-type-mismatch-note branch type mismatch]||##gray|(* compilation error: *)## _
 if true then "hello" else 3;||##gray|(* compilation error: *)## _
 if true then "hello" else 3;;||##gray|(* compilation error: *)## _
@@ -106,7 +106,8 @@ null||Nothing||##gray|//none//##||
  _
 val list = [SOME 3,NONE, SOME ~4];||type list_option_int = int option list;; _
  _
-let list = [Some 3; None; Some (-4)];;|| ||list = [Just(3), Nothing, Just(-4)]||##gray|//Option a://## [Some 3] ##gray|//or//## None||
+let list = [Some 3; None; Some (-4)];;|| ||list = [Just(3), Nothing, Just(-4)]||[type Option [Some a] None] _
+##gray|//then://## [Some 3] ##gray|//or//## None||
 ||[[# null-test]][#null-test-note null test]|| ||match foo with _
 @<&nbsp;&nbsp;>@| None -> true _
 @<&nbsp;&nbsp;>@| _ -> false;;|| || ||[match o [Some v] true None false]||
@@ -126,7 +127,7 @@ fromJust foo _
  _
 let intId x = x _
 ##gray|//evaluates to 0 if Nothing://## _
-maybe 0 intId foo||[match o [Some v] v None d]||
+maybe 0 intId foo||[get m :key dflt]||
 ||[[# nullif]][#nullif-note nullif]|| ||match foo with _
 @<&nbsp;&nbsp;>@| -999 -> None _
 @<&nbsp;&nbsp;>@| n -> Some n;;|| || ||[if [= a b] None [Some a]]||
@@ -161,8 +162,7 @@ end;||let z = _
 ||[[# min-max]][#min-max-note min and max]|| ||min 1 2 _
 max 1 2||min 1 2 _
 max 1 2||min 1 2 _
-max 1 2||[min a b] _
-[max a b]||
+max 1 2||##gray|//of a collection://## [min xs] [max xs]||
 ||[[# int-type]][#int-type-note integer type]||int||int _
  _
 ##gray|//other integer types://## _
@@ -450,11 +450,11 @@ time();;|| ||import System.Time _
 getClockTime @@>>@@= (\(TOD sec _) -> return sec)||##gray|//none//##||
 ||||||||||||~ [[# arrays]][#arrays-note arrays]||
 ||~ ||~ sml||~ ocaml||~ f#||~ haskell||~ loon||
-||literal|| || || || ||
-||size|| || || || ||
-||lookup|| || || || ||
-||update|| || || || ||
-||out-of-bounds|| || || || ||
+||literal|| || || || ||#[1 2 3]||
+||size|| || || || ||[len a]||
+||lookup|| || || || ||[nth a 0]||
+||update|| || || || ||##gray|//none//##||
+||out-of-bounds|| || || || ||[nth a 99] ##gray|//; runtime error//##||
 ||||||||||||~ [[# lists]][#lists-note lists]||
 ||~ ||~ sml||~ ocaml||~ f#||~ haskell||~ loon||
 ||[[# list-literal]][#list-literal-note literal]||[1, 2, 3]||[1; 2; 3]||[1; 2; 3]||[1, 2, 3]||#[1 2 3]||
@@ -484,7 +484,7 @@ elemIndex 8 [7, 8, 9] _
  _
 ##gray|@@--@@ Nothing:## _
 elemIndex 10 [7, 8, 9]||##gray|//none//##||
-||[[# update-list]][#update-list-note update]|| || || || ||[assoc xs 0 9]||
+||[[# update-list]][#update-list-note update]|| || || || ||##gray|//none//##||
 ||[[# concat-list]][#concat-list-note concatenate] _
 ##gray|//two lists, list of lists//##||[1, 2] @ [3, 4] _
 List.concat [[1, 2], [3, 4]]||[1; 2] @ [3; 4] _
@@ -520,9 +520,9 @@ sort [1, 3, 2, 4]||[sort xs]||
 ||[[# map-list]][#map-list-note map]||List.map (fn (x) => x + 2) [1, 2, 3];||List.map (( * ) 2) [1; 2; 3]||List.map (( * ) 2) [1; 2; 3]||map (\x -> x * x) [1, 2, 3]||[map [fn [x] [* x x]] xs]||
 ||[[# filter-list]][#filter-list-note filter] _
 @<&nbsp;>@||List.filter (fn (x) => x > 2) [1, 2, 3];||List.filter ((<) 2) [1; 2; 3]||List.filter ((<) 2) [1; 2; 3]||filter (\x -> x > 2) [1, 2, 3]||[filter [fn [x] [> x 0]] xs]||
-||[[# fold-list-left]][#fold-list-left-note fold from left]||List.foldl (op +) 0 [1, 2, 3];||List.fold_left (+) 0 [1; 2; 3]||List.fold (-) 0 [1; 2; 3]||foldl (+) 0 [1, 2, 3]||[fold xs 0 +]||
+||[[# fold-list-left]][#fold-list-left-note fold from left]||List.foldl (op +) 0 [1, 2, 3];||List.fold_left (+) 0 [1; 2; 3]||List.fold (-) 0 [1; 2; 3]||foldl (+) 0 [1, 2, 3]||[fold 0 [fn [a b] [+ a b]] xs]||
 ||[[# fold-list-right]][#fold-list-right-note fold from right] _
-@<&nbsp;>@|| ||List.fold_right (-) [1; 2; 3] 0||List.foldr (op -) 0 [1, 2, 3];||foldr (-) 0 [1, 2, 3]||[fold [reverse xs] 0 +]||
+@<&nbsp;>@|| ||List.fold_right (-) [1; 2; 3] 0||List.foldr (op -) 0 [1, 2, 3];||foldr (-) 0 [1, 2, 3]||[fold 0 [fn [a b] [+ a b]] [reverse xs]]||
 ||[[# list-member]][#list-member-note membership] _
 @<&nbsp;>@|| ||List.mem 3 [1; 2; 3]|| ||elem 3 [1, 2, 3]||[contains? xs 3]||
 ||[[# universal-test-list]][#universal-test-list-note universal test] _
@@ -535,13 +535,13 @@ List.combine [1; 2; 3] ['a'; 'b'; 'c'] _
 zip [1, 2, 3] ['a', 'b', 'c']||[zip xs ys]||
 ||||||||||||~ [[# tuples]][#tuples-note tuples]||
 ||~ ||~ sml||~ ocaml||~ f#||~ haskell||~ loon||
-||[[# tuple-literal]][#tuple-literal-note literal]||(1, "hello", true)||(1, "hello", true)||(1, "hello", true)||(1, "hello", True)||##gray|//use a vector://## #[1 "a"]||
-||[[# tuple-lookup]][#tuple-lookup-note lookup]||#1 (1, "hello", true)||match (1, "hello", true) with _, x, _ -> x||match (1, "hello", true) with _, x, _ -> x||(\(a, _, _) -> a) (1, "hello", True)||[nth t 0]||
+||[[# tuple-literal]][#tuple-literal-note literal]||(1, "hello", true)||(1, "hello", true)||(1, "hello", true)||(1, "hello", True)||##gray|//none; pairs via//## [zip xs ys]||
+||[[# tuple-lookup]][#tuple-lookup-note lookup]||#1 (1, "hello", true)||match (1, "hello", true) with _, x, _ -> x||match (1, "hello", true) with _, x, _ -> x||(\(a, _, _) -> a) (1, "hello", True)||##gray|//destructure://## [fn [[a b]] a]||
 ||[[# pair-lookup]][#pair-lookup-note pair lookup]||#1 (12,"December") _
 #2 (12,"December")||fst (12, "December") _
 snd (12, "December")||fst (12, "December") _
 snd (12, "December")||fst (12, "December") _
-snd (12, "December")||[nth p 0] [nth p 1]||
+snd (12, "December")||##gray|//destructure://## [fn [[a b]] b]||
 ||||||||||||~ [[# dictionaries]][#dictionaries-note dictionaries]||
 ||~ ||~ sml||~ ocaml||~ f#||~ haskell||~ loon||
 ||||||||||||~ [[# functions]][#functions-note functions]||
@@ -563,47 +563,50 @@ average 1 (2 + 3) _
 average 1 $ 2 + 3||[add 1 2]||
 ||[#named-parameter named parameter]|| ||let subtract ~m ~s = m - s;; _
  _
-subtract ~s: 3 ~m: 7;;|| ||##gray|//none//##||
+subtract ~s: 3 ~m: 7;;|| ||##gray|//none//##||##gray|//none//##||
 ||[#default-value named parameter default value]|| ||let logarithm ?(base = (exp 1.0)) x = log x /. (log base);; _
  _
 logarithm 2.718;; _
-logarithm ~base: 2.0 10.0;;|| ||##gray|//none//##||
+logarithm ~base: 2.0 10.0;;|| ||##gray|//none//##||##gray|//none; use multi-arity//##||
 ||[#piecewise-defined-function piecewise defined function]||val to_s = fn Red => "red" _
 @<&nbsp;&nbsp;>@| Green => "green" _
 @<&nbsp;&nbsp;>@| Blue => "blue";||let to_s = function Red -> "red" _
 @<&nbsp;&nbsp;>@| Green -> "green" _
 @<&nbsp;&nbsp;>@| Blue -> "blue";;|| ||to_s Red = "red" _
 to_s Green = "green" _
-to_s Blue = "blue"||
+to_s Blue = "blue"||[fn to-s [c] _
+  [match c Red "red" Green "green"]]||
 ||[#recursive-function recursive function]||fun range a b = _
 @<&nbsp;&nbsp;>@if a > b then [] _
 @<&nbsp;&nbsp;>@else a :: range (a + 1) b;||let rec range a b = _
 if a > b then [] _
-else a :: range (a+1) b;;|| ||range a b = if a > b then [] else a : range (a+1) b||
+else a :: range (a+1) b;;|| ||range a b = if a > b then [] else a : range (a+1) b||[fn fact [n] _
+  [if [< n 2] 1 [* n [fact [- n 1]]]]]||
 ||[#mutually-recursive-functions mutually-recursive-functions]|| ||let rec even n = if n = 0 then true else odd (n-1) _
-and odd n = if n = 0 then false else even (n-1);;|| || ||
-||[#anonymous-func anonymous function]||fn x => fn y => (x + y) / 2.0||fun x -> fun y -> (x +. y) /. 2.0||fun x -> fun y -> (x + y) / 2.0||\x y -> (x+y) / 2.0||
-||[#infix-prefix infix operator in prefix position]||(op * ) (3, 4)||( * ) 3 4;;|| ||( * ) 3 4||
+and odd n = if n = 0 then false else even (n-1);;|| || ||[fn ev? [n] [if [= n 0] true [od? [- n 1]]]] _
+[fn od? [n] [if [= n 0] false [ev? [- n 1]]]]||
+||[#anonymous-func anonymous function]||fn x => fn y => (x + y) / 2.0||fun x -> fun y -> (x +. y) /. 2.0||fun x -> fun y -> (x + y) / 2.0||\x y -> (x+y) / 2.0||[fn [x y] [/ [+ x y] 2.0]]||
+||[#infix-prefix infix operator in prefix position]||(op * ) (3, 4)||( * ) 3 4;;|| ||( * ) 3 4||##gray|//operators are prefix://## [* 3 4]||
 ||[#function-infix function in infix position]|| ||##gray|//none//##|| ||add x y = x + y _
-3 `add` 4||
+3 `add` 4||##gray|//none; all calls are prefix//##||
 ||[#currying currying]||un plus x y = x + y; _
 val plus2 = plus 2; _
-plus2 7;||let plus2 = (+) 2;;|| ||plus2 = (+) 2||
+plus2 7;||let plus2 = (+) 2;;|| ||plus2 = (+) 2||##gray|//none; use a closure://## [fn [x] [+ 2 x]]||
 ||[#composition composition]|| || || ||f x = x + 2 _
 g x = x * 3 _
-(f . g ) 4||
+(f . g ) 4||[fn [x] [f [g x]]]||
 ||[#function-composition function composition operator]||fun double x = 2 * x; _
 val quadruple = double o double;||##gray|//none//##|| ||double x = 2 * x _
-quadruple x = double . double||
+quadruple x = double . double||[pipe x g f] ##gray|//; via pipe//##||
 ||[#lazy-evaluation lazy evaluation]|| ||let arg1 x y = x;; _
  _
 arg1 7 (lazy (1/0) );;|| ||##gray|//lazy evaluation is default://## _
 arg1 x y = x _
  _
-arg1 7 (error "bam!")||
+arg1 7 (error "bam!")||##gray|//none; strict evaluation//##||
 ||[#strict-evaluation strict evaluation]|| ||##gray|//default behavior//##||##gray|//default behavior//##||arg1 x y = seq y x _
  _
-arg1 7 (error "bam!")||
+arg1 7 (error "bam!")||##gray|//default (strict)//##||
 ||||||||||||~ [[# execution-control]][#execution-control-note execution control]||
 ||~ ||~ sml||~ ocaml||~ f#||~ haskell||~ loon||
 ||[#if if]||f x > 0 then _
@@ -613,7 +616,7 @@ else _
 @<&nbsp;&nbsp;>@print_endline "pos";;||if x > 0 then _
 @<&nbsp;&nbsp;>@printfn "pos"||if x > 0 _
 @<&nbsp;&nbsp;>@then putStrLn "pos" _
-@<&nbsp;&nbsp;>@else return ()||
+@<&nbsp;&nbsp;>@else return ()||[if [> x 0] [println "pos"] [println "neg"]]||
 ||[#if-else-if-else if else-if else]||if x > 0 then print "pos" else if x < 0 then print "neg" else print "zero";||if x > 0 then _
 @<&nbsp;&nbsp;>@print_endline "pos" _
 else _
@@ -630,7 +633,8 @@ else _
 @<&nbsp;&nbsp;>@then putStrLn "pos" _
 @<&nbsp;&nbsp;>@else if x < 0 _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@then putStrLn "neg" _
-@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@else putStrLn "zero"||
+@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@else putStrLn "zero"||[if [> x 0] "pos" _
+  [if [< x 0] "neg" "zero"]]||
 ||[#sequencing sequencing]|| ||print_endline "one"; _
 print_endline "two"; _
 print_endline "three";;||printfn "one" _
@@ -638,7 +642,7 @@ printfn "two" _
 printfn "three"||do _
 @<&nbsp;&nbsp;>@putStrLn "one" _
 @<&nbsp;&nbsp;>@putStrLn  "two" _
-@<&nbsp;&nbsp;>@putStrLn  "three"||
+@<&nbsp;&nbsp;>@putStrLn  "three"||[do [println "one"] [println "two"]]||
 ||[#while while]|| ||let i = ref 0;; _
  _
 while !i < 10 do _
@@ -648,31 +652,31 @@ done;;||let i = ref 0 _
  _
 while !i < 10 do _
 @<&nbsp;&nbsp;>@printfn "%d" !i _
-@<&nbsp;&nbsp;>@i := !i + 1|| ||
+@<&nbsp;&nbsp;>@i := !i + 1|| ||##gray|//none; use//## [loop [i 0] [if [< i 3] [recur [+ i 1]] i]]||
 ||[#for for]|| ||for i = 1 to 10 do _
 @<&nbsp;&nbsp;>@let s = string_of_int i in _
 @<&nbsp;&nbsp;>@print_endline s _
-done;;|| || ||
+done;;|| || ||[each [fn [i] [println i]] [range 5]]||
 ||[#reverse-for for in reverse]|| ||for i = 10 downto 1 do _
 @<&nbsp;&nbsp;>@let s = string_of_int i in _
 @<&nbsp;&nbsp;>@print_endline s _
-done;;|| || ||
-||[#list-iteration list iteration]|| ||##gray|//none//##|| || ||
+done;;|| || ||[each [fn [i] [println i]] [reverse [range 5]]]||
+||[#list-iteration list iteration]|| ||##gray|//none//##|| || ||[each [fn [x] [println x]] xs]||
 ||[#loop loop]|| ||let rec loop i = _
 @<&nbsp;&nbsp;>@if i <= 10 then begin _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@print_endline (string_of_int i); _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@loop (i+1) _
 @<&nbsp;&nbsp;>@end in _
-loop 0;;|| || ||
+loop 0;;|| || ||[loop [i 0] [if [< i 5] [recur [+ i 1]] i]]||
 ||||||||||||~ [[# exceptions]][#exceptions-note exceptions]||
 ||~ ||~ sml||~ ocaml||~ f#||~ haskell||~ loon||
 ||[#raise-error raise error]|| ||raise (Failure "bam!");; _
 ##gray|//or//## _
-failwith "bam!";;|| ||error "bam!"||
-||[#handle-error handle error]|| ||let x = try 1 / 0 with Division_by_zero -> 0;;|| || ||
-||[#exception-type type of exceptions]|| ||exn|| || ||
+failwith "bam!";;|| ||error "bam!"||[Fail.raise "bam"]||
+||[#handle-error handle error]|| ||let x = try 1 / 0 with Division_by_zero -> 0;;|| || ||[try [risky]] ##gray|//; -> Result//##||
+||[#exception-type type of exceptions]|| ||exn|| || ||##gray|//none; Result a Str or Fail effect//##||
 ||[#user-exception user defined exception]|| ||exception Foo of string;; _
-raise (Foo "invalid input");;|| || ||
+raise (Foo "invalid input");;|| || ||[effect Err [oops [String] a]]||
 ||[#standard-exceptions standard exceptions]|| ||Division_by_zero _
 Failure ##gray|//string//## _
 Not_found _
@@ -680,33 +684,33 @@ Invalid_argument ##gray|//string//## _
 Match_failure (##gray|//string//##, ##gray|//int//##, ##gray|//int//##) _
 Assert_failure (##gray|//string//##, ##gray|//int//##, ##gray|//int//##) _
 Out_of_memory _
-Stack_overflow|| || ||
-||[#assert assert]|| ||assert(1 = 0);;|| || ||
+Stack_overflow|| || ||##gray|//none; Fail effect//##||
+||[#assert assert]|| ||assert(1 = 0);;|| || ||[assert-eq got 1] ##gray|//; in a test//##||
 ||||||||||||~ [[# concurrency]][#concurrency-note concurrency]||
 ||~ ||~ sml||~ ocaml||~ f#||~ haskell||~ loon||
 ||||||||||||~ [[# file-handles]][#file-handles-note file handles]||
 ||~ ||~ sml||~ ocaml||~ f#||~ haskell||~ loon||
 ||standard file handles|| ||stdin stdout stderr||stdin stdout stderr||import System.Posix.IO _
  _
-stdInput stdOutput stdError||
-||read line from stdin|| ||let line = read_line();;|| ||line <- getLine||
-||end-of-file behavior|| ||##gray|//raises// End_of_file##|| ||##gray|//when last data is returned,// hIsEOF //will return True.  Reading after end-of-file throws an exception.//##||
-||chomp|| || || || ||
-||[#write-line-stdout write line to stdout]|| ||print_endline "lorem ipsum";;||printfn "lorem ipsum"||putStrLn "lorem ipsum"||
-||write formatted string to stdout|| || || || ||
+stdInput stdOutput stdError||##gray|//none//##||
+||read line from stdin|| ||let line = read_line();;|| ||line <- getLine||[IO.read-line]||
+||end-of-file behavior|| ||##gray|//raises// End_of_file##|| ||##gray|//when last data is returned,// hIsEOF //will return True.  Reading after end-of-file throws an exception.//##||##gray|//none//##||
+||chomp|| || || || ||[trim s]||
+||[#write-line-stdout write line to stdout]|| ||print_endline "lorem ipsum";;||printfn "lorem ipsum"||putStrLn "lorem ipsum"||[IO.println "lorem ipsum"]||
+||write formatted string to stdout|| || || || ||[IO.println "x = {x}"]||
 ||open file for reading|| ||let f = open_in "/etc/passwd";;|| ||import System.IO _
  _
-f <- openFile "/etc/hosts" ReadMode||
+f <- openFile "/etc/hosts" ReadMode||##gray|//none; whole-file://## [IO.read-file p]||
 ||open file for writing|| ||let f = open_out "/tmp/ocaml.out";;|| ||import System.IO _
  _
-f <- openFile "/tmp/test" WriteMode||
+f <- openFile "/tmp/test" WriteMode||##gray|//none; whole-file://## [IO.write-file p s]||
 ||open file for appending|| || || ||import System.IO _
  _
-f <- openFile "/tmp/err.log" AppendMode||
+f <- openFile "/tmp/err.log" AppendMode||##gray|//none//##||
 ||close file|| || || ||import System.IO _
  _
-hClose f||
-||i/o errors|| || || || ||
+hClose f||##gray|//n/a; no handles//##||
+||i/o errors|| || || || ||[IO.read-file p]? ##gray|//; propagates Err//##||
 ||[#read-line read line]||fun displayFile(file: string) = _
 @<&nbsp;&nbsp;>@let _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@val f = TextIO.openIn file _
@@ -735,11 +739,11 @@ readAndPrintLines h = do _
  _
 main = do _
 @<&nbsp;&nbsp;>@h <- openFile "/etc/passwd" ReadMode _
-@<&nbsp;&nbsp;>@readAndPrintLines h||
-||iterate over file by line|| || || || ||
-||read file into array of strings|| || || || ||
-||read file into string|| || || || ||
-||write string|| || || || ||
+@<&nbsp;&nbsp;>@readAndPrintLines h||[IO.read-line] ##gray|//; stdin//##||
+||iterate over file by line|| || || || ||[each f [split [IO.read-file p] "\n"]]||
+||read file into array of strings|| || || || ||[split [IO.read-file p] "\n"]||
+||read file into string|| || || || ||[IO.read-file p]||
+||write string|| || || || ||[IO.write-file p s]||
 ||[#write-file write line]||val file = "/tmp/test-sml"; _
 val f = TextIO.openOut file; _
 TextIO.output(f, "hello out\n"); _
@@ -748,10 +752,10 @@ let oc = open_out "/tmp/test-ocaml" in _
 fprintf oc "hello out\n"; _
 close_out oc;;|| ||s = "hello out\n" _
 f = "/tmp/test-haskell" _
-main = writeFile f s||
-||flush file handle|| || || || ||
-||end-of-file test|| || || || ||
-||get and set filehandle position|| || || || ||
+main = writeFile f s||[IO.write-file p "hello\n"]||
+||flush file handle|| || || || ||##gray|//n/a//##||
+||end-of-file test|| || || || ||##gray|//none//##||
+||get and set filehandle position|| || || || ||##gray|//none//##||
 ||||||||||||~ [[# files]][#files-note files]||
 ||~ ||~ sml||~ ocaml||~ f#||~ haskell||~ loon||
 ||file test, regular file test|| ||open Unix _
@@ -766,11 +770,11 @@ Directory.doesFileExist "/etc/hosts" _
 import Control.Monad _
 import System.Posix.Files _
  _
-liftM isRegularFile (getFileStatus "/etc/hosts")||
+liftM isRegularFile (getFileStatus "/etc/hosts")||##gray|//none//##||
 ||file size|| ||(stat "/etc/hosts").st_size|| ||import Control.Monad _
 import System.Posix.Files _
  _
-liftM fileSize (getFileStatus "/etc/hosts")||
+liftM fileSize (getFileStatus "/etc/hosts")||##gray|//none//##||
 ||is file readable, writable, executable|| ||open Unix _
  _
 try access "/tmp/bar" [R_OK]; true with _
@@ -785,7 +789,7 @@ liftM readable _
 liftM writable _
 @<&nbsp;&nbsp;>@(getPermissions "/etc/hosts") _
 liftM executable _
-@<&nbsp;&nbsp;>@(getPermissions "/etc/hosts")||
+@<&nbsp;&nbsp;>@(getPermissions "/etc/hosts")||##gray|//none//##||
 ||set file permissions|| ||open Unix _
  _
 chmod "/tmp/foo" 0o755|| ||import System.Posix.Files _
@@ -794,7 +798,7 @@ setFileMode "/tmp/foo" ownerModes _
 setFileMode "/tmp/foo" groupReadMode _
 setFileMode "/tmp/foo" groupExecuteMode _
 setFileMode "/tmp/foo" otherReadMode _
-setFileMode "/tmp/foo" otherExecuteMode||
+setFileMode "/tmp/foo" otherExecuteMode||##gray|//none//##||
 ||copy file, remove file, rename file|| ||open Unix _
  _
 ##gray|//??//## _
@@ -803,7 +807,7 @@ rename "/tmp/bar" "/tmp/foo"|| ||import System.Directory _
  _
 copyFile "/tmp/foo" "/tmp/bar" _
 removeFile "/tmp/foo" _
-renameFile "/tmp/bar" "/tmp/foo"||
+renameFile "/tmp/bar" "/tmp/foo"||##gray|//none//##||
 ||create symlink, symlink test, readlink|| ||open Unix _
  _
 symlink "/etc/hosts" "/tmp/hosts" _
@@ -812,48 +816,48 @@ readlink "/tmp/hosts"|| ||import System.Posix.Files _
  _
 createSymbolicLink "/etc/hosts" "/tmp/hosts" _
 ##gray|//??//## _
-readSymbolicLink "/tmp/hosts"||
+readSymbolicLink "/tmp/hosts"||##gray|//none//##||
 ||generate unused file name|| ||open Filename _
  _
 ##gray|(* prefix and suffix: *)## _
-temp_file "foo" ".txt"|| || ||
+temp_file "foo" ".txt"|| || ||##gray|//none//##||
 ||||||||||||~ [[# directories]][#directories-note directories]||
 ||~ ||~ sml||~ ocaml||~ f#||~ haskell||~ loon||
 ||build pathname|| ||open Filename _
  _
 concat "/etc" "hosts"|| ||import System.FilePath ((</>)) _
  _
-let path = "/etc" </> "hosts"||
+let path = "/etc" </> "hosts"||[join "/" #["dir" "file"]]||
 ||dirname and basename|| ||open Filename _
  _
 dirname "/etc/hosts" _
 basename "/etc/hosts"|| ||import System.FilePath _
  _
 takeFileName "/etc/hosts" _
-takeDirectory "/etc/hosts"||
+takeDirectory "/etc/hosts"||##gray|//none//##||
 ||iterate over directory by file|| || || ||import System _
  _
 ##gray|@@--@@ returns IO [FilePath]## _
-Directory.getDirectoryContents "/etc"||
+Directory.getDirectoryContents "/etc"||##gray|//none//##||
 ||make directory|| ||##gray|(* opam install fileutils *)## _
 open FileUtil _
  _
 mkdir ~parent:true "/tmp/foo/bar"|| ||import System.Directory _
  _
 createDirectoryIfMissing True _
-@<&nbsp;&nbsp;>@"/tmp/foo/bar"||
+@<&nbsp;&nbsp;>@"/tmp/foo/bar"||##gray|//none//##||
 ||remove empty directory|| ||open Unix _
  _
 rmdir "/tmp/foodir"|| ||import System.Directory _
  _
-removeDirectory "/tmp/foodir"||
+removeDirectory "/tmp/foodir"||##gray|//none//##||
 ||remove directory and contents|| || || ||import System.Directory _
  _
-removeDirectoryRecursive "/tmp/foodir"||
+removeDirectoryRecursive "/tmp/foodir"||##gray|//none//##||
 ||directory test|| || || ||import System _
  _
-Directory.doesDirectoryExist "/tmp"||
-||temporary directory|| || || || ||
+Directory.doesDirectoryExist "/tmp"||##gray|//none//##||
+||temporary directory|| || || || ||##gray|//none//##||
 ||||||||||||~ [[# processes-environment]][#processes-environment-note processes and environment]||
 ||~ ||~ sml||~ ocaml||~ f#||~ haskell||~ loon||
 ||[#command-line-arg command line arguments]|| ||for i = 0 to Array.length Sys.argv - 1 do _
@@ -868,7 +872,7 @@ printArgs args = do _
 @<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@@<&nbsp;&nbsp;>@printArgs (tail args) _
 main = do _
 @<&nbsp;&nbsp;>@a <- getArgs _
-@<&nbsp;&nbsp;>@printArgs a||
+@<&nbsp;&nbsp;>@printArgs a||[IO.args] ##gray|//; #[Str]//##||
 ||[[# program-name]][#program-name-note program name] _
 @<&nbsp;>@|| || || ||import System _
  _
@@ -933,13 +937,13 @@ main = say baz _
 $ ghc -c Foo/Bar.hs _
 $ ghc Main.hs _
 $ ./Main _
-hello||
-||[#namespaces namespaces]|| || || ||values, constructors, type variables, type constructors, type classes, modules||
-||[#file-name file name restrictions]|| ||##gray|//module// Foo.Bar //must be in// Foo.ml##|| ||##gray|//module// Foo.Bar //must be in// Foo/Bar.hs##||
-||[#import namespace]|| ||open Graphics;;|| ||import Data.Bytestring||
-||[#namespace-creation namespace creation]|| ||##gray|//put code in file// MODULE_NAME//.ml//##|| || ||
-||[#namespace-alias namespace alias]|| ||module Gr = Graphics;;|| ||import qualified Data.Bytestring as B||
-||[#namespace-separator namespace separator]|| ||.|| ||.||
+hello||##gray|//math.oo://## [pub fn add [a b] [+ a b]]||
+||[#namespaces namespaces]|| || || ||values, constructors, type variables, type constructors, type classes, modules||##gray|//one module per file//##||
+||[#file-name file name restrictions]|| ||##gray|//module// Foo.Bar //must be in// Foo.ml##|| ||##gray|//module// Foo.Bar //must be in// Foo/Bar.hs##||##gray|//module name = file name//##||
+||[#import namespace]|| ||open Graphics;;|| ||import Data.Bytestring||[use math]||
+||[#namespace-creation namespace creation]|| ||##gray|//put code in file// MODULE_NAME//.ml//##|| || ||##gray|//implicit (the file)//##||
+||[#namespace-alias namespace alias]|| ||module Gr = Graphics;;|| ||import qualified Data.Bytestring as B||[use math as m]||
+||[#namespace-separator namespace separator]|| ||.|| ||.||. ##gray|//; e.g. math.add//##||
 ||[#subnamespace subnamespace]|| ||##gray|//in A.ml://## _
 module B = _
 sig _
@@ -950,7 +954,7 @@ struct _
 @<&nbsp;&nbsp;>@let display_instruction () = print_endline msg _
 end _
 ##gray|//in client source://## _
-A.B.display_instruction;;|| || ||
+A.B.display_instruction;;|| || ||[use utils/string]||
 ||[[# pkg-manager-setup]][#pkg-manager-setup-note package manager setup]|| ||##gray|//do this once://## _
 $ opam init _
  _
@@ -992,7 +996,7 @@ let n = SpecialInt 7;;||type special_int = SpecialInt of int _
  _
 let n = SpecialInt 7||data SpecialIntType = SpecialInt Integer _
  _
-n = SpecialInt 7||
+n = SpecialInt 7||[type Id [Id Int]]||
 ||tuple product type with two fields||datatype int_pair = IntPair of int * int; _
  _
 val y = IntPair (7, 11);||type int_pair = IntPair of int * int;; _
@@ -1001,7 +1005,7 @@ let p = IntPair (7, 11);;||type int_pair = IntPair of int * int _
  _
 let p = IntPair (7, 11)||data IntPairType = IntPair Integer Integer _
  _
-p = IntPair 7 11||
+p = IntPair 7 11||[type Pair [Pair Int Int]]||
 ||record product type||type customer = {id:int, name:string, address:string}||type customer = { _
 @<&nbsp;&nbsp;>@id: int; _
 @<&nbsp;&nbsp;>@name: string; _
@@ -1014,7 +1018,7 @@ p = IntPair 7 11||
 @<&nbsp;&nbsp;>@customerId :: Integer, _
 @<&nbsp;&nbsp;>@name :: String, _
 @<&nbsp;&nbsp;>@address :: String _
-}||
+}||##gray|//use a map (row-typed)//##||
 ||record product type literal||{id=7, name="John", address="Topeka, KS"}||let cust = { _
 @<&nbsp;&nbsp;>@id=7; _
 @<&nbsp;&nbsp;>@name="John"; _
@@ -1022,7 +1026,7 @@ p = IntPair 7 11||
 };;||{id=7; name="John"; address="Topeka, KS"}||Customer { _
 @<&nbsp;&nbsp;>@customerId=7, _
 @<&nbsp;&nbsp;>@name="John", _
-@<&nbsp;&nbsp;>@address="Topeka, KS" }||
+@<&nbsp;&nbsp;>@address="Topeka, KS" }||{:id 7 :name "ada"}||
 ||[[# generic-type]][#generic-type-note generic type]||datatype ('a, 'b) twosome = _
 @<&nbsp;&nbsp;>@Twosome of 'a * 'b; _
  _
@@ -1043,7 +1047,8 @@ p = Twosome ("pi", 3.14)||[type Tree _
 @<&nbsp;&nbsp;>@| Leaf of int _
 @<&nbsp;&nbsp;>@| Tree of binary_tree * binary_tree;;||type binary_tree = _
 @<&nbsp;&nbsp;>@| Leaf of int _
-@<&nbsp;&nbsp;>@| Tree of binary_tree * binary_tree||data BinaryTree = Leaf Integer | Tree BinaryTree BinaryTree||
+@<&nbsp;&nbsp;>@| Tree of binary_tree * binary_tree||data BinaryTree = Leaf Integer | Tree BinaryTree BinaryTree||[type Tree _
+  [Leaf Int] [Node Tree Tree]]||
 ||pattern match sum type||val c = Red; _
  _
 case c of Red => "red" _
@@ -1056,27 +1061,27 @@ let s = match col with _
 @<&nbsp;&nbsp;>@| Green -> "green";;|| ||c = Red _
 case c of Red -> "red" _
 @<&nbsp;&nbsp;>@Green -> "green" _
-@<&nbsp;&nbsp;>@Blue -> "blue"||
-||pattern match product type|| || || || ||
-||[#match-guard pattern match guard]||##gray|//none; use// if##||match i with j when i < 0 -> -j | j -> j;;|| ||##gray|//none, use if or piecewise function definition//##||
+@<&nbsp;&nbsp;>@Blue -> "blue"||[match c Red "red" Green "green"]||
+||pattern match product type|| || || || ||[match p [Pair a b] [+ a b]]||
+||[#match-guard pattern match guard]||##gray|//none; use// if##||match i with j when i < 0 -> -j | j -> j;;|| ||##gray|//none, use if or piecewise function definition//##||[match n x [if [> x 0] "pos" "neg"]]||
 ||[#match-catchall pattern match catchall]||fun to_s c = case c of Red => "red" | _ => "not red";||let to_s c = match c with Red -> "red" | _ -> "not red";; _
 to_s Green;;|| ||c = Green _
-case c of Red -> "red"; _ -> "not red"||
+case c of Red -> "red"; _ -> "not red"||[match c Red "red" _ "other"]||
 ||||||||||||~ [[# objects]][#objects-note objects]||
 ||~ ||~ sml||~ ocaml||~ f#||~ haskell||~ loon||
 ||[#class-definition class definition]|| ||class counter = object _
 @<&nbsp;&nbsp;>@val mutable n = 0 _
 @<&nbsp;&nbsp;>@method incr = n <- n+1 _
 @<&nbsp;&nbsp;>@method get = n _
-end;;|| || ||
-||[#object-creation object creation]|| ||let c = new counter;;|| || ||
+end;;|| || ||##gray|//none; use type + functions//##||
+||[#object-creation object creation]|| ||let c = new counter;;|| || ||##gray|//none; construct a value//##||
 ||[#method-invocation method invocation]|| ||c#incr;; _
-c#get;;|| || ||
-||[#field-access field access]|| ||##gray|//none//##|| || ||
+c#get;;|| || ||##gray|//none; call a function//##||
+||[#field-access field access]|| ||##gray|//none//##|| || ||[get rec :field] ##gray|//; map field//##||
 ||||||||||||~ [[# inheritance-polymorphism]][#inheritance-polymorphism-note inheritance and polymorphism]||
 ||~ ||~ sml||~ ocaml||~ f#||~ haskell||~ loon||
-||overload function|| || || || ||
-||[#inheritance inheritance]|| || || || ||
+||overload function|| || || || ||[fn f ([a] ...) ([a b] ...)] ##gray|//; multi-arity//##||
+||[#inheritance inheritance]|| || || || ||##gray|//none//##||
 ||||||||||||~ [[# net-web]][#net-web-note net and web]||
 ||~ ||~ sml||~ ocaml||~ f#||~ haskell||~ loon||
 ||||||||||||~ [[# unit-tests]][#unit-tests-note unit test]||
@@ -1093,23 +1098,24 @@ $ rlwrap ocaml _
 ##gray|//The utop toplevel, which can be installed via opam, also provides history.//##||##gray|//Mono://## _
 $ fsharpi _
  _
-##gray|//In visual studio, highlight code and press ALT+ENTER.//##||$ ghci||
-||[#repl-limitations repl limitations]|| || || ||##gray|//Must use let to define values and functions; when defining functions with multiple equations the equations must be separated by semicolons; the clauses of case/of statements must be separated by semicolons; it is not possible to define data types.//##||
-||[#repl-last-value repl last value]||it||##gray|//none//##||it||it||
-||[#help help]|| ||##gray|//none//##|| ||:?||
-||[#quit quit]|| ||^D||#quit;;|| ||
+##gray|//In visual studio, highlight code and press ALT+ENTER.//##||$ ghci||$ loon repl||
+||[#repl-limitations repl limitations]|| || || ||##gray|//Must use let to define values and functions; when defining functions with multiple equations the equations must be separated by semicolons; the clauses of case/of statements must be separated by semicolons; it is not possible to define data types.//##||##gray|//none//##||
+||[#repl-last-value repl last value]||it||##gray|//none//##||it||it||##gray|//none//##||
+||[#help help]|| ||##gray|//none//##|| ||:?||##gray|//none//##||
+||[#quit quit]|| ||^D||#quit;;|| ||:quit||
 ||[#inspect-type inspect type]|| ||##gray|//repl displays the type of any expression entered//##|| ||let a = 3 _
-:type a||
-||[#inspect-namespace inspect namespace]|| ||module Unix = Unix;;|| || ||
+:type a||##gray|//LSP hover, or//## $ loon check||
+||[#inspect-namespace inspect namespace]|| ||module Unix = Unix;;|| || ||##gray|//none//##||
 ||[#load-source load source file]||use "hello.ml";||#use "hello";;|| ||:edit hello.hs _
-:load hello||
+:load hello||$ loon run file.oo||
 ||[#load-pkg-note load package]|| ||##gray|//consider adding to// .ocamlinit:## _
 #use "topfind";; _
 # thread;; _
 #require "core";; _
-open Core.Std;;|| || ||
-||[#search-path search path]|| ||#directory "libdir";;|| || ||
-||[#search-path-command-line set search path on command line]|| ||ocaml -Ilibdir|| || ||
+open Core.Std;;|| || ||$ loon add pkg _
+[use pkg]||
+||[#search-path search path]|| ||#directory "libdir";;|| || ||##gray|//none//##||
+||[#search-path-command-line set search path on command line]|| ||ocaml -Ilibdir|| || ||##gray|//none//##||
 ||~ ||~ ##EFEFEF|@@_______________________________________________@@##||~ ##EFEFEF|@@_______________________________________________@@##||~ ##EFEFEF|@@_______________________________________________@@##||~ ##EFEFEF|@@_______________________________________________@@##||
 
 
